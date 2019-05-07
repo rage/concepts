@@ -1,0 +1,22 @@
+{
+  "name": "concept",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rage/concepts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rage/concepts/issues"
+  },
+  "homepage": "https://github.com/rage/concepts#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
