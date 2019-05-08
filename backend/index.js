@@ -1,12 +1,35 @@
-const express = require('express');
+const { prisma } = require('./generated/prisma-client')
+const { GraphQLServer } = require('graphql-yoga')
 
-const app = express();
-const PORT = 8080;
+const resolvers = {
+  Query: {
+    allCourses(root, args, context) {
+      return context.prisma.courses()
+    },
+    allUsers(root, args, context) {
+      return context.prisma.users()
+    }
+  },
+  Mutation: {
+    createUser(root, args, context) {
+      return context.prisma.createUser({ username: args.username })
+    },
+    createCourse(root, args, context) {
+      return context.prisma.createCourse({ name: args.name })
+    }
+  },
+}
 
-app.get("/", (req, res) => {
-    res.send("Hello, world!");
-});
+const options = {
+  endpoint: '/graphql',
+  playground: '/playground'
+}
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
+const server = new GraphQLServer({
+  typeDefs: './schema.graphql',
+  resolvers,
+  context: {
+    prisma,
+  },
+})
+server.start(options, () => console.log('Server is running on http://localhost:4000'))

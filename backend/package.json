@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/rage/concepts#readme",
   "dependencies": {
-    "express": "^4.16.4"
+    "graphql-yoga": "^1.17.4",
+    "prisma-client-lib": "^1.30.4"
   }
 }

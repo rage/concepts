@@ -1,0 +1,36 @@
+type User {
+  id: ID! @id
+  username: String!
+  concepts: [Concept!]!
+}
+
+type Course {
+  id: ID! @id
+  name: String!
+  instances: [Instance!]!
+}
+
+type Instance {
+  id: ID! @id
+  start_date: DateTime!
+  end_date: DateTime!
+  periods: [Int!]! @scalarList(strategy:RELATION)
+  course: Course!
+  concepts: [Concept!]!
+}
+
+type Concept {
+  id: ID! @id
+  name: String!
+  description: String!
+  user: User! @relation(link: INLINE)
+  official: Boolean! @default(value: false)
+}
+
+type Link {
+  id: ID! @id
+  from: Concept! @relation(link: INLINE, name: "From")
+  to: Concept! @relation(link: INLINE, name: "To")
+  user: User! @relation(link: INLINE)
+  official: Boolean! @default(value: false)
+}
