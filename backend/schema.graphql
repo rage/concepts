@@ -1,46 +1,46 @@
 scalar DateTime
 
 type Query {
-  allCourses: [Course!]!
-  allUsers: [User!]!
+  allConcepts: [Concept!]!
+  conceptById(id: ID!): Concept
 }
 
 type Mutation {
-  createUser(username: String!): User
-  createCourse(name: String!): Course
+  createConcept(name: String!, desc: String, official: Boolean): Concept
+  deleteConcept(id: ID!): Concept
 }
 
-type User {
-  id: ID!
-  username: String!
-}
+# type User {
+#   id: ID!
+#   username: String!
+# }
 
-type Course {
-  id: ID!
-  name: String!
-  instances: [Instance!]!
-}
+# type Course {
+#   id: ID!
+#   name: String!
+#   instances: [Instance!]!
+# }
 
-type Instance {
-  id: ID!
-  start_date: DateTime!
-  end_date: DateTime!
-  period: [Int]!
-  course: Course!
-}
+# type Instance {
+#   id: ID!
+#   start_date: DateTime!
+#   end_date: DateTime!
+#   period: [Int!]!
+#   course: Course!
+# }
 
 type Concept {
   id: ID!
   name: String!
-  description: String!
+  description: String
   official: Boolean!
-  links: [Link]!
+  links: [Link!]!
 }
 
 type Link {
   id: ID!
   from: Concept!
   to: Concept!
-  user: User!
+  # user: User!
   official: Boolean!
 }
