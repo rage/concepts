@@ -2,10 +2,12 @@ scalar DateTime
 
 type Query {
   allCourses: [Course!]!
+  allUsers: [User!]!
 }
 
 type Mutation {
   createUser(username: String!): User
+  createCourse(name: String!): Course
 }
 
 type User {

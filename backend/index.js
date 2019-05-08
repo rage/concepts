@@ -4,20 +4,25 @@ const { GraphQLServer } = require('graphql-yoga')
 const resolvers = {
   Query: {
     allCourses(root, args, context) {
-      return context.prisma.courses({})
+      return context.prisma.courses()
     },
+    allUsers(root, args, context) {
+      return context.prisma.users()
+    }
   },
   Mutation: {
     createUser(root, args, context) {
-      return context.prisma.createUser({ name: args.username })
+      return context.prisma.createUser({ username: args.username })
     },
+    createCourse(root, args, context) {
+      return context.prisma.createCourse({ name: args.name })
+    }
   },
-  User: {
+}
 
-  },
-  Course: {
-
-  },
+const options = {
+  endpoint: '/graphql',
+  playground: '/playground'
 }
 
 const server = new GraphQLServer({
@@ -27,4 +32,4 @@ const server = new GraphQLServer({
     prisma,
   },
 })
-server.start(() => console.log('Server is running on http://localhost:4000'))
+server.start(options, () => console.log('Server is running on http://localhost:4000'))
