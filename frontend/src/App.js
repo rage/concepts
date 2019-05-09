@@ -3,11 +3,11 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import ConceptList from './components/ConceptList'
 import ConceptForm from './components/ConceptForm'
-import {ALL_CONCEPTS, DELETE_CONCEPT, CREATE_CONCEPT, ADD_PREREQUISITE_CONCEPT} from './services/ConceptService'
+import { ALL_CONCEPTS, DELETE_CONCEPT, CREATE_CONCEPT, ADD_PREREQUISITE_CONCEPT } from './services/ConceptService'
 
 import './App.css'
 
-const App = (props) => {
+const App = () => {
   const allConcepts = useQuery(ALL_CONCEPTS)
 
   const addPrerequisiteToConcept = useMutation(ADD_PREREQUISITE_CONCEPT, {
@@ -24,10 +24,10 @@ const App = (props) => {
 
   return (
     <div className="App">
-      <ConceptList deleteConcept={deleteConcept} concepts={allConcepts} addPrerequisiteToConcept={addPrerequisiteToConcept}/><br/>
-      <ConceptForm createConcept={createConcept}/>
+      <ConceptList deleteConcept={deleteConcept} concepts={allConcepts} addPrerequisiteToConcept={addPrerequisiteToConcept} /><br />
+      <ConceptForm createConcept={createConcept} />
     </div>
   )
 }
 
-export default App;
+export default App
