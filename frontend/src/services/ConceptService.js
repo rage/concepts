@@ -2,11 +2,35 @@ import { gql } from 'apollo-boost'
 
 const ALL_CONCEPTS = gql`
 {
-  allConcepts {
+    allConcepts{
+        id
+        name
+        description
+        official
+        linksToConcept {
+            from{
+                id
+                name
+                description
+                official
+            }
+        }
+    }
+}
+`
+
+const ADD_PREREQUISITE_CONCEPT = gql`
+mutation createConceptAndLinkTo($name: String!, $description: String!, $to:ID!) {
+  createConceptAndLinkTo(name: $name, desc: $description, to:$to) {
     id
-    name
-    description
-    official
+    to {
+      id
+      name
+    }
+    from {
+      id
+      name
+    }
   }
 }
 `
@@ -30,4 +54,4 @@ mutation deleteConcept($id: ID!) {
 }
 `
 
-export {ALL_CONCEPTS, CREATE_CONCEPT, DELETE_CONCEPT}
+export {ALL_CONCEPTS, CREATE_CONCEPT, DELETE_CONCEPT, ADD_PREREQUISITE_CONCEPT}

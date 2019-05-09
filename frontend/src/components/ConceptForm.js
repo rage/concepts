@@ -28,10 +28,10 @@ const ConceptForm = ({createConcept}) => {
             </div>
             
             <div>
-                
                 <label> Official </label>
                 <input type="checkbox" checked={official} onChange={(e) => setOfficial(e.target.checked)}></input>
             </div>
+            
             <button type="submit"> Create concept </button>
         </form>
     )
