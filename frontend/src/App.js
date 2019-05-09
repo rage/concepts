@@ -1,105 +1,56 @@
-import React, { useState } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import React from 'react'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import { gql } from 'apollo-boost'
 
-const CREATE_USER = gql`
-mutation createUser($username: String!) {
-  createUser(username: $username) {
+import ConceptList from './components/ConceptList'
+import ConceptForm from './components/ConceptForm'
+
+
+const ALL_CONCEPTS = gql`
+{
+  allConcepts {
     id
-    username
+    name
+    description
+    official
   }
 }
 `
 
-const ALL_USERS = gql`
-{
-  allUsers {
+const CREATE_CONCEPT = gql`
+mutation createConcept($name: String!, $description:String!, $official:Boolean!) {
+  createConcept(name:$name, desc:$description, official:$official) {
     id
-    username
+    name
+    description
+    official
   }
 }
 `
+
+const DELETE_CONCEPT = gql`
+mutation deleteConcept($id: ID!) {
+  deleteConcept(id: $id) {
+    id name
+  }
+}
+`
+
 
 const App = (props) => {
-  const allUsers = useQuery(ALL_USERS)
-  const createUser = useMutation(CREATE_USER, {
-    refetchQueries: [{ query: ALL_USERS }]
+  const allConcepts = useQuery(ALL_CONCEPTS)
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    refetchQueries: [{ query: ALL_CONCEPTS }]
+  })
+
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    refetchQueries: [{ query: ALL_CONCEPTS }]
   })
 
   return (
     <div className="App">
-      <Users users={allUsers} />
-      <NewUser createUser={createUser} />
-    </div>
-  );
-}
-
-const Users = ({ users }) => {
-  return (
-    <div>
-      {users.loading ?
-        <div>loading...</div>
-        :
-        <table>
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.data.allUsers ?
-              users.data.allUsers.map(u => {
-                return (
-                  <tr>
-                    <td>
-                      {u.username}
-                    </td>
-                    <td>
-                      {u.id}
-                    </td>
-                  </tr>
-                )
-              })
-              :
-              null}
-          </tbody>
-        </table>
-      }
-    </div>
-  )
-}
-
-const NewUser = (props) => {
-  const [username, setUsername] = useState('')
-
-  const submit = async (e) => {
-    e.preventDefault()
-    await props.createUser({
-      variables: { username }
-    })
-    setUsername('')
-  }
-  return (
-    <div>
-      <form onSubmit={submit}>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                Username
-              </td>
-              <td>
-                <input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <button type="submit">Create user</button>
-      </form>
+      <ConceptList deleteConcept={deleteConcept} concepts={allConcepts}/>
+      <ConceptForm createConcept={createConcept}/>
     </div>
   )
 }

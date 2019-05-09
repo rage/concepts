@@ -3,19 +3,26 @@ const { GraphQLServer } = require('graphql-yoga')
 
 const resolvers = {
   Query: {
-    allCourses(root, args, context) {
-      return context.prisma.courses()
+    async allConcepts(root, args, context) {
+      return await context.prisma.concepts()
     },
-    allUsers(root, args, context) {
-      return context.prisma.users()
+    async conceptById(root, args, context) {
+      return await context.prisma.concept({ id: args.id })
     }
   },
   Mutation: {
-    createUser(root, args, context) {
-      return context.prisma.createUser({ username: args.username })
+    async createConcept(root, args, context) {
+      const concept = args.desc !== undefined
+        ? args.official !== undefined
+          ? { name: args.name, description: args.desc, official: args.official }
+          : { name: args.name, description: args.desc }
+        : args.official !== undefined
+          ? { name: args.name, official: args.official }
+          : { name: args.name }
+      return await context.prisma.createConcept(concept)
     },
-    createCourse(root, args, context) {
-      return context.prisma.createCourse({ name: args.name })
+    async deleteConcept(root, args, context) {
+      return await context.prisma.deleteConcept({ id: args.id })
     }
   },
 }
