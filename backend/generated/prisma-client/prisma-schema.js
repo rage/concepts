@@ -20,6 +20,8 @@ type Concept {
   name: String!
   description: String
   official: Boolean!
+  linksFromConcept(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
+  linksToConcept(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
 }
 
 type ConceptConnection {
@@ -33,11 +35,34 @@ input ConceptCreateInput {
   name: String!
   description: String
   official: Boolean
+  linksFromConcept: LinkCreateManyWithoutFromInput
+  linksToConcept: LinkCreateManyWithoutToInput
 }
 
-input ConceptCreateOneInput {
-  create: ConceptCreateInput
+input ConceptCreateOneWithoutLinksFromConceptInput {
+  create: ConceptCreateWithoutLinksFromConceptInput
   connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateOneWithoutLinksToConceptInput {
+  create: ConceptCreateWithoutLinksToConceptInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateWithoutLinksFromConceptInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  linksToConcept: LinkCreateManyWithoutToInput
+}
+
+input ConceptCreateWithoutLinksToConceptInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  linksFromConcept: LinkCreateManyWithoutFromInput
 }
 
 type ConceptEdge {
@@ -81,16 +106,12 @@ input ConceptSubscriptionWhereInput {
   NOT: [ConceptSubscriptionWhereInput!]
 }
 
-input ConceptUpdateDataInput {
-  name: String
-  description: String
-  official: Boolean
-}
-
 input ConceptUpdateInput {
   name: String
   description: String
   official: Boolean
+  linksFromConcept: LinkUpdateManyWithoutFromInput
+  linksToConcept: LinkUpdateManyWithoutToInput
 }
 
 input ConceptUpdateManyMutationInput {
@@ -99,16 +120,42 @@ input ConceptUpdateManyMutationInput {
   official: Boolean
 }
 
-input ConceptUpdateOneRequiredInput {
-  create: ConceptCreateInput
-  update: ConceptUpdateDataInput
-  upsert: ConceptUpsertNestedInput
+input ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
+  create: ConceptCreateWithoutLinksFromConceptInput
+  update: ConceptUpdateWithoutLinksFromConceptDataInput
+  upsert: ConceptUpsertWithoutLinksFromConceptInput
   connect: ConceptWhereUniqueInput
 }
 
-input ConceptUpsertNestedInput {
-  update: ConceptUpdateDataInput!
-  create: ConceptCreateInput!
+input ConceptUpdateOneRequiredWithoutLinksToConceptInput {
+  create: ConceptCreateWithoutLinksToConceptInput
+  update: ConceptUpdateWithoutLinksToConceptDataInput
+  upsert: ConceptUpsertWithoutLinksToConceptInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptUpdateWithoutLinksFromConceptDataInput {
+  name: String
+  description: String
+  official: Boolean
+  linksToConcept: LinkUpdateManyWithoutToInput
+}
+
+input ConceptUpdateWithoutLinksToConceptDataInput {
+  name: String
+  description: String
+  official: Boolean
+  linksFromConcept: LinkUpdateManyWithoutFromInput
+}
+
+input ConceptUpsertWithoutLinksFromConceptInput {
+  update: ConceptUpdateWithoutLinksFromConceptDataInput!
+  create: ConceptCreateWithoutLinksFromConceptInput!
+}
+
+input ConceptUpsertWithoutLinksToConceptInput {
+  update: ConceptUpdateWithoutLinksToConceptDataInput!
+  create: ConceptCreateWithoutLinksToConceptInput!
 }
 
 input ConceptWhereInput {
@@ -156,6 +203,12 @@ input ConceptWhereInput {
   description_not_ends_with: String
   official: Boolean
   official_not: Boolean
+  linksFromConcept_every: LinkWhereInput
+  linksFromConcept_some: LinkWhereInput
+  linksFromConcept_none: LinkWhereInput
+  linksToConcept_every: LinkWhereInput
+  linksToConcept_some: LinkWhereInput
+  linksToConcept_none: LinkWhereInput
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -180,8 +233,30 @@ type LinkConnection {
 
 input LinkCreateInput {
   id: ID
-  from: ConceptCreateOneInput!
-  to: ConceptCreateOneInput!
+  from: ConceptCreateOneWithoutLinksFromConceptInput!
+  to: ConceptCreateOneWithoutLinksToConceptInput!
+  official: Boolean
+}
+
+input LinkCreateManyWithoutFromInput {
+  create: [LinkCreateWithoutFromInput!]
+  connect: [LinkWhereUniqueInput!]
+}
+
+input LinkCreateManyWithoutToInput {
+  create: [LinkCreateWithoutToInput!]
+  connect: [LinkWhereUniqueInput!]
+}
+
+input LinkCreateWithoutFromInput {
+  id: ID
+  to: ConceptCreateOneWithoutLinksToConceptInput!
+  official: Boolean
+}
+
+input LinkCreateWithoutToInput {
+  id: ID
+  from: ConceptCreateOneWithoutLinksFromConceptInput!
   official: Boolean
 }
 
@@ -200,6 +275,28 @@ enum LinkOrderByInput {
 type LinkPreviousValues {
   id: ID!
   official: Boolean!
+}
+
+input LinkScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  official: Boolean
+  official_not: Boolean
+  AND: [LinkScalarWhereInput!]
+  OR: [LinkScalarWhereInput!]
+  NOT: [LinkScalarWhereInput!]
 }
 
 type LinkSubscriptionPayload {
@@ -221,13 +318,78 @@ input LinkSubscriptionWhereInput {
 }
 
 input LinkUpdateInput {
-  from: ConceptUpdateOneRequiredInput
-  to: ConceptUpdateOneRequiredInput
+  from: ConceptUpdateOneRequiredWithoutLinksFromConceptInput
+  to: ConceptUpdateOneRequiredWithoutLinksToConceptInput
+  official: Boolean
+}
+
+input LinkUpdateManyDataInput {
   official: Boolean
 }
 
 input LinkUpdateManyMutationInput {
   official: Boolean
+}
+
+input LinkUpdateManyWithoutFromInput {
+  create: [LinkCreateWithoutFromInput!]
+  delete: [LinkWhereUniqueInput!]
+  connect: [LinkWhereUniqueInput!]
+  set: [LinkWhereUniqueInput!]
+  disconnect: [LinkWhereUniqueInput!]
+  update: [LinkUpdateWithWhereUniqueWithoutFromInput!]
+  upsert: [LinkUpsertWithWhereUniqueWithoutFromInput!]
+  deleteMany: [LinkScalarWhereInput!]
+  updateMany: [LinkUpdateManyWithWhereNestedInput!]
+}
+
+input LinkUpdateManyWithoutToInput {
+  create: [LinkCreateWithoutToInput!]
+  delete: [LinkWhereUniqueInput!]
+  connect: [LinkWhereUniqueInput!]
+  set: [LinkWhereUniqueInput!]
+  disconnect: [LinkWhereUniqueInput!]
+  update: [LinkUpdateWithWhereUniqueWithoutToInput!]
+  upsert: [LinkUpsertWithWhereUniqueWithoutToInput!]
+  deleteMany: [LinkScalarWhereInput!]
+  updateMany: [LinkUpdateManyWithWhereNestedInput!]
+}
+
+input LinkUpdateManyWithWhereNestedInput {
+  where: LinkScalarWhereInput!
+  data: LinkUpdateManyDataInput!
+}
+
+input LinkUpdateWithoutFromDataInput {
+  to: ConceptUpdateOneRequiredWithoutLinksToConceptInput
+  official: Boolean
+}
+
+input LinkUpdateWithoutToDataInput {
+  from: ConceptUpdateOneRequiredWithoutLinksFromConceptInput
+  official: Boolean
+}
+
+input LinkUpdateWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput!
+  data: LinkUpdateWithoutFromDataInput!
+}
+
+input LinkUpdateWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput!
+  data: LinkUpdateWithoutToDataInput!
+}
+
+input LinkUpsertWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput!
+  update: LinkUpdateWithoutFromDataInput!
+  create: LinkCreateWithoutFromInput!
+}
+
+input LinkUpsertWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput!
+  update: LinkUpdateWithoutToDataInput!
+  create: LinkCreateWithoutToInput!
 }
 
 input LinkWhereInput {

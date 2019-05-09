@@ -140,6 +140,12 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type LinkOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "official_ASC"
+  | "official_DESC";
+
 export type ConceptOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -150,17 +156,35 @@ export type ConceptOrderByInput =
   | "official_ASC"
   | "official_DESC";
 
-export type LinkOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "official_ASC"
-  | "official_DESC";
-
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type ConceptWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
+
+export interface LinkWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  from?: Maybe<ConceptWhereInput>;
+  to?: Maybe<ConceptWhereInput>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  AND?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  OR?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  NOT?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+}
 
 export interface ConceptWhereInput {
   id?: Maybe<ID_Input>;
@@ -207,6 +231,12 @@ export interface ConceptWhereInput {
   description_not_ends_with?: Maybe<String>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
+  linksFromConcept_every?: Maybe<LinkWhereInput>;
+  linksFromConcept_some?: Maybe<LinkWhereInput>;
+  linksFromConcept_none?: Maybe<LinkWhereInput>;
+  linksToConcept_every?: Maybe<LinkWhereInput>;
+  linksToConcept_some?: Maybe<LinkWhereInput>;
+  linksToConcept_none?: Maybe<LinkWhereInput>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
@@ -216,7 +246,127 @@ export type LinkWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface LinkWhereInput {
+export interface ConceptCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+}
+
+export interface LinkCreateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+}
+
+export interface LinkCreateWithoutFromInput {
+  id?: Maybe<ID_Input>;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptCreateOneWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptCreateWithoutLinksToConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+}
+
+export interface LinkCreateManyWithoutToInput {
+  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+}
+
+export interface LinkCreateWithoutToInput {
+  id?: Maybe<ID_Input>;
+  from: ConceptCreateOneWithoutLinksFromConceptInput;
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptCreateOneWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptCreateWithoutLinksFromConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+}
+
+export interface ConceptUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+}
+
+export interface LinkUpdateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  update?: Maybe<
+    | LinkUpdateWithWhereUniqueWithoutFromInput[]
+    | LinkUpdateWithWhereUniqueWithoutFromInput
+  >;
+  upsert?: Maybe<
+    | LinkUpsertWithWhereUniqueWithoutFromInput[]
+    | LinkUpsertWithWhereUniqueWithoutFromInput
+  >;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  updateMany?: Maybe<
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkUpdateWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutFromDataInput;
+}
+
+export interface LinkUpdateWithoutFromDataInput {
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptUpdateWithoutLinksToConceptDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+}
+
+export interface ConceptUpsertWithoutLinksToConceptInput {
+  update: ConceptUpdateWithoutLinksToConceptDataInput;
+  create: ConceptCreateWithoutLinksToConceptInput;
+}
+
+export interface LinkUpsertWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutFromDataInput;
+  create: LinkCreateWithoutFromInput;
+}
+
+export interface LinkScalarWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -231,26 +381,75 @@ export interface LinkWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  from?: Maybe<ConceptWhereInput>;
-  to?: Maybe<ConceptWhereInput>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
-  AND?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-  OR?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-  NOT?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
 }
 
-export interface ConceptCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
+export interface LinkUpdateManyWithWhereNestedInput {
+  where: LinkScalarWhereInput;
+  data: LinkUpdateManyDataInput;
+}
+
+export interface LinkUpdateManyDataInput {
   official?: Maybe<Boolean>;
 }
 
-export interface ConceptUpdateInput {
+export interface LinkUpdateManyWithoutToInput {
+  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  update?: Maybe<
+    | LinkUpdateWithWhereUniqueWithoutToInput[]
+    | LinkUpdateWithWhereUniqueWithoutToInput
+  >;
+  upsert?: Maybe<
+    | LinkUpsertWithWhereUniqueWithoutToInput[]
+    | LinkUpsertWithWhereUniqueWithoutToInput
+  >;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  updateMany?: Maybe<
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkUpdateWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutToDataInput;
+}
+
+export interface LinkUpdateWithoutToDataInput {
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksFromConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptUpdateWithoutLinksFromConceptDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+}
+
+export interface ConceptUpsertWithoutLinksFromConceptInput {
+  update: ConceptUpdateWithoutLinksFromConceptDataInput;
+  create: ConceptCreateWithoutLinksFromConceptInput;
+}
+
+export interface LinkUpsertWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutToDataInput;
+  create: LinkCreateWithoutToInput;
 }
 
 export interface ConceptUpdateManyMutationInput {
@@ -261,38 +460,15 @@ export interface ConceptUpdateManyMutationInput {
 
 export interface LinkCreateInput {
   id?: Maybe<ID_Input>;
-  from: ConceptCreateOneInput;
-  to: ConceptCreateOneInput;
+  from: ConceptCreateOneWithoutLinksFromConceptInput;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
   official?: Maybe<Boolean>;
-}
-
-export interface ConceptCreateOneInput {
-  create?: Maybe<ConceptCreateInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
 }
 
 export interface LinkUpdateInput {
-  from?: Maybe<ConceptUpdateOneRequiredInput>;
-  to?: Maybe<ConceptUpdateOneRequiredInput>;
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
   official?: Maybe<Boolean>;
-}
-
-export interface ConceptUpdateOneRequiredInput {
-  create?: Maybe<ConceptCreateInput>;
-  update?: Maybe<ConceptUpdateDataInput>;
-  upsert?: Maybe<ConceptUpsertNestedInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface ConceptUpdateDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-}
-
-export interface ConceptUpsertNestedInput {
-  update: ConceptUpdateDataInput;
-  create: ConceptCreateInput;
 }
 
 export interface LinkUpdateManyMutationInput {
@@ -337,6 +513,24 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
   name: () => Promise<String>;
   description: () => Promise<String>;
   official: () => Promise<Boolean>;
+  linksFromConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  linksToConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ConceptSubscription
@@ -346,6 +540,24 @@ export interface ConceptSubscription
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
+  linksFromConcept: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  linksToConcept: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ConceptNullablePromise
@@ -354,6 +566,54 @@ export interface ConceptNullablePromise
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   description: () => Promise<String>;
+  official: () => Promise<Boolean>;
+  linksFromConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  linksToConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface Link {
+  id: ID_Output;
+  official: Boolean;
+}
+
+export interface LinkPromise extends Promise<Link>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  from: <T = ConceptPromise>() => T;
+  to: <T = ConceptPromise>() => T;
+  official: () => Promise<Boolean>;
+}
+
+export interface LinkSubscription
+  extends Promise<AsyncIterator<Link>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  from: <T = ConceptSubscription>() => T;
+  to: <T = ConceptSubscription>() => T;
+  official: () => Promise<AsyncIterator<Boolean>>;
+}
+
+export interface LinkNullablePromise
+  extends Promise<Link | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  from: <T = ConceptPromise>() => T;
+  to: <T = ConceptPromise>() => T;
   official: () => Promise<Boolean>;
 }
 
@@ -432,36 +692,6 @@ export interface AggregateConceptSubscription
   extends Promise<AsyncIterator<AggregateConcept>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface Link {
-  id: ID_Output;
-  official: Boolean;
-}
-
-export interface LinkPromise extends Promise<Link>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  from: <T = ConceptPromise>() => T;
-  to: <T = ConceptPromise>() => T;
-  official: () => Promise<Boolean>;
-}
-
-export interface LinkSubscription
-  extends Promise<AsyncIterator<Link>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  from: <T = ConceptSubscription>() => T;
-  to: <T = ConceptSubscription>() => T;
-  official: () => Promise<AsyncIterator<Boolean>>;
-}
-
-export interface LinkNullablePromise
-  extends Promise<Link | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  from: <T = ConceptPromise>() => T;
-  to: <T = ConceptPromise>() => T;
-  official: () => Promise<Boolean>;
 }
 
 export interface LinkConnection {

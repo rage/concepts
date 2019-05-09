@@ -12,12 +12,12 @@ const resolvers = {
     allLinks(root, args, context) {
       return context.prisma.links()
     },
-    // linksToConcept(root, args, context) {
-    //   return context.prisma.links({ where: { to_contains: args.id } })
-    // },
-    // linksFromConcept(root, args, context) {
-    //   return context.prisma.links({ where: { from_contains: args.id } })
-    // }
+    linksToConcept(root, args, context) {
+      return context.prisma.concept({ id: args.id }).to()
+    },
+    linksFromConcept(root, args, context) {
+      return context.prisma.concept({ id: args.id }).from()
+    }
   },
   Mutation: {
     createConcept(root, args, context) {
@@ -57,6 +57,22 @@ const resolvers = {
       return context.prisma.deleteLink({ id: args.id })
     }
   },
+  Concept: {
+    linksToConcept(root, args, context) {
+      return context.prisma.concept({ id: root.id }).linksToConcept()
+    },
+    linksFromConcept(root, args, context) {
+      return context.prisma.concept({ id: root.id }).linksFromConcept()
+    },
+  },
+  Link: {
+    to(root, args, context) {
+      return context.prisma.link({ id: root.id }).to()
+    },
+    from(root, args, context) {
+      return context.prisma.link({ id: root.id }).from()
+    }
+  }
 }
 
 const options = {
