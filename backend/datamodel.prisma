@@ -25,6 +25,8 @@ type Concept {
   description: String
   # user: User! @relation(link: INLINE)
   official: Boolean! @default(value: false)
+  linksFromConcept: [Link!]! @relation(name: "From")
+  linksToConcept: [Link!]! @relation(name: "To")
 }
 
 type Link {
