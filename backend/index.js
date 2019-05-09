@@ -17,7 +17,7 @@ const resolvers = {
     },
     linksFromConcept(root, args, context) {
       return context.prisma.concept({ id: args.id }).from()
-    }
+    },
   },
   Mutation: {
     createConcept(root, args, context) {
@@ -29,6 +29,28 @@ const resolvers = {
           ? { name: args.name, official: args.official }
           : { name: args.name }
       return context.prisma.createConcept(concept)
+    },
+    async createConceptAndLinkTo(root, args, context) {
+      const concept = args.desc !== undefined
+        ? args.official !== undefined
+          ? { name: args.name, description: args.desc, official: args.official }
+          : { name: args.name, description: args.desc }
+        : args.official !== undefined
+          ? { name: args.name, official: args.official }
+          : { name: args.name }
+      const createdConcept = await context.prisma.createConcept(concept)
+
+      // Link created concept to specified concept
+      return args.linkOfficial !== undefined
+        ? context.prisma.createLink({
+          to: { connect: { id: args.to } },
+          from: { connect: { id: createdConcept.id, } },
+          official: args.linkOfficial
+        })
+        : context.prisma.createLink({
+          to: { connect: { id: args.to } },
+          from: { connect: { id: createdConcept.id } }
+        })
     },
     deleteConcept(root, args, context) {
       return context.prisma.deleteConcept({ id: args.id })

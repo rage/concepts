@@ -12,6 +12,7 @@ type Mutation {
   createConcept(name: String!, desc: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   createLink(to: ID!, from: ID!, official: Boolean): Link
+  createConceptAndLinkTo(name: String!, desc: String, official: Boolean, to: ID!, linkOfficial: Boolean): Link
   deleteLink(id: ID!): Link
 }
 
