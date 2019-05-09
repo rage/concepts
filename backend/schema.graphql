@@ -3,11 +3,16 @@ scalar DateTime
 type Query {
   allConcepts: [Concept!]!
   conceptById(id: ID!): Concept
+  allLinks: [Link!]!
+  linksToConcept(id: ID!): [Link!]!
+  linksFromConcept(id: ID!): [Link!]!
 }
 
 type Mutation {
   createConcept(name: String!, desc: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
+  createLink(to: ID!, from: ID!, official: Boolean): Link
+  deleteLink(id: ID!): Link
 }
 
 # type User {
