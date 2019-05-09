@@ -2,7 +2,8 @@ import React from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { gql } from 'apollo-boost'
 
-import Users from './components/Users'
+import ConceptList from './components/ConceptList'
+import ConceptForm from './components/ConceptForm'
 
 const ALL_USERS = gql`
 {
@@ -18,7 +19,17 @@ const App = (props) => {
 
   return (
     <div className="App">
-      <Users users={allUsers} />
+      <ConceptList concepts={[
+        {
+          "name": "Hello",
+          "id": "001"
+        },
+        {
+          "name": "World",
+          "id": "002"
+        }
+      ]}/>
+      <ConceptForm/>
     </div>
   )
 }
