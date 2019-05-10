@@ -1,5 +1,16 @@
 import { gql } from 'apollo-boost'
 
+const UPDATE_CONCEPT = gql`
+mutation updateConcept($id: ID!, $name:String!, $description: String) {
+  updateConcept(id:$id, name:$name, desc:$description) {
+    id
+    name
+    description
+    official
+  }
+}
+`
+
 const ALL_CONCEPTS = gql`
 {
     allConcepts{
@@ -55,4 +66,4 @@ mutation deleteConcept($id: ID!) {
 }
 `
 
-export { ALL_CONCEPTS, CREATE_CONCEPT, DELETE_CONCEPT, ADD_PREREQUISITE_CONCEPT }
+export { ALL_CONCEPTS, CREATE_CONCEPT, DELETE_CONCEPT, ADD_PREREQUISITE_CONCEPT, UPDATE_CONCEPT }

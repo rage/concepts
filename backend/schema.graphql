@@ -10,6 +10,7 @@ type Query {
 }
 
 type Mutation {
+  updateConcept(id: ID!, name:String!, desc: String): Concept
   createCourse(name: String!): Course
   deleteCourse(id: ID!): Course
   createConcept(name: String!, desc: String, official: Boolean): Concept

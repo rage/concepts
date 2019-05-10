@@ -39,6 +39,12 @@ const resolvers = {
           : { name: args.name }
       return context.prisma.createConcept(concept)
     },
+    updateConcept(root, args, context) {
+      return context.prisma.updateConcept({
+        where: { id: args.id },
+        data: { name: args.name, description: args.desc }
+      })
+    },
     async createConceptAndLinkTo(root, args, context) {
       const concept = args.desc !== undefined
         ? args.official !== undefined
