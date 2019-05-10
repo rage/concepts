@@ -7,6 +7,10 @@ module.exports = {
   count: Int!
 }
 
+type AggregateCourse {
+  count: Int!
+}
+
 type AggregateLink {
   count: Int!
 }
@@ -215,6 +219,103 @@ input ConceptWhereInput {
 }
 
 input ConceptWhereUniqueInput {
+  id: ID
+}
+
+type Course {
+  id: ID!
+  name: String!
+}
+
+type CourseConnection {
+  pageInfo: PageInfo!
+  edges: [CourseEdge]!
+  aggregate: AggregateCourse!
+}
+
+input CourseCreateInput {
+  id: ID
+  name: String!
+}
+
+type CourseEdge {
+  node: Course!
+  cursor: String!
+}
+
+enum CourseOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+}
+
+type CoursePreviousValues {
+  id: ID!
+  name: String!
+}
+
+type CourseSubscriptionPayload {
+  mutation: MutationType!
+  node: Course
+  updatedFields: [String!]
+  previousValues: CoursePreviousValues
+}
+
+input CourseSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CourseWhereInput
+  AND: [CourseSubscriptionWhereInput!]
+  OR: [CourseSubscriptionWhereInput!]
+  NOT: [CourseSubscriptionWhereInput!]
+}
+
+input CourseUpdateInput {
+  name: String
+}
+
+input CourseUpdateManyMutationInput {
+  name: String
+}
+
+input CourseWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [CourseWhereInput!]
+  OR: [CourseWhereInput!]
+  NOT: [CourseWhereInput!]
+}
+
+input CourseWhereUniqueInput {
   id: ID
 }
 
@@ -429,6 +530,12 @@ type Mutation {
   upsertConcept(where: ConceptWhereUniqueInput!, create: ConceptCreateInput!, update: ConceptUpdateInput!): Concept!
   deleteConcept(where: ConceptWhereUniqueInput!): Concept
   deleteManyConcepts(where: ConceptWhereInput): BatchPayload!
+  createCourse(data: CourseCreateInput!): Course!
+  updateCourse(data: CourseUpdateInput!, where: CourseWhereUniqueInput!): Course
+  updateManyCourses(data: CourseUpdateManyMutationInput!, where: CourseWhereInput): BatchPayload!
+  upsertCourse(where: CourseWhereUniqueInput!, create: CourseCreateInput!, update: CourseUpdateInput!): Course!
+  deleteCourse(where: CourseWhereUniqueInput!): Course
+  deleteManyCourses(where: CourseWhereInput): BatchPayload!
   createLink(data: LinkCreateInput!): Link!
   updateLink(data: LinkUpdateInput!, where: LinkWhereUniqueInput!): Link
   updateManyLinks(data: LinkUpdateManyMutationInput!, where: LinkWhereInput): BatchPayload!
@@ -458,6 +565,9 @@ type Query {
   concept(where: ConceptWhereUniqueInput!): Concept
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept]!
   conceptsConnection(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConceptConnection!
+  course(where: CourseWhereUniqueInput!): Course
+  courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course]!
+  coursesConnection(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseConnection!
   link(where: LinkWhereUniqueInput!): Link
   links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
   linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
@@ -466,6 +576,7 @@ type Query {
 
 type Subscription {
   concept(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
+  course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
 }
 `

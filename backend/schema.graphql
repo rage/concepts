@@ -2,6 +2,7 @@ scalar DateTime
 
 type Query {
   allConcepts: [Concept!]!
+  allCourses: [Course!]!
   conceptById(id: ID!): Concept
   allLinks: [Link!]!
   linksToConcept(id: ID!): [Link!]!
@@ -9,6 +10,8 @@ type Query {
 }
 
 type Mutation {
+  createCourse(name: String!): Course
+  deleteCourse(id: ID!): Course
   createConcept(name: String!, desc: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   createLink(to: ID!, from: ID!, official: Boolean): Link
@@ -21,11 +24,10 @@ type Mutation {
 #   username: String!
 # }
 
-# type Course {
-#   id: ID!
-#   name: String!
-#   instances: [Instance!]!
-# }
+type Course {
+  id: ID!
+  name: String!
+}
 
 # type Instance {
 #   id: ID!

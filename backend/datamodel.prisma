@@ -4,11 +4,11 @@
 #   concepts: [Concept!]!
 # }
 
-# type Course {
-#   id: ID! @id
-#   name: String!
+type Course {
+  id: ID! @id
+  name: String!
 #   instances: [Instance!]!
-# }
+}
 
 # type Instance {
 #   id: ID! @id
