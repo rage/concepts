@@ -7,6 +7,7 @@
 type Course {
   id: ID! @id
   name: String!
+  concepts: [Concept!]!
 #   instances: [Instance!]!
 }
 
@@ -27,6 +28,7 @@ type Concept {
   official: Boolean! @default(value: false)
   linksFromConcept: [Link!]! @relation(name: "From")
   linksToConcept: [Link!]! @relation(name: "To")
+  courses: [Course!]!
 }
 
 type Link {

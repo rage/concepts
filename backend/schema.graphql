@@ -13,7 +13,7 @@ type Mutation {
   updateConcept(id: ID!, name:String!, desc: String): Concept
   createCourse(name: String!): Course
   deleteCourse(id: ID!): Course
-  createConcept(name: String!, desc: String, official: Boolean): Concept
+  createConcept(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   createLink(to: ID!, from: ID!, official: Boolean): Link
   createConceptAndLinkTo(name: String!, desc: String, official: Boolean, to: ID!, linkOfficial: Boolean): Link
@@ -28,6 +28,7 @@ type Mutation {
 type Course {
   id: ID!
   name: String!
+  concepts: [Concept!]!
 }
 
 # type Instance {
@@ -45,6 +46,7 @@ type Concept {
   official: Boolean!
   linksFromConcept: [Link!]!
   linksToConcept: [Link!]!
+  courses: [Course!]!
 }
 
 type Link {

@@ -37,7 +37,8 @@ const resolvers = {
         : args.official !== undefined
           ? { name: args.name, official: args.official }
           : { name: args.name }
-      return context.prisma.createConcept(concept)
+      
+      return context.prisma.createConcept({...concept, courses: { connect: [{id: args.course_id}]} })
     },
     updateConcept(root, args, context) {
       return context.prisma.updateConcept({
@@ -101,6 +102,9 @@ const resolvers = {
     linksFromConcept(root, args, context) {
       return context.prisma.concept({ id: root.id }).linksFromConcept()
     },
+    courses(root, args, context) {
+      return context.prisma.concept({ id: root.id}).courses()
+    }
   },
   Link: {
     to(root, args, context) {
@@ -108,6 +112,11 @@ const resolvers = {
     },
     from(root, args, context) {
       return context.prisma.link({ id: root.id }).from()
+    }
+  },
+  Course: {
+    concepts(root, args, context) {
+      return context.prisma.course({ id: root.id}).concepts()
     }
   }
 }

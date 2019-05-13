@@ -26,6 +26,7 @@ type Concept {
   official: Boolean!
   linksFromConcept(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
   linksToConcept(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
+  courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
 }
 
 type ConceptConnection {
@@ -41,6 +42,12 @@ input ConceptCreateInput {
   official: Boolean
   linksFromConcept: LinkCreateManyWithoutFromInput
   linksToConcept: LinkCreateManyWithoutToInput
+  courses: CourseCreateManyWithoutConceptsInput
+}
+
+input ConceptCreateManyWithoutCoursesInput {
+  create: [ConceptCreateWithoutCoursesInput!]
+  connect: [ConceptWhereUniqueInput!]
 }
 
 input ConceptCreateOneWithoutLinksFromConceptInput {
@@ -53,12 +60,22 @@ input ConceptCreateOneWithoutLinksToConceptInput {
   connect: ConceptWhereUniqueInput
 }
 
+input ConceptCreateWithoutCoursesInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  linksFromConcept: LinkCreateManyWithoutFromInput
+  linksToConcept: LinkCreateManyWithoutToInput
+}
+
 input ConceptCreateWithoutLinksFromConceptInput {
   id: ID
   name: String!
   description: String
   official: Boolean
   linksToConcept: LinkCreateManyWithoutToInput
+  courses: CourseCreateManyWithoutConceptsInput
 }
 
 input ConceptCreateWithoutLinksToConceptInput {
@@ -67,6 +84,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   description: String
   official: Boolean
   linksFromConcept: LinkCreateManyWithoutFromInput
+  courses: CourseCreateManyWithoutConceptsInput
 }
 
 type ConceptEdge {
@@ -90,6 +108,56 @@ type ConceptPreviousValues {
   name: String!
   description: String
   official: Boolean!
+}
+
+input ConceptScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  official: Boolean
+  official_not: Boolean
+  AND: [ConceptScalarWhereInput!]
+  OR: [ConceptScalarWhereInput!]
+  NOT: [ConceptScalarWhereInput!]
 }
 
 type ConceptSubscriptionPayload {
@@ -116,12 +184,36 @@ input ConceptUpdateInput {
   official: Boolean
   linksFromConcept: LinkUpdateManyWithoutFromInput
   linksToConcept: LinkUpdateManyWithoutToInput
+  courses: CourseUpdateManyWithoutConceptsInput
+}
+
+input ConceptUpdateManyDataInput {
+  name: String
+  description: String
+  official: Boolean
 }
 
 input ConceptUpdateManyMutationInput {
   name: String
   description: String
   official: Boolean
+}
+
+input ConceptUpdateManyWithoutCoursesInput {
+  create: [ConceptCreateWithoutCoursesInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutCoursesInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutCoursesInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptUpdateManyWithWhereNestedInput {
+  where: ConceptScalarWhereInput!
+  data: ConceptUpdateManyDataInput!
 }
 
 input ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
@@ -138,11 +230,20 @@ input ConceptUpdateOneRequiredWithoutLinksToConceptInput {
   connect: ConceptWhereUniqueInput
 }
 
+input ConceptUpdateWithoutCoursesDataInput {
+  name: String
+  description: String
+  official: Boolean
+  linksFromConcept: LinkUpdateManyWithoutFromInput
+  linksToConcept: LinkUpdateManyWithoutToInput
+}
+
 input ConceptUpdateWithoutLinksFromConceptDataInput {
   name: String
   description: String
   official: Boolean
   linksToConcept: LinkUpdateManyWithoutToInput
+  courses: CourseUpdateManyWithoutConceptsInput
 }
 
 input ConceptUpdateWithoutLinksToConceptDataInput {
@@ -150,6 +251,12 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   description: String
   official: Boolean
   linksFromConcept: LinkUpdateManyWithoutFromInput
+  courses: CourseUpdateManyWithoutConceptsInput
+}
+
+input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutCoursesDataInput!
 }
 
 input ConceptUpsertWithoutLinksFromConceptInput {
@@ -160,6 +267,12 @@ input ConceptUpsertWithoutLinksFromConceptInput {
 input ConceptUpsertWithoutLinksToConceptInput {
   update: ConceptUpdateWithoutLinksToConceptDataInput!
   create: ConceptCreateWithoutLinksToConceptInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutCoursesDataInput!
+  create: ConceptCreateWithoutCoursesInput!
 }
 
 input ConceptWhereInput {
@@ -213,6 +326,9 @@ input ConceptWhereInput {
   linksToConcept_every: LinkWhereInput
   linksToConcept_some: LinkWhereInput
   linksToConcept_none: LinkWhereInput
+  courses_every: CourseWhereInput
+  courses_some: CourseWhereInput
+  courses_none: CourseWhereInput
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -225,6 +341,7 @@ input ConceptWhereUniqueInput {
 type Course {
   id: ID!
   name: String!
+  concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
 }
 
 type CourseConnection {
@@ -234,6 +351,17 @@ type CourseConnection {
 }
 
 input CourseCreateInput {
+  id: ID
+  name: String!
+  concepts: ConceptCreateManyWithoutCoursesInput
+}
+
+input CourseCreateManyWithoutConceptsInput {
+  create: [CourseCreateWithoutConceptsInput!]
+  connect: [CourseWhereUniqueInput!]
+}
+
+input CourseCreateWithoutConceptsInput {
   id: ID
   name: String!
 }
@@ -253,6 +381,40 @@ enum CourseOrderByInput {
 type CoursePreviousValues {
   id: ID!
   name: String!
+}
+
+input CourseScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [CourseScalarWhereInput!]
+  OR: [CourseScalarWhereInput!]
+  NOT: [CourseScalarWhereInput!]
 }
 
 type CourseSubscriptionPayload {
@@ -275,10 +437,47 @@ input CourseSubscriptionWhereInput {
 
 input CourseUpdateInput {
   name: String
+  concepts: ConceptUpdateManyWithoutCoursesInput
+}
+
+input CourseUpdateManyDataInput {
+  name: String
 }
 
 input CourseUpdateManyMutationInput {
   name: String
+}
+
+input CourseUpdateManyWithoutConceptsInput {
+  create: [CourseCreateWithoutConceptsInput!]
+  delete: [CourseWhereUniqueInput!]
+  connect: [CourseWhereUniqueInput!]
+  set: [CourseWhereUniqueInput!]
+  disconnect: [CourseWhereUniqueInput!]
+  update: [CourseUpdateWithWhereUniqueWithoutConceptsInput!]
+  upsert: [CourseUpsertWithWhereUniqueWithoutConceptsInput!]
+  deleteMany: [CourseScalarWhereInput!]
+  updateMany: [CourseUpdateManyWithWhereNestedInput!]
+}
+
+input CourseUpdateManyWithWhereNestedInput {
+  where: CourseScalarWhereInput!
+  data: CourseUpdateManyDataInput!
+}
+
+input CourseUpdateWithoutConceptsDataInput {
+  name: String
+}
+
+input CourseUpdateWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput!
+  data: CourseUpdateWithoutConceptsDataInput!
+}
+
+input CourseUpsertWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput!
+  update: CourseUpdateWithoutConceptsDataInput!
+  create: CourseCreateWithoutConceptsInput!
 }
 
 input CourseWhereInput {
@@ -310,6 +509,9 @@ input CourseWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  concepts_every: ConceptWhereInput
+  concepts_some: ConceptWhereInput
+  concepts_none: ConceptWhereInput
   AND: [CourseWhereInput!]
   OR: [CourseWhereInput!]
   NOT: [CourseWhereInput!]
