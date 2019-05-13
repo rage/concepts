@@ -1,3 +1,37 @@
-table, th, td {
-    border: 1px solid black;
+th, td {
+    border: 1px solid gray;
 }
+
+td {
+    padding: 5px;
+}
+
+.conceptList table {
+    margin: 15px 0;
+    border: 1px solid black;
+    table-layout: fixed;
+    width: 100%; /* must have this set */
+  }
+
+.courseList table {
+    margin: 15px 0;
+    border: 1px solid black;
+    table-layout: fixed;
+    width: 100%; /* must have this set */
+  }
+
+a {
+    text-decoration: none;
+    color: blue;
+}
+
+.App {
+    margin: auto;
+}
+
+body {
+    max-width: 80%;
+    margin: 0 auto;
+    background: white;
+    padding: 10px;
+  }

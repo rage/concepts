@@ -12,7 +12,7 @@ const CourseList = () => {
     refetchQueries: [{ query: ALL_COURSES }]
   })
   return (
-    <div>
+    <div className="courseList">
       <table>
         <thead>
           <tr>

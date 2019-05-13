@@ -39,24 +39,22 @@ const ConnectionForm = ({ concept, onConnect }) => {
 
   return (
     <div>
-      {visible ?
-        <form style={{ alignContent: 'left' }} onSubmit={submit}>
-          <div>
-            <label>
-              Name
-            </label>
-            <input name="name" value={name} onChange={(e) => setName(e.target.value)}></input>
-          </div>
-          <div>
-            <label>
-              Description
-            </label>
-            <input name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
-          </div>
-          <button type="submit"> Add </button> <button onClick={toggleVisibility}> Cancel </button>
-        </form> :
-        <button style={buttonStyle} onClick={toggleVisibility}> + </button>
-      }
+      <form onSubmit={submit} style={{ display: visible ? '' : 'none' }}>
+        <div>
+          <label>
+            Name
+          </label>
+          <input name="name" value={name} onChange={(e) => setName(e.target.value)}></input>
+        </div>
+        <div>
+          <label>
+            Description
+          </label>
+          <input name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        </div>
+        <button type="submit"> Add </button> <button type="button" onClick={toggleVisibility}> Cancel </button>
+      </form>
+      <button style={{ ...buttonStyle, display: visible ? 'none' : '' }} onClick={toggleVisibility}> + </button>
     </div>
   )
 }
@@ -64,9 +62,7 @@ const ConnectionForm = ({ concept, onConnect }) => {
 const Concept = ({ concept, onConnect }) => (
   <tr style={{ textAlign: 'left' }}>
     <td valign="top" >
-      <center>
-        <ConnectionForm concept={concept} onConnect={onConnect} />
-      </center>
+      <ConnectionForm concept={concept} onConnect={onConnect} />
       <div style={prerequisiteStyle}>
         {
           concept.linksToConcept.map(link => <div key={link.from.id}> {link.from.name} </div>)

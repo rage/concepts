@@ -30,19 +30,14 @@ const ConceptList = ({ course_id }) => {
     })
   }
 
-  const tableStyle = {
-    border: '1px solid black',
-    width: '100%'
-  }
-
   return (
-    <div>
+    <div className="conceptList">
       {
         loading ?
           <div> Loading concepts... </div> :
           <div>
             <h3>{data.courseById && data.courseById.name}</h3>
-            <table style={tableStyle}>
+            <table>
               <thead>
                 <tr>
                   <th>
