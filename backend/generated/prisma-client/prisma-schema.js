@@ -19,6 +19,10 @@ type AggregateResource {
   count: Int!
 }
 
+type AggregateURL {
+  count: Int!
+}
+
 type BatchPayload {
   count: Long!
 }
@@ -802,6 +806,12 @@ type Mutation {
   upsertResource(where: ResourceWhereUniqueInput!, create: ResourceCreateInput!, update: ResourceUpdateInput!): Resource!
   deleteResource(where: ResourceWhereUniqueInput!): Resource
   deleteManyResources(where: ResourceWhereInput): BatchPayload!
+  createURL(data: URLCreateInput!): URL!
+  updateURL(data: URLUpdateInput!, where: URLWhereUniqueInput!): URL
+  updateManyURLs(data: URLUpdateManyMutationInput!, where: URLWhereInput): BatchPayload!
+  upsertURL(where: URLWhereUniqueInput!, create: URLCreateInput!, update: URLUpdateInput!): URL!
+  deleteURL(where: URLWhereUniqueInput!): URL
+  deleteManyURLs(where: URLWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -834,6 +844,9 @@ type Query {
   resource(where: ResourceWhereUniqueInput!): Resource
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource]!
   resourcesConnection(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResourceConnection!
+  uRL(where: URLWhereUniqueInput!): URL
+  uRLs(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL]!
+  uRLsConnection(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): URLConnection!
   node(id: ID!): Node
 }
 
@@ -842,6 +855,7 @@ type Resource {
   concept: Concept!
   name: String!
   description: String!
+  urls(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL!]
 }
 
 type ResourceConnection {
@@ -855,6 +869,7 @@ input ResourceCreateInput {
   concept: ConceptCreateOneWithoutResourcesInput!
   name: String!
   description: String!
+  urls: URLCreateManyWithoutResourceInput
 }
 
 input ResourceCreateManyWithoutConceptInput {
@@ -862,8 +877,21 @@ input ResourceCreateManyWithoutConceptInput {
   connect: [ResourceWhereUniqueInput!]
 }
 
+input ResourceCreateOneWithoutUrlsInput {
+  create: ResourceCreateWithoutUrlsInput
+  connect: ResourceWhereUniqueInput
+}
+
 input ResourceCreateWithoutConceptInput {
   id: ID
+  name: String!
+  description: String!
+  urls: URLCreateManyWithoutResourceInput
+}
+
+input ResourceCreateWithoutUrlsInput {
+  id: ID
+  concept: ConceptCreateOneWithoutResourcesInput!
   name: String!
   description: String!
 }
@@ -958,6 +986,7 @@ input ResourceUpdateInput {
   concept: ConceptUpdateOneRequiredWithoutResourcesInput
   name: String
   description: String
+  urls: URLUpdateManyWithoutResourceInput
 }
 
 input ResourceUpdateManyDataInput {
@@ -987,7 +1016,21 @@ input ResourceUpdateManyWithWhereNestedInput {
   data: ResourceUpdateManyDataInput!
 }
 
+input ResourceUpdateOneRequiredWithoutUrlsInput {
+  create: ResourceCreateWithoutUrlsInput
+  update: ResourceUpdateWithoutUrlsDataInput
+  upsert: ResourceUpsertWithoutUrlsInput
+  connect: ResourceWhereUniqueInput
+}
+
 input ResourceUpdateWithoutConceptDataInput {
+  name: String
+  description: String
+  urls: URLUpdateManyWithoutResourceInput
+}
+
+input ResourceUpdateWithoutUrlsDataInput {
+  concept: ConceptUpdateOneRequiredWithoutResourcesInput
   name: String
   description: String
 }
@@ -995,6 +1038,11 @@ input ResourceUpdateWithoutConceptDataInput {
 input ResourceUpdateWithWhereUniqueWithoutConceptInput {
   where: ResourceWhereUniqueInput!
   data: ResourceUpdateWithoutConceptDataInput!
+}
+
+input ResourceUpsertWithoutUrlsInput {
+  update: ResourceUpdateWithoutUrlsDataInput!
+  create: ResourceCreateWithoutUrlsInput!
 }
 
 input ResourceUpsertWithWhereUniqueWithoutConceptInput {
@@ -1047,6 +1095,9 @@ input ResourceWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  urls_every: URLWhereInput
+  urls_some: URLWhereInput
+  urls_none: URLWhereInput
   AND: [ResourceWhereInput!]
   OR: [ResourceWhereInput!]
   NOT: [ResourceWhereInput!]
@@ -1061,6 +1112,188 @@ type Subscription {
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
   resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
+  uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
+}
+
+type URL {
+  id: ID!
+  address: String!
+  resource: Resource!
+}
+
+type URLConnection {
+  pageInfo: PageInfo!
+  edges: [URLEdge]!
+  aggregate: AggregateURL!
+}
+
+input URLCreateInput {
+  id: ID
+  address: String!
+  resource: ResourceCreateOneWithoutUrlsInput!
+}
+
+input URLCreateManyWithoutResourceInput {
+  create: [URLCreateWithoutResourceInput!]
+  connect: [URLWhereUniqueInput!]
+}
+
+input URLCreateWithoutResourceInput {
+  id: ID
+  address: String!
+}
+
+type URLEdge {
+  node: URL!
+  cursor: String!
+}
+
+enum URLOrderByInput {
+  id_ASC
+  id_DESC
+  address_ASC
+  address_DESC
+}
+
+type URLPreviousValues {
+  id: ID!
+  address: String!
+}
+
+input URLScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  address: String
+  address_not: String
+  address_in: [String!]
+  address_not_in: [String!]
+  address_lt: String
+  address_lte: String
+  address_gt: String
+  address_gte: String
+  address_contains: String
+  address_not_contains: String
+  address_starts_with: String
+  address_not_starts_with: String
+  address_ends_with: String
+  address_not_ends_with: String
+  AND: [URLScalarWhereInput!]
+  OR: [URLScalarWhereInput!]
+  NOT: [URLScalarWhereInput!]
+}
+
+type URLSubscriptionPayload {
+  mutation: MutationType!
+  node: URL
+  updatedFields: [String!]
+  previousValues: URLPreviousValues
+}
+
+input URLSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: URLWhereInput
+  AND: [URLSubscriptionWhereInput!]
+  OR: [URLSubscriptionWhereInput!]
+  NOT: [URLSubscriptionWhereInput!]
+}
+
+input URLUpdateInput {
+  address: String
+  resource: ResourceUpdateOneRequiredWithoutUrlsInput
+}
+
+input URLUpdateManyDataInput {
+  address: String
+}
+
+input URLUpdateManyMutationInput {
+  address: String
+}
+
+input URLUpdateManyWithoutResourceInput {
+  create: [URLCreateWithoutResourceInput!]
+  delete: [URLWhereUniqueInput!]
+  connect: [URLWhereUniqueInput!]
+  set: [URLWhereUniqueInput!]
+  disconnect: [URLWhereUniqueInput!]
+  update: [URLUpdateWithWhereUniqueWithoutResourceInput!]
+  upsert: [URLUpsertWithWhereUniqueWithoutResourceInput!]
+  deleteMany: [URLScalarWhereInput!]
+  updateMany: [URLUpdateManyWithWhereNestedInput!]
+}
+
+input URLUpdateManyWithWhereNestedInput {
+  where: URLScalarWhereInput!
+  data: URLUpdateManyDataInput!
+}
+
+input URLUpdateWithoutResourceDataInput {
+  address: String
+}
+
+input URLUpdateWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput!
+  data: URLUpdateWithoutResourceDataInput!
+}
+
+input URLUpsertWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput!
+  update: URLUpdateWithoutResourceDataInput!
+  create: URLCreateWithoutResourceInput!
+}
+
+input URLWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  address: String
+  address_not: String
+  address_in: [String!]
+  address_not_in: [String!]
+  address_lt: String
+  address_lte: String
+  address_gt: String
+  address_gte: String
+  address_contains: String
+  address_not_contains: String
+  address_starts_with: String
+  address_not_starts_with: String
+  address_ends_with: String
+  address_not_ends_with: String
+  resource: ResourceWhereInput
+  AND: [URLWhereInput!]
+  OR: [URLWhereInput!]
+  NOT: [URLWhereInput!]
+}
+
+input URLWhereUniqueInput {
+  id: ID
 }
 `
       }

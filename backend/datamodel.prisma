@@ -37,6 +37,13 @@ type Resource {
   concept: Concept!
   name: String!
   description: String!
+  urls: [URL!]!
+}
+
+type URL {
+  id: ID! @id
+  address: String!
+  resource: Resource!
 }
 
 type Link {
