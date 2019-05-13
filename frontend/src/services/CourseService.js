@@ -5,6 +5,10 @@ const ALL_COURSES = gql`
   allCourses {
     id
     name
+    concepts {
+      id
+      name
+    }
   }
 }
 `

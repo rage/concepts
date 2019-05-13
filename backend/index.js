@@ -54,7 +54,7 @@ const resolvers = {
         : args.official !== undefined
           ? { name: args.name, official: args.official }
           : { name: args.name }
-      const createdConcept = await context.prisma.createConcept(concept)
+      const createdConcept = await context.prisma.createConcept({...concept, courses: { connect: [{id: args.course_id}]} })
 
       // Link created concept to specified concept
       return args.linkOfficial !== undefined
