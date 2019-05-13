@@ -13,6 +13,14 @@ var models = [
     embedded: false
   },
   {
+    name: "Resource",
+    embedded: false
+  },
+  {
+    name: "URL",
+    embedded: false
+  },
+  {
     name: "Link",
     embedded: false
   }

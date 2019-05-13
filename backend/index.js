@@ -3,6 +3,12 @@ const { GraphQLServer } = require('graphql-yoga')
 
 const resolvers = {
   Query: {
+    allURLs(root, args, context) {
+      return context.prisma.uRLs()
+    },
+    allResources(root, args, context) {
+      return context.prisma.resources()
+    },
     allCourses(root, args, context) {
       return context.prisma.courses()
     },
@@ -26,6 +32,12 @@ const resolvers = {
     },
   },
   Mutation: {
+    createURL(root, args, context) {
+      return context.prisma.createURL({ address: args.address, resource: { connect : { id: args.resource_id }}})
+    },
+    createResource(root, args, context) {
+      return context.prisma.createResource({ name: args.name, description: args.desc, concept: { connect: { id: args.concept_id } } })
+    },
     createCourse(root, args, context) {
       return context.prisma.createCourse({ name: args.name })
     },
@@ -120,6 +132,21 @@ const resolvers = {
   Course: {
     concepts(root, args, context) {
       return context.prisma.course({ id: root.id }).concepts()
+    }
+  },
+  Concept: {
+    resources(root, args, context) {
+      return context.prisma.concept({ id: root.id }).resources()
+    }
+  },
+  Resource: {
+    urls(root, args, context) {
+      return context.prisma.resource({ id: root.id }).urls()
+    }
+  },
+  URL: {
+    resource(root, args, context) {
+      return context.prisma.uRL({ id: root.id }).resource()
     }
   }
 }

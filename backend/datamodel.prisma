@@ -29,6 +29,21 @@ type Concept {
   linksFromConcept: [Link!]! @relation(name: "From")
   linksToConcept: [Link!]! @relation(name: "To")
   courses: [Course!]!
+  resources: [Resource!]!
+}
+
+type Resource {
+  id: ID! @id
+  concept: Concept!
+  name: String!
+  description: String!
+  urls: [URL!]!
+}
+
+type URL {
+  id: ID! @id
+  address: String!
+  resource: Resource!
 }
 
 type Link {
