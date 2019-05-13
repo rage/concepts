@@ -33,7 +33,7 @@ const resolvers = {
       return context.prisma.createURL({ address: args.address, resource: { connect : { id: args.resource_id }}})
     },
     createResource(root, args, context) {
-      return context.prisma.createResource({ name: args.name, description: args.description, concept: { connect: { id: args.concept_id } } })
+      return context.prisma.createResource({ name: args.name, description: args.desc, concept: { connect: { id: args.concept_id } } })
     },
     createCourse(root, args, context) {
       return context.prisma.createCourse({ name : args.name })
