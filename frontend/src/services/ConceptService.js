@@ -19,7 +19,7 @@ const ALL_CONCEPTS = gql`
         description
         official
         linksToConcept {
-            from{
+            from {
                 id
                 name
                 description
@@ -31,10 +31,9 @@ const ALL_CONCEPTS = gql`
 `
 
 const ADD_PREREQUISITE_CONCEPT = gql`
-mutation createConceptAndLinkTo($name: String!, $description: String!, $to:ID!, $course_id:ID!) {
-  createConceptAndLinkTo(name: $name, desc: $description, to:$to, course_id:$course_id) {
+mutation createConceptAndLinkTo($name: String!, $description: String!, $to:ID!) {
+  createConceptAndLinkTo(name: $name, desc: $description, to:$to) {
     id
-    course_id
     to {
       id
       name
@@ -54,7 +53,6 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     name
     description
     official
-    course_id
   }
 }
 `

@@ -12,6 +12,9 @@ const resolvers = {
     allCourses(root, args, context) {
       return context.prisma.courses()
     },
+    courseById(root, args, context) {
+      return context.prisma.course({ id: args.id })
+    },
     allConcepts(root, args, context) {
       return context.prisma.concepts()
     },
@@ -36,7 +39,7 @@ const resolvers = {
       return context.prisma.createResource({ name: args.name, description: args.desc, concept: { connect: { id: args.concept_id } } })
     },
     createCourse(root, args, context) {
-      return context.prisma.createCourse({ name : args.name })
+      return context.prisma.createCourse({ name: args.name })
     },
     deleteCourse(root, args, context) {
       return context.prisma.deleteCourse({ id: args.id })
@@ -49,8 +52,8 @@ const resolvers = {
         : args.official !== undefined
           ? { name: args.name, official: args.official }
           : { name: args.name }
-      
-      return context.prisma.createConcept({...concept, courses: { connect: [{id: args.course_id}]} })
+
+      return context.prisma.createConcept({ ...concept, courses: { connect: [{ id: args.course_id }] } })
     },
     updateConcept(root, args, context) {
       return context.prisma.updateConcept({
@@ -66,7 +69,7 @@ const resolvers = {
         : args.official !== undefined
           ? { name: args.name, official: args.official }
           : { name: args.name }
-      const createdConcept = await context.prisma.createConcept({...concept, courses: { connect: [{id: args.course_id}]} })
+      const createdConcept = await context.prisma.createConcept(concept)
 
       // Link created concept to specified concept
       return args.linkOfficial !== undefined
@@ -115,7 +118,7 @@ const resolvers = {
       return context.prisma.concept({ id: root.id }).linksFromConcept()
     },
     courses(root, args, context) {
-      return context.prisma.concept({ id: root.id}).courses()
+      return context.prisma.concept({ id: root.id }).courses()
     }
   },
   Link: {
@@ -128,7 +131,7 @@ const resolvers = {
   },
   Course: {
     concepts(root, args, context) {
-      return context.prisma.course({ id: root.id}).concepts()
+      return context.prisma.course({ id: root.id }).concepts()
     }
   },
   Concept: {
