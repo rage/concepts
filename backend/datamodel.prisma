@@ -4,11 +4,12 @@
 #   concepts: [Concept!]!
 # }
 
-# type Course {
-#   id: ID! @id
-#   name: String!
+type Course {
+  id: ID! @id
+  name: String!
+  concepts: [Concept!]!
 #   instances: [Instance!]!
-# }
+}
 
 # type Instance {
 #   id: ID! @id
@@ -27,6 +28,7 @@ type Concept {
   official: Boolean! @default(value: false)
   linksFromConcept: [Link!]! @relation(name: "From")
   linksToConcept: [Link!]! @relation(name: "To")
+  courses: [Course!]!
 }
 
 type Link {

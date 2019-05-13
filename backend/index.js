@@ -3,6 +3,9 @@ const { GraphQLServer } = require('graphql-yoga')
 
 const resolvers = {
   Query: {
+    allCourses(root, args, context) {
+      return context.prisma.courses()
+    },
     allConcepts(root, args, context) {
       return context.prisma.concepts()
     },
@@ -20,6 +23,12 @@ const resolvers = {
     },
   },
   Mutation: {
+    createCourse(root, args, context) {
+      return context.prisma.createCourse({ name : args.name })
+    },
+    deleteCourse(root, args, context) {
+      return context.prisma.deleteCourse({ id: args.id })
+    },
     createConcept(root, args, context) {
       const concept = args.desc !== undefined
         ? args.official !== undefined
@@ -28,7 +37,14 @@ const resolvers = {
         : args.official !== undefined
           ? { name: args.name, official: args.official }
           : { name: args.name }
-      return context.prisma.createConcept(concept)
+      
+      return context.prisma.createConcept({...concept, courses: { connect: [{id: args.course_id}]} })
+    },
+    updateConcept(root, args, context) {
+      return context.prisma.updateConcept({
+        where: { id: args.id },
+        data: { name: args.name, description: args.desc }
+      })
     },
     async createConceptAndLinkTo(root, args, context) {
       const concept = args.desc !== undefined
@@ -38,7 +54,7 @@ const resolvers = {
         : args.official !== undefined
           ? { name: args.name, official: args.official }
           : { name: args.name }
-      const createdConcept = await context.prisma.createConcept(concept)
+      const createdConcept = await context.prisma.createConcept({...concept, courses: { connect: [{id: args.course_id}]} })
 
       // Link created concept to specified concept
       return args.linkOfficial !== undefined
@@ -86,6 +102,9 @@ const resolvers = {
     linksFromConcept(root, args, context) {
       return context.prisma.concept({ id: root.id }).linksFromConcept()
     },
+    courses(root, args, context) {
+      return context.prisma.concept({ id: root.id}).courses()
+    }
   },
   Link: {
     to(root, args, context) {
@@ -93,6 +112,11 @@ const resolvers = {
     },
     from(root, args, context) {
       return context.prisma.link({ id: root.id }).from()
+    }
+  },
+  Course: {
+    concepts(root, args, context) {
+      return context.prisma.course({ id: root.id}).concepts()
     }
   }
 }
