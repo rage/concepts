@@ -33,7 +33,7 @@ const resolvers = {
   },
   Mutation: {
     createURL(root, args, context) {
-      return context.prisma.createURL({ address: args.address, resource: { connect : { id: args.resource_id }}})
+      return context.prisma.createURL({ address: args.address, resource: { connect: { id: args.resource_id } } })
     },
     createResource(root, args, context) {
       return context.prisma.createResource({ name: args.name, description: args.desc, concept: { connect: { id: args.concept_id } } })
@@ -119,6 +119,9 @@ const resolvers = {
     },
     courses(root, args, context) {
       return context.prisma.concept({ id: root.id }).courses()
+    },
+    resources(root, args, context) {
+      return context.prisma.concept({ id: root.id }).resources()
     }
   },
   Link: {
@@ -132,11 +135,6 @@ const resolvers = {
   Course: {
     concepts(root, args, context) {
       return context.prisma.course({ id: root.id }).concepts()
-    }
-  },
-  Concept: {
-    resources(root, args, context) {
-      return context.prisma.concept({ id: root.id }).resources()
     }
   },
   Resource: {
