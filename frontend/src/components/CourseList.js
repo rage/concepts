@@ -1,17 +1,26 @@
 import React from 'react'
 import Course from './Course'
+import CourseForm from './CourseForm'
 
-const CourseList = ({ courses }) => {
+import { useQuery, useMutation } from 'react-apollo-hooks'
+import { ALL_COURSES, CREATE_COURSE } from '../services/CourseService'
+
+const CourseList = () => {
+  const courses = useQuery(ALL_COURSES)
+
+  const createCourse = useMutation(CREATE_COURSE, {
+    refetchQueries: [{ query: ALL_COURSES }]
+  })
   return (
     <div>
       <table>
         <thead>
           <tr>
             <th>
-                  ID
+              ID
             </th>
             <th>
-                  Name
+              Name
             </th>
           </tr>
         </thead>
@@ -24,6 +33,7 @@ const CourseList = ({ courses }) => {
           }
         </tbody>
       </table>
+      <CourseForm createCourse={createCourse} />
     </div>
   )
 }
