@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 
-const ConceptForm = ({ createConcept }) => {
+const ConceptForm = ({ createConcept, course_id }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [official, setOfficial] = useState(false)
 
   const submit = async (event) => {
     event.preventDefault()
+    console.log('course_id', course_id)
     await createConcept({
-      variables: { name, description, official }
+      variables: { name, description, official, course_id }
     })
     setName('')
     setDescription('')

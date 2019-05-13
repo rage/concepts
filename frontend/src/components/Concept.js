@@ -58,13 +58,10 @@ const ConnectionForm = ({ concept, onConnect }) => {
         <button style={buttonStyle} onClick={toggleVisibility}> + </button>
       }
     </div>
-
   )
-
-
 }
 
-const Concept = ({ concept, onDelete, onConnect }) => (
+const Concept = ({ concept, onConnect }) => (
   <tr style={{ textAlign: 'left' }}>
     <td valign="top" >
       <center>
