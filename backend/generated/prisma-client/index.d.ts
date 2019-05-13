@@ -19,6 +19,7 @@ export interface Exists {
   concept: (where?: ConceptWhereInput) => Promise<boolean>;
   course: (where?: CourseWhereInput) => Promise<boolean>;
   link: (where?: LinkWhereInput) => Promise<boolean>;
+  resource: (where?: ResourceWhereInput) => Promise<boolean>;
 }
 
 export interface Node {}
@@ -97,6 +98,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => LinkConnectionPromise;
+  resource: (where: ResourceWhereUniqueInput) => ResourceNullablePromise;
+  resources: (args?: {
+    where?: ResourceWhereInput;
+    orderBy?: ResourceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Resource>;
+  resourcesConnection: (args?: {
+    where?: ResourceWhereInput;
+    orderBy?: ResourceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => ResourceConnectionPromise;
   node: (args: { id: ID_Output }) => Node;
 
   /**
@@ -151,6 +171,22 @@ export interface Prisma {
   }) => LinkPromise;
   deleteLink: (where: LinkWhereUniqueInput) => LinkPromise;
   deleteManyLinks: (where?: LinkWhereInput) => BatchPayloadPromise;
+  createResource: (data: ResourceCreateInput) => ResourcePromise;
+  updateResource: (args: {
+    data: ResourceUpdateInput;
+    where: ResourceWhereUniqueInput;
+  }) => ResourcePromise;
+  updateManyResources: (args: {
+    data: ResourceUpdateManyMutationInput;
+    where?: ResourceWhereInput;
+  }) => BatchPayloadPromise;
+  upsertResource: (args: {
+    where: ResourceWhereUniqueInput;
+    create: ResourceCreateInput;
+    update: ResourceUpdateInput;
+  }) => ResourcePromise;
+  deleteResource: (where: ResourceWhereUniqueInput) => ResourcePromise;
+  deleteManyResources: (where?: ResourceWhereInput) => BatchPayloadPromise;
 
   /**
    * Subscriptions
@@ -169,6 +205,9 @@ export interface Subscription {
   link: (
     where?: LinkSubscriptionWhereInput
   ) => LinkSubscriptionPayloadSubscription;
+  resource: (
+    where?: ResourceSubscriptionWhereInput
+  ) => ResourceSubscriptionPayloadSubscription;
 }
 
 export interface ClientConstructor<T> {
@@ -201,18 +240,30 @@ export type ConceptOrderByInput =
   | "official_ASC"
   | "official_DESC";
 
+export type ResourceOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "description_ASC"
+  | "description_DESC";
+
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface CourseUpdateWithWhereUniqueWithoutConceptsInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateWithoutConceptsDataInput;
+export interface CourseUpdateManyDataInput {
+  name?: Maybe<String>;
 }
 
 export type ConceptWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface CourseScalarWhereInput {
+export interface ResourceUpdateWithoutConceptDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface CourseWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -241,9 +292,18 @@ export interface CourseScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
-  AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  concepts_every?: Maybe<ConceptWhereInput>;
+  concepts_some?: Maybe<ConceptWhereInput>;
+  concepts_none?: Maybe<ConceptWhereInput>;
+  AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+  OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+  NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+}
+
+export interface ResourceUpsertWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput;
+  update: ResourceUpdateWithoutConceptDataInput;
+  create: ResourceCreateWithoutConceptInput;
 }
 
 export interface ConceptWhereInput {
@@ -300,17 +360,32 @@ export interface ConceptWhereInput {
   courses_every?: Maybe<CourseWhereInput>;
   courses_some?: Maybe<CourseWhereInput>;
   courses_none?: Maybe<CourseWhereInput>;
+  resources_every?: Maybe<ResourceWhereInput>;
+  resources_some?: Maybe<ResourceWhereInput>;
+  resources_none?: Maybe<ResourceWhereInput>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
 }
 
-export interface CourseUpdateManyWithWhereNestedInput {
-  where: CourseScalarWhereInput;
-  data: CourseUpdateManyDataInput;
+export interface LinkUpdateWithoutFromDataInput {
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
 }
 
-export interface LinkWhereInput {
+export interface ConceptUpdateWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutCoursesDataInput;
+}
+
+export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ResourceScalarWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -325,75 +400,37 @@ export interface LinkWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  from?: Maybe<ConceptWhereInput>;
-  to?: Maybe<ConceptWhereInput>;
-  official?: Maybe<Boolean>;
-  official_not?: Maybe<Boolean>;
-  AND?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-  OR?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-  NOT?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-}
-
-export interface LinkUpdateManyWithoutFromInput {
-  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
-  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  update?: Maybe<
-    | LinkUpdateWithWhereUniqueWithoutFromInput[]
-    | LinkUpdateWithWhereUniqueWithoutFromInput
-  >;
-  upsert?: Maybe<
-    | LinkUpsertWithWhereUniqueWithoutFromInput[]
-    | LinkUpsertWithWhereUniqueWithoutFromInput
-  >;
-  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  updateMany?: Maybe<
-    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface CourseCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
-}
-
-export interface LinkUpdateWithWhereUniqueWithoutFromInput {
-  where: LinkWhereUniqueInput;
-  data: LinkUpdateWithoutFromDataInput;
-}
-
-export interface CourseUpdateManyDataInput {
   name?: Maybe<String>;
-}
-
-export interface LinkUpdateWithoutFromDataInput {
-  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
-  official?: Maybe<Boolean>;
-}
-
-export interface CourseSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<CourseWhereInput>;
-  AND?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
-  OR?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
-  NOT?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
-}
-
-export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
-  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
-  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface LinkUpdateManyMutationInput {
-  official?: Maybe<Boolean>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
+  OR?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
+  NOT?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
 }
 
 export interface ConceptUpdateWithoutLinksToConceptDataInput {
@@ -402,13 +439,18 @@ export interface ConceptUpdateWithoutLinksToConceptDataInput {
   official?: Maybe<Boolean>;
   linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
 }
 
-export interface LinkCreateInput {
-  id?: Maybe<ID_Input>;
-  from: ConceptCreateOneWithoutLinksFromConceptInput;
-  to: ConceptCreateOneWithoutLinksToConceptInput;
-  official?: Maybe<Boolean>;
+export interface LinkSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<LinkWhereInput>;
+  AND?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
+  OR?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
+  NOT?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
 }
 
 export interface CourseUpdateManyWithoutConceptsInput {
@@ -434,13 +476,99 @@ export interface CourseUpdateManyWithoutConceptsInput {
   >;
 }
 
-export interface CourseUpdateManyMutationInput {
+export interface ConceptSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ConceptWhereInput>;
+  AND?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
+  OR?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
+  NOT?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
+}
+
+export interface CourseUpdateWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateWithoutConceptsDataInput;
+}
+
+export interface ConceptUpsertWithoutResourcesInput {
+  update: ConceptUpdateWithoutResourcesDataInput;
+  create: ConceptCreateWithoutResourcesInput;
+}
+
+export interface CourseUpdateWithoutConceptsDataInput {
   name?: Maybe<String>;
 }
 
-export interface ConceptUpdateWithWhereUniqueWithoutCoursesInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateWithoutCoursesDataInput;
+export interface ConceptUpdateOneRequiredWithoutResourcesInput {
+  create?: Maybe<ConceptCreateWithoutResourcesInput>;
+  update?: Maybe<ConceptUpdateWithoutResourcesDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutResourcesInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutConceptsDataInput;
+  create: CourseCreateWithoutConceptsInput;
+}
+
+export interface ResourceUpdateInput {
+  concept?: Maybe<ConceptUpdateOneRequiredWithoutResourcesInput>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface CourseScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+}
+
+export interface ConceptCreateOneWithoutResourcesInput {
+  create?: Maybe<ConceptCreateWithoutResourcesInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface CourseUpdateManyWithWhereNestedInput {
+  where: CourseScalarWhereInput;
+  data: CourseUpdateManyDataInput;
+}
+
+export interface ResourceCreateInput {
+  id?: Maybe<ID_Input>;
+  concept: ConceptCreateOneWithoutResourcesInput;
+  name: String;
+  description: String;
 }
 
 export interface ConceptUpdateManyWithWhereNestedInput {
@@ -448,8 +576,111 @@ export interface ConceptUpdateManyWithWhereNestedInput {
   data: ConceptUpdateManyDataInput;
 }
 
-export interface CourseUpdateWithoutConceptsDataInput {
+export interface LinkUpdateInput {
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
+}
+
+export interface ResourceUpdateManyWithoutConceptInput {
+  create?: Maybe<
+    ResourceCreateWithoutConceptInput[] | ResourceCreateWithoutConceptInput
+  >;
+  delete?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+  connect?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+  set?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+  disconnect?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+  update?: Maybe<
+    | ResourceUpdateWithWhereUniqueWithoutConceptInput[]
+    | ResourceUpdateWithWhereUniqueWithoutConceptInput
+  >;
+  upsert?: Maybe<
+    | ResourceUpsertWithWhereUniqueWithoutConceptInput[]
+    | ResourceUpsertWithWhereUniqueWithoutConceptInput
+  >;
+  deleteMany?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
+  updateMany?: Maybe<
+    | ResourceUpdateManyWithWhereNestedInput[]
+    | ResourceUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkCreateInput {
+  id?: Maybe<ID_Input>;
+  from: ConceptCreateOneWithoutLinksFromConceptInput;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
+  official?: Maybe<Boolean>;
+}
+
+export interface ResourceUpdateWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput;
+  data: ResourceUpdateWithoutConceptDataInput;
+}
+
+export interface ConceptUpdateManyDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+}
+
+export interface ResourceWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  concept?: Maybe<ConceptWhereInput>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
+  OR?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
+  NOT?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
+}
+
+export interface ConceptCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
 }
 
 export interface ConceptScalarWhereInput {
@@ -502,21 +733,13 @@ export interface ConceptScalarWhereInput {
   NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
 }
 
-export interface CourseUpsertWithWhereUniqueWithoutConceptsInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutConceptsDataInput;
-  create: CourseCreateWithoutConceptsInput;
-}
-
-export interface ConceptUpdateWithoutCoursesDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
+export interface LinkCreateWithoutFromInput {
+  id?: Maybe<ID_Input>;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
   official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
 }
 
-export interface CourseWhereInput {
+export interface LinkWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -531,36 +754,283 @@ export interface CourseWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  concepts_every?: Maybe<ConceptWhereInput>;
-  concepts_some?: Maybe<ConceptWhereInput>;
-  concepts_none?: Maybe<ConceptWhereInput>;
-  AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
-  OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
-  NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+  from?: Maybe<ConceptWhereInput>;
+  to?: Maybe<ConceptWhereInput>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  AND?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  OR?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  NOT?: Maybe<LinkWhereInput[] | LinkWhereInput>;
 }
 
-export interface ConceptCreateInput {
+export interface ConceptCreateWithoutLinksToConceptInput {
   id?: Maybe<ID_Input>;
   name: String;
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
   linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+}
+
+export interface ResourceUpdateManyWithWhereNestedInput {
+  where: ResourceScalarWhereInput;
+  data: ResourceUpdateManyDataInput;
+}
+
+export interface CourseCreateWithoutConceptsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+}
+
+export interface ResourceUpdateManyDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface ResourceCreateWithoutConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description: String;
+}
+
+export interface ConceptUpsertWithoutLinksToConceptInput {
+  update: ConceptUpdateWithoutLinksToConceptDataInput;
+  create: ConceptCreateWithoutLinksToConceptInput;
+}
+
+export interface LinkCreateWithoutToInput {
+  id?: Maybe<ID_Input>;
+  from: ConceptCreateOneWithoutLinksFromConceptInput;
+  official?: Maybe<Boolean>;
+}
+
+export interface LinkUpsertWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutFromDataInput;
+  create: LinkCreateWithoutFromInput;
+}
+
+export interface ConceptCreateWithoutLinksFromConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
   linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+}
+
+export interface LinkScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+}
+
+export interface LinkUpdateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  update?: Maybe<
+    | LinkUpdateWithWhereUniqueWithoutFromInput[]
+    | LinkUpdateWithWhereUniqueWithoutFromInput
+  >;
+  upsert?: Maybe<
+    | LinkUpsertWithWhereUniqueWithoutFromInput[]
+    | LinkUpsertWithWhereUniqueWithoutFromInput
+  >;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  updateMany?: Maybe<
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkUpdateManyWithWhereNestedInput {
+  where: LinkScalarWhereInput;
+  data: LinkUpdateManyDataInput;
+}
+
+export interface ResourceSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ResourceWhereInput>;
+  AND?: Maybe<
+    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
+  >;
+  OR?: Maybe<ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput>;
+  NOT?: Maybe<
+    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
+  >;
+}
+
+export interface LinkUpdateManyDataInput {
+  official?: Maybe<Boolean>;
+}
+
+export interface ResourceUpdateManyMutationInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface LinkUpdateManyWithoutToInput {
+  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  update?: Maybe<
+    | LinkUpdateWithWhereUniqueWithoutToInput[]
+    | LinkUpdateWithWhereUniqueWithoutToInput
+  >;
+  upsert?: Maybe<
+    | LinkUpsertWithWhereUniqueWithoutToInput[]
+    | LinkUpsertWithWhereUniqueWithoutToInput
+  >;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  updateMany?: Maybe<
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export type CourseWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface LinkUpdateWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutToDataInput;
+}
+
+export type LinkWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface LinkUpdateWithoutToDataInput {
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  official?: Maybe<Boolean>;
+}
+
+export type ResourceWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksFromConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptCreateOneWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptUpdateWithoutLinksFromConceptDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+}
+
+export interface ResourceCreateManyWithoutConceptInput {
+  create?: Maybe<
+    ResourceCreateWithoutConceptInput[] | ResourceCreateWithoutConceptInput
+  >;
+  connect?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+}
+
+export interface ConceptUpsertWithoutLinksFromConceptInput {
+  update: ConceptUpdateWithoutLinksFromConceptDataInput;
+  create: ConceptCreateWithoutLinksFromConceptInput;
+}
+
+export interface ConceptCreateOneWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface LinkUpsertWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutToDataInput;
+  create: LinkCreateWithoutToInput;
+}
+
+export interface LinkUpdateWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutFromDataInput;
+}
+
+export interface ConceptUpdateManyMutationInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptUpdateWithoutResourcesDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutCoursesDataInput;
+  create: ConceptCreateWithoutCoursesInput;
+}
+
+export interface LinkUpdateManyMutationInput {
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptUpdateWithoutCoursesDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+}
+
+export interface LinkCreateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+}
+
+export interface CourseCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
+}
+
+export interface LinkCreateManyWithoutToInput {
+  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
 }
 
 export interface ConceptUpdateManyWithoutCoursesInput {
@@ -586,204 +1056,9 @@ export interface ConceptUpdateManyWithoutCoursesInput {
   >;
 }
 
-export interface LinkCreateWithoutFromInput {
-  id?: Maybe<ID_Input>;
-  to: ConceptCreateOneWithoutLinksToConceptInput;
-  official?: Maybe<Boolean>;
-}
-
 export interface CourseUpdateInput {
   name?: Maybe<String>;
   concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
-}
-
-export interface ConceptCreateWithoutLinksToConceptInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-}
-
-export interface ConceptUpsertWithoutLinksToConceptInput {
-  update: ConceptUpdateWithoutLinksToConceptDataInput;
-  create: ConceptCreateWithoutLinksToConceptInput;
-}
-
-export interface CourseCreateWithoutConceptsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-}
-
-export interface LinkUpsertWithWhereUniqueWithoutFromInput {
-  where: LinkWhereUniqueInput;
-  update: LinkUpdateWithoutFromDataInput;
-  create: LinkCreateWithoutFromInput;
-}
-
-export interface LinkCreateWithoutToInput {
-  id?: Maybe<ID_Input>;
-  from: ConceptCreateOneWithoutLinksFromConceptInput;
-  official?: Maybe<Boolean>;
-}
-
-export interface LinkScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  official?: Maybe<Boolean>;
-  official_not?: Maybe<Boolean>;
-  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-}
-
-export interface ConceptCreateWithoutLinksFromConceptInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-}
-
-export interface LinkUpdateManyWithWhereNestedInput {
-  where: LinkScalarWhereInput;
-  data: LinkUpdateManyDataInput;
-}
-
-export interface LinkSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<LinkWhereInput>;
-  AND?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
-  OR?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
-  NOT?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
-}
-
-export interface LinkUpdateManyDataInput {
-  official?: Maybe<Boolean>;
-}
-
-export interface LinkUpdateInput {
-  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
-  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
-  official?: Maybe<Boolean>;
-}
-
-export interface LinkUpdateManyWithoutToInput {
-  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
-  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  update?: Maybe<
-    | LinkUpdateWithWhereUniqueWithoutToInput[]
-    | LinkUpdateWithWhereUniqueWithoutToInput
-  >;
-  upsert?: Maybe<
-    | LinkUpsertWithWhereUniqueWithoutToInput[]
-    | LinkUpsertWithWhereUniqueWithoutToInput
-  >;
-  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  updateMany?: Maybe<
-    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface ConceptUpdateManyDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-}
-
-export interface LinkUpdateWithWhereUniqueWithoutToInput {
-  where: LinkWhereUniqueInput;
-  data: LinkUpdateWithoutToDataInput;
-}
-
-export interface ConceptUpsertWithWhereUniqueWithoutCoursesInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutCoursesDataInput;
-  create: ConceptCreateWithoutCoursesInput;
-}
-
-export interface LinkUpdateWithoutToDataInput {
-  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
-  official?: Maybe<Boolean>;
-}
-
-export interface LinkCreateManyWithoutFromInput {
-  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-}
-
-export interface ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
-  update?: Maybe<ConceptUpdateWithoutLinksFromConceptDataInput>;
-  upsert?: Maybe<ConceptUpsertWithoutLinksFromConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface CourseCreateManyWithoutConceptsInput {
-  create?: Maybe<
-    CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
-  >;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface ConceptUpdateWithoutLinksFromConceptDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-}
-
-export interface ConceptCreateOneWithoutLinksFromConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithoutLinksFromConceptInput {
-  update: ConceptUpdateWithoutLinksFromConceptDataInput;
-  create: ConceptCreateWithoutLinksFromConceptInput;
-}
-
-export interface ConceptSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ConceptWhereInput>;
-  AND?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
-  OR?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
-  NOT?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
-}
-
-export type LinkWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface ConceptCreateManyWithoutCoursesInput {
-  create?: Maybe<
-    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
-  >;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
 }
 
 export interface ConceptCreateWithoutCoursesInput {
@@ -793,23 +1068,15 @@ export interface ConceptCreateWithoutCoursesInput {
   official?: Maybe<Boolean>;
   linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
   linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
 }
 
-export interface ConceptUpdateManyMutationInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
+export interface ConceptCreateManyWithoutCoursesInput {
+  create?: Maybe<
+    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
 }
-
-export interface LinkUpsertWithWhereUniqueWithoutToInput {
-  where: LinkWhereUniqueInput;
-  update: LinkUpdateWithoutToDataInput;
-  create: LinkCreateWithoutToInput;
-}
-
-export type CourseWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
 
 export interface ConceptUpdateInput {
   name?: Maybe<String>;
@@ -818,56 +1085,88 @@ export interface ConceptUpdateInput {
   linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
   linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
 }
 
-export interface LinkCreateManyWithoutToInput {
-  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+export interface CourseCreateManyWithoutConceptsInput {
+  create?: Maybe<
+    CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
+  >;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
 }
 
-export interface ConceptCreateOneWithoutLinksToConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
+export interface CourseUpdateManyMutationInput {
+  name?: Maybe<String>;
+}
+
+export interface ConceptCreateWithoutResourcesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+}
+
+export interface CourseSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<CourseWhereInput>;
+  AND?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
+  OR?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
+  NOT?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
 }
 
 export interface NodeNode {
   id: ID_Output;
 }
 
-export interface LinkPreviousValues {
+export interface ResourcePreviousValues {
   id: ID_Output;
-  official: Boolean;
+  name: String;
+  description: String;
 }
 
-export interface LinkPreviousValuesPromise
-  extends Promise<LinkPreviousValues>,
+export interface ResourcePreviousValuesPromise
+  extends Promise<ResourcePreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  official: () => Promise<Boolean>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
 }
 
-export interface LinkPreviousValuesSubscription
-  extends Promise<AsyncIterator<LinkPreviousValues>>,
+export interface ResourcePreviousValuesSubscription
+  extends Promise<AsyncIterator<ResourcePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  official: () => Promise<AsyncIterator<Boolean>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
 }
 
-export interface ConceptEdge {
-  node: Concept;
-  cursor: String;
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
 }
 
-export interface ConceptEdgePromise extends Promise<ConceptEdge>, Fragmentable {
-  node: <T = ConceptPromise>() => T;
-  cursor: () => Promise<String>;
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
 }
 
-export interface ConceptEdgeSubscription
-  extends Promise<AsyncIterator<ConceptEdge>>,
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
     Fragmentable {
-  node: <T = ConceptSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface Link {
@@ -900,6 +1199,404 @@ export interface LinkNullablePromise
   official: () => Promise<Boolean>;
 }
 
+export interface ConceptEdge {
+  node: Concept;
+  cursor: String;
+}
+
+export interface ConceptEdgePromise extends Promise<ConceptEdge>, Fragmentable {
+  node: <T = ConceptPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ConceptEdgeSubscription
+  extends Promise<AsyncIterator<ConceptEdge>>,
+    Fragmentable {
+  node: <T = ConceptSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface LinkSubscriptionPayload {
+  mutation: MutationType;
+  node: Link;
+  updatedFields: String[];
+  previousValues: LinkPreviousValues;
+}
+
+export interface LinkSubscriptionPayloadPromise
+  extends Promise<LinkSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = LinkPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = LinkPreviousValuesPromise>() => T;
+}
+
+export interface LinkSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<LinkSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = LinkSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = LinkPreviousValuesSubscription>() => T;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface ConceptConnection {
+  pageInfo: PageInfo;
+  edges: ConceptEdge[];
+}
+
+export interface ConceptConnectionPromise
+  extends Promise<ConceptConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ConceptEdge>>() => T;
+  aggregate: <T = AggregateConceptPromise>() => T;
+}
+
+export interface ConceptConnectionSubscription
+  extends Promise<AsyncIterator<ConceptConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ConceptEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateConceptSubscription>() => T;
+}
+
+export interface ResourceSubscriptionPayload {
+  mutation: MutationType;
+  node: Resource;
+  updatedFields: String[];
+  previousValues: ResourcePreviousValues;
+}
+
+export interface ResourceSubscriptionPayloadPromise
+  extends Promise<ResourceSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ResourcePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ResourcePreviousValuesPromise>() => T;
+}
+
+export interface ResourceSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ResourceSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ResourceSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ResourcePreviousValuesSubscription>() => T;
+}
+
+export interface ResourceEdge {
+  node: Resource;
+  cursor: String;
+}
+
+export interface ResourceEdgePromise
+  extends Promise<ResourceEdge>,
+    Fragmentable {
+  node: <T = ResourcePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ResourceEdgeSubscription
+  extends Promise<AsyncIterator<ResourceEdge>>,
+    Fragmentable {
+  node: <T = ResourceSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface Resource {
+  id: ID_Output;
+  name: String;
+  description: String;
+}
+
+export interface ResourcePromise extends Promise<Resource>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  concept: <T = ConceptPromise>() => T;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+}
+
+export interface ResourceSubscription
+  extends Promise<AsyncIterator<Resource>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  concept: <T = ConceptSubscription>() => T;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ResourceNullablePromise
+  extends Promise<Resource | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  concept: <T = ConceptPromise>() => T;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+}
+
+export interface AggregateLink {
+  count: Int;
+}
+
+export interface AggregateLinkPromise
+  extends Promise<AggregateLink>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateLinkSubscription
+  extends Promise<AsyncIterator<AggregateLink>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface Concept {
+  id: ID_Output;
+  name: String;
+  description?: String;
+  official: Boolean;
+}
+
+export interface ConceptPromise extends Promise<Concept>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  official: () => Promise<Boolean>;
+  linksFromConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  linksToConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  courses: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  resources: <T = FragmentableArray<Resource>>(args?: {
+    where?: ResourceWhereInput;
+    orderBy?: ResourceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface ConceptSubscription
+  extends Promise<AsyncIterator<Concept>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  official: () => Promise<AsyncIterator<Boolean>>;
+  linksFromConcept: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  linksToConcept: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  courses: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  resources: <T = Promise<AsyncIterator<ResourceSubscription>>>(args?: {
+    where?: ResourceWhereInput;
+    orderBy?: ResourceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface ConceptNullablePromise
+  extends Promise<Concept | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  official: () => Promise<Boolean>;
+  linksFromConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  linksToConcept: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  courses: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  resources: <T = FragmentableArray<Resource>>(args?: {
+    where?: ResourceWhereInput;
+    orderBy?: ResourceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+}
+
+export interface LinkConnection {
+  pageInfo: PageInfo;
+  edges: LinkEdge[];
+}
+
+export interface LinkConnectionPromise
+  extends Promise<LinkConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<LinkEdge>>() => T;
+  aggregate: <T = AggregateLinkPromise>() => T;
+}
+
+export interface LinkConnectionSubscription
+  extends Promise<AsyncIterator<LinkConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<LinkEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateLinkSubscription>() => T;
+}
+
+export interface ConceptSubscriptionPayload {
+  mutation: MutationType;
+  node: Concept;
+  updatedFields: String[];
+  previousValues: ConceptPreviousValues;
+}
+
+export interface ConceptSubscriptionPayloadPromise
+  extends Promise<ConceptSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ConceptPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ConceptPreviousValuesPromise>() => T;
+}
+
+export interface ConceptSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ConceptSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ConceptSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ConceptPreviousValuesSubscription>() => T;
+}
+
+export interface CourseEdge {
+  node: Course;
+  cursor: String;
+}
+
+export interface CourseEdgePromise extends Promise<CourseEdge>, Fragmentable {
+  node: <T = CoursePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface CourseEdgeSubscription
+  extends Promise<AsyncIterator<CourseEdge>>,
+    Fragmentable {
+  node: <T = CourseSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ConceptPreviousValues {
+  id: ID_Output;
+  name: String;
+  description?: String;
+  official: Boolean;
+}
+
+export interface ConceptPreviousValuesPromise
+  extends Promise<ConceptPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  official: () => Promise<Boolean>;
+}
+
+export interface ConceptPreviousValuesSubscription
+  extends Promise<AsyncIterator<ConceptPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  official: () => Promise<AsyncIterator<Boolean>>;
+}
+
 export interface AggregateConcept {
   count: Int;
 }
@@ -914,6 +1611,65 @@ export interface AggregateConceptSubscription
   extends Promise<AsyncIterator<AggregateConcept>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ResourceConnection {
+  pageInfo: PageInfo;
+  edges: ResourceEdge[];
+}
+
+export interface ResourceConnectionPromise
+  extends Promise<ResourceConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ResourceEdge>>() => T;
+  aggregate: <T = AggregateResourcePromise>() => T;
+}
+
+export interface ResourceConnectionSubscription
+  extends Promise<AsyncIterator<ResourceConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ResourceEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateResourceSubscription>() => T;
+}
+
+export interface LinkPreviousValues {
+  id: ID_Output;
+  official: Boolean;
+}
+
+export interface LinkPreviousValuesPromise
+  extends Promise<LinkPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  official: () => Promise<Boolean>;
+}
+
+export interface LinkPreviousValuesSubscription
+  extends Promise<AsyncIterator<LinkPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  official: () => Promise<AsyncIterator<Boolean>>;
+}
+
+export interface CoursePreviousValues {
+  id: ID_Output;
+  name: String;
+}
+
+export interface CoursePreviousValuesPromise
+  extends Promise<CoursePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+}
+
+export interface CoursePreviousValuesSubscription
+  extends Promise<AsyncIterator<CoursePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
 }
 
 export interface CourseSubscriptionPayload {
@@ -939,45 +1695,6 @@ export interface CourseSubscriptionPayloadSubscription
   node: <T = CourseSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
   previousValues: <T = CoursePreviousValuesSubscription>() => T;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface Course {
@@ -1031,261 +1748,37 @@ export interface CourseNullablePromise
   }) => T;
 }
 
-export interface AggregateLink {
+export interface LinkEdge {
+  node: Link;
+  cursor: String;
+}
+
+export interface LinkEdgePromise extends Promise<LinkEdge>, Fragmentable {
+  node: <T = LinkPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface LinkEdgeSubscription
+  extends Promise<AsyncIterator<LinkEdge>>,
+    Fragmentable {
+  node: <T = LinkSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateResource {
   count: Int;
 }
 
-export interface AggregateLinkPromise
-  extends Promise<AggregateLink>,
+export interface AggregateResourcePromise
+  extends Promise<AggregateResource>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateLinkSubscription
-  extends Promise<AsyncIterator<AggregateLink>>,
+export interface AggregateResourceSubscription
+  extends Promise<AsyncIterator<AggregateResource>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ConceptConnection {
-  pageInfo: PageInfo;
-  edges: ConceptEdge[];
-}
-
-export interface ConceptConnectionPromise
-  extends Promise<ConceptConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ConceptEdge>>() => T;
-  aggregate: <T = AggregateConceptPromise>() => T;
-}
-
-export interface ConceptConnectionSubscription
-  extends Promise<AsyncIterator<ConceptConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ConceptEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateConceptSubscription>() => T;
-}
-
-export interface LinkConnection {
-  pageInfo: PageInfo;
-  edges: LinkEdge[];
-}
-
-export interface LinkConnectionPromise
-  extends Promise<LinkConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<LinkEdge>>() => T;
-  aggregate: <T = AggregateLinkPromise>() => T;
-}
-
-export interface LinkConnectionSubscription
-  extends Promise<AsyncIterator<LinkConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<LinkEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateLinkSubscription>() => T;
-}
-
-export interface CourseEdge {
-  node: Course;
-  cursor: String;
-}
-
-export interface CourseEdgePromise extends Promise<CourseEdge>, Fragmentable {
-  node: <T = CoursePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface CourseEdgeSubscription
-  extends Promise<AsyncIterator<CourseEdge>>,
-    Fragmentable {
-  node: <T = CourseSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface CoursePreviousValues {
-  id: ID_Output;
-  name: String;
-}
-
-export interface CoursePreviousValuesPromise
-  extends Promise<CoursePreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-}
-
-export interface CoursePreviousValuesSubscription
-  extends Promise<AsyncIterator<CoursePreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-}
-
-export interface ConceptPreviousValues {
-  id: ID_Output;
-  name: String;
-  description?: String;
-  official: Boolean;
-}
-
-export interface ConceptPreviousValuesPromise
-  extends Promise<ConceptPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  official: () => Promise<Boolean>;
-}
-
-export interface ConceptPreviousValuesSubscription
-  extends Promise<AsyncIterator<ConceptPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  official: () => Promise<AsyncIterator<Boolean>>;
-}
-
-export interface ConceptSubscriptionPayload {
-  mutation: MutationType;
-  node: Concept;
-  updatedFields: String[];
-  previousValues: ConceptPreviousValues;
-}
-
-export interface ConceptSubscriptionPayloadPromise
-  extends Promise<ConceptSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ConceptPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ConceptPreviousValuesPromise>() => T;
-}
-
-export interface ConceptSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ConceptSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ConceptSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ConceptPreviousValuesSubscription>() => T;
-}
-
-export interface Concept {
-  id: ID_Output;
-  name: String;
-  description?: String;
-  official: Boolean;
-}
-
-export interface ConceptPromise extends Promise<Concept>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  official: () => Promise<Boolean>;
-  linksFromConcept: <T = FragmentableArray<Link>>(args?: {
-    where?: LinkWhereInput;
-    orderBy?: LinkOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  linksToConcept: <T = FragmentableArray<Link>>(args?: {
-    where?: LinkWhereInput;
-    orderBy?: LinkOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  courses: <T = FragmentableArray<Course>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface ConceptSubscription
-  extends Promise<AsyncIterator<Concept>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  official: () => Promise<AsyncIterator<Boolean>>;
-  linksFromConcept: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
-    where?: LinkWhereInput;
-    orderBy?: LinkOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  linksToConcept: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
-    where?: LinkWhereInput;
-    orderBy?: LinkOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  courses: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-}
-
-export interface ConceptNullablePromise
-  extends Promise<Concept | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  official: () => Promise<Boolean>;
-  linksFromConcept: <T = FragmentableArray<Link>>(args?: {
-    where?: LinkWhereInput;
-    orderBy?: LinkOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  linksToConcept: <T = FragmentableArray<Link>>(args?: {
-    where?: LinkWhereInput;
-    orderBy?: LinkOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  courses: <T = FragmentableArray<Course>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
 }
 
 export interface CourseConnection {
@@ -1325,54 +1818,12 @@ export interface AggregateCourseSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface LinkEdge {
-  node: Link;
-  cursor: String;
-}
-
-export interface LinkEdgePromise extends Promise<LinkEdge>, Fragmentable {
-  node: <T = LinkPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface LinkEdgeSubscription
-  extends Promise<AsyncIterator<LinkEdge>>,
-    Fragmentable {
-  node: <T = LinkSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface LinkSubscriptionPayload {
-  mutation: MutationType;
-  node: Link;
-  updatedFields: String[];
-  previousValues: LinkPreviousValues;
-}
-
-export interface LinkSubscriptionPayloadPromise
-  extends Promise<LinkSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = LinkPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = LinkPreviousValuesPromise>() => T;
-}
-
-export interface LinkSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<LinkSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = LinkSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = LinkPreviousValuesSubscription>() => T;
-}
-
 export type Long = string;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
-export type Boolean = boolean;
+export type Int = number;
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -1381,14 +1832,14 @@ export type ID_Input = string | number;
 export type ID_Output = string;
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number;
-
-/*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /**
  * Model Metadata
@@ -1401,6 +1852,10 @@ export const models: Model[] = [
   },
   {
     name: "Concept",
+    embedded: false
+  },
+  {
+    name: "Resource",
     embedded: false
   },
   {

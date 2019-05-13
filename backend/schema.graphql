@@ -1,6 +1,7 @@
 scalar DateTime
 
 type Query {
+  allResources: [Resource!]!
   allConcepts: [Concept!]!
   allCourses: [Course!]!
   conceptById(id: ID!): Concept
@@ -10,6 +11,7 @@ type Query {
 }
 
 type Mutation {
+  createResource(name: String!, concept_id: ID!, description: String!): Resource
   updateConcept(id: ID!, name:String!, desc: String): Concept
   createCourse(name: String!): Course
   deleteCourse(id: ID!): Course
@@ -47,7 +49,16 @@ type Concept {
   linksFromConcept: [Link!]!
   linksToConcept: [Link!]!
   courses: [Course!]!
+  resources: [Resource!]!
 }
+
+type Resource {
+  id: ID!
+  concept: Concept!
+  name: String!
+  description: String!
+}
+
 
 type Link {
   id: ID!
