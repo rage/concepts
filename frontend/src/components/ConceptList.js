@@ -5,6 +5,7 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { DELETE_CONCEPT, CREATE_CONCEPT, ADD_PREREQUISITE_CONCEPT } from '../services/ConceptService'
 import { COURSE_AND_CONCEPTS } from '../services/CourseService'
+import { CREATE_RESOURCE } from '../services/ResourceService'
 
 const ConceptList = ({ course_id }) => {
 
@@ -24,25 +25,24 @@ const ConceptList = ({ course_id }) => {
     refetchQueries: [{ query: COURSE_AND_CONCEPTS, variables: { id: course_id } }]
   })
 
+  const createResource = useMutation(CREATE_RESOURCE, {
+    refetchQueries: [{ query: COURSE_AND_CONCEPTS, variables: { id: course_id } }]
+  })
+
   const onDelete = (id) => async () => {
     await deleteConcept({
       variables: { id }
     })
   }
 
-  const tableStyle = {
-    border: '1px solid black',
-    width: '100%'
-  }
-
   return (
-    <div>
+    <div className="conceptList">
       {
         loading ?
           <div> Loading concepts... </div> :
           <div>
             <h3>{data.courseById && data.courseById.name}</h3>
-            <table style={tableStyle}>
+            <table>
               <thead>
                 <tr>
                   <th>
@@ -62,6 +62,7 @@ const ConceptList = ({ course_id }) => {
                     concept={concept}
                     onConnect={addPrerequisiteToConcept}
                     course_id={course_id}
+                    createResource={createResource}
                   />
                 })}
               </tbody>

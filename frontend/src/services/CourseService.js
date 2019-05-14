@@ -29,8 +29,18 @@ query courseAndConcepts($id: ID!) {
           name
           description
           official
+          resources {
+            id
+            name
+            description 
+            urls {
+              address
+            }
+          }
         }
+        
       }
+      
     }
   }
 }

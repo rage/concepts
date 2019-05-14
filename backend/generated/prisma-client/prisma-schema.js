@@ -36,6 +36,8 @@ type Concept {
   linksToConcept(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
+  asPrerequisite(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  asLearningObjective(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
 }
 
 type ConceptConnection {
@@ -53,6 +55,18 @@ input ConceptCreateInput {
   linksToConcept: LinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
+  asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
+}
+
+input ConceptCreateManyWithoutAsLearningObjectiveInput {
+  create: [ConceptCreateWithoutAsLearningObjectiveInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
+input ConceptCreateManyWithoutAsPrerequisiteInput {
+  create: [ConceptCreateWithoutAsPrerequisiteInput!]
+  connect: [ConceptWhereUniqueInput!]
 }
 
 input ConceptCreateManyWithoutCoursesInput {
@@ -75,6 +89,30 @@ input ConceptCreateOneWithoutResourcesInput {
   connect: ConceptWhereUniqueInput
 }
 
+input ConceptCreateWithoutAsLearningObjectiveInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  linksFromConcept: LinkCreateManyWithoutFromInput
+  linksToConcept: LinkCreateManyWithoutToInput
+  courses: CourseCreateManyWithoutConceptsInput
+  resources: ResourceCreateManyWithoutConceptInput
+  asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
+}
+
+input ConceptCreateWithoutAsPrerequisiteInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  linksFromConcept: LinkCreateManyWithoutFromInput
+  linksToConcept: LinkCreateManyWithoutToInput
+  courses: CourseCreateManyWithoutConceptsInput
+  resources: ResourceCreateManyWithoutConceptInput
+  asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
+}
+
 input ConceptCreateWithoutCoursesInput {
   id: ID
   name: String!
@@ -83,6 +121,8 @@ input ConceptCreateWithoutCoursesInput {
   linksFromConcept: LinkCreateManyWithoutFromInput
   linksToConcept: LinkCreateManyWithoutToInput
   resources: ResourceCreateManyWithoutConceptInput
+  asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
 }
 
 input ConceptCreateWithoutLinksFromConceptInput {
@@ -93,6 +133,8 @@ input ConceptCreateWithoutLinksFromConceptInput {
   linksToConcept: LinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
+  asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
 }
 
 input ConceptCreateWithoutLinksToConceptInput {
@@ -103,6 +145,8 @@ input ConceptCreateWithoutLinksToConceptInput {
   linksFromConcept: LinkCreateManyWithoutFromInput
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
+  asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
 }
 
 input ConceptCreateWithoutResourcesInput {
@@ -113,6 +157,8 @@ input ConceptCreateWithoutResourcesInput {
   linksFromConcept: LinkCreateManyWithoutFromInput
   linksToConcept: LinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
+  asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
 }
 
 type ConceptEdge {
@@ -214,6 +260,8 @@ input ConceptUpdateInput {
   linksToConcept: LinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
 }
 
 input ConceptUpdateManyDataInput {
@@ -226,6 +274,30 @@ input ConceptUpdateManyMutationInput {
   name: String
   description: String
   official: Boolean
+}
+
+input ConceptUpdateManyWithoutAsLearningObjectiveInput {
+  create: [ConceptCreateWithoutAsLearningObjectiveInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptUpdateManyWithoutAsPrerequisiteInput {
+  create: [ConceptCreateWithoutAsPrerequisiteInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
 }
 
 input ConceptUpdateManyWithoutCoursesInput {
@@ -266,6 +338,28 @@ input ConceptUpdateOneRequiredWithoutResourcesInput {
   connect: ConceptWhereUniqueInput
 }
 
+input ConceptUpdateWithoutAsLearningObjectiveDataInput {
+  name: String
+  description: String
+  official: Boolean
+  linksFromConcept: LinkUpdateManyWithoutFromInput
+  linksToConcept: LinkUpdateManyWithoutToInput
+  courses: CourseUpdateManyWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+}
+
+input ConceptUpdateWithoutAsPrerequisiteDataInput {
+  name: String
+  description: String
+  official: Boolean
+  linksFromConcept: LinkUpdateManyWithoutFromInput
+  linksToConcept: LinkUpdateManyWithoutToInput
+  courses: CourseUpdateManyWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
+}
+
 input ConceptUpdateWithoutCoursesDataInput {
   name: String
   description: String
@@ -273,6 +367,8 @@ input ConceptUpdateWithoutCoursesDataInput {
   linksFromConcept: LinkUpdateManyWithoutFromInput
   linksToConcept: LinkUpdateManyWithoutToInput
   resources: ResourceUpdateManyWithoutConceptInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
 }
 
 input ConceptUpdateWithoutLinksFromConceptDataInput {
@@ -282,6 +378,8 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   linksToConcept: LinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
 }
 
 input ConceptUpdateWithoutLinksToConceptDataInput {
@@ -291,6 +389,8 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   linksFromConcept: LinkUpdateManyWithoutFromInput
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
 }
 
 input ConceptUpdateWithoutResourcesDataInput {
@@ -300,6 +400,18 @@ input ConceptUpdateWithoutResourcesDataInput {
   linksFromConcept: LinkUpdateManyWithoutFromInput
   linksToConcept: LinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
+}
+
+input ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutAsLearningObjectiveDataInput!
+}
+
+input ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutAsPrerequisiteDataInput!
 }
 
 input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
@@ -320,6 +432,18 @@ input ConceptUpsertWithoutLinksToConceptInput {
 input ConceptUpsertWithoutResourcesInput {
   update: ConceptUpdateWithoutResourcesDataInput!
   create: ConceptCreateWithoutResourcesInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutAsLearningObjectiveDataInput!
+  create: ConceptCreateWithoutAsLearningObjectiveInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutAsPrerequisiteDataInput!
+  create: ConceptCreateWithoutAsPrerequisiteInput!
 }
 
 input ConceptUpsertWithWhereUniqueWithoutCoursesInput {
@@ -385,6 +509,12 @@ input ConceptWhereInput {
   resources_every: ResourceWhereInput
   resources_some: ResourceWhereInput
   resources_none: ResourceWhereInput
+  asPrerequisite_every: CourseWhereInput
+  asPrerequisite_some: CourseWhereInput
+  asPrerequisite_none: CourseWhereInput
+  asLearningObjective_every: CourseWhereInput
+  asLearningObjective_some: CourseWhereInput
+  asLearningObjective_none: CourseWhereInput
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -398,6 +528,8 @@ type Course {
   id: ID!
   name: String!
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  prerequisites(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  learningObjectives(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
 }
 
 type CourseConnection {
@@ -410,6 +542,8 @@ input CourseCreateInput {
   id: ID
   name: String!
   concepts: ConceptCreateManyWithoutCoursesInput
+  prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
+  learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
 }
 
 input CourseCreateManyWithoutConceptsInput {
@@ -417,9 +551,35 @@ input CourseCreateManyWithoutConceptsInput {
   connect: [CourseWhereUniqueInput!]
 }
 
+input CourseCreateManyWithoutLearningObjectivesInput {
+  create: [CourseCreateWithoutLearningObjectivesInput!]
+  connect: [CourseWhereUniqueInput!]
+}
+
+input CourseCreateManyWithoutPrerequisitesInput {
+  create: [CourseCreateWithoutPrerequisitesInput!]
+  connect: [CourseWhereUniqueInput!]
+}
+
 input CourseCreateWithoutConceptsInput {
   id: ID
   name: String!
+  prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
+  learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
+}
+
+input CourseCreateWithoutLearningObjectivesInput {
+  id: ID
+  name: String!
+  concepts: ConceptCreateManyWithoutCoursesInput
+  prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
+}
+
+input CourseCreateWithoutPrerequisitesInput {
+  id: ID
+  name: String!
+  concepts: ConceptCreateManyWithoutCoursesInput
+  learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
 }
 
 type CourseEdge {
@@ -494,6 +654,8 @@ input CourseSubscriptionWhereInput {
 input CourseUpdateInput {
   name: String
   concepts: ConceptUpdateManyWithoutCoursesInput
+  prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
+  learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
 }
 
 input CourseUpdateManyDataInput {
@@ -516,6 +678,30 @@ input CourseUpdateManyWithoutConceptsInput {
   updateMany: [CourseUpdateManyWithWhereNestedInput!]
 }
 
+input CourseUpdateManyWithoutLearningObjectivesInput {
+  create: [CourseCreateWithoutLearningObjectivesInput!]
+  delete: [CourseWhereUniqueInput!]
+  connect: [CourseWhereUniqueInput!]
+  set: [CourseWhereUniqueInput!]
+  disconnect: [CourseWhereUniqueInput!]
+  update: [CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput!]
+  upsert: [CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput!]
+  deleteMany: [CourseScalarWhereInput!]
+  updateMany: [CourseUpdateManyWithWhereNestedInput!]
+}
+
+input CourseUpdateManyWithoutPrerequisitesInput {
+  create: [CourseCreateWithoutPrerequisitesInput!]
+  delete: [CourseWhereUniqueInput!]
+  connect: [CourseWhereUniqueInput!]
+  set: [CourseWhereUniqueInput!]
+  disconnect: [CourseWhereUniqueInput!]
+  update: [CourseUpdateWithWhereUniqueWithoutPrerequisitesInput!]
+  upsert: [CourseUpsertWithWhereUniqueWithoutPrerequisitesInput!]
+  deleteMany: [CourseScalarWhereInput!]
+  updateMany: [CourseUpdateManyWithWhereNestedInput!]
+}
+
 input CourseUpdateManyWithWhereNestedInput {
   where: CourseScalarWhereInput!
   data: CourseUpdateManyDataInput!
@@ -523,6 +709,20 @@ input CourseUpdateManyWithWhereNestedInput {
 
 input CourseUpdateWithoutConceptsDataInput {
   name: String
+  prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
+  learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
+}
+
+input CourseUpdateWithoutLearningObjectivesDataInput {
+  name: String
+  concepts: ConceptUpdateManyWithoutCoursesInput
+  prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
+}
+
+input CourseUpdateWithoutPrerequisitesDataInput {
+  name: String
+  concepts: ConceptUpdateManyWithoutCoursesInput
+  learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
 }
 
 input CourseUpdateWithWhereUniqueWithoutConceptsInput {
@@ -530,10 +730,32 @@ input CourseUpdateWithWhereUniqueWithoutConceptsInput {
   data: CourseUpdateWithoutConceptsDataInput!
 }
 
+input CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput {
+  where: CourseWhereUniqueInput!
+  data: CourseUpdateWithoutLearningObjectivesDataInput!
+}
+
+input CourseUpdateWithWhereUniqueWithoutPrerequisitesInput {
+  where: CourseWhereUniqueInput!
+  data: CourseUpdateWithoutPrerequisitesDataInput!
+}
+
 input CourseUpsertWithWhereUniqueWithoutConceptsInput {
   where: CourseWhereUniqueInput!
   update: CourseUpdateWithoutConceptsDataInput!
   create: CourseCreateWithoutConceptsInput!
+}
+
+input CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput {
+  where: CourseWhereUniqueInput!
+  update: CourseUpdateWithoutLearningObjectivesDataInput!
+  create: CourseCreateWithoutLearningObjectivesInput!
+}
+
+input CourseUpsertWithWhereUniqueWithoutPrerequisitesInput {
+  where: CourseWhereUniqueInput!
+  update: CourseUpdateWithoutPrerequisitesDataInput!
+  create: CourseCreateWithoutPrerequisitesInput!
 }
 
 input CourseWhereInput {
@@ -568,6 +790,12 @@ input CourseWhereInput {
   concepts_every: ConceptWhereInput
   concepts_some: ConceptWhereInput
   concepts_none: ConceptWhereInput
+  prerequisites_every: ConceptWhereInput
+  prerequisites_some: ConceptWhereInput
+  prerequisites_none: ConceptWhereInput
+  learningObjectives_every: ConceptWhereInput
+  learningObjectives_some: ConceptWhereInput
+  learningObjectives_none: ConceptWhereInput
   AND: [CourseWhereInput!]
   OR: [CourseWhereInput!]
   NOT: [CourseWhereInput!]

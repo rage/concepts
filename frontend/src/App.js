@@ -18,7 +18,6 @@ const App = () => {
           course_id={match.params.id}
         />
       }} />
-
     </div >
   )
 }

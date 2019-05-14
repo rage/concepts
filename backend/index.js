@@ -13,36 +13,69 @@ const resolvers = {
       return context.prisma.courses()
     },
     courseById(root, args, context) {
-      return context.prisma.course({ id: args.id })
+      return context.prisma.course({
+        id: args.id
+      })
     },
     allConcepts(root, args, context) {
       return context.prisma.concepts()
     },
     conceptById(root, args, context) {
-      return context.prisma.concept({ id: args.id })
+      return context.prisma.concept({
+        id: args.id
+      })
     },
     allLinks(root, args, context) {
       return context.prisma.links()
     },
     linksToConcept(root, args, context) {
-      return context.prisma.concept({ id: args.id }).to()
+      return context.prisma.concept({
+        id: args.id
+      }).to()
     },
     linksFromConcept(root, args, context) {
-      return context.prisma.concept({ id: args.id }).from()
+      return context.prisma.concept({
+        id: args.id
+      }).from()
     },
   },
   Mutation: {
+    createResourceWithURLs(root, args, context) {
+      return context.prisma.createResource({
+        name: args.name,
+        description: args.desc,
+        concept: {
+          connect: { id: args.concept_id }
+        },
+        urls: {
+          create: args.urls.map(url => {
+            return { address: url }
+          })
+        }
+      })
+    },
     createURL(root, args, context) {
-      return context.prisma.createURL({ address: args.address, resource: { connect: { id: args.resource_id } } })
+      return context.prisma.createURL({
+        address: args.address,
+        resource: { connect: { id: args.resource_id } }
+      })
     },
     createResource(root, args, context) {
-      return context.prisma.createResource({ name: args.name, description: args.desc, concept: { connect: { id: args.concept_id } } })
+      return context.prisma.createResource({
+        name: args.name,
+        description: args.desc,
+        concept: { connect: [{ id: args.concept_id }] }
+      })
     },
     createCourse(root, args, context) {
-      return context.prisma.createCourse({ name: args.name })
+      return context.prisma.createCourse({
+        name: args.name
+      })
     },
     deleteCourse(root, args, context) {
-      return context.prisma.deleteCourse({ id: args.id })
+      return context.prisma.deleteCourse({
+        id: args.id
+      })
     },
     createConcept(root, args, context) {
       const concept = args.desc !== undefined
@@ -53,7 +86,38 @@ const resolvers = {
           ? { name: args.name, official: args.official }
           : { name: args.name }
 
-      return context.prisma.createConcept({ ...concept, courses: { connect: [{ id: args.course_id }] } })
+      return context.prisma.createConcept({
+        ...concept,
+        courses: { connect: [{ id: args.course_id }] }
+      })
+    },
+    createConceptAsPrerequisite(root, args, context) {
+      const concept = args.desc !== undefined
+        ? args.official !== undefined
+          ? { name: args.name, description: args.desc, official: args.official }
+          : { name: args.name, description: args.desc }
+        : args.official !== undefined
+          ? { name: args.name, official: args.official }
+          : { name: args.name }
+
+      return context.prisma.createConcept({
+        ...concept,
+        asPrerequisite: { connect: [{ id: args.course_id }] }
+      })
+    },
+    createConceptAsLearningObjective(root, args, context) {
+      const concept = args.desc !== undefined
+        ? args.official !== undefined
+          ? { name: args.name, description: args.desc, official: args.official }
+          : { name: args.name, description: args.desc }
+        : args.official !== undefined
+          ? { name: args.name, official: args.official }
+          : { name: args.name }
+
+      return context.prisma.createConcept({
+        ...concept,
+        asLearningObjective: { connect: [{ id: args.course_id }] }
+      })
     },
     updateConcept(root, args, context) {
       return context.prisma.updateConcept({
@@ -84,7 +148,9 @@ const resolvers = {
         })
     },
     deleteConcept(root, args, context) {
-      return context.prisma.deleteConcept({ id: args.id })
+      return context.prisma.deleteConcept({
+        id: args.id
+      })
     },
     createLink(root, args, context) {
       return args.official !== undefined
@@ -107,44 +173,74 @@ const resolvers = {
         })
     },
     deleteLink(root, args, context) {
-      return context.prisma.deleteLink({ id: args.id })
+      return context.prisma.deleteLink({
+        id: args.id
+      })
     }
   },
   Concept: {
     linksToConcept(root, args, context) {
-      return context.prisma.concept({ id: root.id }).linksToConcept()
+      return context.prisma.concept({
+        id: root.id
+      }).linksToConcept()
     },
     linksFromConcept(root, args, context) {
-      return context.prisma.concept({ id: root.id }).linksFromConcept()
+      return context.prisma.concept({
+        id: root.id
+      }).linksFromConcept()
     },
     courses(root, args, context) {
-      return context.prisma.concept({ id: root.id }).courses()
+      return context.prisma.concept({
+        id: root.id
+      }).courses()
+    },
+    asPrerequisite(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).asPrerequisite()
+    },
+    asLearningObjective(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).asLearningObjective()
     },
     resources(root, args, context) {
-      return context.prisma.concept({ id: root.id }).resources()
+      return context.prisma.concept({
+        id: root.id
+      }).resources()
     }
   },
   Link: {
     to(root, args, context) {
-      return context.prisma.link({ id: root.id }).to()
+      return context.prisma.link({
+        id: root.id
+      }).to()
     },
     from(root, args, context) {
-      return context.prisma.link({ id: root.id }).from()
+      return context.prisma.link({
+        id: root.id
+      }).from()
     }
   },
   Course: {
     concepts(root, args, context) {
-      return context.prisma.course({ id: root.id }).concepts()
+      return context.prisma.course({
+        id: root.id
+      }).concepts()
     }
   },
   Resource: {
     urls(root, args, context) {
-      return context.prisma.resource({ id: root.id }).urls()
+      return context.prisma.resource({
+        id: root.id
+      }).urls()
     }
   },
   URL: {
     resource(root, args, context) {
-      return context.prisma.uRL({ id: root.id }).resource()
+      return context.prisma.uRL({
+        id: root.id
+      }).resource()
     }
   }
 }

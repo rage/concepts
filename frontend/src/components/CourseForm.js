@@ -5,6 +5,7 @@ const CourseForm = ({ createCourse }) => {
 
   const submit = async (event) => {
     event.preventDefault()
+
     if (name === '') {
       alert('Course needs a name!')
       return
