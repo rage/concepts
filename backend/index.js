@@ -91,6 +91,34 @@ const resolvers = {
         courses: { connect: [{ id: args.course_id }] }
       })
     },
+    createConceptAsPrerequisite(root, args, context) {
+      const concept = args.desc !== undefined
+        ? args.official !== undefined
+          ? { name: args.name, description: args.desc, official: args.official }
+          : { name: args.name, description: args.desc }
+        : args.official !== undefined
+          ? { name: args.name, official: args.official }
+          : { name: args.name }
+
+      return context.prisma.createConcept({
+        ...concept,
+        asPrerequisite: { connect: [{ id: args.course_id }] }
+      })
+    },
+    createConceptAsLearningObjective(root, args, context) {
+      const concept = args.desc !== undefined
+        ? args.official !== undefined
+          ? { name: args.name, description: args.desc, official: args.official }
+          : { name: args.name, description: args.desc }
+        : args.official !== undefined
+          ? { name: args.name, official: args.official }
+          : { name: args.name }
+
+      return context.prisma.createConcept({
+        ...concept,
+        asLearningObjective: { connect: [{ id: args.course_id }] }
+      })
+    },
     updateConcept(root, args, context) {
       return context.prisma.updateConcept({
         where: { id: args.id },
@@ -165,6 +193,16 @@ const resolvers = {
       return context.prisma.concept({
         id: root.id
       }).courses()
+    },
+    asPrerequisite(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).asPrerequisite()
+    },
+    asLearningObjective(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).asLearningObjective()
     },
     resources(root, args, context) {
       return context.prisma.concept({

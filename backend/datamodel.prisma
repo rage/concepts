@@ -7,7 +7,9 @@
 type Course {
   id: ID! @id
   name: String!
-  concepts: [Concept!]!
+  concepts: [Concept!]! @relation(name:"Courses")
+  prerequisites: [Concept!]! @relation(name:"Prerequisite")
+  learningObjectives: [Concept!]! @relation(name:"LearningObjective")
 #   instances: [Instance!]!
 }
 
@@ -28,8 +30,10 @@ type Concept {
   official: Boolean! @default(value: false)
   linksFromConcept: [Link!]! @relation(name: "From")
   linksToConcept: [Link!]! @relation(name: "To")
-  courses: [Course!]!
+  courses: [Course!]! @relation(name: "Courses")
   resources: [Resource!]!
+  asPrerequisite: [Course!]! @relation(name:"Prerequisite")
+  asLearningObjective: [Course!]! @relation(name:"LearningObjective")
 }
 
 type Resource {
