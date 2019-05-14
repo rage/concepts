@@ -1,4 +1,4 @@
-th, td {
+/* th, td {
     border: 1px solid gray;
 }
 
@@ -11,14 +11,14 @@ td {
     border: 1px solid black;
     table-layout: fixed;
     width: 100%; /* must have this set */
-  }
+/* } */
 
-.courseList table {
+/* .courseList table {
     margin: 15px 0;
     border: 1px solid black;
     table-layout: fixed;
     width: 100%; /* must have this set */
-  }
+/*
 
 a {
     text-decoration: none;
@@ -34,4 +34,96 @@ body {
     margin: 0 auto;
     background: white;
     padding: 10px;
-  }
+} 
+
+*/
+
+/**
+ * Reset button styles.
+ * It takes a bit of work to achieve a neutral look.
+ */
+ button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  /* show a hand cursor on hover; some argue that we
+  should keep the default arrow cursor for buttons */
+  cursor: pointer;
+}
+
+.App {
+  display: flex;
+  justify-content: space-between;
+}
+
+.curri-button {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  width: 200px;
+  height: 50px;
+  margin-bottom: 0.5vh
+}
+
+.curri-button.narrow {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  width: 100px;
+  height: 50px;
+  margin-bottom: 0.5vh;
+  margin-left: 0.5vh;
+}
+
+.curri-button:hover {
+  border-color: #a7a7a7;
+}
+
+.curri-button:focus {
+  outline-width: 0;
+}
+
+.curri-column {
+  margin: 1vh;
+  display: flex;
+  flex-direction: column
+}
+
+.curri-column-container {
+  padding: 1vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.right-menu {
+  margin: 1vh;
+  height: 98vh;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.right-menu-splitter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 97.5vh;
+}
+
+.curri-button.send {
+  margin: 1vh;
+}
+
+.curri-button.bottom-button {
+  position: fixed;
+  bottom: 0;
+  margin: 1vh;
+}
+
+.curri-course-result-container {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  padding: 1vh;
+  margin: 1vh;
+}
