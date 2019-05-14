@@ -1,21 +1,15 @@
 import React from 'react'
-import './App.css'
 import HeaderButton from './HeaderButton'
 import ToggleButton from './ToggleButton'
 
-const CourseColumn = (props) => {
+const CourseColumn = ({ course }) => {
   return (
     <div className="curri-column">
-      <HeaderButton text={this.props.course} />
-      {this.props.topics.map(topic =>
+      <HeaderButton text={course.name} />
+      {course.concepts.map(concept =>
         <ToggleButton
-          key={topic.name}
-          course={this.props.course}
-          topic={topic}
-          text={topic.name}
-          updateTopicValue={
-            (course, topic, value) => this.props.updateTopicValueF(course, topic, value)
-          } />
+          key={concept.name}
+          text={concept.name}/>
       )}
       <HeaderButton text='+' />
     </div>

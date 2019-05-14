@@ -1,16 +1,11 @@
-import React, { Component } from 'react'
-import './App.css'
+import React from 'react'
 
-const HeaderButton extends Component {
-  render() {
-    return (
-      <button
-        className="curri-button"
-        style={{ backgroundColor: '#e8e8e8' }}>
-        {this.props.text}
-      </button>
-    )
-  }
-}
+const HeaderButton = ({ text }) => (
+  <button
+    className="curri-button"
+    style={{ backgroundColor: '#e8e8e8' }}>
+    {text}
+  </button>
+)
 
 export default HeaderButton

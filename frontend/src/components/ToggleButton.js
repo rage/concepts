@@ -1,41 +1,28 @@
-import React from 'react'
-import './App.css'
+import React, { useState } from 'react'
 
-const ToggleButton = (props) => {
-  state = {
-    toggleSetting: 1
+const ToggleButton = ({ text }) => {
+  const [selected, setSelected] = useState(false)
+
+  const toggle = () => {
+    setSelected(!selected)
   }
 
-  increment = (i) => {
-    return i === 3 ? 1 : i + 1
+  const handleClick = () => {
+    toggle()
   }
 
-
-  handleClick = () => {
-    this.props.updateTopicValue(this.props.course, this.props.topic.name, this.increment(this.props.topic.value))
-    this.setState(({ toggleSetting }) => ({
-      toggleSetting: this.increment(toggleSetting)
-    }))
-  }
-
-  buttonStyle = (toggleValue) => {
-    switch (toggleValue) {
-    case 1:
-      return { backgroundColor: '#ffffff' }
-    case 2:
-      return { backgroundColor: '#9ecae1' }
-    case 3:
-      return { backgroundColor: '#3182bd' }
-    default:
-      return { backgroundColor: '#ffffff' }
+  const buttonStyle = () => {
+    return {
+      backgroundColor: selected ? '#9ecae1' : '#ffffff'
     }
   }
+
   return (
     <button
-      onClick={this.handleClick}
+      onClick={handleClick}
       className="curri-button"
-      style={this.buttonStyle(this.props.topic.value)}>
-      {this.props.text}
+      style={buttonStyle()}>
+      {text}
     </button>
   )
 }
