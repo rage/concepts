@@ -60,28 +60,43 @@ const ConnectionForm = ({ concept, onConnect }) => {
   )
 }
 
-const Concept = ({ concept, onConnect, createResource }) => (
-  <tr style={{ textAlign: 'left' }}>
-    <td valign="top" >
-      <ConnectionForm concept={concept} onConnect={onConnect} />
-      <div style={prerequisiteStyle}>
-        {concept.linksToConcept.map(link => {
-          return <div key={link.from.id}>
-            {link.from.name}
-            <ResourceForm createResource={createResource} concept_id={link.from.id} />
-          </div>
-        })
-        }
-      </div>
-    </td>
+const Concept = ({ concept, onConnect, createResource }) => {
+  console.log('Hloo', concept)
 
-    <td valign="top" style={conceptStyle}>
-      <strong> {concept.name} {concept.official ? '*' : ''} </strong>
-      <p> {concept.description} </p>
-    </td>
+  return (
+    <tr style={{ textAlign: 'left' }}>
+      <td valign="top" >
+        <ConnectionForm concept={concept} onConnect={onConnect} />
+        <div style={prerequisiteStyle}>
+          {concept.linksToConcept.map(link => {
+            return <div key={link.from.id}>
+              {link.from.name}
+              <table>
+                <tbody>
+                  {
+                    link.from &&
+                  link.from.resources.map(resource => (
+                    <tr key={resource.id}>
+                      <td>{resource.name}</td>
+                    </tr>
+                  ))
+                  }
+                </tbody>
+              </table>
+              <ResourceForm createResource={createResource} concept_id={link.from.id} />
+            </div>
+          })
+          }
+        </div>
+      </td>
+
+      <td valign="top" style={conceptStyle}>
+        <strong> {concept.name} {concept.official ? '*' : ''} </strong>
+        <p> {concept.description} </p>
+      </td>
 
 
-  </tr>
-)
+    </tr>
+  )}
 
 export default Concept
