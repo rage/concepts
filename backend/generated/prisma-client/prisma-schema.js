@@ -60,6 +60,11 @@ input ConceptCreateManyWithoutCoursesInput {
   connect: [ConceptWhereUniqueInput!]
 }
 
+input ConceptCreateManyWithoutResourcesInput {
+  create: [ConceptCreateWithoutResourcesInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
 input ConceptCreateOneWithoutLinksFromConceptInput {
   create: ConceptCreateWithoutLinksFromConceptInput
   connect: ConceptWhereUniqueInput
@@ -67,11 +72,6 @@ input ConceptCreateOneWithoutLinksFromConceptInput {
 
 input ConceptCreateOneWithoutLinksToConceptInput {
   create: ConceptCreateWithoutLinksToConceptInput
-  connect: ConceptWhereUniqueInput
-}
-
-input ConceptCreateOneWithoutResourcesInput {
-  create: ConceptCreateWithoutResourcesInput
   connect: ConceptWhereUniqueInput
 }
 
@@ -240,6 +240,18 @@ input ConceptUpdateManyWithoutCoursesInput {
   updateMany: [ConceptUpdateManyWithWhereNestedInput!]
 }
 
+input ConceptUpdateManyWithoutResourcesInput {
+  create: [ConceptCreateWithoutResourcesInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutResourcesInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutResourcesInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
 input ConceptUpdateManyWithWhereNestedInput {
   where: ConceptScalarWhereInput!
   data: ConceptUpdateManyDataInput!
@@ -256,13 +268,6 @@ input ConceptUpdateOneRequiredWithoutLinksToConceptInput {
   create: ConceptCreateWithoutLinksToConceptInput
   update: ConceptUpdateWithoutLinksToConceptDataInput
   upsert: ConceptUpsertWithoutLinksToConceptInput
-  connect: ConceptWhereUniqueInput
-}
-
-input ConceptUpdateOneRequiredWithoutResourcesInput {
-  create: ConceptCreateWithoutResourcesInput
-  update: ConceptUpdateWithoutResourcesDataInput
-  upsert: ConceptUpsertWithoutResourcesInput
   connect: ConceptWhereUniqueInput
 }
 
@@ -307,6 +312,11 @@ input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
   data: ConceptUpdateWithoutCoursesDataInput!
 }
 
+input ConceptUpdateWithWhereUniqueWithoutResourcesInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutResourcesDataInput!
+}
+
 input ConceptUpsertWithoutLinksFromConceptInput {
   update: ConceptUpdateWithoutLinksFromConceptDataInput!
   create: ConceptCreateWithoutLinksFromConceptInput!
@@ -317,15 +327,16 @@ input ConceptUpsertWithoutLinksToConceptInput {
   create: ConceptCreateWithoutLinksToConceptInput!
 }
 
-input ConceptUpsertWithoutResourcesInput {
-  update: ConceptUpdateWithoutResourcesDataInput!
-  create: ConceptCreateWithoutResourcesInput!
-}
-
 input ConceptUpsertWithWhereUniqueWithoutCoursesInput {
   where: ConceptWhereUniqueInput!
   update: ConceptUpdateWithoutCoursesDataInput!
   create: ConceptCreateWithoutCoursesInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutResourcesInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutResourcesDataInput!
+  create: ConceptCreateWithoutResourcesInput!
 }
 
 input ConceptWhereInput {
@@ -852,7 +863,7 @@ type Query {
 
 type Resource {
   id: ID!
-  concept: Concept!
+  concept(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   name: String!
   description: String!
   urls(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL!]
@@ -866,7 +877,7 @@ type ResourceConnection {
 
 input ResourceCreateInput {
   id: ID
-  concept: ConceptCreateOneWithoutResourcesInput!
+  concept: ConceptCreateManyWithoutResourcesInput
   name: String!
   description: String!
   urls: URLCreateManyWithoutResourceInput
@@ -891,7 +902,7 @@ input ResourceCreateWithoutConceptInput {
 
 input ResourceCreateWithoutUrlsInput {
   id: ID
-  concept: ConceptCreateOneWithoutResourcesInput!
+  concept: ConceptCreateManyWithoutResourcesInput
   name: String!
   description: String!
 }
@@ -983,7 +994,7 @@ input ResourceSubscriptionWhereInput {
 }
 
 input ResourceUpdateInput {
-  concept: ConceptUpdateOneRequiredWithoutResourcesInput
+  concept: ConceptUpdateManyWithoutResourcesInput
   name: String
   description: String
   urls: URLUpdateManyWithoutResourceInput
@@ -1030,7 +1041,7 @@ input ResourceUpdateWithoutConceptDataInput {
 }
 
 input ResourceUpdateWithoutUrlsDataInput {
-  concept: ConceptUpdateOneRequiredWithoutResourcesInput
+  concept: ConceptUpdateManyWithoutResourcesInput
   name: String
   description: String
 }
@@ -1066,7 +1077,9 @@ input ResourceWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  concept: ConceptWhereInput
+  concept_every: ConceptWhereInput
+  concept_some: ConceptWhereInput
+  concept_none: ConceptWhereInput
   name: String
   name_not: String
   name_in: [String!]
