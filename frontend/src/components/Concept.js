@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ResourceForm from './ResourceForm'
 
 const prerequisiteStyle = {
   padding: '5px'
@@ -59,13 +60,17 @@ const ConnectionForm = ({ concept, onConnect }) => {
   )
 }
 
-const Concept = ({ concept, onConnect }) => (
+const Concept = ({ concept, onConnect, createResource }) => (
   <tr style={{ textAlign: 'left' }}>
     <td valign="top" >
       <ConnectionForm concept={concept} onConnect={onConnect} />
       <div style={prerequisiteStyle}>
-        {
-          concept.linksToConcept.map(link => <div key={link.from.id}> {link.from.name} </div>)
+        {concept.linksToConcept.map(link => {
+          return <div key={link.from.id}>
+            {link.from.name}
+            <ResourceForm createResource={createResource} concept_id={link.from.id} />
+          </div>
+        })
         }
       </div>
     </td>

@@ -5,6 +5,7 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { DELETE_CONCEPT, CREATE_CONCEPT, ADD_PREREQUISITE_CONCEPT } from '../services/ConceptService'
 import { COURSE_AND_CONCEPTS } from '../services/CourseService'
+import { CREATE_RESOURCE } from '../services/ResourceService'
 
 const ConceptList = ({ course_id }) => {
 
@@ -21,6 +22,10 @@ const ConceptList = ({ course_id }) => {
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
+    refetchQueries: [{ query: COURSE_AND_CONCEPTS, variables: { id: course_id } }]
+  })
+
+  const createResource = useMutation(CREATE_RESOURCE, {
     refetchQueries: [{ query: COURSE_AND_CONCEPTS, variables: { id: course_id } }]
   })
 
@@ -57,6 +62,7 @@ const ConceptList = ({ course_id }) => {
                     concept={concept}
                     onConnect={addPrerequisiteToConcept}
                     course_id={course_id}
+                    createResource={createResource}
                   />
                 })}
               </tbody>

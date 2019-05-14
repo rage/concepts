@@ -44,12 +44,12 @@ const resolvers = {
       return context.prisma.createResource({
         name: args.name,
         description: args.desc,
-        concept: { 
-          connect: [{ id: args.concept_id }] 
+        concept: {
+          connect: { id: args.concept_id }
         },
         urls: {
           create: args.urls.map(url => {
-              return { address: url }
+            return { address: url }
           })
         }
       })
