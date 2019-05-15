@@ -97,12 +97,14 @@ body {
 }
 
 .curri-column-container {
+  align-items: center;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: space-between;
   height: 90vh;
   overflow: scroll;
+  flex-basis: 100%;
 }
 
 .right-menu {
