@@ -97,11 +97,12 @@ body {
 }
 
 .curri-column-container {
-  padding: 1vh;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  height: 90vh;
+  overflow: scroll;
 }
 
 .right-menu {
@@ -112,10 +113,39 @@ body {
   border-radius: 4px;
 }
 
+.right-menu {
+  margin: 1vh;
+  height: 90vh;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.left-menu {
+  margin: 1vh;
+  padding: 5px;
+  height: 90vh;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
 .right-menu-scroll {
   height: 90%;
   overflow: scroll;
 }
+
+.left-menu-scroll {
+  height: 70vh;
+  overflow: scroll;
+}
+
+.left-menu-concepts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 
 .right-menu-splitter {
   display: flex;
