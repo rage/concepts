@@ -1,9 +1,9 @@
 import React from 'react'
 import HeaderButton from './HeaderButton'
-import ConceptButton from './ConceptButton'
+import ActivatableConcept from './ActivatableConcept'
 
 
-const ActiveCourse = ({ course }) => {
+const ActiveCourse = ({ course, activateConcept, activeConceptId }) => {
   console.log(course)
   return (
     <div className="left-menu">
@@ -12,9 +12,12 @@ const ActiveCourse = ({ course }) => {
       <div className="left-menu-scroll">
         <div className="left-menu-concepts">
           {course.concepts.map(concept =>
-            <ConceptButton
+            <ActivatableConcept
               concept={concept}
-              key={concept.name}/>
+              key={concept.name}
+              activeConceptId={activeConceptId}
+              activateConcept={activateConcept}
+            />
           )}
         </div>
 
