@@ -60,6 +60,11 @@ body {
   flex-basis: 100%;
 }
 
+.course-view {
+  display: flex;
+  overflow: hidden;
+}
+
 .curri-button {
   border: solid 1px #d3d3d3;
   border-radius: 4px;
@@ -96,6 +101,7 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .right-menu {
@@ -111,6 +117,12 @@ body {
   flex-direction: column;
   justify-content: space-between;
   height: 97.5vh;
+}
+
+.right-menu-courses {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .curri-button.send {

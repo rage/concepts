@@ -7,7 +7,7 @@ const AltCourse = (props) => {
     <button
       className="course-button"
       style={{ backgroundColor: '#e8e8e8' }}>
-      <Link style={{ textDecoration: 'none' }} to={`/course/${props.id}`}>{props.text}</Link>
+      <Link style={{ textDecoration: 'none' }} to={`/courses/${props.id}`}>{props.text}</Link>
     </button>
   )
 }

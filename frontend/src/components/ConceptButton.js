@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const ToggleButton = ({ text }) => {
+const ConceptButton = ({ concept }) => {
   const [selected, setSelected] = useState(false)
 
   const toggle = () => {
@@ -22,10 +22,10 @@ const ToggleButton = ({ text }) => {
       onClick={handleClick}
       className="curri-button"
       style={buttonStyle()}>
-      {text}
+      {concept.name}
     </button>
   )
 }
 
 
-export default ToggleButton
+export default ConceptButton
