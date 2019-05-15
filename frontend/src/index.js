@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import AltApp from './AltApp'
 import { BrowserRouter } from 'react-router-dom'
-
+import './index.css'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from 'react-apollo-hooks'
 
@@ -13,7 +13,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <App />
+      <AltApp />
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root')

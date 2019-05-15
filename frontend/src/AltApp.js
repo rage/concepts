@@ -1,12 +1,17 @@
 import React from 'react'
+import { Route, Link } from 'react-router-dom'
 import './App.css'
-import CourseColumn from './components/CourseColumn'
+import AltCourseList from './components/AltCourseList'
 
 const App = () => {
   return (
     <div className="App">
+      <div className="nav">
+        <Link to="/">Courses</Link>
+      </div>
+      <Route exact path="/" render={() => <AltCourseList />} />
 
-      <div className="curri-column-container">
+      {/* <div className="curri-column-container">
         {this.state.prequisites.map(course =>
           <CourseColumn
             key={course.courseName}
@@ -14,9 +19,9 @@ const App = () => {
             topics={course.topics}
           />
         )}
-      </div>
+      </div> */}
 
-      <div className="right-menu">
+      {/* <div className="right-menu">
         <div className="right-menu-splitter">
           <CourseColumn
             course={}
@@ -31,7 +36,7 @@ const App = () => {
         </div>
       </div>
 
-      <button className="curri-button bottom-button" onClick={this.changeView}>Vaihda näkymää</button>
+      <button className="curri-button bottom-button" onClick={this.changeView}>Vaihda näkymää</button> */}
     </div>
   )
 }
