@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useQuery } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../services/CourseService'
+import { ALL_COURSES, COURSE_AND_CONCEPTS } from '../services/CourseService'
 
 import CourseContainer from './CourseContainer'
 import CourseTray from './CourseTray'
@@ -9,15 +9,18 @@ import ActiveCourse from './ActiveCourse'
 
 const CourseView = ({ course_id }) => {
   const courses = useQuery(ALL_COURSES)
-  console.log('course')
+
+  const { data, loading } = useQuery(COURSE_AND_CONCEPTS, {
+    variables: { id: course_id }
+  })
 
   return (
     <div>
       {
-        courses.data.allCourses ?
+        data.courseById && courses.data.allCourses ?
           <div className="course-view">
-            <ActiveCourse course={courses.data.allCourses[0]}/>
-            <CourseContainer courses={courses.data.allCourses}/>
+            <ActiveCourse course={data.courseById}/>
+            <CourseContainer courses={courses.data.allCourses.filter(course => course.id !== course_id)}/>
             <CourseTray courses={courses.data.allCourses}/>
           </div> :
           null

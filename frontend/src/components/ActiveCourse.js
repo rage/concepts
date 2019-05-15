@@ -10,8 +10,6 @@ const ActiveCourse = ({ course }) => {
       <HeaderButton text={course.name} />
 
       <div className="left-menu-scroll">
-
-
         <div className="left-menu-concepts">
           {course.concepts.map(concept =>
             <ConceptButton

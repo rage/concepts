@@ -103,7 +103,7 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   height: 90vh;
-  overflow: scroll;
+  overflow-y: scroll;
   flex-basis: 100%;
 }
 
