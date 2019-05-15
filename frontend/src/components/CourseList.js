@@ -1,5 +1,5 @@
 import React from 'react'
-import Course from './Course'
+import CourseLink from './CourseLink'
 import CourseForm from './CourseForm'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -28,7 +28,7 @@ const CourseList = () => {
         <tbody>
           {
             courses.data.allCourses ?
-              courses.data.allCourses.map(course => <Course key={course.id} course={course} />) :
+              courses.data.allCourses.map(course => <CourseLink key={course.id} course={course} />) :
               null
           }
         </tbody>
