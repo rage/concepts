@@ -295,17 +295,20 @@ export type URLOrderByInput =
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
-export interface ResourceUpdateWithWhereUniqueWithoutConceptInput {
-  where: ResourceWhereUniqueInput;
-  data: ResourceUpdateWithoutConceptDataInput;
+export interface ResourceUpdateWithoutConceptDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  urls?: Maybe<URLUpdateManyWithoutResourceInput>;
 }
 
 export type ConceptWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface URLUpdateWithoutResourceDataInput {
-  address?: Maybe<String>;
+export interface URLUpsertWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput;
+  update: URLUpdateWithoutResourceDataInput;
+  create: URLCreateWithoutResourceInput;
 }
 
 export interface ResourceWhereInput {
@@ -360,10 +363,38 @@ export interface ResourceWhereInput {
   NOT?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
 }
 
-export interface URLUpsertWithWhereUniqueWithoutResourceInput {
-  where: URLWhereUniqueInput;
-  update: URLUpdateWithoutResourceDataInput;
-  create: URLCreateWithoutResourceInput;
+export interface URLScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  address?: Maybe<String>;
+  address_not?: Maybe<String>;
+  address_in?: Maybe<String[] | String>;
+  address_not_in?: Maybe<String[] | String>;
+  address_lt?: Maybe<String>;
+  address_lte?: Maybe<String>;
+  address_gt?: Maybe<String>;
+  address_gte?: Maybe<String>;
+  address_contains?: Maybe<String>;
+  address_not_contains?: Maybe<String>;
+  address_starts_with?: Maybe<String>;
+  address_not_starts_with?: Maybe<String>;
+  address_ends_with?: Maybe<String>;
+  address_not_ends_with?: Maybe<String>;
+  AND?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+  OR?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+  NOT?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
 }
 
 export interface CourseWhereInput {
@@ -404,6 +435,9 @@ export interface CourseWhereInput {
   learningObjectives_every?: Maybe<ConceptWhereInput>;
   learningObjectives_some?: Maybe<ConceptWhereInput>;
   learningObjectives_none?: Maybe<ConceptWhereInput>;
+  prerequisiteCourses_every?: Maybe<CourseWhereInput>;
+  prerequisiteCourses_some?: Maybe<CourseWhereInput>;
+  prerequisiteCourses_none?: Maybe<CourseWhereInput>;
   AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
   OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
   NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
@@ -419,46 +453,19 @@ export interface CourseUpdateInput {
   concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
   prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
   learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
 }
 
 export interface CourseUpdateWithoutConceptsDataInput {
   name?: Maybe<String>;
   prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
   learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
 }
 
-export interface URLScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  address?: Maybe<String>;
-  address_not?: Maybe<String>;
-  address_in?: Maybe<String[] | String>;
-  address_not_in?: Maybe<String[] | String>;
-  address_lt?: Maybe<String>;
-  address_lte?: Maybe<String>;
-  address_gt?: Maybe<String>;
-  address_gte?: Maybe<String>;
-  address_contains?: Maybe<String>;
-  address_not_contains?: Maybe<String>;
-  address_starts_with?: Maybe<String>;
-  address_not_starts_with?: Maybe<String>;
-  address_ends_with?: Maybe<String>;
-  address_not_ends_with?: Maybe<String>;
-  AND?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
-  OR?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
-  NOT?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+export interface URLUpdateManyWithWhereNestedInput {
+  where: URLScalarWhereInput;
+  data: URLUpdateManyDataInput;
 }
 
 export interface ConceptUpdateManyWithoutAsPrerequisiteInput {
@@ -651,8 +658,9 @@ export interface ConceptUpsertWithoutResourcesInput {
   create: ConceptCreateWithoutResourcesInput;
 }
 
-export interface LinkUpdateManyMutationInput {
-  official?: Maybe<Boolean>;
+export interface ResourceUpdateWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput;
+  data: ResourceUpdateWithoutConceptDataInput;
 }
 
 export interface ConceptUpdateWithoutResourcesDataInput {
@@ -666,10 +674,8 @@ export interface ConceptUpdateWithoutResourcesDataInput {
   asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
 }
 
-export interface ResourceUpdateWithoutConceptDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  urls?: Maybe<URLUpdateManyWithoutResourceInput>;
+export interface LinkUpdateManyMutationInput {
+  official?: Maybe<Boolean>;
 }
 
 export interface ResourceUpdateInput {
@@ -726,6 +732,23 @@ export interface ResourceCreateInput {
   urls?: Maybe<URLCreateManyWithoutResourceInput>;
 }
 
+export interface URLUpdateWithoutResourceDataInput {
+  address?: Maybe<String>;
+}
+
+export interface ConceptCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+}
+
 export interface URLWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
@@ -761,17 +784,10 @@ export interface URLWhereInput {
   NOT?: Maybe<URLWhereInput[] | URLWhereInput>;
 }
 
-export interface ConceptCreateInput {
+export interface LinkCreateWithoutFromInput {
   id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
   official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
 }
 
 export interface LinkUpdateInput {
@@ -780,10 +796,16 @@ export interface LinkUpdateInput {
   official?: Maybe<Boolean>;
 }
 
-export interface LinkCreateWithoutFromInput {
+export interface ConceptCreateWithoutLinksToConceptInput {
   id?: Maybe<ID_Input>;
-  to: ConceptCreateOneWithoutLinksToConceptInput;
+  name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
 }
 
 export interface ConceptWhereInput {
@@ -854,28 +876,12 @@ export interface ConceptWhereInput {
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
 }
 
-export interface ConceptCreateWithoutLinksToConceptInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface URLUpdateManyWithWhereNestedInput {
-  where: URLScalarWhereInput;
-  data: URLUpdateManyDataInput;
-}
-
 export interface CourseCreateWithoutConceptsInput {
   id?: Maybe<ID_Input>;
   name: String;
   prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
   learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
 }
 
 export interface URLUpdateManyDataInput {
@@ -1017,6 +1023,7 @@ export interface CourseCreateWithoutPrerequisitesInput {
   name: String;
   concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
   learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
 }
 
 export interface CourseUpdateWithWhereUniqueWithoutPrerequisitesInput {
@@ -1040,6 +1047,7 @@ export interface CourseUpdateWithoutPrerequisitesDataInput {
   name?: Maybe<String>;
   concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
   learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
 }
 
 export interface CourseCreateWithoutLearningObjectivesInput {
@@ -1047,6 +1055,7 @@ export interface CourseCreateWithoutLearningObjectivesInput {
   name: String;
   concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
   prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
 }
 
 export interface ConceptUpdateManyWithoutCoursesInput {
@@ -1072,6 +1081,20 @@ export interface ConceptUpdateManyWithoutCoursesInput {
   >;
 }
 
+export interface CourseCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
+}
+
+export interface ConceptUpdateWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutCoursesDataInput;
+}
+
 export interface ConceptCreateWithoutAsLearningObjectiveInput {
   id?: Maybe<ID_Input>;
   name: String;
@@ -1084,9 +1107,15 @@ export interface ConceptCreateWithoutAsLearningObjectiveInput {
   asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
 }
 
-export interface ConceptUpdateWithWhereUniqueWithoutCoursesInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateWithoutCoursesDataInput;
+export interface ConceptUpdateWithoutCoursesDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
 }
 
 export interface LinkUpdateManyWithoutFromInput {
@@ -1107,22 +1136,6 @@ export interface LinkUpdateManyWithoutFromInput {
   updateMany?: Maybe<
     LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
   >;
-}
-
-export interface ConceptUpdateWithoutCoursesDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export interface LinkUpdateWithoutFromDataInput {
-  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
-  official?: Maybe<Boolean>;
 }
 
 export interface CourseUpdateManyWithoutLearningObjectivesInput {
@@ -1149,6 +1162,16 @@ export interface CourseUpdateManyWithoutLearningObjectivesInput {
   >;
 }
 
+export interface LinkUpdateWithoutFromDataInput {
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
+}
+
+export interface CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateWithoutLearningObjectivesDataInput;
+}
+
 export interface ConceptUpdateWithoutLinksToConceptDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
@@ -1160,9 +1183,11 @@ export interface ConceptUpdateWithoutLinksToConceptDataInput {
   asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
 }
 
-export interface CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateWithoutLearningObjectivesDataInput;
+export interface CourseUpdateWithoutLearningObjectivesDataInput {
+  name?: Maybe<String>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
 }
 
 export interface URLSubscriptionWhereInput {
@@ -1176,10 +1201,25 @@ export interface URLSubscriptionWhereInput {
   NOT?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
 }
 
-export interface CourseUpdateWithoutLearningObjectivesDataInput {
-  name?: Maybe<String>;
-  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+export interface CourseUpdateManyInput {
+  create?: Maybe<CourseCreateInput[] | CourseCreateInput>;
+  update?: Maybe<
+    | CourseUpdateWithWhereUniqueNestedInput[]
+    | CourseUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | CourseUpsertWithWhereUniqueNestedInput[]
+    | CourseUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  updateMany?: Maybe<
+    | CourseUpdateManyWithWhereNestedInput[]
+    | CourseUpdateManyWithWhereNestedInput
+  >;
 }
 
 export interface CourseSubscriptionWhereInput {
@@ -1193,10 +1233,9 @@ export interface CourseSubscriptionWhereInput {
   NOT?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
 }
 
-export interface CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput {
+export interface CourseUpdateWithWhereUniqueNestedInput {
   where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutLearningObjectivesDataInput;
-  create: CourseCreateWithoutLearningObjectivesInput;
+  data: CourseUpdateDataInput;
 }
 
 export interface ResourceUpdateWithoutUrlsDataInput {
@@ -1205,38 +1244,12 @@ export interface ResourceUpdateWithoutUrlsDataInput {
   description?: Maybe<String>;
 }
 
-export interface CourseScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
+export interface CourseUpdateDataInput {
   name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
 }
 
 export interface ResourceCreateWithoutUrlsInput {
@@ -1246,9 +1259,28 @@ export interface ResourceCreateWithoutUrlsInput {
   description: String;
 }
 
-export interface CourseUpdateManyWithWhereNestedInput {
-  where: CourseScalarWhereInput;
-  data: CourseUpdateManyDataInput;
+export interface ConceptUpdateManyWithoutAsLearningObjectiveInput {
+  create?: Maybe<
+    | ConceptCreateWithoutAsLearningObjectiveInput[]
+    | ConceptCreateWithoutAsLearningObjectiveInput
+  >;
+  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  update?: Maybe<
+    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput[]
+    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput
+  >;
+  upsert?: Maybe<
+    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput[]
+    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput
+  >;
+  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  updateMany?: Maybe<
+    | ConceptUpdateManyWithWhereNestedInput[]
+    | ConceptUpdateManyWithWhereNestedInput
+  >;
 }
 
 export interface ResourceUpdateManyMutationInput {
@@ -1256,8 +1288,9 @@ export interface ResourceUpdateManyMutationInput {
   description?: Maybe<String>;
 }
 
-export interface CourseUpdateManyDataInput {
-  name?: Maybe<String>;
+export interface ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutAsLearningObjectiveDataInput;
 }
 
 export interface ConceptUpdateOneRequiredWithoutResourcesInput {
@@ -1267,15 +1300,31 @@ export interface ConceptUpdateOneRequiredWithoutResourcesInput {
   connect?: Maybe<ConceptWhereUniqueInput>;
 }
 
-export interface ConceptUpsertWithWhereUniqueWithoutCoursesInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutCoursesDataInput;
-  create: ConceptCreateWithoutCoursesInput;
+export interface ConceptUpdateWithoutAsLearningObjectiveDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
 }
 
 export interface ConceptCreateOneWithoutResourcesInput {
   create?: Maybe<ConceptCreateWithoutResourcesInput>;
   connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutAsLearningObjectiveDataInput;
+  create: ConceptCreateWithoutAsLearningObjectiveInput;
+}
+
+export interface LinkCreateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
 }
 
 export interface ConceptScalarWhereInput {
@@ -1328,16 +1377,6 @@ export interface ConceptScalarWhereInput {
   NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
 }
 
-export interface LinkCreateManyWithoutFromInput {
-  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-}
-
-export interface ConceptUpdateManyWithWhereNestedInput {
-  where: ConceptScalarWhereInput;
-  data: ConceptUpdateManyDataInput;
-}
-
 export interface CourseCreateManyWithoutConceptsInput {
   create?: Maybe<
     CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
@@ -1345,10 +1384,9 @@ export interface CourseCreateManyWithoutConceptsInput {
   connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
 }
 
-export interface ConceptUpdateManyDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
+export interface ConceptUpdateManyWithWhereNestedInput {
+  where: ConceptScalarWhereInput;
+  data: ConceptUpdateManyDataInput;
 }
 
 export interface LinkCreateManyWithoutToInput {
@@ -1356,28 +1394,10 @@ export interface LinkCreateManyWithoutToInput {
   connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
 }
 
-export interface ConceptUpdateManyWithoutAsLearningObjectiveInput {
-  create?: Maybe<
-    | ConceptCreateWithoutAsLearningObjectiveInput[]
-    | ConceptCreateWithoutAsLearningObjectiveInput
-  >;
-  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  update?: Maybe<
-    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput[]
-    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput
-  >;
-  upsert?: Maybe<
-    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput[]
-    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput
-  >;
-  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-  updateMany?: Maybe<
-    | ConceptUpdateManyWithWhereNestedInput[]
-    | ConceptUpdateManyWithWhereNestedInput
-  >;
+export interface ConceptUpdateManyDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
 }
 
 export interface ResourceCreateManyWithoutConceptInput {
@@ -1387,9 +1407,10 @@ export interface ResourceCreateManyWithoutConceptInput {
   connect?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
 }
 
-export interface ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateWithoutAsLearningObjectiveDataInput;
+export interface CourseUpsertWithWhereUniqueNestedInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateDataInput;
+  create: CourseCreateInput;
 }
 
 export interface CourseCreateManyWithoutPrerequisitesInput {
@@ -1400,87 +1421,7 @@ export interface CourseCreateManyWithoutPrerequisitesInput {
   connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
 }
 
-export interface ConceptUpdateWithoutAsLearningObjectiveDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-}
-
-export interface CourseCreateManyWithoutLearningObjectivesInput {
-  create?: Maybe<
-    | CourseCreateWithoutLearningObjectivesInput[]
-    | CourseCreateWithoutLearningObjectivesInput
-  >;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutAsLearningObjectiveDataInput;
-  create: ConceptCreateWithoutAsLearningObjectiveInput;
-}
-
-export interface ConceptUpdateInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export interface CourseUpsertWithWhereUniqueWithoutPrerequisitesInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutPrerequisitesDataInput;
-  create: CourseCreateWithoutPrerequisitesInput;
-}
-
-export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
-  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
-  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithoutLinksFromConceptInput {
-  update: ConceptUpdateWithoutLinksFromConceptDataInput;
-  create: ConceptCreateWithoutLinksFromConceptInput;
-}
-
-export interface ResourceSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ResourceWhereInput>;
-  AND?: Maybe<
-    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
-  >;
-  OR?: Maybe<ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput>;
-  NOT?: Maybe<
-    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
-  >;
-}
-
-export interface LinkUpsertWithWhereUniqueWithoutToInput {
-  where: LinkWhereUniqueInput;
-  update: LinkUpdateWithoutToDataInput;
-  create: LinkCreateWithoutToInput;
-}
-
-export type CourseWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface LinkScalarWhereInput {
+export interface CourseScalarWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -1495,45 +1436,36 @@ export interface LinkScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  official?: Maybe<Boolean>;
-  official_not?: Maybe<Boolean>;
-  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
 }
 
-export type ResourceWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface LinkUpdateManyWithWhereNestedInput {
-  where: LinkScalarWhereInput;
-  data: LinkUpdateManyDataInput;
-}
-
-export interface ConceptCreateManyWithoutAsPrerequisiteInput {
+export interface CourseCreateManyWithoutLearningObjectivesInput {
   create?: Maybe<
-    | ConceptCreateWithoutAsPrerequisiteInput[]
-    | ConceptCreateWithoutAsPrerequisiteInput
+    | CourseCreateWithoutLearningObjectivesInput[]
+    | CourseCreateWithoutLearningObjectivesInput
   >;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
 }
 
-export interface LinkUpdateManyDataInput {
-  official?: Maybe<Boolean>;
-}
-
-export interface URLCreateManyWithoutResourceInput {
-  create?: Maybe<
-    URLCreateWithoutResourceInput[] | URLCreateWithoutResourceInput
-  >;
-  connect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutAsPrerequisiteDataInput;
-  create: ConceptCreateWithoutAsPrerequisiteInput;
+export interface CourseUpdateManyWithWhereNestedInput {
+  where: CourseScalarWhereInput;
+  data: CourseUpdateManyDataInput;
 }
 
 export interface ConceptCreateManyWithoutAsLearningObjectiveInput {
@@ -1544,10 +1476,19 @@ export interface ConceptCreateManyWithoutAsLearningObjectiveInput {
   connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
 }
 
-export interface CourseUpsertWithWhereUniqueWithoutConceptsInput {
+export interface CourseUpdateManyDataInput {
+  name?: Maybe<String>;
+}
+
+export interface LinkUpdateWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutFromDataInput;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput {
   where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutConceptsDataInput;
-  create: CourseCreateWithoutConceptsInput;
+  update: CourseUpdateWithoutLearningObjectivesDataInput;
+  create: CourseCreateWithoutLearningObjectivesInput;
 }
 
 export interface CourseUpdateManyWithoutConceptsInput {
@@ -1573,19 +1514,39 @@ export interface CourseUpdateManyWithoutConceptsInput {
   >;
 }
 
-export interface ConceptUpsertWithoutLinksToConceptInput {
-  update: ConceptUpdateWithoutLinksToConceptDataInput;
-  create: ConceptCreateWithoutLinksToConceptInput;
+export interface ConceptUpsertWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutCoursesDataInput;
+  create: ConceptCreateWithoutCoursesInput;
+}
+
+export interface URLUpdateManyMutationInput {
+  address?: Maybe<String>;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutPrerequisitesInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutPrerequisitesDataInput;
+  create: CourseCreateWithoutPrerequisitesInput;
 }
 
 export type LinkWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface LinkUpsertWithWhereUniqueWithoutFromInput {
+export interface ConceptUpsertWithoutLinksFromConceptInput {
+  update: ConceptUpdateWithoutLinksFromConceptDataInput;
+  create: ConceptCreateWithoutLinksFromConceptInput;
+}
+
+export type URLWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface LinkUpsertWithWhereUniqueWithoutToInput {
   where: LinkWhereUniqueInput;
-  update: LinkUpdateWithoutFromDataInput;
-  create: LinkCreateWithoutFromInput;
+  update: LinkUpdateWithoutToDataInput;
+  create: LinkCreateWithoutToInput;
 }
 
 export interface ConceptCreateOneWithoutLinksToConceptInput {
@@ -1593,12 +1554,108 @@ export interface ConceptCreateOneWithoutLinksToConceptInput {
   connect?: Maybe<ConceptWhereUniqueInput>;
 }
 
-export interface CourseCreateInput {
+export interface LinkScalarWhereInput {
   id?: Maybe<ID_Input>;
-  name: String;
-  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+}
+
+export interface ConceptCreateOneWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface LinkUpdateManyWithWhereNestedInput {
+  where: LinkScalarWhereInput;
+  data: LinkUpdateManyDataInput;
+}
+
+export interface ConceptCreateManyWithoutCoursesInput {
+  create?: Maybe<
+    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+}
+
+export interface LinkUpdateManyDataInput {
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutAsPrerequisiteDataInput;
+  create: ConceptCreateWithoutAsPrerequisiteInput;
+}
+
+export interface ResourceSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ResourceWhereInput>;
+  AND?: Maybe<
+    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
+  >;
+  OR?: Maybe<ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput>;
+  NOT?: Maybe<
+    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
+  >;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutConceptsDataInput;
+  create: CourseCreateWithoutConceptsInput;
+}
+
+export type ResourceWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface ConceptUpsertWithoutLinksToConceptInput {
+  update: ConceptUpdateWithoutLinksToConceptDataInput;
+  create: ConceptCreateWithoutLinksToConceptInput;
+}
+
+export interface ConceptCreateManyWithoutAsPrerequisiteInput {
+  create?: Maybe<
+    | ConceptCreateWithoutAsPrerequisiteInput[]
+    | ConceptCreateWithoutAsPrerequisiteInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+}
+
+export interface CourseCreateManyInput {
+  create?: Maybe<CourseCreateInput[] | CourseCreateInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
 }
 
 export interface CourseUpdateManyMutationInput {
@@ -1618,30 +1675,29 @@ export interface ConceptUpdateManyMutationInput {
   official?: Maybe<Boolean>;
 }
 
-export interface ConceptCreateOneWithoutLinksFromConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+export interface LinkUpsertWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutFromDataInput;
+  create: LinkCreateWithoutFromInput;
+}
+
+export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
   connect?: Maybe<ConceptWhereUniqueInput>;
 }
 
-export type URLWhereUniqueInput = AtLeastOne<{
+export interface URLCreateManyWithoutResourceInput {
+  create?: Maybe<
+    URLCreateWithoutResourceInput[] | URLCreateWithoutResourceInput
+  >;
+  connect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
+}
+
+export type CourseWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
-
-export interface URLUpdateManyMutationInput {
-  address?: Maybe<String>;
-}
-
-export interface LinkUpdateWithWhereUniqueWithoutFromInput {
-  where: LinkWhereUniqueInput;
-  data: LinkUpdateWithoutFromDataInput;
-}
-
-export interface ConceptCreateManyWithoutCoursesInput {
-  create?: Maybe<
-    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
-  >;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-}
 
 export interface NodeNode {
   id: ID_Output;
@@ -2214,6 +2270,15 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  prerequisiteCourses: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface CourseSubscription
@@ -2248,6 +2313,15 @@ export interface CourseSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  prerequisiteCourses: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface CourseNullablePromise
@@ -2276,6 +2350,15 @@ export interface CourseNullablePromise
   learningObjectives: <T = FragmentableArray<Concept>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  prerequisiteCourses: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;

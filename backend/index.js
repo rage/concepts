@@ -40,6 +40,17 @@ const resolvers = {
     },
   },
   Mutation: {
+    addCourseAsCoursePrerequisite(root, args, context) {
+      return context.prisma.updateCourse({
+        where: {id: args.id },
+        data: {
+          prerequisiteCourses: {
+            connect: [{ id: args.prerequisite_id }]
+          }
+        }
+        
+      })
+    },
     createResourceWithURLs(root, args, context) {
       return context.prisma.createResource({
         name: args.name,
@@ -227,6 +238,11 @@ const resolvers = {
       return context.prisma.course({
         id: root.id
       }).concepts()
+    },
+    prerequisiteCourses(root, args, context) {
+      return context.prisma.course({
+        id: root.id
+      }).prerequisiteCourses()
     }
   },
   Resource: {

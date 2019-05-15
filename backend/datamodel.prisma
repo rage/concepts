@@ -10,6 +10,7 @@ type Course {
   concepts: [Concept!]! @relation(name:"Courses")
   prerequisites: [Concept!]! @relation(name:"Prerequisite")
   learningObjectives: [Concept!]! @relation(name:"LearningObjective")
+  prerequisiteCourses: [Course!]! 
 #   instances: [Instance!]!
 }
 
