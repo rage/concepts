@@ -4,7 +4,6 @@ import ActivatableConcept from './ActivatableConcept'
 
 
 const ActiveCourse = ({ course, activateConcept, activeConceptId }) => {
-  console.log(course)
   return (
     <div className="left-menu">
       <HeaderButton text={course.name} />
@@ -14,7 +13,7 @@ const ActiveCourse = ({ course, activateConcept, activeConceptId }) => {
           {course.concepts.map(concept =>
             <ActivatableConcept
               concept={concept}
-              key={concept.name}
+              key={concept.id}
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
             />

@@ -2,14 +2,18 @@ import React from 'react'
 import HeaderButton from './HeaderButton'
 import ConceptButton from './ConceptButton'
 
-const CourseColumn = ({ course }) => {
+const CourseColumn = ({ course, linkPrerequisite, activeConceptId, deleteLink }) => {
   return (
     <div className="curri-column">
       <HeaderButton text={course.name} />
       {course.concepts.map(concept =>
         <ConceptButton
           concept={concept}
-          key={concept.name}/>
+          key={concept.id}
+          linkPrerequisite={linkPrerequisite}
+          deleteLink={deleteLink}
+          activeConceptId={activeConceptId}
+        />
       )}
       <HeaderButton text='+' />
     </div>
