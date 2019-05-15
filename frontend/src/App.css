@@ -62,7 +62,7 @@ body {
 
 .course-view {
   display: flex;
-  overflow: hidden;
+  overflow: hidden; 
 }
 
 .curri-button {
@@ -106,10 +106,15 @@ body {
 
 .right-menu {
   margin: 1vh;
-  height: 98vh;
+  height: 90vh;
   justify-items: end;
   background-color: #325277;
   border-radius: 4px;
+}
+
+.right-menu-scroll {
+  height: 90%;
+  overflow: scroll;
 }
 
 .right-menu-splitter {
@@ -166,11 +171,14 @@ body {
   justify-content: center;
   flex-direction: row;
   flex-basis: 100%;
+  flex-flow: wrap;
 }
 
 .course-menu {
   margin: 1vh;
-  height: 98vh;
+  padding: 4px;
+  height: 90vh;
+  overflow: scroll;
   justify-items: end;
   background-color: #325277;
   border-radius: 4px;

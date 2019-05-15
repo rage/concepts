@@ -15,19 +15,17 @@ const CourseList = () => {
   return (
     <div className="course-selection-container">
       <div className="course-menu">
-        <div className="course-menu-splitter">
-          <div className="course-selection-column">
-            {
-              courses.data.allCourses ?
-                courses.data.allCourses.map(course => {
-                  return (
-                    <AltCourse key={course.id} id={course.id} text={course.name} />
-                  )
-                })
-                :
-                null
-            }
-          </div>
+        <div className="course-selection-column">
+          {
+            courses.data.allCourses ?
+              courses.data.allCourses.map(course => {
+                return (
+                  <AltCourse key={course.id} id={course.id} text={course.name} />
+                )
+              })
+              :
+              null
+          }
         </div>
       </div>
       <div className="course-input-form">
