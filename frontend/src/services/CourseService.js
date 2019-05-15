@@ -52,6 +52,43 @@ query courseAndConcepts($id: ID!) {
 }
 `
 
+const FETCH_COURSE = gql`
+query courseById($id: ID!) {
+  courseById(id: $id) {
+    id
+    name
+    concepts {
+      id
+      name
+    }
+  }
+}
+`
+
+
+const COURSE_PREREQUISITE_COURSES = gql`
+query courseById($id: ID!) {
+  courseById(id: $id) {
+    id
+    prerequisiteCourses {
+      id
+      name
+      concepts {
+        id
+        name
+        linksFromConcept {
+          id
+          to {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+
 const CREATE_COURSE = gql`
 mutation createCourse($name: String!) {
   createCourse(name: $name) {
@@ -70,4 +107,17 @@ mutation deleteCourse($id: ID!) {
 }
 `
 
-export { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS }
+const ADD_COURSE_AS_PREREQUISITE = gql`
+mutation addCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
+  addCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
+    id
+    name
+    prerequisiteCourses {
+      id
+      name
+    }
+  }
+}
+`
+
+export { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES }
