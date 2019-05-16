@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 
-const ConceptForm = ({ createConcept, course_id }) => {
+const ConceptForm = ({ course_id, createConcept, closeModal }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [official, setOfficial] = useState(false)
+
+
 
   const submit = async (event) => {
     event.preventDefault()
@@ -14,6 +16,7 @@ const ConceptForm = ({ createConcept, course_id }) => {
     setName('')
     setDescription('')
     setOfficial(false)
+    closeModal()
   }
 
   return (

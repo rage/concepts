@@ -3,6 +3,8 @@ import React from 'react'
 const ConceptButton = ({ concept, activeConceptId, linkPrerequisite, deleteLink }) => {
 
   const onClick = async () => {
+    console.log(activeConceptId)
+    if (activeConceptId === '') return
     const isActive = concept.linksFromConcept.find(link => {
       return link.to.id === activeConceptId
     })

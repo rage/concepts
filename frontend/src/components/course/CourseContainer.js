@@ -1,7 +1,7 @@
 import React from 'react'
 import Course from './Course'
 
-const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink }) => (
+const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, createConcept }) => (
   <div className="curri-column-container">
     {
       courses && courses.map(course =>
@@ -11,6 +11,7 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
           linkPrerequisite={linkPrerequisite}
           deleteLink={deleteLink}
           activeConceptId={activeConceptId}
+          createConcept={createConcept}
         />
       )
     }

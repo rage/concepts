@@ -2,21 +2,25 @@ import React, { useState } from 'react'
 import HeaderButton from './HeaderButton'
 import ActivatableConcept from '../concept/ActivatableConcept'
 import Modal from 'react-modal'
+import ConceptForm from '../concept/ConceptForm'
 
 const customStyles = {
   content: {
-    top: '50%',
+    top: '42%',
     left: '50%',
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)'
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   }
 }
 
 Modal.setAppElement('#root')
 
-const ActiveCourse = ({ course, activateConcept, activeConceptId }) => {
+const ActiveCourse = ({ course, activateConcept, activeConceptId, createConcept }) => {
 
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -48,20 +52,11 @@ const ActiveCourse = ({ course, activateConcept, activeConceptId }) => {
       <HeaderButton onClick={openModal} text='+' />
       <Modal
         isOpen={modalOpen}
-        onRequestClose={closeModal}
         style={customStyles}
+        onRequestClose={closeModal}
         contentLabel={'Test modal'}
       >
-        <h2>Hello</h2>
-        <button onClick={closeModal}>close</button>
-        <div>I am a modal</div>
-        <form>
-          <input />
-          <button>tab navigation</button>
-          <button>stays</button>
-          <button>inside</button>
-          <button>the modal</button>
-        </form>
+        <ConceptForm course_id={course.id} createConcept={createConcept} closeModal={closeModal} />
       </Modal>
     </div>
   )

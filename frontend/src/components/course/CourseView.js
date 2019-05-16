@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
+import { LINK_PREREQUISITE, DELETE_LINK, CREATE_CONCEPT } from '../../services/ConceptService'
 import {
   ALL_COURSES,
   FETCH_COURSE,
@@ -41,6 +41,12 @@ const CourseView = ({ course_id }) => {
     }]
   })
 
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    refetchQueries: [{
+      query: ALL_COURSES
+    }]
+  })
+
   const activateConcept = (id) => () => {
     const alreadyActive = activeConceptId === id
     setActiveConceptId(alreadyActive ? '' : id)
@@ -48,7 +54,7 @@ const CourseView = ({ course_id }) => {
   }
 
   return (
-    <div>
+    <React.Fragment>
       {
         course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
           <div className="course-view">
@@ -56,6 +62,7 @@ const CourseView = ({ course_id }) => {
               course={course.data.courseById}
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
+              createConcept={createConcept}
             />
             <CourseContainer
               courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
@@ -64,6 +71,7 @@ const CourseView = ({ course_id }) => {
               linkPrerequisite={linkPrerequisite}
               deleteLink={deleteLink}
               activeConceptId={activeConceptId}
+              createConcept={createConcept}
             />
             <CourseTray
               courses={courses.data.allCourses}
@@ -73,7 +81,7 @@ const CourseView = ({ course_id }) => {
           </div> :
           null
       }
-    </div>
+    </React.Fragment>
   )
 }
 
