@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { LINK_PREREQUISITE, DELETE_LINK, CREATE_CONCEPT } from '../../services/ConceptService'
+import {
+  LINK_PREREQUISITE,
+  DELETE_LINK,
+  CREATE_CONCEPT
+} from '../../services/ConceptService'
+
 import {
   ALL_COURSES,
   FETCH_COURSE,
