@@ -66,4 +66,34 @@ mutation deleteConcept($id: ID!) {
 }
 `
 
-export { ALL_CONCEPTS, CREATE_CONCEPT, DELETE_CONCEPT, ADD_PREREQUISITE_CONCEPT, UPDATE_CONCEPT }
+const LINK_PREREQUISITE = gql`
+mutation createLink($to: ID!, $from: ID!) {
+  createLink(to:$to, from:$from) {
+    id
+    to {
+      id
+    }
+    from {
+      id
+    }
+  }
+}
+`
+
+const DELETE_LINK = gql`
+mutation deleteLink($id: ID!) {
+  deleteLink(id: $id) {
+    id
+  }
+}
+`
+
+export {
+  ALL_CONCEPTS,
+  CREATE_CONCEPT,
+  DELETE_CONCEPT,
+  ADD_PREREQUISITE_CONCEPT,
+  UPDATE_CONCEPT,
+  LINK_PREREQUISITE,
+  DELETE_LINK
+}

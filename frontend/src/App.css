@@ -1,4 +1,4 @@
-th, td {
+/* th, td {
     border: 1px solid gray;
 }
 
@@ -11,14 +11,14 @@ td {
     border: 1px solid black;
     table-layout: fixed;
     width: 100%; /* must have this set */
-  }
+/* } */
 
-.courseList table {
+/* .courseList table {
     margin: 15px 0;
     border: 1px solid black;
     table-layout: fixed;
     width: 100%; /* must have this set */
-  }
+/*
 
 a {
     text-decoration: none;
@@ -34,4 +34,244 @@ body {
     margin: 0 auto;
     background: white;
     padding: 10px;
-  }
+} 
+
+*/
+
+/**
+ * Reset button styles.
+ * It takes a bit of work to achieve a neutral look.
+ */
+ button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  /* show a hand cursor on hover; some argue that we
+  should keep the default arrow cursor for buttons */
+  cursor: pointer;
+}
+
+.App {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  flex-basis: 100%;
+}
+
+.course-view {
+  display: flex;
+  overflow: hidden; 
+}
+
+.curri-button {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  width: 200px;
+  height: 50px;
+  margin-bottom: 0.5vh
+}
+
+.curri-button.narrow {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  width: 100px;
+  height: 50px;
+  margin-bottom: 0.5vh;
+  margin-left: 0.5vh;
+}
+
+.curri-button:hover {
+  border-color: #a7a7a7;
+}
+
+.curri-button:focus {
+  outline-width: 0;
+}
+
+.curri-column {
+  margin: 1vh;
+  display: flex;
+  flex-direction: column
+}
+
+.curri-column-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: 90vh;
+  overflow-y: scroll;
+  flex-basis: 100%;
+}
+
+.right-menu {
+  margin: 1vh;
+  height: 90vh;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.right-menu {
+  margin: 1vh;
+  height: 90vh;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.left-menu {
+  margin: 1vh;
+  padding: 5px;
+  height: 90vh;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.right-menu-scroll {
+  height: 90%;
+  overflow: scroll;
+}
+
+.left-menu-scroll {
+  height: 70vh;
+  overflow: scroll;
+}
+
+.left-menu-concepts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.right-menu-splitter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 97.5vh;
+}
+
+.right-menu-courses {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.curri-button.send {
+  margin: 1vh;
+}
+
+.curri-button.bottom-button {
+  position: fixed;
+  bottom: 0;
+  margin: 1vh;
+}
+
+.curri-course-result-container {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  padding: 1vh;
+  margin: 1vh;
+}
+
+.course-button {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  width: 400px;
+  height: 50px;
+  margin-bottom: 0.5vh
+}
+
+.course-button:hover {
+  border-color: #a7a7a7;
+}
+
+.course-button:focus {
+  outline-width: 0;
+}
+
+.course-selection-container {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-basis: 100%;
+  flex-flow: wrap;
+}
+
+.course-menu {
+  margin: 1vh;
+  padding: 4px;
+  height: 90vh;
+  overflow: scroll;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.course-input-form {
+  margin: 1vh;
+  height: 49vh;
+  align-self: flex-start;
+  justify-items: end;
+  background-color: #325277;
+  border-radius: 4px;
+}
+
+.course-input-column {
+  margin: 1vh;
+  display: flex;
+  flex-direction: column
+}
+
+.input-label {
+  margin: 1vh;
+  color: #ffffff;
+}
+
+.course-input {
+  margin: 1vh;
+  padding-left: 10px;
+  width: 290px;
+  height: 40px;
+  border: none;
+  font: inherit;
+  color: inherit;
+  border-radius: 4px;
+}
+
+.input-button {
+  border: solid 1px #d3d3d3;
+  border-radius: 4px;
+  width: 300px;
+  height: 40px;
+  margin: 1vh;
+  background-color: #d3d3d3;
+}
+
+.course-menu-splitter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 97.5vh;
+}
+
+.course-selection-column {
+  margin: 1vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav {
+  margin: 1vh;
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+}

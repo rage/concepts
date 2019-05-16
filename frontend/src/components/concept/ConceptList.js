@@ -3,9 +3,9 @@ import Concept from '../components/Concept'
 import ConceptForm from './ConceptForm'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
-import { DELETE_CONCEPT, CREATE_CONCEPT, ADD_PREREQUISITE_CONCEPT } from '../services/ConceptService'
-import { COURSE_AND_CONCEPTS } from '../services/CourseService'
-import { CREATE_RESOURCE } from '../services/ResourceService'
+import { DELETE_CONCEPT, CREATE_CONCEPT, ADD_PREREQUISITE_CONCEPT } from '../../services/ConceptService'
+import { COURSE_AND_CONCEPTS } from '../../services/CourseService'
+import { CREATE_RESOURCE } from '../../services/ResourceService'
 
 const ConceptList = ({ course_id }) => {
 

@@ -1,25 +1,27 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
-
-import ConceptList from './components/Concept/ConceptList'
-import CourseList from './components/Course/CourseList'
-
 import './App.css'
+
+import AltCourseList from './components/course/AltCourseList'
+import CourseView from './components/course/CourseView'
 
 const App = () => {
   return (
     <div className="App">
-      <div>
+      <div className="nav">
         <Link to="/">Courses</Link>
+
       </div>
-      <Route exact path="/" render={() => <CourseList />} />
+      <Route exact path="/" render={() => <AltCourseList />} />
       <Route exact path="/courses/:id" render={({ match }) => {
-        return <ConceptList
+        return <CourseView
           course_id={match.params.id}
         />
       }} />
-    </div >
+    </div>
   )
 }
+
+
 
 export default App

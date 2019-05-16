@@ -13,6 +13,7 @@ type Query {
 }
 
 type Mutation {
+  addCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   createConceptAsPrerequisite(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
   createConceptAsLearningObjective(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
   createResourceWithURLs(concept_id: ID!, name: String!, desc: String, urls: [String!]!): Resource
@@ -39,6 +40,7 @@ type Course {
   concepts: [Concept!]!
   prerequisites: [Concept!]!
   learningObjectives: [Concept!]!
+  prerequisiteCourses: [Course!]!
 }
 
 # type Instance {
