@@ -1,8 +1,8 @@
 import React from 'react'
 import { Route, Link } from 'react-router-dom'
 
-import ConceptList from './components/ConceptList'
-import CourseList from './components/CourseList'
+import ConceptList from './components/Concept/ConceptList'
+import CourseList from './components/Course/CourseList'
 
 import './App.css'
 

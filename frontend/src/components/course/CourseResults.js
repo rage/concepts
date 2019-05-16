@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './App.css'
+
 import ResultRow from './ResultBox'
 import ResultHeader from './ResultHeader'
 

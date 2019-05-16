@@ -3,7 +3,7 @@ import CourseLink from './CourseLink'
 import CourseForm from './CourseForm'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { ALL_COURSES, CREATE_COURSE } from '../services/CourseService'
+import { ALL_COURSES, CREATE_COURSE } from '../../services/CourseService'
 
 const CourseList = () => {
   const courses = useQuery(ALL_COURSES)

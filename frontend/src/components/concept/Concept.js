@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ResourceForm from './ResourceForm'
+import ResourceForm from '../resource/ResourceForm'
 
 const prerequisiteStyle = {
   padding: '5px'

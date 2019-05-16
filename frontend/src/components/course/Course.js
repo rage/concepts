@@ -1,6 +1,6 @@
 import React from 'react'
 import HeaderButton from './HeaderButton'
-import ConceptButton from './ConceptButton'
+import ConceptButton from '../concept/ConceptButton'
 
 const CourseColumn = ({ course, linkPrerequisite, activeConceptId, deleteLink }) => {
   return (

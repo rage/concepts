@@ -2,8 +2,8 @@ import React from 'react'
 import { Route, Link } from 'react-router-dom'
 import './App.css'
 
-import AltCourseList from './components/AltCourseList'
-import CourseView from './components/CourseView'
+import AltCourseList from './components/course/AltCourseList'
+import CourseView from './components/course/CourseView'
 
 const App = () => {
   return (

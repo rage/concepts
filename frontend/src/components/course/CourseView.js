@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { LINK_PREREQUISITE, DELETE_LINK } from '../services/ConceptService'
+import { LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
 import {
   ALL_COURSES,
   FETCH_COURSE,
   ADD_COURSE_AS_PREREQUISITE,
   COURSE_PREREQUISITE_COURSES
-} from '../services/CourseService'
+} from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
 import CourseTray from './CourseTray'

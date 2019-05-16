@@ -1,6 +1,6 @@
 import React from 'react'
 import HeaderButton from './HeaderButton'
-import ActivatableConcept from './ActivatableConcept'
+import ActivatableConcept from '../concept/ActivatableConcept'
 
 
 const ActiveCourse = ({ course, activateConcept, activeConceptId }) => {
