@@ -1,6 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
+import Modal from 'react-modal'
+
+import { useMutation } from 'react-apollo-hooks'
+
+import ConceptUpdateForm from './ConceptUpdateForm'
+
+import {
+  UPDATE_CONCEPT
+} from '../../services/ConceptService'
+
+const customStyles = {
+  content: {
+    top: '42%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
+  },
+  overlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  }
+}
 
 const ConceptButton = ({ concept, activeConceptId, linkPrerequisite, deleteLink }) => {
+  const [modalOpen, setModalOpen] = useState(false)
+
+  const openModal = () => {
+    if (activeConceptId !== '') return
+    setModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setModalOpen(false)
+  }
+
+  const updateConcept = useMutation(UPDATE_CONCEPT, {
+    variables: { id: concept.id }
+  })
 
   const onClick = async () => {
     console.log(activeConceptId)
@@ -31,12 +68,26 @@ const ConceptButton = ({ concept, activeConceptId, linkPrerequisite, deleteLink 
   }
 
   return (
-    <button
-      onClick={onClick}
-      className="curri-button"
-      style={buttonStyle()}>
-      {concept.name}
-    </button>
+    <React.Fragment>
+      <button
+        onClick={onClick}
+        onDoubleClick={openModal}
+        className="curri-button"
+        style={buttonStyle()}>
+        {concept.name}
+      </button>
+      <Modal
+        isOpen={modalOpen}
+        style={customStyles}
+        onRequestClose={closeModal}
+        contentLabel={'Test modal'}
+      >
+        <ConceptUpdateForm concept={concept} closeModal={closeModal} updateConcept={updateConcept}/>
+
+      </Modal>
+    </React.Fragment>
+
+
   )
 }
 
