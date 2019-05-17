@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd backend && npm install && npm start",
+    "start": "cd backend && yarn install && yarn start",
     "heroku-postbuild": "cd frontend && yarn install && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
