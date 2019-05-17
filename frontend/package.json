@@ -4,9 +4,6 @@
   "private": true,
   "dependencies": {
     "apollo-boost": "^0.3.1",
-    "eslint-plugin-flowtype": "^3.9.0",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.13.0",
     "graphql": "^14.3.0",
     "react": "^16.8.6",
     "react-apollo-hooks": "^0.4.5",
@@ -36,8 +33,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000/graphql",
-  "devDependencies": {
-    "eslint-plugin-import": "^2.17.2"
-  }
+  "proxy": "http://localhost:4000/graphql"
 }
