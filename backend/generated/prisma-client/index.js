@@ -28,6 +28,7 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://hy-mapper-7131800873.herokuapp.com/backend/dev`
+  endpoint: `${process.env["ENDPOINT"]}`,
+  secret: `$(env:SECRET)`
 });
 exports.prisma = new exports.Prisma();

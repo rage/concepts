@@ -2,6 +2,8 @@ const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require("express")
 
+require('dotenv').config()
+
 const resolvers = {
   Query: {
     allURLs(root, args, context) {

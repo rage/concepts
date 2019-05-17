@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start-dev": "ENDPOINT=http://localhost:4466 secret=$SECRET node index.js",
+    "start": "ENDPOINT=https://hy-mapper-7131800873.herokuapp.com/backend/dev node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon index.js"
   },
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/rage/concepts#readme",
   "dependencies": {
+    "dotenv": "^8.0.0",
     "graphql-yoga": "^1.17.4",
     "prisma-client-lib": "^1.30.4"
   },
