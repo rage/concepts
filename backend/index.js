@@ -1,5 +1,6 @@
 const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
+const express = require("express")
 
 const resolvers = {
   Query: {
@@ -273,4 +274,7 @@ const server = new GraphQLServer({
     prisma,
   },
 })
+
+server.express.use(express.static('../frontend/build'))
+
 server.start(options, () => console.log('Server is running on http://localhost:4000'))

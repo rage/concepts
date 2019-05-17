@@ -1,5 +1,6 @@
-endpoint: http://localhost:4466
+endpoint: https://hy-mapper-7131800873.herokuapp.com/backend/dev
 datamodel: datamodel.prisma
+secret: $(env:SECRET)
 
 generate:
   - generator: javascript-client
