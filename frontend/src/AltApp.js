@@ -10,7 +10,6 @@ const App = () => {
     <div className="App">
       <div className="nav">
         <Link to="/">Courses</Link>
-
       </div>
       <Route exact path="/" render={() => <AltCourseList />} />
       <Route exact path="/courses/:id" render={({ match }) => {
