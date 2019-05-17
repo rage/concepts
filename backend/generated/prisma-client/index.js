@@ -25,9 +25,6 @@ var models = [
     embedded: false
   }
 ];
-
-console.log(`${process.env["ENDPOINT"]}`)
-
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
