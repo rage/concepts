@@ -1,6 +1,7 @@
 const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require("express")
+const path = require('path')
 
 require('dotenv').config()
 
@@ -45,13 +46,13 @@ const resolvers = {
   Mutation: {
     addCourseAsCoursePrerequisite(root, args, context) {
       return context.prisma.updateCourse({
-        where: {id: args.id },
+        where: { id: args.id },
         data: {
           prerequisiteCourses: {
             connect: [{ id: args.prerequisite_id }]
           }
         }
-        
+
       })
     },
     createResourceWithURLs(root, args, context) {
@@ -278,5 +279,9 @@ const server = new GraphQLServer({
 })
 
 server.express.use(express.static('../frontend/build'))
+
+server.express.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../frontend/build/index.html'))
+})
 
 server.start(options, () => console.log('Server is running on http://localhost:4000'))
