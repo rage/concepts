@@ -33,11 +33,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jest": "^21.27.2",
-    "eslint-plugin-react": "^7.11.1"
-  },
   "proxy": "http://localhost:4000/graphql"
 }
