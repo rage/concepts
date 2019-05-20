@@ -6,31 +6,95 @@ import MaterialCourse from './MaterialCourse'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField';
 
 
 import { useMutation } from 'react-apollo-hooks'
-import { ALL_COURSES,  UPDATE_COURSE } from '../../services/CourseService'
+import { ALL_COURSES, UPDATE_COURSE } from '../../services/CourseService'
+// import { CREATE_CONCEPT } from '../../services/ConceptService'
 
+const AddConceptDialog = ({ state, handleClose, createConcept }) => {
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+
+  const handleConceptAdding = async () => {
+      await createConcept({
+        variables: {
+          course_id: state.id,
+          name,
+          description,
+          official:false
+        }
+      })
+      setName('')
+      setDescription('')
+      handleClose()
+  }
+
+  return (<Dialog
+    open={state.open}
+    onClose={handleClose}
+    aria-labelledby="form-dialog-title">
+    <DialogTitle id="form-dialog-title">
+      Add concept
+    </DialogTitle>
+    <DialogContent>
+      <TextField
+        autoFocus
+        margin="dense"
+        id="name"
+        label="Name"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        fullWidth
+      />
+      
+      <TextField
+        autoFocus
+        margin="dense"
+        id="description"
+        label="Description"
+        type="text"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        fullWidth
+      />
+    </DialogContent>
+
+
+
+    <DialogActions>
+      <Button onClick={handleClose} color="primary">
+        Cancel
+        </Button>
+      <Button onClick={handleConceptAdding} color="primary">
+        Add concept
+        </Button>
+    </DialogActions>
+  </Dialog>)
+
+
+}
 
 const EditCourseDialog = ({ state, handleClose, updateCourse }) => {
   const [name, setName] = useState('')
-  
+
   const handleCourseEdit = async () => {
     await updateCourse({
       variables: {
-        id: state.id, 
-        name 
+        id: state.id,
+        name
       }
     })
     setName('')
     handleClose()
   }
 
-  
+
   return (
     <Dialog
       open={state.open}
@@ -40,7 +104,7 @@ const EditCourseDialog = ({ state, handleClose, updateCourse }) => {
         Edit course
       </DialogTitle>
       <DialogContent>
-      <TextField
+        <TextField
           autoFocus
           margin="dense"
           id="name"
@@ -50,9 +114,9 @@ const EditCourseDialog = ({ state, handleClose, updateCourse }) => {
           onChange={(e) => setName(e.target.value)}
           fullWidth
         />
-        </DialogContent>
+      </DialogContent>
 
-    
+
 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
@@ -68,38 +132,53 @@ const EditCourseDialog = ({ state, handleClose, updateCourse }) => {
 
 
 const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, createConcept }) => {
-  const [state, setState] = useState({open: false, id: ''})
+  const [courseState, setCourseState] = useState({ open: false, id: '' })
+  const [conceptState, setConceptState] = useState({ open: false, id: '' })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
     refetchQueries: [{ query: ALL_COURSES }]
   })
 
-  const handleClose = () => {
-    setState({open: false, id: ''})
+  // const createConcept = useMutation(CREATE_CONCEPT, {
+  //   refetchQueries: [{ query: ALL_COURSES }]
+  // })
+
+  const handleCourseClose = () => {
+    setCourseState({ open: false, id: '' })
   }
 
-  const handleOpen = (id) => () => {
-    setState({ open: true, id})
+  const handleCourseOpen = (id) => () => {
+    setCourseState({ open: true, id })
   }
 
-  
+  const handleConceptClose = () => {
+    setConceptState({ open: false, id: '' })
+  }
+
+  const handleConceptOpen = (id) => () => {
+    setConceptState({ open: true, id })
+  }
+
+
   return (
-  <div className="curri-column-container">
-    {
-      courses && courses.map(course =>
-        <MaterialCourse
-          key={course.id}
-          course={course}
-          linkPrerequisite={linkPrerequisite}
-          deleteLink={deleteLink}
-          activeConceptId={activeConceptId}
-          createConcept={createConcept}
-          openDialog={handleOpen}
-        />
-      )
-    }
-    <EditCourseDialog state={state} handleOpen={handleOpen} handleClose={handleClose} updateCourse={updateCourse}/>
-  </div>
+    <div className="curri-column-container">
+      {
+        courses && courses.map(course =>
+          <MaterialCourse
+            key={course.id}
+            course={course}
+            linkPrerequisite={linkPrerequisite}
+            deleteLink={deleteLink}
+            activeConceptId={activeConceptId}
+            createConcept={createConcept}
+            openCourseDialog={handleCourseOpen}
+            openConceptDialog={handleConceptOpen}
+          />
+        )
+      }
+      <EditCourseDialog state={courseState} handleClose={handleCourseClose} updateCourse={updateCourse} />
+      <AddConceptDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept}/>
+    </div>
   )
 }
 

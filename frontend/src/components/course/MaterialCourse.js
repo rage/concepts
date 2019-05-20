@@ -50,14 +50,14 @@ const styles = theme => ({
 });
 
 const MaterialCourse = ({ classes, // MaterialUI
-  course, openDialog, linkPrerequisite, activeConceptId, deleteLink, createConcept }) => {
+  course, openCourseDialog, openConceptDialog, linkPrerequisite, activeConceptId, deleteLink, createConcept }) => {
 
 
   return (
     <div>
       <Card className={classes.root}>
         <CardHeader className={classes.cardHeader} title={course.name} action={
-          <IconButton onClick={openDialog(course.id)}>
+          <IconButton onClick={openCourseDialog(course.id)}>
             <EditIcon />
           </IconButton>
         }>
@@ -73,7 +73,7 @@ const MaterialCourse = ({ classes, // MaterialUI
                 activeConceptId={activeConceptId} />
             )}
           </List>
-          <Button className={classes.button} variant="contained" color="primary"> Add concept </Button>
+          <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
         </CardContent>
 
         
