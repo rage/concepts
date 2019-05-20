@@ -76,7 +76,7 @@ const MaterialCourse = ({ classes, // MaterialUI
           <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
         </CardContent>
 
-        
+
       </Card>
     </div>
   )

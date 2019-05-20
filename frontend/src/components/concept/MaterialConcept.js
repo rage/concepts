@@ -2,13 +2,16 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation } from 'react-apollo-hooks'
-import { UPDATE_CONCEPT } from '../../services/ConceptService'
+import { UPDATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
+import { ALL_COURSES } from '../../services/CourseService'
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -32,9 +35,14 @@ const styles = theme => ({
 })
 
 const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, deleteLink }) => {
- 
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
-    variables: { id: concept.id }
+  const [state, setState] = useState({ anchorEl: null })
+
+  // const updateConcept = useMutation(UPDATE_CONCEPT, {
+  //   variables: { id: concept.id }
+  // })
+
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    refetchQueries: { query: ALL_COURSES }
   })
 
   const isActive = () => {
@@ -61,17 +69,54 @@ const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, 
       })
   }
 
+  const handleMenuOpen = (event) => {
+    setState({ anchorEl: event.currentTarget })
+  }
+
+  const handleMenuClose = () => {
+    setState({ anchorEl: null })
+  }
+
+  const openEditDialog = () => {
+    console.log('edit')
+    handleMenuClose()
+  }
+
+  const handleDeleteConcept = (id) => async () => {
+    const willDelete = window.confirm('Are you sure about this?')
+    if (willDelete) {
+      console.log('delete', id)
+      // await deleteConcept({
+      //   variables: { id }
+      // })
+    }
+    handleMenuClose()
+  }
+
   return (
-    <ListItem divider button onClick={onClick} className={isActive() ? classes.active : classes.inactive }>
+    <ListItem divider button onClick={onClick} className={isActive() ? classes.active : classes.inactive}>
       <ListItemText>
         {concept.name}
       </ListItemText>
-      { activeConceptId === '' ? 
-      <ListItemSecondaryAction>
-        <IconButton aria-label="Delete">
-          <MoreVertIcon />
-        </IconButton>
-      </ListItemSecondaryAction> : null
+      {activeConceptId === '' ?
+        <ListItemSecondaryAction>
+          <IconButton
+            aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+            aria-haspopup="true"
+            onClick={handleMenuOpen}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={state.anchorEl}
+            open={Boolean(state.anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
+            <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
+          </Menu>
+        </ListItemSecondaryAction> : null
       }
     </ListItem>
   )

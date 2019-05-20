@@ -62,7 +62,7 @@ body {
 
 .course-view {
   display: flex;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .curri-button {
@@ -96,10 +96,19 @@ body {
   flex-direction: column
 }
 
+/* .curri-column-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-gap: 30px;
+  height: 90vh;
+  grid-auto-flow: column;
+  overflow-y: scroll;
+} */
+
 .curri-column-container {
-  align-items: center;
+  /* align-items: center; */
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
   height: 90vh;
