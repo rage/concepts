@@ -15,10 +15,19 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const styles = theme => ({
   active: {
-    backgroundColor: '#9ecae1'
+    backgroundColor: '#9ecae1',
+    "&:hover": {
+      backgroundColor: '#9ecae1'
+    },
+    "&:focus": {
+      backgroundColor: '#9ecae1'
+    }
   },
   inactive: {
-
+    backgroundColor: '#fff',
+    "&:focus": {
+      backgroundColor: '#fff'
+    }
   }
 })
 
@@ -53,7 +62,7 @@ const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, 
   }
 
   return (
-    <ListItem button onClick={onClick} className={isActive() ? classes.active : classes.inactive }>
+    <ListItem divider button onClick={onClick} className={isActive() ? classes.active : classes.inactive }>
       <ListItemText>
         {concept.name}
       </ListItemText>
