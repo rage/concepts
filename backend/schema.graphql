@@ -22,6 +22,7 @@ type Mutation {
   updateConcept(id: ID!, name:String!, desc: String): Concept
   createCourse(name: String!): Course
   deleteCourse(id: ID!): Course
+  updateCourse(id: ID!, name: String!): Course
   createConcept(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   createLink(to: ID!, from: ID!, official: Boolean): Link

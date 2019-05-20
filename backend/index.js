@@ -139,6 +139,12 @@ const resolvers = {
         data: { name: args.name, description: args.desc }
       })
     },
+    updateCourse(root, args, context) {
+      return context.prisma.updateCourse({
+        where: { id: args.id },
+        data: { name: args.name }
+      })
+    },
     async createConceptAndLinkTo(root, args, context) {
       const concept = args.desc !== undefined
         ? args.official !== undefined
