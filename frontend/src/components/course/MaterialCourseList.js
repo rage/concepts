@@ -64,7 +64,7 @@ const MaterialCourseList = ({ classes, history }) => {
   const handleDelete = (id) => async (e) => {
     let willDelete = window.confirm('Are you sure you want to delete this course?')
     if (willDelete) {
-      deleteCourse({
+      await deleteCourse({
         variables: { id }
       })
     }
