@@ -16,13 +16,12 @@ const CourseList = () => {
     <div>
       <div>
         <div >
-          <MaterialCourseList/>
-          
+          <MaterialCourseList />
         </div>
       </div>
-      <div className="course-input-form">
+      {/* <div className="course-input-form">
         <AltCourseForm createCourse={createCourse} />
-      </div>
+      </div> */}
     </div>
   )
 }
