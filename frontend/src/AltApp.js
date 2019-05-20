@@ -4,6 +4,7 @@ import './App.css'
 
 import AltCourseList from './components/course/AltCourseList'
 import CourseView from './components/course/CourseView'
+import MaterialCourseList from './components/course/MaterialCourseList'
 
 const App = () => {
   return (

@@ -1,7 +1,7 @@
 import React from 'react'
 import AltCourse from './AltCourse'
 import AltCourseForm from './AltCourseForm'
-
+import MaterialCourseList from './MaterialCourseList'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE } from '../../services/CourseService'
 
@@ -13,19 +13,11 @@ const CourseList = () => {
   })
 
   return (
-    <div className="course-selection-container">
-      <div className="course-menu">
-        <div className="course-selection-column">
-          {
-            courses.data.allCourses ?
-              courses.data.allCourses.map(course => {
-                return (
-                  <AltCourse key={course.id} id={course.id} text={course.name} />
-                )
-              })
-              :
-              null
-          }
+    <div>
+      <div>
+        <div >
+          <MaterialCourseList/>
+          
         </div>
       </div>
       <div className="course-input-form">
