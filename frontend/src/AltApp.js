@@ -12,7 +12,7 @@ const App = () => {
       <div className="nav">
         <Link to="/">Courses</Link>
       </div>
-      <Route exact path="/" render={() => <AltCourseList />} />
+      <Route exact path="/" render={() => <MaterialCourseList />} />
       <Route exact path="/courses/:id" render={({ match }) => {
         return <CourseView
           course_id={match.params.id}
