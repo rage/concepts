@@ -63,7 +63,7 @@ const ConceptButton = ({ concept, activeConceptId, linkPrerequisite, deleteLink 
       return link.to.id === activeConceptId
     })
     return {
-      backgroundColor: isActive ? '#9ecae1' : '#ffffff'
+      backgroundColor: isActive ? '#c5cae9' : '#ffffff'
     }
   }
 

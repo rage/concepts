@@ -4,7 +4,8 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
   LINK_PREREQUISITE,
   DELETE_LINK,
-  CREATE_CONCEPT
+  CREATE_CONCEPT,
+  DELETE_CONCEPT
 } from '../../services/ConceptService'
 
 import {
@@ -15,8 +16,9 @@ import {
 } from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
-import CourseTray from './CourseTray'
-import ActiveCourse from './ActiveCourse'
+import MaterialCourseTray from './MaterialCourseTray'
+// import ActiveCourse from './ActiveCourse'
+import MaterialActiveCourse from './MaterialActiveCourse'
 
 const CourseView = ({ course_id }) => {
   const [activeConceptId, setActiveConceptId] = useState('')
@@ -52,6 +54,10 @@ const CourseView = ({ course_id }) => {
     }]
   })
 
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    refetchQueries: { query: FETCH_COURSE, variables: { id: course.id } }
+  })
+
   const activateConcept = (id) => () => {
     const alreadyActive = activeConceptId === id
     setActiveConceptId(alreadyActive ? '' : id)
@@ -63,10 +69,13 @@ const CourseView = ({ course_id }) => {
       {
         course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
           <div className="course-view">
-            <CourseTray
+            <MaterialCourseTray
               courses={courses.data.allCourses}
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
+              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
+                course.id !== course_id
+              )}
             />
             <CourseContainer
               courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
@@ -76,13 +85,21 @@ const CourseView = ({ course_id }) => {
               deleteLink={deleteLink}
               activeConceptId={activeConceptId}
               createConcept={createConcept}
+              deleteConcept={deleteConcept}
             />
-            <ActiveCourse
+            <MaterialActiveCourse
               course={course.data.courseById}
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
               createConcept={createConcept}
+              deleteConcept={deleteConcept}
             />
+            {/* <ActiveCourse
+              course={course.data.courseById}
+              activeConceptId={activeConceptId}
+              activateConcept={activateConcept}
+              createConcept={createConcept}
+            /> */}
           </div> :
           null
       }

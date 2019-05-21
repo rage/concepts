@@ -98,6 +98,15 @@ mutation createCourse($name: String!) {
 }
 `
 
+const UPDATE_COURSE = gql`
+mutation updateCourse($id: ID!, $name: String!) {
+  updateCourse(id: $id, name: $name) {
+    id
+    name
+  }
+}
+`
+
 const DELETE_COURSE = gql`
 mutation deleteCourse($id: ID!) {
   deleteCourse(id: $id) {
@@ -120,4 +129,4 @@ mutation addCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
 }
 `
 
-export { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES }
+export { ALL_COURSES, CREATE_COURSE, UPDATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES }

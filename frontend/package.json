@@ -1,8 +1,10 @@
 {
-  "name": "frontendish",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2",
     "apollo-boost": "^0.3.1",
     "graphql": "^14.3.0",
     "react": "^16.8.6",
