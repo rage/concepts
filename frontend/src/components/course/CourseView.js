@@ -4,7 +4,8 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
   LINK_PREREQUISITE,
   DELETE_LINK,
-  CREATE_CONCEPT
+  CREATE_CONCEPT,
+  DELETE_CONCEPT
 } from '../../services/ConceptService'
 
 import {
@@ -52,6 +53,10 @@ const CourseView = ({ course_id }) => {
     }]
   })
 
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    refetchQueries: { query: FETCH_COURSE, variables: { id: course.id } }
+  })
+
   const activateConcept = (id) => () => {
     const alreadyActive = activeConceptId === id
     setActiveConceptId(alreadyActive ? '' : id)
@@ -76,6 +81,7 @@ const CourseView = ({ course_id }) => {
               deleteLink={deleteLink}
               activeConceptId={activeConceptId}
               createConcept={createConcept}
+              deleteConcept={deleteConcept}
             />
             <ActiveCourse
               course={course.data.courseById}

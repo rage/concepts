@@ -34,16 +34,8 @@ const styles = theme => ({
   }
 })
 
-const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, deleteLink }) => {
+const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, deleteLink, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
-
-  // const updateConcept = useMutation(UPDATE_CONCEPT, {
-  //   variables: { id: concept.id }
-  // })
-
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
-    refetchQueries: { query: ALL_COURSES }
-  })
 
   const isActive = () => {
     return concept.linksFromConcept.find(link => {
@@ -77,24 +69,21 @@ const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, 
     setState({ anchorEl: null })
   }
 
-  const openEditDialog = () => {
-    console.log('edit')
-    handleMenuClose()
-  }
-
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
       console.log('delete', id)
-      // await deleteConcept({
-      //   variables: { id }
-      // })
+      console.log(deleteConcept)
+      
+      await deleteConcept({
+        variables: { id }
+      })
     }
     handleMenuClose()
   }
 
   return (
-    <ListItem divider button onClick={onClick} className={isActive() ? classes.active : classes.inactive}>
+    <ListItem divider button={activeConceptId !== ''} onClick={onClick} className={isActive() ? classes.active : classes.inactive}>
       <ListItemText>
         {concept.name}
       </ListItemText>
@@ -113,7 +102,7 @@ const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, 
             open={Boolean(state.anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
+            <MenuItem onClick={openConceptEditDialog(concept.id, concept.name, concept.description)}>Edit</MenuItem>
             <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
           </Menu>
         </ListItemSecondaryAction> : null

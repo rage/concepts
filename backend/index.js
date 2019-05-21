@@ -167,7 +167,24 @@ const resolvers = {
           from: { connect: { id: createdConcept.id } }
         })
     },
-    deleteConcept(root, args, context) {
+    async deleteConcept(root, args, context) {
+      await context.prisma.deleteManyLinks({
+        
+          OR: [
+            {
+              from: {
+                id: args.id
+              }
+
+            },
+            {
+              to: {
+                id: args.id
+              }
+            }
+          ]
+        
+       })
       return context.prisma.deleteConcept({
         id: args.id
       })
