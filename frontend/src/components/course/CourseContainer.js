@@ -54,7 +54,6 @@ const AddConceptDialog = ({ state, handleClose, createConcept }) => {
       />
       
       <TextField
-        autoFocus
         margin="dense"
         id="description"
         label="Description"
