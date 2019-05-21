@@ -39,24 +39,6 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
     return activeConceptId === concept.id
   }
 
-  // const onClick = async () => {
-  //   if (activeConceptId === '') return
-  //   const isActive = concept.linksFromConcept.find(link => {
-  //     return link.to.id === activeConceptId
-  //   })
-  //   isActive ?
-  //     await deleteLink({
-  //       variables: { id: isActive.id }
-  //     })
-  //     :
-  //     await linkPrerequisite({
-  //       variables: {
-  //         to: activeConceptId,
-  //         from: concept.id
-  //       }
-  //     })
-  // }
-
   const handleMenuOpen = (event) => {
     setState({ anchorEl: event.currentTarget })
   }
@@ -78,7 +60,10 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
     handleMenuClose()
   }
 
-
+  const handleEditConcept = (id, name, description) => () => {
+    handleMenuClose()
+    openConceptEditDialog(id, name, description)()
+  }
 
   return (
     <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
@@ -94,15 +79,15 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
           >
             <MoreVertIcon />
           </IconButton>
-          {/* <Menu
+          <Menu
             id="simple-menu"
             anchorEl={state.anchorEl}
             open={Boolean(state.anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={openConceptEditDialog(concept.id, concept.name, concept.description)}>Edit</MenuItem>
+            <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
             <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
-          </Menu> */}
+          </Menu>
         </ListItemSecondaryAction> : null
       }
     </ListItem>

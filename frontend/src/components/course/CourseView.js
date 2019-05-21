@@ -89,13 +89,8 @@ const CourseView = ({ course_id }) => {
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
               createConcept={createConcept}
-            /> 
-            {/* <ActiveCourse
-              course={course.data.courseById}
-              activeConceptId={activeConceptId}
-              activateConcept={activateConcept}
-              createConcept={createConcept}
-            /> */}
+              deleteConcept={deleteConcept}
+            />
           </div> :
           null
       }
