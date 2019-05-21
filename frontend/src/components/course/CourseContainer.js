@@ -21,17 +21,17 @@ const AddConceptDialog = ({ state, handleClose, createConcept }) => {
   const [description, setDescription] = useState('')
 
   const handleConceptAdding = async () => {
-      await createConcept({
-        variables: {
-          course_id: state.id,
-          name,
-          description,
-          official:false
-        }
-      })
-      setName('')
-      setDescription('')
-      handleClose()
+    await createConcept({
+      variables: {
+        course_id: state.id,
+        name,
+        description,
+        official: false
+      }
+    })
+    setName('')
+    setDescription('')
+    handleClose()
   }
 
   return (<Dialog
@@ -52,7 +52,7 @@ const AddConceptDialog = ({ state, handleClose, createConcept }) => {
         onChange={(e) => setName(e.target.value)}
         fullWidth
       />
-      
+
       <TextField
         multiline
         margin="dense"
@@ -86,17 +86,16 @@ const UpdateConceptDialog = ({ state, handleClose, updateConcept }) => {
   const [description, setDescription] = useState('')
 
   const handleConceptUpdate = async () => {
-      await updateConcept({
-        variables: {
-          course_id: state.id,
-          name,
-          description,
-          official:false
-        }
-      })
-      setName('')
-      setDescription('')
-      handleClose()
+    await updateConcept({
+      variables: {
+        id: state.id,
+        name,
+        description
+      }
+    })
+    setName('')
+    setDescription('')
+    handleClose()
   }
 
   return (<Dialog
@@ -117,7 +116,7 @@ const UpdateConceptDialog = ({ state, handleClose, updateConcept }) => {
         onChange={(e) => setName(e.target.value)}
         fullWidth
       />
-      
+
       <TextField
         multiline
         margin="dense"
@@ -198,9 +197,9 @@ const EditCourseDialog = ({ state, handleClose, updateCourse }) => {
 
 
 const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, createConcept, deleteConcept }) => {
-  const [courseState, setCourseState] = useState({ open: false, id: '', name:'' })
+  const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
-  const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: ''})
+  const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
     refetchQueries: [{ query: ALL_COURSES }]
@@ -229,14 +228,14 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
   const handleConceptOpen = (id) => () => {
     setConceptState({ open: true, id })
   }
-  
+
   const handleConceptEditClose = () => {
-    setConceptEditState({ open: false, id: '', name: '', description:''})
+    setConceptEditState({ open: false, id: '', name: '', description: '' })
   }
 
   const handleConceptEditOpen = (id, name, description) => () => {
     console.log('hello', id)
-    setConceptEditState({ open: true, id, name, description})
+    setConceptEditState({ open: true, id, name, description })
   }
 
 
@@ -258,9 +257,9 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
           />
         )
       }
-      <UpdateConceptDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept}/>
+      <UpdateConceptDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
       <EditCourseDialog state={courseState} handleClose={handleCourseClose} updateCourse={updateCourse} />
-      <AddConceptDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept}/>
+      <AddConceptDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
     </div>
   )
 }

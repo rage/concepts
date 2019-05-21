@@ -17,7 +17,8 @@ import {
 
 import CourseContainer from './CourseContainer'
 import CourseTray from './CourseTray'
-import ActiveCourse from './ActiveCourse'
+// import ActiveCourse from './ActiveCourse'
+import MaterialActiveCourse from './MaterialActiveCourse'
 
 const CourseView = ({ course_id }) => {
   const [activeConceptId, setActiveConceptId] = useState('')
@@ -83,12 +84,18 @@ const CourseView = ({ course_id }) => {
               createConcept={createConcept}
               deleteConcept={deleteConcept}
             />
-            <ActiveCourse
+            <MaterialActiveCourse
               course={course.data.courseById}
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
               createConcept={createConcept}
-            />
+            /> 
+            {/* <ActiveCourse
+              course={course.data.courseById}
+              activeConceptId={activeConceptId}
+              activateConcept={activateConcept}
+              createConcept={createConcept}
+            /> */}
           </div> :
           null
       }
