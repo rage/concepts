@@ -101,7 +101,7 @@ const MaterialCourseList = ({ classes, history }) => {
                           {course.name}
                         </Typography>
                       }
-                      secondary={false ? 'Concepts: ' + course.concepts.length : null}
+                      secondary={true ? 'Concepts: ' + course.concepts.length : null}
                     />
                     <ListItemSecondaryAction>
                       <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>

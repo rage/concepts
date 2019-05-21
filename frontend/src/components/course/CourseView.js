@@ -16,7 +16,7 @@ import {
 } from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
-import CourseTray from './CourseTray'
+import MaterialCourseTray from './MaterialCourseTray'
 // import ActiveCourse from './ActiveCourse'
 import MaterialActiveCourse from './MaterialActiveCourse'
 
@@ -69,7 +69,7 @@ const CourseView = ({ course_id }) => {
       {
         course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
           <div className="course-view">
-            <CourseTray
+            <MaterialCourseTray
               courses={courses.data.allCourses}
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
