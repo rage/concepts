@@ -73,6 +73,9 @@ const CourseView = ({ course_id }) => {
               courses={courses.data.allCourses}
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
+              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
+                course.id !== course_id
+              )}
             />
             <CourseContainer
               courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
@@ -89,8 +92,13 @@ const CourseView = ({ course_id }) => {
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
               createConcept={createConcept}
-              deleteConcept={deleteConcept}
-            />
+            /> 
+            {/* <ActiveCourse
+              course={course.data.courseById}
+              activeConceptId={activeConceptId}
+              activateConcept={activateConcept}
+              createConcept={createConcept}
+            /> */}
           </div> :
           null
       }

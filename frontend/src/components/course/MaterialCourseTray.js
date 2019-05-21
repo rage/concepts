@@ -21,7 +21,8 @@ const styles = theme => ({
     marginRight: '8px',
   },
   cardHeader: {
-    paddingBottom: '0px'
+    paddingBottom: '0px',
+    textAlign: 'center'
   },
   list: {
     backgroundColor: theme.palette.background.paper,
@@ -37,7 +38,7 @@ const styles = theme => ({
   }
 })
 
-const MaterialPrerequisiteCourse = ({ course, activeCourse, addCourseAsPrerequisite }) => {
+const MaterialPrerequisiteCourse = ({ isPrerequisite, course, activeCourse, addCourseAsPrerequisite }) => {
   const onClick = async () => {
     await addCourseAsPrerequisite({
       variables: { id: activeCourse, prerequisite_id: course.id }
@@ -46,15 +47,16 @@ const MaterialPrerequisiteCourse = ({ course, activeCourse, addCourseAsPrerequis
   return (
     <ListItem>
       <ListItemText>{course.name}</ListItemText>
-      <Checkbox color="primary" onClick={onClick}></Checkbox>
+      <Checkbox  checked={isPrerequisite} color="primary" onClick={onClick}></Checkbox>
     </ListItem>
   )
 }
 
-const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite }) => {
+const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite, prerequisiteCourses }) => {
+  console.log(prerequisiteCourses.map(c => c.id))
   return (
     <Card elevation={3} className={classes.root}>
-        <CardHeader className={classes.cardHeader} title="Add course" />
+        <CardHeader  className={classes.cardHeader} title="Add course" />
         <CardContent>
           <List disablePadding className={classes.list}>
           {
@@ -65,6 +67,7 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
                   course={course}
                   activeCourse={activeCourse}
                   addCourseAsPrerequisite={addCourseAsPrerequisite}
+                  isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
                 />
               )
             })
