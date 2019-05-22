@@ -1,29 +1,25 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Grid from '@material-ui/core/Grid'
+import { withStyles } from '@material-ui/core/styles'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
-import { withStyles } from '@material-ui/core/styles'
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add'
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
+
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE } from '../../services/CourseService'
 
+import CourseCreationDialog from './CourseCreationDialog'
+import CourseEditingDialog from './CourseEditingDialog'
 
 const styles = theme => ({
   root: {
@@ -119,105 +115,9 @@ const MaterialCourseList = ({ classes, history }) => {
         </Card>
       </Grid>
 
-      <CourseCreateDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
-      <CourseEditDialog state={stateEdit} handleClose={handleEditClose} />
+      <CourseCreationDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
+      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} />
     </React.Fragment>
-  )
-}
-
-const CourseCreateDialog = ({ state, handleClose, createCourse }) => {
-  const [name, setName] = useState('')
-  const handleCreate = async (e) => {
-    if (name === '') {
-      window.alert('Course needs a name!')
-      return
-    }
-
-    await createCourse({
-      variables: { name }
-    })
-    setName('')
-    handleClose()
-  }
-  return (
-    <Dialog
-      open={state.open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Create course</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Courses can be connected to other courses as prerequisites.
-          </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-          </Button>
-        <Button onClick={handleCreate} color="primary">
-          Create
-          </Button>
-      </DialogActions>
-    </Dialog>
-  )
-}
-
-const CourseEditDialog = ({ state, handleClose, updateCourse }) => {
-  const [name, setName] = useState('')
-
-  const handleEdit = async (e) => {
-    if (name === '') {
-      window.alert('Course needs a name!')
-      return
-    }
-    // Add update funct here
-    console.log(name)
-    setName('')
-    handleClose()
-  }
-
-  return (
-    <Dialog
-      open={state.open}
-      onClose={handleClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Edit course</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          Courses can be connected to other courses as prerequisites.
-          </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-          </Button>
-        <Button onClick={handleEdit} color="primary">
-          Save
-          </Button>
-      </DialogActions>
-    </Dialog>
   )
 }
 
