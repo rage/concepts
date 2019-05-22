@@ -16,7 +16,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE } from '../../services/CourseService'
+import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from '../../services/CourseService'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import CourseEditingDialog from './CourseEditingDialog'
@@ -29,7 +29,7 @@ const styles = theme => ({
 
 const MaterialCourseList = ({ classes, history }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false })
+  const [stateEdit, setStateEdit] = useState({ open: false, id: '' })
 
   const courses = useQuery(ALL_COURSES)
 
@@ -41,6 +41,10 @@ const MaterialCourseList = ({ classes, history }) => {
     refetchQueries: [{ query: ALL_COURSES }]
   })
 
+  const updateCourse = useMutation(UPDATE_COURSE, {
+    refetchQueries: [{ query: ALL_COURSES }]
+  })
+
   const handleClickOpen = () => {
     setStateCreate({ open: true })
   }
@@ -49,12 +53,12 @@ const MaterialCourseList = ({ classes, history }) => {
     setStateCreate({ open: false })
   }
 
-  const handleEditOpen = () => {
-    setStateEdit({ open: true })
+  const handleEditOpen = (id) => () => {
+    setStateEdit({ open: true, id })
   }
 
   const handleEditClose = () => {
-    setStateEdit({ open: false })
+    setStateEdit({ open: false, id: '' })
   }
 
   const handleDelete = (id) => async (e) => {
@@ -103,7 +107,7 @@ const MaterialCourseList = ({ classes, history }) => {
                       <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
                         <DeleteIcon />
                       </IconButton>
-                      <IconButton aria-label="Edit" onClick={handleEditOpen}>
+                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id)}>
                         <EditIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -116,7 +120,7 @@ const MaterialCourseList = ({ classes, history }) => {
       </Grid>
 
       <CourseCreationDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
-      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} />
+      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} />
     </React.Fragment>
   )
 }

@@ -4,28 +4,26 @@ import React, { useState } from 'react'
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Materal common
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-const CourseEditingDialog = ({ state, handleClose, updateCourse }) => {
+const ConceptEditingDialog = ({ state, handleClose, updateConcept }) => {
   const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
 
-  const handleEdit = async (e) => {
-    if (name === '') {
-      window.alert('Course needs a name!')
-      return
-    }
-    await updateCourse({
+  const handleConceptUpdate = async () => {
+    await updateConcept({
       variables: {
         id: state.id,
-        name
+        name,
+        description
       }
     })
     setName('')
+    setDescription('')
     handleClose()
   }
 
@@ -35,11 +33,10 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse }) => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Edit course</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        Edit concept
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Courses can be connected to other courses as prerequisites.
-          </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
@@ -50,17 +47,30 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse }) => {
           onChange={(e) => setName(e.target.value)}
           fullWidth
         />
+
+        <TextField
+          multiline
+          margin="dense"
+          id="description"
+          label="Description"
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          fullWidth
+          variant="outlined"
+        />
       </DialogContent>
+
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
-          </Button>
-        <Button onClick={handleEdit} color="primary">
+        </Button>
+        <Button onClick={handleConceptUpdate} color="primary">
           Save
-          </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-export default CourseEditingDialog
+export default ConceptEditingDialog
