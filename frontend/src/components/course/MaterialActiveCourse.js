@@ -44,7 +44,8 @@ const styles = theme => ({
     maxHeight: 500,
   },
   cardHeader: {
-    paddingBottom: '0px'
+    paddingBottom: '0px',
+    textAlign: 'center'
   },
   listSection: {
     backgroundColor: 'inherit',

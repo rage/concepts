@@ -17,7 +17,6 @@ import {
 
 import CourseContainer from './CourseContainer'
 import MaterialCourseTray from './MaterialCourseTray'
-// import ActiveCourse from './ActiveCourse'
 import MaterialActiveCourse from './MaterialActiveCourse'
 
 const CourseView = ({ course_id }) => {

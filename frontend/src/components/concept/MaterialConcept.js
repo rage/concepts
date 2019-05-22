@@ -5,10 +5,8 @@ import { useMutation } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
 import { ALL_COURSES } from '../../services/CourseService'
 
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';

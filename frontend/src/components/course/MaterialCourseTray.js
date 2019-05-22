@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 // Card
@@ -9,9 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 // List
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'
 
@@ -47,7 +45,7 @@ const MaterialPrerequisiteCourse = ({ isPrerequisite, course, activeCourse, addC
   return (
     <ListItem>
       <ListItemText>{course.name}</ListItemText>
-      <Checkbox  checked={isPrerequisite} color="primary" onClick={onClick}></Checkbox>
+      <Checkbox checked={isPrerequisite} color="primary" onClick={onClick}></Checkbox>
     </ListItem>
   )
 }
@@ -56,9 +54,9 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
   console.log(prerequisiteCourses.map(c => c.id))
   return (
     <Card elevation={3} className={classes.root}>
-        <CardHeader  className={classes.cardHeader} title="Add course" />
-        <CardContent>
-          <List disablePadding className={classes.list}>
+      <CardHeader className={classes.cardHeader} title="Add course" />
+      <CardContent>
+        <List disablePadding className={classes.list}>
           {
             courses.filter(course => course.id !== activeCourse).map(course => {
               return (
@@ -72,10 +70,10 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
               )
             })
           }
-          </List>
-          <Button className={classes.button} variant="contained" color="secondary"> New course </Button>
-        </CardContent>
-      </Card>
+        </List>
+        <Button className={classes.button} variant="contained" color="secondary"> New course </Button>
+      </CardContent>
+    </Card>
   )
 }
 
