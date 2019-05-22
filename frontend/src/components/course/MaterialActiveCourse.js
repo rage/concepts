@@ -22,7 +22,7 @@ import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const styles = theme => ({
   root: {
-    width: '270px',
+    width: '370px',
     marginLeft: '10px'
   },
   list: {
@@ -32,7 +32,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 2,
     // position: 'relative',
     overflow: 'auto',
-    maxHeight: 500,
+    maxHeight: '80vh',
   },
   cardHeader: {
     paddingBottom: '0px',
@@ -126,7 +126,7 @@ const MaterialActiveCourse = ({
 
 
   return (
-    <div>
+    <React.Fragment>
       <Card elevation={3} className={classes.root}>
         <CardHeader className={classes.cardHeader} title={course.name}>
         </CardHeader>
@@ -158,7 +158,7 @@ const MaterialActiveCourse = ({
 
       <ConceptEditingDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
       <ConceptAdditionDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
-    </div>
+    </React.Fragment>
   )
 }
 

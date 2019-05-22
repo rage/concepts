@@ -24,7 +24,7 @@ const styles = theme => ({
   },
   list: {
     backgroundColor: theme.palette.background.paper,
-    maxHeight: 500,
+    maxHeight: '80vh',
     width: '100%',
     overflow: 'auto'
   },
