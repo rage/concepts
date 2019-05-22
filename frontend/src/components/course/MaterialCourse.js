@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 
@@ -49,10 +48,17 @@ const styles = theme => ({
   }
 });
 
-const MaterialCourse = ({ classes, // MaterialUI
-  course, openCourseDialog, openConceptDialog, openConceptEditDialog, linkPrerequisite, activeConceptId, deleteLink, createConcept, deleteConcept }) => {
-
-
+const MaterialCourse = ({
+  classes, // MaterialUI
+  course,
+  activeCourseId,
+  openCourseDialog,
+  openConceptDialog,
+  openConceptEditDialog,
+  linkPrerequisite,
+  activeConceptId,
+  deleteLink
+}) => {
   return (
     <div>
       <Card className={classes.root}>
@@ -68,18 +74,17 @@ const MaterialCourse = ({ classes, // MaterialUI
             {course.concepts.map(concept =>
               <MaterialConcept concept={concept}
                 key={concept.id}
+                course={course}
                 linkPrerequisite={linkPrerequisite}
                 deleteLink={deleteLink}
-                activeConceptId={activeConceptId} 
-                deleteConcept={deleteConcept}
+                activeConceptId={activeConceptId}
                 openConceptEditDialog={openConceptEditDialog}
-                />
+                activeCourseId={activeCourseId}
+              />
             )}
           </List>
           <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
         </CardContent>
-
-
       </Card>
     </div>
   )
