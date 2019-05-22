@@ -53,6 +53,12 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     name
     description
     official
+    linksFromConcept {
+      id
+      to {
+        id
+      }
+    }
   }
 }
 `

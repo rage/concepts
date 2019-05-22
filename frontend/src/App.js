@@ -7,20 +7,20 @@ import MaterialCourseList from './components/course/MaterialCourseList'
 import NavBar from './components/common/NavBar'
 
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService' 
+import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
 
 const App = () => {
   const client = useApolloClient()
   const courses = useQuery(ALL_COURSES)
 
-  const includedIn = (set, object) => 
+  const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
-  
+
   const createCourse = useMutation(CREATE_COURSE, {
     update: (store, response) => {
       const dataInStore = store.readQuery({ query: ALL_COURSES })
       const addedCourse = response.data.createCourse
-      
+
       if (!includedIn(dataInStore.allCourses, addedCourse)) {
         dataInStore.allCourses.push(addedCourse)
         client.writeQuery({
@@ -35,7 +35,7 @@ const App = () => {
     update: (store, response) => {
       const dataInStore = store.readQuery({ query: ALL_COURSES })
       const deletedCourse = response.data.deleteCourse
-      
+
       if (includedIn(dataInStore.allCourses, deletedCourse)) {
         dataInStore.allCourses = dataInStore.allCourses.filter(course => {
           return course.id !== deletedCourse.id
@@ -52,7 +52,7 @@ const App = () => {
     update: (store, response) => {
       const dataInStore = store.readQuery({ query: ALL_COURSES })
       const updatedCourse = response.data.updateCourse
-      
+
       if (includedIn(dataInStore.allCourses, updatedCourse)) {
         dataInStore.allCourses = dataInStore.allCourses.map(course => {
           return course.id === updatedCourse.id ? updatedCourse : course
@@ -68,7 +68,7 @@ const App = () => {
   return (
     <div className="App">
       <NavBar />
-      <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse}/>} />
+      <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
       <Route exact path="/courses/:id" render={({ match }) => {
         return <CourseView
           course_id={match.params.id}

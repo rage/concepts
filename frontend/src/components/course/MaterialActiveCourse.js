@@ -9,9 +9,9 @@ import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
 
-import { useMutation } from 'react-apollo-hooks'
-import { ALL_COURSES, UPDATE_COURSE } from '../../services/CourseService'
-import { UPDATE_CONCEPT } from '../../services/ConceptService'
+import { useMutation, useApolloClient } from 'react-apollo-hooks'
+import { ALL_COURSES, FETCH_COURSE } from '../../services/CourseService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../services/ConceptService'
 
 // List 
 import List from '@material-ui/core/List'
@@ -36,7 +36,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     paddingBottom: theme.spacing.unit * 2,
     // position: 'relative',
-    // overflow: 'auto',
+    overflow: 'auto',
     maxHeight: 500,
   },
   cardHeader: {
@@ -63,19 +63,41 @@ const MaterialActiveCourse = ({
   course,
   activateConcept,
   activeConceptId,
-  deleteConcept,
-  createConcept
+  deleteConcept
 }) => {
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
 
+  const client = useApolloClient()
+
+  const includedIn = (set, object) =>
+    set.map(p => p.id).includes(object.id)
+
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     refetchQueries: [{ query: ALL_COURSES }]
   })
 
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
+      const addedConcept = response.data.createConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const concepts = dataInStoreCopy.courseById.concepts
+      if (!includedIn(course.concepts, addedConcept)) {
+        concepts.push(addedConcept)
+        client.writeQuery({
+          query: FETCH_COURSE,
+          variables: { id: course.id },
+          data: dataInStoreCopy
+        })
+      }
+      setConceptState({ ...conceptState, id: '' })
+    }
+  })
+
   const handleConceptClose = () => {
-    setConceptState({ open: false, id: '' })
+    setConceptState({ ...conceptState, open: false })
   }
 
   const handleConceptOpen = (id) => () => {
@@ -87,7 +109,6 @@ const MaterialActiveCourse = ({
   }
 
   const handleConceptEditOpen = (id, name, description) => () => {
-    console.log('hello', id)
     setConceptEditState({ open: true, id, name, description })
   }
 

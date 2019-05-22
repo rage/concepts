@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import {
   LINK_PREREQUISITE,
   DELETE_LINK,
@@ -21,6 +21,10 @@ import MaterialActiveCourse from './MaterialActiveCourse'
 
 const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   const [activeConceptId, setActiveConceptId] = useState('')
+  const client = useApolloClient()
+
+  const includedIn = (set, object) =>
+    set.map(p => p.id).includes(object.id)
 
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
@@ -46,9 +50,9 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
-    refetchQueries: [{
-      query: ALL_COURSES
-    }]
+    // refetchQueries: [{
+    //   query: ALL_COURSES
+    // }]
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
@@ -79,6 +83,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
                 course.id !== course_id
               )}
+              course_id={course_id}
               linkPrerequisite={linkPrerequisite}
               deleteLink={deleteLink}
               activeConceptId={activeConceptId}
