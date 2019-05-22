@@ -2,15 +2,15 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 // Card
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
 
 // List
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
@@ -51,7 +51,6 @@ const MaterialPrerequisiteCourse = ({ isPrerequisite, course, activeCourse, addC
 }
 
 const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite, prerequisiteCourses }) => {
-  console.log(prerequisiteCourses.map(c => c.id))
   return (
     <Card elevation={3} className={classes.root}>
       <CardHeader className={classes.cardHeader} title="Add course" />

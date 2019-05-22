@@ -1,19 +1,14 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { useMutation } from 'react-apollo-hooks'
-import { UPDATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
-import { ALL_COURSES } from '../../services/CourseService'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Switch from '@material-ui/core/Switch';
-
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 const styles = theme => ({
   active: {

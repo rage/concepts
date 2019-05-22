@@ -4,16 +4,9 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 
 // Card
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-
-// Dialog
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
 
 
 import { useMutation } from 'react-apollo-hooks'
@@ -21,13 +14,16 @@ import { ALL_COURSES, UPDATE_COURSE } from '../../services/CourseService'
 import { UPDATE_CONCEPT } from '../../services/ConceptService'
 
 // List 
-import List from '@material-ui/core/List';
+import List from '@material-ui/core/List'
 
 // Icons
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton'
+import EditIcon from '@material-ui/icons/Edit'
 
 import MaterialActiveConcept from '../concept/MaterialActiveConcept'
+
+import ConceptEditingDialog from '../concept/ConceptEditingDialog'
+import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const styles = theme => ({
   root: {
@@ -127,137 +123,10 @@ const MaterialActiveCourse = ({
         </CardContent>
       </Card>
 
-      <UpdateConceptDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
-      <AddConceptDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
+      <ConceptEditingDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
+      <ConceptAdditionDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
     </div>
   )
-}
-
-const AddConceptDialog = ({ state, handleClose, createConcept }) => {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-
-  const handleConceptAdding = async () => {
-    await createConcept({
-      variables: {
-        course_id: state.id,
-        name,
-        description,
-        official: false
-      }
-    })
-    setName('')
-    setDescription('')
-    handleClose()
-  }
-
-  return (<Dialog
-    open={state.open}
-    onClose={handleClose}
-    aria-labelledby="form-dialog-title">
-    <DialogTitle id="form-dialog-title">
-      Add concept
-    </DialogTitle>
-    <DialogContent>
-      <TextField
-        autoFocus
-        margin="dense"
-        id="name"
-        label="Name"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        fullWidth
-      />
-
-      <TextField
-        multiline
-        margin="dense"
-        id="description"
-        label="Description"
-        type="text"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        fullWidth
-        variant="outlined"
-      />
-    </DialogContent>
-
-
-
-    <DialogActions>
-      <Button onClick={handleClose} color="primary">
-        Cancel
-        </Button>
-      <Button onClick={handleConceptAdding} color="primary">
-        Add concept
-        </Button>
-    </DialogActions>
-  </Dialog>)
-
-
-}
-
-const UpdateConceptDialog = ({ state, handleClose, updateConcept }) => {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-
-  const handleConceptUpdate = async () => {
-    await updateConcept({
-      variables: {
-        id: state.id,
-        name,
-        description
-      }
-    })
-    setName('')
-    setDescription('')
-    handleClose()
-  }
-
-  return (<Dialog
-    open={state.open}
-    onClose={handleClose}
-    aria-labelledby="form-dialog-title">
-    <DialogTitle id="form-dialog-title">
-      Edit concept
-    </DialogTitle>
-    <DialogContent>
-      <TextField
-        autoFocus
-        margin="dense"
-        id="name"
-        label="Name"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        fullWidth
-      />
-
-      <TextField
-        multiline
-        margin="dense"
-        id="description"
-        label="Description"
-        type="text"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        fullWidth
-        variant="outlined"
-      />
-    </DialogContent>
-
-
-
-    <DialogActions>
-      <Button onClick={handleClose} color="primary">
-        Cancel
-        </Button>
-      <Button onClick={handleConceptUpdate} color="primary">
-        Save
-        </Button>
-    </DialogActions>
-  </Dialog>)
 }
 
 export default withStyles(styles)(MaterialActiveCourse)
