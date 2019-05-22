@@ -15,7 +15,7 @@ import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from '../../services/CourseService'
 
 import CourseCreationDialog from './CourseCreationDialog'
@@ -30,19 +30,60 @@ const styles = theme => ({
 const MaterialCourseList = ({ classes, history }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '' })
-
+  const client = useApolloClient()
   const courses = useQuery(ALL_COURSES)
 
+  const includedIn = (set, object) => 
+    set.map(p => p.id).includes(object.id)
+  
   const createCourse = useMutation(CREATE_COURSE, {
-    refetchQueries: [{ query: ALL_COURSES }]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const addedCourse = response.data.createCourse
+      
+      if (!includedIn(dataInStore.allCourses, addedCourse)) {
+        dataInStore.allCourses.push(addedCourse)
+        client.writeQuery({
+          query: ALL_COURSES,
+          data: dataInStore
+        })
+      }
+    }
   })
 
   const deleteCourse = useMutation(DELETE_COURSE, {
-    refetchQueries: [{ query: ALL_COURSES }]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const deletedCourse = response.data.deleteCourse
+      
+      if (includedIn(dataInStore.allCourses, deletedCourse)) {
+        dataInStore.allCourses = dataInStore.allCourses.filter(course => {
+          return course.id !== deletedCourse.id
+        })
+        client.writeQuery({
+          query: ALL_COURSES,
+          data: dataInStore
+        })
+      }
+
+    }
   })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
-    refetchQueries: [{ query: ALL_COURSES }]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const updatedCourse = response.data.updateCourse
+      
+      if (includedIn(dataInStore.allCourses, updatedCourse)) {
+        dataInStore.allCourses = dataInStore.allCourses.map(course => {
+          return course.id === updatedCourse.id ? updatedCourse : course
+        })
+        client.writeQuery({
+          query: ALL_COURSES,
+          data: dataInStore
+        })
+      }
+    }
   })
 
   const handleClickOpen = () => {

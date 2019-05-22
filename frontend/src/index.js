@@ -4,10 +4,12 @@ import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import ApolloClient from 'apollo-boost'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo-hooks'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache()
 })
 
 ReactDOM.render(
