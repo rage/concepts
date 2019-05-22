@@ -19,10 +19,8 @@ import CourseContainer from './CourseContainer'
 import MaterialCourseTray from './MaterialCourseTray'
 import MaterialActiveCourse from './MaterialActiveCourse'
 
-const CourseView = ({ course_id }) => {
+const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   const [activeConceptId, setActiveConceptId] = useState('')
-
-  const courses = useQuery(ALL_COURSES)
 
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
@@ -75,6 +73,7 @@ const CourseView = ({ course_id }) => {
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
                 course.id !== course_id
               )}
+              createCourse={createCourse}
             />
             <CourseContainer
               courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
@@ -85,6 +84,7 @@ const CourseView = ({ course_id }) => {
               activeConceptId={activeConceptId}
               createConcept={createConcept}
               deleteConcept={deleteConcept}
+              updateCourse={updateCourse}
             />
             <MaterialActiveCourse
               course={course.data.courseById}

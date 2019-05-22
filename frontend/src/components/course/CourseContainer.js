@@ -2,29 +2,21 @@ import React, { useState } from 'react'
 import MaterialCourse from './MaterialCourse'
 
 import { useMutation } from 'react-apollo-hooks'
-import { ALL_COURSES, UPDATE_COURSE } from '../../services/CourseService'
+import { ALL_COURSES} from '../../services/CourseService'
 import { UPDATE_CONCEPT } from '../../services/ConceptService'
 
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import CourseEditingDialog from './CourseEditingDialog'
 
-const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, createConcept, deleteConcept }) => {
+const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, createConcept, deleteConcept, updateCourse }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
 
-  const updateCourse = useMutation(UPDATE_COURSE, {
-    refetchQueries: [{ query: ALL_COURSES }]
-  })
-
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     refetchQueries: [{ query: ALL_COURSES }]
   })
-
-  // const createConcept = useMutation(CREATE_CONCEPT, {
-  //   refetchQueries: [{ query: ALL_COURSES }]
-  // })
 
   const handleCourseClose = () => {
     setCourseState({ open: false, id: '' })
