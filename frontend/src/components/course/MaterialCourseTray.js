@@ -12,6 +12,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
   root: {
@@ -27,26 +28,33 @@ const styles = theme => ({
     maxHeight: '80vh',
     width: '100%',
     overflow: 'auto'
+    
   },
   listItem: {
-    width: '100%'
+    width: '100%',
+    backgroundColor: '#fff',
+    "&:focus": {
+      backgroundColor: '#fff'
+    }
   },
   button: {
     width: '100%'
   }
 })
 
-const MaterialPrerequisiteCourse = ({ isPrerequisite, course, activeCourse, addCourseAsPrerequisite }) => {
+const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite }) => {
   const onClick = async () => {
     await addCourseAsPrerequisite({
       variables: { id: activeCourse, prerequisite_id: course.id }
     })
   }
   return (
-    <ListItem>
-      <ListItemText>{course.name}</ListItemText>
-      <Checkbox checked={isPrerequisite} color="primary" onClick={onClick}></Checkbox>
-    </ListItem>
+    <Tooltip title="Add course as prerequisite" placement="right">
+      <ListItem button onClick={onClick} className={classes.listItem}>
+        <ListItemText>{course.name}</ListItemText>
+        <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
+      </ListItem>
+    </Tooltip>
   )
 }
 
@@ -65,6 +73,7 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
                   activeCourse={activeCourse}
                   addCourseAsPrerequisite={addCourseAsPrerequisite}
                   isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
+                  classes={classes}
                 />
               )
             })
