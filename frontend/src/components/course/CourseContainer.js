@@ -83,7 +83,7 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
             openConceptDialog={handleConceptOpen}
             openConceptEditDialog={handleConceptEditOpen}
             activeCourseId={course_id}
-          />
+          /> 
         )
       }
 

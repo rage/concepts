@@ -56,7 +56,7 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
     })
   }
   return (
-    <Tooltip title="Add course as prerequisite" placement="right">
+    <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
       <ListItem button onClick={onClick} className={classes.listItem}>
         <ListItemText>{course.name}</ListItemText>
         <Checkbox checked={isPrerequisite} color="primary"></Checkbox>

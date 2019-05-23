@@ -163,7 +163,7 @@ const MaterialActiveCourse = ({
             className={classes.button}
             onClick={handleConceptOpen(course.id)}
             variant="contained"
-            color="primary"
+            color="secondary"
           >
             Add concept
           </Button>

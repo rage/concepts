@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 import Switch from '@material-ui/core/Switch'
-
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
   active: {
@@ -73,7 +73,9 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
   }
 
   return (
+    
     // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
+    <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
     <ListItem divider button onClick={activateConcept(concept.id)} id={'concept-' + concept.id}>
       <Switch
         checked={isActive()}
@@ -109,6 +111,7 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
         }
       </ListItemSecondaryAction>
     </ListItem >
+    </Tooltip>
   )
 }
 
