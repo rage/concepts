@@ -108,12 +108,13 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
       button={activeConceptId !== ''}
       onClick={onClick}
       className={isActive() ? classes.active : classes.inactive}
+      id={'concept-' + concept.id}
     >
-      <ListItemText>
+      <ListItemText id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
       {activeConceptId === '' ?
-        <ListItemSecondaryAction>
+        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           <IconButton
             aria-owns={state.anchorEl ? 'simple-menu' : undefined}
             aria-haspopup="true"

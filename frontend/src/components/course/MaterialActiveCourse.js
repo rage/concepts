@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 
 // Card
 import Card from '@material-ui/core/Card'
@@ -15,18 +16,20 @@ import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../services/C
 // List 
 import List from '@material-ui/core/List'
 
+
 import MaterialActiveConcept from '../concept/MaterialActiveConcept'
 
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
+
 const styles = theme => ({
   root: {
-    width: '370px',
+    width: '470px',
     marginLeft: '10px'
   },
   list: {
-    // width: '100%',
+    width: '100%',
     // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
     paddingBottom: theme.spacing.unit * 2,
@@ -108,6 +111,15 @@ const MaterialActiveCourse = ({
     }
   })
 
+  const handleClickAway = (event) => {
+    const isConceptButton = event.path
+      .map(el => el.id)
+      .find(id => (id + '').substring(0, 7) === 'concept')
+    if (!isConceptButton) {
+      activateConcept('')()
+    }
+  }
+
   const handleConceptClose = () => {
     setConceptState({ ...conceptState, open: false })
   }
@@ -132,18 +144,20 @@ const MaterialActiveCourse = ({
         </CardHeader>
 
         <CardContent>
-          <List className={classes.list}>
-            {course.concepts.map(concept =>
-              <MaterialActiveConcept concept={concept}
-                key={concept.id}
-                activateConcept={activateConcept}
-                activeConceptId={activeConceptId}
-                deleteConcept={deleteConcept}
-                openConceptDialog={handleConceptOpen}
-                openConceptEditDialog={handleConceptEditOpen}
-              />
-            )}
-          </List>
+          <ClickAwayListener onClickAway={handleClickAway}>
+            <List className={classes.list}>
+              {course.concepts.map(concept =>
+                <MaterialActiveConcept concept={concept}
+                  key={concept.id}
+                  activateConcept={activateConcept}
+                  activeConceptId={activeConceptId}
+                  deleteConcept={deleteConcept}
+                  openConceptDialog={handleConceptOpen}
+                  openConceptEditDialog={handleConceptEditOpen}
+                />
+              )}
+            </List>
+          </ClickAwayListener>
 
           <Button
             className={classes.button}

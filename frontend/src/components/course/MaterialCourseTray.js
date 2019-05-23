@@ -19,19 +19,23 @@ import CourseCreationDialog from './CourseCreationDialog'
 
 const styles = theme => ({
   root: {
-    width: '370px',
-    marginRight: '8px',
+    width: '470px',
+    marginRight: '8px'
   },
   cardHeader: {
+    marginTop: '5px',
     paddingBottom: '0px',
-    textAlign: 'center'
+    textAlign: 'center',
+  },
+  title: {
+
   },
   list: {
     backgroundColor: theme.palette.background.paper,
     maxHeight: '80vh',
     width: '100%',
     overflow: 'auto'
-    
+
   },
   listItem: {
     width: '100%',
@@ -62,8 +66,8 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
 }
 
 const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
-  const [state, setState] = useState({ open: false})
-  
+  const [state, setState] = useState({ open: false })
+
   const handleClose = () => {
     setState({ open: false })
   }
@@ -75,7 +79,7 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
   return (
     <React.Fragment>
       <Card elevation={3} className={classes.root}>
-        <CardHeader className={classes.cardHeader} title="Add course" />
+        <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title="Add course" titleTypographyProps={{ variant: 'h4' }} />
         <CardContent>
           <List disablePadding className={classes.list}>
             {
