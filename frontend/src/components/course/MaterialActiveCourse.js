@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import Grid from '@material-ui/core/Grid';
 
 // Card
 import Card from '@material-ui/core/Card'
@@ -25,8 +26,7 @@ import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const styles = theme => ({
   root: {
-    width: '470px',
-    marginLeft: '10px'
+    
   },
   list: {
     width: '100%',
@@ -138,9 +138,9 @@ const MaterialActiveCourse = ({
 
 
   return (
-    <React.Fragment>
+    <Grid item xs={3}>
       <Card elevation={3} className={classes.root}>
-        <CardHeader className={classes.cardHeader} title={course.name}>
+        <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4'}}>
         </CardHeader>
 
         <CardContent>
@@ -172,7 +172,7 @@ const MaterialActiveCourse = ({
 
       <ConceptEditingDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
       <ConceptAdditionDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
-    </React.Fragment>
+    </Grid>
   )
 }
 

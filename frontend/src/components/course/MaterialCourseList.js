@@ -61,8 +61,8 @@ const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCou
   }
 
   return (
-    <React.Fragment>
-      <Grid item xs={12} md={12}>
+    <Grid container justify="center">
+      <Grid item md={8} xs={12}>
         <Card elevation={1} className={classes.root}>
           <CardHeader
             action={
@@ -107,7 +107,7 @@ const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCou
 
       <CourseCreationDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
       <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} />
-    </React.Fragment>
+    </Grid>
   )
 }
 

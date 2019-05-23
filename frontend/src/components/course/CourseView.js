@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Grid from '@material-ui/core/Grid';
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
@@ -53,7 +54,8 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
     <React.Fragment>
       {
         course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
-          <div className="course-view">
+          <Grid container spacing={24} direction="row">
+          
             <MaterialCourseTray
               courses={courses.data.allCourses}
               activeCourse={course_id}
@@ -78,7 +80,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               activeConceptId={activeConceptId}
               activateConcept={activateConcept}
             />
-          </div> :
+          </Grid> :
           null
       }
     </React.Fragment>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid';
 
 // Card
 import Card from '@material-ui/core/Card'
@@ -19,8 +20,6 @@ import CourseCreationDialog from './CourseCreationDialog'
 
 const styles = theme => ({
   root: {
-    width: '470px',
-    marginRight: '8px'
   },
   cardHeader: {
     marginTop: '5px',
@@ -77,7 +76,7 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
   }
 
   return (
-    <React.Fragment>
+    <Grid item xs={3}>
       <Card elevation={3} className={classes.root}>
         <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title="Add course" titleTypographyProps={{ variant: 'h4' }} />
         <CardContent>
@@ -101,7 +100,7 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
         </CardContent>
       </Card>
       <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
-    </React.Fragment>
+    </Grid>
   )
 }
 

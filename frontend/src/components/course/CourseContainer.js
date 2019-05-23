@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import MaterialCourse from './MaterialCourse'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
@@ -70,9 +72,14 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
 
 
   return (
-    <div className="curri-column-container">
+    <React.Fragment>
+   {
+     courses && courses.length !== 0 ? 
+    <Grid item xs={6}>
+      <Grid container alignContent="space-between" justify="space-between" spacing={24}>
       {
         courses && courses.map(course =>
+          <Grid item> 
           <MaterialCourse
             key={course.id}
             course={course}
@@ -84,8 +91,12 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
             openConceptEditDialog={handleConceptEditOpen}
             activeCourseId={course_id}
           /> 
+          </Grid>
         )
       }
+      
+      
+      </Grid>
 
       <CourseEditingDialog
         state={courseState}
@@ -102,7 +113,26 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
         handleClose={handleConceptEditClose}
         updateConcept={updateConcept}
       />
-    </div>
+    </Grid>
+    :
+    <Grid container alignItems="center" justify="center" xs={6}>
+        <Grid item xs={8}>
+          <Typography id="instructions" variant='body1'>
+            Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
+          </Typography>
+          <br/>
+          <Typography id="instructions" variant='body1'>
+            Activate selection of prerequisites for a concept of the current course by toggling a concept on 
+            the right.
+          </Typography>
+          <br/>
+          <Typography id="instructions" variant='body1'>
+            When a concept is toggled, concepts of courses in the center can be linked to it by clicking them.
+          </Typography>
+        </Grid>
+    </Grid> 
+    }
+    </React.Fragment>
   )
 }
 

@@ -60,7 +60,7 @@ const MaterialCourse = ({
   deleteLink
 }) => {
   return (
-    <div>
+    <React.Fragment>
       <Card className={classes.root}>
         <CardHeader className={classes.cardHeader} title={course.name} action={
           <IconButton onClick={openCourseDialog(course.id, course.name)}>
@@ -86,7 +86,7 @@ const MaterialCourse = ({
           <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
         </CardContent>
       </Card>
-    </div>
+    </React.Fragment>
   )
 }
 
