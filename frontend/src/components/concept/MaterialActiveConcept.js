@@ -57,9 +57,6 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
-      console.log('delete', id)
-      console.log(deleteConcept)
-
       await deleteConcept({
         variables: { id }
       })
@@ -73,44 +70,44 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
   }
 
   return (
-    
+
     // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
-    <ListItem divider button onClick={activateConcept(concept.id)} id={'concept-' + concept.id}>
-      <Switch
-        checked={isActive()}
-        color='primary'
-      />
-      <ListItemText
-        id={'concept-name-' + concept.id}
-        primaryTypographyProps={isPassive() ? { color: 'textSecondary' } : { color: 'textPrimary' }}
-      >
-        {concept.name}
-      </ListItemText>
-      <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-        {activeConceptId === '' ?
-          <React.Fragment>
-            <IconButton
-              aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-              aria-haspopup="true"
-              onClick={handleMenuOpen}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              id="simple-menu"
-              anchorEl={state.anchorEl}
-              open={Boolean(state.anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
-              <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
-            </Menu>
-          </React.Fragment>
-          : null
-        }
-      </ListItemSecondaryAction>
-    </ListItem >
+      <ListItem divider button onClick={activateConcept(concept.id)} id={'concept-' + concept.id}>
+        <Switch
+          checked={isActive()}
+          color='primary'
+        />
+        <ListItemText
+          id={'concept-name-' + concept.id}
+          primaryTypographyProps={isPassive() ? { color: 'textSecondary' } : { color: 'textPrimary' }}
+        >
+          {concept.name}
+        </ListItemText>
+        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+          {activeConceptId === '' ?
+            <React.Fragment>
+              <IconButton
+                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                aria-haspopup="true"
+                onClick={handleMenuOpen}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={state.anchorEl}
+                open={Boolean(state.anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
+                <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
+              </Menu>
+            </React.Fragment>
+            : null
+          }
+        </ListItemSecondaryAction>
+      </ListItem >
     </Tooltip>
   )
 }

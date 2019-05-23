@@ -47,7 +47,6 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   const activateConcept = (id) => () => {
     const alreadyActive = activeConceptId === id
     setActiveConceptId(alreadyActive ? '' : id)
-    console.log(activeConceptId)
   }
 
   return (
@@ -55,7 +54,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
       {
         course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
           <Grid container spacing={24} direction="row">
-          
+
             <MaterialCourseTray
               courses={courses.data.allCourses}
               activeCourse={course_id}

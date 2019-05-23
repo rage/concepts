@@ -66,7 +66,7 @@ const App = () => {
   })
 
   return (
-    <div className="App">
+    <div className="App" style={{ overflowX: 'hidden' }}>
       <NavBar />
       <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
       <Route exact path="/courses/:id" render={({ match }) => {
