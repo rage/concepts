@@ -20,6 +20,7 @@ import CourseCreationDialog from './CourseCreationDialog'
 
 const styles = theme => ({
   root: {
+    height: '90vh',
   },
   courseName: {
     wordBreak: 'break-word'
@@ -36,7 +37,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     width: '100%',
     overflow: 'auto',
-    height: '80vh',
+    maxHeight: '73vh',
     padding: 0
   },
   listItem: {

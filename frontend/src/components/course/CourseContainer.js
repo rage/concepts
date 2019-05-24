@@ -86,7 +86,7 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
         courses && courses.length !== 0 ?
           <Grid item xs={4} lg={8}>
             {/* <Grid container alignContent="space-between" justify="space-between" spacing={0}> */}
-            <div style={{ overflowY: 'scroll', maxHeight: '93vh', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ overflowY: 'scroll', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               <Masonry
                 breakpointCols={breakpointColumnsObj}
                 className="my-masonry-grid"

@@ -26,7 +26,7 @@ import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const styles = theme => ({
   root: {
-
+    height: '90vh',
   },
   list: {
     width: '100%',
@@ -35,7 +35,7 @@ const styles = theme => ({
     // paddingBottom: theme.spacing.unit * 2,
     // position: 'relative',
     overflow: 'auto',
-    height: '80vh',
+    maxHeight: '73vh',
     padding: 0
   },
   cardHeader: {
