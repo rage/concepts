@@ -20,7 +20,7 @@ const styles = {
 
 const NavBar = ({ classes }) => (
   <div className={classes.root}>
-    <AppBar position="static">
+    <AppBar elevation={0} position="static">
       <Toolbar variant="dense">
         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
           <MenuIcon />

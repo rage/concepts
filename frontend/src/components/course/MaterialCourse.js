@@ -19,7 +19,7 @@ import MaterialConcept from '../concept/MaterialConcept'
 
 const styles = theme => ({
   root: {
-    width: '270px',
+    width: '280px',
     margin: '0px 8px 16px 8px'
   },
   list: {
@@ -33,6 +33,9 @@ const styles = theme => ({
   },
   cardHeader: {
     paddingBottom: '0px'
+  },
+  title: {
+    wordBreak: 'break-word'
   },
   listSection: {
     backgroundColor: 'inherit',
@@ -62,8 +65,8 @@ const MaterialCourse = ({
 }) => {
   return (
     <React.Fragment>
-      <Card className={classes.root}>
-        <CardHeader className={classes.cardHeader} title={course.name} action={
+      <Card elevation={0} className={classes.root} id='masonry-element'>
+        <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title={course.name} action={
           <IconButton onClick={openCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>

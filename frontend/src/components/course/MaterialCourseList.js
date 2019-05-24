@@ -28,7 +28,7 @@ const styles = theme => ({
 const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCourse, createCourse }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '' })
-  
+
 
 
   const handleClickOpen = () => {
@@ -63,7 +63,7 @@ const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCou
   return (
     <Grid container justify="center">
       <Grid item md={8} xs={12}>
-        <Card elevation={1} className={classes.root}>
+        <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
               <IconButton aria-label="Add" onClick={handleClickOpen}>

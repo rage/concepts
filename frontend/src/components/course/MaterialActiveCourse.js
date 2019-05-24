@@ -140,8 +140,8 @@ const MaterialActiveCourse = ({
 
 
   return (
-    <Grid item xs={3}>
-      <Card elevation={3} className={classes.root}>
+    <Grid item xs={4} lg={2}>
+      <Card elevation={0} className={classes.root}>
         <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
         </CardHeader>
 

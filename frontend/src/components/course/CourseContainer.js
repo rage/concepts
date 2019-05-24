@@ -12,6 +12,16 @@ import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import CourseEditingDialog from './CourseEditingDialog'
 
+import Masonry from 'react-masonry-css'
+import '../../MasonryLayout.css'
+
+const breakpointColumnsObj = {
+  default: 4,
+  1900: 3,
+  1400: 2,
+  1279: 1
+}
+
 const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
@@ -74,16 +84,18 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
     <React.Fragment>
       {
         courses && courses.length !== 0 ?
-          <Grid item xs={6}>
+          <Grid item xs={4} lg={8}>
             {/* <Grid container alignContent="space-between" justify="space-between" spacing={0}> */}
-            <div className="curri-column-container">
-
-
-              {
-                courses && courses.map(course =>
-                  <Grid item key={course.id}>
+            <div style={{ overflowY: 'scroll', maxHeight: '93vh', display: 'flex', justifyContent: 'center' }}>
+              <Masonry
+                breakpointCols={breakpointColumnsObj}
+                className="my-masonry-grid"
+                columnClassName="my-masonry-grid_column"
+              >
+                {
+                  courses && courses.map(course =>
                     <MaterialCourse
-
+                      key={course.id}
                       course={course}
                       linkPrerequisite={linkPrerequisite}
                       deleteLink={deleteLink}
@@ -93,11 +105,10 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
                       openConceptEditDialog={handleConceptEditOpen}
                       activeCourseId={course_id}
                     />
-                  </Grid>
-                )
-              }
+                  )
+                }
+              </Masonry>
             </div>
-            {/* </Grid> */}
 
             <CourseEditingDialog
               state={courseState}

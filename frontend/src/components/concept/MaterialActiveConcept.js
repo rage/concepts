@@ -29,6 +29,13 @@ const styles = theme => ({
       backgroundColor: '#fff'
     }
   },
+  listItem: {
+    width: '100%',
+    backgroundColor: '#fff',
+    "&:focus": {
+      backgroundColor: '#fff'
+    }
+  },
   otherNameActive: {
     color: 'grey'
   },
@@ -73,7 +80,7 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
 
     // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
-      <ListItem button onClick={activateConcept(concept.id)} id={'concept-' + concept.id} divider>
+      <ListItem button divider className={classes.listItem} onClick={activateConcept(concept.id)} id={'concept-' + concept.id} >
         <Switch
           checked={isActive()}
           color='primary'
