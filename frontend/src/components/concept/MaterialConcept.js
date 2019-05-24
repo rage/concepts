@@ -15,6 +15,9 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 const styles = theme => ({
+  conceptName: {
+    wordBreak: 'break-word'
+  },
   active: {
     backgroundColor: '#9ecae1',
     "&:hover": {
@@ -110,7 +113,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
       className={isActive() ? classes.active : classes.inactive}
       id={'concept-' + concept.id}
     >
-      <ListItemText id={'concept-name-' + concept.id}>
+      <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
       {activeConceptId === '' ?
