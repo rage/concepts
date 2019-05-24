@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid';
+import CourseMatrice from './CourseMatrice'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import {

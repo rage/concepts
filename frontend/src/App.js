@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom'
 import './App.css'
 
 import CourseView from './components/course/CourseView'
+import MatriceView from './components/course/MatriceView'
 import MaterialCourseList from './components/course/MaterialCourseList'
 import NavBar from './components/common/NavBar'
 
@@ -80,7 +81,18 @@ const App = () => {
             updateCourse={updateCourse}
             courses={courses}
           />
-        }} />
+        }} 
+        />
+        <Route exact path="/matrix/:id" render={({ match }) => {
+          return <MatriceView
+            course_id={match.params.id}
+            createCourse={createCourse}
+            updateCourse={updateCourse}
+            courses={courses}
+          />
+        }}
+        />
+        
       </Grid>
     </div>
   )
