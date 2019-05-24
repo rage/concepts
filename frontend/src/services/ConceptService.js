@@ -21,9 +21,6 @@ const ALL_CONCEPTS = gql`
         linksToConcept {
             from {
                 id
-                name
-                description
-                official
             }
         }
     }
@@ -53,6 +50,12 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     name
     description
     official
+    linksFromConcept {
+      id
+      to {
+        id
+      }
+    }
   }
 }
 `
@@ -72,9 +75,15 @@ mutation createLink($to: ID!, $from: ID!) {
     id
     to {
       id
+      name
+      description
+      official
     }
     from {
       id
+      name
+      description
+      official
     }
   }
 }

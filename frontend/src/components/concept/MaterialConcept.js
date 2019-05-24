@@ -1,22 +1,23 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { useMutation } from 'react-apollo-hooks'
-import { UPDATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
-import { ALL_COURSES } from '../../services/CourseService'
+import { useMutation, useApolloClient } from 'react-apollo-hooks'
+import { DELETE_CONCEPT } from '../../services/ConceptService'
+import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@material-ui/core/IconButton'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 const styles = theme => ({
+  conceptName: {
+    wordBreak: 'break-word'
+  },
   active: {
     backgroundColor: '#9ecae1',
     "&:hover": {
@@ -34,8 +35,30 @@ const styles = theme => ({
   }
 })
 
-const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, deleteLink, deleteConcept, openConceptEditDialog }) => {
+const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptId, linkPrerequisite, deleteLink, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
+
+  const client = useApolloClient()
+
+  const includedIn = (set, object) =>
+    set.map(p => p.id).includes(object.id)
+
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: activeCourseId } })
+      const deletedConcept = response.data.deleteConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const prereqCourse = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === course.id)
+      if (includedIn(prereqCourse.concepts, deletedConcept)) {
+        prereqCourse.concepts = prereqCourse.concepts.filter(c => c.id !== deletedConcept.id)
+        client.writeQuery({
+          query: COURSE_PREREQUISITE_COURSES,
+          variables: { id: activeCourseId },
+          data: dataInStoreCopy
+        })
+      }
+    }
+  })
 
   const isActive = () => {
     return concept.linksFromConcept.find(link => {
@@ -72,12 +95,7 @@ const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, 
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
-      console.log('delete', id)
-      console.log(deleteConcept)
-
-      await deleteConcept({
-        variables: { id }
-      })
+      deleteConcept({ variables: { id } })
     }
     handleMenuClose()
   }
@@ -88,12 +106,18 @@ const MaterialConcept = ({ classes, concept, activeConceptId, linkPrerequisite, 
   }
 
   return (
-    <ListItem divider button={activeConceptId !== ''} onClick={onClick} className={isActive() ? classes.active : classes.inactive}>
-      <ListItemText>
+    <ListItem
+      divider
+      button={activeConceptId !== ''}
+      onClick={onClick}
+      className={isActive() ? classes.active : classes.inactive}
+      id={'concept-' + concept.id}
+    >
+      <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
       {activeConceptId === '' ?
-        <ListItemSecondaryAction>
+        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           <IconButton
             aria-owns={state.anchorEl ? 'simple-menu' : undefined}
             aria-haspopup="true"

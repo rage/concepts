@@ -1,81 +1,110 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid';
 
 // Card
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
 
 // List
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Checkbox from '@material-ui/core/Checkbox';
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip';
+
+import CourseCreationDialog from './CourseCreationDialog'
+
 
 const styles = theme => ({
   root: {
-    width: '370px',
-    marginRight: '8px',
+    height: '90vh',
+  },
+  courseName: {
+    wordBreak: 'break-word'
   },
   cardHeader: {
+    marginTop: '5px',
     paddingBottom: '0px',
-    textAlign: 'center'
+    textAlign: 'center',
+  },
+  title: {
+
   },
   list: {
     backgroundColor: theme.palette.background.paper,
-    maxHeight: 500,
     width: '100%',
-    overflow: 'auto'
+    overflow: 'auto',
+    maxHeight: '73vh',
+    padding: 0
   },
   listItem: {
-    width: '100%'
+    width: '100%',
+    backgroundColor: '#fff',
+    "&:focus": {
+      backgroundColor: '#fff'
+    }
   },
   button: {
     width: '100%'
   }
 })
 
-const MaterialPrerequisiteCourse = ({ isPrerequisite, course, activeCourse, addCourseAsPrerequisite }) => {
+const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite }) => {
   const onClick = async () => {
     await addCourseAsPrerequisite({
       variables: { id: activeCourse, prerequisite_id: course.id }
     })
   }
   return (
-    <ListItem>
-      <ListItemText>{course.name}</ListItemText>
-      <Checkbox  checked={isPrerequisite} color="primary" onClick={onClick}></Checkbox>
-    </ListItem>
+    <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
+      <ListItem button onClick={onClick} className={classes.listItem}>
+        <ListItemText className={classes.courseName}>{course.name}</ListItemText>
+        <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
+      </ListItem>
+    </Tooltip>
   )
 }
 
-const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite, prerequisiteCourses }) => {
-  console.log(prerequisiteCourses.map(c => c.id))
+const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
+  const [state, setState] = useState({ open: false })
+
+  const handleClose = () => {
+    setState({ open: false })
+  }
+
+  const handleClickOpen = () => {
+    setState({ open: true })
+  }
+
   return (
-    <Card elevation={3} className={classes.root}>
-        <CardHeader  className={classes.cardHeader} title="Add course" />
+    <Grid item xs={4} lg={3}>
+      <Card elevation={0} className={classes.root}>
+        <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title="Add course" titleTypographyProps={{ variant: 'h4' }} />
         <CardContent>
           <List disablePadding className={classes.list}>
-          {
-            courses.filter(course => course.id !== activeCourse).map(course => {
-              return (
-                <MaterialPrerequisiteCourse
-                  key={course.id}
-                  course={course}
-                  activeCourse={activeCourse}
-                  addCourseAsPrerequisite={addCourseAsPrerequisite}
-                  isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
-                />
-              )
-            })
-          }
+            {
+              courses.filter(course => course.id !== activeCourse).map(course => {
+                return (
+                  <MaterialPrerequisiteCourse
+                    key={course.id}
+                    course={course}
+                    activeCourse={activeCourse}
+                    addCourseAsPrerequisite={addCourseAsPrerequisite}
+                    isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
+                    classes={classes}
+                  />
+                )
+              })
+            }
           </List>
-          <Button className={classes.button} variant="contained" color="secondary"> New course </Button>
+          <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
         </CardContent>
       </Card>
+      <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
+    </Grid>
   )
 }
 

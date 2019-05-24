@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { useMutation } from 'react-apollo-hooks'
-import { UPDATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
-import { ALL_COURSES } from '../../services/CourseService'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Switch from '@material-ui/core/Switch'
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
+  conceptName: {
+    wordBreak: 'break-word'
+  },
   active: {
     backgroundColor: '#9ecae1',
     "&:hover": {
@@ -29,7 +31,17 @@ const styles = theme => ({
     "&:focus": {
       backgroundColor: '#fff'
     }
-  }
+  },
+  listItem: {
+    width: '100%',
+    backgroundColor: '#fff',
+    "&:focus": {
+      backgroundColor: '#fff'
+    }
+  },
+  otherNameActive: {
+    color: 'grey'
+  },
 })
 
 const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, deleteConcept, openConceptEditDialog }) => {
@@ -37,6 +49,11 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
 
   const isActive = () => {
     return activeConceptId === concept.id
+  }
+
+  const isPassive = () => {
+    return (activeConceptId !== concept.id)
+      && (activeConceptId !== '')
   }
 
   const handleMenuOpen = (event) => {
@@ -50,9 +67,6 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
-      console.log('delete', id)
-      console.log(deleteConcept)
-
       await deleteConcept({
         variables: { id }
       })
@@ -66,31 +80,50 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
   }
 
   return (
-    <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
-      <ListItemText>
-        {concept.name}
-      </ListItemText>
-      {activeConceptId === '' ?
-        <ListItemSecondaryAction>
-          <IconButton
-            aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={state.anchorEl}
-            open={Boolean(state.anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
-            <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
-          </Menu>
-        </ListItemSecondaryAction> : null
-      }
-    </ListItem>
+
+    // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
+    <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
+      <ListItem button divider className={classes.listItem} onClick={activateConcept(concept.id)} id={'concept-' + concept.id} >
+        <Switch
+          checked={isActive()}
+          color='primary'
+        />
+        <ListItemText
+          id={'concept-name-' + concept.id}
+          className={classes.conceptName}
+          primaryTypographyProps={isPassive() ? { color: 'textSecondary' } : { color: 'textPrimary' }}
+        >
+          {concept.name}
+        </ListItemText>
+        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+          {activeConceptId === '' ?
+            <React.Fragment>
+              <IconButton
+                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                aria-haspopup="true"
+                onClick={handleMenuOpen}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={state.anchorEl}
+                open={Boolean(state.anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem
+                  onClick={handleEditConcept(concept.id, concept.name, concept.description)}
+                >
+                  Edit
+                </MenuItem>
+                <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
+              </Menu>
+            </React.Fragment>
+            : null
+          }
+        </ListItemSecondaryAction>
+      </ListItem >
+    </Tooltip>
   )
 }
 

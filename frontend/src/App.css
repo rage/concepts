@@ -111,7 +111,7 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
-  height: 90vh;
+  height: 93vh;
   overflow-y: scroll;
   flex-basis: 100%;
 }

@@ -94,6 +94,16 @@ mutation createCourse($name: String!) {
   createCourse(name: $name) {
     id
     name
+    concepts {
+      id
+      name
+      linksFromConcept {
+        id
+        to {
+          id
+        }
+      }
+    }
   }
 }
 `
@@ -103,6 +113,16 @@ mutation updateCourse($id: ID!, $name: String!) {
   updateCourse(id: $id, name: $name) {
     id
     name
+    concepts {
+      id
+      name
+      linksFromConcept {
+        id
+        to {
+          id
+        }
+      }
+    }
   }
 }
 `
@@ -111,7 +131,6 @@ const DELETE_COURSE = gql`
 mutation deleteCourse($id: ID!) {
   deleteCourse(id: $id) {
     id
-    name
   }
 }
 `

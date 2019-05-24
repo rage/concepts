@@ -14,7 +14,6 @@ const ResourceForm = ({ createResource, concept_id }) => {
       alert('Name can\'t be empty')
       return
     }
-    console.log('concept_id', concept_id)
     await createResource({
       variables: { name, desc: description, urls, concept_id }
     })
