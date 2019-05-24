@@ -14,6 +14,9 @@ import Switch from '@material-ui/core/Switch'
 import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
+  conceptName: {
+    wordBreak: 'break-word'
+  },
   active: {
     backgroundColor: '#9ecae1',
     "&:hover": {
@@ -87,6 +90,7 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
         />
         <ListItemText
           id={'concept-name-' + concept.id}
+          className={classes.conceptName}
           primaryTypographyProps={isPassive() ? { color: 'textSecondary' } : { color: 'textPrimary' }}
         >
           {concept.name}
