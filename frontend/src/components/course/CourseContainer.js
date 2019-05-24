@@ -127,8 +127,8 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
             />
           </Grid>
           :
-          <Grid container alignItems="center" justify="center" xs={6}>
-            <Grid item xs={8}>
+          <Grid container alignItems="center" justify="center" xs={4} lg={8}>
+            <Grid item xs={4}>
               <Typography id="instructions" variant='body1'>
                 Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
               </Typography>
