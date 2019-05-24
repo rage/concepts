@@ -16,9 +16,8 @@ import Masonry from 'react-masonry-css'
 import '../../MasonryLayout.css'
 
 const breakpointColumnsObj = {
-  default: 4,
-  1900: 3,
-  1400: 2,
+  default: 3,
+  1900: 2,
   1279: 1
 }
 
@@ -84,7 +83,7 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
     <React.Fragment>
       {
         courses && courses.length !== 0 ?
-          <Grid item xs={4} lg={8}>
+          <Grid item xs={4} lg={6}>
             {/* <Grid container alignContent="space-between" justify="space-between" spacing={0}> */}
             <div style={{ overflowY: 'scroll', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               <Masonry
@@ -127,7 +126,7 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
             />
           </Grid>
           :
-          <Grid container alignItems="center" justify="center" xs={4} lg={8}>
+          <Grid container alignItems="center" justify="center" xs={4} lg={6}>
             <Grid item xs={4}>
               <Typography id="instructions" variant='body1'>
                 Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.

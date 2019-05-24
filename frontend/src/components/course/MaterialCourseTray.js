@@ -80,7 +80,7 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
   }
 
   return (
-    <Grid item xs={4} lg={2}>
+    <Grid item xs={4} lg={3}>
       <Card elevation={0} className={classes.root}>
         <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title="Add course" titleTypographyProps={{ variant: 'h4' }} />
         <CardContent>
