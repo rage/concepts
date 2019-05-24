@@ -78,35 +78,62 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
     setConceptEditState({ open: true, id, name, description })
   }
 
+  const makeGridCourseElements = () => {
+    return courses && courses.map(course =>
+      <Grid item>
+        <MaterialCourse
+          key={course.id}
+          course={course}
+          linkPrerequisite={linkPrerequisite}
+          deleteLink={deleteLink}
+          activeConceptId={activeConceptId}
+          openCourseDialog={handleCourseOpen}
+          openConceptDialog={handleConceptOpen}
+          openConceptEditDialog={handleConceptEditOpen}
+          activeCourseId={course_id}
+        />
+      </Grid>
+    )
+  }
 
   return (
     <React.Fragment>
       {
         courses && courses.length !== 0 ?
-          <Grid item xs={4} lg={6}>
+          <Grid container xs={4} lg={6}>
             {/* <Grid container alignContent="space-between" justify="space-between" spacing={0}> */}
-            <div style={{ overflowY: 'scroll', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
-              <Masonry
-                breakpointCols={breakpointColumnsObj}
-                className="my-masonry-grid"
-                columnClassName="my-masonry-grid_column"
-              >
-                {
-                  courses && courses.map(course =>
-                    <MaterialCourse
-                      key={course.id}
-                      course={course}
-                      linkPrerequisite={linkPrerequisite}
-                      deleteLink={deleteLink}
-                      activeConceptId={activeConceptId}
-                      openCourseDialog={handleCourseOpen}
-                      openConceptDialog={handleConceptOpen}
-                      openConceptEditDialog={handleConceptEditOpen}
-                      activeCourseId={course_id}
-                    />
-                  )
-                }
-              </Masonry>
+            <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
+              {
+                courses && courses.length < 3 ?
+                  <Grid container direction='rows' justify='space-evenly'>
+                    {
+                      makeGridCourseElements()
+                    }
+                  </Grid>
+                  :
+                  <Masonry
+                    breakpointCols={breakpointColumnsObj}
+                    className="my-masonry-grid"
+                    columnClassName="my-masonry-grid_column"
+                  >
+                    {
+                      courses && courses.map(course =>
+                        <MaterialCourse
+                          key={course.id}
+                          course={course}
+                          linkPrerequisite={linkPrerequisite}
+                          deleteLink={deleteLink}
+                          activeConceptId={activeConceptId}
+                          openCourseDialog={handleCourseOpen}
+                          openConceptDialog={handleConceptOpen}
+                          openConceptEditDialog={handleConceptEditOpen}
+                          activeCourseId={course_id}
+                        />
+                      )
+                    }
+                  </Masonry>
+              }
+
             </div>
 
             <CourseEditingDialog
