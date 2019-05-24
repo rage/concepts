@@ -75,7 +75,10 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
       {
         courses && courses.length !== 0 ?
           <Grid item xs={6}>
-            <Grid container alignContent="space-between" justify="space-between" spacing={24}>
+            {/* <Grid container alignContent="space-between" justify="space-between" spacing={0}> */}
+            <div className="curri-column-container">
+
+
               {
                 courses && courses.map(course =>
                   <Grid item key={course.id}>
@@ -93,7 +96,8 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
                   </Grid>
                 )
               }
-            </Grid>
+            </div>
+            {/* </Grid> */}
 
             <CourseEditingDialog
               state={courseState}

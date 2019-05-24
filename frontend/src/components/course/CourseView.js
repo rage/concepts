@@ -53,7 +53,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
     <React.Fragment>
       {
         course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
-          <Grid container spacing={24} direction="row">
+          <Grid container spacing={0} direction="row">
 
             <MaterialCourseTray
               courses={courses.data.allCourses}

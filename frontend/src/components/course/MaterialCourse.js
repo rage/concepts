@@ -19,7 +19,8 @@ import MaterialConcept from '../concept/MaterialConcept'
 
 const styles = theme => ({
   root: {
-    width: '270px'
+    width: '270px',
+    margin: '0px 8px 16px 8px'
   },
   list: {
     width: '100%',

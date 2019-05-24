@@ -26,18 +26,20 @@ import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const styles = theme => ({
   root: {
-    
+
   },
   list: {
     width: '100%',
     // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-    paddingBottom: theme.spacing.unit * 2,
+    // paddingBottom: theme.spacing.unit * 2,
     // position: 'relative',
     overflow: 'auto',
-    maxHeight: '80vh',
+    height: '80vh',
+    padding: 0
   },
   cardHeader: {
+    marginTop: '5px',
     paddingBottom: '0px',
     textAlign: 'center'
   },
@@ -140,7 +142,7 @@ const MaterialActiveCourse = ({
   return (
     <Grid item xs={3}>
       <Card elevation={3} className={classes.root}>
-        <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4'}}>
+        <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
         </CardHeader>
 
         <CardContent>

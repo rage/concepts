@@ -73,7 +73,7 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
 
     // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
-      <ListItem divider button onClick={activateConcept(concept.id)} id={'concept-' + concept.id}>
+      <ListItem button onClick={activateConcept(concept.id)} id={'concept-' + concept.id} divider>
         <Switch
           checked={isActive()}
           color='primary'
@@ -100,7 +100,11 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
                 open={Boolean(state.anchorEl)}
                 onClose={handleMenuClose}
               >
-                <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
+                <MenuItem
+                  onClick={handleEditConcept(concept.id, concept.name, concept.description)}
+                >
+                  Edit
+                </MenuItem>
                 <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
               </Menu>
             </React.Fragment>

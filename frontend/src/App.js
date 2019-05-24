@@ -8,6 +8,7 @@ import NavBar from './components/common/NavBar'
 
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
+import { Grid } from '@material-ui/core';
 
 const App = () => {
   const client = useApolloClient()
@@ -66,17 +67,21 @@ const App = () => {
   })
 
   return (
-    <div className="App" style={{ overflowX: 'hidden' }}>
-      <NavBar />
-      <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-      <Route exact path="/courses/:id" render={({ match }) => {
-        return <CourseView
-          course_id={match.params.id}
-          createCourse={createCourse}
-          updateCourse={updateCourse}
-          courses={courses}
-        />
-      }} />
+    <div className="App">
+      <Grid container>
+        <Grid item xs={12}>
+          <NavBar />
+        </Grid>
+        <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+        <Route exact path="/courses/:id" render={({ match }) => {
+          return <CourseView
+            course_id={match.params.id}
+            createCourse={createCourse}
+            updateCourse={updateCourse}
+            courses={courses}
+          />
+        }} />
+      </Grid>
     </div>
   )
 }
