@@ -10,27 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import { FixedSizeGrid } from 'react-window';
 import Grid from '@material-ui/core/Grid'
 
-const columnCount = 25;
-const rowCount = 1000;
-const columnWidth = 100;
 
-const HeaderCell = ({ columnIndex, rowIndex, style }) => (
-  <div style={style}>
-    Header {rowIndex},{columnIndex}
-  </div>
-);
-
-const RowHeaderCell = ({ columnIndex, rowIndex, style }) => (
-  <div style={style}>
-    Header {rowIndex},{columnIndex}
-  </div>
-);
-
-const Cell = ({ columnIndex, rowIndex, style }) => (
-  <div style={style}>
-    Item {rowIndex},{columnIndex}
-  </div>
-);
 
 const styles = theme => {
 }
@@ -53,6 +33,36 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
   const headerGrid = React.createRef();
   const sideGrid = React.createRef()
 
+
+
+  
+  console.log(allPrerequisiteConcepts)
+
+  const columnCount = allPrerequisiteConcepts.length;
+  const rowCount = course.concepts.length;
+  const columnWidth = 100;
+  const rowHeight = 40;
+
+  const HeaderCell = ({ columnIndex, rowIndex, style }) => (
+    <div style={style}>
+      { allPrerequisiteConcepts[columnIndex].name }
+    </div>
+  );
+  
+  const RowHeaderCell = ({ columnIndex, rowIndex, style }) => (
+    <div style={style}>
+      { course.concepts[rowIndex].name }
+      
+    </div>
+  );
+  
+  const Cell = ({ columnIndex, rowIndex, style }) => (
+    <div style={style}>
+      Item {rowIndex},{columnIndex}
+    </div>
+  );
+  
+
   console.log(course)
   return (
     <Grid container direction='row'>
@@ -68,7 +78,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           columnCount={columnCount}
           rowCount={1}
           columnWidth={columnWidth}
-          rowHeight={40}
+          rowHeight={rowHeight}
           height={40}
           width={600}
           // hold onto a reference to the header grid component
@@ -109,16 +119,17 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
             borderBottom: `1px solid gray`,
           }}
         >
-          {HeaderCell}
+          {RowHeaderCell}
         </FixedSizeGrid>
       </Grid>
+
       <Grid item xs={10}>
         <FixedSizeGrid
           // standard grid setup for the body grid
           columnCount={columnCount}
           rowCount={rowCount}
           columnWidth={columnWidth}
-          rowHeight={80}
+          rowHeight={rowHeight}
           height={560}
           width={600}
           // When a scroll occurs in the body grid,
