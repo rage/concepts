@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import Grid from '@material-ui/core/Grid';
-import CourseMatrice from './CourseMatrice'
+import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
@@ -45,11 +44,10 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   return (
     <React.Fragment>
       {
-        course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
+        course.data.courseById && prerequisites.data.courseById ?
           <Grid container spacing={0} direction="row">
 
             <MaterialCourseTray
-              courses={courses.data.allCourses}
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>

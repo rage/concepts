@@ -17,6 +17,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import CourseCreationDialog from './CourseCreationDialog'
 
+import { useQuery } from 'react-apollo-hooks'
+import { ALL_COURSES } from '../../services/CourseService'
 
 const styles = theme => ({
   root: {
@@ -68,8 +70,10 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
   )
 }
 
-const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
+const MaterialCourseTray = ({ classes, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
+
+  const courses = useQuery(ALL_COURSES)
 
   const handleClose = () => {
     setState({ open: false })
@@ -84,22 +88,27 @@ const MaterialCourseTray = ({ classes, courses, activeCourse, addCourseAsPrerequ
       <Card elevation={0} className={classes.root}>
         <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title="Add course" titleTypographyProps={{ variant: 'h4' }} />
         <CardContent>
-          <List disablePadding className={classes.list}>
-            {
-              courses.filter(course => course.id !== activeCourse).map(course => {
-                return (
-                  <MaterialPrerequisiteCourse
-                    key={course.id}
-                    course={course}
-                    activeCourse={activeCourse}
-                    addCourseAsPrerequisite={addCourseAsPrerequisite}
-                    isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
-                    classes={classes}
-                  />
-                )
-              })
-            }
-          </List>
+          {
+            courses.data.allCourses ?
+              <List disablePadding className={classes.list}>
+                {
+                  courses.data.allCourses.filter(course => course.id !== activeCourse).map(course => {
+                    return (
+                      <MaterialPrerequisiteCourse
+                        key={course.id}
+                        course={course}
+                        activeCourse={activeCourse}
+                        addCourseAsPrerequisite={addCourseAsPrerequisite}
+                        isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
+                        classes={classes}
+                      />
+                    )
+                  })
+                }
+              </List>
+              :
+              null
+          }
           <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
         </CardContent>
       </Card>

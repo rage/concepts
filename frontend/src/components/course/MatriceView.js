@@ -13,7 +13,7 @@ import {
 } from '../../services/CourseService'
 
 
-const MatriceView = ({ course_id, createCourse, updateCourse, courses }) => {
+const MatriceView = ({ course_id }) => {
 
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
@@ -26,10 +26,10 @@ const MatriceView = ({ course_id, createCourse, updateCourse, courses }) => {
   return (
     <React.Fragment>
       {
-        course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
+        course.data.courseById && prerequisites.data.courseById ?
           <CourseMatrice course={course.data.courseById} prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
             course.id !== course_id
-          )}/> :
+          )} /> :
           null
       }
     </React.Fragment>

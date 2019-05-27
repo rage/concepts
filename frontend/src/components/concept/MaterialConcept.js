@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK} from '../../services/ConceptService'
+import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
 import { COURSE_PREREQUISITE_COURSES, ALL_COURSES } from '../../services/CourseService'
 
 import ListItem from '@material-ui/core/ListItem'
@@ -106,11 +106,11 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
       return link.to.id === activeConceptId
     })
     isActive ?
-      await deleteLink({
+      deleteLink({
         variables: { id: isActive.id }
       })
       :
-      await linkPrerequisite({
+      linkPrerequisite({
         variables: {
           to: activeConceptId,
           from: concept.id

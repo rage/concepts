@@ -13,7 +13,7 @@ import { Grid } from '@material-ui/core';
 
 const App = () => {
   const client = useApolloClient()
-  const courses = useQuery(ALL_COURSES)
+  // const courses = useQuery(ALL_COURSES)
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -73,26 +73,24 @@ const App = () => {
         <Grid item xs={12}>
           <NavBar />
         </Grid>
-        <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+        <Route exact path="/" render={() => <MaterialCourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
         <Route exact path="/courses/:id" render={({ match }) => {
           return <CourseView
             course_id={match.params.id}
             createCourse={createCourse}
             updateCourse={updateCourse}
-            courses={courses}
           />
-        }} 
+        }}
         />
         <Route exact path="/matrix/:id" render={({ match }) => {
           return <MatriceView
             course_id={match.params.id}
             createCourse={createCourse}
             updateCourse={updateCourse}
-            courses={courses}
           />
         }}
         />
-        
+
       </Grid>
     </div>
   )
