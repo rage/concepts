@@ -30,14 +30,6 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
     variables: { id: course_id }
   })
 
-  const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
-    refetchQueries: [{ query: ALL_COURSES }]
-  })
-
-  const deleteLink = useMutation(DELETE_LINK, {
-    refetchQueries: [{ query: ALL_COURSES }]
-  })
-
   const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
     refetchQueries: [{
       query: COURSE_PREREQUISITE_COURSES,
@@ -70,8 +62,6 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
                 course.id !== course_id
               )}
               course_id={course_id}
-              linkPrerequisite={linkPrerequisite}
-              deleteLink={deleteLink}
               activeConceptId={activeConceptId}
               updateCourse={updateCourse}
             />

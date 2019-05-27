@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { DELETE_CONCEPT } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK} from '../../services/ConceptService'
+import { COURSE_PREREQUISITE_COURSES, ALL_COURSES } from '../../services/CourseService'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -35,10 +35,42 @@ const styles = theme => ({
   }
 })
 
-const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptId, linkPrerequisite, deleteLink, openConceptEditDialog }) => {
+const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptId, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const client = useApolloClient()
+
+  const deleteLink = useMutation(DELETE_LINK, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const deletedLink = response.data.deleteLink
+      const dataInStoreCopy = { ...dataInStore }
+      const courseForConcept = dataInStoreCopy.allCourses.find(c => c.id === course.id)
+      courseForConcept.concepts.forEach(concept => {
+        concept.linksFromConcept = concept.linksFromConcept.filter(l => l.id !== deletedLink.id)
+      })
+      client.writeQuery({
+        query: ALL_COURSES,
+        data: dataInStoreCopy
+      })
+    }
+  })
+
+  const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const addedLink = response.data.createLink
+      const dataInStoreCopy = { ...dataInStore }
+      const courseForConcept = dataInStoreCopy.allCourses.find(c => c.id === course.id)
+      const concept = courseForConcept.concepts.find(c => c.id === addedLink.from.id)
+      concept.linksFromConcept.push(addedLink)
+      client.writeQuery({
+        query: ALL_COURSES,
+        data: dataInStoreCopy
+      })
+    }
+  })
+
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
