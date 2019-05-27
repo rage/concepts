@@ -18,26 +18,13 @@ const styles = theme => {
 
 const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
 
+
   const allPrerequisiteConcepts = prerequisiteCourses.map(course => course.concepts).reduce((concepts, allConcepts) => {
     return allConcepts.concat(concepts)
   }, [])
 
-  const createConceptRow = (concept, prerequisites) => {
-    return prerequisites.map(p => {
-      return {
-        id: p.id,
-        isPrerequisite: p.linksFromConcept.map(l => l.to.id).includes(concept.id)
-      }
-    })
-  }
-
   const headerGrid = React.createRef();
   const sideGrid = React.createRef()
-
-
-
-  
-  console.log(allPrerequisiteConcepts)
 
   const columnCount = allPrerequisiteConcepts.length;
   const rowCount = course.concepts.length;
@@ -61,15 +48,18 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
   }
 
   const Cell = ({ columnIndex, data, rowIndex, style }) => {
-    let {columnData, rowData } = data
+    const {columnData, rowData } = data
+    const isPrerequisite = columnData[columnIndex].linksFromConcept.find(l => l.to.id === rowData[rowIndex].id)
+
     return (
-    <div style={style}>
-      <Checkbox 
-      onClick={
-        linkConcepts(columnData[columnIndex].id, rowData[rowIndex].id)
-      }
-      />
-    </div>
+      <div style={style}>
+          <Checkbox 
+          onClick={
+            linkConcepts(columnData[columnIndex].id, rowData[rowIndex].id)
+          }
+          checked={isPrerequisite} 
+          />
+      </div>
   )}
   
 
