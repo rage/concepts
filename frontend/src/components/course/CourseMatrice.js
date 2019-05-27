@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
 import { FixedSizeGrid } from 'react-window';
+import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
 
 
@@ -55,9 +56,14 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
     </div>
   );
   
+  const linkConcepts = (from, to) => (event) => {
+    console.log((event.target.checked ? 'connecting' : 'disconnecting') + ` ${from} with ${to}`)
+  }
+
+  // Item {rowIndex},{columnIndex}
   const Cell = ({ columnIndex, rowIndex, style }) => (
     <div style={style}>
-      Item {rowIndex},{columnIndex}
+      <Checkbox onClick={linkConcepts(allPrerequisiteConcepts[columnIndex].id, course.concepts[rowIndex].id)}></Checkbox>
     </div>
   );
   
