@@ -52,7 +52,6 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
   const RowHeaderCell = ({ columnIndex, rowIndex, style }) => (
     <div style={style}>
       { course.concepts[rowIndex].name }
-      
     </div>
   );
   
