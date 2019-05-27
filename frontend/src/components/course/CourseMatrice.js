@@ -11,17 +11,20 @@ import { FixedSizeGrid } from 'react-window';
 import Checkbox from '@material-ui/core/Checkbox'
 import Grid from '@material-ui/core/Grid'
 
-
+import { useMutation, useApolloClient, useQuery } from 'react-apollo-hooks'
+import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK} from '../../services/ConceptService'
+import { COURSE_PREREQUISITE_COURSES, ALL_COURSES } from '../../services/CourseService'
 
 const styles = theme => {
 }
 
 const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
 
-
   const allPrerequisiteConcepts = prerequisiteCourses.map(course => course.concepts).reduce((concepts, allConcepts) => {
     return allConcepts.concat(concepts)
   }, [])
+
+  const client = useApolloClient()
 
   const headerGrid = React.createRef();
   const sideGrid = React.createRef()
@@ -42,28 +45,81 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
       { data[rowIndex].name }
     </div>
   );
-  
-  const linkConcepts = (from, to) => (event) => {
-    console.log((event.target.checked ? 'connecting' : 'disconnecting') + ` ${from} with ${to}`)
+
+  const deleteLink = useMutation(DELETE_LINK, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course.id } })
+      const deletedLink = response.data.deleteLink
+      const dataInStoreCopy = { ...dataInStore }
+      dataInStoreCopy.courseById.prerequisiteCourses.forEach(courseForConcept => {
+        courseForConcept.concepts.forEach(concept => {
+          concept.linksFromConcept = concept.linksFromConcept.filter(l => l.id !== deletedLink.id)
+        })
+      })
+      client.writeQuery({
+        query: COURSE_PREREQUISITE_COURSES,
+        variables: { id: course.id },
+        data: dataInStoreCopy
+      })
+    }
+  })
+
+  const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course.id } })
+      const addedLink = response.data.createLink
+      const dataInStoreCopy = { ...dataInStore }
+      dataInStoreCopy.courseById.prerequisiteCourses.forEach(courseForConcept => {
+        const concept = courseForConcept.concepts.find(c => c.id === addedLink.from.id)
+        if (concept) {
+          concept.linksFromConcept.push(addedLink)
+        }
+      })
+      client.writeQuery({
+        query: COURSE_PREREQUISITE_COURSES,
+        variables: { id: course.id },
+        data: dataInStoreCopy
+      })
+    }
+  })
+
+  const linkConcepts = (from, to) => async (event) => {
+    if (event.target.checked) {
+      await linkPrerequisite({
+        variables: {
+          from: from.id, to: to.id
+        }
+      })
+    } else {
+      const link = from.linksFromConcept.find(link => {
+        return link.to.id === to.id
+      })
+      await deleteLink({
+        variables: {
+          id: link.id
+        }
+      })
+    }
+
+
+    
   }
 
   const Cell = ({ columnIndex, data, rowIndex, style }) => {
     const {columnData, rowData } = data
     const isPrerequisite = columnData[columnIndex].linksFromConcept.find(l => l.to.id === rowData[rowIndex].id)
-
+    let checked = isPrerequisite !== undefined
     return (
       <div style={style}>
           <Checkbox 
           onClick={
-            linkConcepts(columnData[columnIndex].id, rowData[rowIndex].id)
+            linkConcepts(columnData[columnIndex], rowData[rowIndex], checked)
           }
-          checked={isPrerequisite} 
+          checked={checked}
           />
       </div>
   )}
   
-
-  console.log(course)
   return (
     <Grid container direction='row'>
       <Grid item xs={2}>

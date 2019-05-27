@@ -42,15 +42,16 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
 
   const deleteLink = useMutation(DELETE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: activeCourseId } })
       const deletedLink = response.data.deleteLink
       const dataInStoreCopy = { ...dataInStore }
-      const courseForConcept = dataInStoreCopy.allCourses.find(c => c.id === course.id)
+      const courseForConcept = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === course.id)
       courseForConcept.concepts.forEach(concept => {
         concept.linksFromConcept = concept.linksFromConcept.filter(l => l.id !== deletedLink.id)
       })
       client.writeQuery({
-        query: ALL_COURSES,
+        query: COURSE_PREREQUISITE_COURSES,
+        variables: { id: activeCourseId },
         data: dataInStoreCopy
       })
     }
@@ -58,14 +59,15 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
 
   const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: activeCourseId } })
       const addedLink = response.data.createLink
       const dataInStoreCopy = { ...dataInStore }
-      const courseForConcept = dataInStoreCopy.allCourses.find(c => c.id === course.id)
+      const courseForConcept = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === course.id)
       const concept = courseForConcept.concepts.find(c => c.id === addedLink.from.id)
       concept.linksFromConcept.push(addedLink)
       client.writeQuery({
-        query: ALL_COURSES,
+        query: COURSE_PREREQUISITE_COURSES,
+        variables: { id: activeCourseId },
         data: dataInStoreCopy
       })
     }
