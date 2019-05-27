@@ -44,15 +44,15 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
   const columnWidth = 100;
   const rowHeight = 40;
 
-  const HeaderCell = ({ columnIndex, rowIndex, style }) => (
+  const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
-      { allPrerequisiteConcepts[columnIndex].name }
+      { data[columnIndex].name }
     </div>
   );
   
-  const RowHeaderCell = ({ columnIndex, rowIndex, style }) => (
+  const RowHeaderCell = ({ data, rowIndex, style }) => (
     <div style={style}>
-      { course.concepts[rowIndex].name }
+      { data[rowIndex].name }
     </div>
   );
   
@@ -60,12 +60,17 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
     console.log((event.target.checked ? 'connecting' : 'disconnecting') + ` ${from} with ${to}`)
   }
 
-  // Item {rowIndex},{columnIndex}
-  const Cell = ({ columnIndex, rowIndex, style }) => (
+  const Cell = ({ columnIndex, data, rowIndex, style }) => {
+    let {columnData, rowData } = data
+    return (
     <div style={style}>
-      <Checkbox onClick={linkConcepts(allPrerequisiteConcepts[columnIndex].id, course.concepts[rowIndex].id)}></Checkbox>
+      <Checkbox 
+      onClick={
+        linkConcepts(columnData[columnIndex].id, rowData[rowIndex].id)
+      }
+      />
     </div>
-  );
+  )}
   
 
   console.log(course)
@@ -97,6 +102,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
             backgroundColor: 'lightgray',
             borderBottom: `1px solid gray`,
           }}
+          itemData={allPrerequisiteConcepts}
         >
           {HeaderCell}
         </FixedSizeGrid>
@@ -123,6 +129,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
             backgroundColor: 'lightgray',
             borderBottom: `1px solid gray`,
           }}
+          itemData={course.concepts}
         >
           {RowHeaderCell}
         </FixedSizeGrid>
@@ -142,6 +149,10 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           onScroll={({ scrollLeft, scrollTop }) => {
             headerGrid.current.scrollTo({ scrollLeft })
             sideGrid.current.scrollTo({ scrollTop })
+          }}
+          itemData={{
+            columnData: allPrerequisiteConcepts,
+            rowData: course.concepts
           }}
         >
           {Cell}
