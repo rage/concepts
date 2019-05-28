@@ -37,7 +37,7 @@ const MatriceView = ({ course_id }) => {
         }}
       >
         {({ measureRef }) => (
-          <div ref={measureRef} style={{ maxWidth: '100%', maxHeight: '90vh' }}>
+          <div ref={measureRef} style={{ maxWidth: '83vw', maxHeight: '90vh' }}>
             {
               course.data.courseById && prerequisites.data.courseById ?
                 <CourseMatrice dimensions={dimensions} course={course.data.courseById} prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>

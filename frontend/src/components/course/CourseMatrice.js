@@ -30,7 +30,7 @@ const styles = theme => ({
 
 
 const GridCell = ({ onClick, checked, onHover, onMouseLeave }) => (
-  <Button onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained"  color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
+  <Button onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
 )
 
 const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => {
@@ -54,12 +54,12 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
       <div style={{
-      transform: 'translate(0px, 51px) rotate(315deg)',
-      width: '150px',
-      textOverflow: 'ellipsis',
-      color: columnIndex !== selectedColumn ? 'grey' : 'black'
-    }}>
-        <span style={{overflow: 'hidden', maxWidth:'3ch'}}>
+        transform: 'translate(0px, 51px) rotate(315deg)',
+        width: '150px',
+        textOverflow: 'ellipsis',
+        color: columnIndex !== selectedColumn ? 'grey' : 'black'
+      }}>
+        <span style={{ overflow: 'hidden', maxWidth: '3ch' }}>
           {data[columnIndex].name}
         </span>
       </div >
@@ -71,7 +71,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
       <div style={{
         margin: '12px 20px 0px 0px',
         width: '200px',
-        color:  rowIndex !== selectedRow ? 'grey' : 'black'
+        color: rowIndex !== selectedRow ? 'grey' : 'black'
       }}>
         {data[rowIndex].name}
       </div>
@@ -163,9 +163,9 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
               setSelectedColumn(-1)
               setSelectedRow(-1)
             }
-            
+
           }
-          
+
           checked={checked}
         />
       </div>
@@ -188,7 +188,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           columnWidth={columnWidth}
           rowHeight={rowHeight}
           height={160}
-          width={dimensions.width - 230}
+          width={dimensions.width}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
           ref={headerGrid}
@@ -241,7 +241,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           columnWidth={columnWidth}
           rowHeight={rowHeight}
           height={dimensions.height - 160}
-          width={dimensions.width - 230}
+          width={dimensions.width}
           // When a scroll occurs in the body grid,
           // synchronize the scroll position of the header grid
           onScroll={({ scrollLeft, scrollTop }) => {
