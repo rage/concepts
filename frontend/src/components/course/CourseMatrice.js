@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles } from "@material-ui/core/styles";
 
 import { FixedSizeGrid } from 'react-window';
@@ -29,8 +29,8 @@ const styles = theme => ({
 })
 
 
-const GridCell = ({ onClick, checked}) => (
-  <Button onClick={onClick} variant="contained"  color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
+const GridCell = ({ onClick, checked, onHover, onMouseLeave }) => (
+  <Button onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained"  color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
 )
 
 const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => {
@@ -48,12 +48,16 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   const columnWidth = 100;
   const rowHeight = 70;
 
+  const [selectedRow, setSelectedRow] = useState(-1)
+  const [selectedColumn, setSelectedColumn] = useState(-1)
+
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
       <div style={{
       transform: 'translate(0px, 51px) rotate(315deg)',
       width: '150px',
-      textOverflow: 'ellipsis'
+      textOverflow: 'ellipsis',
+      color: columnIndex !== selectedColumn ? 'grey' : 'black'
     }}>
         <span style={{overflow: 'hidden', maxWidth:'3ch'}}>
           {data[columnIndex].name}
@@ -66,7 +70,8 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
     <div style={style}>
       <div style={{
         margin: '12px 20px 0px 0px',
-        width: '200px'
+        width: '200px',
+        color:  rowIndex !== selectedRow ? 'grey' : 'black'
       }}>
         {data[rowIndex].name}
       </div>
@@ -147,6 +152,20 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           onClick={
             linkConcepts(columnData[columnIndex], rowData[rowIndex], checked)
           }
+          onHover={
+            () => {
+              setSelectedColumn(columnIndex)
+              setSelectedRow(rowIndex)
+            }
+          }
+          onMouseLeave={
+            () => {
+              setSelectedColumn(-1)
+              setSelectedRow(-1)
+            }
+            
+          }
+          
           checked={checked}
         />
       </div>
