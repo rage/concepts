@@ -41,17 +41,30 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
   const columnCount = allPrerequisiteConcepts.length;
   const rowCount = course.concepts.length;
   const columnWidth = 100;
-  const rowHeight = 40;
+  const rowHeight = 70;
 
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
-      {data[columnIndex].name}
+      <div style={{
+      transform: 'translate(0px, 51px) rotate(315deg)',
+      width: '150px',
+      textOverflow: 'ellipsis'
+    }}>
+        <span style={{overflow: 'hidden', maxWidth:'3ch'}}>
+          {data[columnIndex].name}
+        </span>
+      </div >
     </div>
   );
 
   const RowHeaderCell = ({ data, rowIndex, style }) => (
     <div style={style}>
-      {data[rowIndex].name}
+      <div style={{
+        margin: '12px 20px 0px 0px',
+        width: '200px'
+      }}>
+        {data[rowIndex].name}
+      </div>
     </div>
   );
 
@@ -150,8 +163,8 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           rowCount={1}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
-          height={40}
-          width={600}
+          height={160}
+          width={1000}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
           ref={headerGrid}
@@ -160,8 +173,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           style={{
             overflowX: 'hidden',
             overflowY: 'hidden',
-            backgroundColor: 'lightgray',
-            borderBottom: `1px solid gray`,
+            // borderBottom: `1px solid gray`,
           }}
           itemData={allPrerequisiteConcepts}
         >
@@ -176,7 +188,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           columnCount={1}
           rowCount={rowCount}
           columnWidth={columnWidth}
-          rowHeight={40}
+          rowHeight={rowHeight}
           height={560}
           width={214}
           // hold onto a reference to the header grid component
@@ -187,9 +199,10 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           style={{
             overflowX: 'hidden',
             overflowY: 'hidden',
-            backgroundColor: 'lightgray',
-            borderBottom: `1px solid gray`,
+            // backgroundColor: 'lightgray',
+            // borderBottom: `1px solid gray`,
           }}
+          direction='rtl'
           itemData={course.concepts}
         >
           {RowHeaderCell}
@@ -204,7 +217,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           columnWidth={columnWidth}
           rowHeight={rowHeight}
           height={560}
-          width={600}
+          width={1000}
           // When a scroll occurs in the body grid,
           // synchronize the scroll position of the header grid
           onScroll={({ scrollLeft, scrollTop }) => {
