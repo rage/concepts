@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { FixedSizeGrid } from 'react-window';
 import Checkbox from '@material-ui/core/Checkbox'
+import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
@@ -27,6 +28,10 @@ const styles = theme => ({
   }
 })
 
+
+const GridCell = ({ onClick, checked}) => (
+  <Button onClick={onClick} variant="contained"  color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
+)
 
 const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => {
   const allPrerequisiteConcepts = prerequisiteCourses.map(course => course.concepts).reduce((concepts, allConcepts) => {
@@ -109,8 +114,8 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
     }
   })
 
-  const linkConcepts = (from, to) => async (event) => {
-    if (event.target.checked) {
+  const linkConcepts = (from, to, checked) => async (event) => {
+    if (!checked) {
       try {
         linkPrerequisite({
           variables: {
@@ -138,11 +143,11 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
     let checked = isPrerequisite !== undefined
     return (
       <div style={style} key={`${rowData[rowIndex].id}-${columnIndex}-${columnData[columnIndex]}`}>
-        <Checkbox
+        <GridCell
           onClick={
-            linkConcepts(columnData[columnIndex], rowData[rowIndex])
+            linkConcepts(columnData[columnIndex], rowData[rowIndex], checked)
           }
-          defaultChecked={checked}
+          checked={checked}
         />
       </div>
     )
