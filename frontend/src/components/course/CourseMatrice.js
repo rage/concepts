@@ -27,8 +27,8 @@ const styles = theme => ({
   }
 })
 
-const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
 
+const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => {
   const allPrerequisiteConcepts = prerequisiteCourses.map(course => course.concepts).reduce((concepts, allConcepts) => {
     return allConcepts.concat(concepts)
   }, [])
@@ -164,7 +164,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           columnWidth={columnWidth}
           rowHeight={rowHeight}
           height={160}
-          width={1000}
+          width={dimensions.width - 230}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
           ref={headerGrid}
@@ -189,7 +189,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           rowCount={rowCount}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
-          height={560}
+          height={dimensions.height - 160}
           width={214}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
@@ -216,8 +216,8 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses }) => {
           rowCount={rowCount}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
-          height={560}
-          width={1000}
+          height={dimensions.height - 160}
+          width={dimensions.width - 230}
           // When a scroll occurs in the body grid,
           // synchronize the scroll position of the header grid
           onScroll={({ scrollLeft, scrollTop }) => {

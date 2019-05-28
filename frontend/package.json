@@ -11,6 +11,7 @@
     "react-apollo-hooks": "^0.4.5",
     "react-dom": "^16.8.6",
     "react-masonry-css": "^1.0.12",
+    "react-measure": "^2.3.0",
     "react-modal": "^3.8.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
