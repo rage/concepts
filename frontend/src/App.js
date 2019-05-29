@@ -82,15 +82,16 @@ const App = () => {
           />
         }}
         />
-        <Route exact path="/matrix/:id" render={({ match }) => {
-          return <MatriceView
-            course_id={match.params.id}
-            createCourse={createCourse}
-            updateCourse={updateCourse}
+        <Grid item xs={12}>
+          <Route exact path="/matrix/:id" render={({ match }) => {
+            return <MatriceView
+              course_id={match.params.id}
+              createCourse={createCourse}
+              updateCourse={updateCourse}
+            />
+          }}
           />
-        }}
-        />
-
+        </Grid>
       </Grid>
     </div>
   )

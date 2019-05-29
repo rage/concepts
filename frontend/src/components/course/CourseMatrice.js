@@ -48,6 +48,10 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   const columnWidth = 100;
   const rowHeight = 70;
 
+  const headerHeight = 160;
+  const sideHeaderWidth = 250
+  const height = 600
+
   const [selectedRow, setSelectedRow] = useState(-1)
   const [selectedColumn, setSelectedColumn] = useState(-1)
 
@@ -122,12 +126,28 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   })
 
   const linkConcepts = (from, to, checked) => async (event) => {
+
     if (!checked) {
       try {
         linkPrerequisite({
           variables: {
             from: from.id, to: to.id
-          }
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createLink: {
+              id: `${Math.random() * 100}`,
+              __typename: "Link",
+              to: {
+                __typename: "Concept",
+                id: to.id
+              },
+              from: {
+                __typename: "Link",
+                id: from.id
+              }
+            }
+          },
         })
       } catch (err) { }
     } else {
@@ -138,10 +158,18 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
         deleteLink({
           variables: {
             id: link.id
-          }
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            deleteLink: {
+              id: link.id,
+              __typename: "Link"
+            }
+          },
         })
       } catch (err) { }
     }
+
   }
 
   const Cell = ({ columnIndex, data, rowIndex, style }) => {
@@ -176,7 +204,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
 
 
   const filteredPrerequisiteConcepts = () => {
-    let filteredConcepts = allPrerequisiteConcepts.filter(c => 
+    let filteredConcepts = allPrerequisiteConcepts.filter(c =>
       c.name.toLowerCase().includes(filter)
     )
     return filteredConcepts.length === 0 ? allPrerequisiteConcepts : filteredConcepts
@@ -184,27 +212,27 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
 
   return (
     <Grid container direction='row'>
-      <Grid item xs={2}>
-        <div>
-        <form onSubmit={(e) => {
-          e.preventDefault()
-          setFilter(e.target.filter.value.toLowerCase())
-        }} >
-          <TextField
-            margin="dense"
-            id="description"
-            label="Filter"
-            type="text"
-            name="filter"
-            fullWidth
-            variant="outlined"
-          />
-          <Button variant="contained" type="submit" fullWidth> Filter </Button>
-        </form>
+      <Grid item xs={4} lg={3} xl={2}>
+        <div style={{ padding: '20px' }}>
+          <form onSubmit={(e) => {
+            e.preventDefault()
+            setFilter(e.target.filter.value.toLowerCase())
+          }} >
+            <TextField
+              margin="dense"
+              id="description"
+              label="Filter"
+              type="text"
+              name="filter"
+              fullWidth
+              variant="outlined"
+            />
+            <Button variant="contained" type="submit" fullWidth> Filter </Button>
+          </form>
         </div>
       </Grid>
 
-      <Grid item xs={10}>
+      <Grid item xs={8} lg={9} xl={10}>
         <FixedSizeGrid
           id='headerGrid'
           // standard grid setup for the header grid
@@ -212,8 +240,8 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           rowCount={1}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
-          height={160}
-          width={dimensions.width}
+          height={headerHeight}
+          width={dimensions.width - 104}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
           ref={headerGrid}
@@ -230,7 +258,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
         </FixedSizeGrid>
       </Grid>
 
-      <Grid item xs={2}>
+      <Grid item xs={4} lg={3} xl={2}>
         <FixedSizeGrid
           id='sideGrid'
           // standard grid setup for the header grid
@@ -238,8 +266,8 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           rowCount={rowCount}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
-          height={dimensions.height - 160}
-          width={214}
+          height={height}
+          width={sideHeaderWidth}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
           ref={sideGrid}
@@ -258,15 +286,15 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
         </FixedSizeGrid>
       </Grid>
 
-      <Grid item xs={10}>
+      <Grid item xs={8} lg={9} xl={10}>
         <FixedSizeGrid
           // standard grid setup for the body grid
           columnCount={filteredPrerequisiteConcepts().length}
           rowCount={rowCount}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
-          height={dimensions.height - 160}
-          width={dimensions.width}
+          height={height}
+          width={dimensions.width - 104}
           // When a scroll occurs in the body grid,
           // synchronize the scroll position of the header grid
           onScroll={({ scrollLeft, scrollTop }) => {
