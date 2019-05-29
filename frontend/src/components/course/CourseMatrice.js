@@ -50,7 +50,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
 
   const headerHeight = 160;
   const sideHeaderWidth = 250
-  const height = 600
+  const height = 470
 
   const [selectedRow, setSelectedRow] = useState(-1)
   const [selectedColumn, setSelectedColumn] = useState(-1)
@@ -241,7 +241,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           columnWidth={columnWidth}
           rowHeight={rowHeight}
           height={headerHeight}
-          width={dimensions.width - 104}
+          width={dimensions.width - 120}
           // hold onto a reference to the header grid component
           // so we can set the scroll position later
           ref={headerGrid}
@@ -294,7 +294,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
           columnWidth={columnWidth}
           rowHeight={rowHeight}
           height={height}
-          width={dimensions.width - 104}
+          width={dimensions.width - 120}
           // When a scroll occurs in the body grid,
           // synchronize the scroll position of the header grid
           onScroll={({ scrollLeft, scrollTop }) => {
