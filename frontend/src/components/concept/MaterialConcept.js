@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES, ALL_COURSES } from '../../services/CourseService'
+import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'

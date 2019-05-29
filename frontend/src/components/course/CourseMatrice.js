@@ -44,7 +44,6 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   const headerGrid = React.createRef();
   const sideGrid = React.createRef()
 
-  const columnCount = allPrerequisiteConcepts.length;
   const rowCount = course.concepts.length;
   const columnWidth = 100;
   const rowHeight = 70;
@@ -54,8 +53,6 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
 
   const [filter, setFilter] = useState('')
 
-
-  
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
       <div style={{

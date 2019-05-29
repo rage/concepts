@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import CourseMatrice from './CourseMatrice'
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
-import {
-  LINK_PREREQUISITE,
-  DELETE_LINK,
-} from '../../services/ConceptService'
+import { useQuery} from 'react-apollo-hooks'
 
 import Measure from 'react-measure'
 

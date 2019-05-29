@@ -7,7 +7,7 @@ import MatriceView from './components/course/MatriceView'
 import MaterialCourseList from './components/course/MaterialCourseList'
 import NavBar from './components/common/NavBar'
 
-import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
 import { Grid } from '@material-ui/core';
 
