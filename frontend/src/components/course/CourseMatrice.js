@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { withStyles } from "@material-ui/core/styles";
 
 import { FixedSizeGrid } from 'react-window';
-import Checkbox from '@material-ui/core/Checkbox'
+
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
@@ -51,6 +52,10 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   const [selectedRow, setSelectedRow] = useState(-1)
   const [selectedColumn, setSelectedColumn] = useState(-1)
 
+  const [filter, setFilter] = useState('')
+
+
+  
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
       <div style={{
@@ -172,10 +177,33 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
     )
   }
 
+
+  const filteredPrerequisiteConcepts = () => {
+    let filteredConcepts = allPrerequisiteConcepts.filter(c => 
+      c.name.toLowerCase().includes(filter)
+    )
+    return filteredConcepts.length === 0 ? allPrerequisiteConcepts : filteredConcepts
+  }
+
   return (
     <Grid container direction='row'>
       <Grid item xs={2}>
         <div>
+        <form onSubmit={(e) => {
+          e.preventDefault()
+          setFilter(e.target.filter.value.toLowerCase())
+        }} >
+          <TextField
+            margin="dense"
+            id="description"
+            label="Filter"
+            type="text"
+            name="filter"
+            fullWidth
+            variant="outlined"
+          />
+          <Button variant="contained" type="submit" fullWidth> Filter </Button>
+        </form>
         </div>
       </Grid>
 
@@ -183,7 +211,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
         <FixedSizeGrid
           id='headerGrid'
           // standard grid setup for the header grid
-          columnCount={columnCount}
+          columnCount={filteredPrerequisiteConcepts().length}
           rowCount={1}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
@@ -199,7 +227,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
             overflowY: 'hidden',
             // borderBottom: `1px solid gray`,
           }}
-          itemData={allPrerequisiteConcepts}
+          itemData={filteredPrerequisiteConcepts()}
         >
           {HeaderCell}
         </FixedSizeGrid>
@@ -236,7 +264,7 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
       <Grid item xs={10}>
         <FixedSizeGrid
           // standard grid setup for the body grid
-          columnCount={columnCount}
+          columnCount={filteredPrerequisiteConcepts().length}
           rowCount={rowCount}
           columnWidth={columnWidth}
           rowHeight={rowHeight}
