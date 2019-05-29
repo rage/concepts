@@ -14,7 +14,10 @@ import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
+import GridOnIcon from '@material-ui/icons/GridOn'
 
+import { useQuery } from 'react-apollo-hooks'
+import { ALL_COURSES } from '../../services/CourseService'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import CourseEditingDialog from './CourseEditingDialog'
@@ -25,11 +28,11 @@ const styles = theme => ({
   }
 })
 
-const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCourse, createCourse }) => {
+const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '' })
 
-
+  const courses = useQuery(ALL_COURSES)
 
   const handleClickOpen = () => {
     setStateCreate({ open: true })
@@ -50,14 +53,17 @@ const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCou
   const handleDelete = (id) => async (e) => {
     let willDelete = window.confirm('Are you sure you want to delete this course?')
     if (willDelete) {
-      await deleteCourse({
+      deleteCourse({
         variables: { id }
       })
     }
   }
 
-  const handleNavigate = (id) => () => {
+  const handleNavigateColumns = (id) => () => {
     history.push(`/courses/${id}`)
+  }
+  const handleNavigateMatrix = (id) => () => {
+    history.push(`/courses/${id}/matrix`)
   }
 
   return (
@@ -80,7 +86,7 @@ const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCou
             {
               courses.data.allCourses ?
                 courses.data.allCourses.map(course => (
-                  <ListItem button key={course.id} onClick={handleNavigate(course.id)}>
+                  <ListItem button key={course.id} onClick={handleNavigateColumns(course.id)}>
                     <ListItemText
                       primary={
                         <Typography variant="h6">
@@ -90,6 +96,9 @@ const MaterialCourseList = ({ classes, history, courses, updateCourse, deleteCou
                       secondary={true ? 'Concepts: ' + course.concepts.length : null}
                     />
                     <ListItemSecondaryAction>
+                      <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
+                        <GridOnIcon />
+                      </IconButton>
                       <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
                         <DeleteIcon />
                       </IconButton>

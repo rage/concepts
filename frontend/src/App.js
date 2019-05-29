@@ -3,16 +3,17 @@ import { Route } from 'react-router-dom'
 import './App.css'
 
 import CourseView from './components/course/CourseView'
+import MatriceView from './components/course/MatriceView'
 import MaterialCourseList from './components/course/MaterialCourseList'
 import NavBar from './components/common/NavBar'
 
-import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
 import { Grid } from '@material-ui/core';
 
 const App = () => {
   const client = useApolloClient()
-  const courses = useQuery(ALL_COURSES)
+  // const courses = useQuery(ALL_COURSES)
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -72,15 +73,25 @@ const App = () => {
         <Grid item xs={12}>
           <NavBar />
         </Grid>
-        <Route exact path="/" render={() => <MaterialCourseList courses={courses} updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+        <Route exact path="/" render={() => <MaterialCourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
         <Route exact path="/courses/:id" render={({ match }) => {
           return <CourseView
             course_id={match.params.id}
             createCourse={createCourse}
             updateCourse={updateCourse}
-            courses={courses}
           />
-        }} />
+        }}
+        />
+        <Grid item xs={12}>
+          <Route exact path="/courses/:id/matrix" render={({ match }) => {
+            return <MatriceView
+              course_id={match.params.id}
+              createCourse={createCourse}
+              updateCourse={updateCourse}
+            />
+          }}
+          />
+        </Grid>
       </Grid>
     </div>
   )

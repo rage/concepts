@@ -114,12 +114,15 @@ const MaterialActiveCourse = ({
   })
 
   const handleClickAway = (event) => {
-    const isConceptButton = event.path
-      .map(el => el.id)
-      .find(id => (id + '').substring(0, 7) === 'concept')
-    if (!isConceptButton) {
-      activateConcept('')()
+    try {
+      const isConceptButton = event.composedPath()
+        .map(el => el.id)
+        .find(id => (id + '').substring(0, 7) === 'concept')
+      if (!isConceptButton) {
+        activateConcept('')()
+      }
     }
+    catch (err) { console.log('Unsuccessful clickaway') }
   }
 
   const handleConceptClose = () => {

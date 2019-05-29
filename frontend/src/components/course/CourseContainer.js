@@ -21,7 +21,7 @@ const breakpointColumnsObj = {
   1279: 1
 }
 
-const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLink, updateCourse, course_id }) => {
+const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -84,8 +84,6 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
         <MaterialCourse
           key={course.id}
           course={course}
-          linkPrerequisite={linkPrerequisite}
-          deleteLink={deleteLink}
           activeConceptId={activeConceptId}
           openCourseDialog={handleCourseOpen}
           openConceptDialog={handleConceptOpen}
@@ -101,7 +99,6 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
       {
         courses && courses.length !== 0 ?
           <Grid container xs={4} lg={6}>
-            {/* <Grid container alignContent="space-between" justify="space-between" spacing={0}> */}
             <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               {
                 courses && courses.length < 3 ?
@@ -121,8 +118,6 @@ const CourseContainer = ({ courses, linkPrerequisite, activeConceptId, deleteLin
                         <MaterialCourse
                           key={course.id}
                           course={course}
-                          linkPrerequisite={linkPrerequisite}
-                          deleteLink={deleteLink}
                           activeConceptId={activeConceptId}
                           openCourseDialog={handleCourseOpen}
                           openConceptDialog={handleConceptOpen}

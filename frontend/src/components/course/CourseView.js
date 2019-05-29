@@ -1,14 +1,10 @@
 import React, { useState } from 'react'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import {
-  LINK_PREREQUISITE,
-  DELETE_LINK,
-} from '../../services/ConceptService'
+
 
 import {
-  ALL_COURSES,
   FETCH_COURSE,
   ADD_COURSE_AS_PREREQUISITE,
   COURSE_PREREQUISITE_COURSES
@@ -29,14 +25,6 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
     variables: { id: course_id }
   })
 
-  const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
-    refetchQueries: [{ query: ALL_COURSES }]
-  })
-
-  const deleteLink = useMutation(DELETE_LINK, {
-    refetchQueries: [{ query: ALL_COURSES }]
-  })
-
   const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
     refetchQueries: [{
       query: COURSE_PREREQUISITE_COURSES,
@@ -52,11 +40,10 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   return (
     <React.Fragment>
       {
-        course.data.courseById && courses.data.allCourses && prerequisites.data.courseById ?
+        course.data.courseById && prerequisites.data.courseById ?
           <Grid container spacing={0} direction="row">
 
             <MaterialCourseTray
-              courses={courses.data.allCourses}
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
@@ -69,8 +56,6 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
                 course.id !== course_id
               )}
               course_id={course_id}
-              linkPrerequisite={linkPrerequisite}
-              deleteLink={deleteLink}
               activeConceptId={activeConceptId}
               updateCourse={updateCourse}
             />
