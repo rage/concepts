@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
+import GridOnIcon from '@material-ui/icons/GridOn'
 
 import { useQuery } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
@@ -58,8 +59,11 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
     }
   }
 
-  const handleNavigate = (id) => () => {
+  const handleNavigateColumns = (id) => () => {
     history.push(`/courses/${id}`)
+  }
+  const handleNavigateMatrix = (id) => () => {
+    history.push(`/courses/${id}/matrix`)
   }
 
   return (
@@ -82,7 +86,7 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
             {
               courses.data.allCourses ?
                 courses.data.allCourses.map(course => (
-                  <ListItem button key={course.id} onClick={handleNavigate(course.id)}>
+                  <ListItem button key={course.id} onClick={handleNavigateColumns(course.id)}>
                     <ListItemText
                       primary={
                         <Typography variant="h6">
@@ -92,6 +96,9 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
                       secondary={true ? 'Concepts: ' + course.concepts.length : null}
                     />
                     <ListItemSecondaryAction>
+                      <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
+                        <GridOnIcon />
+                      </IconButton>
                       <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
                         <DeleteIcon />
                       </IconButton>
