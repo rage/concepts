@@ -34,7 +34,7 @@ const GridCell = ({ onClick, checked, onHover, onMouseLeave }) => (
   <Button onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
 )
 
-const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => {
+const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
   const allPrerequisiteConcepts = prerequisiteCourses.map(course => course.concepts).reduce((concepts, allConcepts) => {
     return allConcepts.concat(concepts)
   }, [])
@@ -313,4 +313,4 @@ const CourseMatrice = ({ classes, course, prerequisiteCourses, dimensions }) => 
   )
 }
 
-export default withStyles(styles)(CourseMatrice)
+export default withStyles(styles)(CourseMatrix)

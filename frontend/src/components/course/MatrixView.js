@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import CourseMatrice from './CourseMatrice'
+import CourseMatrix from './CourseMatrix'
 
 import { useQuery} from 'react-apollo-hooks'
 
@@ -36,7 +36,7 @@ const MatriceView = ({ course_id }) => {
           <div ref={measureRef} style={{ maxWidth: '83vw', maxHeight: '90vh' }}>
             {
               course.data.courseById && prerequisites.data.courseById ?
-                <CourseMatrice dimensions={dimensions} course={course.data.courseById} prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
+                <CourseMatrix dimensions={dimensions} course={course.data.courseById} prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
                   course.id !== course_id
                 )} /> :
                 null
