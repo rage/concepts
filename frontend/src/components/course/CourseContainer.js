@@ -98,7 +98,7 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
     <React.Fragment>
       {
         courses && courses.length !== 0 ?
-          <Grid container xs={4} lg={6}>
+          <Grid container item xs={4} lg={6}>
             <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               {
                 courses && courses.length < 3 ?

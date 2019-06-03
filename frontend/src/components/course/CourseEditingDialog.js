@@ -29,6 +29,12 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse }) => {
     handleClose()
   }
 
+  const handleKey = (e) => {
+    if (e.key === 'Enter') {
+      handleEdit(e)
+    }
+  }
+
   return (
     <Dialog
       open={state.open}
@@ -49,6 +55,7 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
+          onKeyPress={handleKey}
         />
       </DialogContent>
       <DialogActions>

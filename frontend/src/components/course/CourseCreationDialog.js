@@ -15,6 +15,7 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
   const [name, setName] = useState('')
 
   const handleCreate = async (e) => {
+    e.preventDefault()
     if (name === '') {
       window.alert('Course needs a name!')
       return
@@ -25,6 +26,12 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
     })
     setName('')
     handleClose()
+  }
+
+  const handleKey = (e) => {
+    if (e.key === 'Enter') {
+      handleCreate(e)
+    }
   }
 
   return (
@@ -47,6 +54,7 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
+          onKeyPress={handleKey}
         />
       </DialogContent>
       <DialogActions>
