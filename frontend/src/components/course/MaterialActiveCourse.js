@@ -61,8 +61,8 @@ const styles = theme => ({
 const MaterialActiveCourse = ({
   classes, // MaterialUI
   course,
-  activateConcept,
-  activeConceptId
+  activeConceptIds,
+  toggleConcept
 }) => {
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
@@ -119,7 +119,7 @@ const MaterialActiveCourse = ({
         .map(el => el.id)
         .find(id => (id + '').substring(0, 7) === 'concept')
       if (!isConceptButton) {
-        activateConcept('')()
+        toggleConcept([])()
       }
     }
     catch (err) { console.log('Unsuccessful clickaway') }
@@ -154,11 +154,11 @@ const MaterialActiveCourse = ({
               {course.concepts.map(concept =>
                 <MaterialActiveConcept concept={concept}
                   key={concept.id}
-                  activateConcept={activateConcept}
-                  activeConceptId={activeConceptId}
+                  activeConceptIds={activeConceptIds}
                   deleteConcept={deleteConcept}
                   openConceptDialog={handleConceptOpen}
                   openConceptEditDialog={handleConceptEditOpen}
+                  toggleConcept={toggleConcept}
                 />
               )}
             </List>

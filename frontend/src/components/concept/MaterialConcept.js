@@ -35,7 +35,7 @@ const styles = theme => ({
   }
 })
 
-const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptId, openConceptEditDialog }) => {
+const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const client = useApolloClient()
@@ -95,27 +95,31 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   })
 
   const isActive = () => {
+    console.log('parsing ',activeConceptIds)
     return concept.linksFromConcept.find(link => {
-      return link.to.id === activeConceptId
+      console.log(activeConceptIds)
+      return  activeConceptIds.find(conceptId => link.to.id === conceptId)
+      //link.to.id === activeConceptId
     })
   }
 
   const onClick = async () => {
-    if (activeConceptId === '') return
+    if (activeConceptIds === []) return
     const isActive = concept.linksFromConcept.find(link => {
-      return link.to.id === activeConceptId
+      return  activeConceptIds.find(conceptId => link.to.id === conceptId)
     })
     isActive ?
       deleteLink({
         variables: { id: isActive.id }
       })
       :
+      activeConceptIds.forEach(conceptId => 
       linkPrerequisite({
         variables: {
-          to: activeConceptId,
+          to: conceptId,
           from: concept.id
         }
-      })
+      }))
   }
 
   const handleMenuOpen = (event) => {
@@ -142,7 +146,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   return (
     <ListItem
       divider
-      button={activeConceptId !== ''}
+      button={activeConceptIds !== ''}
       onClick={onClick}
       className={isActive() ? classes.active : classes.inactive}
       id={'concept-' + concept.id}
@@ -150,7 +154,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
-      {activeConceptId === '' ?
+      {activeConceptIds === '' ?
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           <IconButton
             aria-owns={state.anchorEl ? 'simple-menu' : undefined}

@@ -44,16 +44,17 @@ const styles = theme => ({
   },
 })
 
-const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, deleteConcept, openConceptEditDialog }) => {
+const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
-
+ 
+  console.log('Toggle concept: ', toggleConcept)
   const isActive = () => {
-    return activeConceptId === concept.id
+    return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id) //activeConceptIds === concept.id
   }
 
   const isPassive = () => {
-    return (activeConceptId !== concept.id)
-      && (activeConceptId !== '')
+    return (!isActive())
+      && (activeConceptIds.length > 0)
   }
 
   const handleMenuOpen = (event) => {
@@ -83,7 +84,7 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
 
     // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
-      <ListItem button divider className={classes.listItem} onClick={activateConcept(concept.id)} id={'concept-' + concept.id} >
+      <ListItem button divider className={classes.listItem} onClick={toggleConcept(concept.id)} id={'concept-' + concept.id} >
         <Switch
           checked={isActive()}
           color='primary'
@@ -96,7 +97,7 @@ const MaterialConcept = ({ classes, concept, activateConcept, activeConceptId, d
           {concept.name}
         </ListItemText>
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-          {activeConceptId === '' ?
+          {activeConceptIds.length > 0 ?
             <React.Fragment>
               <IconButton
                 aria-owns={state.anchorEl ? 'simple-menu' : undefined}

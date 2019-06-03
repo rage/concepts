@@ -15,7 +15,7 @@ import MaterialCourseTray from './MaterialCourseTray'
 import MaterialActiveCourse from './MaterialActiveCourse'
 
 const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
-  const [activeConceptId, setActiveConceptId] = useState('')
+  const [activeConceptIds, setActiveConceptIds] = useState([])
 
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
@@ -32,9 +32,12 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
     }]
   })
 
-  const activateConcept = (id) => () => {
-    const alreadyActive = activeConceptId === id
-    setActiveConceptId(alreadyActive ? '' : id)
+  const toggleConcept = (id) => () => {
+    const alreadyActive = activeConceptIds.find(i => i === id)
+    setActiveConceptIds(alreadyActive ? 
+      activeConceptIds.filter(conceptId => conceptId !== id) : 
+      activeConceptIds.concat(id)
+      )
   }
 
   return (
@@ -56,13 +59,13 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
                 course.id !== course_id
               )}
               course_id={course_id}
-              activeConceptId={activeConceptId}
+              activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}
             />
             <MaterialActiveCourse
               course={course.data.courseById}
-              activeConceptId={activeConceptId}
-              activateConcept={activateConcept}
+              activeConceptIds={activeConceptIds}
+              toggleConcept={toggleConcept}
             />
           </Grid> :
           null

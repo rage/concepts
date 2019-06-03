@@ -21,7 +21,7 @@ const breakpointColumnsObj = {
   1279: 1
 }
 
-const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) => {
+const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -84,7 +84,7 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
         <MaterialCourse
           key={course.id}
           course={course}
-          activeConceptId={activeConceptId}
+          activeConceptIds={activeConceptIds}
           openCourseDialog={handleCourseOpen}
           openConceptDialog={handleConceptOpen}
           openConceptEditDialog={handleConceptEditOpen}
@@ -118,7 +118,7 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
                         <MaterialCourse
                           key={course.id}
                           course={course}
-                          activeConceptId={activeConceptId}
+                          activeConceptIds={activeConceptIds}
                           openCourseDialog={handleCourseOpen}
                           openConceptDialog={handleConceptOpen}
                           openConceptEditDialog={handleConceptEditOpen}

@@ -59,7 +59,7 @@ const MaterialCourse = ({
   openCourseDialog,
   openConceptDialog,
   openConceptEditDialog,
-  activeConceptId
+  activeConceptIds
 }) => {
   return (
     <React.Fragment>
@@ -77,7 +77,7 @@ const MaterialCourse = ({
               <MaterialConcept concept={concept}
                 key={concept.id}
                 course={course}
-                activeConceptId={activeConceptId}
+                activeConceptIds={activeConceptIds}
                 openConceptEditDialog={openConceptEditDialog}
                 activeCourseId={activeCourseId}
               />
