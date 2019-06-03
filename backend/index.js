@@ -135,9 +135,16 @@ const resolvers = {
       })
     },
     updateConcept(root, args, context) {
+      let data = {}
+      if (args.name !== undefined) {
+        data.name = args.name
+      }
+      if (args.desc !== undefined) {
+        data.description = args.desc
+      }
       return context.prisma.updateConcept({
         where: { id: args.id },
-        data: { name: args.name, description: args.desc }
+        data: data
       })
     },
     updateCourse(root, args, context) {
@@ -170,22 +177,22 @@ const resolvers = {
     },
     async deleteConcept(root, args, context) {
       await context.prisma.deleteManyLinks({
-        
-          OR: [
-            {
-              from: {
-                id: args.id
-              }
 
-            },
-            {
-              to: {
-                id: args.id
-              }
+        OR: [
+          {
+            from: {
+              id: args.id
             }
-          ]
-        
-       })
+
+          },
+          {
+            to: {
+              id: args.id
+            }
+          }
+        ]
+
+      })
       return context.prisma.deleteConcept({
         id: args.id
       })

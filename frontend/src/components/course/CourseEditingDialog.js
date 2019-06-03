@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 // Material dialog
 import Dialog from '@material-ui/core/Dialog'
@@ -11,20 +11,25 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
-const CourseEditingDialog = ({ state, handleClose, updateCourse }) => {
+const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) => {
   const [name, setName] = useState('')
+
+  useEffect(() => {
+    setName(defaultName)
+  }, [defaultName])
 
   const handleEdit = async (e) => {
     if (name === '') {
       window.alert('Course needs a name!')
       return
+    } else if (defaultName !== name) {
+      await updateCourse({
+        variables: {
+          id: state.id,
+          name
+        }
+      })
     }
-    await updateCourse({
-      variables: {
-        id: state.id,
-        name
-      }
-    })
     setName('')
     handleClose()
   }

@@ -76,6 +76,7 @@ query courseById($id: ID!) {
       concepts {
         id
         name
+        description
         linksFromConcept {
           id
           to {

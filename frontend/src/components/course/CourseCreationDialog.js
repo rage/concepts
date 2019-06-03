@@ -15,12 +15,10 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
   const [name, setName] = useState('')
 
   const handleCreate = async (e) => {
-    e.preventDefault()
     if (name === '') {
       window.alert('Course needs a name!')
       return
     }
-
     await createCourse({
       variables: { name }
     })

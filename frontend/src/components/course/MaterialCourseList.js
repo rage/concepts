@@ -30,7 +30,7 @@ const styles = theme => ({
 
 const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false, id: '' })
+  const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   const courses = useQuery(ALL_COURSES)
 
@@ -42,12 +42,12 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
     setStateCreate({ open: false })
   }
 
-  const handleEditOpen = (id) => () => {
-    setStateEdit({ open: true, id })
+  const handleEditOpen = (id, name) => () => {
+    setStateEdit({ open: true, id, name })
   }
 
   const handleEditClose = () => {
-    setStateEdit({ open: false, id: '' })
+    setStateEdit({ open: false, id: '', name: '' })
   }
 
   const handleDelete = (id) => async (e) => {
@@ -102,7 +102,7 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
                       <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
                         <DeleteIcon />
                       </IconButton>
-                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id)}>
+                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
                         <EditIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -115,7 +115,7 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
       </Grid>
 
       <CourseCreationDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
-      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} />
+      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} defaultName={stateEdit.name} />
     </Grid>
   )
 }

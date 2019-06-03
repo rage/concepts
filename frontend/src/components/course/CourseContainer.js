@@ -55,7 +55,7 @@ const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id })
   })
 
   const handleCourseClose = () => {
-    setCourseState({ open: false, id: '' })
+    setCourseState({ open: false, id: '', name: '' })
   }
 
   const handleCourseOpen = (id, name) => () => {
@@ -135,6 +135,7 @@ const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id })
               state={courseState}
               handleClose={handleCourseClose}
               updateCourse={updateCourse}
+              defaultName={courseState.name}
             />
             <ConceptAdditionDialog
               state={conceptState}
@@ -145,6 +146,8 @@ const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id })
               state={conceptEditState}
               handleClose={handleConceptEditClose}
               updateConcept={updateConcept}
+              defaultDescription={conceptEditState.description}
+              defaultName={conceptEditState.name}
             />
           </Grid>
           :
