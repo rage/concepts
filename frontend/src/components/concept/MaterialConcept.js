@@ -147,7 +147,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   return (
     <ListItem
       divider
-      button={activeConceptIds !== ''}
+      button={activeConceptIds.length !== 0}
       onClick={onClick}
       className={isActive() ? classes.active : classes.inactive}
       id={'concept-' + concept.id}
