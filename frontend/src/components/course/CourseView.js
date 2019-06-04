@@ -34,10 +34,14 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
 
   const toggleConcept = (id) => () => {
     const alreadyActive = activeConceptIds.find(i => i === id)
-    setActiveConceptIds(alreadyActive ? 
-      activeConceptIds.filter(conceptId => conceptId !== id) : 
+    setActiveConceptIds(alreadyActive ?
+      activeConceptIds.filter(conceptId => conceptId !== id) :
       activeConceptIds.concat(id)
-      )
+    )
+  }
+
+  const resetConceptToggle = () => {
+    setActiveConceptIds([])
   }
 
   return (
@@ -66,6 +70,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               course={course.data.courseById}
               activeConceptIds={activeConceptIds}
               toggleConcept={toggleConcept}
+              resetConceptToggle={resetConceptToggle}
             />
           </Grid> :
           null

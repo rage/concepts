@@ -62,7 +62,8 @@ const MaterialActiveCourse = ({
   classes, // MaterialUI
   course,
   activeConceptIds,
-  toggleConcept
+  toggleConcept,
+  resetConceptToggle
 }) => {
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
@@ -119,7 +120,7 @@ const MaterialActiveCourse = ({
         .map(el => el.id)
         .find(id => (id + '').substring(0, 7) === 'concept')
       if (!isConceptButton) {
-        toggleConcept([])()
+        resetConceptToggle()
       }
     }
     catch (err) { console.log('Unsuccessful clickaway') }
