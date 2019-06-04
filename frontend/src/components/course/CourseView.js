@@ -16,6 +16,7 @@ import MaterialActiveCourse from './MaterialActiveCourse'
 
 const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
+  const [courseTrayOpen, setCourseTrayOpen] = useState(false)
 
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
@@ -56,6 +57,8 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
                 course.id !== course_id
               )}
+              setCourseTrayOpen={setCourseTrayOpen}
+              courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}
             />
             <CourseContainer
@@ -65,12 +68,14 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               course_id={course_id}
               activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}
+              courseTrayOpen={courseTrayOpen}
             />
             <MaterialActiveCourse
               course={course.data.courseById}
               activeConceptIds={activeConceptIds}
               toggleConcept={toggleConcept}
               resetConceptToggle={resetConceptToggle}
+              courseTrayOpen={courseTrayOpen}
             />
           </Grid> :
           null

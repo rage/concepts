@@ -15,6 +15,10 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip';
 
+import Fab from '@material-ui/core/Fab'
+import AddIcon from '@material-ui/icons/Add'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import IconButton from '@material-ui/core/IconButton'
 import CourseCreationDialog from './CourseCreationDialog'
 
 import { useQuery } from 'react-apollo-hooks'
@@ -28,9 +32,9 @@ const styles = theme => ({
     wordBreak: 'break-word'
   },
   cardHeader: {
-    marginTop: '5px',
+    // marginTop: '5px',
     paddingBottom: '0px',
-    textAlign: 'center',
+    // textAlign: 'center',
   },
   title: {
 
@@ -51,6 +55,9 @@ const styles = theme => ({
   },
   button: {
     width: '100%'
+  },
+  extendedIcon: {
+    marginRight: 5
   }
 })
 
@@ -62,7 +69,7 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
   }
   return (
     <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
-      <ListItem button onClick={onClick} className={classes.listItem}>
+      <ListItem divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
       </ListItem>
@@ -70,7 +77,7 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
   )
 }
 
-const MaterialCourseTray = ({ classes, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
+const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
 
   const courses = useQuery(ALL_COURSES)
@@ -83,37 +90,64 @@ const MaterialCourseTray = ({ classes, activeCourse, addCourseAsPrerequisite, pr
     setState({ open: true })
   }
 
+  const handleTrayOpen = () => {
+    setCourseTrayOpen(true)
+  }
+
+  const handleTrayClose = () => {
+    setCourseTrayOpen(false)
+  }
+
   return (
-    <Grid item xs={4} lg={3}>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title="Add course" titleTypographyProps={{ variant: 'h4' }} />
-        <CardContent>
-          {
-            courses.data.allCourses ?
-              <List disablePadding className={classes.list}>
-                {
-                  courses.data.allCourses.filter(course => course.id !== activeCourse).map(course => {
-                    return (
-                      <MaterialPrerequisiteCourse
-                        key={course.id}
-                        course={course}
-                        activeCourse={activeCourse}
-                        addCourseAsPrerequisite={addCourseAsPrerequisite}
-                        isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
-                        classes={classes}
-                      />
-                    )
-                  })
+    <React.Fragment>
+      {
+        courseTrayOpen ?
+          <Grid item xs={4} lg={3}>
+            <Card elevation={0} className={classes.root}>
+              <CardHeader
+                className={classes.cardHeader}
+                classes={{ title: classes.title }}
+                title="Add course"
+                titleTypographyProps={{ variant: 'h4' }}
+                action={
+                  <IconButton onClick={handleTrayClose} >
+                    <ChevronLeftIcon />
+                  </IconButton>
                 }
-              </List>
-              :
-              null
-          }
-          <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
-        </CardContent>
-      </Card>
-      <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
-    </Grid>
+              />
+              <CardContent>
+                {
+                  courses.data.allCourses ?
+                    <List disablePadding className={classes.list}>
+                      {
+                        courses.data.allCourses.filter(course => course.id !== activeCourse).map(course => {
+                          return (
+                            <MaterialPrerequisiteCourse
+                              key={course.id}
+                              course={course}
+                              activeCourse={activeCourse}
+                              addCourseAsPrerequisite={addCourseAsPrerequisite}
+                              isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
+                              classes={classes}
+                            />
+                          )
+                        })
+                      }
+                    </List>
+                    :
+                    null
+                }
+                <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
+              </CardContent>
+            </Card>
+            <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
+          </Grid>
+          :
+          <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', left: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
+            <AddIcon className={classes.extendedIcon} /> Add course
+          </Fab>
+      }
+    </React.Fragment>
   )
 }
 
