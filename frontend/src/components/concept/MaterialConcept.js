@@ -105,11 +105,14 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
     const isActive = concept.linksFromConcept.find(link => {
       return activeConceptIds.find(conceptId => link.to.id === conceptId)
     })
-    isActive ?
-      deleteLink({
-        variables: { id: isActive.id }
+    if (isActive) {
+      concept.linksFromConcept.forEach(link => {
+        const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
+        if (hasLink) {
+          deleteLink({ variables: { id: link.id } })
+        }
       })
-      :
+    } else {
       activeConceptIds.forEach(conceptId =>
         linkPrerequisite({
           variables: {
@@ -117,6 +120,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
             from: concept.id
           }
         }))
+    }
   }
 
   const handleMenuOpen = (event) => {

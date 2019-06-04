@@ -176,8 +176,18 @@ const MaterialActiveCourse = ({
         </CardContent>
       </Card>
 
-      <ConceptEditingDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
-      <ConceptAdditionDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
+      <ConceptEditingDialog 
+      state={conceptEditState} 
+      handleClose={handleConceptEditClose} 
+      updateConcept={updateConcept} 
+      defaultName={conceptEditState.name} 
+      defaultDescription={conceptEditState.description} 
+      />
+      <ConceptAdditionDialog 
+      state={conceptState} 
+      handleClose={handleConceptClose} 
+      createConcept={createConcept} 
+      />
     </Grid>
   )
 }

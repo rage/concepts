@@ -47,9 +47,8 @@ const styles = theme => ({
 const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
-  console.log('Toggle concept: ', toggleConcept)
   const isActive = () => {
-    return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id) //activeConceptIds === concept.id
+    return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
   }
 
   const isPassive = () => {
@@ -81,8 +80,6 @@ const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, de
   }
 
   return (
-
-    // <ListItem divider button onClick={activateConcept(concept.id)} className={isActive() ? classes.active : classes.inactive}>
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
       <ListItem button divider className={classes.listItem} onClick={toggleConcept(concept.id)} id={'concept-' + concept.id} >
         <Switch
