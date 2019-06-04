@@ -7,7 +7,8 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
   FETCH_COURSE,
   ADD_COURSE_AS_PREREQUISITE,
-  COURSE_PREREQUISITE_COURSES
+  COURSE_PREREQUISITE_COURSES,
+  DELETE_COURSE_AS_PREREQUISITE
 } from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
@@ -27,6 +28,13 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   })
 
   const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
+    refetchQueries: [{
+      query: COURSE_PREREQUISITE_COURSES,
+      variables: { id: course_id }
+    }]
+  })
+
+  const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
     refetchQueries: [{
       query: COURSE_PREREQUISITE_COURSES,
       variables: { id: course_id }
@@ -54,6 +62,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
             <MaterialCourseTray
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
+              deleteCourseAsPrerequisite={deleteCourseAsPrerequisite}
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
                 course.id !== course_id
               )}

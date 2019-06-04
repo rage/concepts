@@ -152,7 +152,7 @@ mutation addCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
 
 const DELETE_COURSE_AS_PREREQUISITE = gql`
 mutation deleteCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
-  addCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
+  deleteCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
     id
     name
     prerequisiteCourses {

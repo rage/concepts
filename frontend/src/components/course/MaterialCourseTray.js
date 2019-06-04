@@ -61,11 +61,17 @@ const styles = theme => ({
   }
 })
 
-const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite }) => {
+const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite }) => {
   const onClick = async () => {
-    await addCourseAsPrerequisite({
-      variables: { id: activeCourse, prerequisite_id: course.id }
-    })
+    if (isPrerequisite) {
+      await deleteCourseAsPrerequisite({
+        variables: { id: activeCourse, prerequisite_id: course.id }
+      })
+    } else {
+      await addCourseAsPrerequisite({
+        variables: { id: activeCourse, prerequisite_id: course.id }
+      })
+    }
   }
   return (
     <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
@@ -77,7 +83,7 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
   )
 }
 
-const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, addCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
+const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
 
   const courses = useQuery(ALL_COURSES)
@@ -96,6 +102,10 @@ const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, active
 
   const handleTrayClose = () => {
     setCourseTrayOpen(false)
+  }
+
+  const isPrerequisite = (course) => {
+    return (prerequisiteCourses.find(c => c.id === course.id) !== undefined)
   }
 
   return (
@@ -127,7 +137,8 @@ const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, active
                               course={course}
                               activeCourse={activeCourse}
                               addCourseAsPrerequisite={addCourseAsPrerequisite}
-                              isPrerequisite={prerequisiteCourses.find(c => c.id === course.id) !== undefined}
+                              deleteCourseAsPrerequisite={deleteCourseAsPrerequisite}
+                              isPrerequisite={isPrerequisite(course)}
                               classes={classes}
                             />
                           )

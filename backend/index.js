@@ -45,16 +45,16 @@ const resolvers = {
   },
   Mutation: {
     deleteCourseAsCoursePrerequisite(root, args, context) {
-    return context.prisma.updateCourse({
-      where: { id: args.id },
-      data: {
-        prerequisiteCourses: {
-          delete: [{ id: args.prerequisite_id }]
+      return context.prisma.updateCourse({
+        where: { id: args.id },
+        data: {
+          prerequisiteCourses: {
+            disconnect: [{ id: args.prerequisite_id }]
+          }
         }
-      }
 
-    })
-  },
+      })
+    },
     addCourseAsCoursePrerequisite(root, args, context) {
       return context.prisma.updateCourse({
         where: { id: args.id },
