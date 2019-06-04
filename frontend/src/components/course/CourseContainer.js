@@ -80,9 +80,8 @@ const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id })
 
   const makeGridCourseElements = () => {
     return courses && courses.map(course =>
-      <Grid item>
+      <Grid item key={course.id}>
         <MaterialCourse
-          key={course.id}
           course={course}
           activeConceptIds={activeConceptIds}
           openCourseDialog={handleCourseOpen}
@@ -102,7 +101,7 @@ const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id })
             <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               {
                 courses && courses.length < 3 ?
-                  <Grid container direction='rows' justify='space-evenly'>
+                  <Grid container justify='space-evenly'>
                     {
                       makeGridCourseElements()
                     }
@@ -151,7 +150,7 @@ const CourseContainer = ({ courses, activeConceptIds, updateCourse, course_id })
             />
           </Grid>
           :
-          <Grid container alignItems="center" justify="center" xs={4} lg={6}>
+          <Grid container item alignItems="center" justify="center" xs={4} lg={6}>
             <Grid item xs={4}>
               <Typography id="instructions" variant='body1'>
                 Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
