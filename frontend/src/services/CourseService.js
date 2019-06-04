@@ -150,4 +150,17 @@ mutation addCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
 }
 `
 
-export { ALL_COURSES, CREATE_COURSE, UPDATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES }
+const DELETE_COURSE_AS_PREREQUISITE = gql`
+mutation deleteCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
+  addCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
+    id
+    name
+    prerequisiteCourses {
+      id
+      name
+    }
+  }
+}
+`
+
+export { ALL_COURSES, CREATE_COURSE, UPDATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES, DELETE_COURSE_AS_PREREQUISITE }
