@@ -46,7 +46,7 @@ const styles = theme => ({
 
 const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
- 
+
   console.log('Toggle concept: ', toggleConcept)
   const isActive = () => {
     return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id) //activeConceptIds === concept.id
@@ -97,7 +97,7 @@ const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, de
           {concept.name}
         </ListItemText>
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-          {activeConceptIds.length > 0 ?
+          {activeConceptIds.length === 0 ?
             <React.Fragment>
               <IconButton
                 aria-owns={state.anchorEl ? 'simple-menu' : undefined}

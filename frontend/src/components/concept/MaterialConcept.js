@@ -95,31 +95,28 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   })
 
   const isActive = () => {
-    console.log('parsing ',activeConceptIds)
     return concept.linksFromConcept.find(link => {
-      console.log(activeConceptIds)
-      return  activeConceptIds.find(conceptId => link.to.id === conceptId)
-      //link.to.id === activeConceptId
+      return activeConceptIds.find(conceptId => link.to.id === conceptId)
     })
   }
 
   const onClick = async () => {
     if (activeConceptIds === []) return
     const isActive = concept.linksFromConcept.find(link => {
-      return  activeConceptIds.find(conceptId => link.to.id === conceptId)
+      return activeConceptIds.find(conceptId => link.to.id === conceptId)
     })
     isActive ?
       deleteLink({
         variables: { id: isActive.id }
       })
       :
-      activeConceptIds.forEach(conceptId => 
-      linkPrerequisite({
-        variables: {
-          to: conceptId,
-          from: concept.id
-        }
-      }))
+      activeConceptIds.forEach(conceptId =>
+        linkPrerequisite({
+          variables: {
+            to: conceptId,
+            from: concept.id
+          }
+        }))
   }
 
   const handleMenuOpen = (event) => {
@@ -154,7 +151,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
-      {activeConceptIds === '' ?
+      {activeConceptIds.length === 0 ?
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           <IconButton
             aria-owns={state.anchorEl ? 'simple-menu' : undefined}
