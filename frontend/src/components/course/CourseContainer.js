@@ -97,7 +97,7 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
     <React.Fragment>
       {
         courses && courses.length !== 0 ?
-          <Grid container item xs={4} lg={courseTrayOpen ? 6 : 9}>
+          <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
             <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               {
                 courses && courses.length < 3 ?
@@ -150,7 +150,7 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
             />
           </Grid>
           :
-          <Grid container item alignItems="center" justify="center" xs={4} lg={courseTrayOpen ? 6 : 9}>
+          <Grid container item alignItems="center" justify="center" xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
             <Grid item xs={4}>
               <Typography id="instructions" variant='body1'>
                 Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
