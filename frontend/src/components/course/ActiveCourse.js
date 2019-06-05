@@ -18,7 +18,7 @@ import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../services/C
 import List from '@material-ui/core/List'
 
 
-import MaterialActiveConcept from '../concept/MaterialActiveConcept'
+import ActiveConcept from '../concept/ActiveConcept'
 
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
@@ -58,8 +58,8 @@ const styles = theme => ({
   }
 });
 
-const MaterialActiveCourse = ({
-  classes, // MaterialUI
+const ActiveCourse = ({
+  classes, // UI
   course,
   activeConceptIds,
   toggleConcept,
@@ -153,7 +153,7 @@ const MaterialActiveCourse = ({
           <ClickAwayListener onClickAway={handleClickAway}>
             <List className={classes.list}>
               {course.concepts.map(concept =>
-                <MaterialActiveConcept concept={concept}
+                <ActiveConcept concept={concept}
                   key={concept.id}
                   activeConceptIds={activeConceptIds}
                   deleteConcept={deleteConcept}
@@ -192,4 +192,4 @@ const MaterialActiveCourse = ({
   )
 }
 
-export default withStyles(styles)(MaterialActiveCourse)
+export default withStyles(styles)(ActiveCourse)

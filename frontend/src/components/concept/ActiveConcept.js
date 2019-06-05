@@ -44,7 +44,7 @@ const styles = theme => ({
   },
 })
 
-const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
+const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const isActive = () => {
@@ -125,4 +125,4 @@ const MaterialConcept = ({ classes, concept, toggleConcept, activeConceptIds, de
   )
 }
 
-export default withStyles(styles)(MaterialConcept)
+export default withStyles(styles)(Concept)

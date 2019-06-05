@@ -32,7 +32,7 @@ const styles = theme => ({
   }
 })
 
-const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
+const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
@@ -126,4 +126,4 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
   )
 }
 
-export default withRouter(withStyles(styles)(MaterialCourseList))
+export default withRouter(withStyles(styles)(CourseList))

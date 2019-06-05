@@ -66,7 +66,7 @@ const styles = theme => ({
   }
 })
 
-const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite }) => {
+const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite }) => {
   const onClick = async () => {
     if (isPrerequisite) {
       await deleteCourseAsPrerequisite({
@@ -88,7 +88,7 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
   )
 }
 
-const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
+const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
 
   const courses = useQuery(ALL_COURSES)
@@ -180,7 +180,7 @@ const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, active
                       {
                         courses.data.allCourses.map(course => {
                           return (
-                            <MaterialPrerequisiteCourse
+                            <PrerequisiteCourse
                               key={course.id}
                               course={course}
                               activeCourse={activeCourse}
@@ -210,4 +210,4 @@ const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, active
   )
 }
 
-export default withStyles(styles)(MaterialCourseTray);
+export default withStyles(styles)(CourseTray);

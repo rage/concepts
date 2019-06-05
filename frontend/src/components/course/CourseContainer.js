@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import MaterialCourse from './MaterialCourse'
+import Course from './Course'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
@@ -81,7 +81,7 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
   const makeGridCourseElements = () => {
     return courses && courses.map(course =>
       <Grid item key={course.id}>
-        <MaterialCourse
+        <Course
           course={course}
           activeConceptIds={activeConceptIds}
           openCourseDialog={handleCourseOpen}
@@ -114,7 +114,7 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
                   >
                     {
                       courses && courses.map(course =>
-                        <MaterialCourse
+                        <Course
                           key={course.id}
                           course={course}
                           activeConceptIds={activeConceptIds}

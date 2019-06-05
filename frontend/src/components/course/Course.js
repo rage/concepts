@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 
 
-import MaterialConcept from '../concept/MaterialConcept'
+import Concept from '../concept/Concept'
 
 const styles = theme => ({
   root: {
@@ -52,8 +52,8 @@ const styles = theme => ({
   }
 });
 
-const MaterialCourse = ({
-  classes, // MaterialUI
+const Course = ({
+  classes, // UI
   course,
   activeCourseId,
   openCourseDialog,
@@ -74,7 +74,7 @@ const MaterialCourse = ({
         <CardContent>
           <List className={classes.list}>
             {course.concepts.map(concept =>
-              <MaterialConcept concept={concept}
+              <Concept concept={concept}
                 key={concept.id}
                 course={course}
                 activeConceptIds={activeConceptIds}
@@ -90,4 +90,4 @@ const MaterialCourse = ({
   )
 }
 
-export default withStyles(styles)(MaterialCourse);
+export default withStyles(styles)(Course);

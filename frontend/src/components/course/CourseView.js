@@ -10,8 +10,8 @@ import {
 } from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
-import MaterialCourseTray from './MaterialCourseTray'
-import MaterialActiveCourse from './MaterialActiveCourse'
+import CourseTray from './CourseTray'
+import ActiveCourse from './ActiveCourse'
 
 const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
@@ -43,7 +43,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
         course.data.courseById && prerequisites.data.courseById ?
           <Grid container spacing={0} direction="row">
 
-            <MaterialCourseTray
+            <CourseTray
               activeCourse={course_id}
               course_id={course.data.courseById.id}
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
@@ -58,7 +58,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
             />
-            <MaterialActiveCourse
+            <ActiveCourse
               course={course.data.courseById}
               activeConceptIds={activeConceptIds}
               toggleConcept={toggleConcept}

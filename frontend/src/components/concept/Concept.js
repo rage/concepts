@@ -35,7 +35,7 @@ const styles = theme => ({
   }
 })
 
-const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const client = useApolloClient()
@@ -175,4 +175,4 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   )
 }
 
-export default withStyles(styles)(MaterialConcept)
+export default withStyles(styles)(Concept)
