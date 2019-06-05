@@ -86,10 +86,10 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
               </Typography>
             }
           />
-          {
-            courses.data.allCourses ?
-              courses.data.allCourses.map(course => (
-                <List dense={false}>
+          <List dense={false}>
+            {
+              courses.data.allCourses ?
+                courses.data.allCourses.map(course => (
                   <ListItem button key={course.id} onClick={handleNavigateColumns(course.id)}>
                     <ListItemText
                       primary={
@@ -111,12 +111,12 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
-                </List>
-              )) :
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress className={classes.progress} />
-              </div>
-          }
+                )) :
+                <div style={{ textAlign: 'center' }}>
+                  <CircularProgress className={classes.progress} />
+                </div>
+            }
+          </List>
         </Card>
       </Grid>
 
