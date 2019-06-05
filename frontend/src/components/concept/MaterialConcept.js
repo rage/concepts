@@ -101,11 +101,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   }
 
   const onClick = async () => {
-    if (activeConceptIds === []) return
-    const isActive = concept.linksFromConcept.find(link => {
-      return activeConceptIds.find(conceptId => link.to.id === conceptId)
-    })
-    if (isActive) {
+    if (isActive()) {
       concept.linksFromConcept.forEach(link => {
         const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
         if (hasLink) {

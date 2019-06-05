@@ -8,12 +8,6 @@ const ALL_COURSES = gql`
     concepts {
       id
       name
-      linksFromConcept {
-        id
-        to {
-          id
-        }
-      }
     }
   }
 }
