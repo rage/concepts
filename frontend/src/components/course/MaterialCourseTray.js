@@ -130,7 +130,7 @@ const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, active
                   courses.data.allCourses ?
                     <List disablePadding className={classes.list}>
                       {
-                        courses.data.allCourses.filter(course => course.id !== activeCourse).map(course => {
+                        courses.data.allCourses.map(course => {
                           return (
                             <MaterialPrerequisiteCourse
                               key={course.id}

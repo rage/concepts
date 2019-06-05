@@ -63,17 +63,13 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               activeCourse={course_id}
               addCourseAsPrerequisite={addCourseAsPrerequisite}
               deleteCourseAsPrerequisite={deleteCourseAsPrerequisite}
-              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
-                course.id !== course_id
-              )}
+              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
               setCourseTrayOpen={setCourseTrayOpen}
               courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}
             />
             <CourseContainer
-              courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
-                course.id !== course_id
-              )}
+              courses={prerequisites.data.courseById.prerequisiteCourses}
               course_id={course_id}
               activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-dev": "ENDPOINT=http://localhost:4466 secret=$SECRET node index.js",
-    "start": "ENDPOINT=https://hy-mapper-7131800873.herokuapp.com/backend/dev node index.js",
+    "start-dev": "NODE_ENV=development ENDPOINT=http://localhost:4466 secret=$SECRET node index.js",
+    "start": "NODE_ENV=production ENDPOINT=https://hy-mapper-7131800873.herokuapp.com/backend/dev node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "ENDPOINT=http://localhost:4466 nodemon index.js"
   },
