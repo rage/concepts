@@ -35,7 +35,7 @@ const styles = theme => ({
   }
 })
 
-const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConceptId, openConceptEditDialog }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const client = useApolloClient()
@@ -96,26 +96,27 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
 
   const isActive = () => {
     return concept.linksFromConcept.find(link => {
-      return link.to.id === activeConceptId
+      return activeConceptIds.find(conceptId => link.to.id === conceptId)
     })
   }
 
   const onClick = async () => {
-    if (activeConceptId === '') return
-    const isActive = concept.linksFromConcept.find(link => {
-      return link.to.id === activeConceptId
-    })
-    isActive ?
-      deleteLink({
-        variables: { id: isActive.id }
-      })
-      :
-      linkPrerequisite({
-        variables: {
-          to: activeConceptId,
-          from: concept.id
+    if (isActive()) {
+      concept.linksFromConcept.forEach(link => {
+        const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
+        if (hasLink) {
+          deleteLink({ variables: { id: link.id } })
         }
       })
+    } else {
+      activeConceptIds.forEach(conceptId =>
+        linkPrerequisite({
+          variables: {
+            to: conceptId,
+            from: concept.id
+          }
+        }))
+    }
   }
 
   const handleMenuOpen = (event) => {
@@ -142,7 +143,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   return (
     <ListItem
       divider
-      button={activeConceptId !== ''}
+      button={activeConceptIds.length !== 0}
       onClick={onClick}
       className={isActive() ? classes.active : classes.inactive}
       id={'concept-' + concept.id}
@@ -150,7 +151,7 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
-      {activeConceptId === '' ?
+      {activeConceptIds.length === 0 ?
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           <IconButton
             aria-owns={state.anchorEl ? 'simple-menu' : undefined}
@@ -174,4 +175,4 @@ const MaterialConcept = ({ classes, course, activeCourseId, concept, activeConce
   )
 }
 
-export default withStyles(styles)(MaterialConcept)
+export default withStyles(styles)(Concept)

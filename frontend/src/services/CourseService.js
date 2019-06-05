@@ -8,12 +8,6 @@ const ALL_COURSES = gql`
     concepts {
       id
       name
-      linksFromConcept {
-        id
-        to {
-          id
-        }
-      }
     }
   }
 }
@@ -60,6 +54,7 @@ query courseById($id: ID!) {
     concepts {
       id
       name
+      description
     }
   }
 }
@@ -76,6 +71,7 @@ query courseById($id: ID!) {
       concepts {
         id
         name
+        description
         linksFromConcept {
           id
           to {
@@ -139,13 +135,28 @@ const ADD_COURSE_AS_PREREQUISITE = gql`
 mutation addCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
   addCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
     id
-    name
-    prerequisiteCourses {
-      id
       name
-    }
+      concepts {
+        id
+        name
+        description
+        linksFromConcept {
+          id
+          to {
+            id
+          }
+        }
+      }
   }
 }
 `
 
-export { ALL_COURSES, CREATE_COURSE, UPDATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES }
+const DELETE_COURSE_AS_PREREQUISITE = gql`
+mutation deleteCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
+  deleteCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
+    id
+  }
+}
+`
+
+export { ALL_COURSES, CREATE_COURSE, UPDATE_COURSE, DELETE_COURSE, COURSE_AND_CONCEPTS, ADD_COURSE_AS_PREREQUISITE, FETCH_COURSE, COURSE_PREREQUISITE_COURSES, DELETE_COURSE_AS_PREREQUISITE }

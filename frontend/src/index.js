@@ -7,8 +7,15 @@ import ApolloClient from 'apollo-boost'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo-hooks'
 
+let uri
+if (process.env.NODE_ENV !== 'production') {
+  uri = 'http://localhost:4000/graphql'
+} else {
+  uri = '/graphql'
+}
+
 const client = new ApolloClient({
-  uri: '/graphql',
+  uri,
   cache: new InMemoryCache()
 })
 

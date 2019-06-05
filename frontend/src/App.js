@@ -3,8 +3,8 @@ import { Route } from 'react-router-dom'
 import './App.css'
 
 import CourseView from './components/course/CourseView'
-import MatriceView from './components/course/MatriceView'
-import MaterialCourseList from './components/course/MaterialCourseList'
+import MatrixView from './components/course/MatrixView'
+import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
@@ -73,7 +73,7 @@ const App = () => {
         <Grid item xs={12}>
           <NavBar />
         </Grid>
-        <Route exact path="/" render={() => <MaterialCourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+        <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
         <Route exact path="/courses/:id" render={({ match }) => {
           return <CourseView
             course_id={match.params.id}
@@ -84,7 +84,7 @@ const App = () => {
         />
         <Grid item xs={12}>
           <Route exact path="/courses/:id/matrix" render={({ match }) => {
-            return <MatriceView
+            return <MatrixView
               course_id={match.params.id}
               createCourse={createCourse}
               updateCourse={updateCourse}

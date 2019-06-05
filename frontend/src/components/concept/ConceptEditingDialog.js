@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-// Material dialog
+//  dialog
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -10,18 +10,31 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
-const ConceptEditingDialog = ({ state, handleClose, updateConcept }) => {
+const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, defaultDescription }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
 
+  useEffect(() => {
+    setName(defaultName)
+    setDescription(defaultDescription)
+  }, [defaultDescription, defaultName])
+
   const handleConceptUpdate = async () => {
-    await updateConcept({
-      variables: {
-        id: state.id,
-        name,
-        description
-      }
-    })
+    let variables = { id: state.id }
+    let shouldUpdate = false
+    if (defaultName !== name) {
+      variables.name = name
+      shouldUpdate = true
+    }
+    if (defaultDescription !== description) {
+      variables.description = description
+      shouldUpdate = true
+    }
+    if (shouldUpdate) {
+      await updateConcept({
+        variables: variables
+      })
+    }
     setName('')
     setDescription('')
     handleClose()

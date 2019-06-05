@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import MaterialCourse from './MaterialCourse'
+import Course from './Course'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
@@ -21,7 +21,7 @@ const breakpointColumnsObj = {
   1279: 1
 }
 
-const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) => {
+const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -55,7 +55,7 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
   })
 
   const handleCourseClose = () => {
-    setCourseState({ open: false, id: '' })
+    setCourseState({ open: false, id: '', name: '' })
   }
 
   const handleCourseOpen = (id, name) => () => {
@@ -80,11 +80,10 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
 
   const makeGridCourseElements = () => {
     return courses && courses.map(course =>
-      <Grid item>
-        <MaterialCourse
-          key={course.id}
+      <Grid item key={course.id}>
+        <Course
           course={course}
-          activeConceptId={activeConceptId}
+          activeConceptIds={activeConceptIds}
           openCourseDialog={handleCourseOpen}
           openConceptDialog={handleConceptOpen}
           openConceptEditDialog={handleConceptEditOpen}
@@ -98,11 +97,11 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
     <React.Fragment>
       {
         courses && courses.length !== 0 ?
-          <Grid container xs={4} lg={6}>
+          <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
             <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
               {
                 courses && courses.length < 3 ?
-                  <Grid container direction='rows' justify='space-evenly'>
+                  <Grid container justify='space-evenly'>
                     {
                       makeGridCourseElements()
                     }
@@ -115,10 +114,10 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
                   >
                     {
                       courses && courses.map(course =>
-                        <MaterialCourse
+                        <Course
                           key={course.id}
                           course={course}
-                          activeConceptId={activeConceptId}
+                          activeConceptIds={activeConceptIds}
                           openCourseDialog={handleCourseOpen}
                           openConceptDialog={handleConceptOpen}
                           openConceptEditDialog={handleConceptEditOpen}
@@ -135,6 +134,7 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
               state={courseState}
               handleClose={handleCourseClose}
               updateCourse={updateCourse}
+              defaultName={courseState.name}
             />
             <ConceptAdditionDialog
               state={conceptState}
@@ -145,10 +145,12 @@ const CourseContainer = ({ courses, activeConceptId, updateCourse, course_id }) 
               state={conceptEditState}
               handleClose={handleConceptEditClose}
               updateConcept={updateConcept}
+              defaultDescription={conceptEditState.description}
+              defaultName={conceptEditState.name}
             />
           </Grid>
           :
-          <Grid container alignItems="center" justify="center" xs={4} lg={6}>
+          <Grid container item alignItems="center" justify="center" xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
             <Grid item xs={4}>
               <Typography id="instructions" variant='body1'>
                 Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.

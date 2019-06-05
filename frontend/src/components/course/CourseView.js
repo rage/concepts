@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
-
+import { useQuery } from 'react-apollo-hooks'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import {
   FETCH_COURSE,
-  ADD_COURSE_AS_PREREQUISITE,
   COURSE_PREREQUISITE_COURSES
 } from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
-import MaterialCourseTray from './MaterialCourseTray'
-import MaterialActiveCourse from './MaterialActiveCourse'
+import CourseTray from './CourseTray'
+import ActiveCourse from './ActiveCourse'
 
 const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
-  const [activeConceptId, setActiveConceptId] = useState('')
+  const [activeConceptIds, setActiveConceptIds] = useState([])
+  const [courseTrayOpen, setCourseTrayOpen] = useState(false)
 
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
@@ -25,16 +25,16 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
     variables: { id: course_id }
   })
 
-  const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
-    refetchQueries: [{
-      query: COURSE_PREREQUISITE_COURSES,
-      variables: { id: course_id }
-    }]
-  })
+  const toggleConcept = (id) => () => {
+    const alreadyActive = activeConceptIds.find(i => i === id)
+    setActiveConceptIds(alreadyActive ?
+      activeConceptIds.filter(conceptId => conceptId !== id) :
+      activeConceptIds.concat(id)
+    )
+  }
 
-  const activateConcept = (id) => () => {
-    const alreadyActive = activeConceptId === id
-    setActiveConceptId(alreadyActive ? '' : id)
+  const resetConceptToggle = () => {
+    setActiveConceptIds([])
   }
 
   return (
@@ -43,29 +43,41 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
         course.data.courseById && prerequisites.data.courseById ?
           <Grid container spacing={0} direction="row">
 
-            <MaterialCourseTray
+            <CourseTray
               activeCourse={course_id}
-              addCourseAsPrerequisite={addCourseAsPrerequisite}
-              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
-                course.id !== course_id
-              )}
+              course_id={course.data.courseById.id}
+              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
+              setCourseTrayOpen={setCourseTrayOpen}
+              courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}
             />
             <CourseContainer
-              courses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
-                course.id !== course_id
-              )}
+              courses={prerequisites.data.courseById.prerequisiteCourses}
               course_id={course_id}
-              activeConceptId={activeConceptId}
+              activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}
+              courseTrayOpen={courseTrayOpen}
             />
-            <MaterialActiveCourse
+            <ActiveCourse
               course={course.data.courseById}
-              activeConceptId={activeConceptId}
-              activateConcept={activateConcept}
+              activeConceptIds={activeConceptIds}
+              toggleConcept={toggleConcept}
+              resetConceptToggle={resetConceptToggle}
+              courseTrayOpen={courseTrayOpen}
             />
           </Grid> :
-          null
+          <Grid container
+            spacing={0}
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={12}>
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress />
+              </div>
+            </Grid>
+          </Grid>
       }
     </React.Fragment>
   )

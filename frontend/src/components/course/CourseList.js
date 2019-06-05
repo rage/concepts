@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GridOnIcon from '@material-ui/icons/GridOn'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { useQuery } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
@@ -25,12 +26,15 @@ import CourseEditingDialog from './CourseEditingDialog'
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters()
+  },
+  progress: {
+    margin: theme.spacing.unit * 2
   }
 })
 
-const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
+const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false, id: '' })
+  const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   const courses = useQuery(ALL_COURSES)
 
@@ -42,12 +46,12 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
     setStateCreate({ open: false })
   }
 
-  const handleEditOpen = (id) => () => {
-    setStateEdit({ open: true, id })
+  const handleEditOpen = (id, name) => () => {
+    setStateEdit({ open: true, id, name })
   }
 
   const handleEditClose = () => {
-    setStateEdit({ open: false, id: '' })
+    setStateEdit({ open: false, id: '', name: '' })
   }
 
   const handleDelete = (id) => async (e) => {
@@ -102,22 +106,24 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
                       <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
                         <DeleteIcon />
                       </IconButton>
-                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id)}>
+                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
                         <EditIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
                 )) :
-                null
+                <div style={{ textAlign: 'center' }}>
+                  <CircularProgress className={classes.progress} />
+                </div>
             }
           </List>
         </Card>
       </Grid>
 
       <CourseCreationDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
-      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} />
+      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} defaultName={stateEdit.name} />
     </Grid>
   )
 }
 
-export default withRouter(withStyles(styles)(MaterialCourseList))
+export default withRouter(withStyles(styles)(CourseList))

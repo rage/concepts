@@ -44,15 +44,30 @@ const resolvers = {
     },
   },
   Mutation: {
-    addCourseAsCoursePrerequisite(root, args, context) {
-      return context.prisma.updateCourse({
+    async deleteCourseAsCoursePrerequisite(root, args, context) {
+      await context.prisma.updateCourse({
+        where: { id: args.id },
+        data: {
+          prerequisiteCourses: {
+            disconnect: [{ id: args.prerequisite_id }]
+          }
+        }
+      })
+      return context.prisma.course({
+        id: args.prerequisite_id 
+      })
+    },
+    async addCourseAsCoursePrerequisite(root, args, context) {
+      await context.prisma.updateCourse({
         where: { id: args.id },
         data: {
           prerequisiteCourses: {
             connect: [{ id: args.prerequisite_id }]
           }
         }
-
+      })
+      return context.prisma.course({
+        id: args.prerequisite_id 
       })
     },
     createResourceWithURLs(root, args, context) {
@@ -135,9 +150,16 @@ const resolvers = {
       })
     },
     updateConcept(root, args, context) {
+      let data = {}
+      if (args.name !== undefined) {
+        data.name = args.name
+      }
+      if (args.desc !== undefined) {
+        data.description = args.desc
+      }
       return context.prisma.updateConcept({
         where: { id: args.id },
-        data: { name: args.name, description: args.desc }
+        data: data
       })
     },
     updateCourse(root, args, context) {
@@ -170,22 +192,22 @@ const resolvers = {
     },
     async deleteConcept(root, args, context) {
       await context.prisma.deleteManyLinks({
-        
-          OR: [
-            {
-              from: {
-                id: args.id
-              }
 
-            },
-            {
-              to: {
-                id: args.id
-              }
+        OR: [
+          {
+            from: {
+              id: args.id
             }
-          ]
-        
-       })
+
+          },
+          {
+            to: {
+              id: args.id
+            }
+          }
+        ]
+
+      })
       return context.prisma.deleteConcept({
         id: args.id
       })
@@ -301,10 +323,12 @@ const server = new GraphQLServer({
   },
 })
 
-server.express.use(express.static('../frontend/build'))
+if (process.env.NODE_ENV === 'production') {
+  server.express.use(express.static('../frontend/build'))
 
-server.express.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/../frontend/build/index.html'))
-})
+  server.express.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../frontend/build/index.html'))
+  })
+}
 
 server.start(options, () => console.log('Server is running on http://localhost:4000'))

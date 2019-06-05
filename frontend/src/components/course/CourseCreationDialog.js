@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-// Material dialog
+//  dialog
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -19,12 +19,17 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
       window.alert('Course needs a name!')
       return
     }
-
     await createCourse({
       variables: { name }
     })
     setName('')
     handleClose()
+  }
+
+  const handleKey = (e) => {
+    if (e.key === 'Enter') {
+      handleCreate(e)
+    }
   }
 
   return (
@@ -47,6 +52,7 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
+          onKeyPress={handleKey}
         />
       </DialogContent>
       <DialogActions>

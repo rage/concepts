@@ -18,7 +18,7 @@ import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../services/C
 import List from '@material-ui/core/List'
 
 
-import MaterialActiveConcept from '../concept/MaterialActiveConcept'
+import ActiveConcept from '../concept/ActiveConcept'
 
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
@@ -58,11 +58,12 @@ const styles = theme => ({
   }
 });
 
-const MaterialActiveCourse = ({
-  classes, // MaterialUI
+const ActiveCourse = ({
+  classes, // UI
   course,
-  activateConcept,
-  activeConceptId
+  activeConceptIds,
+  toggleConcept,
+  resetConceptToggle
 }) => {
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
@@ -119,7 +120,7 @@ const MaterialActiveCourse = ({
         .map(el => el.id)
         .find(id => (id + '').substring(0, 7) === 'concept')
       if (!isConceptButton) {
-        activateConcept('')()
+        resetConceptToggle()
       }
     }
     catch (err) { console.log('Unsuccessful clickaway') }
@@ -152,13 +153,13 @@ const MaterialActiveCourse = ({
           <ClickAwayListener onClickAway={handleClickAway}>
             <List className={classes.list}>
               {course.concepts.map(concept =>
-                <MaterialActiveConcept concept={concept}
+                <ActiveConcept concept={concept}
                   key={concept.id}
-                  activateConcept={activateConcept}
-                  activeConceptId={activeConceptId}
+                  activeConceptIds={activeConceptIds}
                   deleteConcept={deleteConcept}
                   openConceptDialog={handleConceptOpen}
                   openConceptEditDialog={handleConceptEditOpen}
+                  toggleConcept={toggleConcept}
                 />
               )}
             </List>
@@ -175,10 +176,20 @@ const MaterialActiveCourse = ({
         </CardContent>
       </Card>
 
-      <ConceptEditingDialog state={conceptEditState} handleClose={handleConceptEditClose} updateConcept={updateConcept} />
-      <ConceptAdditionDialog state={conceptState} handleClose={handleConceptClose} createConcept={createConcept} />
+      <ConceptEditingDialog 
+      state={conceptEditState} 
+      handleClose={handleConceptEditClose} 
+      updateConcept={updateConcept} 
+      defaultName={conceptEditState.name} 
+      defaultDescription={conceptEditState.description} 
+      />
+      <ConceptAdditionDialog 
+      state={conceptState} 
+      handleClose={handleConceptClose} 
+      createConcept={createConcept} 
+      />
     </Grid>
   )
 }
 
-export default withStyles(styles)(MaterialActiveCourse)
+export default withStyles(styles)(ActiveCourse)
