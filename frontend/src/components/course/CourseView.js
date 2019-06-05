@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
-
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import {
   FETCH_COURSE,
@@ -83,7 +83,18 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
               courseTrayOpen={courseTrayOpen}
             />
           </Grid> :
-          null
+          <Grid container
+            spacing={0}
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={12}>
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress />
+              </div>
+            </Grid>
+          </Grid>
       }
     </React.Fragment>
   )

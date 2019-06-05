@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import CourseMatrix from './CourseMatrix'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 
-import { useQuery} from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 
 import Measure from 'react-measure'
 
@@ -26,24 +28,37 @@ const MatriceView = ({ course_id }) => {
 
   return (
     <React.Fragment>
-      <Measure
-        bounds
-        onResize={contentRect => {
-          setDimensions(contentRect.bounds)
-        }}
-      >
-        {({ measureRef }) => (
-          <div ref={measureRef} style={{ maxWidth: '83vw', maxHeight: '90vh' }}>
-            {
-              course.data.courseById && prerequisites.data.courseById ?
+      {
+        course.data.courseById && prerequisites.data.courseById ?
+          <Measure
+            bounds
+            onResize={contentRect => {
+              setDimensions(contentRect.bounds)
+            }}
+          >
+            {({ measureRef }) => (
+              <div ref={measureRef} style={{ maxWidth: '83vw', maxHeight: '90vh' }}>
                 <CourseMatrix dimensions={dimensions} course={course.data.courseById} prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses.filter(course =>
                   course.id !== course_id
-                )} /> :
-                null
-            }
-          </div>
-        )}
-      </Measure>
+                )} />
+
+              </div>
+            )}
+          </Measure>
+          :
+          <Grid container
+            spacing={0}
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={12}>
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress />
+              </div>
+            </Grid>
+          </Grid>
+      }
     </React.Fragment>
   )
 }

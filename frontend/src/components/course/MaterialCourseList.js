@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GridOnIcon from '@material-ui/icons/GridOn'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { useQuery } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
@@ -25,6 +26,9 @@ import CourseEditingDialog from './CourseEditingDialog'
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters()
+  },
+  progress: {
+    margin: theme.spacing.unit * 2
   }
 })
 
@@ -82,10 +86,10 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
               </Typography>
             }
           />
-          <List dense={false}>
-            {
-              courses.data.allCourses ?
-                courses.data.allCourses.map(course => (
+          {
+            courses.data.allCourses ?
+              courses.data.allCourses.map(course => (
+                <List dense={false}>
                   <ListItem button key={course.id} onClick={handleNavigateColumns(course.id)}>
                     <ListItemText
                       primary={
@@ -107,10 +111,12 @@ const MaterialCourseList = ({ classes, history, updateCourse, deleteCourse, crea
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
-                )) :
-                null
-            }
-          </List>
+                </List>
+              )) :
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress className={classes.progress} />
+              </div>
+          }
         </Card>
       </Grid>
 
