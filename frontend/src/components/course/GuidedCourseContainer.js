@@ -99,35 +99,42 @@ const GuidedCourseContainer = ({ courses, courseTrayOpen, activeConceptIds, upda
       {
         courses && courses.length !== 0 ?
           <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
-            <div style={{ overflowY: 'scroll', width: '100%', maxHeight: '90vh', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ width: '100%', maxHeight: '90vh'}}>
+            <div style={{ paddingLeft: '10px', paddingBottom: '16px' }}>
+
+              <Typography variant='h4'>Prerequisites</Typography>
+            </div>
+            <div style={{ overflowY: 'scroll', width: '100%', height: '100%', display: 'flex', justifyContent: 'center'}}>
+
               {
                 courses && courses.length < 3 ?
-                  <Grid container justify='space-evenly'>
+                <Grid container justify='space-evenly'>
                     {
                       makeGridCourseElements()
                     }
                   </Grid>
                   :
                   <Masonry
-                    breakpointCols={breakpointColumnsObj}
+                  breakpointCols={breakpointColumnsObj}
                     className="my-masonry-grid"
                     columnClassName="my-masonry-grid_column"
-                  >
+                    >
                     {
                       courses && courses.map(course =>
                         <Course
-                          key={course.id}
+                        key={course.id}
                           course={course}
                           activeConceptIds={activeConceptIds}
                           openCourseDialog={handleCourseOpen}
                           openConceptDialog={handleConceptOpen}
                           openConceptEditDialog={handleConceptEditOpen}
                           activeCourseId={course_id}
-                        />
-                      )
-                    }
+                          />
+                          )
+                        }
                   </Masonry>
               }
+              </div>
 
             </div>
             <CourseEditingDialog
