@@ -141,11 +141,18 @@ const ADD_COURSE_AS_PREREQUISITE = gql`
 mutation addCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
   addCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
     id
-    name
-    prerequisiteCourses {
-      id
       name
-    }
+      concepts {
+        id
+        name
+        description
+        linksFromConcept {
+          id
+          to {
+            id
+          }
+        }
+      }
   }
 }
 `
@@ -154,11 +161,6 @@ const DELETE_COURSE_AS_PREREQUISITE = gql`
 mutation deleteCourseAsCoursePrerequisite($id: ID!, $prerequisite_id: ID!) {
   deleteCourseAsCoursePrerequisite(id: $id, prerequisite_id: $prerequisite_id) {
     id
-    name
-    prerequisiteCourses {
-      id
-      name
-    }
   }
 }
 `

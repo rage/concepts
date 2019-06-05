@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import {
   FETCH_COURSE,
-  ADD_COURSE_AS_PREREQUISITE,
-  COURSE_PREREQUISITE_COURSES,
-  DELETE_COURSE_AS_PREREQUISITE
+  COURSE_PREREQUISITE_COURSES
 } from '../../services/CourseService'
 
 import CourseContainer from './CourseContainer'
@@ -25,20 +23,6 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
 
   const prerequisites = useQuery(COURSE_PREREQUISITE_COURSES, {
     variables: { id: course_id }
-  })
-
-  const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
-    refetchQueries: [{
-      query: COURSE_PREREQUISITE_COURSES,
-      variables: { id: course_id }
-    }]
-  })
-
-  const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
-    refetchQueries: [{
-      query: COURSE_PREREQUISITE_COURSES,
-      variables: { id: course_id }
-    }]
   })
 
   const toggleConcept = (id) => () => {
@@ -61,8 +45,7 @@ const CourseView = ({ course_id, createCourse, updateCourse, courses }) => {
 
             <MaterialCourseTray
               activeCourse={course_id}
-              addCourseAsPrerequisite={addCourseAsPrerequisite}
-              deleteCourseAsPrerequisite={deleteCourseAsPrerequisite}
+              course_id={course.data.courseById.id}
               prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
               setCourseTrayOpen={setCourseTrayOpen}
               courseTrayOpen={courseTrayOpen}

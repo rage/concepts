@@ -20,9 +20,14 @@ import AddIcon from '@material-ui/icons/Add'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
 import CourseCreationDialog from './CourseCreationDialog'
-
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
+
+import {
+  ADD_COURSE_AS_PREREQUISITE,
+  DELETE_COURSE_AS_PREREQUISITE,
+  COURSE_PREREQUISITE_COURSES
+} from '../../services/CourseService'
 
 const styles = theme => ({
   root: {
@@ -83,10 +88,53 @@ const MaterialPrerequisiteCourse = ({ classes, isPrerequisite, course, activeCou
   )
 }
 
-const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite, prerequisiteCourses, createCourse }) => {
+const MaterialCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
 
   const courses = useQuery(ALL_COURSES)
+
+
+  const client = useApolloClient()
+
+  const includedIn = (set, object) =>
+    set.map(p => p.id).includes(object.id)
+
+
+  const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES,variables: { id: course_id } })
+      const addedCourse = response.data.addCourseAsCoursePrerequisite
+      const dataInStoreCopy = { ...dataInStore }
+      const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
+      if (!includedIn(prerequisiteCourses, addedCourse)) {
+        prerequisiteCourses.push(addedCourse)
+        client.writeQuery({
+          query: COURSE_PREREQUISITE_COURSES,
+          variables: { id: course_id },
+          data: dataInStoreCopy
+        })
+      }
+    }
+
+  })
+
+  const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES,variables: { id: course_id } })
+      const removedCourse = response.data.deleteCourseAsCoursePrerequisite
+      const dataInStoreCopy = { ...dataInStore }
+      const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
+      if (includedIn(prerequisiteCourses, removedCourse)) {
+        dataInStoreCopy.courseById.prerequisiteCourses = prerequisiteCourses.filter(course => course.id !== removedCourse.id)
+        client.writeQuery({
+          query: COURSE_PREREQUISITE_COURSES,
+          variables: { id: course_id },
+          data: dataInStoreCopy
+        })
+      }
+    }
+    
+  })
 
   const handleClose = () => {
     setState({ open: false })

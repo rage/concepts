@@ -44,26 +44,30 @@ const resolvers = {
     },
   },
   Mutation: {
-    deleteCourseAsCoursePrerequisite(root, args, context) {
-      return context.prisma.updateCourse({
+    async deleteCourseAsCoursePrerequisite(root, args, context) {
+      await context.prisma.updateCourse({
         where: { id: args.id },
         data: {
           prerequisiteCourses: {
             disconnect: [{ id: args.prerequisite_id }]
           }
         }
-
+      })
+      return context.prisma.course({
+        id: args.prerequisite_id 
       })
     },
-    addCourseAsCoursePrerequisite(root, args, context) {
-      return context.prisma.updateCourse({
+    async addCourseAsCoursePrerequisite(root, args, context) {
+      await context.prisma.updateCourse({
         where: { id: args.id },
         data: {
           prerequisiteCourses: {
             connect: [{ id: args.prerequisite_id }]
           }
         }
-
+      })
+      return context.prisma.course({
+        id: args.prerequisite_id 
       })
     },
     createResourceWithURLs(root, args, context) {
