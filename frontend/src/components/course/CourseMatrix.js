@@ -12,6 +12,9 @@ import { LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
 import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
 
 const styles = theme => ({
+  cellButton: {
+    width: '90%'
+  },
   active: {
     backgroundColor: '#9ecae1',
     "&:hover": {
@@ -30,8 +33,8 @@ const styles = theme => ({
 })
 
 
-const GridCell = ({ onClick, checked, onHover, onMouseLeave }) => (
-  <Button onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={!checked ? "primary" : "secondary"}> {checked ? 'UNLINK' : 'LINK'} </Button>
+const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
+  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={checked ? "primary" : "secondary"}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
 )
 
 const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
@@ -45,7 +48,7 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
   const sideGrid = React.createRef()
 
   const rowCount = course.concepts.length;
-  const columnWidth = 100;
+  const columnWidth = 110;
   const rowHeight = 70;
 
   const headerHeight = 160;
@@ -179,6 +182,7 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
     return (
       <div style={style} key={`${rowData[rowIndex].id}-${columnIndex}-${columnData[columnIndex]}`}>
         <GridCell
+          classes={classes}
           onClick={
             linkConcepts(columnData[columnIndex], rowData[rowIndex], checked)
           }
