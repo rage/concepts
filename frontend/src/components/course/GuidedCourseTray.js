@@ -84,7 +84,7 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
   )
 }
 
-const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
+const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
 
   const courses = useQuery(ALL_COURSES)
@@ -200,4 +200,4 @@ const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, 
   )
 }
 
-export default withStyles(styles)(CourseTray);
+export default withStyles(styles)(GuidedCourseTray);

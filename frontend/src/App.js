@@ -2,7 +2,7 @@ import React from 'react'
 import { Route } from 'react-router-dom'
 import './App.css'
 
-import CourseView from './components/course/CourseView'
+import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
 import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
@@ -75,7 +75,7 @@ const App = () => {
         </Grid>
         <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
         <Route exact path="/courses/:id" render={({ match }) => {
-          return <CourseView
+          return <GuidedCourseView
             course_id={match.params.id}
             createCourse={createCourse}
             updateCourse={updateCourse}
