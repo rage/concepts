@@ -1,9 +1,10 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import { withStyles } from "@material-ui/core/styles";
 import Course from './Course'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
-
+import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
 import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../services/ConceptService'
@@ -12,6 +13,10 @@ import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import CourseEditingDialog from './CourseEditingDialog'
+
+import IconButton from '@material-ui/core/IconButton'
+import InfoIcon from '@material-ui/icons/Info'
+import CloseIcon from '@material-ui/icons/Close'
 
 import Masonry from 'react-masonry-css'
 import '../../MasonryLayout.css'
@@ -22,17 +27,36 @@ const breakpointColumnsObj = {
   1279: 1
 }
 
+const styles = theme => ({
+  snackbar: {
+    margin: theme.spacing.unit * 4
+  },
+  info: {
+    backgroundColor: theme.palette.primary.dark
+  },
+  infoIcon: {
+    marginRight: theme.spacing.unit
+  },
+  icon: {
+    fontSize: 20
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+})
+
 const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective from left column."
 const COURSE_ADDING_INSTRUCTION = "Add courses from the right column"
 // const CONCEPT_LINKING_INSTRUCTION = "TBA"
 
-const GuidedCourseContainer = ({ activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
+const GuidedCourseContainer = ({ classes, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
 
   const [conceptInfoState, setConceptInfoState] = useState(false)
-  const [courseInfoState, setCourseInfoState] = useState(false)
+  const [courseInfoState, setCourseInfoState] = useState(false)
 
   useEffect(() => {
     if (activeCourse.concepts.length === 0) {
@@ -186,21 +210,59 @@ const GuidedCourseContainer = ({ activeCourse, courses, courseTrayOpen, activeCo
         defaultName={conceptEditState.name}
       />
       <Snackbar open={conceptInfoState}
-          onClose={handleConceptInfoClose}
-          ClickAwayListenerProps={{ onClickAway: () => null }}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{CONCEPT_ADDING_INSTRUCTION}</span>}/>
-        <Snackbar open={courseInfoState}
-          onClose={handleCourseInfoClose}
-          ClickAwayListenerProps={{ onClickAway: () => null }}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{COURSE_ADDING_INSTRUCTION}</span>}/>
+        onClose={handleConceptInfoClose}
+        className={classes.snackbar}
+        ClickAwayListenerProps={{ onClickAway: () => null }}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}>
+        <SnackbarContent className={classes.info}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleConceptInfoClose}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id="message-id">
+              <InfoIcon className={classes.infoIcon} />
+              {CONCEPT_ADDING_INSTRUCTION}
+            </span>}
+        />
+      </Snackbar>
+      <Snackbar open={courseInfoState}
+        onClose={handleCourseInfoClose}
+        ClickAwayListenerProps={{ onClickAway: () => null }}
+        className={classes.snackbar}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        >
+
+        <SnackbarContent className={classes.info}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleCourseInfoClose}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id="message-id">
+              <InfoIcon className={classes.infoIcon} />
+              {COURSE_ADDING_INSTRUCTION}
+            </span>}
+        />
+      </Snackbar>
     </React.Fragment>
   )
 }
 
-export default GuidedCourseContainer
+export default withStyles(styles)(GuidedCourseContainer)
