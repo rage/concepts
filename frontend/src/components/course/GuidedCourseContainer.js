@@ -95,85 +95,86 @@ const GuidedCourseContainer = ({ courses, courseTrayOpen, activeConceptIds, upda
 
   return (
     <React.Fragment>
-      
-      {
-        courses && courses.length !== 0 ?
-          <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
-            <div style={{ width: '100%', maxHeight: '90vh'}}>
-            <div style={{ paddingLeft: '10px', paddingBottom: '16px' }}>
-
-              <Typography variant='h4'>Prerequisites</Typography>
-            </div>
-            <div style={{ overflowY: 'scroll', width: '100%', height: '100%', display: 'flex', justifyContent: 'center'}}>
-
-              {
-                courses && courses.length < 3 ?
-                <Grid container justify='space-evenly'>
-                    {
-                      makeGridCourseElements()
-                    }
-                  </Grid>
-                  :
-                  <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                    className="my-masonry-grid"
-                    columnClassName="my-masonry-grid_column"
+      <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
+        <Grid item>
+          <Typography style={{ margin: '2px 0px 0px 10px' }} variant='h4'>Prerequisites</Typography>
+        </Grid>
+        {
+          courses && courses.length !== 0 ?
+            <Grid container item>
+              <div style={{ overflowY: 'scroll', width: '100%', height: '85vh', paddingTop: '14px', display: 'flex', justifyContent: 'center' }}>
+                {
+                  courses && courses.length < 3 ?
+                    <Grid container justify='space-evenly'>
+                      {
+                        makeGridCourseElements()
+                      }
+                    </Grid>
+                    :
+                    <Masonry
+                      breakpointCols={breakpointColumnsObj}
+                      className="my-masonry-grid"
+                      columnClassName="my-masonry-grid_column"
                     >
-                    {
-                      courses && courses.map(course =>
-                        <Course
-                        key={course.id}
-                          course={course}
-                          activeConceptIds={activeConceptIds}
-                          openCourseDialog={handleCourseOpen}
-                          openConceptDialog={handleConceptOpen}
-                          openConceptEditDialog={handleConceptEditOpen}
-                          activeCourseId={course_id}
+                      {
+                        courses && courses.map(course =>
+                          <Course
+                            key={course.id}
+                            course={course}
+                            activeConceptIds={activeConceptIds}
+                            openCourseDialog={handleCourseOpen}
+                            openConceptDialog={handleConceptOpen}
+                            openConceptEditDialog={handleConceptEditOpen}
+                            activeCourseId={course_id}
                           />
-                          )
-                        }
-                  </Masonry>
-              }
-              </div>
+                        )
+                      }
+                    </Masonry>
+                }
 
-            </div>
-            <CourseEditingDialog
-              state={courseState}
-              handleClose={handleCourseClose}
-              updateCourse={updateCourse}
-              defaultName={courseState.name}
-            />
-            <ConceptAdditionDialog
-              state={conceptState}
-              handleClose={handleConceptClose}
-              createConcept={createConcept}
-            />
-            <ConceptEditingDialog
-              state={conceptEditState}
-              handleClose={handleConceptEditClose}
-              updateConcept={updateConcept}
-              defaultDescription={conceptEditState.description}
-              defaultName={conceptEditState.name}
-            />
-          </Grid>
-          :
-          <Grid container item alignItems="center" justify="center" xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
-            <Grid item xs={4}>
-              <Typography id="instructions" variant='body1'>
-                Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
-              </Typography>
-              <br />
-              <Typography id="instructions" variant='body1'>
-                Activate selection of prerequisites for a concept of the current course by toggling a concept on
-                the right.
-              </Typography>
-              <br />
-              <Typography id="instructions" variant='body1'>
-                When a concept is toggled, concepts of courses in the center can be linked to it by clicking them.
-              </Typography>
+              </div>
             </Grid>
-          </Grid>
-      }
+            :
+            <Grid container>
+              <div style={{ width: '100%' }}>
+                <Grid container item alignItems="center" justify="center">
+                  <Grid item xs={4}>
+                    <Typography id="instructions" variant='body1'>
+                      Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
+              </Typography>
+                    <br />
+                    <Typography id="instructions" variant='body1'>
+                      Activate selection of prerequisites for a concept of the current course by toggling a concept on
+                      the right.
+              </Typography>
+                    <br />
+                    <Typography id="instructions" variant='body1'>
+                      When a concept is toggled, concepts of courses in the center can be linked to it by clicking them.
+              </Typography>
+                  </Grid>
+                </Grid>
+              </div>
+            </Grid>
+        }
+      </Grid>
+      <CourseEditingDialog
+        state={courseState}
+        handleClose={handleCourseClose}
+        updateCourse={updateCourse}
+        defaultName={courseState.name}
+      />
+      <ConceptAdditionDialog
+        state={conceptState}
+        handleClose={handleConceptClose}
+        createConcept={createConcept}
+      />
+      <ConceptEditingDialog
+        state={conceptEditState}
+        handleClose={handleConceptEditClose}
+        updateConcept={updateConcept}
+        defaultDescription={conceptEditState.description}
+        defaultName={conceptEditState.name}
+      />
     </React.Fragment>
   )
 }
