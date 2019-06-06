@@ -14,7 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip';
-
+import TextField from '@material-ui/core/TextField'
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
@@ -86,6 +86,7 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
 
 const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
+  const [filterKeyword, setFilterKeyword] = useState('')
 
   const courses = useQuery(ALL_COURSES)
 
@@ -132,6 +133,10 @@ const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCo
     
   })
 
+  const handleKeywordInput = (e) => {
+    setFilterKeyword(e.target.value)
+  }
+
   const handleClose = () => {
     setState({ open: false })
   }
@@ -165,12 +170,23 @@ const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCo
                   </IconButton>
                 }
               />
-              <CardContent>
+                       
+              <CardContent> <TextField
+              margin="dense"
+              id="description"
+              label="Filter"
+              type="text"
+              name="filter"
+              fullWidth
+              value={filterKeyword}
+              onChange={handleKeywordInput}
+            />
+
                 {
                   courses.data.allCourses ?
                     <List disablePadding className={classes.list}>
                       {
-                        courses.data.allCourses.map(course => {
+                        courses.data.allCourses.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
                           return (
                             <PrerequisiteCourse
                               key={course.id}

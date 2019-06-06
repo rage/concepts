@@ -211,7 +211,7 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
     let filteredConcepts = allPrerequisiteConcepts.filter(c =>
       c.name.toLowerCase().includes(filter)
     )
-    return filteredConcepts.length === 0 ? allPrerequisiteConcepts : filteredConcepts
+    return filteredConcepts
   }
 
   return (
