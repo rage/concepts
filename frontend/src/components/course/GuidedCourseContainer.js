@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import Course from './Course'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import Snackbar from '@material-ui/core/Snackbar'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
@@ -21,10 +22,30 @@ const breakpointColumnsObj = {
   1279: 1
 }
 
-const GuidedCourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
+const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective from left column."
+const COURSE_ADDING_INSTRUCTION = "Add courses from the right column"
+// const CONCEPT_LINKING_INSTRUCTION = "TBA"
+
+const GuidedCourseContainer = ({ activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
+
+  const [conceptInfoState, setConceptInfoState] = useState(false)
+  const [courseInfoState, setCourseInfoState] = useState(false)
+
+  useEffect(() => {
+    if (activeCourse.concepts.length === 0) {
+      setConceptInfoState(true)
+      setCourseInfoState(false)
+    } else if (courses.length === 0) {
+      setConceptInfoState(false)
+      setCourseInfoState(true)
+    } else {
+      setConceptInfoState(false)
+      setCourseInfoState(false)
+    }
+  }, [activeCourse.concepts.length, courses.length])
 
   const client = useApolloClient()
 
@@ -93,6 +114,14 @@ const GuidedCourseContainer = ({ courses, courseTrayOpen, activeConceptIds, upda
     )
   }
 
+  const handleConceptInfoClose = () => {
+    setConceptInfoState(false)
+  };
+
+  const handleCourseInfoClose = () => {
+    setCourseInfoState(false)
+  }
+
   return (
     <React.Fragment>
       <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
@@ -135,26 +164,7 @@ const GuidedCourseContainer = ({ courses, courseTrayOpen, activeConceptIds, upda
               </div>
             </Grid>
             :
-            <Grid container>
-              <div style={{ width: '100%' }}>
-                <Grid container item alignItems="center" justify="center">
-                  <Grid item xs={4}>
-                    <Typography id="instructions" variant='body1'>
-                      Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
-              </Typography>
-                    <br />
-                    <Typography id="instructions" variant='body1'>
-                      Activate selection of prerequisites for a concept of the current course by toggling a concept on
-                      the right.
-              </Typography>
-                    <br />
-                    <Typography id="instructions" variant='body1'>
-                      When a concept is toggled, concepts of courses in the center can be linked to it by clicking them.
-              </Typography>
-                  </Grid>
-                </Grid>
-              </div>
-            </Grid>
+            null
         }
       </Grid>
       <CourseEditingDialog
@@ -175,6 +185,20 @@ const GuidedCourseContainer = ({ courses, courseTrayOpen, activeConceptIds, upda
         defaultDescription={conceptEditState.description}
         defaultName={conceptEditState.name}
       />
+      <Snackbar open={conceptInfoState}
+          onClose={handleConceptInfoClose}
+          ClickAwayListenerProps={{ onClickAway: () => null }}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{CONCEPT_ADDING_INSTRUCTION}</span>}/>
+        <Snackbar open={courseInfoState}
+          onClose={handleCourseInfoClose}
+          ClickAwayListenerProps={{ onClickAway: () => null }}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{COURSE_ADDING_INSTRUCTION}</span>}/>
     </React.Fragment>
   )
 }
