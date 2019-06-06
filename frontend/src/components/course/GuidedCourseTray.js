@@ -76,10 +76,10 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
   return (
     <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
       <ListItem divider button onClick={onClick} className={classes.listItem}>
+        <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
         </ListItemSecondaryAction>
-        <ListItemText className={classes.courseName}>{course.name}</ListItemText>
       </ListItem>
     </Tooltip>
   )

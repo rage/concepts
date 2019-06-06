@@ -85,10 +85,7 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, cour
             />
             {
               course.data.courseById.concepts.length !== 0 ?
-                // <Fab style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
-                //   <AddIcon className={classes.extendedIcon} /> Add course
-                // </Fab>
-                <Fab style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }} onClick={handleTrayToggle} color="grey" >
+                <Fab style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }} onClick={handleTrayToggle} >
                   {
                     courseTrayOpen ?
                       <ChevronRightIcon />
