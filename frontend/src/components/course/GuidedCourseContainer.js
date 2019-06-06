@@ -50,7 +50,7 @@ const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective from lef
 const COURSE_ADDING_INSTRUCTION = "Add courses from the right column"
 // const CONCEPT_LINKING_INSTRUCTION = "TBA"
 
-const GuidedCourseContainer = ({ classes, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
+const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -62,6 +62,7 @@ const GuidedCourseContainer = ({ classes, activeCourse, courses, courseTrayOpen,
     if (activeCourse.concepts.length === 0) {
       setConceptInfoState(true)
       setCourseInfoState(false)
+      setCourseTrayOpen(false)
     } else if (courses.length === 0) {
       setConceptInfoState(false)
       setCourseInfoState(true)
@@ -69,7 +70,7 @@ const GuidedCourseContainer = ({ classes, activeCourse, courses, courseTrayOpen,
       setConceptInfoState(false)
       setCourseInfoState(false)
     }
-  }, [activeCourse.concepts.length, courses.length])
+  }, [activeCourse.concepts.length, courses.length, setCourseTrayOpen])
 
   const client = useApolloClient()
 

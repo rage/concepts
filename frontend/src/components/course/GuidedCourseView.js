@@ -71,6 +71,7 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, cour
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
               activeCourse={course.data.courseById}
+              setCourseTrayOpen={setCourseTrayOpen}
             />
             <GuidedCourseTray
               activeCourse={course_id}
