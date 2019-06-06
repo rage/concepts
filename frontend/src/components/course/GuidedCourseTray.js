@@ -17,8 +17,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import IconButton from '@material-ui/core/IconButton'
 import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
@@ -87,7 +85,7 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
   )
 }
 
-const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
+const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
   const [filterKeyword, setFilterKeyword] = useState('')
 
@@ -148,10 +146,6 @@ const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCo
     setState({ open: true })
   }
 
-  const handleTrayClose = () => {
-    setCourseTrayOpen(false)
-  }
-
   const isPrerequisite = (course) => {
     return (prerequisiteCourses.find(c => c.id === course.id) !== undefined)
   }
@@ -167,11 +161,6 @@ const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCo
                 classes={{ title: classes.title }}
                 title="Add course"
                 titleTypographyProps={{ variant: 'h4' }}
-                action={
-                  <IconButton onClick={handleTrayClose} >
-                    <ChevronLeftIcon />
-                  </IconButton>
-                }
               />
 
               <CardContent> <TextField
