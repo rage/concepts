@@ -11,8 +11,8 @@ import {
   COURSE_PREREQUISITE_COURSES
 } from '../../services/CourseService'
 
-import CourseContainer from './CourseContainer'
-import CourseTray from './CourseTray'
+import GuidedCourseContainer from './GuidedCourseContainer'
+import GuidedCourseTray from './GuidedCourseTray'
 import ActiveCourse from './ActiveCourse'
 
 import Fab from '@material-ui/core/Fab'
@@ -24,7 +24,7 @@ const styles = theme => ({
   }
 })
 
-const CourseView = ({ classes, course_id, createCourse, updateCourse, courses }) => {
+const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, courses }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
 
@@ -57,22 +57,6 @@ const CourseView = ({ classes, course_id, createCourse, updateCourse, courses })
       {
         course.data.courseById && prerequisites.data.courseById ?
           <Grid container spacing={0} direction="row">
-
-            <CourseTray
-              activeCourse={course_id}
-              course_id={course.data.courseById.id}
-              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
-              setCourseTrayOpen={setCourseTrayOpen}
-              courseTrayOpen={courseTrayOpen}
-              createCourse={createCourse}
-            />
-            <CourseContainer
-              courses={prerequisites.data.courseById.prerequisiteCourses}
-              course_id={course_id}
-              activeConceptIds={activeConceptIds}
-              updateCourse={updateCourse}
-              courseTrayOpen={courseTrayOpen}
-            />
             <ActiveCourse
               course={course.data.courseById}
               activeConceptIds={activeConceptIds}
@@ -80,12 +64,28 @@ const CourseView = ({ classes, course_id, createCourse, updateCourse, courses })
               resetConceptToggle={resetConceptToggle}
               courseTrayOpen={courseTrayOpen}
             />
+            <GuidedCourseContainer
+              courses={prerequisites.data.courseById.prerequisiteCourses}
+              course_id={course_id}
+              activeConceptIds={activeConceptIds}
+              updateCourse={updateCourse}
+              courseTrayOpen={courseTrayOpen}
+              activeCourse={course.data.courseById}
+              setCourseTrayOpen={setCourseTrayOpen}
+            />
+            <GuidedCourseTray
+              activeCourse={course_id}
+              course_id={course.data.courseById.id}
+              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
+              setCourseTrayOpen={setCourseTrayOpen}
+              courseTrayOpen={courseTrayOpen}
+              createCourse={createCourse}
+            />
             {
-              !courseTrayOpen ? 
-              <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', left: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
+              !courseTrayOpen && course.data.courseById.concepts.length !== 0 ? 
+              <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', right: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
                 <AddIcon className={classes.extendedIcon} /> Add course
               </Fab> : null
-
             }
           </Grid> :
           <Grid container
@@ -105,4 +105,4 @@ const CourseView = ({ classes, course_id, createCourse, updateCourse, courses })
   )
 }
 
-export default withStyles(styles)(CourseView)
+export default withStyles(styles)(GuidedCourseView)

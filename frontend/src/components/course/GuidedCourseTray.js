@@ -14,7 +14,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip';
-
+import TextField from '@material-ui/core/TextField'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
@@ -77,15 +78,18 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
   return (
     <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
       <ListItem divider button onClick={onClick} className={classes.listItem}>
+        <ListItemSecondaryAction>
+          <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
+        </ListItemSecondaryAction>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
-        <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
       </ListItem>
     </Tooltip>
   )
 }
 
-const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
+const GuidedCourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
+  const [filterKeyword, setFilterKeyword] = useState('')
 
   const courses = useQuery(ALL_COURSES)
 
@@ -98,7 +102,7 @@ const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, 
 
   const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES,variables: { id: course_id } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
       const addedCourse = response.data.addCourseAsCoursePrerequisite
       const dataInStoreCopy = { ...dataInStore }
       const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
@@ -116,7 +120,7 @@ const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, 
 
   const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES,variables: { id: course_id } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
       const removedCourse = response.data.deleteCourseAsCoursePrerequisite
       const dataInStoreCopy = { ...dataInStore }
       const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
@@ -129,8 +133,12 @@ const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, 
         })
       }
     }
-    
+
   })
+
+  const handleKeywordInput = (e) => {
+    setFilterKeyword(e.target.value)
+  }
 
   const handleClose = () => {
     setState({ open: false })
@@ -165,12 +173,23 @@ const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, 
                   </IconButton>
                 }
               />
-              <CardContent>
+
+              <CardContent> <TextField
+                margin="dense"
+                id="description"
+                label="Filter"
+                type="text"
+                name="filter"
+                fullWidth
+                value={filterKeyword}
+                onChange={handleKeywordInput}
+              />
+
                 {
                   courses.data.allCourses ?
                     <List disablePadding className={classes.list}>
                       {
-                        courses.data.allCourses.map(course => {
+                        courses.data.allCourses.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
                           return (
                             <PrerequisiteCourse
                               key={course.id}
@@ -200,4 +219,4 @@ const CourseTray = ({ classes, setCourseTrayOpen, courseTrayOpen, activeCourse, 
   )
 }
 
-export default withStyles(styles)(CourseTray);
+export default withStyles(styles)(GuidedCourseTray);

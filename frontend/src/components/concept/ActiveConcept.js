@@ -51,11 +51,6 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
     return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
   }
 
-  const isPassive = () => {
-    return (!isActive())
-      && (activeConceptIds.length > 0)
-  }
-
   const handleMenuOpen = (event) => {
     setState({ anchorEl: event.currentTarget })
   }
@@ -82,14 +77,9 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
   return (
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
       <ListItem button divider className={classes.listItem} onClick={toggleConcept(concept.id)} id={'concept-' + concept.id} >
-        <Switch
-          checked={isActive()}
-          color='primary'
-        />
         <ListItemText
           id={'concept-name-' + concept.id}
           className={classes.conceptName}
-          primaryTypographyProps={isPassive() ? { color: 'textSecondary' } : { color: 'textPrimary' }}
         >
           {concept.name}
         </ListItemText>
@@ -119,6 +109,12 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
             </React.Fragment>
             : null
           }
+          <Switch
+            checked={isActive()}
+            color='primary'
+            onClick={toggleConcept(concept.id)}
+            id={'concept-switch' + concept.id}
+          />
         </ListItemSecondaryAction>
       </ListItem >
     </Tooltip>

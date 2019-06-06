@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { withStyles } from "@material-ui/core/styles";
 import Course from './Course'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-
+import Snackbar from '@material-ui/core/Snackbar'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
 import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../services/ConceptService'
@@ -11,6 +13,10 @@ import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import CourseEditingDialog from './CourseEditingDialog'
+
+import IconButton from '@material-ui/core/IconButton'
+import InfoIcon from '@material-ui/icons/Info'
+import CloseIcon from '@material-ui/icons/Close'
 
 import Masonry from 'react-masonry-css'
 import '../../MasonryLayout.css'
@@ -21,10 +27,50 @@ const breakpointColumnsObj = {
   1279: 1
 }
 
-const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
+const styles = theme => ({
+  snackbar: {
+    margin: theme.spacing.unit * 4
+  },
+  info: {
+    backgroundColor: theme.palette.primary.dark
+  },
+  infoIcon: {
+    marginRight: theme.spacing.unit
+  },
+  icon: {
+    fontSize: 20
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+})
+
+const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective from left column."
+const COURSE_ADDING_INSTRUCTION = "Add courses from the right column"
+// const CONCEPT_LINKING_INSTRUCTION = "TBA"
+
+const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
+
+  const [conceptInfoState, setConceptInfoState] = useState(false)
+  const [courseInfoState, setCourseInfoState] = useState(false)
+
+  useEffect(() => {
+    if (activeCourse.concepts.length === 0) {
+      setConceptInfoState(true)
+      setCourseInfoState(false)
+      setCourseTrayOpen(false)
+    } else if (courses.length === 0) {
+      setConceptInfoState(false)
+      setCourseInfoState(true)
+    } else {
+      setConceptInfoState(false)
+      setCourseInfoState(false)
+    }
+  }, [activeCourse.concepts.length, courses.length, setCourseTrayOpen])
 
   const client = useApolloClient()
 
@@ -93,6 +139,14 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
     )
   }
 
+  const handleConceptInfoClose = () => {
+    setConceptInfoState(false)
+  };
+
+  const handleCourseInfoClose = () => {
+    setCourseInfoState(false)
+  }
+
   return (
     <React.Fragment>
       <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
@@ -135,26 +189,7 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
               </div>
             </Grid>
             :
-            <Grid container>
-              <div style={{ width: '100%' }}>
-                <Grid container item alignItems="center" justify="center">
-                  <Grid item xs={4}>
-                    <Typography id="instructions" variant='body1'>
-                      Hello, here you can add courses as prerequisites by clicking the items in the leftmost column.
-              </Typography>
-                    <br />
-                    <Typography id="instructions" variant='body1'>
-                      Activate selection of prerequisites for a concept of the current course by toggling a concept on
-                      the right.
-              </Typography>
-                    <br />
-                    <Typography id="instructions" variant='body1'>
-                      When a concept is toggled, concepts of courses in the center can be linked to it by clicking them.
-              </Typography>
-                  </Grid>
-                </Grid>
-              </div>
-            </Grid>
+            null
         }
       </Grid>
       <CourseEditingDialog
@@ -175,8 +210,60 @@ const CourseContainer = ({ courses, courseTrayOpen, activeConceptIds, updateCour
         defaultDescription={conceptEditState.description}
         defaultName={conceptEditState.name}
       />
+      <Snackbar open={conceptInfoState}
+        onClose={handleConceptInfoClose}
+        className={classes.snackbar}
+        ClickAwayListenerProps={{ onClickAway: () => null }}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}>
+        <SnackbarContent className={classes.info}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleConceptInfoClose}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id="message-id">
+              <InfoIcon className={classes.infoIcon} />
+              {CONCEPT_ADDING_INSTRUCTION}
+            </span>}
+        />
+      </Snackbar>
+      <Snackbar open={courseInfoState}
+        onClose={handleCourseInfoClose}
+        ClickAwayListenerProps={{ onClickAway: () => null }}
+        className={classes.snackbar}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        >
+
+        <SnackbarContent className={classes.info}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleCourseInfoClose}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id="message-id">
+              <InfoIcon className={classes.infoIcon} />
+              {COURSE_ADDING_INSTRUCTION}
+            </span>}
+        />
+      </Snackbar>
     </React.Fragment>
   )
 }
 
-export default CourseContainer
+export default withStyles(styles)(GuidedCourseContainer)
