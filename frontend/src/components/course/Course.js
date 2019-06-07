@@ -36,8 +36,8 @@ const styles = theme => ({
   },
   title: {
     wordBreak: 'break-word',
-    textDecoration: 'underline',
     '&:hover': {
+      textDecoration: 'underline',
       cursor: 'pointer'
     }
 
