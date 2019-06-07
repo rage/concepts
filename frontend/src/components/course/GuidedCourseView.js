@@ -16,15 +16,14 @@ import GuidedCourseTray from './GuidedCourseTray'
 import ActiveCourse from './ActiveCourse'
 
 import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
+// import AddIcon from '@material-ui/icons/Add'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 const styles = theme => ({
-  extendedIcon: {
-    marginRight: 5
-  }
 })
 
-const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, courses }) => {
+const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
 
@@ -48,8 +47,8 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, cour
     setActiveConceptIds([])
   }
 
-  const handleTrayOpen = () => {
-    setCourseTrayOpen(true)
+  const handleTrayToggle = () => {
+    setCourseTrayOpen(!courseTrayOpen)
   }
 
   return (
@@ -82,10 +81,16 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, cour
               createCourse={createCourse}
             />
             {
-              !courseTrayOpen && course.data.courseById.concepts.length !== 0 ? 
-              <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', right: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
-                <AddIcon className={classes.extendedIcon} /> Add course
-              </Fab> : null
+              course.data.courseById.concepts.length !== 0 ?
+                <Fab style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }} onClick={handleTrayToggle} >
+                  {
+                    courseTrayOpen ?
+                      <ChevronRightIcon />
+                      :
+                      <ChevronLeftIcon />
+                  }
+                </Fab>
+                : null
             }
           </Grid> :
           <Grid container

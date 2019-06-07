@@ -15,6 +15,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
   conceptName: {
+    maxWidth: '70%',
     wordBreak: 'break-word'
   },
   active: {

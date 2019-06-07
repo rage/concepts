@@ -14,7 +14,7 @@ import List from '@material-ui/core/List'
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
 
-
+import { withRouter } from 'react-router-dom'
 import Concept from '../concept/Concept'
 
 const styles = theme => ({
@@ -35,7 +35,12 @@ const styles = theme => ({
     paddingBottom: '0px'
   },
   title: {
-    wordBreak: 'break-word'
+    wordBreak: 'break-word',
+    '&:hover': {
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
+
   },
   listSection: {
     backgroundColor: 'inherit',
@@ -59,12 +64,18 @@ const Course = ({
   openCourseDialog,
   openConceptDialog,
   openConceptEditDialog,
-  activeConceptIds
+  activeConceptIds,
+  history
 }) => {
+
+  const onHeaderClickHandle = () => {
+    history.push(`/courses/${course.id}`)
+  }
+
   return (
     <React.Fragment>
       <Card elevation={0} className={classes.root} id='masonry-element'>
-        <CardHeader className={classes.cardHeader} classes={{ title: classes.title }} title={course.name} action={
+        <CardHeader onClick={onHeaderClickHandle} className={classes.cardHeader} classes={{ title: classes.title }} title={course.name} action={
           <IconButton onClick={openCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>
@@ -90,4 +101,4 @@ const Course = ({
   )
 }
 
-export default withStyles(styles)(Course);
+export default withRouter(withStyles(styles)(Course))

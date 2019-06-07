@@ -13,9 +13,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
+import Switch from '@material-ui/core/Switch'
+
 
 const styles = theme => ({
   conceptName: {
+    maxWidth: '85%',
     wordBreak: 'break-word'
   },
   active: {
@@ -95,7 +98,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
   })
 
   const isActive = () => {
-    return concept.linksFromConcept.find(link => {
+    return undefined !== concept.linksFromConcept.find(link => {
       return activeConceptIds.find(conceptId => link.to.id === conceptId)
     })
   }
@@ -145,32 +148,42 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
       divider
       button={activeConceptIds.length !== 0}
       onClick={onClick}
-      className={isActive() ? classes.active : classes.inactive}
+      className={classes.inactive}
       id={'concept-' + concept.id}
     >
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
-      {activeConceptIds.length === 0 ?
-        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-          <IconButton
-            aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-            aria-haspopup="true"
-            onClick={handleMenuOpen}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={state.anchorEl}
-            open={Boolean(state.anchorEl)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
-            <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
-          </Menu>
-        </ListItemSecondaryAction> : null
-      }
+      <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+        {activeConceptIds.length === 0 ?
+          <React.Fragment>
+
+            <IconButton
+              aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+              aria-haspopup="true"
+              onClick={handleMenuOpen}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={state.anchorEl}
+              open={Boolean(state.anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
+              <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
+            </Menu>
+          </React.Fragment>
+          :
+          <Switch
+            checked={isActive()}
+            color='primary'
+            onClick={onClick}
+            id={'concept-switch' + concept.id}
+          />
+        }
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
