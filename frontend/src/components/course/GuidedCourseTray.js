@@ -78,7 +78,7 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
       <ListItem divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
-          <Checkbox checked={isPrerequisite} color="primary"></Checkbox>
+          <Checkbox checked={isPrerequisite} onClick={onClick} color="primary"></Checkbox>
         </ListItemSecondaryAction>
       </ListItem>
     </Tooltip>

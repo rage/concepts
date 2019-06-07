@@ -18,6 +18,7 @@ import Switch from '@material-ui/core/Switch'
 
 const styles = theme => ({
   conceptName: {
+    maxWidth: '85%',
     wordBreak: 'break-word'
   },
   active: {

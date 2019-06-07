@@ -24,7 +24,7 @@ const styles = theme => ({
   }
 })
 
-const CourseView = ({ classes, course_id, createCourse, updateCourse, courses }) => {
+const CourseView = ({ classes, course_id, createCourse, updateCourse }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
 
@@ -81,9 +81,9 @@ const CourseView = ({ classes, course_id, createCourse, updateCourse, courses })
               courseTrayOpen={courseTrayOpen}
             />
             {
-              !courseTrayOpen ? 
-              <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', left: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
-                <AddIcon className={classes.extendedIcon} /> Add course
+              !courseTrayOpen ?
+                <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', left: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
+                  <AddIcon className={classes.extendedIcon} /> Add course
               </Fab> : null
 
             }

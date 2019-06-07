@@ -21,12 +21,9 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 const styles = theme => ({
-  extendedIcon: {
-    marginRight: 5
-  }
 })
 
-const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse, courses }) => {
+const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
 
