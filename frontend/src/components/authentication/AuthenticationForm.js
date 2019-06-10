@@ -4,14 +4,11 @@ import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
 
-import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 
+import { signIn } from '../../lib/authentication'
 
 const styles = theme => ({
   paper: {
@@ -31,22 +28,26 @@ const styles = theme => ({
 })
 
 const AuthenticationForm = ({ classes }) => {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const authenticate = (event) => {
+  const authenticate = async (event) => {
     event.preventDefault();
-    console.log(`Logging in with username: ${username}, password: ${password}`)
+    try {
+      await signIn({ email, password })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline/>
+      <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           Sign in with TMC account
         </Typography>
-        
+
 
         <form className={classes.form} onSubmit={authenticate} noValidate>
           <TextField
@@ -54,12 +55,12 @@ const AuthenticationForm = ({ classes }) => {
             margin="normal"
             required
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            onChange={(e) => setUsername(e.target.value)}
-            value={username}
+            id="email"
+            label="email or username"
+            name="email"
+            autoComplete="email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             autoFocus
           />
           <TextField
@@ -68,14 +69,14 @@ const AuthenticationForm = ({ classes }) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="password"
             type="password"
             id="password"
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-          
+
           <Button
             type="submit"
             fullWidth

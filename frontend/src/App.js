@@ -76,7 +76,7 @@ const App = () => {
           <NavBar />
         </Grid>
         <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-        <Route exact path="/auth" render={() => <AuthenticationForm/>}/> 
+        <Route exact path="/auth" render={() => <AuthenticationForm />} />
         <Route exact path="/courses/:id" render={({ match }) => {
           return <GuidedCourseView
             course_id={match.params.id}
