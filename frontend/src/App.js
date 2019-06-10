@@ -11,6 +11,8 @@ import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
 import { Grid } from '@material-ui/core';
 
+import AuthenticationForm from './components/authentication/AuthenticationForm'
+
 const App = () => {
   const client = useApolloClient()
   // const courses = useQuery(ALL_COURSES)
@@ -74,6 +76,7 @@ const App = () => {
           <NavBar />
         </Grid>
         <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+        <Route exact path="/auth" render={() => <AuthenticationForm/>}/> 
         <Route exact path="/courses/:id" render={({ match }) => {
           return <GuidedCourseView
             course_id={match.params.id}
