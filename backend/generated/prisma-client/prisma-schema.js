@@ -23,6 +23,10 @@ type AggregateURL {
   count: Int!
 }
 
+type AggregateUser {
+  count: Int!
+}
+
 type BatchPayload {
   count: Long!
 }
@@ -1088,6 +1092,12 @@ type Mutation {
   upsertURL(where: URLWhereUniqueInput!, create: URLCreateInput!, update: URLUpdateInput!): URL!
   deleteURL(where: URLWhereUniqueInput!): URL
   deleteManyURLs(where: URLWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1123,6 +1133,9 @@ type Query {
   uRL(where: URLWhereUniqueInput!): URL
   uRLs(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL]!
   uRLsConnection(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): URLConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   node(id: ID!): Node
 }
 
@@ -1383,12 +1396,19 @@ input ResourceWhereUniqueInput {
   id: ID
 }
 
+enum Role {
+  GUEST
+  USER
+  ADMIN
+}
+
 type Subscription {
   concept(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
   resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
   uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type URL {
@@ -1570,6 +1590,109 @@ input URLWhereInput {
 
 input URLWhereUniqueInput {
   id: ID
+}
+
+type User {
+  id: ID!
+  tmcId: Int!
+  role: Role!
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  id: ID
+  tmcId: Int!
+  role: Role!
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  tmcId_ASC
+  tmcId_DESC
+  role_ASC
+  role_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  tmcId: Int!
+  role: Role!
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
+}
+
+input UserUpdateInput {
+  tmcId: Int
+  role: Role
+}
+
+input UserUpdateManyMutationInput {
+  tmcId: Int
+  role: Role
+}
+
+input UserWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  tmcId: Int
+  tmcId_not: Int
+  tmcId_in: [Int!]
+  tmcId_not_in: [Int!]
+  tmcId_lt: Int
+  tmcId_lte: Int
+  tmcId_gt: Int
+  tmcId_gte: Int
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  tmcId: Int
 }
 `
       }
