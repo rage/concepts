@@ -8,6 +8,7 @@ const client = new tmcClient(clientId, tmcSecret)
 export const getUser = () => client.getUser()
 
 export const isSignedIn = () => {
+  return window.localStorage.getItem('access_token') !== null
 }
 
 export const isAdmin = () => {
@@ -18,24 +19,34 @@ export const signIn = async ({
   password,
 }) => {
   const res = await client.authenticate({ username: email, password })
-
-  const details = await userDetails(res.accessToken)
-  const firstName = details ? details.user_field.first_name : ""
-  const lastName = details ? details.user_field.last_name : ""
-
-  window.localStorage.setItem('acces_token', res)
-
-  console.log("first name", firstName, "last name", lastName)
-  if (firstName === "" || lastName === "") {
-    throw new Error("Etunimi tai sukunimi puuttuu.")
-  }
-  return res
+  const apiResponse = await apiAuthentication(res.accessToken)
+  console.log(apiResponse.data.login)
+  window.localStorage.setItem('acces_token', apiResponse.data.login)
+  return apiResponse
 }
 
 export const signOut = async (apollo) => {
   await apollo.resetStore().then(() => {
     client.unauthenticate()
   })
+}
+
+export async function apiAuthentication(accessToken) {
+  const data = {
+    query: `
+      mutation authenticateUser {
+        login(tmcToken: ${accessToken}) {
+          token
+          user {
+            id
+            role
+          }
+        }
+      }
+    `
+  }
+  const res = await axios.post('/grapql', data)
+  return res.data
 }
 
 export async function userDetails(accessToken) {
