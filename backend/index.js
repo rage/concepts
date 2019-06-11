@@ -11,7 +11,7 @@ const express = require("express")
 const tmc = require('./TMCAuthentication')
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server-core')
-
+const { authenticate } = require('./middleware/authentication')
 
 const resolvers = {
   Query: {
@@ -62,38 +62,25 @@ const resolvers = {
       let tmcId = userDetails.id
       let administrator = userDetails.administrator
       
-      const user = await context.prisma.user({ tmcId: tmcId })
-      console.log("hmmm", user)
+      const user = await context.prisma.user({ tmcId })
       // New user
       if (!user) {
         const createdUser = context.prisma.createUser({
           tmcId: tmcId,
           role: administrator ? 'ADMIN' : 'USER'
         })
-        console.log("mystish", createdUser)
-        const token = jwt.sign({
-          role: createdUser.role,
-          id: createdUser.id
-        }, 
-        "secret"
-        )
-        console.log("tokenish", token)
+        const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, "secret")
         return {
           token,
           user: createdUser
         }
       }
-      const token = jwt.sign({
-        role: user.role,
-        id: user.id
-      },
-        "secret"
-      )
+      // Existing user
+      const token = jwt.sign({ role: user.role, id: user.id }, "secret")
       return {
         token,
         user
       }
-
     },
     async deleteCourseAsCoursePrerequisite(root, args, context) {
       await context.prisma.updateCourse({
@@ -369,9 +356,11 @@ const options = {
 const server = new GraphQLServer({
   typeDefs: './schema.graphql',
   resolvers,
-  context: {
+  context: req => ({
     prisma,
-  },
+    ...req
+  }),
+  middlewares: [authenticate]
 })
 
 if (process.env.ENVIRONMENT === 'production') {
