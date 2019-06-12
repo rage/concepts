@@ -18,7 +18,8 @@ const authenticate = async (resolve, root, args, context, info) => {
   if (!rawToken) {
     context.role = Role.GUEST
   } else {
-    await getUser(rawToken, context, prisma)
+    const token = rawToken.split(' ')[1]
+    await getUser(token, context, prisma)
   }
 
   const result = await resolve(root, args, context, info)

@@ -29,6 +29,7 @@ export const signIn = async ({
 export const signOut = async (apollo) => {
   await apollo.resetStore().then(() => {
     tmcClient.unauthenticate()
+    window.localStorage.clear()
   })
 }
 
