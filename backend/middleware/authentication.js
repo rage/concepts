@@ -1,23 +1,48 @@
 const { AuthenticationError } = require('apollo-server-core')
+const { Role } = require('../accessControl')
 const jwt = require('jsonwebtoken')
  
 const authenticate = async(resolve, root, args, context, info) => {
-  // If logging in, then pass on the request
-  if (context.request.body.operationName === 'authenticateUser') {
-    const result = await resolve(root, args, context, info)
-    return result
+  const prisma = context.prisma
+
+  let rawToken = null
+  if (context.request) {
+    rawToken = context.request.get('Authorization')
+  }
+  
+  if (!rawToken) {
+    context.role = Role.GUEST
+  } else {
+    await getUser(rawToken, context, prisma)
+    console.log(":)")
   }
 
-  let decodedToken
-  try {
-    decodedToken = jwt.verify(context.request.get('Authorization'), "secret")
-  } catch (e) {
-    return new AuthenticationError('Unauthorized')
-  }
-  console.log("Success...?")
-  // const user = await context.prisma.user({ id: decodedToken.id })
   const result = await resolve(root, args, context, info)
   return result
+}
+
+const getUser = async (token, context, prisma) => {
+  try {
+    decodedToken = jwt.verify(token, "secret")
+  } catch (e) { 
+    console.log(e)
+    throw new AuthenticationError("Bad token")
+  }
+  let user = null
+  if (decodedToken) {
+    user = prisma.user({ id: decodedToken.id })
+  }
+
+  if (!user) {
+    context.role = Role.GUEST
+  } 
+
+  context.user = user
+  if (user.role === 'ADMIN') {
+    context.role = Role.ADMIN
+  } else {
+    context.role = Role.USER
+  }  
 }
 
 module.exports = { authenticate }
