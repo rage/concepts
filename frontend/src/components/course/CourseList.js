@@ -28,7 +28,7 @@ const styles = theme => ({
     ...theme.mixins.gutters()
   },
   progress: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing(2)
   }
 })
 

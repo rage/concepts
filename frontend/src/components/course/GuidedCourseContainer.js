@@ -29,13 +29,13 @@ const breakpointColumnsObj = {
 
 const styles = theme => ({
   snackbar: {
-    margin: theme.spacing.unit * 4
+    margin: theme.spacing(4)
   },
   info: {
     backgroundColor: theme.palette.primary.dark
   },
   infoIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   icon: {
     fontSize: 20
