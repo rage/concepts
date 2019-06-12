@@ -28,7 +28,7 @@ const authenticate = async (resolve, root, args, context, info) => {
 
 const getUser = async (token, context, prisma) => {
   try {
-    decodedToken = jwt.verify(token, "secret")
+    decodedToken = jwt.verify(token, process.env.SECRET)
   } catch (e) {
     console.log(e)
     throw new AuthenticationError("Bad token")

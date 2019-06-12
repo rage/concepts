@@ -52,7 +52,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    
+
     // Authentication resolver 
     async login(root, args, context) {
       // Get user details from tmc
@@ -62,7 +62,7 @@ const resolvers = {
       } catch (e) {
         return new AuthenticationError('Invalid tmc-token')
       }
-      
+
       let tmcId = userDetails.id
       let administrator = userDetails.administrator
       const user = await context.prisma.user({ tmcId })
@@ -73,15 +73,15 @@ const resolvers = {
           tmcId: tmcId,
           role: administrator ? 'ADMIN' : 'USER'
         })
-        const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, "secret")
+        const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
         return {
           token,
           user: createdUser
         }
       }
-      
+
       // Existing user
-      const token = jwt.sign({ role: user.role, id: user.id }, "secret")
+      const token = jwt.sign({ role: user.role, id: user.id }, process.env.SECRET)
       return {
         token,
         user
