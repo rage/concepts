@@ -10,7 +10,7 @@ const tmcClient = new TmcClient(clientId, tmcSecret)
 export const getUser = () => tmcClient.getUser()
 
 export const isSignedIn = () => {
-  return window.localStorage.getItem('access_token') !== null
+  return window.localStorage.getItem('current_user') !== null
 }
 
 export const isAdmin = () => {
@@ -33,17 +33,20 @@ export const signOut = async (apollo) => {
 }
 
 export async function apiAuthentication(accessToken) {
-  const res = client.mutate({ mutation: gql`
-  mutation authenticateUser($tmcToken: String!) {
-    login(tmcToken: $tmcToken) {
-      token
-      user {
-        id
-        role
+  const res = client.mutate({
+    mutation: gql`
+      mutation authenticateUser($tmcToken: String!) {
+        login(tmcToken: $tmcToken) {
+          token
+          user {
+            id
+            role
+          }
+        }
       }
-    }
-  }`
-  , variables: { tmcToken: accessToken } })
+    `
+    , variables: { tmcToken: accessToken }
+  })
   return res
 }
 

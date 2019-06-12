@@ -5,7 +5,26 @@ let uri = '/graphql'
 
 const client = new ApolloClient({
   uri,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  request: async (operation) => {
+    const rawData = await window.localStorage.getItem('current_user')
+    if (rawData) {
+      let data
+      try {
+        data = JSON.parse(rawData)
+      } catch (e) {
+        window.localStorage.clear()
+        console.log(e)
+      }
+      if (data.token) {
+        operation.setContext({
+          headers: {
+            authorization: data.token
+          }
+        })
+      }
+    }
+  }
 })
 
 export default client
