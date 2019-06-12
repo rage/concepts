@@ -11,6 +11,8 @@ import Typography from '@material-ui/core/Typography'
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { withRouter } from 'react-router-dom'
 
+import { useLoginStateValue } from '../../store'
+
 const styles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -32,10 +34,15 @@ const AuthenticationForm = ({ history, classes }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const dispatch = useLoginStateValue()[1]
+
   const authenticate = async (event) => {
     event.preventDefault();
     try {
       await signIn({ email, password })
+      dispatch({
+        type: 'login'
+      })
     } catch (e) {
       console.log(e)
     }

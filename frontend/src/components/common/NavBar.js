@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -9,8 +9,10 @@ import { Link } from 'react-router-dom'
 
 // Authentication related imporst
 import Button from '@material-ui/core/Button'
-import { isSignedIn, signOut } from '../../lib/authentication'
+import { signOut } from '../../lib/authentication'
 import { withRouter } from 'react-router-dom'
+
+import { useLoginStateValue } from '../../store'
 
 const styles = {
   root: {
@@ -27,7 +29,7 @@ const styles = {
 };
 
 const NavBar = ({ history, classes }) => {
-  const [authenticated, setAuthenticated] = useState(false)
+  const [{ loggedIn }, dispatch] = useLoginStateValue()
 
   const navigateToLogin = () => {
     history.push("/auth")
@@ -35,7 +37,9 @@ const NavBar = ({ history, classes }) => {
 
   const logout = async () => {
     await signOut()
-    setAuthenticated(!authenticated)
+    dispatch({
+      type: 'logout'
+    })
     history.push("/")
   }
 
@@ -49,12 +53,12 @@ const NavBar = ({ history, classes }) => {
           <Typography className={classes.title} variant="h6" color="inherit">
             <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">Courses</Link>
           </Typography>
-          {isSignedIn() ? (
-              <Button onClick={logout} color="inherit">
-                  Logout
+          {loggedIn ? (
+            <Button onClick={logout} color="inherit">
+              Logout
                 </Button>
-            ): (<Button onClick={navigateToLogin} color="inherit">
-                  Login
+          ) : (<Button onClick={navigateToLogin} color="inherit">
+            Login
                 </Button>)}
         </Toolbar>
       </AppBar>
