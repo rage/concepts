@@ -1,8 +1,15 @@
-# type User {
-#   id: ID! @id
-#   username: String!
-#   concepts: [Concept!]!
-# }
+type User {
+  id: ID! @id
+  tmcId: Int! @unique
+  role: Role!
+}
+
+enum Role {
+  GUEST
+  USER
+  ADMIN
+}
+
 
 type Course {
   id: ID! @id

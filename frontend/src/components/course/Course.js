@@ -26,7 +26,7 @@ const styles = theme => ({
     width: '100%',
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-    paddingBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing(2),
     position: 'relative',
     overflow: 'auto',
     maxHeight: 300,

@@ -1,9 +1,17 @@
+const path = require('path')
+
+require('dotenv').config({
+  path: path.resolve(__dirname, `./config/${process.env.ENVIRONMENT}.env`)
+})
+
 const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require("express")
-const path = require('path')
 
-require('dotenv').config()
+const tmc = require('./TMCAuthentication')
+const jwt = require('jsonwebtoken')
+const { AuthenticationError } = require('apollo-server-core')
+const { authenticate } = require('./middleware/authentication')
 
 const resolvers = {
   Query: {
@@ -44,6 +52,42 @@ const resolvers = {
     },
   },
   Mutation: {
+
+    // Authentication resolver 
+    async login(root, args, context) {
+      // Get user details from tmc
+      let userDetails
+      try {
+        userDetails = await tmc.userDetails(args.tmcToken)
+      } catch (e) {
+        return new AuthenticationError('Invalid tmc-token')
+      }
+
+      let tmcId = userDetails.id
+      let administrator = userDetails.administrator
+      const user = await context.prisma.user({ tmcId })
+
+      // New user
+      if (!user) {
+        const createdUser = context.prisma.createUser({
+          tmcId: tmcId,
+          role: administrator ? 'ADMIN' : 'USER'
+        })
+        const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
+        return {
+          token,
+          user: createdUser
+        }
+      }
+
+      // Existing user
+      const token = jwt.sign({ role: user.role, id: user.id }, process.env.SECRET)
+      return {
+        token,
+        user
+      }
+    },
+
     async deleteCourseAsCoursePrerequisite(root, args, context) {
       await context.prisma.updateCourse({
         where: { id: args.id },
@@ -54,7 +98,7 @@ const resolvers = {
         }
       })
       return context.prisma.course({
-        id: args.prerequisite_id 
+        id: args.prerequisite_id
       })
     },
     async addCourseAsCoursePrerequisite(root, args, context) {
@@ -67,7 +111,7 @@ const resolvers = {
         }
       })
       return context.prisma.course({
-        id: args.prerequisite_id 
+        id: args.prerequisite_id
       })
     },
     createResourceWithURLs(root, args, context) {
@@ -318,12 +362,14 @@ const options = {
 const server = new GraphQLServer({
   typeDefs: './schema.graphql',
   resolvers,
-  context: {
+  context: req => ({
     prisma,
-  },
+    ...req
+  }),
+  middlewares: [authenticate]
 })
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.ENVIRONMENT === 'production') {
   server.express.use(express.static('../frontend/build'))
 
   server.express.get('*', (req, res) => {
