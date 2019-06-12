@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
-import { signIn } from '../../lib/authentication'
+import { signIn, isSignedIn } from '../../lib/authentication'
+import { withRouter } from 'react-router-dom'
 
 const styles = theme => ({
   paper: {
@@ -27,7 +28,7 @@ const styles = theme => ({
   },
 })
 
-const AuthenticationForm = ({ classes }) => {
+const AuthenticationForm = ({ history, classes }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -37,6 +38,9 @@ const AuthenticationForm = ({ classes }) => {
       await signIn({ email, password })
     } catch (e) {
       console.log(e)
+    }
+    if (isSignedIn()) {
+      history.push("/")
     }
   }
 
@@ -95,4 +99,4 @@ const AuthenticationForm = ({ classes }) => {
 }
 
 
-export default withStyles(styles)(AuthenticationForm)
+export default withRouter(withStyles(styles)(AuthenticationForm))

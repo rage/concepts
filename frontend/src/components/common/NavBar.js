@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -6,6 +6,11 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import { Link } from 'react-router-dom'
+
+// Authentication related imporst
+import Button from '@material-ui/core/Button'
+import { isSignedIn, signOut } from '../../lib/authentication'
+import { withRouter } from 'react-router-dom'
 
 const styles = {
   root: {
@@ -16,21 +21,45 @@ const styles = {
     marginLeft: -18,
     marginRight: 10,
   },
+  title: {
+    flexGrow: 1
+  }
 };
 
-const NavBar = ({ classes }) => (
-  <div className={classes.root}>
-    <AppBar elevation={0} position="static">
-      <Toolbar variant="dense">
-        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" color="inherit">
-          <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">Courses</Link>
-        </Typography>
-      </Toolbar>
-    </AppBar>
-  </div>
-)
+const NavBar = ({ history, classes }) => {
+  const [authenticated, setAuthenticated] = useState(false)
 
-export default withStyles(styles)(NavBar);
+  const navigateToLogin = () => {
+    history.push("/auth")
+  }
+
+  const logout = async () => {
+    await signOut()
+    setAuthenticated(!authenticated)
+    history.push("/")
+  }
+
+  return (
+    <div className={classes.root}>
+      <AppBar elevation={0} position="static" >
+        <Toolbar variant="dense">
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography className={classes.title} variant="h6" color="inherit">
+            <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">Courses</Link>
+          </Typography>
+          {isSignedIn() ? (
+              <Button onClick={logout} color="inherit">
+                  Logout
+                </Button>
+            ): (<Button onClick={navigateToLogin} color="inherit">
+                  Login
+                </Button>)}
+        </Toolbar>
+      </AppBar>
+    </div>
+  )
+}
+
+export default withRouter(withStyles(styles)(NavBar));
