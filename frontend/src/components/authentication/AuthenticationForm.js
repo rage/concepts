@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { withRouter } from 'react-router-dom'
@@ -25,7 +26,7 @@ const styles = theme => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2)
   },
 })
@@ -33,6 +34,8 @@ const styles = theme => ({
 const AuthenticationForm = ({ history, classes }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const [error, setError] = useState(false)
 
   const dispatch = useLoginStateValue()[1]
 
@@ -44,7 +47,10 @@ const AuthenticationForm = ({ history, classes }) => {
         type: 'login'
       })
     } catch (e) {
-      console.log(e)
+      setError(true)
+      setTimeout(() => {
+        setError(false)
+      }, 4000)
     }
     if (isSignedIn()) {
       history.push("/")
@@ -62,6 +68,7 @@ const AuthenticationForm = ({ history, classes }) => {
 
         <form className={classes.form} onSubmit={authenticate} noValidate>
           <TextField
+            error={error}
             variant="outlined"
             margin="normal"
             required
@@ -74,7 +81,9 @@ const AuthenticationForm = ({ history, classes }) => {
             value={email}
             autoFocus
           />
+
           <TextField
+            error={error}
             variant="outlined"
             margin="normal"
             required
@@ -87,7 +96,15 @@ const AuthenticationForm = ({ history, classes }) => {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-
+          <FormHelperText error={error}>
+          {
+            error ? 
+              <span>
+                Invalid username or password.
+              </span>
+                : null
+          }
+          </FormHelperText>
           <Button
             type="submit"
             fullWidth
