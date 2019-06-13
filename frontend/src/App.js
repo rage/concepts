@@ -6,16 +6,20 @@ import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
 import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
+import PrivateRoute from './components/common/PrivateRoute'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
 import { Grid } from '@material-ui/core';
 
+import { useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 
 const App = () => {
   const client = useApolloClient()
   // const courses = useQuery(ALL_COURSES)
+
+  const { loggedIn } = useLoginStateValue()[0]
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -75,22 +79,22 @@ const App = () => {
         <Grid item xs={12}>
           <NavBar />
         </Grid>
-        <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
         <Route exact path="/auth" render={() => <AuthenticationForm />} />
+        <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
         <Route exact path="/courses/:id" render={({ match }) => {
           return <GuidedCourseView
-            course_id={match.params.id}
-            createCourse={createCourse}
-            updateCourse={updateCourse}
+          course_id={match.params.id}
+          createCourse={createCourse}
+          updateCourse={updateCourse}
           />
         }}
         />
         <Grid item xs={12}>
-          <Route exact path="/courses/:id/matrix" render={({ match }) => {
+          <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
             return <MatrixView
-              course_id={match.params.id}
-              createCourse={createCourse}
-              updateCourse={updateCourse}
+            course_id={match.params.id}
+            createCourse={createCourse}
+            updateCourse={updateCourse}
             />
           }}
           />
