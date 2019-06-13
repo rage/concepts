@@ -10,10 +10,14 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, defaultDescription }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-
+  const errorDispatch = useErrorStateValue()[1]
+  
   useEffect(() => {
     setName(defaultName)
     setDescription(defaultDescription)
@@ -30,14 +34,21 @@ const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, 
       variables.description = description
       shouldUpdate = true
     }
-    if (shouldUpdate) {
-      await updateConcept({
-        variables: variables
+    try {
+      if (shouldUpdate) {
+        await updateConcept({
+          variables: variables
+        })
+      }
+      setName('')
+      setDescription('')
+      handleClose()
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
       })
     }
-    setName('')
-    setDescription('')
-    handleClose()
   }
 
   return (

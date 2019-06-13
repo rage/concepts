@@ -21,6 +21,9 @@ import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES } from '../../services/CourseService'
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 import {
   ADD_COURSE_AS_PREREQUISITE,
   DELETE_COURSE_AS_PREREQUISITE,
@@ -62,14 +65,23 @@ const styles = theme => ({
 })
 
 const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite }) => {
+  const errorDispatch = useErrorStateValue()[1]
+  
   const onClick = async () => {
-    if (isPrerequisite) {
-      await deleteCourseAsPrerequisite({
-        variables: { id: activeCourse, prerequisite_id: course.id }
-      })
-    } else {
-      await addCourseAsPrerequisite({
-        variables: { id: activeCourse, prerequisite_id: course.id }
+    try {
+      if (isPrerequisite) {
+        await deleteCourseAsPrerequisite({
+          variables: { id: activeCourse, prerequisite_id: course.id }
+        })
+      } else {
+        await addCourseAsPrerequisite({
+          variables: { id: activeCourse, prerequisite_id: course.id }
+        })
+      }
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
       })
     }
   }

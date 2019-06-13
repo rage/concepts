@@ -10,22 +10,34 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 const ConceptAdditionDialog = ({ state, handleClose, createConcept }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  
+  const errorDispatch = useErrorStateValue()[1]
 
   const handleConceptAdding = async () => {
-    await createConcept({
-      variables: {
-        course_id: state.id,
-        name,
-        description,
-        official: false
-      }
-    })
-    setName('')
-    setDescription('')
-    handleClose()
+    try {
+      await createConcept({
+        variables: {
+          course_id: state.id,
+          name,
+          description,
+          official: false
+        }
+      })
+      setName('')
+      setDescription('')
+      handleClose()
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+    }
   }
 
   return (

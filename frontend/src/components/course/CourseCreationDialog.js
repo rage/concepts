@@ -11,7 +11,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
+  const errorDispatch = useErrorStateValue()[1]
   const [name, setName] = useState('')
 
   const handleCreate = async (e) => {
@@ -19,11 +23,19 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
       window.alert('Course needs a name!')
       return
     }
-    await createCourse({
-      variables: { name }
-    })
-    setName('')
-    handleClose()
+    try {
+      await createCourse({
+        variables: { name }
+      })
+      setName('')
+      handleClose()
+
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+    }
   }
 
   const handleKey = (e) => {

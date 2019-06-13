@@ -23,6 +23,9 @@ import { ALL_COURSES } from '../../services/CourseService'
 import CourseCreationDialog from './CourseCreationDialog'
 import CourseEditingDialog from './CourseEditingDialog'
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters()
@@ -37,6 +40,7 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   const courses = useQuery(ALL_COURSES)
+  const errorDispatch = useErrorStateValue()[1]
 
   const handleClickOpen = () => {
     setStateCreate({ open: true })
@@ -57,9 +61,16 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   const handleDelete = (id) => async (e) => {
     let willDelete = window.confirm('Are you sure you want to delete this course?')
     if (willDelete) {
-      deleteCourse({
-        variables: { id }
-      })
+      try {
+        await deleteCourse({
+          variables: { id }
+        })
+      } catch (err) {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      }
     }
   }
 

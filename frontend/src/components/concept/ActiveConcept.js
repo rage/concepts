@@ -13,6 +13,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Switch from '@material-ui/core/Switch'
 import Tooltip from '@material-ui/core/Tooltip';
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 const styles = theme => ({
   conceptName: {
     maxWidth: '70%',
@@ -47,7 +50,7 @@ const styles = theme => ({
 
 const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
-
+  const errorDispatch = useErrorStateValue()[1]
   const isActive = () => {
     return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
   }
@@ -63,9 +66,16 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
-      await deleteConcept({
-        variables: { id }
-      })
+      try {
+        await deleteConcept({
+          variables: { id }
+        })
+      } catch (err) {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      }
     }
     handleMenuClose()
   }

@@ -2,6 +2,12 @@ import React from 'react'
 import { Route } from 'react-router-dom'
 import './App.css'
 
+import Snackbar from '@material-ui/core/Snackbar'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
+import ErrorIcon from '@material-ui/icons/Error'
+import IconButton from '@material-ui/core/IconButton'
+import CloseIcon from '@material-ui/icons/Close'
+
 import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
 import CourseList from './components/course/CourseList'
@@ -12,14 +18,44 @@ import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
 import { Grid } from '@material-ui/core';
 
-import { useLoginStateValue } from './store'
+import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
+import { withStyles } from "@material-ui/core/styles";
 
-const App = () => {
+const styles = theme => ({
+  error: {
+    backgroundColor: theme.palette.error.dark
+  },
+  icon: {
+    fontSize: 20
+  },
+  errorIcon: {
+    marginRight: theme.spacing(1)
+  },
+  snackbar: {
+    margin: theme.spacing(4)
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center'
+  }
+})
+
+const App = ({ classes }) => {
   const client = useApolloClient()
   // const courses = useQuery(ALL_COURSES)
 
   const { loggedIn } = useLoginStateValue()[0]
+
+  // Error handling
+  const { error } = useErrorStateValue()[0]
+  const dispatchError = useErrorStateValue()[1]
+
+  const handleCloseErrorMessage = () => {
+    dispatchError({
+      type: 'clearError'
+    })
+  }
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -74,6 +110,7 @@ const App = () => {
   })
 
   return (
+    <React.Fragment>
     <div className="App">
       <Grid container>
         <Grid item xs={12}>
@@ -101,9 +138,37 @@ const App = () => {
         </Grid>
       </Grid>
     </div>
+    <Snackbar open={error !== ''}
+        onClose={handleCloseErrorMessage}
+        ClickAwayListenerProps={{ onClickAway: () => null }}
+        autoHideDuration={4000}
+        className={classes.snackbar}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+      >
+      <SnackbarContent className={classes.error}
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            onClick={handleCloseErrorMessage}
+          >
+            <CloseIcon className={classes.icon} />
+          </IconButton>
+        ]}
+        message={
+          <span className={classes.message} id="message-id">
+            <ErrorIcon className={classes.errorIcon} />
+            { error }
+          </span>}
+      />
+    </Snackbar>
+    </React.Fragment>
   )
 }
 
 
 
-export default App
+export default withStyles(styles)(App)
