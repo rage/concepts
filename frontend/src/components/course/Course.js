@@ -75,7 +75,9 @@ const Course = ({
   return (
     <React.Fragment>
       <Card elevation={0} className={classes.root} id='masonry-element'>
-        <CardHeader onClick={onHeaderClickHandle} className={classes.cardHeader} classes={{ title: classes.title }} title={course.name} action={
+        <CardHeader className={classes.cardHeader} title={
+          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>  
+        } action={
           <IconButton onClick={openCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>
