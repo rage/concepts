@@ -27,6 +27,10 @@ type AggregateUser {
   count: Int!
 }
 
+type AggregateWorkSpace {
+  count: Int!
+}
+
 type BatchPayload {
   count: Long!
 }
@@ -61,6 +65,11 @@ input ConceptCreateInput {
   resources: ResourceCreateManyWithoutConceptInput
   asPrerequisite: CourseCreateManyWithoutPrerequisitesInput
   asLearningObjective: CourseCreateManyWithoutLearningObjectivesInput
+}
+
+input ConceptCreateManyInput {
+  create: [ConceptCreateInput!]
+  connect: [ConceptWhereUniqueInput!]
 }
 
 input ConceptCreateManyWithoutAsLearningObjectiveInput {
@@ -256,6 +265,18 @@ input ConceptSubscriptionWhereInput {
   NOT: [ConceptSubscriptionWhereInput!]
 }
 
+input ConceptUpdateDataInput {
+  name: String
+  description: String
+  official: Boolean
+  linksFromConcept: LinkUpdateManyWithoutFromInput
+  linksToConcept: LinkUpdateManyWithoutToInput
+  courses: CourseUpdateManyWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  asPrerequisite: CourseUpdateManyWithoutPrerequisitesInput
+  asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
+}
+
 input ConceptUpdateInput {
   name: String
   description: String
@@ -272,6 +293,18 @@ input ConceptUpdateManyDataInput {
   name: String
   description: String
   official: Boolean
+}
+
+input ConceptUpdateManyInput {
+  create: [ConceptCreateInput!]
+  update: [ConceptUpdateWithWhereUniqueNestedInput!]
+  upsert: [ConceptUpsertWithWhereUniqueNestedInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
 }
 
 input ConceptUpdateManyMutationInput {
@@ -408,6 +441,11 @@ input ConceptUpdateWithoutResourcesDataInput {
   asLearningObjective: CourseUpdateManyWithoutLearningObjectivesInput
 }
 
+input ConceptUpdateWithWhereUniqueNestedInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateDataInput!
+}
+
 input ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput {
   where: ConceptWhereUniqueInput!
   data: ConceptUpdateWithoutAsLearningObjectiveDataInput!
@@ -436,6 +474,12 @@ input ConceptUpsertWithoutLinksToConceptInput {
 input ConceptUpsertWithoutResourcesInput {
   update: ConceptUpdateWithoutResourcesDataInput!
   create: ConceptCreateWithoutResourcesInput!
+}
+
+input ConceptUpsertWithWhereUniqueNestedInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateDataInput!
+  create: ConceptCreateInput!
 }
 
 input ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput {
@@ -535,6 +579,7 @@ type Course {
   prerequisites(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   learningObjectives(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   prerequisiteCourses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  workspace: WorkSpace!
 }
 
 type CourseConnection {
@@ -550,6 +595,7 @@ input CourseCreateInput {
   prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseCreateManyInput
+  workspace: WorkSpaceCreateOneWithoutCourseInput!
 }
 
 input CourseCreateManyInput {
@@ -572,12 +618,18 @@ input CourseCreateManyWithoutPrerequisitesInput {
   connect: [CourseWhereUniqueInput!]
 }
 
+input CourseCreateManyWithoutWorkspaceInput {
+  create: [CourseCreateWithoutWorkspaceInput!]
+  connect: [CourseWhereUniqueInput!]
+}
+
 input CourseCreateWithoutConceptsInput {
   id: ID
   name: String!
   prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseCreateManyInput
+  workspace: WorkSpaceCreateOneWithoutCourseInput!
 }
 
 input CourseCreateWithoutLearningObjectivesInput {
@@ -586,12 +638,23 @@ input CourseCreateWithoutLearningObjectivesInput {
   concepts: ConceptCreateManyWithoutCoursesInput
   prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
   prerequisiteCourses: CourseCreateManyInput
+  workspace: WorkSpaceCreateOneWithoutCourseInput!
 }
 
 input CourseCreateWithoutPrerequisitesInput {
   id: ID
   name: String!
   concepts: ConceptCreateManyWithoutCoursesInput
+  learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
+  prerequisiteCourses: CourseCreateManyInput
+  workspace: WorkSpaceCreateOneWithoutCourseInput!
+}
+
+input CourseCreateWithoutWorkspaceInput {
+  id: ID
+  name: String!
+  concepts: ConceptCreateManyWithoutCoursesInput
+  prerequisites: ConceptCreateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptCreateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseCreateManyInput
 }
@@ -671,6 +734,7 @@ input CourseUpdateDataInput {
   prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseUpdateManyInput
+  workspace: WorkSpaceUpdateOneRequiredWithoutCourseInput
 }
 
 input CourseUpdateInput {
@@ -679,6 +743,7 @@ input CourseUpdateInput {
   prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseUpdateManyInput
+  workspace: WorkSpaceUpdateOneRequiredWithoutCourseInput
 }
 
 input CourseUpdateManyDataInput {
@@ -737,6 +802,18 @@ input CourseUpdateManyWithoutPrerequisitesInput {
   updateMany: [CourseUpdateManyWithWhereNestedInput!]
 }
 
+input CourseUpdateManyWithoutWorkspaceInput {
+  create: [CourseCreateWithoutWorkspaceInput!]
+  delete: [CourseWhereUniqueInput!]
+  connect: [CourseWhereUniqueInput!]
+  set: [CourseWhereUniqueInput!]
+  disconnect: [CourseWhereUniqueInput!]
+  update: [CourseUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [CourseUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [CourseScalarWhereInput!]
+  updateMany: [CourseUpdateManyWithWhereNestedInput!]
+}
+
 input CourseUpdateManyWithWhereNestedInput {
   where: CourseScalarWhereInput!
   data: CourseUpdateManyDataInput!
@@ -747,6 +824,7 @@ input CourseUpdateWithoutConceptsDataInput {
   prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseUpdateManyInput
+  workspace: WorkSpaceUpdateOneRequiredWithoutCourseInput
 }
 
 input CourseUpdateWithoutLearningObjectivesDataInput {
@@ -754,11 +832,21 @@ input CourseUpdateWithoutLearningObjectivesDataInput {
   concepts: ConceptUpdateManyWithoutCoursesInput
   prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
   prerequisiteCourses: CourseUpdateManyInput
+  workspace: WorkSpaceUpdateOneRequiredWithoutCourseInput
 }
 
 input CourseUpdateWithoutPrerequisitesDataInput {
   name: String
   concepts: ConceptUpdateManyWithoutCoursesInput
+  learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
+  prerequisiteCourses: CourseUpdateManyInput
+  workspace: WorkSpaceUpdateOneRequiredWithoutCourseInput
+}
+
+input CourseUpdateWithoutWorkspaceDataInput {
+  name: String
+  concepts: ConceptUpdateManyWithoutCoursesInput
+  prerequisites: ConceptUpdateManyWithoutAsPrerequisiteInput
   learningObjectives: ConceptUpdateManyWithoutAsLearningObjectiveInput
   prerequisiteCourses: CourseUpdateManyInput
 }
@@ -783,6 +871,11 @@ input CourseUpdateWithWhereUniqueWithoutPrerequisitesInput {
   data: CourseUpdateWithoutPrerequisitesDataInput!
 }
 
+input CourseUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseWhereUniqueInput!
+  data: CourseUpdateWithoutWorkspaceDataInput!
+}
+
 input CourseUpsertWithWhereUniqueNestedInput {
   where: CourseWhereUniqueInput!
   update: CourseUpdateDataInput!
@@ -805,6 +898,12 @@ input CourseUpsertWithWhereUniqueWithoutPrerequisitesInput {
   where: CourseWhereUniqueInput!
   update: CourseUpdateWithoutPrerequisitesDataInput!
   create: CourseCreateWithoutPrerequisitesInput!
+}
+
+input CourseUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseWhereUniqueInput!
+  update: CourseUpdateWithoutWorkspaceDataInput!
+  create: CourseCreateWithoutWorkspaceInput!
 }
 
 input CourseWhereInput {
@@ -848,6 +947,7 @@ input CourseWhereInput {
   prerequisiteCourses_every: CourseWhereInput
   prerequisiteCourses_some: CourseWhereInput
   prerequisiteCourses_none: CourseWhereInput
+  workspace: WorkSpaceWhereInput
   AND: [CourseWhereInput!]
   OR: [CourseWhereInput!]
   NOT: [CourseWhereInput!]
@@ -1098,6 +1198,12 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  createWorkSpace(data: WorkSpaceCreateInput!): WorkSpace!
+  updateWorkSpace(data: WorkSpaceUpdateInput!, where: WorkSpaceWhereUniqueInput!): WorkSpace
+  updateManyWorkSpaces(data: WorkSpaceUpdateManyMutationInput!, where: WorkSpaceWhereInput): BatchPayload!
+  upsertWorkSpace(where: WorkSpaceWhereUniqueInput!, create: WorkSpaceCreateInput!, update: WorkSpaceUpdateInput!): WorkSpace!
+  deleteWorkSpace(where: WorkSpaceWhereUniqueInput!): WorkSpace
+  deleteManyWorkSpaces(where: WorkSpaceWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1136,6 +1242,9 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  workSpace(where: WorkSpaceWhereUniqueInput!): WorkSpace
+  workSpaces(where: WorkSpaceWhereInput, orderBy: WorkSpaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkSpace]!
+  workSpacesConnection(where: WorkSpaceWhereInput, orderBy: WorkSpaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkSpaceConnection!
   node(id: ID!): Node
 }
 
@@ -1409,6 +1518,7 @@ type Subscription {
   resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
   uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  workSpace(where: WorkSpaceSubscriptionWhereInput): WorkSpaceSubscriptionPayload
 }
 
 type URL {
@@ -1596,6 +1706,8 @@ type User {
   id: ID!
   tmcId: Int!
   role: Role!
+  workspaceOwned(where: WorkSpaceWhereInput, orderBy: WorkSpaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkSpace!]
+  workspacesParticipated(where: WorkSpaceWhereInput, orderBy: WorkSpaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkSpace!]
 }
 
 type UserConnection {
@@ -1608,6 +1720,32 @@ input UserCreateInput {
   id: ID
   tmcId: Int!
   role: Role!
+  workspaceOwned: WorkSpaceCreateManyWithoutOwnerInput
+  workspacesParticipated: WorkSpaceCreateManyWithoutParticipantsInput
+}
+
+input UserCreateManyWithoutWorkspacesParticipatedInput {
+  create: [UserCreateWithoutWorkspacesParticipatedInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutWorkspaceOwnedInput {
+  create: UserCreateWithoutWorkspaceOwnedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutWorkspaceOwnedInput {
+  id: ID
+  tmcId: Int!
+  role: Role!
+  workspacesParticipated: WorkSpaceCreateManyWithoutParticipantsInput
+}
+
+input UserCreateWithoutWorkspacesParticipatedInput {
+  id: ID
+  tmcId: Int!
+  role: Role!
+  workspaceOwned: WorkSpaceCreateManyWithoutOwnerInput
 }
 
 type UserEdge {
@@ -1628,6 +1766,38 @@ type UserPreviousValues {
   id: ID!
   tmcId: Int!
   role: Role!
+}
+
+input UserScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  tmcId: Int
+  tmcId_not: Int
+  tmcId_in: [Int!]
+  tmcId_not_in: [Int!]
+  tmcId_lt: Int
+  tmcId_lte: Int
+  tmcId_gt: Int
+  tmcId_gte: Int
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
+  AND: [UserScalarWhereInput!]
+  OR: [UserScalarWhereInput!]
+  NOT: [UserScalarWhereInput!]
 }
 
 type UserSubscriptionPayload {
@@ -1651,11 +1821,70 @@ input UserSubscriptionWhereInput {
 input UserUpdateInput {
   tmcId: Int
   role: Role
+  workspaceOwned: WorkSpaceUpdateManyWithoutOwnerInput
+  workspacesParticipated: WorkSpaceUpdateManyWithoutParticipantsInput
+}
+
+input UserUpdateManyDataInput {
+  tmcId: Int
+  role: Role
 }
 
 input UserUpdateManyMutationInput {
   tmcId: Int
   role: Role
+}
+
+input UserUpdateManyWithoutWorkspacesParticipatedInput {
+  create: [UserCreateWithoutWorkspacesParticipatedInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput!
+  data: UserUpdateManyDataInput!
+}
+
+input UserUpdateOneRequiredWithoutWorkspaceOwnedInput {
+  create: UserCreateWithoutWorkspaceOwnedInput
+  update: UserUpdateWithoutWorkspaceOwnedDataInput
+  upsert: UserUpsertWithoutWorkspaceOwnedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutWorkspaceOwnedDataInput {
+  tmcId: Int
+  role: Role
+  workspacesParticipated: WorkSpaceUpdateManyWithoutParticipantsInput
+}
+
+input UserUpdateWithoutWorkspacesParticipatedDataInput {
+  tmcId: Int
+  role: Role
+  workspaceOwned: WorkSpaceUpdateManyWithoutOwnerInput
+}
+
+input UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutWorkspacesParticipatedDataInput!
+}
+
+input UserUpsertWithoutWorkspaceOwnedInput {
+  update: UserUpdateWithoutWorkspaceOwnedDataInput!
+  create: UserCreateWithoutWorkspaceOwnedInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutWorkspacesParticipatedDataInput!
+  create: UserCreateWithoutWorkspacesParticipatedInput!
 }
 
 input UserWhereInput {
@@ -1685,6 +1914,12 @@ input UserWhereInput {
   role_not: Role
   role_in: [Role!]
   role_not_in: [Role!]
+  workspaceOwned_every: WorkSpaceWhereInput
+  workspaceOwned_some: WorkSpaceWhereInput
+  workspaceOwned_none: WorkSpaceWhereInput
+  workspacesParticipated_every: WorkSpaceWhereInput
+  workspacesParticipated_some: WorkSpaceWhereInput
+  workspacesParticipated_none: WorkSpaceWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
@@ -1693,6 +1928,286 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   tmcId: Int
+}
+
+type WorkSpace {
+  id: ID!
+  name: String!
+  owner: User!
+  participants(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  course(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+}
+
+type WorkSpaceConnection {
+  pageInfo: PageInfo!
+  edges: [WorkSpaceEdge]!
+  aggregate: AggregateWorkSpace!
+}
+
+input WorkSpaceCreateInput {
+  id: ID
+  name: String!
+  owner: UserCreateOneWithoutWorkspaceOwnedInput!
+  participants: UserCreateManyWithoutWorkspacesParticipatedInput
+  course: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyInput
+}
+
+input WorkSpaceCreateManyWithoutOwnerInput {
+  create: [WorkSpaceCreateWithoutOwnerInput!]
+  connect: [WorkSpaceWhereUniqueInput!]
+}
+
+input WorkSpaceCreateManyWithoutParticipantsInput {
+  create: [WorkSpaceCreateWithoutParticipantsInput!]
+  connect: [WorkSpaceWhereUniqueInput!]
+}
+
+input WorkSpaceCreateOneWithoutCourseInput {
+  create: WorkSpaceCreateWithoutCourseInput
+  connect: WorkSpaceWhereUniqueInput
+}
+
+input WorkSpaceCreateWithoutCourseInput {
+  id: ID
+  name: String!
+  owner: UserCreateOneWithoutWorkspaceOwnedInput!
+  participants: UserCreateManyWithoutWorkspacesParticipatedInput
+  concepts: ConceptCreateManyInput
+}
+
+input WorkSpaceCreateWithoutOwnerInput {
+  id: ID
+  name: String!
+  participants: UserCreateManyWithoutWorkspacesParticipatedInput
+  course: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyInput
+}
+
+input WorkSpaceCreateWithoutParticipantsInput {
+  id: ID
+  name: String!
+  owner: UserCreateOneWithoutWorkspaceOwnedInput!
+  course: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyInput
+}
+
+type WorkSpaceEdge {
+  node: WorkSpace!
+  cursor: String!
+}
+
+enum WorkSpaceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+}
+
+type WorkSpacePreviousValues {
+  id: ID!
+  name: String!
+}
+
+input WorkSpaceScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [WorkSpaceScalarWhereInput!]
+  OR: [WorkSpaceScalarWhereInput!]
+  NOT: [WorkSpaceScalarWhereInput!]
+}
+
+type WorkSpaceSubscriptionPayload {
+  mutation: MutationType!
+  node: WorkSpace
+  updatedFields: [String!]
+  previousValues: WorkSpacePreviousValues
+}
+
+input WorkSpaceSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WorkSpaceWhereInput
+  AND: [WorkSpaceSubscriptionWhereInput!]
+  OR: [WorkSpaceSubscriptionWhereInput!]
+  NOT: [WorkSpaceSubscriptionWhereInput!]
+}
+
+input WorkSpaceUpdateInput {
+  name: String
+  owner: UserUpdateOneRequiredWithoutWorkspaceOwnedInput
+  participants: UserUpdateManyWithoutWorkspacesParticipatedInput
+  course: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyInput
+}
+
+input WorkSpaceUpdateManyDataInput {
+  name: String
+}
+
+input WorkSpaceUpdateManyMutationInput {
+  name: String
+}
+
+input WorkSpaceUpdateManyWithoutOwnerInput {
+  create: [WorkSpaceCreateWithoutOwnerInput!]
+  delete: [WorkSpaceWhereUniqueInput!]
+  connect: [WorkSpaceWhereUniqueInput!]
+  set: [WorkSpaceWhereUniqueInput!]
+  disconnect: [WorkSpaceWhereUniqueInput!]
+  update: [WorkSpaceUpdateWithWhereUniqueWithoutOwnerInput!]
+  upsert: [WorkSpaceUpsertWithWhereUniqueWithoutOwnerInput!]
+  deleteMany: [WorkSpaceScalarWhereInput!]
+  updateMany: [WorkSpaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkSpaceUpdateManyWithoutParticipantsInput {
+  create: [WorkSpaceCreateWithoutParticipantsInput!]
+  delete: [WorkSpaceWhereUniqueInput!]
+  connect: [WorkSpaceWhereUniqueInput!]
+  set: [WorkSpaceWhereUniqueInput!]
+  disconnect: [WorkSpaceWhereUniqueInput!]
+  update: [WorkSpaceUpdateWithWhereUniqueWithoutParticipantsInput!]
+  upsert: [WorkSpaceUpsertWithWhereUniqueWithoutParticipantsInput!]
+  deleteMany: [WorkSpaceScalarWhereInput!]
+  updateMany: [WorkSpaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkSpaceUpdateManyWithWhereNestedInput {
+  where: WorkSpaceScalarWhereInput!
+  data: WorkSpaceUpdateManyDataInput!
+}
+
+input WorkSpaceUpdateOneRequiredWithoutCourseInput {
+  create: WorkSpaceCreateWithoutCourseInput
+  update: WorkSpaceUpdateWithoutCourseDataInput
+  upsert: WorkSpaceUpsertWithoutCourseInput
+  connect: WorkSpaceWhereUniqueInput
+}
+
+input WorkSpaceUpdateWithoutCourseDataInput {
+  name: String
+  owner: UserUpdateOneRequiredWithoutWorkspaceOwnedInput
+  participants: UserUpdateManyWithoutWorkspacesParticipatedInput
+  concepts: ConceptUpdateManyInput
+}
+
+input WorkSpaceUpdateWithoutOwnerDataInput {
+  name: String
+  participants: UserUpdateManyWithoutWorkspacesParticipatedInput
+  course: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyInput
+}
+
+input WorkSpaceUpdateWithoutParticipantsDataInput {
+  name: String
+  owner: UserUpdateOneRequiredWithoutWorkspaceOwnedInput
+  course: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyInput
+}
+
+input WorkSpaceUpdateWithWhereUniqueWithoutOwnerInput {
+  where: WorkSpaceWhereUniqueInput!
+  data: WorkSpaceUpdateWithoutOwnerDataInput!
+}
+
+input WorkSpaceUpdateWithWhereUniqueWithoutParticipantsInput {
+  where: WorkSpaceWhereUniqueInput!
+  data: WorkSpaceUpdateWithoutParticipantsDataInput!
+}
+
+input WorkSpaceUpsertWithoutCourseInput {
+  update: WorkSpaceUpdateWithoutCourseDataInput!
+  create: WorkSpaceCreateWithoutCourseInput!
+}
+
+input WorkSpaceUpsertWithWhereUniqueWithoutOwnerInput {
+  where: WorkSpaceWhereUniqueInput!
+  update: WorkSpaceUpdateWithoutOwnerDataInput!
+  create: WorkSpaceCreateWithoutOwnerInput!
+}
+
+input WorkSpaceUpsertWithWhereUniqueWithoutParticipantsInput {
+  where: WorkSpaceWhereUniqueInput!
+  update: WorkSpaceUpdateWithoutParticipantsDataInput!
+  create: WorkSpaceCreateWithoutParticipantsInput!
+}
+
+input WorkSpaceWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  owner: UserWhereInput
+  participants_every: UserWhereInput
+  participants_some: UserWhereInput
+  participants_none: UserWhereInput
+  course_every: CourseWhereInput
+  course_some: CourseWhereInput
+  course_none: CourseWhereInput
+  concepts_every: ConceptWhereInput
+  concepts_some: ConceptWhereInput
+  concepts_none: ConceptWhereInput
+  AND: [WorkSpaceWhereInput!]
+  OR: [WorkSpaceWhereInput!]
+  NOT: [WorkSpaceWhereInput!]
+}
+
+input WorkSpaceWhereUniqueInput {
+  id: ID
 }
 `
       }

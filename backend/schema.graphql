@@ -1,6 +1,7 @@
 scalar DateTime
 
 type Query {
+  ownedWorkSpaces: [WorkSpace!]!
   allResources: [Resource!]!
   allURLs: [URL!]!
   allConcepts: [Concept!]!
@@ -14,6 +15,7 @@ type Query {
 
 type Mutation {
   login(tmcToken: String!): AuthPayload
+  createWorkSpace(name: String!): WorkSpace
   addCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   deleteCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   createConceptAsPrerequisite(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
@@ -22,7 +24,7 @@ type Mutation {
   createURL(address: String!, resource_id: ID!): URL
   createResource(name: String!, concept_id: ID!, desc: String!): Resource
   updateConcept(id: ID!, name:String, desc: String): Concept
-  createCourse(name: String!): Course
+  createCourse(name: String!, workspace_id: ID!): Course
   deleteCourse(id: ID!): Course
   updateCourse(id: ID!, name: String!): Course
   createConcept(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
@@ -36,12 +38,23 @@ type User {
   id: ID!
   tmcId: Int!
   role: Role!
+  workspaceOwned: [WorkSpace!]!
+  workspacesParticipated: [WorkSpace!]!
 }
 
 enum Role {
   GUEST
   USER
   ADMIN
+}
+
+type WorkSpace {
+  id: ID!
+  name: String!
+  owner: User!
+  participants: [User!]!
+  course: [Course!]!
+  concepts: [Concept!]!
 }
 
 type AuthPayload {
@@ -56,6 +69,7 @@ type Course {
   prerequisites: [Concept!]!
   learningObjectives: [Concept!]!
   prerequisiteCourses: [Course!]!
+  workspace: WorkSpace!
 }
 
 # type Instance {

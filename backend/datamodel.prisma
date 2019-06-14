@@ -2,6 +2,8 @@ type User {
   id: ID! @id
   tmcId: Int! @unique
   role: Role!
+  workspaceOwned: [WorkSpace!]! @relation(name:"WorkspaceOwner")
+  workspacesParticipated: [WorkSpace!]! @relation(name: "WorkspaceParticipant")
 }
 
 enum Role {
@@ -11,6 +13,16 @@ enum Role {
 }
 
 
+
+type WorkSpace {
+  id: ID! @id
+  name: String!
+  owner: User! @relation(name:"WorkspaceOwner")
+  participants: [User!]! @relation(name:"WorkspaceParticipant")
+  course: [Course!]! @relation(name:"WorkspaceCourses")
+  concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
+}
+
 type Course {
   id: ID! @id
   name: String!
@@ -18,6 +30,7 @@ type Course {
   prerequisites: [Concept!]! @relation(name:"Prerequisite")
   learningObjectives: [Concept!]! @relation(name:"LearningObjective")
   prerequisiteCourses: [Course!]! 
+  workspace: WorkSpace! @relation(name:"WorkspaceCourses") # One course to one workspace
 #   instances: [Instance!]!
 }
 

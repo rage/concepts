@@ -16,6 +16,17 @@ const { checkAccess } = require('./accessControl')
 
 const resolvers = {
   Query: {
+    ownedWorkSpaces(root, args, context) {
+      accessControl(context, {allowUser: true})
+
+      return context.prisma.workSpaces({
+        where: {
+          owner: {
+            connect: { id: context.user.id }
+          }
+        }
+      })
+    },
     allURLs(root, args, context) {
       return context.prisma.uRLs()
     },
@@ -53,7 +64,15 @@ const resolvers = {
     },
   },
   Mutation: {
-
+    async createWorkSpace(root, args, context) {
+      checkAccess(context, { allowUser: true })
+      return context.prisma.createWorkSpace({
+        name: args.name,
+        owner: {
+          connect: { id: context.user.id }
+        }
+      })
+    },
     // Authentication resolver 
     async login(root, args, context) {
       // Get user details from tmc
@@ -150,7 +169,10 @@ const resolvers = {
     createCourse(root, args, context) {
       checkAccess(context, { allowUser: true })
       return context.prisma.createCourse({
-        name: args.name
+        name: args.name,
+        workspace: {
+          connect: { id: args.workspace_id }
+        }
       })
     },
     deleteCourse(root, args, context) {
