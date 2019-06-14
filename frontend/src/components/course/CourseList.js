@@ -24,7 +24,7 @@ import CourseCreationDialog from './CourseCreationDialog'
 import CourseEditingDialog from './CourseEditingDialog'
 
 // Error dispatcher
-import { useErrorStateValue } from '../../store'
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
@@ -40,9 +40,18 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   const courses = useQuery(ALL_COURSES)
+
+  const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
 
   const handleClickOpen = () => {
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
     setStateCreate({ open: true })
   }
 
@@ -51,6 +60,13 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   }
 
   const handleEditOpen = (id, name) => () => {
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
     setStateEdit({ open: true, id, name })
   }
 
@@ -59,6 +75,14 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   }
 
   const handleDelete = (id) => async (e) => {
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    
     let willDelete = window.confirm('Are you sure you want to delete this course?')
     if (willDelete) {
       try {
