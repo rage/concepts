@@ -14,7 +14,7 @@ import Switch from '@material-ui/core/Switch'
 import Tooltip from '@material-ui/core/Tooltip';
 
 // Error dispatcher
-import { useErrorStateValue } from '../../store'
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   conceptName: {
@@ -50,7 +50,10 @@ const styles = theme => ({
 
 const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
+
   const errorDispatch = useErrorStateValue()[1]
+  const { loggedIn } = useLoginStateValue()[0]
+  
   const isActive = () => {
     return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
   }
@@ -97,13 +100,16 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           {activeConceptIds.length === 0 ?
             <React.Fragment>
-              <IconButton
-                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                aria-haspopup="true"
-                onClick={handleMenuOpen}
-              >
-                <MoreVertIcon />
-              </IconButton>
+              { loggedIn ?
+                <IconButton
+                  aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                  : null 
+              }
               <Menu
                 id="simple-menu"
                 anchorEl={state.anchorEl}

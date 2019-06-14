@@ -118,7 +118,7 @@ const App = ({ classes }) => {
         </Grid>
         <Route exact path="/auth" render={() => <AuthenticationForm />} />
         <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-        <PrivateRoute exact path="/courses/:id" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
+        <Route exact path="/courses/:id" render={({ match }) => {
           return <GuidedCourseView
           course_id={match.params.id}
           createCourse={createCourse}

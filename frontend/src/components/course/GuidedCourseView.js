@@ -20,13 +20,15 @@ import Fab from '@material-ui/core/Fab'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
+import { useLoginStateValue } from '../../store'
+
 const styles = theme => ({
 })
 
 const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
-
+  const { loggedIn } = useLoginStateValue()[0]
   const course = useQuery(FETCH_COURSE, {
     variables: { id: course_id }
   })
@@ -81,7 +83,7 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) =>
               createCourse={createCourse}
             />
             {
-              course.data.courseById.concepts.length !== 0 ?
+              course.data.courseById.concepts.length !== 0 && loggedIn ?
                 <Fab style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }} onClick={handleTrayToggle} >
                   {
                     courseTrayOpen ?

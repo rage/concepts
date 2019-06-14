@@ -21,6 +21,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import Masonry from 'react-masonry-css'
 import '../../MasonryLayout.css'
 
+import { useLoginStateValue } from '../../store'
+
 const breakpointColumnsObj = {
   default: 3,
   1900: 2,
@@ -58,6 +60,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   const [conceptInfoState, setConceptInfoState] = useState(false)
   const [courseInfoState, setCourseInfoState] = useState(false)
   const [linkInfoState, setLinkInfoState] = useState(false)
+  
+  const { loggedIn } = useLoginStateValue()[0]
 
   useEffect(() => {
     if (activeCourse.concepts.length === 0) {
@@ -226,7 +230,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
       />
 
       {/* Intruction snackbars */}
-
+      { loggedIn ?
+      <React.Fragment>
       <Snackbar open={conceptInfoState}
         onClose={handleConceptInfoClose}
         className={classes.snackbar}
@@ -306,6 +311,9 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             </span>}
         />
       </Snackbar>
+      </React.Fragment>
+      : null
+      }
     </React.Fragment>
   )
 }

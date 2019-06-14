@@ -111,9 +111,10 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
         <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
+              loggedIn ? 
               <IconButton aria-label="Add" onClick={handleClickOpen}>
                 <AddIcon />
-              </IconButton>
+              </IconButton> : null
             }
             title={
               <Typography variant="h5" component="h3">
@@ -134,17 +135,21 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
                       }
                       secondary={true ? 'Concepts: ' + course.concepts.length : null}
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
-                        <GridOnIcon />
-                      </IconButton>
-                      <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
-                        <EditIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
+                    {
+                      loggedIn ? 
+                        <ListItemSecondaryAction>
+                        <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
+                          <GridOnIcon />
+                        </IconButton>
+                        <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                        <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
+                          <EditIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction> : null
+                    }
+                    
                   </ListItem>
                 )) :
                 <div style={{ textAlign: 'center' }}>
