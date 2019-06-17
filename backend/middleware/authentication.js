@@ -48,7 +48,7 @@ const getUser = async (token, context, prisma) => {
   if (user.role === 'ADMIN') {
     context.role = Role.ADMIN
   } else {
-    context.role = Role.USER
+    context.role = Role.STUDENT
   }
 }
 

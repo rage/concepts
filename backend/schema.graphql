@@ -15,7 +15,7 @@ type Query {
 
 type Mutation {
   login(tmcToken: String!): AuthPayload
-  createWorkSpace(name: String!): WorkSpace
+  createWorkspace(name: String!): WorkSpace
   addCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   deleteCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   createConceptAsPrerequisite(name: String!, course_id:ID!, desc: String, official: Boolean): Concept

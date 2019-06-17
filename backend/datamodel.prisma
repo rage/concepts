@@ -2,25 +2,32 @@ type User {
   id: ID! @id
   tmcId: Int! @unique
   role: Role!
-  workspaceOwned: [WorkSpace!]! @relation(name:"WorkspaceOwner")
-  workspacesParticipated: [WorkSpace!]! @relation(name: "WorkspaceParticipant")
+  workspaceOwned: [Workspace!]! @relation(name:"WorkspaceOwner")
+  workspacesParticipated: [Workspace!]! @relation(name: "WorkspaceParticipant")
 }
 
 enum Role {
   GUEST
-  USER
+  STUDENT
+  STAFF
   ADMIN
 }
 
+enum WorkspaceType {
+  STAFF
+  STUDENT
+}
 
-
-type WorkSpace {
+type Workspace {
   id: ID! @id
   name: String!
   owner: User! @relation(name:"WorkspaceOwner")
   participants: [User!]! @relation(name:"WorkspaceParticipant")
   course: [Course!]! @relation(name:"WorkspaceCourses")
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
+  subWorkspaces: [Workspace!]! @relation(name: "SubWorkspaces")
+  type: WorkspaceType!
+  links: [Link!]! @relation(name:"WorkspaceLinks")
 }
 
 type Course {
@@ -30,7 +37,7 @@ type Course {
   prerequisites: [Concept!]! @relation(name:"Prerequisite")
   learningObjectives: [Concept!]! @relation(name:"LearningObjective")
   prerequisiteCourses: [Course!]! 
-  workspace: WorkSpace! @relation(name:"WorkspaceCourses") # One course to one workspace
+  workspace: Workspace! @relation(name:"WorkspaceCourses") # One course to one workspace
 #   instances: [Instance!]!
 }
 
@@ -55,6 +62,7 @@ type Concept {
   resources: [Resource!]!
   asPrerequisite: [Course!]! @relation(name:"Prerequisite")
   asLearningObjective: [Course!]! @relation(name:"LearningObjective")
+  workspaces: [Workspace!]! @relation(name:"WorkspaceConcepts")
 }
 
 type Resource {
@@ -71,10 +79,12 @@ type URL {
   resource: Resource!
 }
 
-type Link {
+## Link to workspace
+type Link { 
   id: ID! @id
   from: Concept! @relation(link: INLINE, name: "From")
   to: Concept! @relation(link: INLINE, name: "To")
   # user: User! @relation(link: INLINE)
   official: Boolean! @default(value: false)
+  workspace: [Workspace!]! @relation(name:"WorkspaceLinks")
 }

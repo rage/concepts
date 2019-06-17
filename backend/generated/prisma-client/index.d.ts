@@ -22,7 +22,7 @@ export interface Exists {
   resource: (where?: ResourceWhereInput) => Promise<boolean>;
   uRL: (where?: URLWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
-  workSpace: (where?: WorkSpaceWhereInput) => Promise<boolean>;
+  workspace: (where?: WorkspaceWhereInput) => Promise<boolean>;
 }
 
 export interface Node {}
@@ -158,25 +158,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => UserConnectionPromise;
-  workSpace: (where: WorkSpaceWhereUniqueInput) => WorkSpaceNullablePromise;
-  workSpaces: (args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  workspace: (where: WorkspaceWhereUniqueInput) => WorkspaceNullablePromise;
+  workspaces: (args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
-  }) => FragmentableArray<WorkSpace>;
-  workSpacesConnection: (args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  }) => FragmentableArray<Workspace>;
+  workspacesConnection: (args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
-  }) => WorkSpaceConnectionPromise;
+  }) => WorkspaceConnectionPromise;
   node: (args: { id: ID_Output }) => Node;
 
   /**
@@ -279,22 +279,22 @@ export interface Prisma {
   }) => UserPromise;
   deleteUser: (where: UserWhereUniqueInput) => UserPromise;
   deleteManyUsers: (where?: UserWhereInput) => BatchPayloadPromise;
-  createWorkSpace: (data: WorkSpaceCreateInput) => WorkSpacePromise;
-  updateWorkSpace: (args: {
-    data: WorkSpaceUpdateInput;
-    where: WorkSpaceWhereUniqueInput;
-  }) => WorkSpacePromise;
-  updateManyWorkSpaces: (args: {
-    data: WorkSpaceUpdateManyMutationInput;
-    where?: WorkSpaceWhereInput;
+  createWorkspace: (data: WorkspaceCreateInput) => WorkspacePromise;
+  updateWorkspace: (args: {
+    data: WorkspaceUpdateInput;
+    where: WorkspaceWhereUniqueInput;
+  }) => WorkspacePromise;
+  updateManyWorkspaces: (args: {
+    data: WorkspaceUpdateManyMutationInput;
+    where?: WorkspaceWhereInput;
   }) => BatchPayloadPromise;
-  upsertWorkSpace: (args: {
-    where: WorkSpaceWhereUniqueInput;
-    create: WorkSpaceCreateInput;
-    update: WorkSpaceUpdateInput;
-  }) => WorkSpacePromise;
-  deleteWorkSpace: (where: WorkSpaceWhereUniqueInput) => WorkSpacePromise;
-  deleteManyWorkSpaces: (where?: WorkSpaceWhereInput) => BatchPayloadPromise;
+  upsertWorkspace: (args: {
+    where: WorkspaceWhereUniqueInput;
+    create: WorkspaceCreateInput;
+    update: WorkspaceUpdateInput;
+  }) => WorkspacePromise;
+  deleteWorkspace: (where: WorkspaceWhereUniqueInput) => WorkspacePromise;
+  deleteManyWorkspaces: (where?: WorkspaceWhereInput) => BatchPayloadPromise;
 
   /**
    * Subscriptions
@@ -322,9 +322,9 @@ export interface Subscription {
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
-  workSpace: (
-    where?: WorkSpaceSubscriptionWhereInput
-  ) => WorkSpaceSubscriptionPayloadSubscription;
+  workspace: (
+    where?: WorkspaceSubscriptionWhereInput
+  ) => WorkspaceSubscriptionPayloadSubscription;
 }
 
 export interface ClientConstructor<T> {
@@ -335,7 +335,15 @@ export interface ClientConstructor<T> {
  * Types
  */
 
-export type Role = "GUEST" | "USER" | "ADMIN";
+export type CourseOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC";
+
+export type Role = "GUEST" | "STUDENT" | "STAFF" | "ADMIN";
+
+export type WorkspaceType = "STAFF" | "STUDENT";
 
 export type LinkOrderByInput =
   | "id_ASC"
@@ -343,11 +351,23 @@ export type LinkOrderByInput =
   | "official_ASC"
   | "official_DESC";
 
-export type CourseOrderByInput =
+export type WorkspaceOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "name_ASC"
-  | "name_DESC";
+  | "name_DESC"
+  | "type_ASC"
+  | "type_DESC";
+
+export type UserOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "tmcId_ASC"
+  | "tmcId_DESC"
+  | "role_ASC"
+  | "role_DESC";
+
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type ConceptOrderByInput =
   | "id_ASC"
@@ -358,20 +378,6 @@ export type ConceptOrderByInput =
   | "description_DESC"
   | "official_ASC"
   | "official_DESC";
-
-export type WorkSpaceOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "name_ASC"
-  | "name_DESC";
-
-export type UserOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "tmcId_ASC"
-  | "tmcId_DESC"
-  | "role_ASC"
-  | "role_DESC";
 
 export type ResourceOrderByInput =
   | "id_ASC"
@@ -387,39 +393,32 @@ export type URLOrderByInput =
   | "address_ASC"
   | "address_DESC";
 
-export type MutationType = "CREATED" | "UPDATED" | "DELETED";
-
-export interface ResourceUpsertWithWhereUniqueWithoutConceptInput {
-  where: ResourceWhereUniqueInput;
-  update: ResourceUpdateWithoutConceptDataInput;
-  create: ResourceCreateWithoutConceptInput;
+export interface ResourceUpdateManyDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
 }
 
 export type ConceptWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export interface ConceptUpdateManyWithoutAsPrerequisiteInput {
-  create?: Maybe<
-    | ConceptCreateWithoutAsPrerequisiteInput[]
-    | ConceptCreateWithoutAsPrerequisiteInput
-  >;
-  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+export interface LinkUpdateManyWithoutToInput {
+  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
   update?: Maybe<
-    | ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput[]
-    | ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput
+    | LinkUpdateWithWhereUniqueWithoutToInput[]
+    | LinkUpdateWithWhereUniqueWithoutToInput
   >;
   upsert?: Maybe<
-    | ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput[]
-    | ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput
+    | LinkUpsertWithWhereUniqueWithoutToInput[]
+    | LinkUpsertWithWhereUniqueWithoutToInput
   >;
-  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
   updateMany?: Maybe<
-    | ConceptUpdateManyWithWhereNestedInput[]
-    | ConceptUpdateManyWithWhereNestedInput
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
   >;
 }
 
@@ -429,28 +428,30 @@ export interface CourseUpdateInput {
   prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
   learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
   prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
-  workspace?: Maybe<WorkSpaceUpdateOneRequiredWithoutCourseInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseInput>;
 }
 
-export interface ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateWithoutAsPrerequisiteDataInput;
+export interface LinkUpdateWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutToDataInput;
 }
 
-export interface CourseUpdateWithWhereUniqueWithoutPrerequisitesInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateWithoutPrerequisitesDataInput;
-}
-
-export interface ConceptUpdateWithoutAsPrerequisiteDataInput {
+export interface ConceptUpdateWithoutCoursesDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
   linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
   linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
   asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
+}
+
+export interface LinkUpdateWithoutToDataInput {
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  official?: Maybe<Boolean>;
+  workspace?: Maybe<WorkspaceUpdateManyWithoutLinksInput>;
 }
 
 export interface UserWhereInput {
@@ -480,38 +481,25 @@ export interface UserWhereInput {
   role_not?: Maybe<Role>;
   role_in?: Maybe<Role[] | Role>;
   role_not_in?: Maybe<Role[] | Role>;
-  workspaceOwned_every?: Maybe<WorkSpaceWhereInput>;
-  workspaceOwned_some?: Maybe<WorkSpaceWhereInput>;
-  workspaceOwned_none?: Maybe<WorkSpaceWhereInput>;
-  workspacesParticipated_every?: Maybe<WorkSpaceWhereInput>;
-  workspacesParticipated_some?: Maybe<WorkSpaceWhereInput>;
-  workspacesParticipated_none?: Maybe<WorkSpaceWhereInput>;
+  workspaceOwned_every?: Maybe<WorkspaceWhereInput>;
+  workspaceOwned_some?: Maybe<WorkspaceWhereInput>;
+  workspaceOwned_none?: Maybe<WorkspaceWhereInput>;
+  workspacesParticipated_every?: Maybe<WorkspaceWhereInput>;
+  workspacesParticipated_some?: Maybe<WorkspaceWhereInput>;
+  workspacesParticipated_none?: Maybe<WorkspaceWhereInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface LinkUpdateManyWithoutToInput {
-  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
-  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  update?: Maybe<
-    | LinkUpdateWithWhereUniqueWithoutToInput[]
-    | LinkUpdateWithWhereUniqueWithoutToInput
-  >;
-  upsert?: Maybe<
-    | LinkUpsertWithWhereUniqueWithoutToInput[]
-    | LinkUpsertWithWhereUniqueWithoutToInput
-  >;
-  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  updateMany?: Maybe<
-    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
-  >;
+export interface ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksFromConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
 }
 
-export interface WorkSpaceWhereInput {
+export interface WorkspaceWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -550,112 +538,19 @@ export interface WorkSpaceWhereInput {
   concepts_every?: Maybe<ConceptWhereInput>;
   concepts_some?: Maybe<ConceptWhereInput>;
   concepts_none?: Maybe<ConceptWhereInput>;
-  AND?: Maybe<WorkSpaceWhereInput[] | WorkSpaceWhereInput>;
-  OR?: Maybe<WorkSpaceWhereInput[] | WorkSpaceWhereInput>;
-  NOT?: Maybe<WorkSpaceWhereInput[] | WorkSpaceWhereInput>;
-}
-
-export interface LinkUpdateWithWhereUniqueWithoutToInput {
-  where: LinkWhereUniqueInput;
-  data: LinkUpdateWithoutToDataInput;
-}
-
-export interface CourseWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  concepts_every?: Maybe<ConceptWhereInput>;
-  concepts_some?: Maybe<ConceptWhereInput>;
-  concepts_none?: Maybe<ConceptWhereInput>;
-  prerequisites_every?: Maybe<ConceptWhereInput>;
-  prerequisites_some?: Maybe<ConceptWhereInput>;
-  prerequisites_none?: Maybe<ConceptWhereInput>;
-  learningObjectives_every?: Maybe<ConceptWhereInput>;
-  learningObjectives_some?: Maybe<ConceptWhereInput>;
-  learningObjectives_none?: Maybe<ConceptWhereInput>;
-  prerequisiteCourses_every?: Maybe<CourseWhereInput>;
-  prerequisiteCourses_some?: Maybe<CourseWhereInput>;
-  prerequisiteCourses_none?: Maybe<CourseWhereInput>;
-  workspace?: Maybe<WorkSpaceWhereInput>;
-  AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
-  OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
-  NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
-}
-
-export interface LinkUpdateWithoutToDataInput {
-  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
-  official?: Maybe<Boolean>;
-}
-
-export interface ResourceSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ResourceWhereInput>;
-  AND?: Maybe<
-    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
-  >;
-  OR?: Maybe<ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput>;
-  NOT?: Maybe<
-    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
-  >;
-}
-
-export interface ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
-  update?: Maybe<ConceptUpdateWithoutLinksFromConceptDataInput>;
-  upsert?: Maybe<ConceptUpsertWithoutLinksFromConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface LinkWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  from?: Maybe<ConceptWhereInput>;
-  to?: Maybe<ConceptWhereInput>;
-  official?: Maybe<Boolean>;
-  official_not?: Maybe<Boolean>;
-  AND?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-  OR?: Maybe<LinkWhereInput[] | LinkWhereInput>;
-  NOT?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  subWorkspaces_every?: Maybe<WorkspaceWhereInput>;
+  subWorkspaces_some?: Maybe<WorkspaceWhereInput>;
+  subWorkspaces_none?: Maybe<WorkspaceWhereInput>;
+  type?: Maybe<WorkspaceType>;
+  type_not?: Maybe<WorkspaceType>;
+  type_in?: Maybe<WorkspaceType[] | WorkspaceType>;
+  type_not_in?: Maybe<WorkspaceType[] | WorkspaceType>;
+  links_every?: Maybe<LinkWhereInput>;
+  links_some?: Maybe<LinkWhereInput>;
+  links_none?: Maybe<LinkWhereInput>;
+  AND?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
+  OR?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
+  NOT?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
 }
 
 export interface ConceptUpdateWithoutLinksFromConceptDataInput {
@@ -667,17 +562,18 @@ export interface ConceptUpdateWithoutLinksFromConceptDataInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
   asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
 }
 
-export interface CourseSubscriptionWhereInput {
+export interface URLSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
   updatedFields_contains_every?: Maybe<String[] | String>;
   updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<CourseWhereInput>;
-  AND?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
-  OR?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
-  NOT?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
+  node?: Maybe<URLWhereInput>;
+  AND?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
+  OR?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
+  NOT?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
 }
 
 export interface ResourceUpdateManyWithoutConceptInput {
@@ -701,1560 +597,6 @@ export interface ResourceUpdateManyWithoutConceptInput {
     | ResourceUpdateManyWithWhereNestedInput[]
     | ResourceUpdateManyWithWhereNestedInput
   >;
-}
-
-export interface WorkSpaceUpdateManyMutationInput {
-  name?: Maybe<String>;
-}
-
-export interface ResourceUpdateWithWhereUniqueWithoutConceptInput {
-  where: ResourceWhereUniqueInput;
-  data: ResourceUpdateWithoutConceptDataInput;
-}
-
-export interface WorkSpaceCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  owner: UserCreateOneWithoutWorkspaceOwnedInput;
-  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
-  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptCreateManyInput>;
-}
-
-export interface ResourceUpdateWithoutConceptDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  urls?: Maybe<URLUpdateManyWithoutResourceInput>;
-}
-
-export interface UserUpdateInput {
-  tmcId?: Maybe<Int>;
-  role?: Maybe<Role>;
-  workspaceOwned?: Maybe<WorkSpaceUpdateManyWithoutOwnerInput>;
-  workspacesParticipated?: Maybe<WorkSpaceUpdateManyWithoutParticipantsInput>;
-}
-
-export interface URLUpdateManyWithoutResourceInput {
-  create?: Maybe<
-    URLCreateWithoutResourceInput[] | URLCreateWithoutResourceInput
-  >;
-  delete?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
-  connect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
-  set?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
-  disconnect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
-  update?: Maybe<
-    | URLUpdateWithWhereUniqueWithoutResourceInput[]
-    | URLUpdateWithWhereUniqueWithoutResourceInput
-  >;
-  upsert?: Maybe<
-    | URLUpsertWithWhereUniqueWithoutResourceInput[]
-    | URLUpsertWithWhereUniqueWithoutResourceInput
-  >;
-  deleteMany?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
-  updateMany?: Maybe<
-    URLUpdateManyWithWhereNestedInput[] | URLUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  tmcId: Int;
-  role: Role;
-  workspaceOwned?: Maybe<WorkSpaceCreateManyWithoutOwnerInput>;
-  workspacesParticipated?: Maybe<WorkSpaceCreateManyWithoutParticipantsInput>;
-}
-
-export interface URLUpdateWithWhereUniqueWithoutResourceInput {
-  where: URLWhereUniqueInput;
-  data: URLUpdateWithoutResourceDataInput;
-}
-
-export interface ResourceUpsertWithoutUrlsInput {
-  update: ResourceUpdateWithoutUrlsDataInput;
-  create: ResourceCreateWithoutUrlsInput;
-}
-
-export interface URLUpdateWithoutResourceDataInput {
-  address?: Maybe<String>;
-}
-
-export interface ResourceUpdateWithoutUrlsDataInput {
-  concept?: Maybe<ConceptUpdateOneRequiredWithoutResourcesInput>;
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface URLUpsertWithWhereUniqueWithoutResourceInput {
-  where: URLWhereUniqueInput;
-  update: URLUpdateWithoutResourceDataInput;
-  create: URLCreateWithoutResourceInput;
-}
-
-export interface URLUpdateInput {
-  address?: Maybe<String>;
-  resource?: Maybe<ResourceUpdateOneRequiredWithoutUrlsInput>;
-}
-
-export interface URLScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  address?: Maybe<String>;
-  address_not?: Maybe<String>;
-  address_in?: Maybe<String[] | String>;
-  address_not_in?: Maybe<String[] | String>;
-  address_lt?: Maybe<String>;
-  address_lte?: Maybe<String>;
-  address_gt?: Maybe<String>;
-  address_gte?: Maybe<String>;
-  address_contains?: Maybe<String>;
-  address_not_contains?: Maybe<String>;
-  address_starts_with?: Maybe<String>;
-  address_not_starts_with?: Maybe<String>;
-  address_ends_with?: Maybe<String>;
-  address_not_ends_with?: Maybe<String>;
-  AND?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
-  OR?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
-  NOT?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
-}
-
-export interface ResourceCreateWithoutUrlsInput {
-  id?: Maybe<ID_Input>;
-  concept: ConceptCreateOneWithoutResourcesInput;
-  name: String;
-  description: String;
-}
-
-export interface URLUpdateManyWithWhereNestedInput {
-  where: URLScalarWhereInput;
-  data: URLUpdateManyDataInput;
-}
-
-export interface URLCreateInput {
-  id?: Maybe<ID_Input>;
-  address: String;
-  resource: ResourceCreateOneWithoutUrlsInput;
-}
-
-export interface URLUpdateManyDataInput {
-  address?: Maybe<String>;
-}
-
-export interface ResourceUpdateManyMutationInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface LinkUpdateInput {
-  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
-  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
-  official?: Maybe<Boolean>;
-}
-
-export interface ConceptUpdateWithoutResourcesDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export interface ResourceScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  AND?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
-  OR?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
-  NOT?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
-}
-
-export interface ConceptUpdateOneRequiredWithoutResourcesInput {
-  create?: Maybe<ConceptCreateWithoutResourcesInput>;
-  update?: Maybe<ConceptUpdateWithoutResourcesDataInput>;
-  upsert?: Maybe<ConceptUpsertWithoutResourcesInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface ResourceUpdateManyWithWhereNestedInput {
-  where: ResourceScalarWhereInput;
-  data: ResourceUpdateManyDataInput;
-}
-
-export interface ConceptCreateWithoutResourcesInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface ResourceUpdateManyDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-}
-
-export interface ConceptCreateOneWithoutResourcesInput {
-  create?: Maybe<ConceptCreateWithoutResourcesInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface CourseUpdateManyWithoutPrerequisitesInput {
-  create?: Maybe<
-    | CourseCreateWithoutPrerequisitesInput[]
-    | CourseCreateWithoutPrerequisitesInput
-  >;
-  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  update?: Maybe<
-    | CourseUpdateWithWhereUniqueWithoutPrerequisitesInput[]
-    | CourseUpdateWithWhereUniqueWithoutPrerequisitesInput
-  >;
-  upsert?: Maybe<
-    | CourseUpsertWithWhereUniqueWithoutPrerequisitesInput[]
-    | CourseUpsertWithWhereUniqueWithoutPrerequisitesInput
-  >;
-  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  updateMany?: Maybe<
-    | CourseUpdateManyWithWhereNestedInput[]
-    | CourseUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface LinkUpdateManyMutationInput {
-  official?: Maybe<Boolean>;
-}
-
-export interface ResourceWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  concept?: Maybe<ConceptWhereInput>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  urls_every?: Maybe<URLWhereInput>;
-  urls_some?: Maybe<URLWhereInput>;
-  urls_none?: Maybe<URLWhereInput>;
-  AND?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
-  OR?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
-  NOT?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
-}
-
-export interface ConceptCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface CourseUpdateWithoutPrerequisitesDataInput {
-  name?: Maybe<String>;
-  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
-  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
-  workspace?: Maybe<WorkSpaceUpdateOneRequiredWithoutCourseInput>;
-}
-
-export interface LinkCreateWithoutFromInput {
-  id?: Maybe<ID_Input>;
-  to: ConceptCreateOneWithoutLinksToConceptInput;
-  official?: Maybe<Boolean>;
-}
-
-export interface ConceptUpdateManyWithoutCoursesInput {
-  create?: Maybe<
-    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
-  >;
-  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  update?: Maybe<
-    | ConceptUpdateWithWhereUniqueWithoutCoursesInput[]
-    | ConceptUpdateWithWhereUniqueWithoutCoursesInput
-  >;
-  upsert?: Maybe<
-    | ConceptUpsertWithWhereUniqueWithoutCoursesInput[]
-    | ConceptUpsertWithWhereUniqueWithoutCoursesInput
-  >;
-  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-  updateMany?: Maybe<
-    | ConceptUpdateManyWithWhereNestedInput[]
-    | ConceptUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface ConceptCreateWithoutLinksToConceptInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface ConceptUpdateWithWhereUniqueWithoutCoursesInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateWithoutCoursesDataInput;
-}
-
-export interface CourseCreateWithoutConceptsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
-  workspace: WorkSpaceCreateOneWithoutCourseInput;
-}
-
-export interface ConceptUpdateWithoutCoursesDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export interface ConceptCreateWithoutAsPrerequisiteInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface CourseUpdateManyWithoutLearningObjectivesInput {
-  create?: Maybe<
-    | CourseCreateWithoutLearningObjectivesInput[]
-    | CourseCreateWithoutLearningObjectivesInput
-  >;
-  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  update?: Maybe<
-    | CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput[]
-    | CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput
-  >;
-  upsert?: Maybe<
-    | CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput[]
-    | CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput
-  >;
-  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  updateMany?: Maybe<
-    | CourseUpdateManyWithWhereNestedInput[]
-    | CourseUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface LinkCreateWithoutToInput {
-  id?: Maybe<ID_Input>;
-  from: ConceptCreateOneWithoutLinksFromConceptInput;
-  official?: Maybe<Boolean>;
-}
-
-export interface CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateWithoutLearningObjectivesDataInput;
-}
-
-export interface ConceptCreateWithoutLinksFromConceptInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface CourseUpdateWithoutLearningObjectivesDataInput {
-  name?: Maybe<String>;
-  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
-  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
-  workspace?: Maybe<WorkSpaceUpdateOneRequiredWithoutCourseInput>;
-}
-
-export interface ResourceCreateWithoutConceptInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description: String;
-  urls?: Maybe<URLCreateManyWithoutResourceInput>;
-}
-
-export interface CourseUpdateManyInput {
-  create?: Maybe<CourseCreateInput[] | CourseCreateInput>;
-  update?: Maybe<
-    | CourseUpdateWithWhereUniqueNestedInput[]
-    | CourseUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | CourseUpsertWithWhereUniqueNestedInput[]
-    | CourseUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  updateMany?: Maybe<
-    | CourseUpdateManyWithWhereNestedInput[]
-    | CourseUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface URLCreateWithoutResourceInput {
-  id?: Maybe<ID_Input>;
-  address: String;
-}
-
-export interface CourseUpdateWithWhereUniqueNestedInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateDataInput;
-}
-
-export interface CourseCreateWithoutPrerequisitesInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
-  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
-  workspace: WorkSpaceCreateOneWithoutCourseInput;
-}
-
-export interface CourseUpdateDataInput {
-  name?: Maybe<String>;
-  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
-  workspace?: Maybe<WorkSpaceUpdateOneRequiredWithoutCourseInput>;
-}
-
-export interface ConceptCreateWithoutCoursesInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
-}
-
-export interface ConceptUpdateManyWithoutAsLearningObjectiveInput {
-  create?: Maybe<
-    | ConceptCreateWithoutAsLearningObjectiveInput[]
-    | ConceptCreateWithoutAsLearningObjectiveInput
-  >;
-  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  update?: Maybe<
-    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput[]
-    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput
-  >;
-  upsert?: Maybe<
-    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput[]
-    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput
-  >;
-  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-  updateMany?: Maybe<
-    | ConceptUpdateManyWithWhereNestedInput[]
-    | ConceptUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface CourseCreateWithoutLearningObjectivesInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
-  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
-  workspace: WorkSpaceCreateOneWithoutCourseInput;
-}
-
-export interface ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateWithoutAsLearningObjectiveDataInput;
-}
-
-export interface CourseCreateInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
-  workspace: WorkSpaceCreateOneWithoutCourseInput;
-}
-
-export interface ConceptUpdateWithoutAsLearningObjectiveDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-}
-
-export interface ConceptCreateWithoutAsLearningObjectiveInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
-  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
-}
-
-export interface ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutAsLearningObjectiveDataInput;
-  create: ConceptCreateWithoutAsLearningObjectiveInput;
-}
-
-export interface WorkSpaceCreateWithoutCourseInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  owner: UserCreateOneWithoutWorkspaceOwnedInput;
-  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
-  concepts?: Maybe<ConceptCreateManyInput>;
-}
-
-export interface ConceptScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  official_not?: Maybe<Boolean>;
-  AND?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-  OR?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-  NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-}
-
-export interface UserCreateWithoutWorkspaceOwnedInput {
-  id?: Maybe<ID_Input>;
-  tmcId: Int;
-  role: Role;
-  workspacesParticipated?: Maybe<WorkSpaceCreateManyWithoutParticipantsInput>;
-}
-
-export interface ConceptUpdateManyWithWhereNestedInput {
-  where: ConceptScalarWhereInput;
-  data: ConceptUpdateManyDataInput;
-}
-
-export interface WorkSpaceCreateWithoutParticipantsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  owner: UserCreateOneWithoutWorkspaceOwnedInput;
-  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptCreateManyInput>;
-}
-
-export interface ConceptUpdateManyDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-}
-
-export interface CourseCreateWithoutWorkspaceInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
-}
-
-export interface WorkSpaceUpdateOneRequiredWithoutCourseInput {
-  create?: Maybe<WorkSpaceCreateWithoutCourseInput>;
-  update?: Maybe<WorkSpaceUpdateWithoutCourseDataInput>;
-  upsert?: Maybe<WorkSpaceUpsertWithoutCourseInput>;
-  connect?: Maybe<WorkSpaceWhereUniqueInput>;
-}
-
-export interface UserCreateManyWithoutWorkspacesParticipatedInput {
-  create?: Maybe<
-    | UserCreateWithoutWorkspacesParticipatedInput[]
-    | UserCreateWithoutWorkspacesParticipatedInput
-  >;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-}
-
-export interface WorkSpaceUpdateWithoutCourseDataInput {
-  name?: Maybe<String>;
-  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
-  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
-  concepts?: Maybe<ConceptUpdateManyInput>;
-}
-
-export interface WorkSpaceCreateManyWithoutOwnerInput {
-  create?: Maybe<
-    WorkSpaceCreateWithoutOwnerInput[] | WorkSpaceCreateWithoutOwnerInput
-  >;
-  connect?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-}
-
-export interface UserUpdateOneRequiredWithoutWorkspaceOwnedInput {
-  create?: Maybe<UserCreateWithoutWorkspaceOwnedInput>;
-  update?: Maybe<UserUpdateWithoutWorkspaceOwnedDataInput>;
-  upsert?: Maybe<UserUpsertWithoutWorkspaceOwnedInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface ConceptUpdateInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export interface UserUpdateWithoutWorkspaceOwnedDataInput {
-  tmcId?: Maybe<Int>;
-  role?: Maybe<Role>;
-  workspacesParticipated?: Maybe<WorkSpaceUpdateManyWithoutParticipantsInput>;
-}
-
-export interface LinkUpdateWithWhereUniqueWithoutFromInput {
-  where: LinkWhereUniqueInput;
-  data: LinkUpdateWithoutFromDataInput;
-}
-
-export interface WorkSpaceUpdateManyWithoutParticipantsInput {
-  create?: Maybe<
-    | WorkSpaceCreateWithoutParticipantsInput[]
-    | WorkSpaceCreateWithoutParticipantsInput
-  >;
-  delete?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  connect?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  set?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  disconnect?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  update?: Maybe<
-    | WorkSpaceUpdateWithWhereUniqueWithoutParticipantsInput[]
-    | WorkSpaceUpdateWithWhereUniqueWithoutParticipantsInput
-  >;
-  upsert?: Maybe<
-    | WorkSpaceUpsertWithWhereUniqueWithoutParticipantsInput[]
-    | WorkSpaceUpsertWithWhereUniqueWithoutParticipantsInput
-  >;
-  deleteMany?: Maybe<WorkSpaceScalarWhereInput[] | WorkSpaceScalarWhereInput>;
-  updateMany?: Maybe<
-    | WorkSpaceUpdateManyWithWhereNestedInput[]
-    | WorkSpaceUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
-  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
-  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface WorkSpaceUpdateWithWhereUniqueWithoutParticipantsInput {
-  where: WorkSpaceWhereUniqueInput;
-  data: WorkSpaceUpdateWithoutParticipantsDataInput;
-}
-
-export interface CourseUpdateManyWithoutConceptsInput {
-  create?: Maybe<
-    CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
-  >;
-  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  update?: Maybe<
-    | CourseUpdateWithWhereUniqueWithoutConceptsInput[]
-    | CourseUpdateWithWhereUniqueWithoutConceptsInput
-  >;
-  upsert?: Maybe<
-    | CourseUpsertWithWhereUniqueWithoutConceptsInput[]
-    | CourseUpsertWithWhereUniqueWithoutConceptsInput
-  >;
-  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  updateMany?: Maybe<
-    | CourseUpdateManyWithWhereNestedInput[]
-    | CourseUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface WorkSpaceUpdateWithoutParticipantsDataInput {
-  name?: Maybe<String>;
-  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
-  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptUpdateManyInput>;
-}
-
-export interface CourseUpdateWithoutConceptsDataInput {
-  name?: Maybe<String>;
-  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
-  workspace?: Maybe<WorkSpaceUpdateOneRequiredWithoutCourseInput>;
-}
-
-export interface CourseUpdateManyWithoutWorkspaceInput {
-  create?: Maybe<
-    CourseCreateWithoutWorkspaceInput[] | CourseCreateWithoutWorkspaceInput
-  >;
-  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-  update?: Maybe<
-    | CourseUpdateWithWhereUniqueWithoutWorkspaceInput[]
-    | CourseUpdateWithWhereUniqueWithoutWorkspaceInput
-  >;
-  upsert?: Maybe<
-    | CourseUpsertWithWhereUniqueWithoutWorkspaceInput[]
-    | CourseUpsertWithWhereUniqueWithoutWorkspaceInput
-  >;
-  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  updateMany?: Maybe<
-    | CourseUpdateManyWithWhereNestedInput[]
-    | CourseUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface WorkSpaceSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<WorkSpaceWhereInput>;
-  AND?: Maybe<
-    WorkSpaceSubscriptionWhereInput[] | WorkSpaceSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    WorkSpaceSubscriptionWhereInput[] | WorkSpaceSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    WorkSpaceSubscriptionWhereInput[] | WorkSpaceSubscriptionWhereInput
-  >;
-}
-
-export interface CourseUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateWithoutWorkspaceDataInput;
-}
-
-export interface URLSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<URLWhereInput>;
-  AND?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
-  OR?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
-  NOT?: Maybe<URLSubscriptionWhereInput[] | URLSubscriptionWhereInput>;
-}
-
-export interface CourseUpdateWithoutWorkspaceDataInput {
-  name?: Maybe<String>;
-  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
-  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
-  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
-  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
-}
-
-export interface LinkSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<LinkWhereInput>;
-  AND?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
-  OR?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
-  NOT?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
-}
-
-export interface CourseUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutWorkspaceDataInput;
-  create: CourseCreateWithoutWorkspaceInput;
-}
-
-export interface WorkSpaceUpdateInput {
-  name?: Maybe<String>;
-  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
-  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
-  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptUpdateManyInput>;
-}
-
-export interface CourseScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-  NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
-}
-
-export type CourseWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface CourseUpdateManyWithWhereNestedInput {
-  where: CourseScalarWhereInput;
-  data: CourseUpdateManyDataInput;
-}
-
-export type LinkWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface CourseUpdateManyDataInput {
-  name?: Maybe<String>;
-}
-
-export type ResourceWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface ConceptUpdateManyInput {
-  create?: Maybe<ConceptCreateInput[] | ConceptCreateInput>;
-  update?: Maybe<
-    | ConceptUpdateWithWhereUniqueNestedInput[]
-    | ConceptUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | ConceptUpsertWithWhereUniqueNestedInput[]
-    | ConceptUpsertWithWhereUniqueNestedInput
-  >;
-  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
-  updateMany?: Maybe<
-    | ConceptUpdateManyWithWhereNestedInput[]
-    | ConceptUpdateManyWithWhereNestedInput
-  >;
-}
-
-export type URLWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface ConceptUpdateWithWhereUniqueNestedInput {
-  where: ConceptWhereUniqueInput;
-  data: ConceptUpdateDataInput;
-}
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  tmcId?: Maybe<Int>;
-}>;
-
-export interface ConceptUpdateDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export type WorkSpaceWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface ConceptUpsertWithWhereUniqueNestedInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateDataInput;
-  create: ConceptCreateInput;
-}
-
-export interface ConceptCreateOneWithoutLinksToConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface WorkSpaceUpsertWithWhereUniqueWithoutParticipantsInput {
-  where: WorkSpaceWhereUniqueInput;
-  update: WorkSpaceUpdateWithoutParticipantsDataInput;
-  create: WorkSpaceCreateWithoutParticipantsInput;
-}
-
-export interface ConceptCreateManyWithoutAsPrerequisiteInput {
-  create?: Maybe<
-    | ConceptCreateWithoutAsPrerequisiteInput[]
-    | ConceptCreateWithoutAsPrerequisiteInput
-  >;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-}
-
-export interface WorkSpaceScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  AND?: Maybe<WorkSpaceScalarWhereInput[] | WorkSpaceScalarWhereInput>;
-  OR?: Maybe<WorkSpaceScalarWhereInput[] | WorkSpaceScalarWhereInput>;
-  NOT?: Maybe<WorkSpaceScalarWhereInput[] | WorkSpaceScalarWhereInput>;
-}
-
-export interface ConceptCreateOneWithoutLinksFromConceptInput {
-  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface WorkSpaceUpdateManyWithWhereNestedInput {
-  where: WorkSpaceScalarWhereInput;
-  data: WorkSpaceUpdateManyDataInput;
-}
-
-export interface URLCreateManyWithoutResourceInput {
-  create?: Maybe<
-    URLCreateWithoutResourceInput[] | URLCreateWithoutResourceInput
-  >;
-  connect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
-}
-
-export interface WorkSpaceUpdateManyDataInput {
-  name?: Maybe<String>;
-}
-
-export interface ConceptCreateManyWithoutCoursesInput {
-  create?: Maybe<
-    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
-  >;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-}
-
-export interface UserUpsertWithoutWorkspaceOwnedInput {
-  update: UserUpdateWithoutWorkspaceOwnedDataInput;
-  create: UserCreateWithoutWorkspaceOwnedInput;
-}
-
-export interface CourseCreateManyInput {
-  create?: Maybe<CourseCreateInput[] | CourseCreateInput>;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface UserUpdateManyWithoutWorkspacesParticipatedInput {
-  create?: Maybe<
-    | UserCreateWithoutWorkspacesParticipatedInput[]
-    | UserCreateWithoutWorkspacesParticipatedInput
-  >;
-  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
-  update?: Maybe<
-    | UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput[]
-    | UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput
-  >;
-  upsert?: Maybe<
-    | UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput[]
-    | UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput
-  >;
-  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  updateMany?: Maybe<
-    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface WorkSpaceCreateOneWithoutCourseInput {
-  create?: Maybe<WorkSpaceCreateWithoutCourseInput>;
-  connect?: Maybe<WorkSpaceWhereUniqueInput>;
-}
-
-export interface UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput {
-  where: UserWhereUniqueInput;
-  data: UserUpdateWithoutWorkspacesParticipatedDataInput;
-}
-
-export interface WorkSpaceCreateManyWithoutParticipantsInput {
-  create?: Maybe<
-    | WorkSpaceCreateWithoutParticipantsInput[]
-    | WorkSpaceCreateWithoutParticipantsInput
-  >;
-  connect?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-}
-
-export interface UserUpdateWithoutWorkspacesParticipatedDataInput {
-  tmcId?: Maybe<Int>;
-  role?: Maybe<Role>;
-  workspaceOwned?: Maybe<WorkSpaceUpdateManyWithoutOwnerInput>;
-}
-
-export interface ConceptCreateManyInput {
-  create?: Maybe<ConceptCreateInput[] | ConceptCreateInput>;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-}
-
-export interface WorkSpaceUpdateManyWithoutOwnerInput {
-  create?: Maybe<
-    WorkSpaceCreateWithoutOwnerInput[] | WorkSpaceCreateWithoutOwnerInput
-  >;
-  delete?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  connect?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  set?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  disconnect?: Maybe<WorkSpaceWhereUniqueInput[] | WorkSpaceWhereUniqueInput>;
-  update?: Maybe<
-    | WorkSpaceUpdateWithWhereUniqueWithoutOwnerInput[]
-    | WorkSpaceUpdateWithWhereUniqueWithoutOwnerInput
-  >;
-  upsert?: Maybe<
-    | WorkSpaceUpsertWithWhereUniqueWithoutOwnerInput[]
-    | WorkSpaceUpsertWithWhereUniqueWithoutOwnerInput
-  >;
-  deleteMany?: Maybe<WorkSpaceScalarWhereInput[] | WorkSpaceScalarWhereInput>;
-  updateMany?: Maybe<
-    | WorkSpaceUpdateManyWithWhereNestedInput[]
-    | WorkSpaceUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface WorkSpaceCreateWithoutOwnerInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
-  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptCreateManyInput>;
-}
-
-export interface WorkSpaceUpdateWithWhereUniqueWithoutOwnerInput {
-  where: WorkSpaceWhereUniqueInput;
-  data: WorkSpaceUpdateWithoutOwnerDataInput;
-}
-
-export interface LinkUpdateWithoutFromDataInput {
-  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
-  official?: Maybe<Boolean>;
-}
-
-export interface WorkSpaceUpdateWithoutOwnerDataInput {
-  name?: Maybe<String>;
-  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
-  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptUpdateManyInput>;
-}
-
-export interface CourseUpdateWithWhereUniqueWithoutConceptsInput {
-  where: CourseWhereUniqueInput;
-  data: CourseUpdateWithoutConceptsDataInput;
-}
-
-export interface WorkSpaceUpsertWithWhereUniqueWithoutOwnerInput {
-  where: WorkSpaceWhereUniqueInput;
-  update: WorkSpaceUpdateWithoutOwnerDataInput;
-  create: WorkSpaceCreateWithoutOwnerInput;
-}
-
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-}
-
-export interface UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput {
-  where: UserWhereUniqueInput;
-  update: UserUpdateWithoutWorkspacesParticipatedDataInput;
-  create: UserCreateWithoutWorkspacesParticipatedInput;
-}
-
-export interface ConceptSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ConceptWhereInput>;
-  AND?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
-  OR?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
-  NOT?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
-}
-
-export interface UserScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  tmcId?: Maybe<Int>;
-  tmcId_not?: Maybe<Int>;
-  tmcId_in?: Maybe<Int[] | Int>;
-  tmcId_not_in?: Maybe<Int[] | Int>;
-  tmcId_lt?: Maybe<Int>;
-  tmcId_lte?: Maybe<Int>;
-  tmcId_gt?: Maybe<Int>;
-  tmcId_gte?: Maybe<Int>;
-  role?: Maybe<Role>;
-  role_not?: Maybe<Role>;
-  role_in?: Maybe<Role[] | Role>;
-  role_not_in?: Maybe<Role[] | Role>;
-  AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-  NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
-}
-
-export interface URLUpdateManyMutationInput {
-  address?: Maybe<String>;
-}
-
-export interface UserUpdateManyWithWhereNestedInput {
-  where: UserScalarWhereInput;
-  data: UserUpdateManyDataInput;
-}
-
-export interface ResourceCreateOneWithoutUrlsInput {
-  create?: Maybe<ResourceCreateWithoutUrlsInput>;
-  connect?: Maybe<ResourceWhereUniqueInput>;
-}
-
-export interface UserUpdateManyDataInput {
-  tmcId?: Maybe<Int>;
-  role?: Maybe<Role>;
-}
-
-export interface ResourceUpdateInput {
-  concept?: Maybe<ConceptUpdateOneRequiredWithoutResourcesInput>;
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  urls?: Maybe<URLUpdateManyWithoutResourceInput>;
-}
-
-export interface WorkSpaceUpsertWithoutCourseInput {
-  update: WorkSpaceUpdateWithoutCourseDataInput;
-  create: WorkSpaceCreateWithoutCourseInput;
-}
-
-export interface LinkCreateManyWithoutFromInput {
-  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-}
-
-export interface CourseUpsertWithWhereUniqueNestedInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateDataInput;
-  create: CourseCreateInput;
-}
-
-export interface LinkCreateManyWithoutToInput {
-  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-}
-
-export interface CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutLearningObjectivesDataInput;
-  create: CourseCreateWithoutLearningObjectivesInput;
-}
-
-export interface CourseCreateManyWithoutPrerequisitesInput {
-  create?: Maybe<
-    | CourseCreateWithoutPrerequisitesInput[]
-    | CourseCreateWithoutPrerequisitesInput
-  >;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithWhereUniqueWithoutCoursesInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutCoursesDataInput;
-  create: ConceptCreateWithoutCoursesInput;
-}
-
-export interface ConceptCreateManyWithoutAsLearningObjectiveInput {
-  create?: Maybe<
-    | ConceptCreateWithoutAsLearningObjectiveInput[]
-    | ConceptCreateWithoutAsLearningObjectiveInput
-  >;
-  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
-}
-
-export interface CourseUpsertWithWhereUniqueWithoutPrerequisitesInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutPrerequisitesDataInput;
-  create: CourseCreateWithoutPrerequisitesInput;
-}
-
-export interface CourseCreateManyWithoutWorkspaceInput {
-  create?: Maybe<
-    CourseCreateWithoutWorkspaceInput[] | CourseCreateWithoutWorkspaceInput
-  >;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithoutLinksFromConceptInput {
-  update: ConceptUpdateWithoutLinksFromConceptDataInput;
-  create: ConceptCreateWithoutLinksFromConceptInput;
-}
-
-export interface LinkUpdateManyWithoutFromInput {
-  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
-  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
-  update?: Maybe<
-    | LinkUpdateWithWhereUniqueWithoutFromInput[]
-    | LinkUpdateWithWhereUniqueWithoutFromInput
-  >;
-  upsert?: Maybe<
-    | LinkUpsertWithWhereUniqueWithoutFromInput[]
-    | LinkUpsertWithWhereUniqueWithoutFromInput
-  >;
-  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  updateMany?: Maybe<
-    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
-  >;
-}
-
-export interface LinkUpsertWithWhereUniqueWithoutToInput {
-  where: LinkWhereUniqueInput;
-  update: LinkUpdateWithoutToDataInput;
-  create: LinkCreateWithoutToInput;
-}
-
-export interface URLWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  address?: Maybe<String>;
-  address_not?: Maybe<String>;
-  address_in?: Maybe<String[] | String>;
-  address_not_in?: Maybe<String[] | String>;
-  address_lt?: Maybe<String>;
-  address_lte?: Maybe<String>;
-  address_gt?: Maybe<String>;
-  address_gte?: Maybe<String>;
-  address_contains?: Maybe<String>;
-  address_not_contains?: Maybe<String>;
-  address_starts_with?: Maybe<String>;
-  address_not_starts_with?: Maybe<String>;
-  address_ends_with?: Maybe<String>;
-  address_not_ends_with?: Maybe<String>;
-  resource?: Maybe<ResourceWhereInput>;
-  AND?: Maybe<URLWhereInput[] | URLWhereInput>;
-  OR?: Maybe<URLWhereInput[] | URLWhereInput>;
-  NOT?: Maybe<URLWhereInput[] | URLWhereInput>;
-}
-
-export interface LinkScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  official?: Maybe<Boolean>;
-  official_not?: Maybe<Boolean>;
-  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
-}
-
-export interface UserUpdateManyMutationInput {
-  tmcId?: Maybe<Int>;
-  role?: Maybe<Role>;
-}
-
-export interface LinkUpdateManyWithWhereNestedInput {
-  where: LinkScalarWhereInput;
-  data: LinkUpdateManyDataInput;
-}
-
-export interface ConceptUpsertWithoutResourcesInput {
-  update: ConceptUpdateWithoutResourcesDataInput;
-  create: ConceptCreateWithoutResourcesInput;
-}
-
-export interface LinkUpdateManyDataInput {
-  official?: Maybe<Boolean>;
-}
-
-export interface CourseCreateManyWithoutConceptsInput {
-  create?: Maybe<
-    CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
-  >;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput {
-  where: ConceptWhereUniqueInput;
-  update: ConceptUpdateWithoutAsPrerequisiteDataInput;
-  create: ConceptCreateWithoutAsPrerequisiteInput;
-}
-
-export interface CourseCreateManyWithoutLearningObjectivesInput {
-  create?: Maybe<
-    | CourseCreateWithoutLearningObjectivesInput[]
-    | CourseCreateWithoutLearningObjectivesInput
-  >;
-  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
-}
-
-export interface CourseUpsertWithWhereUniqueWithoutConceptsInput {
-  where: CourseWhereUniqueInput;
-  update: CourseUpdateWithoutConceptsDataInput;
-  create: CourseCreateWithoutConceptsInput;
-}
-
-export interface UserCreateWithoutWorkspacesParticipatedInput {
-  id?: Maybe<ID_Input>;
-  tmcId: Int;
-  role: Role;
-  workspaceOwned?: Maybe<WorkSpaceCreateManyWithoutOwnerInput>;
-}
-
-export interface ConceptUpsertWithoutLinksToConceptInput {
-  update: ConceptUpdateWithoutLinksToConceptDataInput;
-  create: ConceptCreateWithoutLinksToConceptInput;
 }
 
 export interface ConceptWhereInput {
@@ -2320,9 +662,2005 @@ export interface ConceptWhereInput {
   asLearningObjective_every?: Maybe<CourseWhereInput>;
   asLearningObjective_some?: Maybe<CourseWhereInput>;
   asLearningObjective_none?: Maybe<CourseWhereInput>;
+  workspaces_every?: Maybe<WorkspaceWhereInput>;
+  workspaces_some?: Maybe<WorkspaceWhereInput>;
+  workspaces_none?: Maybe<WorkspaceWhereInput>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
+}
+
+export interface ResourceUpdateWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput;
+  data: ResourceUpdateWithoutConceptDataInput;
+}
+
+export interface LinkWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  from?: Maybe<ConceptWhereInput>;
+  to?: Maybe<ConceptWhereInput>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  workspace_every?: Maybe<WorkspaceWhereInput>;
+  workspace_some?: Maybe<WorkspaceWhereInput>;
+  workspace_none?: Maybe<WorkspaceWhereInput>;
+  AND?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  OR?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+  NOT?: Maybe<LinkWhereInput[] | LinkWhereInput>;
+}
+
+export interface ResourceUpdateWithoutConceptDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  urls?: Maybe<URLUpdateManyWithoutResourceInput>;
+}
+
+export interface CourseSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<CourseWhereInput>;
+  AND?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
+  OR?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
+  NOT?: Maybe<CourseSubscriptionWhereInput[] | CourseSubscriptionWhereInput>;
+}
+
+export interface URLUpdateManyWithoutResourceInput {
+  create?: Maybe<
+    URLCreateWithoutResourceInput[] | URLCreateWithoutResourceInput
+  >;
+  delete?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
+  connect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
+  set?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
+  disconnect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
+  update?: Maybe<
+    | URLUpdateWithWhereUniqueWithoutResourceInput[]
+    | URLUpdateWithWhereUniqueWithoutResourceInput
+  >;
+  upsert?: Maybe<
+    | URLUpsertWithWhereUniqueWithoutResourceInput[]
+    | URLUpsertWithWhereUniqueWithoutResourceInput
+  >;
+  deleteMany?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+  updateMany?: Maybe<
+    URLUpdateManyWithWhereNestedInput[] | URLUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface WorkspaceUpdateManyMutationInput {
+  name?: Maybe<String>;
+  type?: Maybe<WorkspaceType>;
+}
+
+export interface URLUpdateWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput;
+  data: URLUpdateWithoutResourceDataInput;
+}
+
+export interface WorkspaceCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  owner: UserCreateOneWithoutWorkspaceOwnedInput;
+  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceCreateManyWithoutSubWorkspacesInput>;
+  type: WorkspaceType;
+  links?: Maybe<LinkCreateManyWithoutWorkspaceInput>;
+}
+
+export interface URLUpdateWithoutResourceDataInput {
+  address?: Maybe<String>;
+}
+
+export interface UserUpdateInput {
+  tmcId?: Maybe<Int>;
+  role?: Maybe<Role>;
+  workspaceOwned?: Maybe<WorkspaceUpdateManyWithoutOwnerInput>;
+  workspacesParticipated?: Maybe<WorkspaceUpdateManyWithoutParticipantsInput>;
+}
+
+export interface URLUpsertWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput;
+  update: URLUpdateWithoutResourceDataInput;
+  create: URLCreateWithoutResourceInput;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  tmcId: Int;
+  role: Role;
+  workspaceOwned?: Maybe<WorkspaceCreateManyWithoutOwnerInput>;
+  workspacesParticipated?: Maybe<WorkspaceCreateManyWithoutParticipantsInput>;
+}
+
+export interface URLScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  address?: Maybe<String>;
+  address_not?: Maybe<String>;
+  address_in?: Maybe<String[] | String>;
+  address_not_in?: Maybe<String[] | String>;
+  address_lt?: Maybe<String>;
+  address_lte?: Maybe<String>;
+  address_gt?: Maybe<String>;
+  address_gte?: Maybe<String>;
+  address_contains?: Maybe<String>;
+  address_not_contains?: Maybe<String>;
+  address_starts_with?: Maybe<String>;
+  address_not_starts_with?: Maybe<String>;
+  address_ends_with?: Maybe<String>;
+  address_not_ends_with?: Maybe<String>;
+  AND?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+  OR?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+  NOT?: Maybe<URLScalarWhereInput[] | URLScalarWhereInput>;
+}
+
+export interface ResourceUpsertWithoutUrlsInput {
+  update: ResourceUpdateWithoutUrlsDataInput;
+  create: ResourceCreateWithoutUrlsInput;
+}
+
+export interface URLUpdateManyWithWhereNestedInput {
+  where: URLScalarWhereInput;
+  data: URLUpdateManyDataInput;
+}
+
+export interface ResourceUpdateWithoutUrlsDataInput {
+  concept?: Maybe<ConceptUpdateOneRequiredWithoutResourcesInput>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface URLUpdateManyDataInput {
+  address?: Maybe<String>;
+}
+
+export interface URLUpdateInput {
+  address?: Maybe<String>;
+  resource?: Maybe<ResourceUpdateOneRequiredWithoutUrlsInput>;
+}
+
+export interface ResourceUpsertWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput;
+  update: ResourceUpdateWithoutConceptDataInput;
+  create: ResourceCreateWithoutConceptInput;
+}
+
+export interface ResourceCreateWithoutUrlsInput {
+  id?: Maybe<ID_Input>;
+  concept: ConceptCreateOneWithoutResourcesInput;
+  name: String;
+  description: String;
+}
+
+export interface ResourceScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  AND?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
+  OR?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
+  NOT?: Maybe<ResourceScalarWhereInput[] | ResourceScalarWhereInput>;
+}
+
+export interface URLCreateInput {
+  id?: Maybe<ID_Input>;
+  address: String;
+  resource: ResourceCreateOneWithoutUrlsInput;
+}
+
+export interface ResourceUpdateManyWithWhereNestedInput {
+  where: ResourceScalarWhereInput;
+  data: ResourceUpdateManyDataInput;
+}
+
+export interface ResourceUpdateManyMutationInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+}
+
+export interface LinkUpdateInput {
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
+  workspace?: Maybe<WorkspaceUpdateManyWithoutLinksInput>;
+}
+
+export interface ConceptUpdateWithoutResourcesDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
+}
+
+export interface CourseUpdateManyWithoutPrerequisitesInput {
+  create?: Maybe<
+    | CourseCreateWithoutPrerequisitesInput[]
+    | CourseCreateWithoutPrerequisitesInput
+  >;
+  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  update?: Maybe<
+    | CourseUpdateWithWhereUniqueWithoutPrerequisitesInput[]
+    | CourseUpdateWithWhereUniqueWithoutPrerequisitesInput
+  >;
+  upsert?: Maybe<
+    | CourseUpsertWithWhereUniqueWithoutPrerequisitesInput[]
+    | CourseUpsertWithWhereUniqueWithoutPrerequisitesInput
+  >;
+  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  updateMany?: Maybe<
+    | CourseUpdateManyWithWhereNestedInput[]
+    | CourseUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ConceptUpdateOneRequiredWithoutResourcesInput {
+  create?: Maybe<ConceptCreateWithoutResourcesInput>;
+  update?: Maybe<ConceptUpdateWithoutResourcesDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutResourcesInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface CourseUpdateWithWhereUniqueWithoutPrerequisitesInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateWithoutPrerequisitesDataInput;
+}
+
+export interface ConceptCreateWithoutResourcesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface CourseUpdateWithoutPrerequisitesDataInput {
+  name?: Maybe<String>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
+  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseInput>;
+}
+
+export interface ConceptCreateOneWithoutResourcesInput {
+  create?: Maybe<ConceptCreateWithoutResourcesInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface ConceptUpdateManyWithoutCoursesInput {
+  create?: Maybe<
+    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
+  >;
+  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  update?: Maybe<
+    | ConceptUpdateWithWhereUniqueWithoutCoursesInput[]
+    | ConceptUpdateWithWhereUniqueWithoutCoursesInput
+  >;
+  upsert?: Maybe<
+    | ConceptUpsertWithWhereUniqueWithoutCoursesInput[]
+    | ConceptUpsertWithWhereUniqueWithoutCoursesInput
+  >;
+  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  updateMany?: Maybe<
+    | ConceptUpdateManyWithWhereNestedInput[]
+    | ConceptUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkUpdateManyMutationInput {
+  official?: Maybe<Boolean>;
+}
+
+export interface ConceptUpdateWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutCoursesDataInput;
+}
+
+export interface ConceptCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface ResourceWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  concept?: Maybe<ConceptWhereInput>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  urls_every?: Maybe<URLWhereInput>;
+  urls_some?: Maybe<URLWhereInput>;
+  urls_none?: Maybe<URLWhereInput>;
+  AND?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
+  OR?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
+  NOT?: Maybe<ResourceWhereInput[] | ResourceWhereInput>;
+}
+
+export interface LinkCreateWithoutFromInput {
+  id?: Maybe<ID_Input>;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
+  official?: Maybe<Boolean>;
+  workspace?: Maybe<WorkspaceCreateManyWithoutLinksInput>;
+}
+
+export interface CourseUpdateManyWithoutLearningObjectivesInput {
+  create?: Maybe<
+    | CourseCreateWithoutLearningObjectivesInput[]
+    | CourseCreateWithoutLearningObjectivesInput
+  >;
+  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  update?: Maybe<
+    | CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput[]
+    | CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput
+  >;
+  upsert?: Maybe<
+    | CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput[]
+    | CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput
+  >;
+  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  updateMany?: Maybe<
+    | CourseUpdateManyWithWhereNestedInput[]
+    | CourseUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ConceptCreateWithoutLinksToConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface CourseUpdateWithWhereUniqueWithoutLearningObjectivesInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateWithoutLearningObjectivesDataInput;
+}
+
+export interface CourseCreateWithoutConceptsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
+  workspace: WorkspaceCreateOneWithoutCourseInput;
+}
+
+export interface CourseUpdateWithoutLearningObjectivesDataInput {
+  name?: Maybe<String>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseInput>;
+}
+
+export interface ConceptCreateWithoutAsPrerequisiteInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface CourseUpdateManyInput {
+  create?: Maybe<CourseCreateInput[] | CourseCreateInput>;
+  update?: Maybe<
+    | CourseUpdateWithWhereUniqueNestedInput[]
+    | CourseUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    | CourseUpsertWithWhereUniqueNestedInput[]
+    | CourseUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  updateMany?: Maybe<
+    | CourseUpdateManyWithWhereNestedInput[]
+    | CourseUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkCreateWithoutToInput {
+  id?: Maybe<ID_Input>;
+  from: ConceptCreateOneWithoutLinksFromConceptInput;
+  official?: Maybe<Boolean>;
+  workspace?: Maybe<WorkspaceCreateManyWithoutLinksInput>;
+}
+
+export interface CourseUpdateWithWhereUniqueNestedInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateDataInput;
+}
+
+export interface ConceptCreateWithoutLinksFromConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface CourseUpdateDataInput {
+  name?: Maybe<String>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseInput>;
+}
+
+export interface ResourceCreateWithoutConceptInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description: String;
+  urls?: Maybe<URLCreateManyWithoutResourceInput>;
+}
+
+export interface ConceptUpdateManyWithoutAsLearningObjectiveInput {
+  create?: Maybe<
+    | ConceptCreateWithoutAsLearningObjectiveInput[]
+    | ConceptCreateWithoutAsLearningObjectiveInput
+  >;
+  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  update?: Maybe<
+    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput[]
+    | ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput
+  >;
+  upsert?: Maybe<
+    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput[]
+    | ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput
+  >;
+  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  updateMany?: Maybe<
+    | ConceptUpdateManyWithWhereNestedInput[]
+    | ConceptUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface URLCreateWithoutResourceInput {
+  id?: Maybe<ID_Input>;
+  address: String;
+}
+
+export interface ConceptUpdateWithWhereUniqueWithoutAsLearningObjectiveInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutAsLearningObjectiveDataInput;
+}
+
+export interface CourseCreateWithoutPrerequisitesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
+  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
+  workspace: WorkspaceCreateOneWithoutCourseInput;
+}
+
+export interface ConceptUpdateWithoutAsLearningObjectiveDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
+}
+
+export interface ConceptCreateWithoutCoursesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface WorkspaceUpdateManyWithoutConceptsInput {
+  create?: Maybe<
+    WorkspaceCreateWithoutConceptsInput[] | WorkspaceCreateWithoutConceptsInput
+  >;
+  delete?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  set?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  disconnect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  update?: Maybe<
+    | WorkspaceUpdateWithWhereUniqueWithoutConceptsInput[]
+    | WorkspaceUpdateWithWhereUniqueWithoutConceptsInput
+  >;
+  upsert?: Maybe<
+    | WorkspaceUpsertWithWhereUniqueWithoutConceptsInput[]
+    | WorkspaceUpsertWithWhereUniqueWithoutConceptsInput
+  >;
+  deleteMany?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  updateMany?: Maybe<
+    | WorkspaceUpdateManyWithWhereNestedInput[]
+    | WorkspaceUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface CourseCreateWithoutLearningObjectivesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
+  workspace: WorkspaceCreateOneWithoutCourseInput;
+}
+
+export interface WorkspaceUpdateWithWhereUniqueWithoutConceptsInput {
+  where: WorkspaceWhereUniqueInput;
+  data: WorkspaceUpdateWithoutConceptsDataInput;
+}
+
+export interface CourseCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
+  workspace: WorkspaceCreateOneWithoutCourseInput;
+}
+
+export interface WorkspaceUpdateWithoutConceptsDataInput {
+  name?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
+  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  subWorkspaces?: Maybe<WorkspaceUpdateManyWithoutSubWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+  links?: Maybe<LinkUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface ConceptCreateWithoutAsLearningObjectiveInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  workspaces?: Maybe<WorkspaceCreateManyWithoutConceptsInput>;
+}
+
+export interface UserUpdateOneRequiredWithoutWorkspaceOwnedInput {
+  create?: Maybe<UserCreateWithoutWorkspaceOwnedInput>;
+  update?: Maybe<UserUpdateWithoutWorkspaceOwnedDataInput>;
+  upsert?: Maybe<UserUpsertWithoutWorkspaceOwnedInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface WorkspaceCreateWithoutConceptsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  owner: UserCreateOneWithoutWorkspaceOwnedInput;
+  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  subWorkspaces?: Maybe<WorkspaceCreateManyWithoutSubWorkspacesInput>;
+  type: WorkspaceType;
+  links?: Maybe<LinkCreateManyWithoutWorkspaceInput>;
+}
+
+export interface UserUpdateWithoutWorkspaceOwnedDataInput {
+  tmcId?: Maybe<Int>;
+  role?: Maybe<Role>;
+  workspacesParticipated?: Maybe<WorkspaceUpdateManyWithoutParticipantsInput>;
+}
+
+export interface UserCreateWithoutWorkspaceOwnedInput {
+  id?: Maybe<ID_Input>;
+  tmcId: Int;
+  role: Role;
+  workspacesParticipated?: Maybe<WorkspaceCreateManyWithoutParticipantsInput>;
+}
+
+export interface WorkspaceUpdateManyWithoutParticipantsInput {
+  create?: Maybe<
+    | WorkspaceCreateWithoutParticipantsInput[]
+    | WorkspaceCreateWithoutParticipantsInput
+  >;
+  delete?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  set?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  disconnect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  update?: Maybe<
+    | WorkspaceUpdateWithWhereUniqueWithoutParticipantsInput[]
+    | WorkspaceUpdateWithWhereUniqueWithoutParticipantsInput
+  >;
+  upsert?: Maybe<
+    | WorkspaceUpsertWithWhereUniqueWithoutParticipantsInput[]
+    | WorkspaceUpsertWithWhereUniqueWithoutParticipantsInput
+  >;
+  deleteMany?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  updateMany?: Maybe<
+    | WorkspaceUpdateManyWithWhereNestedInput[]
+    | WorkspaceUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface WorkspaceCreateWithoutParticipantsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  owner: UserCreateOneWithoutWorkspaceOwnedInput;
+  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceCreateManyWithoutSubWorkspacesInput>;
+  type: WorkspaceType;
+  links?: Maybe<LinkCreateManyWithoutWorkspaceInput>;
+}
+
+export interface WorkspaceUpdateWithWhereUniqueWithoutParticipantsInput {
+  where: WorkspaceWhereUniqueInput;
+  data: WorkspaceUpdateWithoutParticipantsDataInput;
+}
+
+export interface CourseCreateWithoutWorkspaceInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  concepts?: Maybe<ConceptCreateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptCreateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptCreateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseCreateManyInput>;
+}
+
+export interface WorkspaceUpdateWithoutParticipantsDataInput {
+  name?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
+  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceUpdateManyWithoutSubWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+  links?: Maybe<LinkUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface ConceptCreateWithoutWorkspacesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkCreateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkCreateManyWithoutToInput>;
+  courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseCreateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseCreateManyWithoutLearningObjectivesInput>;
+}
+
+export interface CourseUpdateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    CourseCreateWithoutWorkspaceInput[] | CourseCreateWithoutWorkspaceInput
+  >;
+  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  update?: Maybe<
+    | CourseUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | CourseUpdateWithWhereUniqueWithoutWorkspaceInput
+  >;
+  upsert?: Maybe<
+    | CourseUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | CourseUpsertWithWhereUniqueWithoutWorkspaceInput
+  >;
+  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  updateMany?: Maybe<
+    | CourseUpdateManyWithWhereNestedInput[]
+    | CourseUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface WorkspaceCreateWithoutSubWorkspacesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  owner: UserCreateOneWithoutWorkspaceOwnedInput;
+  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspacesInput>;
+  type: WorkspaceType;
+  links?: Maybe<LinkCreateManyWithoutWorkspaceInput>;
+}
+
+export interface CourseUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateWithoutWorkspaceDataInput;
+}
+
+export interface UserCreateWithoutWorkspacesParticipatedInput {
+  id?: Maybe<ID_Input>;
+  tmcId: Int;
+  role: Role;
+  workspaceOwned?: Maybe<WorkspaceCreateManyWithoutOwnerInput>;
+}
+
+export interface CourseUpdateWithoutWorkspaceDataInput {
+  name?: Maybe<String>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCoursesInput>;
+  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
+}
+
+export interface WorkspaceCreateWithoutOwnerInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceCreateManyWithoutSubWorkspacesInput>;
+  type: WorkspaceType;
+  links?: Maybe<LinkCreateManyWithoutWorkspaceInput>;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutWorkspaceDataInput;
+  create: CourseCreateWithoutWorkspaceInput;
+}
+
+export interface LinkCreateWithoutWorkspaceInput {
+  id?: Maybe<ID_Input>;
+  from: ConceptCreateOneWithoutLinksFromConceptInput;
+  to: ConceptCreateOneWithoutLinksToConceptInput;
+  official?: Maybe<Boolean>;
+}
+
+export interface CourseScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+}
+
+export interface WorkspaceCreateWithoutCourseInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  owner: UserCreateOneWithoutWorkspaceOwnedInput;
+  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceCreateManyWithoutSubWorkspacesInput>;
+  type: WorkspaceType;
+  links?: Maybe<LinkCreateManyWithoutWorkspaceInput>;
+}
+
+export interface CourseUpdateManyWithWhereNestedInput {
+  where: CourseScalarWhereInput;
+  data: CourseUpdateManyDataInput;
+}
+
+export interface WorkspaceCreateWithoutLinksInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  owner: UserCreateOneWithoutWorkspaceOwnedInput;
+  participants?: Maybe<UserCreateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceCreateManyWithoutSubWorkspacesInput>;
+  type: WorkspaceType;
+}
+
+export interface CourseUpdateManyDataInput {
+  name?: Maybe<String>;
+}
+
+export interface LinkUpdateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  update?: Maybe<
+    | LinkUpdateWithWhereUniqueWithoutFromInput[]
+    | LinkUpdateWithWhereUniqueWithoutFromInput
+  >;
+  upsert?: Maybe<
+    | LinkUpsertWithWhereUniqueWithoutFromInput[]
+    | LinkUpsertWithWhereUniqueWithoutFromInput
+  >;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  updateMany?: Maybe<
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ConceptUpdateManyWithoutWorkspacesInput {
+  create?: Maybe<
+    ConceptCreateWithoutWorkspacesInput[] | ConceptCreateWithoutWorkspacesInput
+  >;
+  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  update?: Maybe<
+    | ConceptUpdateWithWhereUniqueWithoutWorkspacesInput[]
+    | ConceptUpdateWithWhereUniqueWithoutWorkspacesInput
+  >;
+  upsert?: Maybe<
+    | ConceptUpsertWithWhereUniqueWithoutWorkspacesInput[]
+    | ConceptUpsertWithWhereUniqueWithoutWorkspacesInput
+  >;
+  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  updateMany?: Maybe<
+    | ConceptUpdateManyWithWhereNestedInput[]
+    | ConceptUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkUpdateWithoutFromDataInput {
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
+  workspace?: Maybe<WorkspaceUpdateManyWithoutLinksInput>;
+}
+
+export interface ConceptUpdateWithWhereUniqueWithoutWorkspacesInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutWorkspacesDataInput;
+}
+
+export interface ConceptUpdateWithoutLinksToConceptDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
+}
+
+export interface ConceptUpdateWithoutWorkspacesDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+}
+
+export interface CourseUpdateWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput;
+  data: CourseUpdateWithoutConceptsDataInput;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutWorkspacesInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutWorkspacesDataInput;
+  create: ConceptCreateWithoutWorkspacesInput;
+}
+
+export interface ConceptUpdateManyWithoutAsPrerequisiteInput {
+  create?: Maybe<
+    | ConceptCreateWithoutAsPrerequisiteInput[]
+    | ConceptCreateWithoutAsPrerequisiteInput
+  >;
+  delete?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  set?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  disconnect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+  update?: Maybe<
+    | ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput[]
+    | ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput
+  >;
+  upsert?: Maybe<
+    | ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput[]
+    | ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput
+  >;
+  deleteMany?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  updateMany?: Maybe<
+    | ConceptUpdateManyWithWhereNestedInput[]
+    | ConceptUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ConceptScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  AND?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  OR?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+  NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
+}
+
+export interface ConceptUpdateWithoutAsPrerequisiteDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
+}
+
+export interface ConceptUpdateManyWithWhereNestedInput {
+  where: ConceptScalarWhereInput;
+  data: ConceptUpdateManyDataInput;
+}
+
+export interface WorkspaceSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<WorkspaceWhereInput>;
+  AND?: Maybe<
+    WorkspaceSubscriptionWhereInput[] | WorkspaceSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    WorkspaceSubscriptionWhereInput[] | WorkspaceSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    WorkspaceSubscriptionWhereInput[] | WorkspaceSubscriptionWhereInput
+  >;
+}
+
+export interface ConceptUpdateManyDataInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+}
+
+export interface CourseWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  concepts_every?: Maybe<ConceptWhereInput>;
+  concepts_some?: Maybe<ConceptWhereInput>;
+  concepts_none?: Maybe<ConceptWhereInput>;
+  prerequisites_every?: Maybe<ConceptWhereInput>;
+  prerequisites_some?: Maybe<ConceptWhereInput>;
+  prerequisites_none?: Maybe<ConceptWhereInput>;
+  learningObjectives_every?: Maybe<ConceptWhereInput>;
+  learningObjectives_some?: Maybe<ConceptWhereInput>;
+  learningObjectives_none?: Maybe<ConceptWhereInput>;
+  prerequisiteCourses_every?: Maybe<CourseWhereInput>;
+  prerequisiteCourses_some?: Maybe<CourseWhereInput>;
+  prerequisiteCourses_none?: Maybe<CourseWhereInput>;
+  workspace?: Maybe<WorkspaceWhereInput>;
+  AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+  OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+  NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
+}
+
+export interface WorkspaceUpdateManyWithoutSubWorkspacesInput {
+  create?: Maybe<
+    | WorkspaceCreateWithoutSubWorkspacesInput[]
+    | WorkspaceCreateWithoutSubWorkspacesInput
+  >;
+  delete?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  set?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  disconnect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  update?: Maybe<
+    | WorkspaceUpdateWithWhereUniqueWithoutSubWorkspacesInput[]
+    | WorkspaceUpdateWithWhereUniqueWithoutSubWorkspacesInput
+  >;
+  upsert?: Maybe<
+    | WorkspaceUpsertWithWhereUniqueWithoutSubWorkspacesInput[]
+    | WorkspaceUpsertWithWhereUniqueWithoutSubWorkspacesInput
+  >;
+  deleteMany?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  updateMany?: Maybe<
+    | WorkspaceUpdateManyWithWhereNestedInput[]
+    | WorkspaceUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface LinkSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<LinkWhereInput>;
+  AND?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
+  OR?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
+  NOT?: Maybe<LinkSubscriptionWhereInput[] | LinkSubscriptionWhereInput>;
+}
+
+export interface WorkspaceUpdateWithWhereUniqueWithoutSubWorkspacesInput {
+  where: WorkspaceWhereUniqueInput;
+  data: WorkspaceUpdateWithoutSubWorkspacesDataInput;
+}
+
+export interface WorkspaceUpdateInput {
+  name?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
+  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceUpdateManyWithoutSubWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+  links?: Maybe<LinkUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface WorkspaceUpdateWithoutSubWorkspacesDataInput {
+  name?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
+  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+  links?: Maybe<LinkUpdateManyWithoutWorkspaceInput>;
+}
+
+export type CourseWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface UserUpdateManyWithoutWorkspacesParticipatedInput {
+  create?: Maybe<
+    | UserCreateWithoutWorkspacesParticipatedInput[]
+    | UserCreateWithoutWorkspacesParticipatedInput
+  >;
+  delete?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  set?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  disconnect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+  update?: Maybe<
+    | UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput[]
+    | UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput
+  >;
+  upsert?: Maybe<
+    | UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput[]
+    | UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput
+  >;
+  deleteMany?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  updateMany?: Maybe<
+    UserUpdateManyWithWhereNestedInput[] | UserUpdateManyWithWhereNestedInput
+  >;
+}
+
+export type LinkWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface UserUpdateWithWhereUniqueWithoutWorkspacesParticipatedInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutWorkspacesParticipatedDataInput;
+}
+
+export type ResourceWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface UserUpdateWithoutWorkspacesParticipatedDataInput {
+  tmcId?: Maybe<Int>;
+  role?: Maybe<Role>;
+  workspaceOwned?: Maybe<WorkspaceUpdateManyWithoutOwnerInput>;
+}
+
+export type URLWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface WorkspaceUpdateManyWithoutOwnerInput {
+  create?: Maybe<
+    WorkspaceCreateWithoutOwnerInput[] | WorkspaceCreateWithoutOwnerInput
+  >;
+  delete?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  set?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  disconnect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  update?: Maybe<
+    | WorkspaceUpdateWithWhereUniqueWithoutOwnerInput[]
+    | WorkspaceUpdateWithWhereUniqueWithoutOwnerInput
+  >;
+  upsert?: Maybe<
+    | WorkspaceUpsertWithWhereUniqueWithoutOwnerInput[]
+    | WorkspaceUpsertWithWhereUniqueWithoutOwnerInput
+  >;
+  deleteMany?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  updateMany?: Maybe<
+    | WorkspaceUpdateManyWithWhereNestedInput[]
+    | WorkspaceUpdateManyWithWhereNestedInput
+  >;
+}
+
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  tmcId?: Maybe<Int>;
+}>;
+
+export interface WorkspaceUpdateWithWhereUniqueWithoutOwnerInput {
+  where: WorkspaceWhereUniqueInput;
+  data: WorkspaceUpdateWithoutOwnerDataInput;
+}
+
+export type WorkspaceWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface WorkspaceUpdateWithoutOwnerDataInput {
+  name?: Maybe<String>;
+  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceUpdateManyWithoutSubWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+  links?: Maybe<LinkUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface ConceptCreateOneWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface LinkUpdateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    LinkCreateWithoutWorkspaceInput[] | LinkCreateWithoutWorkspaceInput
+  >;
+  delete?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  set?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  disconnect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+  update?: Maybe<
+    | LinkUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | LinkUpdateWithWhereUniqueWithoutWorkspaceInput
+  >;
+  upsert?: Maybe<
+    | LinkUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | LinkUpsertWithWhereUniqueWithoutWorkspaceInput
+  >;
+  deleteMany?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  updateMany?: Maybe<
+    LinkUpdateManyWithWhereNestedInput[] | LinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ConceptCreateManyWithoutAsPrerequisiteInput {
+  create?: Maybe<
+    | ConceptCreateWithoutAsPrerequisiteInput[]
+    | ConceptCreateWithoutAsPrerequisiteInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+}
+
+export interface LinkUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutWorkspaceDataInput;
+}
+
+export interface ConceptCreateOneWithoutLinksFromConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksFromConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface LinkUpdateWithoutWorkspaceDataInput {
+  from?: Maybe<ConceptUpdateOneRequiredWithoutLinksFromConceptInput>;
+  to?: Maybe<ConceptUpdateOneRequiredWithoutLinksToConceptInput>;
+  official?: Maybe<Boolean>;
+}
+
+export interface URLCreateManyWithoutResourceInput {
+  create?: Maybe<
+    URLCreateWithoutResourceInput[] | URLCreateWithoutResourceInput
+  >;
+  connect?: Maybe<URLWhereUniqueInput[] | URLWhereUniqueInput>;
+}
+
+export interface LinkUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutWorkspaceDataInput;
+  create: LinkCreateWithoutWorkspaceInput;
+}
+
+export interface ConceptCreateManyWithoutCoursesInput {
+  create?: Maybe<
+    ConceptCreateWithoutCoursesInput[] | ConceptCreateWithoutCoursesInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+}
+
+export interface LinkScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  official?: Maybe<Boolean>;
+  official_not?: Maybe<Boolean>;
+  AND?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  OR?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+  NOT?: Maybe<LinkScalarWhereInput[] | LinkScalarWhereInput>;
+}
+
+export interface CourseCreateManyInput {
+  create?: Maybe<CourseCreateInput[] | CourseCreateInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+}
+
+export interface LinkUpdateManyWithWhereNestedInput {
+  where: LinkScalarWhereInput;
+  data: LinkUpdateManyDataInput;
+}
+
+export interface WorkspaceCreateManyWithoutConceptsInput {
+  create?: Maybe<
+    WorkspaceCreateWithoutConceptsInput[] | WorkspaceCreateWithoutConceptsInput
+  >;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+}
+
+export interface LinkUpdateManyDataInput {
+  official?: Maybe<Boolean>;
+}
+
+export interface WorkspaceCreateManyWithoutParticipantsInput {
+  create?: Maybe<
+    | WorkspaceCreateWithoutParticipantsInput[]
+    | WorkspaceCreateWithoutParticipantsInput
+  >;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+}
+
+export interface WorkspaceUpsertWithWhereUniqueWithoutOwnerInput {
+  where: WorkspaceWhereUniqueInput;
+  update: WorkspaceUpdateWithoutOwnerDataInput;
+  create: WorkspaceCreateWithoutOwnerInput;
+}
+
+export interface ConceptCreateManyWithoutWorkspacesInput {
+  create?: Maybe<
+    ConceptCreateWithoutWorkspacesInput[] | ConceptCreateWithoutWorkspacesInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+}
+
+export interface WorkspaceScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  type?: Maybe<WorkspaceType>;
+  type_not?: Maybe<WorkspaceType>;
+  type_in?: Maybe<WorkspaceType[] | WorkspaceType>;
+  type_not_in?: Maybe<WorkspaceType[] | WorkspaceType>;
+  AND?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  OR?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  NOT?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+}
+
+export interface UserCreateManyWithoutWorkspacesParticipatedInput {
+  create?: Maybe<
+    | UserCreateWithoutWorkspacesParticipatedInput[]
+    | UserCreateWithoutWorkspacesParticipatedInput
+  >;
+  connect?: Maybe<UserWhereUniqueInput[] | UserWhereUniqueInput>;
+}
+
+export interface WorkspaceUpdateManyWithWhereNestedInput {
+  where: WorkspaceScalarWhereInput;
+  data: WorkspaceUpdateManyDataInput;
+}
+
+export interface LinkCreateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    LinkCreateWithoutWorkspaceInput[] | LinkCreateWithoutWorkspaceInput
+  >;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+}
+
+export interface WorkspaceUpdateManyDataInput {
+  name?: Maybe<String>;
+  type?: Maybe<WorkspaceType>;
+}
+
+export interface WorkspaceCreateManyWithoutLinksInput {
+  create?: Maybe<
+    WorkspaceCreateWithoutLinksInput[] | WorkspaceCreateWithoutLinksInput
+  >;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutWorkspacesParticipatedInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutWorkspacesParticipatedDataInput;
+  create: UserCreateWithoutWorkspacesParticipatedInput;
+}
+
+export interface LinkUpdateWithWhereUniqueWithoutFromInput {
+  where: LinkWhereUniqueInput;
+  data: LinkUpdateWithoutFromDataInput;
+}
+
+export interface UserScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  tmcId?: Maybe<Int>;
+  tmcId_not?: Maybe<Int>;
+  tmcId_in?: Maybe<Int[] | Int>;
+  tmcId_not_in?: Maybe<Int[] | Int>;
+  tmcId_lt?: Maybe<Int>;
+  tmcId_lte?: Maybe<Int>;
+  tmcId_gt?: Maybe<Int>;
+  tmcId_gte?: Maybe<Int>;
+  role?: Maybe<Role>;
+  role_not?: Maybe<Role>;
+  role_in?: Maybe<Role[] | Role>;
+  role_not_in?: Maybe<Role[] | Role>;
+  AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+  NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
+}
+
+export interface CourseUpdateManyWithoutConceptsInput {
+  create?: Maybe<
+    CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
+  >;
+  delete?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  set?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  disconnect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+  update?: Maybe<
+    | CourseUpdateWithWhereUniqueWithoutConceptsInput[]
+    | CourseUpdateWithWhereUniqueWithoutConceptsInput
+  >;
+  upsert?: Maybe<
+    | CourseUpsertWithWhereUniqueWithoutConceptsInput[]
+    | CourseUpsertWithWhereUniqueWithoutConceptsInput
+  >;
+  deleteMany?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
+  updateMany?: Maybe<
+    | CourseUpdateManyWithWhereNestedInput[]
+    | CourseUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput;
+  data: UserUpdateManyDataInput;
+}
+
+export interface ConceptUpdateWithWhereUniqueWithoutAsPrerequisiteInput {
+  where: ConceptWhereUniqueInput;
+  data: ConceptUpdateWithoutAsPrerequisiteDataInput;
+}
+
+export interface UserUpdateManyDataInput {
+  tmcId?: Maybe<Int>;
+  role?: Maybe<Role>;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+}
+
+export interface WorkspaceUpsertWithWhereUniqueWithoutSubWorkspacesInput {
+  where: WorkspaceWhereUniqueInput;
+  update: WorkspaceUpdateWithoutSubWorkspacesDataInput;
+  create: WorkspaceCreateWithoutSubWorkspacesInput;
+}
+
+export interface ConceptSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ConceptWhereInput>;
+  AND?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
+  OR?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
+  NOT?: Maybe<ConceptSubscriptionWhereInput[] | ConceptSubscriptionWhereInput>;
+}
+
+export interface WorkspaceUpsertWithWhereUniqueWithoutParticipantsInput {
+  where: WorkspaceWhereUniqueInput;
+  update: WorkspaceUpdateWithoutParticipantsDataInput;
+  create: WorkspaceCreateWithoutParticipantsInput;
+}
+
+export interface URLUpdateManyMutationInput {
+  address?: Maybe<String>;
+}
+
+export interface UserUpsertWithoutWorkspaceOwnedInput {
+  update: UserUpdateWithoutWorkspaceOwnedDataInput;
+  create: UserCreateWithoutWorkspaceOwnedInput;
+}
+
+export interface ResourceCreateOneWithoutUrlsInput {
+  create?: Maybe<ResourceCreateWithoutUrlsInput>;
+  connect?: Maybe<ResourceWhereUniqueInput>;
+}
+
+export interface WorkspaceUpsertWithWhereUniqueWithoutConceptsInput {
+  where: WorkspaceWhereUniqueInput;
+  update: WorkspaceUpdateWithoutConceptsDataInput;
+  create: WorkspaceCreateWithoutConceptsInput;
+}
+
+export interface ResourceUpdateInput {
+  concept?: Maybe<ConceptUpdateOneRequiredWithoutResourcesInput>;
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  urls?: Maybe<URLUpdateManyWithoutResourceInput>;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutAsLearningObjectiveInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutAsLearningObjectiveDataInput;
+  create: ConceptCreateWithoutAsLearningObjectiveInput;
+}
+
+export interface LinkCreateManyWithoutFromInput {
+  create?: Maybe<LinkCreateWithoutFromInput[] | LinkCreateWithoutFromInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+}
+
+export interface WorkspaceUpdateOneRequiredWithoutCourseInput {
+  create?: Maybe<WorkspaceCreateWithoutCourseInput>;
+  update?: Maybe<WorkspaceUpdateWithoutCourseDataInput>;
+  upsert?: Maybe<WorkspaceUpsertWithoutCourseInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export interface LinkCreateManyWithoutToInput {
+  create?: Maybe<LinkCreateWithoutToInput[] | LinkCreateWithoutToInput>;
+  connect?: Maybe<LinkWhereUniqueInput[] | LinkWhereUniqueInput>;
+}
+
+export interface WorkspaceUpdateWithoutCourseDataInput {
+  name?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
+  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceUpdateManyWithoutSubWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+  links?: Maybe<LinkUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface CourseCreateManyWithoutPrerequisitesInput {
+  create?: Maybe<
+    | CourseCreateWithoutPrerequisitesInput[]
+    | CourseCreateWithoutPrerequisitesInput
+  >;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+}
+
+export interface WorkspaceUpsertWithoutCourseInput {
+  update: WorkspaceUpdateWithoutCourseDataInput;
+  create: WorkspaceCreateWithoutCourseInput;
+}
+
+export interface ConceptCreateManyWithoutAsLearningObjectiveInput {
+  create?: Maybe<
+    | ConceptCreateWithoutAsLearningObjectiveInput[]
+    | ConceptCreateWithoutAsLearningObjectiveInput
+  >;
+  connect?: Maybe<ConceptWhereUniqueInput[] | ConceptWhereUniqueInput>;
+}
+
+export interface CourseUpsertWithWhereUniqueNestedInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateDataInput;
+  create: CourseCreateInput;
+}
+
+export interface CourseCreateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    CourseCreateWithoutWorkspaceInput[] | CourseCreateWithoutWorkspaceInput
+  >;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutLearningObjectivesInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutLearningObjectivesDataInput;
+  create: CourseCreateWithoutLearningObjectivesInput;
+}
+
+export interface WorkspaceCreateManyWithoutOwnerInput {
+  create?: Maybe<
+    WorkspaceCreateWithoutOwnerInput[] | WorkspaceCreateWithoutOwnerInput
+  >;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutCoursesInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutCoursesDataInput;
+  create: ConceptCreateWithoutCoursesInput;
+}
+
+export interface ConceptUpdateInput {
+  name?: Maybe<String>;
+  description?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
+  linksToConcept?: Maybe<LinkUpdateManyWithoutToInput>;
+  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
+  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
+  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
+  workspaces?: Maybe<WorkspaceUpdateManyWithoutConceptsInput>;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutPrerequisitesInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutPrerequisitesDataInput;
+  create: CourseCreateWithoutPrerequisitesInput;
+}
+
+export interface CourseUpdateWithoutConceptsDataInput {
+  name?: Maybe<String>;
+  prerequisites?: Maybe<ConceptUpdateManyWithoutAsPrerequisiteInput>;
+  learningObjectives?: Maybe<ConceptUpdateManyWithoutAsLearningObjectiveInput>;
+  prerequisiteCourses?: Maybe<CourseUpdateManyInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseInput>;
+}
+
+export interface ConceptUpsertWithoutLinksFromConceptInput {
+  update: ConceptUpdateWithoutLinksFromConceptDataInput;
+  create: ConceptCreateWithoutLinksFromConceptInput;
+}
+
+export interface ResourceSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ResourceWhereInput>;
+  AND?: Maybe<
+    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
+  >;
+  OR?: Maybe<ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput>;
+  NOT?: Maybe<
+    ResourceSubscriptionWhereInput[] | ResourceSubscriptionWhereInput
+  >;
+}
+
+export interface WorkspaceUpdateManyWithoutLinksInput {
+  create?: Maybe<
+    WorkspaceCreateWithoutLinksInput[] | WorkspaceCreateWithoutLinksInput
+  >;
+  delete?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  set?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  disconnect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
+  update?: Maybe<
+    | WorkspaceUpdateWithWhereUniqueWithoutLinksInput[]
+    | WorkspaceUpdateWithWhereUniqueWithoutLinksInput
+  >;
+  upsert?: Maybe<
+    | WorkspaceUpsertWithWhereUniqueWithoutLinksInput[]
+    | WorkspaceUpsertWithWhereUniqueWithoutLinksInput
+  >;
+  deleteMany?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
+  updateMany?: Maybe<
+    | WorkspaceUpdateManyWithWhereNestedInput[]
+    | WorkspaceUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ResourceUpdateOneRequiredWithoutUrlsInput {
+  create?: Maybe<ResourceCreateWithoutUrlsInput>;
+  update?: Maybe<ResourceUpdateWithoutUrlsDataInput>;
+  upsert?: Maybe<ResourceUpsertWithoutUrlsInput>;
+  connect?: Maybe<ResourceWhereUniqueInput>;
+}
+
+export interface WorkspaceUpdateWithWhereUniqueWithoutLinksInput {
+  where: WorkspaceWhereUniqueInput;
+  data: WorkspaceUpdateWithoutLinksDataInput;
+}
+
+export interface ResourceCreateInput {
+  id?: Maybe<ID_Input>;
+  concept: ConceptCreateOneWithoutResourcesInput;
+  name: String;
+  description: String;
+  urls?: Maybe<URLCreateManyWithoutResourceInput>;
+}
+
+export interface WorkspaceUpdateWithoutLinksDataInput {
+  name?: Maybe<String>;
+  owner?: Maybe<UserUpdateOneRequiredWithoutWorkspaceOwnedInput>;
+  participants?: Maybe<UserUpdateManyWithoutWorkspacesParticipatedInput>;
+  course?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspacesInput>;
+  subWorkspaces?: Maybe<WorkspaceUpdateManyWithoutSubWorkspacesInput>;
+  type?: Maybe<WorkspaceType>;
+}
+
+export interface ResourceCreateManyWithoutConceptInput {
+  create?: Maybe<
+    ResourceCreateWithoutConceptInput[] | ResourceCreateWithoutConceptInput
+  >;
+  connect?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+}
+
+export interface WorkspaceUpsertWithWhereUniqueWithoutLinksInput {
+  where: WorkspaceWhereUniqueInput;
+  update: WorkspaceUpdateWithoutLinksDataInput;
+  create: WorkspaceCreateWithoutLinksInput;
+}
+
+export interface UserCreateOneWithoutWorkspaceOwnedInput {
+  create?: Maybe<UserCreateWithoutWorkspaceOwnedInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface LinkUpsertWithWhereUniqueWithoutToInput {
+  where: LinkWhereUniqueInput;
+  update: LinkUpdateWithoutToDataInput;
+  create: LinkCreateWithoutToInput;
+}
+
+export interface WorkspaceCreateOneWithoutCourseInput {
+  create?: Maybe<WorkspaceCreateWithoutCourseInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export interface ConceptUpsertWithWhereUniqueWithoutAsPrerequisiteInput {
+  where: ConceptWhereUniqueInput;
+  update: ConceptUpdateWithoutAsPrerequisiteDataInput;
+  create: ConceptCreateWithoutAsPrerequisiteInput;
+}
+
+export interface URLWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  address?: Maybe<String>;
+  address_not?: Maybe<String>;
+  address_in?: Maybe<String[] | String>;
+  address_not_in?: Maybe<String[] | String>;
+  address_lt?: Maybe<String>;
+  address_lte?: Maybe<String>;
+  address_gt?: Maybe<String>;
+  address_gte?: Maybe<String>;
+  address_contains?: Maybe<String>;
+  address_not_contains?: Maybe<String>;
+  address_starts_with?: Maybe<String>;
+  address_not_starts_with?: Maybe<String>;
+  address_ends_with?: Maybe<String>;
+  address_not_ends_with?: Maybe<String>;
+  resource?: Maybe<ResourceWhereInput>;
+  AND?: Maybe<URLWhereInput[] | URLWhereInput>;
+  OR?: Maybe<URLWhereInput[] | URLWhereInput>;
+  NOT?: Maybe<URLWhereInput[] | URLWhereInput>;
+}
+
+export interface CourseUpsertWithWhereUniqueWithoutConceptsInput {
+  where: CourseWhereUniqueInput;
+  update: CourseUpdateWithoutConceptsDataInput;
+  create: CourseCreateWithoutConceptsInput;
+}
+
+export interface ConceptUpsertWithoutResourcesInput {
+  update: ConceptUpdateWithoutResourcesDataInput;
+  create: ConceptCreateWithoutResourcesInput;
+}
+
+export interface ConceptUpsertWithoutLinksToConceptInput {
+  update: ConceptUpdateWithoutLinksToConceptDataInput;
+  create: ConceptCreateWithoutLinksToConceptInput;
+}
+
+export interface CourseCreateManyWithoutLearningObjectivesInput {
+  create?: Maybe<
+    | CourseCreateWithoutLearningObjectivesInput[]
+    | CourseCreateWithoutLearningObjectivesInput
+  >;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
 }
 
 export interface CourseUpdateManyMutationInput {
@@ -2334,6 +2672,7 @@ export interface LinkCreateInput {
   from: ConceptCreateOneWithoutLinksFromConceptInput;
   to: ConceptCreateOneWithoutLinksToConceptInput;
   official?: Maybe<Boolean>;
+  workspace?: Maybe<WorkspaceCreateManyWithoutLinksInput>;
 }
 
 export interface ConceptUpdateManyMutationInput {
@@ -2348,65 +2687,57 @@ export interface LinkUpsertWithWhereUniqueWithoutFromInput {
   create: LinkCreateWithoutFromInput;
 }
 
-export interface ResourceUpdateOneRequiredWithoutUrlsInput {
-  create?: Maybe<ResourceCreateWithoutUrlsInput>;
-  update?: Maybe<ResourceUpdateWithoutUrlsDataInput>;
-  upsert?: Maybe<ResourceUpsertWithoutUrlsInput>;
-  connect?: Maybe<ResourceWhereUniqueInput>;
-}
-
-export interface ConceptUpdateWithoutLinksToConceptDataInput {
-  name?: Maybe<String>;
-  description?: Maybe<String>;
-  official?: Maybe<Boolean>;
-  linksFromConcept?: Maybe<LinkUpdateManyWithoutFromInput>;
-  courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
-  resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
-  asPrerequisite?: Maybe<CourseUpdateManyWithoutPrerequisitesInput>;
-  asLearningObjective?: Maybe<CourseUpdateManyWithoutLearningObjectivesInput>;
-}
-
-export interface UserCreateOneWithoutWorkspaceOwnedInput {
-  create?: Maybe<UserCreateWithoutWorkspaceOwnedInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface ResourceCreateManyWithoutConceptInput {
+export interface WorkspaceCreateManyWithoutSubWorkspacesInput {
   create?: Maybe<
-    ResourceCreateWithoutConceptInput[] | ResourceCreateWithoutConceptInput
+    | WorkspaceCreateWithoutSubWorkspacesInput[]
+    | WorkspaceCreateWithoutSubWorkspacesInput
   >;
-  connect?: Maybe<ResourceWhereUniqueInput[] | ResourceWhereUniqueInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput[] | WorkspaceWhereUniqueInput>;
 }
 
-export interface ResourceCreateInput {
-  id?: Maybe<ID_Input>;
-  concept: ConceptCreateOneWithoutResourcesInput;
-  name: String;
-  description: String;
-  urls?: Maybe<URLCreateManyWithoutResourceInput>;
+export interface CourseCreateManyWithoutConceptsInput {
+  create?: Maybe<
+    CourseCreateWithoutConceptsInput[] | CourseCreateWithoutConceptsInput
+  >;
+  connect?: Maybe<CourseWhereUniqueInput[] | CourseWhereUniqueInput>;
+}
+
+export interface UserUpdateManyMutationInput {
+  tmcId?: Maybe<Int>;
+  role?: Maybe<Role>;
+}
+
+export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
+  create?: Maybe<ConceptCreateWithoutLinksToConceptInput>;
+  update?: Maybe<ConceptUpdateWithoutLinksToConceptDataInput>;
+  upsert?: Maybe<ConceptUpsertWithoutLinksToConceptInput>;
+  connect?: Maybe<ConceptWhereUniqueInput>;
 }
 
 export interface NodeNode {
   id: ID_Output;
 }
 
-export interface WorkSpacePreviousValues {
+export interface WorkspacePreviousValues {
   id: ID_Output;
   name: String;
+  type: WorkspaceType;
 }
 
-export interface WorkSpacePreviousValuesPromise
-  extends Promise<WorkSpacePreviousValues>,
+export interface WorkspacePreviousValuesPromise
+  extends Promise<WorkspacePreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  type: () => Promise<WorkspaceType>;
 }
 
-export interface WorkSpacePreviousValuesSubscription
-  extends Promise<AsyncIterator<WorkSpacePreviousValues>>,
+export interface WorkspacePreviousValuesSubscription
+  extends Promise<AsyncIterator<WorkspacePreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  type: () => Promise<AsyncIterator<WorkspaceType>>;
 }
 
 export interface ConceptEdge {
@@ -2511,18 +2842,18 @@ export interface BatchPayloadSubscription
   count: () => Promise<AsyncIterator<Long>>;
 }
 
-export interface AggregateWorkSpace {
+export interface AggregateWorkspace {
   count: Int;
 }
 
-export interface AggregateWorkSpacePromise
-  extends Promise<AggregateWorkSpace>,
+export interface AggregateWorkspacePromise
+  extends Promise<AggregateWorkspace>,
     Fragmentable {
   count: () => Promise<Int>;
 }
 
-export interface AggregateWorkSpaceSubscription
-  extends Promise<AsyncIterator<AggregateWorkSpace>>,
+export interface AggregateWorkspaceSubscription
+  extends Promise<AsyncIterator<AggregateWorkspace>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -2552,25 +2883,25 @@ export interface URLNullablePromise extends Promise<URL | null>, Fragmentable {
   resource: <T = ResourcePromise>() => T;
 }
 
-export interface WorkSpaceConnection {
+export interface WorkspaceConnection {
   pageInfo: PageInfo;
-  edges: WorkSpaceEdge[];
+  edges: WorkspaceEdge[];
 }
 
-export interface WorkSpaceConnectionPromise
-  extends Promise<WorkSpaceConnection>,
+export interface WorkspaceConnectionPromise
+  extends Promise<WorkspaceConnection>,
     Fragmentable {
   pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<WorkSpaceEdge>>() => T;
-  aggregate: <T = AggregateWorkSpacePromise>() => T;
+  edges: <T = FragmentableArray<WorkspaceEdge>>() => T;
+  aggregate: <T = AggregateWorkspacePromise>() => T;
 }
 
-export interface WorkSpaceConnectionSubscription
-  extends Promise<AsyncIterator<WorkSpaceConnection>>,
+export interface WorkspaceConnectionSubscription
+  extends Promise<AsyncIterator<WorkspaceConnection>>,
     Fragmentable {
   pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<WorkSpaceEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateWorkSpaceSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<WorkspaceEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateWorkspaceSubscription>() => T;
 }
 
 export interface Link {
@@ -2583,6 +2914,15 @@ export interface LinkPromise extends Promise<Link>, Fragmentable {
   from: <T = ConceptPromise>() => T;
   to: <T = ConceptPromise>() => T;
   official: () => Promise<Boolean>;
+  workspace: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface LinkSubscription
@@ -2592,6 +2932,15 @@ export interface LinkSubscription
   from: <T = ConceptSubscription>() => T;
   to: <T = ConceptSubscription>() => T;
   official: () => Promise<AsyncIterator<Boolean>>;
+  workspace: <T = Promise<AsyncIterator<WorkspaceSubscription>>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface LinkNullablePromise
@@ -2601,6 +2950,15 @@ export interface LinkNullablePromise
   from: <T = ConceptPromise>() => T;
   to: <T = ConceptPromise>() => T;
   official: () => Promise<Boolean>;
+  workspace: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface UserEdge {
@@ -2686,6 +3044,15 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  workspaces: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ConceptSubscription
@@ -2749,6 +3116,15 @@ export interface ConceptSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  workspaces: <T = Promise<AsyncIterator<WorkspaceSubscription>>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ConceptNullablePromise
@@ -2806,6 +3182,15 @@ export interface ConceptNullablePromise
   asLearningObjective: <T = FragmentableArray<Course>>(args?: {
     where?: CourseWhereInput;
     orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspaces: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -3139,22 +3524,22 @@ export interface LinkSubscriptionPayloadSubscription
   previousValues: <T = LinkPreviousValuesSubscription>() => T;
 }
 
-export interface WorkSpaceEdge {
-  node: WorkSpace;
+export interface WorkspaceEdge {
+  node: Workspace;
   cursor: String;
 }
 
-export interface WorkSpaceEdgePromise
-  extends Promise<WorkSpaceEdge>,
+export interface WorkspaceEdgePromise
+  extends Promise<WorkspaceEdge>,
     Fragmentable {
-  node: <T = WorkSpacePromise>() => T;
+  node: <T = WorkspacePromise>() => T;
   cursor: () => Promise<String>;
 }
 
-export interface WorkSpaceEdgeSubscription
-  extends Promise<AsyncIterator<WorkSpaceEdge>>,
+export interface WorkspaceEdgeSubscription
+  extends Promise<AsyncIterator<WorkspaceEdge>>,
     Fragmentable {
-  node: <T = WorkSpaceSubscription>() => T;
+  node: <T = WorkspaceSubscription>() => T;
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
@@ -3198,88 +3583,139 @@ export interface UserConnectionSubscription
   aggregate: <T = AggregateUserSubscription>() => T;
 }
 
-export interface User {
+export interface Course {
   id: ID_Output;
-  tmcId: Int;
-  role: Role;
+  name: String;
 }
 
-export interface UserPromise extends Promise<User>, Fragmentable {
+export interface CoursePromise extends Promise<Course>, Fragmentable {
   id: () => Promise<ID_Output>;
-  tmcId: () => Promise<Int>;
-  role: () => Promise<Role>;
-  workspaceOwned: <T = FragmentableArray<WorkSpace>>(args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  name: () => Promise<String>;
+  concepts: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  workspacesParticipated: <T = FragmentableArray<WorkSpace>>(args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  prerequisites: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
+  learningObjectives: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  prerequisiteCourses: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspace: <T = WorkspacePromise>() => T;
 }
 
-export interface UserSubscription
-  extends Promise<AsyncIterator<User>>,
+export interface CourseSubscription
+  extends Promise<AsyncIterator<Course>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  tmcId: () => Promise<AsyncIterator<Int>>;
-  role: () => Promise<AsyncIterator<Role>>;
-  workspaceOwned: <T = Promise<AsyncIterator<WorkSpaceSubscription>>>(args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  name: () => Promise<AsyncIterator<String>>;
+  concepts: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  workspacesParticipated: <
-    T = Promise<AsyncIterator<WorkSpaceSubscription>>
-  >(args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  prerequisites: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
+  learningObjectives: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  prerequisiteCourses: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspace: <T = WorkspaceSubscription>() => T;
 }
 
-export interface UserNullablePromise
-  extends Promise<User | null>,
+export interface CourseNullablePromise
+  extends Promise<Course | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  tmcId: () => Promise<Int>;
-  role: () => Promise<Role>;
-  workspaceOwned: <T = FragmentableArray<WorkSpace>>(args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  name: () => Promise<String>;
+  concepts: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  workspacesParticipated: <T = FragmentableArray<WorkSpace>>(args?: {
-    where?: WorkSpaceWhereInput;
-    orderBy?: WorkSpaceOrderByInput;
+  prerequisites: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
+  learningObjectives: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  prerequisiteCourses: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspace: <T = WorkspacePromise>() => T;
 }
 
 export interface AggregateResource {
@@ -3399,14 +3835,34 @@ export interface AggregateUserSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface Course {
+export interface Workspace {
   id: ID_Output;
   name: String;
+  type: WorkspaceType;
 }
 
-export interface CoursePromise extends Promise<Course>, Fragmentable {
+export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  owner: <T = UserPromise>() => T;
+  participants: <T = FragmentableArray<User>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  course: <T = FragmentableArray<Course>>(args?: {
+    where?: CourseWhereInput;
+    orderBy?: CourseOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   concepts: <T = FragmentableArray<Concept>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
@@ -3416,25 +3872,43 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  prerequisites: <T = FragmentableArray<Concept>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  subWorkspaces: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  learningObjectives: <T = FragmentableArray<Concept>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  type: () => Promise<WorkspaceType>;
+  links: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  prerequisiteCourses: <T = FragmentableArray<Course>>(args?: {
+}
+
+export interface WorkspaceSubscription
+  extends Promise<AsyncIterator<Workspace>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  owner: <T = UserSubscription>() => T;
+  participants: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  course: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
     where?: CourseWhereInput;
     orderBy?: CourseOrderByInput;
     skip?: Int;
@@ -3443,14 +3917,6 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  workspace: <T = WorkSpacePromise>() => T;
-}
-
-export interface CourseSubscription
-  extends Promise<AsyncIterator<Course>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
   concepts: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
@@ -3460,25 +3926,43 @@ export interface CourseSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  prerequisites: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  subWorkspaces: <T = Promise<AsyncIterator<WorkspaceSubscription>>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  learningObjectives: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  type: () => Promise<AsyncIterator<WorkspaceType>>;
+  links: <T = Promise<AsyncIterator<LinkSubscription>>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  prerequisiteCourses: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
+}
+
+export interface WorkspaceNullablePromise
+  extends Promise<Workspace | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  owner: <T = UserPromise>() => T;
+  participants: <T = FragmentableArray<User>>(args?: {
+    where?: UserWhereInput;
+    orderBy?: UserOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  course: <T = FragmentableArray<Course>>(args?: {
     where?: CourseWhereInput;
     orderBy?: CourseOrderByInput;
     skip?: Int;
@@ -3487,14 +3971,6 @@ export interface CourseSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  workspace: <T = WorkSpaceSubscription>() => T;
-}
-
-export interface CourseNullablePromise
-  extends Promise<Course | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
   concepts: <T = FragmentableArray<Concept>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
@@ -3504,34 +3980,25 @@ export interface CourseNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  prerequisites: <T = FragmentableArray<Concept>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  subWorkspaces: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  learningObjectives: <T = FragmentableArray<Concept>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  type: () => Promise<WorkspaceType>;
+  links: <T = FragmentableArray<Link>>(args?: {
+    where?: LinkWhereInput;
+    orderBy?: LinkOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  prerequisiteCourses: <T = FragmentableArray<Course>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  workspace: <T = WorkSpacePromise>() => T;
 }
 
 export interface URLPreviousValues {
@@ -3578,36 +4045,28 @@ export interface URLSubscriptionPayloadSubscription
   previousValues: <T = URLPreviousValuesSubscription>() => T;
 }
 
-export interface WorkSpace {
+export interface User {
   id: ID_Output;
-  name: String;
+  tmcId: Int;
+  role: Role;
 }
 
-export interface WorkSpacePromise extends Promise<WorkSpace>, Fragmentable {
+export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  owner: <T = UserPromise>() => T;
-  participants: <T = FragmentableArray<User>>(args?: {
-    where?: UserWhereInput;
-    orderBy?: UserOrderByInput;
+  tmcId: () => Promise<Int>;
+  role: () => Promise<Role>;
+  workspaceOwned: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  course: <T = FragmentableArray<Course>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  concepts: <T = FragmentableArray<Concept>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  workspacesParticipated: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -3616,33 +4075,26 @@ export interface WorkSpacePromise extends Promise<WorkSpace>, Fragmentable {
   }) => T;
 }
 
-export interface WorkSpaceSubscription
-  extends Promise<AsyncIterator<WorkSpace>>,
+export interface UserSubscription
+  extends Promise<AsyncIterator<User>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  owner: <T = UserSubscription>() => T;
-  participants: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
-    where?: UserWhereInput;
-    orderBy?: UserOrderByInput;
+  tmcId: () => Promise<AsyncIterator<Int>>;
+  role: () => Promise<AsyncIterator<Role>>;
+  workspaceOwned: <T = Promise<AsyncIterator<WorkspaceSubscription>>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  course: <T = Promise<AsyncIterator<CourseSubscription>>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  concepts: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  workspacesParticipated: <
+    T = Promise<AsyncIterator<WorkspaceSubscription>>
+  >(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -3651,33 +4103,24 @@ export interface WorkSpaceSubscription
   }) => T;
 }
 
-export interface WorkSpaceNullablePromise
-  extends Promise<WorkSpace | null>,
+export interface UserNullablePromise
+  extends Promise<User | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  owner: <T = UserPromise>() => T;
-  participants: <T = FragmentableArray<User>>(args?: {
-    where?: UserWhereInput;
-    orderBy?: UserOrderByInput;
+  tmcId: () => Promise<Int>;
+  role: () => Promise<Role>;
+  workspaceOwned: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  course: <T = FragmentableArray<Course>>(args?: {
-    where?: CourseWhereInput;
-    orderBy?: CourseOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  concepts: <T = FragmentableArray<Concept>>(args?: {
-    where?: ConceptWhereInput;
-    orderBy?: ConceptOrderByInput;
+  workspacesParticipated: <T = FragmentableArray<Workspace>>(args?: {
+    where?: WorkspaceWhereInput;
+    orderBy?: WorkspaceOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -3703,29 +4146,29 @@ export interface URLEdgeSubscription
   cursor: () => Promise<AsyncIterator<String>>;
 }
 
-export interface WorkSpaceSubscriptionPayload {
+export interface WorkspaceSubscriptionPayload {
   mutation: MutationType;
-  node: WorkSpace;
+  node: Workspace;
   updatedFields: String[];
-  previousValues: WorkSpacePreviousValues;
+  previousValues: WorkspacePreviousValues;
 }
 
-export interface WorkSpaceSubscriptionPayloadPromise
-  extends Promise<WorkSpaceSubscriptionPayload>,
+export interface WorkspaceSubscriptionPayloadPromise
+  extends Promise<WorkspaceSubscriptionPayload>,
     Fragmentable {
   mutation: () => Promise<MutationType>;
-  node: <T = WorkSpacePromise>() => T;
+  node: <T = WorkspacePromise>() => T;
   updatedFields: () => Promise<String[]>;
-  previousValues: <T = WorkSpacePreviousValuesPromise>() => T;
+  previousValues: <T = WorkspacePreviousValuesPromise>() => T;
 }
 
-export interface WorkSpaceSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<WorkSpaceSubscriptionPayload>>,
+export interface WorkspaceSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<WorkspaceSubscriptionPayload>>,
     Fragmentable {
   mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = WorkSpaceSubscription>() => T;
+  node: <T = WorkspaceSubscription>() => T;
   updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = WorkSpacePreviousValuesSubscription>() => T;
+  previousValues: <T = WorkspacePreviousValuesSubscription>() => T;
 }
 
 export interface AggregateCourse {
@@ -3802,7 +4245,11 @@ export const models: Model[] = [
     embedded: false
   },
   {
-    name: "WorkSpace",
+    name: "WorkspaceType",
+    embedded: false
+  },
+  {
+    name: "Workspace",
     embedded: false
   },
   {

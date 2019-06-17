@@ -17,7 +17,7 @@ const { checkAccess } = require('./accessControl')
 const resolvers = {
   Query: {
     ownedWorkSpaces(root, args, context) {
-      accessControl(context, {allowUser: true})
+      accessControl(context, {allowStudent: true})
 
       return context.prisma.workSpaces({
         where: {
@@ -64,8 +64,18 @@ const resolvers = {
     },
   },
   Mutation: {
-    async createWorkSpace(root, args, context) {
-      checkAccess(context, { allowUser: true })
+    async createWorkspace(root, args, context) {
+      switch(args.type) {
+        case 'STAFF':
+          checkAccess(context, {allowStaff: true})
+          break
+        case 'STUDENT':
+          checkAccess(context, {allowStudent: true})
+          break
+        default:
+          checkAccess(context)
+      }
+      
       return context.prisma.createWorkSpace({
         name: args.name,
         owner: {
@@ -109,7 +119,7 @@ const resolvers = {
     },
 
     async deleteCourseAsCoursePrerequisite(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       await context.prisma.updateCourse({
         where: { id: args.id },
         data: {
@@ -123,7 +133,7 @@ const resolvers = {
       })
     },
     async addCourseAsCoursePrerequisite(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       await context.prisma.updateCourse({
         where: { id: args.id },
         data: {
@@ -137,7 +147,7 @@ const resolvers = {
       })
     },
     createResourceWithURLs(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.createResource({
         name: args.name,
         description: args.desc,
@@ -152,14 +162,14 @@ const resolvers = {
       })
     },
     createURL(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.createURL({
         address: args.address,
         resource: { connect: { id: args.resource_id } }
       })
     },
     createResource(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.createResource({
         name: args.name,
         description: args.desc,
@@ -167,7 +177,7 @@ const resolvers = {
       })
     },
     createCourse(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.createCourse({
         name: args.name,
         workspace: {
@@ -176,13 +186,13 @@ const resolvers = {
       })
     },
     deleteCourse(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.deleteCourse({
         id: args.id
       })
     },
     createConcept(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       const concept = args.desc !== undefined
         ? args.official !== undefined
           ? { name: args.name, description: args.desc, official: args.official }
@@ -197,7 +207,7 @@ const resolvers = {
       })
     },
     createConceptAsPrerequisite(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       const concept = args.desc !== undefined
         ? args.official !== undefined
           ? { name: args.name, description: args.desc, official: args.official }
@@ -212,7 +222,7 @@ const resolvers = {
       })
     },
     createConceptAsLearningObjective(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       const concept = args.desc !== undefined
         ? args.official !== undefined
           ? { name: args.name, description: args.desc, official: args.official }
@@ -227,7 +237,7 @@ const resolvers = {
       })
     },
     updateConcept(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       let data = {}
       if (args.name !== undefined) {
         data.name = args.name
@@ -241,14 +251,14 @@ const resolvers = {
       })
     },
     updateCourse(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.updateCourse({
         where: { id: args.id },
         data: { name: args.name }
       })
     },
     async createConceptAndLinkTo(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       const concept = args.desc !== undefined
         ? args.official !== undefined
           ? { name: args.name, description: args.desc, official: args.official }
@@ -271,7 +281,7 @@ const resolvers = {
         })
     },
     async deleteConcept(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       await context.prisma.deleteManyLinks({
 
         OR: [
@@ -294,7 +304,7 @@ const resolvers = {
       })
     },
     createLink(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return args.official !== undefined
         ? context.prisma.createLink({
           to: {
@@ -315,7 +325,7 @@ const resolvers = {
         })
     },
     deleteLink(root, args, context) {
-      checkAccess(context, { allowUser: true })
+      checkAccess(context, { allowStudent: true })
       return context.prisma.deleteLink({
         id: args.id
       })
