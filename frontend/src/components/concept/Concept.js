@@ -16,7 +16,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Switch from '@material-ui/core/Switch'
 
 // Error dispatcher
-import { useErrorStateValue } from '../../store'
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   conceptName: {
@@ -44,7 +44,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
   const [state, setState] = useState({ anchorEl: null })
 
   const client = useApolloClient()
+
   const errorDispatch = useErrorStateValue()[1]
+  const { loggedIn } = useLoginStateValue()[0]
 
   const deleteLink = useMutation(DELETE_LINK, {
     update: (store, response) => {
@@ -182,14 +184,16 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
       <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
         {activeConceptIds.length === 0 ?
           <React.Fragment>
-
-            <IconButton
-              aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-              aria-haspopup="true"
-              onClick={handleMenuOpen}
-            >
-              <MoreVertIcon />
-            </IconButton>
+            { 
+              loggedIn ? 
+                <IconButton
+                  aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVertIcon />
+                </IconButton> : null
+            }
             <Menu
               id="simple-menu"
               anchorEl={state.anchorEl}
