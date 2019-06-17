@@ -16,7 +16,7 @@ const { checkAccess } = require('./accessControl')
 
 const resolvers = {
   Query: {
-    ownedWorkSpaces(root, args, context) {
+    ownedWorkspaces(root, args, context) {
       accessControl(context, {allowStudent: true})
 
       return context.prisma.workSpaces({
@@ -78,6 +78,7 @@ const resolvers = {
       
       return context.prisma.createWorkSpace({
         name: args.name,
+        type: args.type,
         owner: {
           connect: { id: context.user.id }
         }
@@ -179,10 +180,7 @@ const resolvers = {
     createCourse(root, args, context) {
       checkAccess(context, { allowStudent: true })
       return context.prisma.createCourse({
-        name: args.name,
-        workspace: {
-          connect: { id: args.workspace_id }
-        }
+        name: args.name
       })
     },
     deleteCourse(root, args, context) {

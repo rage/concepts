@@ -1,7 +1,7 @@
 scalar DateTime
 
 type Query {
-  ownedWorkSpaces: [WorkSpace!]!
+  ownedWorkspaces: [WorkSpace!]!
   allResources: [Resource!]!
   allURLs: [URL!]!
   allConcepts: [Concept!]!
@@ -15,7 +15,7 @@ type Query {
 
 type Mutation {
   login(tmcToken: String!): AuthPayload
-  createWorkspace(name: String!): WorkSpace
+  createWorkspace(name: String!, type: WorkspaceType!): WorkSpace
   addCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   deleteCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
   createConceptAsPrerequisite(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
@@ -24,7 +24,7 @@ type Mutation {
   createURL(address: String!, resource_id: ID!): URL
   createResource(name: String!, concept_id: ID!, desc: String!): Resource
   updateConcept(id: ID!, name:String, desc: String): Concept
-  createCourse(name: String!, workspace_id: ID!): Course
+  createCourse(name: String!): Course
   deleteCourse(id: ID!): Course
   updateCourse(id: ID!, name: String!): Course
   createConcept(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
@@ -49,6 +49,11 @@ enum Role {
   ADMIN
 }
 
+enum WorkspaceType {
+  STAFF
+  STUDENT
+}
+
 type WorkSpace {
   id: ID!
   name: String!
@@ -57,6 +62,7 @@ type WorkSpace {
   course: Course!
   prerequisiteCourses: [Course!]!
   concepts: [Concept!]!
+  type: WorkspaceType!
 }
 
 type AuthPayload {
