@@ -23,6 +23,8 @@ import ActiveConcept from '../concept/ActiveConcept'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
+import { useLoginStateValue } from '../../store'
+
 
 const styles = theme => ({
   root: {
@@ -68,6 +70,8 @@ const ActiveCourse = ({
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
+
+  const { loggedIn } = useLoginStateValue()[0]
 
   const client = useApolloClient()
 
@@ -165,14 +169,17 @@ const ActiveCourse = ({
             </List>
           </ClickAwayListener>
 
-          <Button
-            className={classes.button}
-            onClick={handleConceptOpen(course.id)}
-            variant="contained"
-            color="secondary"
-          >
-            Add concept
-          </Button>
+          { loggedIn ? 
+              <Button
+              className={classes.button}
+              onClick={handleConceptOpen(course.id)}
+              variant="contained"
+              color="secondary"
+            >
+              Add concept
+            </Button> : null
+          }
+          
         </CardContent>
       </Card>
 

@@ -23,6 +23,9 @@ import { ALL_COURSES } from '../../services/CourseService'
 import CourseCreationDialog from './CourseCreationDialog'
 import CourseEditingDialog from './CourseEditingDialog'
 
+// Error dispatcher
+import { useErrorStateValue, useLoginStateValue } from '../../store'
+
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters()
@@ -38,7 +41,17 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
 
   const courses = useQuery(ALL_COURSES)
 
+  const { loggedIn } = useLoginStateValue()[0]
+  const errorDispatch = useErrorStateValue()[1]
+
   const handleClickOpen = () => {
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
     setStateCreate({ open: true })
   }
 
@@ -47,6 +60,13 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   }
 
   const handleEditOpen = (id, name) => () => {
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
     setStateEdit({ open: true, id, name })
   }
 
@@ -55,11 +75,26 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   }
 
   const handleDelete = (id) => async (e) => {
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    
     let willDelete = window.confirm('Are you sure you want to delete this course?')
     if (willDelete) {
-      deleteCourse({
-        variables: { id }
-      })
+      try {
+        await deleteCourse({
+          variables: { id }
+        })
+      } catch (err) {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      }
     }
   }
 
@@ -76,9 +111,10 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
         <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
+              loggedIn ? 
               <IconButton aria-label="Add" onClick={handleClickOpen}>
                 <AddIcon />
-              </IconButton>
+              </IconButton> : null
             }
             title={
               <Typography variant="h5" component="h3">
@@ -99,17 +135,21 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
                       }
                       secondary={true ? 'Concepts: ' + course.concepts.length : null}
                     />
-                    <ListItemSecondaryAction>
-                      <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
-                        <GridOnIcon />
-                      </IconButton>
-                      <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                      <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
-                        <EditIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
+                    {
+                      loggedIn ? 
+                        <ListItemSecondaryAction>
+                        <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
+                          <GridOnIcon />
+                        </IconButton>
+                        <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                        <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
+                          <EditIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction> : null
+                    }
+                    
                   </ListItem>
                 )) :
                 <div style={{ textAlign: 'center' }}>

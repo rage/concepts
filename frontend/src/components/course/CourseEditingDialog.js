@@ -11,8 +11,13 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
+// Error dispatcher
+import { useErrorStateValue } from '../../store'
+
 const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) => {
   const [name, setName] = useState('')
+
+  const errorDispatch = useErrorStateValue()[1]
 
   useEffect(() => {
     setName(defaultName)
@@ -22,16 +27,24 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
     if (name === '') {
       window.alert('Course needs a name!')
       return
-    } else if (defaultName !== name) {
-      await updateCourse({
-        variables: {
-          id: state.id,
-          name
-        }
+    } 
+    try {
+      if (defaultName !== name) {
+        await updateCourse({
+          variables: {
+            id: state.id,
+            name
+          }
+        })
+      }
+      setName('')
+      handleClose()
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
       })
     }
-    setName('')
-    handleClose()
   }
 
   const handleKey = (e) => {

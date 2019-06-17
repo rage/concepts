@@ -6,9 +6,9 @@ import './index.css'
 import client from './apolloClient'
 import { ApolloProvider } from 'react-apollo-hooks'
 import { isSignedIn } from './lib/authentication'
-import { LoginStateProvider } from './store'
+import { LoginStateProvider, ErrorStateProvider } from './store'
 
-const reducer = (state, action) => {
+const loginReducer = (state, action) => {
   switch (action.type) {
     case 'login':
       return {
@@ -25,12 +25,31 @@ const reducer = (state, action) => {
   }
 }
 
+const errorReducer = (state, action) => {
+  switch (action.type) {
+    case 'setError':
+      return {
+        ...state,
+        error: action.data
+      }
+    case 'clearError':
+      return {
+        ...state,
+        error: ''
+      }
+    default:
+      return state
+  }
+}
+
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <LoginStateProvider initialState={{ loggedIn: isSignedIn() }} reducer={reducer}>
-        <App />
-      </LoginStateProvider>
+      <ErrorStateProvider initialState={{ error: '' }} reducer={errorReducer}>
+        <LoginStateProvider initialState={{ loggedIn: isSignedIn() }} reducer={loginReducer}>
+          <App />
+        </LoginStateProvider>
+      </ErrorStateProvider>
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root')

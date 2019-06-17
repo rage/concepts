@@ -15,6 +15,8 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Switch from '@material-ui/core/Switch'
 
+// Error dispatcher
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   conceptName: {
@@ -42,6 +44,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
   const [state, setState] = useState({ anchorEl: null })
 
   const client = useApolloClient()
+
+  const errorDispatch = useErrorStateValue()[1]
+  const { loggedIn } = useLoginStateValue()[0]
 
   const deleteLink = useMutation(DELETE_LINK, {
     update: (store, response) => {
@@ -105,20 +110,35 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
 
   const onClick = async () => {
     if (isActive()) {
-      concept.linksFromConcept.forEach(link => {
+      concept.linksFromConcept.forEach(async (link) => {
         const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
         if (hasLink) {
-          deleteLink({ variables: { id: link.id } })
+          try {
+            await deleteLink({ variables: { id: link.id } })
+          } catch (err) {
+            errorDispatch({
+              type: 'setError',
+              data: 'Access denied'
+            })
+          }
         }
       })
     } else {
-      activeConceptIds.forEach(conceptId =>
-        linkPrerequisite({
-          variables: {
-            to: conceptId,
-            from: concept.id
-          }
-        }))
+      activeConceptIds.forEach(async (conceptId) => {
+        try {
+          await linkPrerequisite({
+            variables: {
+              to: conceptId,
+              from: concept.id
+            }
+          })
+        } catch (err) {
+          errorDispatch({
+            type: 'setError',
+            data: 'Access denied'
+          })
+        }
+      })
     }
   }
 
@@ -133,7 +153,14 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
-      deleteConcept({ variables: { id } })
+      try {
+        await deleteConcept({ variables: { id } })
+      } catch (err) {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      }
     }
     handleMenuClose()
   }
@@ -157,14 +184,16 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
       <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
         {activeConceptIds.length === 0 ?
           <React.Fragment>
-
-            <IconButton
-              aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-              aria-haspopup="true"
-              onClick={handleMenuOpen}
-            >
-              <MoreVertIcon />
-            </IconButton>
+            { 
+              loggedIn ? 
+                <IconButton
+                  aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVertIcon />
+                </IconButton> : null
+            }
             <Menu
               id="simple-menu"
               anchorEl={state.anchorEl}

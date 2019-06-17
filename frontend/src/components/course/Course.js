@@ -17,6 +17,8 @@ import EditIcon from '@material-ui/icons/Edit'
 import { withRouter } from 'react-router-dom'
 import Concept from '../concept/Concept'
 
+import { useLoginStateValue } from '../../store'
+
 const styles = theme => ({
   root: {
     width: '280px',
@@ -68,6 +70,8 @@ const Course = ({
   history
 }) => {
 
+  const { loggedIn } = useLoginStateValue()[0]
+
   const onHeaderClickHandle = () => {
     history.push(`/courses/${course.id}`)
   }
@@ -75,10 +79,15 @@ const Course = ({
   return (
     <React.Fragment>
       <Card elevation={0} className={classes.root} id='masonry-element'>
-        <CardHeader onClick={onHeaderClickHandle} className={classes.cardHeader} classes={{ title: classes.title }} title={course.name} action={
-          <IconButton onClick={openCourseDialog(course.id, course.name)}>
-            <EditIcon />
-          </IconButton>
+        <CardHeader className={classes.cardHeader} title={
+          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>  
+        } action={
+          loggedIn ?
+            <IconButton onClick={openCourseDialog(course.id, course.name)}>
+              <EditIcon />
+            </IconButton>
+            : null
+          
         }>
         </CardHeader>
 
@@ -94,7 +103,12 @@ const Course = ({
               />
             )}
           </List>
-          <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
+          {
+            loggedIn ?
+            <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
+            : null
+          }
+          
         </CardContent>
       </Card>
     </React.Fragment>
