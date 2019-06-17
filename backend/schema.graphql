@@ -44,7 +44,8 @@ type User {
 
 enum Role {
   GUEST
-  USER
+  STUDENT
+  STAFF
   ADMIN
 }
 
@@ -53,7 +54,8 @@ type WorkSpace {
   name: String!
   owner: User!
   participants: [User!]!
-  course: [Course!]!
+  course: Course!
+  prerequisiteCourses: [Course!]!
   concepts: [Concept!]!
 }
 
@@ -69,16 +71,8 @@ type Course {
   prerequisites: [Concept!]!
   learningObjectives: [Concept!]!
   prerequisiteCourses: [Course!]!
-  workspace: WorkSpace!
+  workspaces: [WorkSpace!]!
 }
-
-# type Instance {
-#   id: ID!
-#   start_date: DateTime!
-#   end_date: DateTime!
-#   period: [Int!]!
-#   course: Course!
-# }
 
 type Concept {
   id: ID!

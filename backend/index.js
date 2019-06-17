@@ -101,7 +101,7 @@ const resolvers = {
       if (!user) {
         const createdUser = context.prisma.createUser({
           tmcId: tmcId,
-          role: administrator ? 'ADMIN' : 'USER'
+          role: administrator ? 'ADMIN' : 'STUDENT'
         })
         const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
         return {

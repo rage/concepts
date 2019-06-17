@@ -23,7 +23,8 @@ type Workspace {
   name: String!
   owner: User! @relation(name:"WorkspaceOwner")
   participants: [User!]! @relation(name:"WorkspaceParticipant")
-  course: [Course!]! @relation(name:"WorkspaceCourses")
+  course: Course! @relation(name:"WorkspaceCourses")
+  prerequisiteCourses: [Course!]! @relation(name:"WorkspacePrerequisiteCourses")
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
   subWorkspaces: [Workspace!]! @relation(name: "SubWorkspaces")
   type: WorkspaceType!
@@ -33,22 +34,12 @@ type Workspace {
 type Course {
   id: ID! @id
   name: String!
-  concepts: [Concept!]! @relation(name:"Courses")
-  prerequisites: [Concept!]! @relation(name:"Prerequisite")
-  learningObjectives: [Concept!]! @relation(name:"LearningObjective")
-  prerequisiteCourses: [Course!]! 
-  workspace: Workspace! @relation(name:"WorkspaceCourses") # One course to one workspace
-#   instances: [Instance!]!
+  concepts: [Concept!]! @relation(name:"Courses") 
+  prerequisites: [Concept!]! @relation(name:"Prerequisite") # Will be removed
+  learningObjectives: [Concept!]! @relation(name:"LearningObjective") # Will be removed
+  prerequisiteCourses: [Course!]! # Will be removed
+  workspaces: [Workspace!]! @relation(name:"WorkspaceCourses")
 }
-
-# type Instance {
-#   id: ID! @id
-#   start_date: DateTime!
-#   end_date: DateTime!
-#   periods: [Int!]! @scalarList(strategy:RELATION)
-#   course: Course!
-#   concepts: [Concept!]!
-# }
 
 type Concept {
   id: ID! @id
@@ -60,8 +51,8 @@ type Concept {
   linksToConcept: [Link!]! @relation(name: "To")
   courses: [Course!]! @relation(name: "Courses")
   resources: [Resource!]!
-  asPrerequisite: [Course!]! @relation(name:"Prerequisite")
-  asLearningObjective: [Course!]! @relation(name:"LearningObjective")
+  asPrerequisite: [Course!]! @relation(name:"Prerequisite") # Will be removed
+  asLearningObjective: [Course!]! @relation(name:"LearningObjective") # Will be removed
   workspaces: [Workspace!]! @relation(name:"WorkspaceConcepts")
 }
 
