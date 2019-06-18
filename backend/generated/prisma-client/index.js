@@ -13,10 +13,6 @@ var models = [
     embedded: false
   },
   {
-    name: "WorkspaceType",
-    embedded: false
-  },
-  {
     name: "Project",
     embedded: false
   },

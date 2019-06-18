@@ -7,37 +7,38 @@ type Query {
   allCourses: [Course!]!
   courseById(id: ID!): Course
   conceptById(id: ID!): Concept
-  allLinks: [ConceptLink!]!
+  allConceptLinks: [ConceptLink!]!
   linksToConcept(id: ID!): [ConceptLink!]!
   linksFromConcept(id: ID!): [ConceptLink!]!
 }
 
 type Mutation {
   login(tmcToken: String!): AuthPayload
-  # addCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
-  # deleteCourseAsCoursePrerequisite(id: ID!, prerequisite_id: ID!): Course
-  # createConceptAsPrerequisite(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
-  # createConceptAsLearningObjective(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
-  # createResourceWithURLs(concept_id: ID!, name: String!, desc: String, urls: [String!]!): Resource
-  # createURL(address: String!, resource_id: ID!): URL
-  # createResource(name: String!, concept_id: ID!, desc: String!): Resource
-  # updateConcept(id: ID!, name:String, desc: String): Concept
-  # createCourse(name: String!): Course
-  # deleteCourse(id: ID!): Course
-  # updateCourse(id: ID!, name: String!): Course
-  # createConcept(name: String!, course_id:ID!, desc: String, official: Boolean): Concept
-  # deleteConcept(id: ID!): Concept
-  # createLink(to: ID!, from: ID!, official: Boolean): ConceptLink
-  # createConceptAndLinkTo(name: String!, desc: String, official: Boolean, to: ID!, linkOfficial: Boolean): ConceptLink
-  # deleteLink(id: ID!): ConceptLink
+  
+  createCourse(name: String!, workspaceId: ID!): Course
+  deleteCourse(id: ID!): Course
+  updateCourse(id: ID!, name: String!): Course
+
+  createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
+  deleteConcept(id: ID!): Concept
+  updateConcept(id: ID!, name:String, desc: String): Concept
+  
+  createCourseLink(targetCourse: ID!, prerequisiteCourse: ID!, official: Boolean): CourseLink
+  deleteCourseLink(id: ID!): CourseLink
+  
+  createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
+  deleteConceptLink(id: ID!): ConceptLink
+
+  createResourceForCourse(courseId: ID!, name: String!, desc: String, urls: [String!]!): Resource
+  createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
 type User {
   id: ID!
   tmcId: Int!
   role: Role!
-  projectsOwned: [Project!]!
-  projects: [Project!]!
+  asProjectOwner: [Project!]!
+  asProjectParticipant: [Project!]!
 }
 
 enum Role {
@@ -47,26 +48,22 @@ enum Role {
   ADMIN
 }
 
-enum WorkspaceType {
-  STAFF
-  STUDENT
-}
-
 type Project {
   id: ID!
   name: String!
   owner: User!
   participants: [User!]!
-  type: WorkspaceType!
-  workspaces: [Workspace]
-  template: Workspace
+  workspaces: [Workspace!]!
+  template: Workspace!
 }
 
 type Workspace {
-  workspace: Workspace!
+  id: ID!
+  project: Project!
   user: User!
-  courses: [Course]
-  concepts: [Concept]
+  defaultCourse: Course!
+  courses: [Course!]!
+  concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
 }
@@ -79,11 +76,11 @@ type AuthPayload {
 type Course {
   id: ID!
   name: String!
-  concepts: [Concept!]!
-  prerequisites: [Concept!]!
-  learningObjectives: [Concept!]!
-  prerequisiteCourses: [Course!]!
-  workspaces: [Workspace!]!
+  createdBy: User!
+  linksFromCourse: [CourseLink!]! 
+  linksToCourse: [CourseLink!]! 
+  concepts: [Concept!]! 
+  workspaces: [Workspace!]! 
 }
 
 type Concept {
@@ -91,12 +88,12 @@ type Concept {
   name: String!
   description: String
   official: Boolean!
-  linksFromConcept: [ConceptLink!]!
-  linksToConcept: [ConceptLink!]!
-  courses: [Course!]!
+  createdBy: User!
+  linksFromConcept: [ConceptLink!]! 
+  linksToConcept: [ConceptLink!]! 
+  courses: [Course!]! 
   resources: [Resource!]!
-  asPrerequisite: [Course!]!
-  asLearningObjective: [Course!]!
+  workspaces: [Workspace!]! 
 }
 
 type Resource {

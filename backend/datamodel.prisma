@@ -2,8 +2,8 @@ type User {
   id: ID! @id
   tmcId: Int! @unique
   role: Role!
-  projectsOwned: [Project!]! @relation(name:"ProjectsOwned")
-  projects: [Project!]! @relation(name: "ProjectParticipant")
+  asProjectOwner: [Project!]! @relation(name:"ProjectOwner")
+  asProjectParticipant: [Project!]! @relation(name:"ProjectParticipant")
 }
 
 enum Role {
@@ -13,35 +13,30 @@ enum Role {
   ADMIN
 }
 
-enum WorkspaceType {
-  STAFF
-  STUDENT
-}
-
 type Project {
   id: ID! @id
   name: String!
-  owner: User! @relation(name:"ProjectsOwned")
+  owner: User! @relation(name:"ProjectOwner")
   participants: [User!]! @relation(name:"ProjectParticipant")
-  type: WorkspaceType!
-  workspaces: [Workspace] @relation(name: "UserWorkspaces")
+  workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
   template: Workspace! @relation(link: INLINE, name:"Template")
 }
 
 type Workspace {
   id: ID! @id
-  workspace: Workspace!
+  project: Project! @relation(name: "UserWorkspaces")
   user: User!
-  courses: [Course] @relation(name:"WorkspaceCourses")
-  concepts: [Concept] @relation(name:"WorkspaceConcepts")
+  defaultCourse: Course! @relation(link: INLINE, name:"DefaultCourse")
+  courses: [Course!]! @relation(name:"WorkspaceCourses")
+  concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks")
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks")
 }
 
 type CourseLink {
   id: ID! @id
-  from: Course! @relation(link: INLINE, name: "From")
-  to: Course! @relation(link: INLINE, name: "To")
+  from: Course! @relation(link: INLINE, name: "PrerequisiteCourse")
+  to: Course! @relation(link: INLINE, name: "TargetCourse")
   official: Boolean! @default(value: false)
   workspace: [Workspace!]! @relation(name:"WorkspaceCourseLinks")
 }
@@ -49,7 +44,10 @@ type CourseLink {
 type Course {
   id: ID! @id
   name: String!
-  concepts: [Concept!]! @relation(name:"Courses") 
+  createdBy: User!
+  linksFromCourse: [CourseLink!]! @relation(name: "PrerequisiteCourse")
+  linksToCourse: [CourseLink!]! @relation(name: "TargetCourse")
+  concepts: [Concept!]! @relation(name:"Courses")
   workspaces: [Workspace!]! @relation(name:"WorkspaceCourses")
 }
 
@@ -66,6 +64,7 @@ type Concept {
   name: String!
   description: String
   official: Boolean! @default(value: false)
+  createdBy: User!
   linksFromConcept: [ConceptLink!]! @relation(name: "Prerequisite")
   linksToConcept: [ConceptLink!]! @relation(name: "LearningObjective")
   courses: [Course!]! @relation(name: "Courses")
