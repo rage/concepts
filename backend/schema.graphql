@@ -4,6 +4,9 @@ type Query {
   allWorkspaces: [Workspace!]!
   workspaceById(id: ID!): Workspace
   
+  allProjects: [Project!]!
+  projectById(id: ID!): Project
+
   allCourses: [Course!]!
   courseById(id: ID!): Course
   allCourseLinks: [CourseLink!]!
