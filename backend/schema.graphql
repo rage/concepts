@@ -1,11 +1,16 @@
 scalar DateTime
 
 type Query {
-  allResources: [Resource!]!
-  allURLs: [URL!]!
-  allConcepts: [Concept!]!
+  allWorkspaces: [Workspace!]!
+  workspaceById(id: ID!): Workspace
+  
   allCourses: [Course!]!
   courseById(id: ID!): Course
+  allCourseLinks: [CourseLink!]!
+  linksToCourse(id: ID!): [CourseLink!]!
+  linksFromCourse(id: ID!): [CourseLink!]!
+
+  allConcepts: [Concept!]!
   conceptById(id: ID!): Concept
   allConceptLinks: [ConceptLink!]!
   linksToConcept(id: ID!): [ConceptLink!]!
@@ -15,22 +20,22 @@ type Query {
 type Mutation {
   login(tmcToken: String!): AuthPayload
   
-  createCourse(name: String!, workspaceId: ID!): Course
-  deleteCourse(id: ID!): Course
-  updateCourse(id: ID!, name: String!): Course
+  # createCourse(name: String!, workspaceId: ID!): Course
+  # deleteCourse(id: ID!): Course
+  # updateCourse(id: ID!, name: String!): Course
 
-  createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
-  deleteConcept(id: ID!): Concept
-  updateConcept(id: ID!, name:String, desc: String): Concept
+  # createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
+  # deleteConcept(id: ID!): Concept
+  # updateConcept(id: ID!, name:String, desc: String): Concept
   
-  createCourseLink(targetCourse: ID!, prerequisiteCourse: ID!, official: Boolean): CourseLink
-  deleteCourseLink(id: ID!): CourseLink
+  # createCourseLink(targetCourse: ID!, prerequisiteCourse: ID!, official: Boolean): CourseLink
+  # deleteCourseLink(id: ID!): CourseLink
   
-  createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
-  deleteConceptLink(id: ID!): ConceptLink
+  # createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
+  # deleteConceptLink(id: ID!): ConceptLink
 
-  createResourceForCourse(courseId: ID!, name: String!, desc: String, urls: [String!]!): Resource
-  createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
+  # createResourceForCourse(courseId: ID!, name: String!, desc: String, urls: [String!]!): Resource
+  # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
 type User {
