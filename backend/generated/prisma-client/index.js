@@ -17,11 +17,23 @@ var models = [
     embedded: false
   },
   {
+    name: "Project",
+    embedded: false
+  },
+  {
     name: "Workspace",
     embedded: false
   },
   {
+    name: "CourseLink",
+    embedded: false
+  },
+  {
     name: "Course",
+    embedded: false
+  },
+  {
+    name: "ConceptLink",
     embedded: false
   },
   {
@@ -34,10 +46,6 @@ var models = [
   },
   {
     name: "URL",
-    embedded: false
-  },
-  {
-    name: "Link",
     embedded: false
   }
 ];

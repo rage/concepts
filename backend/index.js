@@ -16,17 +16,6 @@ const { checkAccess } = require('./accessControl')
 
 const resolvers = {
   Query: {
-    ownedWorkspaces(root, args, context) {
-      accessControl(context, {allowStudent: true})
-
-      return context.prisma.workSpaces({
-        where: {
-          owner: {
-            connect: { id: context.user.id }
-          }
-        }
-      })
-    },
     allURLs(root, args, context) {
       return context.prisma.uRLs()
     },
@@ -64,26 +53,6 @@ const resolvers = {
     },
   },
   Mutation: {
-    async createWorkspace(root, args, context) {
-      switch(args.type) {
-        case 'STAFF':
-          checkAccess(context, {allowStaff: true})
-          break
-        case 'STUDENT':
-          checkAccess(context, {allowStudent: true})
-          break
-        default:
-          checkAccess(context)
-      }
-      
-      return context.prisma.createWorkSpace({
-        name: args.name,
-        type: args.type,
-        owner: {
-          connect: { id: context.user.id }
-        }
-      })
-    },
     // Authentication resolver 
     async login(root, args, context) {
       // Get user details from tmc
