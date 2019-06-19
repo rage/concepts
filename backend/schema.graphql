@@ -66,7 +66,7 @@ type Project {
   owner: User!
   participants: [User!]!
   workspaces: [Workspace!]!
-  template: Workspace!
+  template: Workspace
 }
 
 type Workspace {
