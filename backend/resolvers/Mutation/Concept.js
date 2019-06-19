@@ -34,7 +34,7 @@ const ConceptMutations = {
     },
     async deleteConcept(root, args, context) {
       checkAccess(context, { allowStudent: true })
-      await context.prisma.deleteManyLinks({
+      await context.prisma.deleteManyConceptLinks({
         OR: [
           {
             from: {
