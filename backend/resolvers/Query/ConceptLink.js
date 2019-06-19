@@ -2,7 +2,7 @@ const { checkAccess } = require('../../accessControl')
 
 const ConceptLinkQueries = {
   allConceptLinks(root, args, context) {
-    return context.prisma.conceptLink()
+    return context.prisma.conceptLinks()
   },
   linksToConcept(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })

@@ -1,34 +1,28 @@
 const { checkAccess, checkUser } = require('../../accessControl')
 
 const ConceptMutations = {
-    createConcept(root, args, context) {
+    createConcept(root, { name, description, official, courseId, workspaceId }, context) {
       checkAccess(context, { allowStudent: true })
 
-      const concept = args.desc !== undefined
-        ? args.official !== undefined
-          ? { name: args.name, description: args.desc, official: args.official }
-          : { name: args.name, description: args.desc }
-        : args.official !== undefined
-          ? { name: args.name, official: args.official }
-          : { name: args.name }
+      let data = { 
+        name,
+        createdBy: { connect: { id: context.user.id }},
+        workspace: { connect: { id : workspaceId }}
+      }
+      if (description !== undefined) data.description = description 
+      if (official !== undefined) data.official = official
+      if (courseId !== undefined) data.courses = { connect: [{ id: courseId }] }
 
-      return context.prisma.createConcept({
-        ...concept,
-        courses: { connect: [{ id: args.course_id }] },
-        createdBy: { connect: { id: context.user.id }}
-      })
+      return context.prisma.createConcept(data)
     },
-    updateConcept(root, args, context) {
+    updateConcept(root, { id, name, description}, context) {
       checkAccess(context, { allowStudent: true })
       let data = {}
-      if (args.name !== undefined) {
-        data.name = args.name
-      }
-      if (args.desc !== undefined) {
-        data.description = args.desc
-      }
+      if (name !== undefined) data.name = name
+      if (description !== undefined) data.description = description
+
       return context.prisma.updateConcept({
-        where: { id: args.id },
+        where: { id },
         data: data
       })
     },

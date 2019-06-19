@@ -24,9 +24,10 @@ type Project {
 
 type Workspace {
   id: ID! @id
+  name: String!
   project: Project! @relation(name: "UserWorkspaces")
   owner: User!
-  defaultCourse: Course! @relation(link: INLINE, name:"DefaultCourse")
+  defaultCourse: Course @relation(link: INLINE, name:"DefaultCourse")
   courses: [Course!]! @relation(name:"WorkspaceCourses")
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks")

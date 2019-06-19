@@ -6,7 +6,7 @@ const CourseQueries = {
     return context.prisma.createCourse({
       name: args.name,
       createdBy: { connect: { id: context.user.id } },
-      workspaces: { connect: [{ id: args.workspaceId }] }
+      workspace: { connect: { id: args.workspaceId } }
     })
   },
 

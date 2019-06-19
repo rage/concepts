@@ -1,32 +1,22 @@
 const { checkAccess } = require('../../accessControl')
 
 const ConceptLink = {
-    createConceptLink(root, args, context) {
+    createConceptLink(root, { official, to, from }, context) {
       checkAccess(context, { allowStudent: true })
-      return args.official !== undefined
-        ? context.prisma.createConceptLink({
-          to: {
-            connect: { id: args.to }
-          },
-          from: {
-            connect: { id: args.from, }
-          },
-          createdBy: {
-            connect: { id: context.user.id }
-          },
-          official: args.official
-        })
-        : context.prisma.createConceptLink({
-          to: {
-            connect: { id: args.to }
-          },
-          from: {
-            connect: { id: args.from }
-          },
-          createdBy: {
-            connect: { id: context.user.id }
-          }
-        })
+      let data = {
+        to: {
+          connect: { id: to }
+        },
+        from: {
+          connect: { id: from, }
+        },
+        createdBy: {
+          connect: { id: context.user.id }
+        }
+      }
+      if (official !== undefined) data.official = official
+
+      return context.prisma.createConceptLink(data)
     },
     async deleteConceptLink(root, args, context) {
       const user = await context.prisma.conceptLink({ id: args.id }).createdBy()

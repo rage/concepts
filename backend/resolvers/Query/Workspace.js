@@ -2,7 +2,8 @@ const { checkAccess } = require('../../accessControl')
 
 const WorkspaceQueries = {
     allWorkspaces(root, args, context) {
-      return context.prisma.workspace()
+      checkAccess(context, { allowStaff: true })
+      return context.prisma.workspaces()
     },
     workspaceById(root, args, context) {
       checkAccess(context, { allowStaff: true, allowStudent: true })

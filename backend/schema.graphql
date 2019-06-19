@@ -27,9 +27,9 @@ type Mutation {
   deleteCourse(id: ID!): Course
   updateCourse(id: ID!, name: String!): Course
 
-  createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
-  updateConcept(id: ID!, name:String, desc: String): Concept
+  updateConcept(id: ID!, name:String, description: String): Concept
   
   createCourseLink(to: ID!, from: ID!, official: Boolean, workspaceId: ID!): CourseLink
   deleteCourseLink(id: ID!): CourseLink
@@ -40,7 +40,8 @@ type Mutation {
   createProject(name: String!): Project
   deleteProject(id: ID!): Project
 
-  createWorkspace(projectId: ID!, defaultCourseId: ID!): Workspace
+  createWorkspace(name: String!, projectId: ID!): Workspace
+  addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
   deleteWorkspace(id: ID!): Workspace
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
@@ -71,9 +72,10 @@ type Project {
 
 type Workspace {
   id: ID!
+  name: String!
   project: Project!
   owner: User!
-  defaultCourse: Course!
+  defaultCourse: Course
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!

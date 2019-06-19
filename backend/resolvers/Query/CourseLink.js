@@ -2,7 +2,7 @@ const { checkAccess } = require('../../accessControl')
 
 const CourseLinkQueries = {
   allCourseLinks(root, args, context) {
-    return context.prisma.courseLink()
+    return context.prisma.courseLinks()
   },
   linksToCourse(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
