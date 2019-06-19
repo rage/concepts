@@ -1,4 +1,4 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, checkUser } = require('../../accessControl')
 
 const ConceptMutations = {
     createConcept(root, args, context) {
@@ -33,7 +33,10 @@ const ConceptMutations = {
       })
     },
     async deleteConcept(root, args, context) {
-      checkAccess(context, { allowStudent: true })
+      const user = await context.prisma.concept({
+        id: args.id 
+      }).createdBy()
+      checkAccess(context, { allowStudent: true, verifyUser: true, userId: user.id })
       await context.prisma.deleteManyConceptLinks({
         OR: [
           {

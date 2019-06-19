@@ -28,8 +28,9 @@ const ConceptLink = {
           }
         })
     },
-    deleteConceptLink(root, args, context) {
-      checkAccess(context, { allowStudent: true })
+    async deleteConceptLink(root, args, context) {
+      const user = await context.prisma.conceptLink({ id: args.id }).createdBy()
+      checkAccess(context, { allowStudent: true, verifyUser: true, userId: user.id })
       return context.prisma.deleteConceptLink({
         id: args.id
       })
