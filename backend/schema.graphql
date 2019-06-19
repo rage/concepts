@@ -27,17 +27,16 @@ type Mutation {
   deleteCourse(id: ID!): Course
   updateCourse(id: ID!, name: String!): Course
 
-  # createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
-  # deleteConcept(id: ID!): Concept
-  # updateConcept(id: ID!, name:String, desc: String): Concept
+  createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
+  deleteConcept(id: ID!): Concept
+  updateConcept(id: ID!, name:String, desc: String): Concept
   
   createCourseLink(to: ID!, from: ID!, official: Boolean, workspaceId: ID!): CourseLink
   deleteCourseLink(id: ID!): CourseLink
   
-  # createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
-  # deleteConceptLink(id: ID!): ConceptLink
+  createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
+  deleteConceptLink(id: ID!): ConceptLink
 
-  # createResourceForCourse(courseId: ID!, name: String!, desc: String, urls: [String!]!): Resource
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
@@ -131,5 +130,6 @@ type ConceptLink {
   from: Concept!
   to: Concept!
   official: Boolean!
+  createdBy: User!
   workspace: [Workspace!]!
 }

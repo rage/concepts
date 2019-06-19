@@ -54,10 +54,11 @@ type Course {
 
 type ConceptLink { 
   id: ID! @id
-  from: Concept! @relation(link: INLINE, name: "Prerequisite")
-  to: Concept! @relation(link: INLINE, name: "LearningObjective")
+  from: Concept! @relation(link: INLINE, name: "FromConcept")
+  to: Concept! @relation(link: INLINE, name: "ToConcept")
   official: Boolean! @default(value: false)
   workspace: [Workspace!]! @relation(name:"WorkspaceConceptLinks")
+  createdBy: User!
 }
 
 type Concept {
@@ -66,8 +67,8 @@ type Concept {
   description: String
   official: Boolean! @default(value: false)
   createdBy: User!
-  linksFromConcept: [ConceptLink!]! @relation(name: "Prerequisite")
-  linksToConcept: [ConceptLink!]! @relation(name: "LearningObjective")
+  linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept")
+  linksToConcept: [ConceptLink!]! @relation(name: "ToConcept")
   courses: [Course!]! @relation(name: "Courses")
   resources: [Resource!]!
   workspaces: [Workspace!]! @relation(name:"WorkspaceConcepts")
