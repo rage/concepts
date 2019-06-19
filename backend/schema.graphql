@@ -34,7 +34,7 @@ type Mutation {
   createCourseLink(to: ID!, from: ID!, official: Boolean, workspaceId: ID!): CourseLink
   deleteCourseLink(id: ID!): CourseLink
   
-  createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
+  createConceptLink(to: ID!, from: ID!, official: Boolean): ConceptLink
   deleteConceptLink(id: ID!): ConceptLink
 
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource

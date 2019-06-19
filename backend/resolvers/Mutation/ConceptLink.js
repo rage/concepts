@@ -6,10 +6,10 @@ const ConceptLink = {
       return args.official !== undefined
         ? context.prisma.createConceptLink({
           to: {
-            connect: { id: args.targetConcept }
+            connect: { id: args.to }
           },
           from: {
-            connect: { id: args.prerequisiteConcept, }
+            connect: { id: args.from, }
           },
           createdBy: {
             connect: { id: context.user.id }
@@ -18,10 +18,10 @@ const ConceptLink = {
         })
         : context.prisma.createConceptLink({
           to: {
-            connect: { id: args.targetConcept }
+            connect: { id: args.to }
           },
           from: {
-            connect: { id: args.prerequisiteConcept }
+            connect: { id: args.from }
           },
           createdBy: {
             connect: { id: context.user.id }
