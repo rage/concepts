@@ -23,16 +23,16 @@ type Query {
 type Mutation {
   login(tmcToken: String!): AuthPayload
   
-  # createCourse(name: String!, workspaceId: ID!): Course
-  # deleteCourse(id: ID!): Course
-  # updateCourse(id: ID!, name: String!): Course
+  createCourse(name: String!, workspaceId: ID!): Course
+  deleteCourse(id: ID!): Course
+  updateCourse(id: ID!, name: String!): Course
 
   # createConcept(name: String!, workspaceId: ID!, desc: String, official: Boolean): Concept
   # deleteConcept(id: ID!): Concept
   # updateConcept(id: ID!, name:String, desc: String): Concept
   
-  # createCourseLink(targetCourse: ID!, prerequisiteCourse: ID!, official: Boolean): CourseLink
-  # deleteCourseLink(id: ID!): CourseLink
+  createCourseLink(to: ID!, from: ID!, official: Boolean, workspaceId: ID!): CourseLink
+  deleteCourseLink(id: ID!): CourseLink
   
   # createConceptLink(targetConcept: ID!, prerequisiteConcept: ID!, official: Boolean): ConceptLink
   # deleteConceptLink(id: ID!): ConceptLink

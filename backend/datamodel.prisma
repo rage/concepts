@@ -35,9 +35,10 @@ type Workspace {
 
 type CourseLink {
   id: ID! @id
-  from: Course! @relation(link: INLINE, name: "PrerequisiteCourse")
-  to: Course! @relation(link: INLINE, name: "TargetCourse")
+  from: Course! @relation(link: INLINE, name: "FromCourse")
+  to: Course! @relation(link: INLINE, name: "ToCourse")
   official: Boolean! @default(value: false)
+  createdBy: User!
   workspace: [Workspace!]! @relation(name:"WorkspaceCourseLinks")
 }
 
@@ -45,8 +46,8 @@ type Course {
   id: ID! @id
   name: String!
   createdBy: User!
-  linksFromCourse: [CourseLink!]! @relation(name: "PrerequisiteCourse")
-  linksToCourse: [CourseLink!]! @relation(name: "TargetCourse")
+  linksFromCourse: [CourseLink!]! @relation(name: "FromCourse")
+  linksToCourse: [CourseLink!]! @relation(name: "ToCourse")
   concepts: [Concept!]! @relation(name:"Courses")
   workspaces: [Workspace!]! @relation(name:"WorkspaceCourses")
 }
