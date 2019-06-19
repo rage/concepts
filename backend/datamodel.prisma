@@ -19,13 +19,13 @@ type Project {
   owner: User! @relation(name:"ProjectOwner")
   participants: [User!]! @relation(name:"ProjectParticipant")
   workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
-  template: Workspace! @relation(link: INLINE, name:"Template")
+  template: Workspace @relation(link: INLINE, name:"Template")
 }
 
 type Workspace {
   id: ID! @id
   project: Project! @relation(name: "UserWorkspaces")
-  user: User!
+  owner: User!
   defaultCourse: Course! @relation(link: INLINE, name:"DefaultCourse")
   courses: [Course!]! @relation(name:"WorkspaceCourses")
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
