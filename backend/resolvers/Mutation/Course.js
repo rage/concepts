@@ -10,8 +10,23 @@ const CourseQueries = {
     })
   },
 
-  deleteCourse(root, args, context) {
+  async deleteCourse(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
+    await context.prisma.deleteManyCourseLinks({
+      OR: [
+        {
+          from: {
+            id: args.id
+          }
+
+        },
+        {
+          to: {
+            id: args.id
+          }
+        }
+      ]
+    })
     return context.prisma.deleteCourse({
       id: args.id
     })
