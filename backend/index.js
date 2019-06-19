@@ -327,6 +327,11 @@ const resolvers = {
         id: root.id
       }).createdBy()
     },
+    workspace(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).workspace()
+    }
   },
   ConceptLink: {
     to(root, args, context) {
@@ -344,6 +349,11 @@ const resolvers = {
         id: root.id
       }).createdBy()
     },
+    workspace(root, args, context) {
+      return context.prisma.conceptLink({
+        id: root.id
+      }).workspace()
+    }
   },
   CourseLink: {
     to(root, args, context) {
@@ -361,6 +371,11 @@ const resolvers = {
         id: root.id
       }).createdBy()
     },
+    workspace(root, args, context) {
+      return context.prisma.courseLink({
+        id: root.id
+      }).workspace()
+    }
   },
   Course: {
     concepts(root, args, context) {
@@ -383,6 +398,11 @@ const resolvers = {
         id: root.id
       }).createdBy()
     },
+    workspace(root, args, context) {
+      return context.prisma.course({
+        id: root.id
+      }).workspace()
+    }
   },
   Resource: {
     urls(root, args, context) {
