@@ -301,6 +301,103 @@ const resolvers = {
   //     }).resource()
   //   }
   // }
+  Concept: {
+    linksToConcept(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).linksToConcept()
+    },
+    linksFromConcept(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).linksFromConcept()
+    },
+    courses(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).courses()
+    },
+    resources(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).resources()
+    },
+    createdBy(root, args, context) {
+      return context.prisma.concept({
+        id: root.id
+      }).createdBy()
+    },
+  },
+  ConceptLink: {
+    to(root, args, context) {
+      return context.prisma.conceptLink({
+        id: root.id
+      }).to()
+    },
+    from(root, args, context) {
+      return context.prisma.conceptLink({
+        id: root.id
+      }).from()
+    },
+    createdBy(root, args, context) {
+      return context.prisma.conceptLink({
+        id: root.id
+      }).createdBy()
+    },
+  },
+  CourseLink: {
+    to(root, args, context) {
+      return context.prisma.courseLink({
+        id: root.id
+      }).to()
+    },
+    from(root, args, context) {
+      return context.prisma.courseLink({
+        id: root.id
+      }).from()
+    },
+    createdBy(root, args, context) {
+      return context.prisma.courseLink({
+        id: root.id
+      }).createdBy()
+    },
+  },
+  Course: {
+    concepts(root, args, context) {
+      return context.prisma.course({
+        id: root.id
+      }).concepts()
+    },
+    linksToCourse(root, args, context) {
+      return context.prisma.course({
+        id: root.id
+      }).linksToCourse()
+    },
+    linksFromCourse(root, args, context) {
+      return context.prisma.course({
+        id: root.id
+      }).linksFromCourse()
+    },
+    createdBy(root, args, context) {
+      return context.prisma.course({
+        id: root.id
+      }).createdBy()
+    },
+  },
+  Resource: {
+    urls(root, args, context) {
+      return context.prisma.resource({
+        id: root.id
+      }).urls()
+    }
+  },
+  URL: {
+    resource(root, args, context) {
+      return context.prisma.uRL({
+        id: root.id
+      }).resource()
+    }
+  }
 }
 
 const options = {
