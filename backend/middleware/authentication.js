@@ -48,10 +48,15 @@ const getUser = async (token, context, prisma) => {
     switch (user.role) {
       case 'ADMIN':
         context.role = Role.ADMIN
+        break
       case 'STUDENT':
         context.role = Role.STUDENT
+        break
       case 'STAFF':
         context.role = Role.STAFF
+        break
+      default:
+        context.role = Role.GUEST
     }
   }
 }

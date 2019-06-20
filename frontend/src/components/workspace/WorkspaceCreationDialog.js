@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
+const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace, projectId }) => {
   const errorDispatch = useErrorStateValue()[1]
   const [name, setName] = useState('')
 
@@ -24,8 +24,8 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
       return
     }
     try {
-      await createCourse({
-        variables: { name }
+      await createWorkspace({
+        variables: { name, projectId }
       })
       setName('')
       handleClose()
@@ -50,11 +50,11 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Create course</DialogTitle>
+      <DialogTitle id="form-dialog-title">Create workspace</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Courses can be connected to other courses as prerequisites.
-          </DialogContentText>
+          Workspaces work as a sandbox for you to create and connect concepts with each other.
+        </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
@@ -79,4 +79,4 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
   )
 }
 
-export default CourseCreationDialog
+export default WorkspaceCreationDialog

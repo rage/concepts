@@ -1,10 +1,10 @@
 const { ForbiddenError } = require('apollo-server-core')
 
 const Role = {
-  GUEST: 0,
-  STUDENT: 1,
-  STAFF: 2,
-  ADMIN: 3
+  GUEST: 'GUEST',
+  STUDENT: 'STUDENT',
+  STAFF: 'STAFF',
+  ADMIN: 'ADMIN'
 }
 
 const checkUser = (ctx, userId) => {
@@ -28,7 +28,7 @@ const checkAccess = (ctx, {
   }
   if (ctx.role === Role.STUDENT && allowStudent) return true
   if (ctx.role === Role.STAFF && allowStaff) return true
-  if (ctx.role === Role.GUEST && allowGuest) return true 
+  if (ctx.role === Role.GUEST && allowGuest) return true
   throw new ForbiddenError("Access denied")
 }
 

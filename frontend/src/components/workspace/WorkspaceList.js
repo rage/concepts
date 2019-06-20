@@ -39,7 +39,11 @@ const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, upd
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
-  const workspaces = useQuery(ALL_WORKSPACES)
+  // tillfälligt konstant definierad så länga man inte kan skapa projekt.
+  // ändra till ett projectId i din egen databas 
+  const tempProjectId = 'cjx4zuhbb00lf0751b7tj2tkz'
+
+  const workspaceQuery = useQuery(ALL_WORKSPACES)
 
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
@@ -98,7 +102,7 @@ const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, upd
     }
   }
 
-  const handleNavigateColumns = (id) => () => {
+  const handleNavigateMapper = (id) => () => {
     history.push(`/workspaces/${id}/mapper`)
   }
   const handleNavigateMatrix = (id) => () => {
@@ -124,16 +128,16 @@ const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, upd
           />
           <List dense={false}>
             {
-              workspaces.data.allWorkspaces ?
-                workspaces.data.allWorkspaces.map(workspace => (
-                  <ListItem button key={workspace.id} onClick={handleNavigateColumns(workspace.id)}>
+              workspaceQuery.data.allWorkspaces ?
+                workspaceQuery.data.allWorkspaces.map(workspace => (
+                  <ListItem button key={workspace.id} onClick={handleNavigateMapper(workspace.id)}>
                     <ListItemText
                       primary={
                         <Typography variant="h6">
                           {workspace.name}
                         </Typography>
                       }
-                      secondary={workspace.owner}
+                      secondary={workspace.owner.id}
                     />
                     {
                       loggedIn ?
@@ -160,8 +164,8 @@ const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, upd
         </Card>
       </Grid>
 
-      {/* <WorkspaceCreationDialog state={stateCreate} handleClose={handleClose} createWorkspace={createWorkspace} />
-      <WorkspaceEditingDialog state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace} defaultName={stateEdit.name} /> */}
+      <WorkspaceCreationDialog state={stateCreate} handleClose={handleClose} createWorkspace={createWorkspace} projectId={tempProjectId} />
+      <WorkspaceEditingDialog state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace} defaultName={stateEdit.name} />
     </Grid>
   )
 }
