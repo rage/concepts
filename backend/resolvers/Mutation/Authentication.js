@@ -19,7 +19,7 @@ const AuthenticationMutations = {
 
     // New user
     if (!user) {
-      const createdUser = context.prisma.createUser({
+      const createdUser = await context.prisma.createUser({
         tmcId: tmcId,
         role: administrator ? 'ADMIN' : 'STUDENT'
       })

@@ -33,6 +33,7 @@ const getUser = async (token, context, prisma) => {
     console.log(e)
     throw new AuthenticationError("Bad token")
   }
+
   let user = null
   if (decodedToken && decodedToken.id) {
     user = await prisma.user({ id: decodedToken.id })
