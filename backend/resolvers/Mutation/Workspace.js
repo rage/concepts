@@ -14,8 +14,8 @@ const WorkspaceMutations = {
     })
   },
   async deleteWorkspace(root, args, context) {
-    const owner = await context.prisma.workspace({ 
-      id: args.id 
+    const owner = await context.prisma.workspace({
+      id: args.id
     }).owner()
     checkAccess(context, { allowStudent: true, verifyUser: true, userId: owner.id })
     return context.prisma.deleteWorkspace({ id: args.id })
@@ -30,6 +30,12 @@ const WorkspaceMutations = {
           connect: { id: args.courseId }
         }
       }
+    })
+  },
+  async createGuestWorkspace(root, args, context) {
+    return await context.prisma.createWorkspace({
+      name: args.name,
+      public: true
     })
   }
 }

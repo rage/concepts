@@ -43,6 +43,7 @@ type Mutation {
   createWorkspace(name: String!, projectId: ID!): Workspace
   addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
   deleteWorkspace(id: ID!): Workspace
+  createGuestWorkspace(name: String!): Workspace
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
@@ -73,8 +74,9 @@ type Project {
 type Workspace {
   id: ID!
   name: String!
-  project: Project!
-  owner: User!
+  project: Project
+  owner: User
+  public: Boolean!
   defaultCourse: Course
   courses: [Course!]!
   concepts: [Concept!]!
