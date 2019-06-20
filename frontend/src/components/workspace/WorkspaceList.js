@@ -18,10 +18,10 @@ import GridOnIcon from '@material-ui/icons/GridOn'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { useQuery } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../graphql/CourseService'
+import { ALL_WORKSPACES } from '../../graphql/Query/Workspace'
 
-import CourseCreationDialog from './CourseCreationDialog'
-import CourseEditingDialog from './CourseEditingDialog'
+import WorkspaceCreationDialog from './WorkspaceCreationDialog'
+import WorkspaceEditingDialog from './WorkspaceEditingDialog'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
@@ -35,11 +35,11 @@ const styles = theme => ({
   }
 })
 
-const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse }) => {
+const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, updateWorkspace }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
-  const courses = useQuery(ALL_COURSES)
+  const workspaces = useQuery(ALL_WORKSPACES)
 
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
@@ -82,11 +82,11 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
       })
       return
     }
-    
-    let willDelete = window.confirm('Are you sure you want to delete this course?')
+
+    let willDelete = window.confirm('Are you sure you want to delete this workspace?')
     if (willDelete) {
       try {
-        await deleteCourse({
+        await deleteWorkspace({
           variables: { id }
         })
       } catch (err) {
@@ -99,10 +99,10 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   }
 
   const handleNavigateColumns = (id) => () => {
-    history.push(`/courses/${id}`)
+    history.push(`/workspaces/${id}/mapper`)
   }
   const handleNavigateMatrix = (id) => () => {
-    history.push(`/courses/${id}/matrix`)
+    history.push(`/workspaces/${id}/matrix`)
   }
 
   return (
@@ -111,45 +111,45 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
         <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
-              loggedIn ? 
-              <IconButton aria-label="Add" onClick={handleClickOpen}>
-                <AddIcon />
-              </IconButton> : null
+              loggedIn ?
+                <IconButton aria-label="Add" onClick={handleClickOpen}>
+                  <AddIcon />
+                </IconButton> : null
             }
             title={
               <Typography variant="h5" component="h3">
-                Courses
+                Workspaces
               </Typography>
             }
           />
           <List dense={false}>
             {
-              courses.data.allCourses ?
-                courses.data.allCourses.map(course => (
-                  <ListItem button key={course.id} onClick={handleNavigateColumns(course.id)}>
+              workspaces.data.allWorkspaces ?
+                workspaces.data.allWorkspaces.map(workspace => (
+                  <ListItem button key={workspace.id} onClick={handleNavigateColumns(workspace.id)}>
                     <ListItemText
                       primary={
                         <Typography variant="h6">
-                          {course.name}
+                          {workspace.name}
                         </Typography>
                       }
-                      secondary={true ? 'Concepts: ' + course.concepts.length : null}
+                      secondary={workspace.owner}
                     />
                     {
-                      loggedIn ? 
+                      loggedIn ?
                         <ListItemSecondaryAction>
-                        <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
-                          <GridOnIcon />
-                        </IconButton>
-                        <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
-                          <DeleteIcon />
-                        </IconButton>
-                        <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
-                          <EditIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> : null
+                          <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(workspace.id)}>
+                            <GridOnIcon />
+                          </IconButton>
+                          <IconButton aria-label="Delete" onClick={handleDelete(workspace.id)}>
+                            <DeleteIcon />
+                          </IconButton>
+                          <IconButton aria-label="Edit" onClick={handleEditOpen(workspace.id, workspace.name)}>
+                            <EditIcon />
+                          </IconButton>
+                        </ListItemSecondaryAction> : null
                     }
-                    
+
                   </ListItem>
                 )) :
                 <div style={{ textAlign: 'center' }}>
@@ -160,10 +160,10 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
         </Card>
       </Grid>
 
-      <CourseCreationDialog state={stateCreate} handleClose={handleClose} createCourse={createCourse} />
-      <CourseEditingDialog state={stateEdit} handleClose={handleEditClose} updateCourse={updateCourse} defaultName={stateEdit.name} />
+      {/* <WorkspaceCreationDialog state={stateCreate} handleClose={handleClose} createWorkspace={createWorkspace} />
+      <WorkspaceEditingDialog state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace} defaultName={stateEdit.name} /> */}
     </Grid>
   )
 }
 
-export default withRouter(withStyles(styles)(CourseList))
+export default withRouter(withStyles(styles)(WorkspaceList))

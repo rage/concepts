@@ -6,9 +6,9 @@ import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { ALL_COURSES } from '../../graphql/CourseService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/ConceptService'
+import { COURSE_PREREQUISITE_COURSES } from '../../graphql/CourseService'
 
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
@@ -60,7 +60,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   const [conceptInfoState, setConceptInfoState] = useState(false)
   const [courseInfoState, setCourseInfoState] = useState(false)
   const [linkInfoState, setLinkInfoState] = useState(false)
-  
+
   const { loggedIn } = useLoginStateValue()[0]
 
   useEffect(() => {
@@ -230,89 +230,89 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
       />
 
       {/* Intruction snackbars */}
-      { loggedIn ?
-      <React.Fragment>
-      <Snackbar open={conceptInfoState}
-        onClose={handleConceptInfoClose}
-        className={classes.snackbar}
-        ClickAwayListenerProps={{ onClickAway: () => null }}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-      >
-        <SnackbarContent className={classes.info}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleConceptInfoClose}
-            >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
-          ]}
-          message={
-            <span className={classes.message} id="message-id">
-              <InfoIcon className={classes.infoIcon} />
-              {CONCEPT_ADDING_INSTRUCTION}
-            </span>}
-        />
-      </Snackbar>
-      <Snackbar open={courseInfoState}
-        onClose={handleCourseInfoClose}
-        ClickAwayListenerProps={{ onClickAway: () => null }}
-        className={classes.snackbar}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-      >
-        <SnackbarContent className={classes.info}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleCourseInfoClose}
-            >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
-          ]}
-          message={
-            <span className={classes.message} id="message-id">
-              <InfoIcon className={classes.infoIcon} />
-              {COURSE_ADDING_INSTRUCTION}
-            </span>}
-        />
-      </Snackbar>
-      <Snackbar open={linkInfoState}
-        onClose={handleLinkInfoClose}
-        ClickAwayListenerProps={{ onClickAway: () => null }}
-        autoHideDuration={6000}
-        className={classes.snackbar}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-      >
-        <SnackbarContent className={classes.info}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleLinkInfoClose}
-            >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
-          ]}
-          message={
-            <span className={classes.message} id="message-id">
-              <InfoIcon className={classes.infoIcon} />
-              {CONCEPT_LINKING_INSTRUCTION}
-            </span>}
-        />
-      </Snackbar>
-      </React.Fragment>
-      : null
+      {loggedIn ?
+        <React.Fragment>
+          <Snackbar open={conceptInfoState}
+            onClose={handleConceptInfoClose}
+            className={classes.snackbar}
+            ClickAwayListenerProps={{ onClickAway: () => null }}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+          >
+            <SnackbarContent className={classes.info}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleConceptInfoClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>
+              ]}
+              message={
+                <span className={classes.message} id="message-id">
+                  <InfoIcon className={classes.infoIcon} />
+                  {CONCEPT_ADDING_INSTRUCTION}
+                </span>}
+            />
+          </Snackbar>
+          <Snackbar open={courseInfoState}
+            onClose={handleCourseInfoClose}
+            ClickAwayListenerProps={{ onClickAway: () => null }}
+            className={classes.snackbar}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+          >
+            <SnackbarContent className={classes.info}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleCourseInfoClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>
+              ]}
+              message={
+                <span className={classes.message} id="message-id">
+                  <InfoIcon className={classes.infoIcon} />
+                  {COURSE_ADDING_INSTRUCTION}
+                </span>}
+            />
+          </Snackbar>
+          <Snackbar open={linkInfoState}
+            onClose={handleLinkInfoClose}
+            ClickAwayListenerProps={{ onClickAway: () => null }}
+            autoHideDuration={6000}
+            className={classes.snackbar}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+          >
+            <SnackbarContent className={classes.info}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleLinkInfoClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>
+              ]}
+              message={
+                <span className={classes.message} id="message-id">
+                  <InfoIcon className={classes.infoIcon} />
+                  {CONCEPT_LINKING_INSTRUCTION}
+                </span>}
+            />
+          </Snackbar>
+        </React.Fragment>
+        : null
       }
     </React.Fragment>
   )

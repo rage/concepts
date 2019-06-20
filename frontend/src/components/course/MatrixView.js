@@ -10,7 +10,7 @@ import Measure from 'react-measure'
 import {
   FETCH_COURSE,
   COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
+} from '../../graphql/CourseService'
 
 
 const MatriceView = ({ course_id }) => {

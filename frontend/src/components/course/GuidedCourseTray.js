@@ -19,7 +19,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
+import { ALL_COURSES } from '../../graphql/Query/Course'
 
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
@@ -28,7 +28,7 @@ import {
   ADD_COURSE_AS_PREREQUISITE,
   DELETE_COURSE_AS_PREREQUISITE,
   COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
+} from '../../graphql/CourseService'
 
 const styles = theme => ({
   root: {
@@ -66,7 +66,7 @@ const styles = theme => ({
 
 const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite }) => {
   const errorDispatch = useErrorStateValue()[1]
-  
+
   const onClick = async () => {
     try {
       if (isPrerequisite) {
@@ -128,23 +128,26 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
 
   })
 
-  const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
-      const removedCourse = response.data.deleteCourseAsCoursePrerequisite
-      const dataInStoreCopy = { ...dataInStore }
-      const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
-      if (includedIn(prerequisiteCourses, removedCourse)) {
-        dataInStoreCopy.courseById.prerequisiteCourses = prerequisiteCourses.filter(course => course.id !== removedCourse.id)
-        client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course_id },
-          data: dataInStoreCopy
-        })
-      }
-    }
+  const deleteCourseAsPrerequisite = () => {
 
-  })
+  }
+  // const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
+  //   update: (store, response) => {
+  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
+  //     const removedCourse = response.data.deleteCourseAsCoursePrerequisite
+  //     const dataInStoreCopy = { ...dataInStore }
+  //     const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
+  //     if (includedIn(prerequisiteCourses, removedCourse)) {
+  //       dataInStoreCopy.courseById.prerequisiteCourses = prerequisiteCourses.filter(course => course.id !== removedCourse.id)
+  //       client.writeQuery({
+  //         query: COURSE_PREREQUISITE_COURSES,
+  //         variables: { id: course_id },
+  //         data: dataInStoreCopy
+  //       })
+  //     }
+  //   }
+
+  // })
 
   const handleKeywordInput = (e) => {
     setFilterKeyword(e.target.value)
@@ -163,11 +166,11 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
   }
 
   return (
-    <React.Fragment>
+    <React.Fragment >
       {
         courseTrayOpen ?
           <Grid item xs={4} lg={3}>
-            <Card elevation={0} className={classes.root}>
+            < Card elevation={0} className={classes.root} >
               <CardHeader
                 className={classes.cardHeader}
                 classes={{ title: classes.title }}
@@ -210,13 +213,13 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
                 }
                 <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
               </CardContent>
-            </Card>
+            </Card >
             <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
-          </Grid>
+          </Grid >
           :
           null
       }
-    </React.Fragment>
+    </React.Fragment >
   )
 }
 

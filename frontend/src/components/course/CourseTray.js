@@ -20,13 +20,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
 import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
+import { ALL_COURSES } from '../../graphql/CourseService'
 
 import {
   ADD_COURSE_AS_PREREQUISITE,
   DELETE_COURSE_AS_PREREQUISITE,
   COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
+} from '../../graphql/CourseService'
 
 const styles = theme => ({
   root: {

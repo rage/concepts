@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK } from '../../graphql/ConceptService'
+import { COURSE_PREREQUISITE_COURSES } from '../../graphql/CourseService'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'

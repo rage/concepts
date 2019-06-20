@@ -8,8 +8,8 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { LINK_PREREQUISITE, DELETE_LINK } from '../../graphql/ConceptService'
+import { COURSE_PREREQUISITE_COURSES } from '../../graphql/CourseService'
 
 const styles = theme => ({
   cellButton: {

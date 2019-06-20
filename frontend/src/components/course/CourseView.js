@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 import {
   FETCH_COURSE,
   COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
+} from '../../graphql/CourseService'
 
 import CourseContainer from './CourseContainer'
 import CourseTray from './CourseTray'

@@ -14,8 +14,11 @@ import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
 import PrivateRoute from './components/common/PrivateRoute'
 
+import WorkspaceList from './components/workspace/WorkspaceList'
+
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
+import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
+import { ALL_COURSES } from './graphql/Query/Course'
 import { Grid } from '@material-ui/core';
 
 import { useErrorStateValue, useLoginStateValue } from './store'
@@ -111,34 +114,35 @@ const App = ({ classes }) => {
 
   return (
     <React.Fragment>
-    <div className="App">
-      <Grid container>
-        <Grid item xs={12}>
-          <NavBar />
-        </Grid>
-        <Route exact path="/auth" render={() => <AuthenticationForm />} />
-        <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-        <Route exact path="/courses/:id" render={({ match }) => {
-          return <GuidedCourseView
-          course_id={match.params.id}
-          createCourse={createCourse}
-          updateCourse={updateCourse}
-          />
-        }}
-        />
-        <Grid item xs={12}>
-          <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
-            return <MatrixView
-            course_id={match.params.id}
-            createCourse={createCourse}
-            updateCourse={updateCourse}
+      <div className="App">
+        <Grid container>
+          <Grid item xs={12}>
+            <NavBar />
+          </Grid>
+          <Route exact path="/auth" render={() => <AuthenticationForm />} />
+          <Route exact path="/courses" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+          <Route exact path="/" render={() => <WorkspaceList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+          <Route exact path="/courses/:id" render={({ match }) => {
+            return <GuidedCourseView
+              course_id={match.params.id}
+              createCourse={createCourse}
+              updateCourse={updateCourse}
             />
           }}
           />
+          <Grid item xs={12}>
+            <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
+              return <MatrixView
+                course_id={match.params.id}
+                createCourse={createCourse}
+                updateCourse={updateCourse}
+              />
+            }}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
-    <Snackbar open={error !== ''}
+      </div>
+      <Snackbar open={error !== ''}
         onClose={handleCloseErrorMessage}
         ClickAwayListenerProps={{ onClickAway: () => null }}
         autoHideDuration={4000}
@@ -147,24 +151,24 @@ const App = ({ classes }) => {
           'aria-describedby': 'message-id',
         }}
       >
-      <SnackbarContent className={classes.error}
-        action={[
-          <IconButton
-            key="close"
-            aria-label="Close"
-            color="inherit"
-            onClick={handleCloseErrorMessage}
-          >
-            <CloseIcon className={classes.icon} />
-          </IconButton>
-        ]}
-        message={
-          <span className={classes.message} id="message-id">
-            <ErrorIcon className={classes.errorIcon} />
-            { error }
-          </span>}
-      />
-    </Snackbar>
+        <SnackbarContent className={classes.error}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleCloseErrorMessage}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id="message-id">
+              <ErrorIcon className={classes.errorIcon} />
+              {error}
+            </span>}
+        />
+      </Snackbar>
     </React.Fragment>
   )
 }

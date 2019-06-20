@@ -11,8 +11,8 @@ import CardContent from '@material-ui/core/CardContent'
 
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, FETCH_COURSE } from '../../services/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
+import { ALL_COURSES, FETCH_COURSE } from '../../graphql/CourseService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/ConceptService'
 
 // List 
 import List from '@material-ui/core/List'
@@ -169,8 +169,8 @@ const ActiveCourse = ({
             </List>
           </ClickAwayListener>
 
-          { loggedIn ? 
-              <Button
+          {loggedIn ?
+            <Button
               className={classes.button}
               onClick={handleConceptOpen(course.id)}
               variant="contained"
@@ -179,21 +179,21 @@ const ActiveCourse = ({
               Add concept
             </Button> : null
           }
-          
+
         </CardContent>
       </Card>
 
-      <ConceptEditingDialog 
-      state={conceptEditState} 
-      handleClose={handleConceptEditClose} 
-      updateConcept={updateConcept} 
-      defaultName={conceptEditState.name} 
-      defaultDescription={conceptEditState.description} 
+      <ConceptEditingDialog
+        state={conceptEditState}
+        handleClose={handleConceptEditClose}
+        updateConcept={updateConcept}
+        defaultName={conceptEditState.name}
+        defaultDescription={conceptEditState.description}
       />
-      <ConceptAdditionDialog 
-      state={conceptState} 
-      handleClose={handleConceptClose} 
-      createConcept={createConcept} 
+      <ConceptAdditionDialog
+        state={conceptState}
+        handleClose={handleConceptClose}
+        createConcept={createConcept}
       />
     </Grid>
   )

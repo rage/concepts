@@ -7,9 +7,13 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { withStyles } from '@material-ui/core/styles'
 
 import {
+  FETCH_WORKSPACE_AND_DEFAULT_DATA
+} from '../../graphql/Query'
+
+import {
   FETCH_COURSE,
   COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
+} from '../../graphql/CourseService'
 
 import GuidedCourseContainer from './GuidedCourseContainer'
 import GuidedCourseTray from './GuidedCourseTray'

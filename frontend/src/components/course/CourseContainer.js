@@ -4,9 +4,9 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { ALL_COURSES } from '../../graphql/CourseService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/ConceptService'
+import { COURSE_PREREQUISITE_COURSES } from '../../graphql/CourseService'
 
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
