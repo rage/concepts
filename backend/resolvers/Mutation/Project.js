@@ -18,6 +18,16 @@ const ProjectMutations = {
     return context.prisma.deleteProject({
       id: args.id
     })
+  },
+  async updateProject(root, args, context) {
+    const user = await context.prisma.project({
+      id: args.id
+    }).owner()
+    checkAccess(context, { allowStaff: true, verifyUser: true, userId: user.id})
+    return context.prisma.updateProject({
+      where: { id: args.id },
+      data: { name: args.name }
+    })
   }
 }
 

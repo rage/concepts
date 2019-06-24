@@ -43,6 +43,7 @@ type Mutation {
   deleteConceptLink(id: ID!): ConceptLink
 
   createProject(name: String!): Project
+  updateProject(name: String!): Project
   deleteProject(id: ID!): Project
 
   createWorkspace(name: String!, projectId: ID!): Workspace
