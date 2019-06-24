@@ -2,6 +2,7 @@ type User {
   id: ID! @id
   tmcId: Int! @unique
   role: Role!
+  asWorkspaceOwner: [Workspace!]! @relation(name:"WorkspaceOwner")
   asProjectOwner: [Project!]! @relation(name:"ProjectOwner")
   asProjectParticipant: [Project!]! @relation(name:"ProjectParticipant")
 }
@@ -26,7 +27,7 @@ type Workspace {
   id: ID! @id
   name: String!
   project: Project @relation(name: "UserWorkspaces")
-  owner: User
+  owner: User @relation(name:"WorkspaceOwner")
   public: Boolean! @default(value: false)
   defaultCourse: Course @relation(link: INLINE, name:"DefaultCourse")
   courses: [Course!]! @relation(name:"WorkspaceCourses")
