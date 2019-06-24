@@ -4,6 +4,7 @@ const course = require('./Course')
 const courseLink = require('./CourseLink')
 const workspace = require('./Workspace')
 const project = require('./Project')
+const user = require('./User')
 
 module.exports = {
   ...concept,
@@ -11,5 +12,6 @@ module.exports = {
   ...course,
   ...courseLink,
   ...workspace,
-  ...project
+  ...project,
+  ...user
 }

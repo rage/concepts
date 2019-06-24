@@ -1,6 +1,9 @@
 scalar DateTime
 
 type Query {
+  allUsers: [User!]!
+  userById(id: ID!): User!
+
   allWorkspaces: [Workspace!]!
   workspaceById(id: ID!): Workspace
   workspacesByOwner(ownerId: ID!): [Workspace!]!
@@ -10,6 +13,7 @@ type Query {
 
   allCourses: [Course!]!
   courseById(id: ID!): Course
+
   allCourseLinks: [CourseLink!]!
   linksToCourse(id: ID!): [CourseLink!]!
   linksFromCourse(id: ID!): [CourseLink!]!
