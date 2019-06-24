@@ -14,22 +14,16 @@ import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
 import PrivateRoute from './components/common/PrivateRoute'
 
-import WorkspaceList from './components/workspace/WorkspaceList'
-
 import UserView from './components/user/UserView'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
-import { CREATE_WORKSPACE, DELETE_WORKSPACE, UPDATE_WORKSPACE, CREATE_GUEST_WORKSPACE } from './graphql/Mutation/Workspace'
 import { ALL_COURSES } from './graphql/Query/Course'
 import { Grid } from '@material-ui/core';
 
 import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 import { withStyles } from "@material-ui/core/styles";
-
-import { useQuery } from 'react-apollo-hooks'
-import { ALL_WORKSPACES } from './graphql/Query/Workspace'
 
 const styles = theme => ({
   error: {
@@ -52,9 +46,6 @@ const styles = theme => ({
 
 const App = ({ classes }) => {
   const client = useApolloClient()
-  // const courses = useQuery(ALL_COURSES)
-
-  const workspaceQuery = useQuery(ALL_WORKSPACES)
 
   const { loggedIn } = useLoginStateValue()[0]
 
@@ -120,18 +111,6 @@ const App = ({ classes }) => {
     }
   })
 
-  const createWorkspace = useMutation(CREATE_WORKSPACE, {
-    refetchQueries: [{ query: ALL_WORKSPACES }]
-  })
-
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
-    refetchQueries: [{ query: ALL_WORKSPACES }]
-  })
-
-  const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
-    refetchQueries: [{ query: ALL_WORKSPACES }]
-  })
-
   return (
     <React.Fragment>
       <div className="App">
@@ -140,10 +119,12 @@ const App = ({ classes }) => {
             <NavBar />
           </Grid>
           <Route exact path="/auth" render={() => <AuthenticationForm />} />
-          <Route exact path="/user/:id" render={({ match }) => <UserView userId={match.params.id} />} />
+          <Route exact path="/users/:id" render={({ match }) => <UserView userId={match.params.id} />} />
+
+          <Route exact path="/user" render={() => <UserView />} />
 
           <Route exact path="/courses" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-          <Route exact path="/" render={() => <WorkspaceList workspaces={workspaceQuery.data.allWorkspaces} updateWorkspace={updateWorkspace} createWorkspace={createWorkspace} deleteWorkspace={deleteWorkspace} />} />
+          <Route exact path="/" render={() => <div>ROOT</div>} />
 
           {/* <Route exact path="/workspaces" render={() => <div>ALL WORKSPACES</div>} />
           <Route exact path="/workspaces/:id" render={() => <div>ENTRYPOINTS</div>} />

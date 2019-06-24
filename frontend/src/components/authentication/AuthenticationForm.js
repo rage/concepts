@@ -42,9 +42,10 @@ const AuthenticationForm = ({ history, classes }) => {
   const authenticate = async (event) => {
     event.preventDefault();
     try {
-      await signIn({ email, password })
+      const response = await signIn({ email, password })
       dispatch({
-        type: 'login'
+        type: 'login',
+        data: response.user
       })
     } catch (e) {
       setError(true)
@@ -97,13 +98,13 @@ const AuthenticationForm = ({ history, classes }) => {
             value={password}
           />
           <FormHelperText error={error}>
-          {
-            error ? 
-              <span>
-                Invalid username or password.
+            {
+              error ?
+                <span>
+                  Invalid username or password.
               </span>
                 : null
-          }
+            }
           </FormHelperText>
           <Button
             type="submit"

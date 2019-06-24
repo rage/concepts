@@ -1,77 +1,25 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
+import { useLoginStateValue } from '../../store'
+import UserContent from './UserContent'
 
-import Grid from '@material-ui/core/Grid'
+const UserView = () => {
+  const { loggedIn, user } = useLoginStateValue()[0]
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
-import { CREATE_WORKSPACE, DELETE_WORKSPACE, UPDATE_WORKSPACE } from '../../graphql/Mutation/Workspace'
-import { WORKSPACES_BY_OWNER } from '../../graphql/Query/Workspace'
-
-
-import WorkspaceList from '../workspace/WorkspaceList'
-
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { withStyles } from '@material-ui/core/styles'
-
-const styles = theme => ({
-})
-
-const UserView = ({ classes, userId }) => {
-
-  // const userQuery = useQuery()
-
-  const workspaceQuery = useQuery(WORKSPACES_BY_OWNER, {
-    variables: {
-      ownerId: userId
+  if (loggedIn) {
+    switch (user.role) {
+      case 'STUDENT':
+        return <UserContent userId={user.id} />
+      case 'STAFF':
+        return null
+      case 'ADMIN':
+        return <Redirect to={'/admin'} />
+      default:
+        return <Redirect to={'/'} />
     }
-  })
-
-  const createWorkspace = useMutation(CREATE_WORKSPACE, {
-    refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
-      }
-    }]
-  })
-
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
-    refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
-      }
-    }]
-  })
-
-  const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
-    refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
-      }
-    }]
-  })
-
-  return (
-    <React.Fragment>
-      {
-        workspaceQuery.data.workspacesByOwner ?
-          <Grid container spacing={0} direction="column">
-            <WorkspaceList workspaces={workspaceQuery.data.workspacesByOwner} updateWorkspace={updateWorkspace} createWorkspace={createWorkspace} deleteWorkspace={deleteWorkspace} />
-          </Grid>
-          :
-          <Grid container
-            spacing={0}
-            direction="row"
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={12}>
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress />
-              </div>
-            </Grid>
-          </Grid>
-      }
-    </ React.Fragment>
-  )
+  } else {
+    return <Redirect to={'/'} />
+  }
 }
 
-export default withStyles(styles)(UserView)
+export default UserView

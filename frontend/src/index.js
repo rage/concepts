@@ -13,12 +13,14 @@ const loginReducer = (state, action) => {
     case 'login':
       return {
         ...state,
-        loggedIn: true
+        loggedIn: true,
+        user: action.data
       }
     case 'logout':
       return {
         ...state,
-        loggedIn: false
+        loggedIn: false,
+        user: {}
       }
     default:
       return state
@@ -42,11 +44,21 @@ const errorReducer = (state, action) => {
   }
 }
 
+const getLoggedInUser = () => {
+  let user
+  try {
+    user = JSON.parse(localStorage.getItem('current_user')).user
+    return user
+  } catch (error) {
+    return {}
+  }
+}
+
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
       <ErrorStateProvider initialState={{ error: '' }} reducer={errorReducer}>
-        <LoginStateProvider initialState={{ loggedIn: isSignedIn() }} reducer={loginReducer}>
+        <LoginStateProvider initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }} reducer={loginReducer}>
           <App />
         </LoginStateProvider>
       </ErrorStateProvider>
