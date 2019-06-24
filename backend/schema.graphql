@@ -58,6 +58,7 @@ type User {
   id: ID!
   tmcId: Int!
   role: Role!
+  asWorkspaceOwner: [Workspace!]!
   asProjectOwner: [Project!]!
   asProjectParticipant: [Project!]!
 }

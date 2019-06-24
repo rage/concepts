@@ -6,6 +6,7 @@ const workspace = require('./Workspace')
 const project = require('./Project')
 const url = require('./URL')
 const resource = require('./Resource')
+const user = require('./User')
 
 module.exports = {
   ...concept,
@@ -15,5 +16,6 @@ module.exports = {
   ...workspace,
   ...project,
   ...url,
-  ...resource
+  ...resource,
+  ...user
 }
