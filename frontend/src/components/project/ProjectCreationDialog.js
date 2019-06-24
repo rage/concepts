@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 //  dialog
 import Dialog from '@material-ui/core/Dialog'
@@ -14,31 +14,22 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultName }) => {
+const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
+  const errorDispatch = useErrorStateValue()[1]
   const [name, setName] = useState('')
 
-  const errorDispatch = useErrorStateValue()[1]
-
-  useEffect(() => {
-    setName(defaultName)
-  }, [defaultName])
-
-  const handleEdit = async (e) => {
+  const handleCreate = async (e) => {
     if (name === '') {
-      window.alert('Workspace needs a name!')
+      window.alert('Project needs a name!')
       return
     }
     try {
-      if (defaultName !== name) {
-        await updateWorkspace({
-          variables: {
-            id: state.id,
-            name
-          }
-        })
-      }
+      await createProject({
+        variables: { name }
+      })
       setName('')
       handleClose()
+
     } catch (err) {
       errorDispatch({
         type: 'setError',
@@ -49,7 +40,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
 
   const handleKey = (e) => {
     if (e.key === 'Enter') {
-      handleEdit(e)
+      handleCreate(e)
     }
   }
 
@@ -59,10 +50,10 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Edit workspace</DialogTitle>
+      <DialogTitle id="form-dialog-title">Create project</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Workspaces work as a sandbox for you to create and connect concepts with each other.
+          Projects are used to manage the creation of workspaces
         </DialogContentText>
         <TextField
           autoFocus
@@ -80,12 +71,12 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
         <Button onClick={handleClose} color="primary">
           Cancel
           </Button>
-        <Button onClick={handleEdit} color="primary">
-          Save
+        <Button onClick={handleCreate} color="primary">
+          Create
           </Button>
       </DialogActions>
     </Dialog>
   )
 }
 
-export default WorkspaceEditingDialog
+export default ProjectCreationDialog

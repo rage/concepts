@@ -1,7 +1,7 @@
 import { gql } from 'apollo-boost'
 
 const CREATE_WORKSPACE = gql`
-mutation createWorkspace($name: String!, $projectId: ID!) {
+mutation createWorkspace($name: String!, $projectId: ID) {
   createWorkspace(name: $name, projectId: $projectId) {
     id
     name

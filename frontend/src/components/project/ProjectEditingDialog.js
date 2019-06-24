@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultName }) => {
+const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName }) => {
   const [name, setName] = useState('')
 
   const errorDispatch = useErrorStateValue()[1]
@@ -25,12 +25,12 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
 
   const handleEdit = async (e) => {
     if (name === '') {
-      window.alert('Workspace needs a name!')
+      window.alert('Project needs a name!')
       return
     }
     try {
       if (defaultName !== name) {
-        await updateWorkspace({
+        await updateProject({
           variables: {
             id: state.id,
             name
@@ -59,10 +59,10 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Edit workspace</DialogTitle>
+      <DialogTitle id="form-dialog-title">Edit project</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Workspaces work as a sandbox for you to create and connect concepts with each other.
+          Projects are used to manage the creation of workspaces
         </DialogContentText>
         <TextField
           autoFocus

@@ -14,18 +14,18 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace, projectId }) => {
+const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
   const errorDispatch = useErrorStateValue()[1]
   const [name, setName] = useState('')
 
   const handleCreate = async (e) => {
     if (name === '') {
-      window.alert('Course needs a name!')
+      window.alert('Workspace needs a name!')
       return
     }
     try {
       await createWorkspace({
-        variables: { name, projectId }
+        variables: { name }
       })
       setName('')
       handleClose()

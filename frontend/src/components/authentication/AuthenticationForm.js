@@ -54,7 +54,7 @@ const AuthenticationForm = ({ history, classes }) => {
       }, 4000)
     }
     if (isSignedIn()) {
-      history.push("/")
+      history.push("/user")
     }
   }
 

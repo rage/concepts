@@ -36,10 +36,6 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
-  // tillfälligt konstant definierad så länga man inte kan skapa projekt.
-  // ändra till ett projectId i din egen databas 
-  const tempProjectId = 'cjx4zuhbb00lf0751b7tj2tkz'
-
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
 
@@ -159,7 +155,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
         </Card>
       </Grid>
 
-      <WorkspaceCreationDialog state={stateCreate} handleClose={handleClose} createWorkspace={createWorkspace} projectId={tempProjectId} />
+      <WorkspaceCreationDialog state={stateCreate} handleClose={handleClose} createWorkspace={createWorkspace} />
       <WorkspaceEditingDialog state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace} defaultName={stateEdit.name} />
     </Grid>
   )

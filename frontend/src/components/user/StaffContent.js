@@ -4,9 +4,11 @@ import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { CREATE_WORKSPACE, DELETE_WORKSPACE, UPDATE_WORKSPACE } from '../../graphql/Mutation/Workspace'
-import { WORKSPACES_BY_OWNER } from '../../graphql/Query/Workspace'
+import { STAFF_BY_ID } from '../../graphql/Query/User'
+import { CREATE_PROJECT, DELETE_PROJECT, UPDATE_PROJECT } from '../../graphql/Mutation/Project'
 
 import WorkspaceList from '../workspace/WorkspaceList'
+import ProjectList from '../project/ProjectList'
 
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { withStyles } from '@material-ui/core/styles'
@@ -16,32 +18,56 @@ const styles = theme => ({
 
 const UserView = ({ classes, userId }) => {
 
-  const workspaceQuery = useQuery(WORKSPACES_BY_OWNER, {
+  const userQuery = useQuery(STAFF_BY_ID, {
     variables: {
-      ownerId: userId
+      id: userId
     }
   })
 
   const createWorkspace = useMutation(CREATE_WORKSPACE, {
     refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
+      query: STAFF_BY_ID, variables: {
+        id: userId
       }
     }]
   })
 
   const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
+      query: STAFF_BY_ID, variables: {
+        id: userId
       }
     }]
   })
 
   const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
     refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
+      query: STAFF_BY_ID, variables: {
+        id: userId
+      }
+    }]
+  })
+
+  const createProject = useMutation(CREATE_PROJECT, {
+    refetchQueries: [{
+      query: STAFF_BY_ID, variables: {
+        id: userId
+      }
+    }]
+  })
+
+  const deleteProject = useMutation(DELETE_PROJECT, {
+    refetchQueries: [{
+      query: STAFF_BY_ID, variables: {
+        id: userId
+      }
+    }]
+  })
+
+  const updateProject = useMutation(UPDATE_PROJECT, {
+    refetchQueries: [{
+      query: STAFF_BY_ID, variables: {
+        id: userId
       }
     }]
   })
@@ -49,9 +75,25 @@ const UserView = ({ classes, userId }) => {
   return (
     <React.Fragment>
       {
-        workspaceQuery.data.workspacesByOwner ?
+        userQuery.data.userById ?
           <Grid container spacing={0} direction="column">
-            <WorkspaceList workspaces={workspaceQuery.data.workspacesByOwner} updateWorkspace={updateWorkspace} createWorkspace={createWorkspace} deleteWorkspace={deleteWorkspace} />
+            <Grid item>
+              <WorkspaceList
+                workspaces={userQuery.data.userById.asWorkspaceOwner}
+                updateWorkspace={updateWorkspace}
+                createWorkspace={createWorkspace}
+                deleteWorkspace={deleteWorkspace}
+              />
+            </Grid>
+            <br />
+            <Grid item>
+              <ProjectList
+                projects={userQuery.data.userById.asProjectOwner}
+                updateProject={updateProject}
+                createProject={createProject}
+                deleteProject={deleteProject}
+              />
+            </Grid>
           </Grid>
           :
           <Grid container
