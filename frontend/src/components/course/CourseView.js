@@ -84,7 +84,7 @@ const CourseView = ({ classes, course_id, createCourse, updateCourse }) => {
               !courseTrayOpen ?
                 <Fab style={{ position: 'absolute', top: '90%', zIndex: '1', left: '20px' }} onClick={handleTrayOpen} variant="extended" color="primary" >
                   <AddIcon className={classes.extendedIcon} /> Add course
-              </Fab> : null
+                </Fab> : null
 
             }
           </Grid> :

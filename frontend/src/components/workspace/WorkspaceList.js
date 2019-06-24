@@ -17,9 +17,6 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import GridOnIcon from '@material-ui/icons/GridOn'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import { useQuery } from 'react-apollo-hooks'
-import { ALL_WORKSPACES } from '../../graphql/Query/Workspace'
-
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
 
@@ -35,15 +32,13 @@ const styles = theme => ({
   }
 })
 
-const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, updateWorkspace }) => {
+const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   // tillfälligt konstant definierad så länga man inte kan skapa projekt.
   // ändra till ett projectId i din egen databas 
   const tempProjectId = 'cjx4zuhbb00lf0751b7tj2tkz'
-
-  const workspaceQuery = useQuery(ALL_WORKSPACES)
 
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
@@ -128,8 +123,8 @@ const WorkspaceList = ({ classes, history, deleteWorkspace, createWorkspace, upd
           />
           <List dense={false}>
             {
-              workspaceQuery.data.allWorkspaces ?
-                workspaceQuery.data.allWorkspaces.map(workspace => (
+              workspaces ?
+                workspaces.map(workspace => (
                   <ListItem button key={workspace.id} onClick={handleNavigateMapper(workspace.id)}>
                     <ListItemText
                       primary={
