@@ -3,15 +3,18 @@ const { checkAccess } = require('../../accessControl')
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
     checkAccess(context, { allowStudent: true, allowStaff: true })
-    return await context.prisma.createWorkspace({
+    let data = {
       name: args.name,
       owner: {
         connect: { id: context.user.id }
-      },
-      project: {
+      }
+    }
+    if (args.projectId !== undefined) {
+      data.project = {
         connect: { id: args.projectId }
       }
-    })
+    }
+    return await context.prisma.createWorkspace(data)
   },
   async deleteWorkspace(root, args, context) {
     const owner = await context.prisma.workspace({
