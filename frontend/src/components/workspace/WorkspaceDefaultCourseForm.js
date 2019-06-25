@@ -77,7 +77,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
       await addDefaultCourseForWorkspace({
         variables: { courseId: course.id, workspaceId }
       })
-      history.replace(`/workspace/${workspaceId}/mapper/${course.id}`)
+      history.replace(`/workspaces/${workspaceId}/mapper/${course.id}`)
     } catch (e) {
       setError(true)
       setTimeout(() => {
