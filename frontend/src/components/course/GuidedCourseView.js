@@ -83,20 +83,20 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               courseTrayOpen={courseTrayOpen}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
-            <GuidedCourseContainer
+            {/* <GuidedCourseContainer
               courses={courseQuery.data.courseAndPrerequisites.linksToCourse}
-              courseId={courseId}
+              courseId={courseQuery.data.courseAndPrerequisites.id}
               activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
               activeCourse={courseQuery.data.courseAndPrerequisites}
               setCourseTrayOpen={setCourseTrayOpen}
               workspaceId={workspaceQuery.data.workspaceById.id}
-            />
+            /> */}
             <GuidedCourseTray
-              activeCourse={courseId}
+              activeCourseId={courseQuery.data.courseAndPrerequisites.id}
               courseId={courseQuery.data.courseAndPrerequisites.id}
-              prerequisiteCourses={courseQuery.data.courseAndPrerequisites.linksToCourse}
+              courseLinks={courseQuery.data.courseAndPrerequisites.linksToCourse}
               setCourseTrayOpen={setCourseTrayOpen}
               courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}

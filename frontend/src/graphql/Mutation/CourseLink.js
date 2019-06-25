@@ -16,8 +16,8 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
 `
 
 const DELETE_COURSE_LINK = gql`
-mutation deleteLink($id: ID!) {
-  deleteLink(id: $id) {
+mutation deleteCourseLink($id: ID!) {
+  deleteCourseLink(id: $id) {
     id
   }
 }

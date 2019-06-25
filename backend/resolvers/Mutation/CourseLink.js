@@ -12,7 +12,8 @@ const CourseQueries = {
           connect: { id: args.from, }
         },
         official: args.official,
-        createdBy: { connect: { id: context.user.id } }
+        createdBy: { connect: { id: context.user.id } },
+        workspace: { connect: { id: args.workspaceId } }
       })
       : context.prisma.createCourseLink({
         to: {
@@ -21,12 +22,13 @@ const CourseQueries = {
         from: {
           connect: { id: args.from }
         },
-        createdBy: { connect: { id: context.user.id } }
+        createdBy: { connect: { id: context.user.id } },
+        workspace: { connect: { id: args.workspaceId } }
       })
   },
 
   async deleteCourseLink(root, args, context) {
-    const user = context.prisma.courseLink({ id: args.id }).createdBy()
+    const user = await context.prisma.courseLink({ id: args.id }).createdBy()
     checkAccess(context, { allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id })
     return context.prisma.deleteCourseLink({
       id: args.id
