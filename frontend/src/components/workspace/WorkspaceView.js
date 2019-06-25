@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
@@ -23,7 +23,7 @@ const WorkspaceView = ({ workspaceId, location }) => {
               state: { from: location }
             }} />
             : <WorkspaceDefaultCourseForm workspaceId={workspaceId} />
-          : <div>404</div>
+          : null
       }
     </React.Fragment>
   )

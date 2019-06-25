@@ -6,9 +6,7 @@ import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../graphql/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../graphql/CourseService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/Mutation'
 
 import { FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query'
 
@@ -54,7 +52,7 @@ const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective in the l
 const COURSE_ADDING_INSTRUCTION = "To add prerequisites, open the drawer on the right."
 const CONCEPT_LINKING_INSTRUCTION = "Switch on a learning objective on the left to start linking prerequisites."
 
-const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, courseId }) => {
+const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, workspaceId, courseId }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -91,27 +89,35 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    refetchQueries: [{ query: ALL_COURSES }]
+    refetchQueries: [{ query: FETCH_COURSE_AND_PREREQUISITES }]
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
-      const addedConcept = response.data.createConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const course = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === conceptState.id)
-
-      if (!includedIn(course.concepts, addedConcept)) {
-        course.concepts.push(addedConcept)
-        client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: courseId },
-          data: dataInStoreCopy
-        })
+    refetchQueries: [{
+      query: FETCH_COURSE_AND_PREREQUISITES,
+      variables: {
+        courseId, workspaceId
       }
-      setConceptState({ ...conceptState, id: '' })
-    }
+    }]
   })
+  // const createConcept = useMutation(CREATE_CONCEPT, {
+  //   update: (store, response) => {
+  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
+  //     const addedConcept = response.data.createConcept
+  //     const dataInStoreCopy = { ...dataInStore }
+  //     const course = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === conceptState.id)
+
+  //     if (!includedIn(course.concepts, addedConcept)) {
+  //       course.concepts.push(addedConcept)
+  //       client.writeQuery({
+  //         query: COURSE_PREREQUISITE_COURSES,
+  //         variables: { id: courseId },
+  //         data: dataInStoreCopy
+  //       })
+  //     }
+  //     setConceptState({ ...conceptState, id: '' })
+  //   }
+  // })
 
   const handleCourseClose = () => {
     setCourseState({ open: false, id: '', name: '' })
@@ -159,11 +165,11 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
           openConceptDialog={handleConceptOpen}
           openConceptEditDialog={handleConceptEditOpen}
           activeCourseId={courseId}
+          workspaceId={workspaceId}
         />
       </Grid>
     )
   }
-
 
   return (
     <React.Fragment>
@@ -198,6 +204,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                             openConceptDialog={handleConceptOpen}
                             openConceptEditDialog={handleConceptEditOpen}
                             activeCourseId={courseId}
+                            workspaceId={workspaceId}
                           />
                         )
                       }
@@ -223,6 +230,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         state={conceptState}
         handleClose={handleConceptClose}
         createConcept={createConcept}
+        workspaceId={workspaceId}
       />
       <ConceptEditingDialog
         state={conceptEditState}

@@ -35,12 +35,12 @@ type Mutation {
 
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
-  updateConcept(id: ID!, name:String, description: String): Concept
+  updateConcept(id: ID!, name:String, description: String, official: Boolean): Concept
   
-  createCourseLink(to: ID!, from: ID!, official: Boolean, workspaceId: ID!): CourseLink
+  createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
   deleteCourseLink(id: ID!): CourseLink
   
-  createConceptLink(to: ID!, from: ID!, official: Boolean): ConceptLink
+  createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
   deleteConceptLink(id: ID!): ConceptLink
 
   createProject(name: String!): Project

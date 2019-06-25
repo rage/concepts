@@ -67,7 +67,8 @@ const Course = ({
   openConceptDialog,
   openConceptEditDialog,
   activeConceptIds,
-  history
+  history,
+  workspaceId
 }) => {
 
   const { loggedIn } = useLoginStateValue()[0]
@@ -80,14 +81,14 @@ const Course = ({
     <React.Fragment>
       <Card elevation={0} className={classes.root} id='masonry-element'>
         <CardHeader className={classes.cardHeader} title={
-          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>  
+          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
         } action={
           loggedIn ?
             <IconButton onClick={openCourseDialog(course.id, course.name)}>
               <EditIcon />
             </IconButton>
             : null
-          
+
         }>
         </CardHeader>
 
@@ -100,15 +101,16 @@ const Course = ({
                 activeConceptIds={activeConceptIds}
                 openConceptEditDialog={openConceptEditDialog}
                 activeCourseId={activeCourseId}
+                workspaceId={workspaceId}
               />
             )}
           </List>
           {
             loggedIn ?
-            <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
-            : null
+              <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
+              : null
           }
-          
+
         </CardContent>
       </Card>
     </React.Fragment>

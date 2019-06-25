@@ -60,6 +60,9 @@ query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
       name
       linksToConcept {
         id
+        from {
+          id
+        }
         official
       }
     }
@@ -73,8 +76,11 @@ query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
           name
           description
           linksFromConcept {
-            official
             id
+            official
+            to {
+              id
+            }
           }
         }
       }
