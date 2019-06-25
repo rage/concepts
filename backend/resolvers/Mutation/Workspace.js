@@ -20,7 +20,7 @@ const WorkspaceMutations = {
     const owner = await context.prisma.workspace({
       id: args.id
     }).owner()
-    checkAccess(context, { allowStudent: true, verifyUser: true, userId: owner.id })
+    checkAccess(context, { allowStudent: true, allowStaff: true, verifyUser: true, userId: owner.id })
     return context.prisma.deleteWorkspace({ id: args.id })
   },
   async updateWorkspace(root, { id, name }, context) {
