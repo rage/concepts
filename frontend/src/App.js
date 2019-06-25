@@ -16,6 +16,8 @@ import PrivateRoute from './components/common/PrivateRoute'
 
 import UserView from './components/user/UserView'
 
+import WorkspaceView from './components/workspace/WorkspaceView'
+
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
 import { ALL_COURSES } from './graphql/Query/Course'
@@ -118,20 +120,18 @@ const App = ({ classes }) => {
           <Grid item xs={12}>
             <NavBar />
           </Grid>
-          <Route exact path="/auth" render={() => <AuthenticationForm />} />
-          <Route exact path="/users/:id" render={({ match }) => <UserView userId={match.params.id} />} />
-
-          <Route exact path="/user" render={() => <UserView />} />
-
-          <Route exact path="/courses" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
           <Route exact path="/" render={() => <div>ROOT</div>} />
 
-          {/* <Route exact path="/workspaces" render={() => <div>ALL WORKSPACES</div>} />
-          <Route exact path="/workspaces/:id" render={() => <div>ENTRYPOINTS</div>} />
-          <Route exact path="/workspaces/:wid/mapper/:cid" render={({ match }) => <FakeCourseView courseId={match.params.cid} workspaceId={match.params.wid} />} />
-          <Route exact path="/workspaces/:wid/matrix/:cid" render={() => <div>MATRIX FOR LINKING CONCEPTS</div>} />
-          <Route exact path="/workspaces/:wid/graph/:cid" render={() => <div>GRAPH FOR SHOWING LINKS BETWEEN CONCEPTS</div>} />
-          <Route exact path="/workspaces/:id/courses" render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} /> */}
+          <Route exact path="/auth" render={() => <AuthenticationForm />} />
+          <Route exact path="/user" render={() => <UserView />} />
+
+          <Route exact path="/workspaces/:id/(mapper|matrix|graph)" render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />
+          <Route exact path="/workspaces/:wid/mapper/:cid" render={({ match }) => <div>MAPPER</div>} />
+          <Route exact path="/workspaces/:wid/matrix/:cid" render={({ match }) => <div>MATRIX</div>} />
+          <Route exact path="/workspaces/:wid/graph/:cid" render={({ match }) => <div>GRAPH</div>} />
+          <Route exact path="/workspaces/:id/courses" render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
+
+          <Route exact path="/courses" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
 
           <Route exact path="/courses/:id" render={({ match }) => {
             return <GuidedCourseView
