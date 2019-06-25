@@ -16,6 +16,8 @@ import PrivateRoute from './components/common/PrivateRoute'
 
 import UserView from './components/user/UserView'
 
+import LandingView from './components/common/LandingView'
+
 import WorkspaceView from './components/workspace/WorkspaceView'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
@@ -120,7 +122,7 @@ const App = ({ classes }) => {
           <Grid item xs={12}>
             <NavBar />
           </Grid>
-          <Route exact path="/" render={() => <div>ROOT</div>} />
+          <Route exact path="/" render={() => <Grid item xs={12}><LandingView /></Grid>} />
 
           <Route exact path="/auth" render={() => <AuthenticationForm />} />
           <Route exact path="/user" render={() => <UserView />} />

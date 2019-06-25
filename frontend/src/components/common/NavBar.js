@@ -51,7 +51,7 @@ const NavBar = ({ history, classes }) => {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" color="inherit">
-            <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">Courses</Link>
+            <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">Home</Link>
           </Typography>
           {loggedIn ? (
             <Button onClick={logout} color="inherit">
