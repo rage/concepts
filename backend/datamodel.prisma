@@ -29,11 +29,11 @@ type Workspace {
   project: Project @relation(name: "UserWorkspaces")
   owner: User @relation(name:"WorkspaceOwner")
   public: Boolean! @default(value: false)
-  defaultCourse: Course @relation(link: INLINE, name:"DefaultCourse")
-  courses: [Course!]! @relation(name:"WorkspaceCourses")
-  concepts: [Concept!]! @relation(name:"WorkspaceConcepts")
-  conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks")
-  courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks")
+  defaultCourse: Course @relation(link: INLINE, name:"DefaultCourse", onDelete: CASCADE)
+  courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
+  concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
+  conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
+  courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
 }
 
 type CourseLink {
