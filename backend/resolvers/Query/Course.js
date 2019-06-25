@@ -10,7 +10,25 @@ const CourseQueries = {
     return context.prisma.course({
       id: args.id
     })
-  }
+  },
+  async courseAndPrerequisites(root, args, context) {
+    // Check if the course is related to the workspace
+    const courses = await context.prisma
+      .workspace({ id: args.workspaceId })
+      .courses({
+        where: {
+          id: args.courseId
+        }
+      })
+
+    if (courses.length > 0) {
+      checkAccess(context, { allowStaff: true, allowStudent: true })
+      return await context.prisma.course({
+        id: args.courseId
+      })
+    }
+    return null
+  },
 }
 
 module.exports = CourseQueries

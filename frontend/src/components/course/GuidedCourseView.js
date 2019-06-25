@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { withStyles } from '@material-ui/core/styles'
 
-import {
-  FETCH_WORKSPACE_AND_DEFAULT_DATA
-} from '../../graphql/Query'
-
-import {
-  FETCH_COURSE,
-  COURSE_PREREQUISITE_COURSES
-} from '../../graphql/CourseService'
+import { FETCH_COURSE_AND_PREREQUISITES, WORKSPACE_BY_ID, ALL_COURSES } from '../../graphql/Query'
+import { CREATE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'
 
 import GuidedCourseContainer from './GuidedCourseContainer'
 import GuidedCourseTray from './GuidedCourseTray'
@@ -29,16 +23,35 @@ import { useLoginStateValue } from '../../store'
 const styles = theme => ({
 })
 
-const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) => {
+const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const { loggedIn } = useLoginStateValue()[0]
-  const course = useQuery(FETCH_COURSE, {
-    variables: { id: course_id }
+
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
+    variables: { id: workspaceId }
   })
 
-  const prerequisites = useQuery(COURSE_PREREQUISITE_COURSES, {
-    variables: { id: course_id }
+  const courseQuery = useQuery(FETCH_COURSE_AND_PREREQUISITES, {
+    variables: { courseId, workspaceId }
+  })
+
+  const createCourse = useMutation(CREATE_COURSE, {
+    refetchQueries: [{
+      query: ALL_COURSES,
+      variables: {
+        courseId, workspaceId
+      }
+    }]
+  })
+
+  const updateCourse = useMutation(UPDATE_COURSE, {
+    refetchQueries: [{
+      query: ALL_COURSES,
+      variables: {
+        courseId, workspaceId
+      }
+    }]
   })
 
   const toggleConcept = (id) => () => {
@@ -60,35 +73,41 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) =>
   return (
     <React.Fragment>
       {
-        course.data.courseById && prerequisites.data.courseById ?
+        courseQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
           <Grid container spacing={0} direction="row">
             <ActiveCourse
-              course={course.data.courseById}
+              course={courseQuery.data.courseAndPrerequisites}
               activeConceptIds={activeConceptIds}
               toggleConcept={toggleConcept}
               resetConceptToggle={resetConceptToggle}
               courseTrayOpen={courseTrayOpen}
+              workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseContainer
-              courses={prerequisites.data.courseById.prerequisiteCourses}
-              course_id={course_id}
+              courses={courseQuery.data.courseAndPrerequisites.linksToCourse}
+              courseId={courseId}
               activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
-              activeCourse={course.data.courseById}
+              activeCourse={courseQuery.data.courseAndPrerequisites}
               setCourseTrayOpen={setCourseTrayOpen}
+              workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseTray
-              activeCourse={course_id}
-              course_id={course.data.courseById.id}
-              prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses}
+              activeCourse={courseId}
+              courseId={courseQuery.data.courseAndPrerequisites.id}
+              prerequisiteCourses={courseQuery.data.courseAndPrerequisites.linksToCourse}
               setCourseTrayOpen={setCourseTrayOpen}
               courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}
+              workspaceId={workspaceQuery.data.workspaceById.id}
             />
             {
-              course.data.courseById.concepts.length !== 0 && loggedIn ?
-                <Fab style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }} onClick={handleTrayToggle} >
+              courseQuery.data.courseAndPrerequisites.concepts.length !== 0 && loggedIn ?
+                <Fab
+                  style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
+                  onClick={handleTrayToggle}
+                >
                   {
                     courseTrayOpen ?
                       <ChevronRightIcon />
@@ -98,7 +117,8 @@ const GuidedCourseView = ({ classes, course_id, createCourse, updateCourse }) =>
                 </Fab>
                 : null
             }
-          </Grid> :
+          </Grid>
+          :
           <Grid container
             spacing={0}
             direction="row"

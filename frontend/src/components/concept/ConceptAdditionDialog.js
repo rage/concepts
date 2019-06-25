@@ -13,17 +13,18 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const ConceptAdditionDialog = ({ state, handleClose, createConcept }) => {
+const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  
+
   const errorDispatch = useErrorStateValue()[1]
 
   const handleConceptAdding = async () => {
     try {
       await createConcept({
         variables: {
-          course_id: state.id,
+          courseId: state.id,
+          workspaceId,
           name,
           description,
           official: false

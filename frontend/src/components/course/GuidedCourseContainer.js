@@ -10,6 +10,8 @@ import { ALL_COURSES } from '../../graphql/CourseService'
 import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/ConceptService'
 import { COURSE_PREREQUISITE_COURSES } from '../../graphql/CourseService'
 
+import { FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query'
+
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import CourseEditingDialog from './CourseEditingDialog'
@@ -52,7 +54,7 @@ const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective in the l
 const COURSE_ADDING_INSTRUCTION = "To add prerequisites, open the drawer on the right."
 const CONCEPT_LINKING_INSTRUCTION = "Switch on a learning objective on the left to start linking prerequisites."
 
-const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
+const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, courseId }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -94,7 +96,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
       const addedConcept = response.data.createConcept
       const dataInStoreCopy = { ...dataInStore }
       const course = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === conceptState.id)
@@ -103,7 +105,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         course.concepts.push(addedConcept)
         client.writeQuery({
           query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course_id },
+          variables: { id: courseId },
           data: dataInStoreCopy
         })
       }
@@ -135,21 +137,6 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     setConceptEditState({ open: true, id, name, description })
   }
 
-  const makeGridCourseElements = () => {
-    return courses && courses.map(course =>
-      <Grid item key={course.id}>
-        <Course
-          course={course}
-          activeConceptIds={activeConceptIds}
-          openCourseDialog={handleCourseOpen}
-          openConceptDialog={handleConceptOpen}
-          openConceptEditDialog={handleConceptEditOpen}
-          activeCourseId={course_id}
-        />
-      </Grid>
-    )
-  }
-
   const handleConceptInfoClose = () => {
     setConceptInfoState(false)
   }
@@ -161,6 +148,22 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   const handleLinkInfoClose = () => {
     setLinkInfoState(false)
   }
+
+  const makeGridCourseElements = () => {
+    return courses && courses.map(course =>
+      <Grid item key={course.id}>
+        <Course
+          course={course}
+          activeConceptIds={activeConceptIds}
+          openCourseDialog={handleCourseOpen}
+          openConceptDialog={handleConceptOpen}
+          openConceptEditDialog={handleConceptEditOpen}
+          activeCourseId={courseId}
+        />
+      </Grid>
+    )
+  }
+
 
   return (
     <React.Fragment>
@@ -194,7 +197,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                             openCourseDialog={handleCourseOpen}
                             openConceptDialog={handleConceptOpen}
                             openConceptEditDialog={handleConceptEditOpen}
-                            activeCourseId={course_id}
+                            activeCourseId={courseId}
                           />
                         )
                       }

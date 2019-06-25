@@ -9,10 +9,10 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
+import { FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, FETCH_COURSE } from '../../graphql/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/ConceptService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
 
 // List 
 import List from '@material-ui/core/List'
@@ -63,6 +63,7 @@ const styles = theme => ({
 const ActiveCourse = ({
   classes, // UI
   course,
+  workspaceId,
   activeConceptIds,
   toggleConcept,
   resetConceptToggle
@@ -79,43 +80,66 @@ const ActiveCourse = ({
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    refetchQueries: [{ query: ALL_COURSES }]
+    refetchQueries: [{
+      query: FETCH_COURSE_AND_PREREQUISITES,
+      variables: {
+        courseId: course.id, workspaceId
+      }
+    }]
   })
 
+  // const createConcept = useMutation(CREATE_CONCEPT, {
+  //   update: (store, response) => {
+  //     const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
+  //     const addedConcept = response.data.createConcept
+  //     const dataInStoreCopy = { ...dataInStore }
+  //     const concepts = dataInStoreCopy.courseById.concepts
+  //     if (!includedIn(concepts, addedConcept)) {
+  //       concepts.push(addedConcept)
+  //       client.writeQuery({
+  //         query: FETCH_COURSE,
+  //         variables: { id: course.id },
+  //         data: dataInStoreCopy
+  //       })
+  //     }
+  //     setConceptState({ ...conceptState, id: '' })
+  //   }
+  // })
+
+  // const deleteConcept = useMutation(DELETE_CONCEPT, {
+  //   update: (store, response) => {
+  //     const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
+  //     const deletedConcept = response.data.deleteConcept
+  //     const dataInStoreCopy = { ...dataInStore }
+  //     let concepts = dataInStoreCopy.courseById.concepts
+  //     if (includedIn(concepts, deletedConcept)) {
+  //       dataInStoreCopy.courseById.concepts = concepts.filter(c => c.id !== deletedConcept.id)
+  //       client.writeQuery({
+  //         query: FETCH_COURSE,
+  //         variables: { id: course.id },
+  //         data: dataInStoreCopy
+  //       })
+  //     }
+
+  //   }
+  // })
+
   const createConcept = useMutation(CREATE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
-      const addedConcept = response.data.createConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const concepts = dataInStoreCopy.courseById.concepts
-      if (!includedIn(concepts, addedConcept)) {
-        concepts.push(addedConcept)
-        client.writeQuery({
-          query: FETCH_COURSE,
-          variables: { id: course.id },
-          data: dataInStoreCopy
-        })
+    refetchQueries: [{
+      query: FETCH_COURSE_AND_PREREQUISITES,
+      variables: {
+        courseId: course.id, workspaceId
       }
-      setConceptState({ ...conceptState, id: '' })
-    }
+    }]
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
-      const deletedConcept = response.data.deleteConcept
-      const dataInStoreCopy = { ...dataInStore }
-      let concepts = dataInStoreCopy.courseById.concepts
-      if (includedIn(concepts, deletedConcept)) {
-        dataInStoreCopy.courseById.concepts = concepts.filter(c => c.id !== deletedConcept.id)
-        client.writeQuery({
-          query: FETCH_COURSE,
-          variables: { id: course.id },
-          data: dataInStoreCopy
-        })
+    refetchQueries: [{
+      query: FETCH_COURSE_AND_PREREQUISITES,
+      variables: {
+        courseId: course.id, workspaceId
       }
-
-    }
+    }]
   })
 
   const handleClickAway = (event) => {
@@ -134,8 +158,8 @@ const ActiveCourse = ({
     setConceptState({ ...conceptState, open: false })
   }
 
-  const handleConceptOpen = (id) => () => {
-    setConceptState({ open: true, id })
+  const handleConceptOpen = (courseId) => () => {
+    setConceptState({ open: true, id: courseId })
   }
 
   const handleConceptEditClose = () => {
@@ -187,6 +211,7 @@ const ActiveCourse = ({
         state={conceptEditState}
         handleClose={handleConceptEditClose}
         updateConcept={updateConcept}
+        workspaceId={workspaceId}
         defaultName={conceptEditState.name}
         defaultDescription={conceptEditState.description}
       />
@@ -194,6 +219,7 @@ const ActiveCourse = ({
         state={conceptState}
         handleClose={handleConceptClose}
         createConcept={createConcept}
+        workspaceId={workspaceId}
       />
     </Grid>
   )

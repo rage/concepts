@@ -24,12 +24,6 @@ import { ALL_COURSES } from '../../graphql/Query/Course'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-import {
-  ADD_COURSE_AS_PREREQUISITE,
-  DELETE_COURSE_AS_PREREQUISITE,
-  COURSE_PREREQUISITE_COURSES
-} from '../../graphql/CourseService'
-
 const styles = theme => ({
   root: {
     height: '90vh',
@@ -97,7 +91,7 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
   )
 }
 
-const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
+const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, courseId, workspaceId, prerequisiteCourses, createCourse }) => {
   const [state, setState] = useState({ open: false })
   const [filterKeyword, setFilterKeyword] = useState('')
 
@@ -109,31 +103,34 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
 
+  const addCourseAsPrerequisite = () => {
 
-  const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
-      const addedCourse = response.data.addCourseAsCoursePrerequisite
-      const dataInStoreCopy = { ...dataInStore }
-      const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
-      if (!includedIn(prerequisiteCourses, addedCourse)) {
-        prerequisiteCourses.push(addedCourse)
-        client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course_id },
-          data: dataInStoreCopy
-        })
-      }
-    }
+  }
 
-  })
+  // const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
+  //   update: (store, response) => {
+  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
+  //     const addedCourse = response.data.addCourseAsCoursePrerequisite
+  //     const dataInStoreCopy = { ...dataInStore }
+  //     const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
+  //     if (!includedIn(prerequisiteCourses, addedCourse)) {
+  //       prerequisiteCourses.push(addedCourse)
+  //       client.writeQuery({
+  //         query: COURSE_PREREQUISITE_COURSES,
+  //         variables: { id: courseId },
+  //         data: dataInStoreCopy
+  //       })
+  //     }
+  //   }
+
+  // })
 
   const deleteCourseAsPrerequisite = () => {
 
   }
   // const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
   //   update: (store, response) => {
-  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
+  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
   //     const removedCourse = response.data.deleteCourseAsCoursePrerequisite
   //     const dataInStoreCopy = { ...dataInStore }
   //     const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
@@ -141,7 +138,7 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
   //       dataInStoreCopy.courseById.prerequisiteCourses = prerequisiteCourses.filter(course => course.id !== removedCourse.id)
   //       client.writeQuery({
   //         query: COURSE_PREREQUISITE_COURSES,
-  //         variables: { id: course_id },
+  //         variables: { id: courseId },
   //         data: dataInStoreCopy
   //       })
   //     }
@@ -214,7 +211,7 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
                 <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
               </CardContent>
             </Card >
-            <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
+            <CourseCreationDialog state={state} handleClose={handleClose} workspaceId={workspaceId} createCourse={createCourse} />
           </Grid >
           :
           null

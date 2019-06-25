@@ -50,7 +50,41 @@ query workspaceAndData($id: ID!) {
 }
 `
 
+const FETCH_COURSE_AND_PREREQUISITES = gql`
+query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
+  courseAndPrerequisites(courseId: $courseId, workspaceId: $workspaceId) {
+    id
+    name
+    concepts {
+      id
+      name
+      linksToConcept {
+        id
+        official
+      }
+    }
+    linksToCourse {
+      id
+      from {
+        id
+        name
+        concepts {
+          id
+          name
+          description
+          linksFromConcept {
+            official
+            id
+          }
+        }
+      }
+    }
+  }
+}
+`
+
 export {
   ALL_COURSES,
-  FETCH_WORKSPACE_AND_DEFAULT_DATA
+  FETCH_WORKSPACE_AND_DEFAULT_DATA,
+  FETCH_COURSE_AND_PREREQUISITES
 }
