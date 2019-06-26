@@ -46,8 +46,8 @@ const LandingView = (props) => {
             <Grid container spacing={2} justify="center">
               <Grid item>
                 <Button variant="contained" color="primary" onClick={loggedIn ? redirectTo('/user') : redirectTo('/auth')}>
-                  Login and start mapping
-                  </Button>
+                  {loggedIn ? 'Choose workspace' : 'Login and choose workspace'}
+                </Button>
               </Grid>
               <Grid item>
                 <Button variant="outlined" color="primary" onClick={(e) => alert('Work in progress')}>

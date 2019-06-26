@@ -41,11 +41,11 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   })
 
   const createCourse = useMutation(CREATE_COURSE, {
-    update: createCourseUpdate()
+    update: createCourseUpdate(workspaceId)
   })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
-    update: updateCourseUpdate()
+    update: updateCourseUpdate(workspaceId)
   })
 
   const toggleConcept = (id) => () => {

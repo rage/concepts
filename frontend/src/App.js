@@ -136,13 +136,10 @@ const App = ({ classes }) => {
           )}
           />
           <Route exact path="/workspaces/:wid/matrix/:cid" render={({ match }) => (
-            // <div>MATRIX</div>
             <MatrixView
-                courseId={match.params.cid}
-                workspaceId={match.params.wid}
-                createCourse={createCourse}
-                updateCourse={updateCourse}
-              />
+              courseId={match.params.cid}
+              workspaceId={match.params.wid}
+            />
           )} />
           <Route exact path="/workspaces/:wid/graph/:cid" render={({ match }) => <div>GRAPH</div>} />
           <Route exact path="/workspaces/:id/courses" render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
@@ -161,8 +158,6 @@ const App = ({ classes }) => {
             <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
               return <MatrixView
                 course_id={match.params.id}
-                createCourse={createCourse}
-                updateCourse={updateCourse}
               />
             }}
             />

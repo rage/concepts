@@ -19,7 +19,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query/Course'
+import { COURSES_BY_WORKSPACE, FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
 // Error dispatcher
@@ -97,8 +97,9 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
   const [state, setState] = useState({ open: false })
   const [filterKeyword, setFilterKeyword] = useState('')
 
-  const courses = useQuery(ALL_COURSES)
-
+  const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
+    variables: { workspaceId }
+  })
 
   const client = useApolloClient()
 
@@ -185,10 +186,10 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
                 />
 
                 {
-                  courses.data.allCourses ?
+                  coursesQuery.data.coursesByWorkspace ?
                     <List disablePadding className={classes.list}>
                       {
-                        courses.data.allCourses.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
+                        coursesQuery.data.coursesByWorkspace.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
                           return (
                             <PrerequisiteCourse
                               key={course.id}

@@ -13,6 +13,7 @@ type Query {
 
   allCourses: [Course!]!
   courseById(id: ID!): Course
+  coursesByWorkspace(workspaceId: ID!): [Course!]!
   courseAndPrerequisites(courseId: ID!, workspaceId: ID!): Course
 
   allCourseLinks: [CourseLink!]!
