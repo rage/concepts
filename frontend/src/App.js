@@ -132,8 +132,6 @@ const App = ({ classes }) => {
             <GuidedCourseView
               courseId={match.params.cid}
               workspaceId={match.params.wid}
-              createCourse={createCourse}
-              updateCourse={updateCourse}
             />
           )}
           />

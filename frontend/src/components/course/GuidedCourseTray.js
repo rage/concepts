@@ -106,51 +106,38 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
     set.map(p => p.id).includes(object.id)
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
-    refetchQueries: [
-      { query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } }
-    ]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } })
+      const addedCourseLink = response.data.createCourseLink
+      const dataInStoreCopy = { ...dataInStore }
+      const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
+      if (!includedIn(courseLinks, addedCourseLink)) {
+        courseLinks.push(addedCourseLink)
+        client.writeQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: { courseId, workspaceId },
+          data: dataInStoreCopy
+        })
+      }
+    }
   })
-
-  // const createCourseLink = useMutation(ADD_COURSE_AS_PREREQUISITE, {
-  //   update: (store, response) => {
-  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
-  //     const addedCourse = response.data.addCourseAsCoursePrerequisite
-  //     const dataInStoreCopy = { ...dataInStore }
-  //     const courseLinks = dataInStoreCopy.courseById.courseLinks
-  //     if (!includedIn(courseLinks, addedCourse)) {
-  //       courseLinks.push(addedCourse)
-  //       client.writeQuery({
-  //         query: COURSE_PREREQUISITE_COURSES,
-  //         variables: { id: courseId },
-  //         data: dataInStoreCopy
-  //       })
-  //     }
-  //   }
-
-  // })
 
   const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
-    refetchQueries: [
-      { query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } }
-    ]
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } })
+      const removedCourseLink = response.data.deleteCourseLink
+      const dataInStoreCopy = { ...dataInStore }
+      const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
+      if (includedIn(courseLinks, removedCourseLink)) {
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => course.id !== removedCourseLink.id)
+        client.writeQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: { courseId, workspaceId },
+          data: dataInStoreCopy
+        })
+      }
+    }
   })
-  // const deleteCourseLink = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
-  //   update: (store, response) => {
-  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
-  //     const removedCourse = response.data.deleteCourseAsCoursePrerequisite
-  //     const dataInStoreCopy = { ...dataInStore }
-  //     const courseLinks = dataInStoreCopy.courseById.courseLinks
-  //     if (includedIn(courseLinks, removedCourse)) {
-  //       dataInStoreCopy.courseById.courseLinks = courseLinks.filter(course => course.id !== removedCourse.id)
-  //       client.writeQuery({
-  //         query: COURSE_PREREQUISITE_COURSES,
-  //         variables: { id: courseId },
-  //         data: dataInStoreCopy
-  //       })
-  //     }
-  //   }
-
-  // })
 
   const handleKeywordInput = (e) => {
     setFilterKeyword(e.target.value)

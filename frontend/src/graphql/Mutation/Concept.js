@@ -7,6 +7,20 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
     name
     description
     official
+    linksFromConcept {
+      id
+      official
+      to {
+        id
+      }
+    }
+    linksToConcept {
+      id
+      official
+      from {
+        id
+      }
+    }
   }
 }
 `
@@ -18,6 +32,20 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     name
     description
     official
+    linksFromConcept {
+      id
+      official
+      to {
+        id
+      }
+    }
+    linksToConcept {
+      id
+      official
+      from {
+        id
+      }
+    }
   }
 }
 `
@@ -26,7 +54,6 @@ const DELETE_CONCEPT = gql`
 mutation deleteConcept($id: ID!) {
   deleteConcept(id: $id) {
     id
-    name
   }
 }
 `

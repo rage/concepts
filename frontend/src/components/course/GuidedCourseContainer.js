@@ -93,31 +93,23 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
-    refetchQueries: [{
-      query: FETCH_COURSE_AND_PREREQUISITES,
-      variables: {
-        courseId, workspaceId
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } })
+      const addedConcept = response.data.createConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link => link.from.id === conceptState.id)
+      const course = courseLink.from
+      if (!includedIn(course.concepts, addedConcept)) {
+        course.concepts.push(addedConcept)
+        client.writeQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: { id: courseId, workspaceId },
+          data: dataInStoreCopy
+        })
       }
-    }]
+      setConceptState({ ...conceptState, id: '' })
+    }
   })
-  // const createConcept = useMutation(CREATE_CONCEPT, {
-  //   update: (store, response) => {
-  //     const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseId } })
-  //     const addedConcept = response.data.createConcept
-  //     const dataInStoreCopy = { ...dataInStore }
-  //     const course = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === conceptState.id)
-
-  //     if (!includedIn(course.concepts, addedConcept)) {
-  //       course.concepts.push(addedConcept)
-  //       client.writeQuery({
-  //         query: COURSE_PREREQUISITE_COURSES,
-  //         variables: { id: courseId },
-  //         data: dataInStoreCopy
-  //       })
-  //     }
-  //     setConceptState({ ...conceptState, id: '' })
-  //   }
-  // })
 
   const handleCourseClose = () => {
     setCourseState({ open: false, id: '', name: '' })
@@ -131,8 +123,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     setConceptState({ ...conceptState, open: false })
   }
 
-  const handleConceptOpen = (id) => () => {
-    setConceptState({ open: true, id })
+  const handleConceptOpen = (courseId) => () => {
+    setConceptState({ open: true, id: courseId })
   }
 
   const handleConceptEditClose = () => {

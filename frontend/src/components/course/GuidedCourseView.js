@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -28,6 +28,11 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const { loggedIn } = useLoginStateValue()[0]
 
+  const client = useApolloClient()
+
+  const includedIn = (set, object) =>
+    set.map(p => p.id).includes(object.id)
+
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
   })
@@ -37,21 +42,35 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   })
 
   const createCourse = useMutation(CREATE_COURSE, {
-    refetchQueries: [{
-      query: ALL_COURSES,
-      variables: {
-        courseId, workspaceId
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const addedCourse = response.data.createCourse
+
+      if (!includedIn(dataInStore.allCourses, addedCourse)) {
+        dataInStore.allCourses.push(addedCourse)
+        client.writeQuery({
+          query: ALL_COURSES,
+          data: dataInStore
+        })
       }
-    }]
+    }
   })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
-    refetchQueries: [{
-      query: ALL_COURSES,
-      variables: {
-        courseId, workspaceId
+    update: (store, response) => {
+      const dataInStore = store.readQuery({ query: ALL_COURSES })
+      const updatedCourse = response.data.updateCourse
+
+      if (includedIn(dataInStore.allCourses, updatedCourse)) {
+        dataInStore.allCourses = dataInStore.allCourses.map(course => {
+          return course.id === updatedCourse.id ? updatedCourse : course
+        })
+        client.writeQuery({
+          query: ALL_COURSES,
+          data: dataInStore
+        })
       }
-    }]
+    }
   })
 
   const toggleConcept = (id) => () => {

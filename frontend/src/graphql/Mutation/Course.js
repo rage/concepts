@@ -5,6 +5,10 @@ mutation createCourse($name: String!, $workspaceId: ID!) {
   createCourse(name: $name, workspaceId: $workspaceId) {
     id
     name
+    concepts {
+      id
+      name
+    }
   }
 }
 `
@@ -14,6 +18,10 @@ mutation updateCourse($id: ID!, $name: String!) {
   updateCourse(id: $id, name: $name) {
     id
     name
+    concepts {
+      id
+      name
+    }
   }
 }
 `

@@ -5,11 +5,21 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
   createCourseLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official) {
     id
     official
-    to {
-      id
-    }
     from {
       id
+      name
+      concepts {
+        id
+        name
+        description
+        linksFromConcept {
+          official
+          id
+          to {
+              id
+            }
+        }
+      }
     }
   }
 }
