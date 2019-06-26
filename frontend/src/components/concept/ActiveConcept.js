@@ -69,6 +69,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
   const handleDeleteConcept = (id) => async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
+      handleMenuClose()
       try {
         await deleteConcept({
           variables: { id }
@@ -80,7 +81,6 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
         })
       }
     }
-    handleMenuClose()
   }
 
   const handleEditConcept = (id, name, description) => () => {
