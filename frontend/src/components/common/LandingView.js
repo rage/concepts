@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 
 import { withRouter } from 'react-router-dom'
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -22,8 +23,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const LandingView = (props) => {
-  const classes = useStyles()
+  const { loggedIn } = useLoginStateValue()[0]
 
+  const classes = useStyles()
   const redirectTo = (path) => () => {
     props.history.push(path)
   }
@@ -43,7 +45,7 @@ const LandingView = (props) => {
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify="center">
               <Grid item>
-                <Button variant="contained" color="primary" onClick={redirectTo('/auth')}>
+                <Button variant="contained" color="primary" onClick={loggedIn ? redirectTo('/user') : redirectTo('/auth')}>
                   Login and start mapping
                   </Button>
               </Grid>
