@@ -88,58 +88,42 @@ const ActiveCourse = ({
     }]
   })
 
-  // const deleteConcept = useMutation(DELETE_CONCEPT, {
-  //   update: (store, response) => {
-  //     const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
-  //     const deletedConcept = response.data.deleteConcept
-  //     const dataInStoreCopy = { ...dataInStore }
-  //     let concepts = dataInStoreCopy.courseById.concepts
-  //     if (includedIn(concepts, deletedConcept)) {
-  //       dataInStoreCopy.courseById.concepts = concepts.filter(c => c.id !== deletedConcept.id)
-  //       client.writeQuery({
-  //         query: FETCH_COURSE,
-  //         variables: { id: course.id },
-  //         data: dataInStoreCopy
-  //       })
-  //     }
-
-  //   }
-  // })
-
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
       const dataInStore = store.readQuery({
         query: FETCH_COURSE_AND_PREREQUISITES,
-        variables: { courseId: course.id, workspaceId }
+        variables: { 
+          courseId: course.id, 
+          workspaceId 
+        }
       })
       const addedConcept = response.data.createConcept
-      console.log(addedConcept)
       const dataInStoreCopy = { ...dataInStore }
       const concepts = dataInStoreCopy.courseAndPrerequisites.concepts
       if (!includedIn(concepts, addedConcept)) {
-        console.log(concepts)
         dataInStoreCopy.courseAndPrerequisites.concepts.push(addedConcept)
         client.writeQuery({
           query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: { courseId: course.id, workspaceId },
+          variables: { 
+            courseId: course.id, 
+            workspaceId 
+          },
           data: dataInStoreCopy
         })
       }
-    },
-    refetchQueries: [{
-      query: FETCH_COURSE_AND_PREREQUISITES,
-      variables: {
-        courseId: course.id, workspaceId
-      }
-    }]
-  })
+    }
+   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: (store, response) => {
       const dataInStore = store.readQuery({
         query: FETCH_COURSE_AND_PREREQUISITES,
-        variables: { courseId: course.id, workspaceId }
+        variables: {
+          courseId: course.id,
+          workspaceId
+        }
       })
+
       const deletedConcept = response.data.deleteConcept
       const dataInStoreCopy = { ...dataInStore }
       const concepts = dataInStoreCopy.courseAndPrerequisites.concepts
@@ -151,13 +135,7 @@ const ActiveCourse = ({
           data: dataInStoreCopy
         })
       }
-    },
-    refetchQueries: [{
-      query: FETCH_COURSE_AND_PREREQUISITES,
-      variables: {
-        courseId: course.id, workspaceId
-      }
-    }]
+    }
   })
 
   const handleClickAway = (event) => {
