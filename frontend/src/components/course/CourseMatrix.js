@@ -96,63 +96,73 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   );
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    refetchQueries: [{
-      query: FETCH_COURSE_AND_PREREQUISITES,
-      variables: {
-        courseId: courseAndPrerequisites.id,
-        workspaceId
+    update: (store, response) => {
+      try {
+        const dataInStore = store.readQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: {
+            courseId: courseAndPrerequisites.id,
+            workspaceId
+          }
+        })
+
+        const deletedConceptLink = response.data.deleteConceptLink
+        const dataInStoreCopy = { ...dataInStore }
+
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
+          courseLink.from.concepts.forEach(concept => {
+            concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
+          })
+        })
+
+        client.writeQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: {
+            courseId: courseAndPrerequisites.id,
+            workspaceId
+          },
+          data: dataInStoreCopy
+        })
+      } catch (err) {
+
       }
-    }]
+    }
   })
-  // const deleteLink = useMutation(DELETE_CONCEPT_LINK, {
-  //   update: (store, response) => {
-  //     try {
-  //       const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseAndPrerequisites.id } })
-  //       const deletedLink = response.data.deleteLink
-  //       const dataInStoreCopy = { ...dataInStore }
-  //       dataInStoreCopy.courseById.prerequisiteCourses.forEach(courseForConcept => {
-  //         courseForConcept.concepts.forEach(concept => {
-  //           concept.linksFromConcept = concept.linksFromConcept.filter(l => l.id !== deletedLink.id)
-  //         })
-  //       })
-  //       client.writeQuery({
-  //         query: COURSE_PREREQUISITE_COURSES,
-  //         variables: { id: courseAndPrerequisites.id },
-  //         data: dataInStoreCopy
-  //       })
-  //     } catch (err) { }
-  //   }
-  // })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    refetchQueries: [{
-      query: FETCH_COURSE_AND_PREREQUISITES,
-      variables: {
-        courseId: courseAndPrerequisites.id,
-        workspaceId
+    update: (store, response) => {
+      try {
+        const dataInStore = store.readQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: {
+            courseId: courseAndPrerequisites.id,
+            workspaceId
+          }
+        })
+        const createdConceptLink = response.data.createConceptLink
+        const dataInStoreCopy = { ...dataInStore }
+
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
+          const concept = courseLink.from.concepts.find(concept => concept.id === createdConceptLink.from.id)
+          if (concept) {
+            concept.linksFromConcept.push(createdConceptLink)
+          }
+        })
+
+        client.writeQuery({
+          query: FETCH_COURSE_AND_PREREQUISITES,
+          variables: {
+            courseId: courseAndPrerequisites.id,
+            workspaceId
+          },
+          data: dataInStoreCopy
+        })
+
+      } catch (err) {
+
       }
-    }]
+    }
   })
-  // const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
-  //   update: (store, response) => {
-  //     try {
-  //       const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: courseAndPrerequisites.id } })
-  //       const addedLink = response.data.createLink
-  //       const dataInStoreCopy = { ...dataInStore }
-  //       dataInStoreCopy.courseById.prerequisiteCourses.forEach(courseForConcept => {
-  //         const concept = courseForConcept.concepts.find(c => c.id === addedLink.from.id)
-  //         if (concept) {
-  //           concept.linksFromConcept.push(addedLink)
-  //         }
-  //       })
-  //       client.writeQuery({
-  //         query: COURSE_PREREQUISITE_COURSES,
-  //         variables: { id: courseAndPrerequisites.id },
-  //         data: dataInStoreCopy
-  //       })
-  //     } catch (err) { }
-  //   }
-  // })
 
   const linkConcepts = (from, to, checked) => async (event) => {
 
@@ -162,21 +172,22 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
           variables: {
             from: from.id, to: to.id, workspaceId
           },
-          // optimisticResponse: {
-          //   __typename: "Mutation",
-          //   createLink: {
-          //     id: `${Math.random() * 100}`,
-          //     __typename: "Link",
-          //     to: {
-          //       __typename: "Concept",
-          //       id: to.id
-          //     },
-          //     from: {
-          //       __typename: "Link",
-          //       id: from.id
-          //     }
-          //   }
-          // },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createConceptLink: {
+              id: `${Math.random() * 100}`,
+              official: false,
+              __typename: "ConceptLink",
+              to: {
+                __typename: "Concept",
+                id: to.id
+              },
+              from: {
+                __typename: "Concept",
+                id: from.id
+              }
+            }
+          }
         })
       } catch (err) { }
     } else {
@@ -188,13 +199,13 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
           variables: {
             id: link.id
           },
-          // optimisticResponse: {
-          //   __typename: "Mutation",
-          //   deleteConceptLink: {
-          //     id: link.id,
-          //     __typename: "Link"
-          //   }
-          // },
+          optimisticResponse: {
+            __typename: "Mutation",
+            deleteConceptLink: {
+              id: link.id,
+              __typename: "ConceptLink"
+            }
+          }
         })
       } catch (err) { }
     }
