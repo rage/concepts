@@ -74,7 +74,7 @@ const Course = ({
   const { loggedIn } = useLoginStateValue()[0]
 
   const onHeaderClickHandle = () => {
-    history.push(`/courses/${course.id}`)
+    history.push(`/workspaces/${workspaceId}/mapper/${course.id}`)
   }
 
   return (

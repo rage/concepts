@@ -92,9 +92,9 @@ const ActiveCourse = ({
     update: (store, response) => {
       const dataInStore = store.readQuery({
         query: FETCH_COURSE_AND_PREREQUISITES,
-        variables: { 
-          courseId: course.id, 
-          workspaceId 
+        variables: {
+          courseId: course.id,
+          workspaceId
         }
       })
       const addedConcept = response.data.createConcept
@@ -104,15 +104,15 @@ const ActiveCourse = ({
         dataInStoreCopy.courseAndPrerequisites.concepts.push(addedConcept)
         client.writeQuery({
           query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: { 
-            courseId: course.id, 
-            workspaceId 
+          variables: {
+            courseId: course.id,
+            workspaceId
           },
           data: dataInStoreCopy
         })
       }
     }
-   })
+  })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: (store, response) => {
