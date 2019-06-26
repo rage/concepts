@@ -137,7 +137,15 @@ const App = ({ classes }) => {
             />
           )}
           />
-          <Route exact path="/workspaces/:wid/matrix/:cid" render={({ match }) => <div>MATRIX</div>} />
+          <Route exact path="/workspaces/:wid/matrix/:cid" render={({ match }) => (
+            // <div>MATRIX</div>
+            <MatrixView
+                courseId={match.params.cid}
+                workspaceId={match.params.wid}
+                createCourse={createCourse}
+                updateCourse={updateCourse}
+              />
+          )} />
           <Route exact path="/workspaces/:wid/graph/:cid" render={({ match }) => <div>GRAPH</div>} />
           <Route exact path="/workspaces/:id/courses" render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
 
