@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
-
+import { useMutation } from 'react-apollo-hooks'
 import { 
   DELETE_CONCEPT, 
   CREATE_CONCEPT_LINK, 
   DELETE_CONCEPT_LINK 
 } from '../../graphql/Mutation'
-import { FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -19,6 +17,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Switch from '@material-ui/core/Switch'
+
+import { 
+  deleteConceptLinkUpdate,
+  createConceptLinkUpdate,
+  deleteConceptUpdate
+} from '../../apollo/update'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
@@ -48,110 +52,19 @@ const styles = theme => ({
 const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
-  const client = useApolloClient()
-
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: activeCourseId,
-            workspaceId
-          }
-        })
-
-        const deletedConceptLink = response.data.deleteConceptLink
-        const dataInStoreCopy = { ...dataInStore }
-
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-          courseLink.from.concepts.forEach(concept => {
-            concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
-          })
-        })
-
-        client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: activeCourseId,
-            workspaceId
-          },
-          data: dataInStoreCopy
-        })
-      } catch (err) {
-
-      }
-    }
+    update: deleteConceptLinkUpdate(activeCourseId, workspaceId)
   })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: activeCourseId,
-            workspaceId
-          }
-        })
-        const createdConceptLink = response.data.createConceptLink
-        const dataInStoreCopy = { ...dataInStore }
-
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-          const concept = courseLink.from.concepts.find(concept => concept.id === createdConceptLink.from.id)
-          if (concept) {
-            concept.linksFromConcept.push(createdConceptLink)
-          }
-        })
-
-        client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: activeCourseId,
-            workspaceId
-          },
-          data: dataInStoreCopy
-        })
-
-      } catch (err) {
-
-      }
-    }
+    update: createConceptLinkUpdate(activeCourseId, workspaceId)
   })
 
-
-  const includedIn = (set, object) =>
-    set.map(p => p.id).includes(object.id)
-
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
-        variables: {
-          courseId: activeCourseId,
-          workspaceId
-        }
-      })
-
-      const deletedConcept = response.data.deleteConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const courseLink =  dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link => link.from.id === course.id)
-      const prereqCourse = courseLink.from
-      if (includedIn(prereqCourse.concepts, deletedConcept)) {
-        prereqCourse.concepts = prereqCourse.concepts.filter(c => c.id !== deletedConcept.id)
-        client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: { 
-            courseId: activeCourseId, 
-            workspaceId 
-          },
-          data: dataInStoreCopy
-        })
-      }
-    }
+    update: deleteConceptUpdate(activeCourseId, workspaceId, course.id)
   })
 
   const isActive = () => {

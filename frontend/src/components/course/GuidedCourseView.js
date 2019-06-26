@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import Grid from '@material-ui/core/Grid'
 
-import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { withStyles } from '@material-ui/core/styles'
 
-import { FETCH_COURSE_AND_PREREQUISITES, WORKSPACE_BY_ID, ALL_COURSES } from '../../graphql/Query'
+import { FETCH_COURSE_AND_PREREQUISITES, WORKSPACE_BY_ID } from '../../graphql/Query'
 import { CREATE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'
 
 import GuidedCourseContainer from './GuidedCourseContainer'
@@ -19,7 +19,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 import { useLoginStateValue } from '../../store'
-
+import {
+  createCourseUpdate,
+  updateCourseUpdate
+} from '../../apollo/update'
 const styles = theme => ({
 })
 
@@ -28,10 +31,6 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const { loggedIn } = useLoginStateValue()[0]
 
-  const client = useApolloClient()
-
-  const includedIn = (set, object) =>
-    set.map(p => p.id).includes(object.id)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -42,35 +41,11 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   })
 
   const createCourse = useMutation(CREATE_COURSE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
-      const addedCourse = response.data.createCourse
-
-      if (!includedIn(dataInStore.allCourses, addedCourse)) {
-        dataInStore.allCourses.push(addedCourse)
-        client.writeQuery({
-          query: ALL_COURSES,
-          data: dataInStore
-        })
-      }
-    }
+    update: createCourseUpdate()
   })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
-      const updatedCourse = response.data.updateCourse
-
-      if (includedIn(dataInStore.allCourses, updatedCourse)) {
-        dataInStore.allCourses = dataInStore.allCourses.map(course => {
-          return course.id === updatedCourse.id ? updatedCourse : course
-        })
-        client.writeQuery({
-          query: ALL_COURSES,
-          data: dataInStore
-        })
-      }
-    }
+    update: updateCourseUpdate()
   })
 
   const toggleConcept = (id) => () => {

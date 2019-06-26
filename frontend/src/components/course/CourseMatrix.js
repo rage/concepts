@@ -7,16 +7,16 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
-
+import { useMutation } from 'react-apollo-hooks'
+import {
+  createConceptLinkUpdate,
+  deleteConceptLinkUpdate
+} from '../../apollo/update'
 import {
   CREATE_CONCEPT_LINK,
   DELETE_CONCEPT_LINK
 } from '../../graphql/Mutation'
 
-import { 
-  FETCH_COURSE_AND_PREREQUISITES
-} from '../../graphql/Query'
 
 const styles = theme => ({
   cellButton: {
@@ -49,8 +49,6 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => { 
     return allConcepts.concat(concepts)}
   , [])
-
-  const client = useApolloClient()
 
   const headerGrid = React.createRef();
   const sideGrid = React.createRef()
@@ -96,72 +94,11 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   );
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: courseAndPrerequisites.id,
-            workspaceId
-          }
-        })
-
-        const deletedConceptLink = response.data.deleteConceptLink
-        const dataInStoreCopy = { ...dataInStore }
-
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-          courseLink.from.concepts.forEach(concept => {
-            concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
-          })
-        })
-
-        client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: courseAndPrerequisites.id,
-            workspaceId
-          },
-          data: dataInStoreCopy
-        })
-      } catch (err) {
-
-      }
-    }
+    update: deleteConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: courseAndPrerequisites.id,
-            workspaceId
-          }
-        })
-        const createdConceptLink = response.data.createConceptLink
-        const dataInStoreCopy = { ...dataInStore }
-
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-          const concept = courseLink.from.concepts.find(concept => concept.id === createdConceptLink.from.id)
-          if (concept) {
-            concept.linksFromConcept.push(createdConceptLink)
-          }
-        })
-
-        client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: {
-            courseId: courseAndPrerequisites.id,
-            workspaceId
-          },
-          data: dataInStoreCopy
-        })
-
-      } catch (err) {
-
-      }
-    }
+    update: createConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
   const linkConcepts = (from, to, checked) => async (event) => {

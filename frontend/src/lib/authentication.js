@@ -1,6 +1,6 @@
 import TmcClient from 'tmc-client-js'
 import axios from 'axios'
-import client from '../apolloClient'
+import client from '../apollo/apolloClient'
 import { gql } from 'apollo-boost'
 
 const clientId = process.env.REACT_APP_TMC_CLIENT_ID
