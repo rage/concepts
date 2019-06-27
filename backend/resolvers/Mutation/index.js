@@ -4,7 +4,7 @@ const courseLink = require('./CourseLink')
 const concept = require('./Concept')
 const conceptLink = require('./ConceptLink')
 const workspace = require('./Workspace')
-const project = require('./project')
+const project = require('./Project')
 
 module.exports = {
   ...authentication,
