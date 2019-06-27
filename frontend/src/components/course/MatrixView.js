@@ -8,14 +8,14 @@ import { useQuery } from 'react-apollo-hooks'
 import Measure from 'react-measure'
 
 import {
-  COURSE_PREREQUISITES
+  FETCH_COURSE_AND_PREREQUISITES
 } from '../../graphql/Query'
 
 const MatriceView = ({ courseId, workspaceId }) => {
 
   const [dimensions, setDimensions] = useState({ width: -1, height: -1 })
 
-  const courseQuery = useQuery(COURSE_PREREQUISITES, {
+  const courseQuery = useQuery(FETCH_COURSE_AND_PREREQUISITES, {
     variables: { courseId, workspaceId }
   })
 
