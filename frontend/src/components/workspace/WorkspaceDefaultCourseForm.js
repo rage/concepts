@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -94,46 +94,46 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
     data: {
       allCourses:
         [
-          {
-            id: 'sakdfaölksdj',
-            name: 'TEST1',
-            concepts: [
-              {
-                id: 'aisdhfö',
-                name: 'C1'
-              },
-            ]
-          },
-          {
-            id: 'sakdfaölasdfsdj',
-            name: 'TEST2',
-            concepts: [
-              {
-                id: 'aisdhfö',
-                name: 'C2'
-              },
-            ]
-          },
-          {
-            id: 'sakdfaölölkäölsdj',
-            name: 'TEST3',
-            concepts: [
-              {
-                id: 'aisdhfö',
-                name: 'C1'
-              },
-            ]
-          },
-          {
-            id: 'sakdfaölöklöaksdj',
-            name: 'TEST4',
-            concepts: [
-              {
-                id: 'aisdhfö',
-                name: 'C2'
-              },
-            ]
-          },
+          // {
+          //   id: 'sakdfaölksdj',
+          //   name: 'TEST1',
+          //   concepts: [
+          //     {
+          //       id: 'aisdhfö',
+          //       name: 'C1'
+          //     },
+          //   ]
+          // },
+          // {
+          //   id: 'sakdfaölasdfsdj',
+          //   name: 'TEST2',
+          //   concepts: [
+          //     {
+          //       id: 'aisdhfö',
+          //       name: 'C2'
+          //     },
+          //   ]
+          // },
+          // {
+          //   id: 'sakdfaölölkäölsdj',
+          //   name: 'TEST3',
+          //   concepts: [
+          //     {
+          //       id: 'aisdhfö',
+          //       name: 'C1'
+          //     },
+          //   ]
+          // },
+          // {
+          //   id: 'sakdfaölöklöaksdj',
+          //   name: 'TEST4',
+          //   concepts: [
+          //     {
+          //       id: 'aisdhfö',
+          //       name: 'C2'
+          //     },
+          //   ]
+          // },
         ]
     }
   }
