@@ -9,7 +9,7 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
-import { FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query'
+import { FETCH_COURSE_AND_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
@@ -91,22 +91,20 @@ const ActiveCourse = ({
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
       const dataInStore = store.readQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: COURSE_BY_ID,
         variables: {
-          courseId: course.id,
-          workspaceId
+          id: course.id
         }
       })
       const addedConcept = response.data.createConcept
       const dataInStoreCopy = { ...dataInStore }
-      const concepts = dataInStoreCopy.courseAndPrerequisites.concepts
+      const concepts = dataInStoreCopy.courseById.concepts
       if (!includedIn(concepts, addedConcept)) {
-        dataInStoreCopy.courseAndPrerequisites.concepts.push(addedConcept)
+        dataInStoreCopy.courseById.concepts.push(addedConcept)
         client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
+          query: COURSE_BY_ID,
           variables: {
-            courseId: course.id,
-            workspaceId
+            id: course.id
           },
           data: dataInStoreCopy
         })
@@ -117,21 +115,20 @@ const ActiveCourse = ({
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: (store, response) => {
       const dataInStore = store.readQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: COURSE_BY_ID,
         variables: {
-          courseId: course.id,
-          workspaceId
+          id: course.id
         }
       })
 
       const deletedConcept = response.data.deleteConcept
       const dataInStoreCopy = { ...dataInStore }
-      const concepts = dataInStoreCopy.courseAndPrerequisites.concepts
+      const concepts = dataInStoreCopy.courseById.concepts
       if (includedIn(concepts, deletedConcept)) {
-        dataInStoreCopy.courseAndPrerequisites.concepts = concepts.filter(c => c.id !== deletedConcept.id)
+        dataInStoreCopy.courseById.concepts = concepts.filter(c => c.id !== deletedConcept.id)
         client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: { courseId: course.id, workspaceId },
+          query: COURSE_BY_ID,
+          variables: { id: course.id },
           data: dataInStoreCopy
         })
       }

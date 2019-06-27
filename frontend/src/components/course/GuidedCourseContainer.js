@@ -103,7 +103,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         course.concepts.push(addedConcept)
         client.writeQuery({
           query: FETCH_COURSE_AND_PREREQUISITES,
-          variables: { id: courseId, workspaceId },
+          variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })
       }

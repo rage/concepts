@@ -71,6 +71,15 @@ query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
     concepts {
       id
       name
+      description
+      official
+      linksFromConcept {
+        id
+        official
+        to {
+          id
+        }
+      }
       linksToConcept {
         id
         official
@@ -88,10 +97,83 @@ query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
           id
           name
           description
+          official
           linksFromConcept {
             id
             official
             to {
+              id
+            }
+          }
+          linksToConcept {
+            id
+            official
+            from {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+const COURSE_BY_ID = gql`
+query courseById($id: ID!) {
+  courseById(id: $id) {
+    id
+    name
+    concepts {
+      id
+      name
+      description
+      official
+      linksFromConcept {
+        id
+        official
+        to {
+          id
+        }
+      }
+      linksToConcept {
+        id
+        official
+        from {
+          id
+        }
+      }
+    }
+  }
+}
+`
+
+const COURSE_PREREQUISITES = gql`
+query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
+  courseAndPrerequisites(courseId: $courseId, workspaceId: $workspaceId) {
+    id
+    name
+    linksToCourse {
+      id
+      from {
+        id
+        name
+        concepts {
+          id
+          name
+          description
+          official
+          linksFromConcept {
+            id
+            official
+            to {
+              id
+            }
+          }
+          linksToConcept {
+            id
+            official
+            from {
               id
             }
           }
@@ -106,5 +188,7 @@ export {
   ALL_COURSES,
   FETCH_WORKSPACE_AND_DEFAULT_DATA,
   FETCH_COURSE_AND_PREREQUISITES,
-  COURSES_BY_WORKSPACE
+  COURSES_BY_WORKSPACE,
+  COURSE_BY_ID,
+  COURSE_PREREQUISITES
 }

@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { withStyles } from '@material-ui/core/styles'
 
-import { FETCH_COURSE_AND_PREREQUISITES, WORKSPACE_BY_ID } from '../../graphql/Query'
+import { FETCH_COURSE_AND_PREREQUISITES, WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
 import { CREATE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'
 
 import GuidedCourseContainer from './GuidedCourseContainer'
@@ -36,8 +36,12 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
     variables: { id: workspaceId }
   })
 
-  const courseQuery = useQuery(FETCH_COURSE_AND_PREREQUISITES, {
+  const prereqQuery = useQuery(COURSE_PREREQUISITES, {
     variables: { courseId, workspaceId }
+  })
+
+  const courseQuery = useQuery(COURSE_BY_ID, {
+    variables: { id: courseId }
   })
 
   const createCourse = useMutation(CREATE_COURSE, {
@@ -67,10 +71,10 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   return (
     <React.Fragment>
       {
-        courseQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
+        courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
           <Grid container spacing={0} direction="row">
             <ActiveCourse
-              course={courseQuery.data.courseAndPrerequisites}
+              course={courseQuery.data.courseById}
               activeConceptIds={activeConceptIds}
               toggleConcept={toggleConcept}
               resetConceptToggle={resetConceptToggle}
@@ -78,26 +82,26 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseContainer
-              courses={courseQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
-              courseId={courseQuery.data.courseAndPrerequisites.id}
+              courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
+              courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
-              activeCourse={courseQuery.data.courseAndPrerequisites}
+              activeCourse={courseQuery.data.courseById}
               setCourseTrayOpen={setCourseTrayOpen}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseTray
-              activeCourseId={courseQuery.data.courseAndPrerequisites.id}
-              courseId={courseQuery.data.courseAndPrerequisites.id}
-              courseLinks={courseQuery.data.courseAndPrerequisites.linksToCourse}
+              activeCourseId={courseQuery.data.courseById.id}
+              courseId={courseQuery.data.courseById.id}
+              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               setCourseTrayOpen={setCourseTrayOpen}
               courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             {
-              courseQuery.data.courseAndPrerequisites.concepts.length !== 0 && loggedIn ?
+              courseQuery.data.courseById.concepts.length !== 0 && loggedIn ?
                 <Fab
                   style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
                   onClick={handleTrayToggle}
