@@ -1,13 +1,13 @@
 import client from '../apolloClient'
 import {
-  FETCH_COURSE_AND_PREREQUISITES
+  COURSE_PREREQUISITES
 } from '../../graphql/Query'
 
 const createConceptLinkUpdate = (courseId, workspaceId) => {
   return (store, response) => {
     try {
       const dataInStore = store.readQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId
@@ -24,7 +24,7 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
       })
 
       client.writeQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId
@@ -41,7 +41,7 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
   return (store, response) => {
     try {
       const dataInStore = store.readQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId
@@ -58,7 +58,7 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
       })
 
       client.writeQuery({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId

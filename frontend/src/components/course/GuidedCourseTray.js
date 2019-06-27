@@ -19,7 +19,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { COURSES_BY_WORKSPACE, FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query/Course'
+import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
 // Error dispatcher
@@ -108,14 +108,14 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
       const addedCourseLink = response.data.createCourseLink
       const dataInStoreCopy = { ...dataInStore }
       const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
       if (!includedIn(courseLinks, addedCourseLink)) {
         courseLinks.push(addedCourseLink)
         client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
+          query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })
@@ -125,14 +125,14 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
 
   const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
       const removedCourseLink = response.data.deleteCourseLink
       const dataInStoreCopy = { ...dataInStore }
       const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
       if (includedIn(courseLinks, removedCourseLink)) {
         dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => course.id !== removedCourseLink.id)
         client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
+          query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })

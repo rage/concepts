@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { withStyles } from '@material-ui/core/styles'
 
-import { FETCH_COURSE_AND_PREREQUISITES, WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
+import { WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
 import { CREATE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'
 
 import GuidedCourseContainer from './GuidedCourseContainer'

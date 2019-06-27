@@ -9,7 +9,7 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
-import { FETCH_COURSE_AND_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
+import { COURSE_BY_ID } from '../../graphql/Query'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
@@ -80,12 +80,25 @@ const ActiveCourse = ({
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    refetchQueries: [{
-      query: FETCH_COURSE_AND_PREREQUISITES,
-      variables: {
-        courseId: course.id, workspaceId
+    update: (store, response) => {
+      const dataInStore = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: course.id
+        }
+      })
+      const updatedConcept = response.data.updateConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const concepts = dataInStoreCopy.courseById.concepts
+      if (includedIn(concepts, updatedConcept)) {
+        dataInStoreCopy.courseById.concepts = concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c)
+        client.writeQuery({
+          query: COURSE_BY_ID,
+          variables: { id: course.id },
+          data: dataInStoreCopy
+        })
       }
-    }]
+    }
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {

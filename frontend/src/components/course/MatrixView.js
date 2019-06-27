@@ -8,14 +8,14 @@ import { useQuery } from 'react-apollo-hooks'
 import Measure from 'react-measure'
 
 import {
-  FETCH_COURSE_AND_PREREQUISITES
+  COURSE_PREREQUISITES
 } from '../../graphql/Query'
 
 const MatriceView = ({ courseId, workspaceId }) => {
 
   const [dimensions, setDimensions] = useState({ width: -1, height: -1 })
 
-  const courseQuery = useQuery(FETCH_COURSE_AND_PREREQUISITES, {
+  const courseQuery = useQuery(COURSE_PREREQUISITES, {
     variables: { courseId, workspaceId }
   })
 
@@ -31,10 +31,10 @@ const MatriceView = ({ courseId, workspaceId }) => {
           >
             {({ measureRef }) => (
               <div ref={measureRef} style={{ maxWidth: '83vw', maxHeight: '90vh' }}>
-                <CourseMatrix 
-                  dimensions={dimensions} 
-                  courseAndPrerequisites={courseQuery.data.courseAndPrerequisites} 
-                  linksToCourses={courseQuery.data.courseAndPrerequisites.linksToCourse} 
+                <CourseMatrix
+                  dimensions={dimensions}
+                  courseAndPrerequisites={courseQuery.data.courseAndPrerequisites}
+                  linksToCourses={courseQuery.data.courseAndPrerequisites.linksToCourse}
                   workspaceId={workspaceId}
                 />
               </div>

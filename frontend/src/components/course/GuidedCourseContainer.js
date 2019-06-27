@@ -8,7 +8,7 @@ import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/Mutation'
 
-import { FETCH_COURSE_AND_PREREQUISITES } from '../../graphql/Query'
+import { COURSE_PREREQUISITES } from '../../graphql/Query'
 
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
@@ -20,6 +20,8 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import Masonry from 'react-masonry-css'
 import '../../MasonryLayout.css'
+
+import { updateConceptUpdate } from '../../apollo/update'
 
 import { useLoginStateValue } from '../../store'
 
@@ -89,12 +91,13 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    refetchQueries: [{ query: FETCH_COURSE_AND_PREREQUISITES }]
+    update: updateConceptUpdate(activeCourse.id, workspaceId, conceptEditState.id)
+    // refetchQueries: [{ query: COURSE_PREREQUISITES }]
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE_AND_PREREQUISITES, variables: { courseId, workspaceId } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
       const addedConcept = response.data.createConcept
       const dataInStoreCopy = { ...dataInStore }
       const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link => link.from.id === conceptState.id)
@@ -102,7 +105,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
       if (!includedIn(course.concepts, addedConcept)) {
         course.concepts.push(addedConcept)
         client.writeQuery({
-          query: FETCH_COURSE_AND_PREREQUISITES,
+          query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })
