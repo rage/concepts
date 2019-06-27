@@ -18,7 +18,7 @@ import GridOnIcon from '@material-ui/icons/GridOn'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { useQuery } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
+import { ALL_COURSES } from '../../graphql/CourseService'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import CourseEditingDialog from './CourseEditingDialog'

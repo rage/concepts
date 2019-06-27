@@ -6,9 +6,9 @@ import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT } from '../../graphql/Mutation'
+
+import { COURSE_PREREQUISITES } from '../../graphql/Query'
 
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
@@ -20,6 +20,8 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import Masonry from 'react-masonry-css'
 import '../../MasonryLayout.css'
+
+import { updateConceptUpdate } from '../../apollo/update'
 
 import { useLoginStateValue } from '../../store'
 
@@ -52,7 +54,7 @@ const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective in the l
 const COURSE_ADDING_INSTRUCTION = "To add prerequisites, open the drawer on the right."
 const CONCEPT_LINKING_INSTRUCTION = "Switch on a learning objective on the left to start linking prerequisites."
 
-const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, course_id }) => {
+const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, workspaceId, courseId }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -60,7 +62,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   const [conceptInfoState, setConceptInfoState] = useState(false)
   const [courseInfoState, setCourseInfoState] = useState(false)
   const [linkInfoState, setLinkInfoState] = useState(false)
-  
+
   const { loggedIn } = useLoginStateValue()[0]
 
   useEffect(() => {
@@ -89,21 +91,22 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    refetchQueries: [{ query: ALL_COURSES }]
+    update: updateConceptUpdate(activeCourse.id, workspaceId, conceptEditState.id)
+    // refetchQueries: [{ query: COURSE_PREREQUISITES }]
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
       const addedConcept = response.data.createConcept
       const dataInStoreCopy = { ...dataInStore }
-      const course = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === conceptState.id)
-
+      const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link => link.from.id === conceptState.id)
+      const course = courseLink.from
       if (!includedIn(course.concepts, addedConcept)) {
         course.concepts.push(addedConcept)
         client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course_id },
+          query: COURSE_PREREQUISITES,
+          variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })
       }
@@ -123,8 +126,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     setConceptState({ ...conceptState, open: false })
   }
 
-  const handleConceptOpen = (id) => () => {
-    setConceptState({ open: true, id })
+  const handleConceptOpen = (courseId) => () => {
+    setConceptState({ open: true, id: courseId })
   }
 
   const handleConceptEditClose = () => {
@@ -133,21 +136,6 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
 
   const handleConceptEditOpen = (id, name, description) => () => {
     setConceptEditState({ open: true, id, name, description })
-  }
-
-  const makeGridCourseElements = () => {
-    return courses && courses.map(course =>
-      <Grid item key={course.id}>
-        <Course
-          course={course}
-          activeConceptIds={activeConceptIds}
-          openCourseDialog={handleCourseOpen}
-          openConceptDialog={handleConceptOpen}
-          openConceptEditDialog={handleConceptEditOpen}
-          activeCourseId={course_id}
-        />
-      </Grid>
-    )
   }
 
   const handleConceptInfoClose = () => {
@@ -160,6 +148,22 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
 
   const handleLinkInfoClose = () => {
     setLinkInfoState(false)
+  }
+
+  const makeGridCourseElements = () => {
+    return courses && courses.map(course =>
+      <Grid item key={course.id}>
+        <Course
+          course={course}
+          activeConceptIds={activeConceptIds}
+          openCourseDialog={handleCourseOpen}
+          openConceptDialog={handleConceptOpen}
+          openConceptEditDialog={handleConceptEditOpen}
+          activeCourseId={courseId}
+          workspaceId={workspaceId}
+        />
+      </Grid>
+    )
   }
 
   return (
@@ -194,7 +198,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                             openCourseDialog={handleCourseOpen}
                             openConceptDialog={handleConceptOpen}
                             openConceptEditDialog={handleConceptEditOpen}
-                            activeCourseId={course_id}
+                            activeCourseId={courseId}
+                            workspaceId={workspaceId}
                           />
                         )
                       }
@@ -220,6 +225,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         state={conceptState}
         handleClose={handleConceptClose}
         createConcept={createConcept}
+        workspaceId={workspaceId}
       />
       <ConceptEditingDialog
         state={conceptEditState}
@@ -230,89 +236,89 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
       />
 
       {/* Intruction snackbars */}
-      { loggedIn ?
-      <React.Fragment>
-      <Snackbar open={conceptInfoState}
-        onClose={handleConceptInfoClose}
-        className={classes.snackbar}
-        ClickAwayListenerProps={{ onClickAway: () => null }}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-      >
-        <SnackbarContent className={classes.info}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleConceptInfoClose}
-            >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
-          ]}
-          message={
-            <span className={classes.message} id="message-id">
-              <InfoIcon className={classes.infoIcon} />
-              {CONCEPT_ADDING_INSTRUCTION}
-            </span>}
-        />
-      </Snackbar>
-      <Snackbar open={courseInfoState}
-        onClose={handleCourseInfoClose}
-        ClickAwayListenerProps={{ onClickAway: () => null }}
-        className={classes.snackbar}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-      >
-        <SnackbarContent className={classes.info}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleCourseInfoClose}
-            >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
-          ]}
-          message={
-            <span className={classes.message} id="message-id">
-              <InfoIcon className={classes.infoIcon} />
-              {COURSE_ADDING_INSTRUCTION}
-            </span>}
-        />
-      </Snackbar>
-      <Snackbar open={linkInfoState}
-        onClose={handleLinkInfoClose}
-        ClickAwayListenerProps={{ onClickAway: () => null }}
-        autoHideDuration={6000}
-        className={classes.snackbar}
-        ContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-      >
-        <SnackbarContent className={classes.info}
-          action={[
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={handleLinkInfoClose}
-            >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
-          ]}
-          message={
-            <span className={classes.message} id="message-id">
-              <InfoIcon className={classes.infoIcon} />
-              {CONCEPT_LINKING_INSTRUCTION}
-            </span>}
-        />
-      </Snackbar>
-      </React.Fragment>
-      : null
+      {loggedIn ?
+        <React.Fragment>
+          <Snackbar open={conceptInfoState}
+            onClose={handleConceptInfoClose}
+            className={classes.snackbar}
+            ClickAwayListenerProps={{ onClickAway: () => null }}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+          >
+            <SnackbarContent className={classes.info}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleConceptInfoClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>
+              ]}
+              message={
+                <span className={classes.message} id="message-id">
+                  <InfoIcon className={classes.infoIcon} />
+                  {CONCEPT_ADDING_INSTRUCTION}
+                </span>}
+            />
+          </Snackbar>
+          <Snackbar open={courseInfoState}
+            onClose={handleCourseInfoClose}
+            ClickAwayListenerProps={{ onClickAway: () => null }}
+            className={classes.snackbar}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+          >
+            <SnackbarContent className={classes.info}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleCourseInfoClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>
+              ]}
+              message={
+                <span className={classes.message} id="message-id">
+                  <InfoIcon className={classes.infoIcon} />
+                  {COURSE_ADDING_INSTRUCTION}
+                </span>}
+            />
+          </Snackbar>
+          <Snackbar open={linkInfoState}
+            onClose={handleLinkInfoClose}
+            ClickAwayListenerProps={{ onClickAway: () => null }}
+            autoHideDuration={6000}
+            className={classes.snackbar}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+          >
+            <SnackbarContent className={classes.info}
+              action={[
+                <IconButton
+                  key="close"
+                  aria-label="Close"
+                  color="inherit"
+                  onClick={handleLinkInfoClose}
+                >
+                  <CloseIcon className={classes.icon} />
+                </IconButton>
+              ]}
+              message={
+                <span className={classes.message} id="message-id">
+                  <InfoIcon className={classes.infoIcon} />
+                  {CONCEPT_LINKING_INSTRUCTION}
+                </span>}
+            />
+          </Snackbar>
+        </React.Fragment>
+        : null
       }
     </React.Fragment>
   )

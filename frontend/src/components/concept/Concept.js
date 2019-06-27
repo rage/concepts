@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { DELETE_CONCEPT, LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { useMutation } from 'react-apollo-hooks'
+import { 
+  DELETE_CONCEPT, 
+  CREATE_CONCEPT_LINK, 
+  DELETE_CONCEPT_LINK 
+} from '../../graphql/Mutation'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -14,6 +17,12 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Switch from '@material-ui/core/Switch'
+
+import { 
+  deleteConceptLinkUpdate,
+  createConceptLinkUpdate,
+  deleteConceptUpdate
+} from '../../apollo/update'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
@@ -40,66 +49,22 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
-
-  const client = useApolloClient()
 
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
-  const deleteLink = useMutation(DELETE_LINK, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: activeCourseId } })
-      const deletedLink = response.data.deleteLink
-      const dataInStoreCopy = { ...dataInStore }
-      const courseForConcept = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === course.id)
-      courseForConcept.concepts.forEach(concept => {
-        concept.linksFromConcept = concept.linksFromConcept.filter(l => l.id !== deletedLink.id)
-      })
-      client.writeQuery({
-        query: COURSE_PREREQUISITE_COURSES,
-        variables: { id: activeCourseId },
-        data: dataInStoreCopy
-      })
-    }
+  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+    update: deleteConceptLinkUpdate(activeCourseId, workspaceId)
   })
 
-  const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: activeCourseId } })
-      const addedLink = response.data.createLink
-      const dataInStoreCopy = { ...dataInStore }
-      const courseForConcept = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === course.id)
-      const concept = courseForConcept.concepts.find(c => c.id === addedLink.from.id)
-      concept.linksFromConcept.push(addedLink)
-      client.writeQuery({
-        query: COURSE_PREREQUISITE_COURSES,
-        variables: { id: activeCourseId },
-        data: dataInStoreCopy
-      })
-    }
+  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+    update: createConceptLinkUpdate(activeCourseId, workspaceId)
   })
-
-
-  const includedIn = (set, object) =>
-    set.map(p => p.id).includes(object.id)
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: activeCourseId } })
-      const deletedConcept = response.data.deleteConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const prereqCourse = dataInStoreCopy.courseById.prerequisiteCourses.find(c => c.id === course.id)
-      if (includedIn(prereqCourse.concepts, deletedConcept)) {
-        prereqCourse.concepts = prereqCourse.concepts.filter(c => c.id !== deletedConcept.id)
-        client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: activeCourseId },
-          data: dataInStoreCopy
-        })
-      }
-    }
+    update: deleteConceptUpdate(activeCourseId, workspaceId, course.id)
   })
 
   const isActive = () => {
@@ -114,7 +79,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
         const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
         if (hasLink) {
           try {
-            await deleteLink({ variables: { id: link.id } })
+            await deleteConceptLink({ variables: { id: link.id } })
           } catch (err) {
             errorDispatch({
               type: 'setError',
@@ -124,12 +89,13 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
         }
       })
     } else {
-      activeConceptIds.forEach(async (conceptId) => {
+      activeConceptIds.forEach(async (conceptId) => {
         try {
-          await linkPrerequisite({
+          await createConceptLink({
             variables: {
               to: conceptId,
-              from: concept.id
+              from: concept.id,
+              workspaceId
             }
           })
         } catch (err) {
@@ -184,8 +150,8 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
       <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
         {activeConceptIds.length === 0 ?
           <React.Fragment>
-            { 
-              loggedIn ? 
+            {
+              loggedIn ?
                 <IconButton
                   aria-owns={state.anchorEl ? 'simple-menu' : undefined}
                   aria-haspopup="true"

@@ -8,28 +8,21 @@ import { useQuery } from 'react-apollo-hooks'
 import Measure from 'react-measure'
 
 import {
-  FETCH_COURSE,
-  COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
+  COURSE_PREREQUISITES
+} from '../../graphql/Query'
 
-
-const MatriceView = ({ course_id }) => {
+const MatriceView = ({ courseId, workspaceId }) => {
 
   const [dimensions, setDimensions] = useState({ width: -1, height: -1 })
 
-
-  const course = useQuery(FETCH_COURSE, {
-    variables: { id: course_id }
-  })
-
-  const prerequisites = useQuery(COURSE_PREREQUISITE_COURSES, {
-    variables: { id: course_id }
+  const courseQuery = useQuery(COURSE_PREREQUISITES, {
+    variables: { courseId, workspaceId }
   })
 
   return (
     <React.Fragment>
       {
-        course.data.courseById && prerequisites.data.courseById ?
+        courseQuery && courseQuery.data.courseAndPrerequisites ?
           <Measure
             bounds
             onResize={contentRect => {
@@ -38,8 +31,12 @@ const MatriceView = ({ course_id }) => {
           >
             {({ measureRef }) => (
               <div ref={measureRef} style={{ maxWidth: '83vw', maxHeight: '90vh' }}>
-                <CourseMatrix dimensions={dimensions} course={course.data.courseById} prerequisiteCourses={prerequisites.data.courseById.prerequisiteCourses} />
-
+                <CourseMatrix
+                  dimensions={dimensions}
+                  courseAndPrerequisites={courseQuery.data.courseAndPrerequisites}
+                  linksToCourses={courseQuery.data.courseAndPrerequisites.linksToCourse}
+                  workspaceId={workspaceId}
+                />
               </div>
             )}
           </Measure>

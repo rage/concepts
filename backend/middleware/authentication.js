@@ -33,20 +33,31 @@ const getUser = async (token, context, prisma) => {
     console.log(e)
     throw new AuthenticationError("Bad token")
   }
+
   let user = null
-  if (decodedToken) {
-    user = prisma.user({ id: decodedToken.id })
+  if (decodedToken && decodedToken.id) {
+    user = await prisma.user({ id: decodedToken.id })
+  } else {
+    throw new AuthenticationError("Invalid token: No ID found")
   }
 
   if (!user) {
     context.role = Role.GUEST
-  }
-
-  context.user = user
-  if (user.role === 'ADMIN') {
-    context.role = Role.ADMIN
   } else {
-    context.role = Role.USER
+    context.user = user
+    switch (user.role) {
+      case 'ADMIN':
+        context.role = Role.ADMIN
+        break
+      case 'STUDENT':
+        context.role = Role.STUDENT
+        break
+      case 'STAFF':
+        context.role = Role.STAFF
+        break
+      default:
+        context.role = Role.GUEST
+    }
   }
 }
 

@@ -14,8 +14,15 @@ import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
 import PrivateRoute from './components/common/PrivateRoute'
 
+import UserView from './components/user/UserView'
+
+import LandingView from './components/common/LandingView'
+
+import WorkspaceView from './components/workspace/WorkspaceView'
+
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './services/CourseService'
+import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
+import { ALL_COURSES } from './graphql/Query/Course'
 import { Grid } from '@material-ui/core';
 
 import { useErrorStateValue, useLoginStateValue } from './store'
@@ -43,7 +50,6 @@ const styles = theme => ({
 
 const App = ({ classes }) => {
   const client = useApolloClient()
-  // const courses = useQuery(ALL_COURSES)
 
   const { loggedIn } = useLoginStateValue()[0]
 
@@ -111,34 +117,54 @@ const App = ({ classes }) => {
 
   return (
     <React.Fragment>
-    <div className="App">
-      <Grid container>
-        <Grid item xs={12}>
-          <NavBar />
-        </Grid>
-        <Route exact path="/auth" render={() => <AuthenticationForm />} />
-        <Route exact path="/" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-        <Route exact path="/courses/:id" render={({ match }) => {
-          return <GuidedCourseView
-          course_id={match.params.id}
-          createCourse={createCourse}
-          updateCourse={updateCourse}
+      <div className="App">
+        <Grid container>
+          <Grid item xs={12}>
+            <NavBar />
+          </Grid>
+          <Route exact path="/" render={() => <Grid item xs={12}><LandingView /></Grid>} />
+
+          <Route exact path="/auth" render={() => <AuthenticationForm />} />
+          <Route exact path="/user" render={() => <UserView />} />
+
+          <Route exact path="/workspaces/:id/(mapper|matrix|graph)" render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />
+          <Route exact path="/workspaces/:wid/mapper/:cid" render={({ match }) => (
+            <GuidedCourseView
+              courseId={match.params.cid}
+              workspaceId={match.params.wid}
+            />
+          )}
           />
-        }}
-        />
-        <Grid item xs={12}>
-          <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
-            return <MatrixView
-            course_id={match.params.id}
-            createCourse={createCourse}
-            updateCourse={updateCourse}
+          <Route exact path="/workspaces/:wid/matrix/:cid" render={({ match }) => (
+            <MatrixView
+              courseId={match.params.cid}
+              workspaceId={match.params.wid}
+            />
+          )} />
+          <Route exact path="/workspaces/:wid/graph/:cid" render={({ match }) => <div>GRAPH</div>} />
+          <Route exact path="/workspaces/:id/courses" render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
+
+          <Route exact path="/courses" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+
+          <Route exact path="/courses/:id" render={({ match }) => {
+            return <GuidedCourseView
+              course_id={match.params.id}
+              createCourse={createCourse}
+              updateCourse={updateCourse}
             />
           }}
           />
+          <Grid item xs={12}>
+            <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
+              return <MatrixView
+                course_id={match.params.id}
+              />
+            }}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
-    <Snackbar open={error !== ''}
+      </div>
+      <Snackbar open={error !== ''}
         onClose={handleCloseErrorMessage}
         ClickAwayListenerProps={{ onClickAway: () => null }}
         autoHideDuration={4000}
@@ -147,24 +173,24 @@ const App = ({ classes }) => {
           'aria-describedby': 'message-id',
         }}
       >
-      <SnackbarContent className={classes.error}
-        action={[
-          <IconButton
-            key="close"
-            aria-label="Close"
-            color="inherit"
-            onClick={handleCloseErrorMessage}
-          >
-            <CloseIcon className={classes.icon} />
-          </IconButton>
-        ]}
-        message={
-          <span className={classes.message} id="message-id">
-            <ErrorIcon className={classes.errorIcon} />
-            { error }
-          </span>}
-      />
-    </Snackbar>
+        <SnackbarContent className={classes.error}
+          action={[
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              onClick={handleCloseErrorMessage}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id="message-id">
+              <ErrorIcon className={classes.errorIcon} />
+              {error}
+            </span>}
+        />
+      </Snackbar>
     </React.Fragment>
   )
 }

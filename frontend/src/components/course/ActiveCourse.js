@@ -9,10 +9,10 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
+import { COURSE_BY_ID } from '../../graphql/Query'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES, FETCH_COURSE } from '../../services/CourseService'
-import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../services/ConceptService'
+import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
 
 // List 
 import List from '@material-ui/core/List'
@@ -63,6 +63,7 @@ const styles = theme => ({
 const ActiveCourse = ({
   classes, // UI
   course,
+  workspaceId,
   activeConceptIds,
   toggleConcept,
   resetConceptToggle
@@ -79,42 +80,71 @@ const ActiveCourse = ({
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    refetchQueries: [{ query: ALL_COURSES }]
-  })
-
-  const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
-      const addedConcept = response.data.createConcept
+      const dataInStore = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: course.id
+        }
+      })
+      const updatedConcept = response.data.updateConcept
       const dataInStoreCopy = { ...dataInStore }
       const concepts = dataInStoreCopy.courseById.concepts
-      if (!includedIn(concepts, addedConcept)) {
-        concepts.push(addedConcept)
+      if (includedIn(concepts, updatedConcept)) {
+        dataInStoreCopy.courseById.concepts = concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c)
         client.writeQuery({
-          query: FETCH_COURSE,
+          query: COURSE_BY_ID,
           variables: { id: course.id },
           data: dataInStoreCopy
         })
       }
-      setConceptState({ ...conceptState, id: '' })
+    }
+  })
+
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    update: (store, response) => {
+      const dataInStore = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: course.id
+        }
+      })
+      const addedConcept = response.data.createConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const concepts = dataInStoreCopy.courseById.concepts
+      if (!includedIn(concepts, addedConcept)) {
+        dataInStoreCopy.courseById.concepts.push(addedConcept)
+        client.writeQuery({
+          query: COURSE_BY_ID,
+          variables: {
+            id: course.id
+          },
+          data: dataInStoreCopy
+        })
+      }
     }
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: FETCH_COURSE, variables: { id: course.id } })
+      const dataInStore = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: course.id
+        }
+      })
+
       const deletedConcept = response.data.deleteConcept
       const dataInStoreCopy = { ...dataInStore }
-      let concepts = dataInStoreCopy.courseById.concepts
+      const concepts = dataInStoreCopy.courseById.concepts
       if (includedIn(concepts, deletedConcept)) {
         dataInStoreCopy.courseById.concepts = concepts.filter(c => c.id !== deletedConcept.id)
         client.writeQuery({
-          query: FETCH_COURSE,
+          query: COURSE_BY_ID,
           variables: { id: course.id },
           data: dataInStoreCopy
         })
       }
-
     }
   })
 
@@ -134,8 +164,8 @@ const ActiveCourse = ({
     setConceptState({ ...conceptState, open: false })
   }
 
-  const handleConceptOpen = (id) => () => {
-    setConceptState({ open: true, id })
+  const handleConceptOpen = (courseId) => () => {
+    setConceptState({ open: true, id: courseId })
   }
 
   const handleConceptEditClose = () => {
@@ -169,8 +199,8 @@ const ActiveCourse = ({
             </List>
           </ClickAwayListener>
 
-          { loggedIn ? 
-              <Button
+          {loggedIn ?
+            <Button
               className={classes.button}
               onClick={handleConceptOpen(course.id)}
               variant="contained"
@@ -179,21 +209,23 @@ const ActiveCourse = ({
               Add concept
             </Button> : null
           }
-          
+
         </CardContent>
       </Card>
 
-      <ConceptEditingDialog 
-      state={conceptEditState} 
-      handleClose={handleConceptEditClose} 
-      updateConcept={updateConcept} 
-      defaultName={conceptEditState.name} 
-      defaultDescription={conceptEditState.description} 
+      <ConceptEditingDialog
+        state={conceptEditState}
+        handleClose={handleConceptEditClose}
+        updateConcept={updateConcept}
+        workspaceId={workspaceId}
+        defaultName={conceptEditState.name}
+        defaultDescription={conceptEditState.description}
       />
-      <ConceptAdditionDialog 
-      state={conceptState} 
-      handleClose={handleConceptClose} 
-      createConcept={createConcept} 
+      <ConceptAdditionDialog
+        state={conceptState}
+        handleClose={handleConceptClose}
+        createConcept={createConcept}
+        workspaceId={workspaceId}
       />
     </Grid>
   )

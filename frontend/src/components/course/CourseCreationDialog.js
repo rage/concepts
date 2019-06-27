@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
+const CourseCreationDialog = ({ state, handleClose, createCourse, workspaceId }) => {
   const errorDispatch = useErrorStateValue()[1]
   const [name, setName] = useState('')
 
@@ -25,7 +25,7 @@ const CourseCreationDialog = ({ state, handleClose, createCourse }) => {
     }
     try {
       await createCourse({
-        variables: { name }
+        variables: { name, workspaceId }
       })
       setName('')
       handleClose()

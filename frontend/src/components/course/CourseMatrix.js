@@ -7,9 +7,16 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { LINK_PREREQUISITE, DELETE_LINK } from '../../services/ConceptService'
-import { COURSE_PREREQUISITE_COURSES } from '../../services/CourseService'
+import { useMutation } from 'react-apollo-hooks'
+import {
+  createConceptLinkUpdate,
+  deleteConceptLinkUpdate
+} from '../../apollo/update'
+import {
+  CREATE_CONCEPT_LINK,
+  DELETE_CONCEPT_LINK
+} from '../../graphql/Mutation'
+
 
 const styles = theme => ({
   cellButton: {
@@ -37,17 +44,16 @@ const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
   <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={checked ? "primary" : "secondary"}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
 )
 
-const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
-  const allPrerequisiteConcepts = prerequisiteCourses.map(course => course.concepts).reduce((concepts, allConcepts) => {
-    return allConcepts.concat(concepts)
-  }, [])
-
-  const client = useApolloClient()
+const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions }) => {
+  
+  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => { 
+    return allConcepts.concat(concepts)}
+  , [])
 
   const headerGrid = React.createRef();
   const sideGrid = React.createRef()
 
-  const rowCount = course.concepts.length;
+  const rowCount = courseAndPrerequisites.concepts.length;
   const columnWidth = 110;
   const rowHeight = 70;
 
@@ -87,70 +93,38 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
     </div>
   );
 
-  const deleteLink = useMutation(DELETE_LINK, {
-    update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course.id } })
-        const deletedLink = response.data.deleteLink
-        const dataInStoreCopy = { ...dataInStore }
-        dataInStoreCopy.courseById.prerequisiteCourses.forEach(courseForConcept => {
-          courseForConcept.concepts.forEach(concept => {
-            concept.linksFromConcept = concept.linksFromConcept.filter(l => l.id !== deletedLink.id)
-          })
-        })
-        client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course.id },
-          data: dataInStoreCopy
-        })
-      } catch (err) { }
-    }
+  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+    update: deleteConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
-  const linkPrerequisite = useMutation(LINK_PREREQUISITE, {
-    update: (store, response) => {
-      try {
-        const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course.id } })
-        const addedLink = response.data.createLink
-        const dataInStoreCopy = { ...dataInStore }
-        dataInStoreCopy.courseById.prerequisiteCourses.forEach(courseForConcept => {
-          const concept = courseForConcept.concepts.find(c => c.id === addedLink.from.id)
-          if (concept) {
-            concept.linksFromConcept.push(addedLink)
-          }
-        })
-        client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course.id },
-          data: dataInStoreCopy
-        })
-      } catch (err) { }
-    }
+  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+    update: createConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
   const linkConcepts = (from, to, checked) => async (event) => {
 
     if (!checked) {
       try {
-        linkPrerequisite({
+        createConceptLink({
           variables: {
-            from: from.id, to: to.id
+            from: from.id, to: to.id, workspaceId
           },
           optimisticResponse: {
             __typename: "Mutation",
-            createLink: {
+            createConceptLink: {
               id: `${Math.random() * 100}`,
-              __typename: "Link",
+              official: false,
+              __typename: "ConceptLink",
               to: {
                 __typename: "Concept",
                 id: to.id
               },
               from: {
-                __typename: "Link",
+                __typename: "Concept",
                 id: from.id
               }
             }
-          },
+          }
         })
       } catch (err) { }
     } else {
@@ -158,17 +132,17 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
         const link = from.linksFromConcept.find(link => {
           return link.to.id === to.id
         })
-        deleteLink({
+        deleteConceptLink({
           variables: {
             id: link.id
           },
           optimisticResponse: {
             __typename: "Mutation",
-            deleteLink: {
+            deleteConceptLink: {
               id: link.id,
-              __typename: "Link"
+              __typename: "ConceptLink"
             }
-          },
+          }
         })
       } catch (err) { }
     }
@@ -284,7 +258,7 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
             // borderBottom: `1px solid gray`,
           }}
           direction='rtl'
-          itemData={course.concepts}
+          itemData={courseAndPrerequisites.concepts}
         >
           {RowHeaderCell}
         </FixedSizeGrid>
@@ -307,7 +281,7 @@ const CourseMatrix = ({ classes, course, prerequisiteCourses, dimensions }) => {
           }}
           itemData={{
             columnData: allPrerequisiteConcepts,
-            rowData: course.concepts
+            rowData: courseAndPrerequisites.concepts
           }}
         >
           {Cell}

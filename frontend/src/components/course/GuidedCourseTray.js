@@ -19,16 +19,11 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { ALL_COURSES } from '../../services/CourseService'
+import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
+import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
-
-import {
-  ADD_COURSE_AS_PREREQUISITE,
-  DELETE_COURSE_AS_PREREQUISITE,
-  COURSE_PREREQUISITE_COURSES
-} from '../../services/CourseService'
 
 const styles = theme => ({
   root: {
@@ -64,18 +59,19 @@ const styles = theme => ({
   }
 })
 
-const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, addCourseAsPrerequisite, deleteCourseAsPrerequisite }) => {
+const PrerequisiteCourse = ({ classes, isPrerequisite, getLinkToDelete, course, activeCourseId, workspaceId, createCourseLink, deleteCourseLink }) => {
   const errorDispatch = useErrorStateValue()[1]
-  
+
   const onClick = async () => {
     try {
       if (isPrerequisite) {
-        await deleteCourseAsPrerequisite({
-          variables: { id: activeCourse, prerequisite_id: course.id }
+        const link = getLinkToDelete(course)
+        await deleteCourseLink({
+          variables: { id: link.id }
         })
       } else {
-        await addCourseAsPrerequisite({
-          variables: { id: activeCourse, prerequisite_id: course.id }
+        await createCourseLink({
+          variables: { to: activeCourseId, from: course.id, workspaceId: workspaceId }
         })
       }
     } catch (err) {
@@ -97,53 +93,51 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, course, activeCourse, add
   )
 }
 
-const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, prerequisiteCourses, createCourse }) => {
+const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, workspaceId, courseLinks, createCourse }) => {
   const [state, setState] = useState({ open: false })
   const [filterKeyword, setFilterKeyword] = useState('')
 
-  const courses = useQuery(ALL_COURSES)
-
+  const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
+    variables: { workspaceId }
+  })
 
   const client = useApolloClient()
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
 
-
-  const addCourseAsPrerequisite = useMutation(ADD_COURSE_AS_PREREQUISITE, {
+  const createCourseLink = useMutation(CREATE_COURSE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
-      const addedCourse = response.data.addCourseAsCoursePrerequisite
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
+      const addedCourseLink = response.data.createCourseLink
       const dataInStoreCopy = { ...dataInStore }
-      const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
-      if (!includedIn(prerequisiteCourses, addedCourse)) {
-        prerequisiteCourses.push(addedCourse)
+      const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
+      if (!includedIn(courseLinks, addedCourseLink)) {
+        courseLinks.push(addedCourseLink)
         client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course_id },
+          query: COURSE_PREREQUISITES,
+          variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })
       }
     }
-
   })
 
-  const deleteCourseAsPrerequisite = useMutation(DELETE_COURSE_AS_PREREQUISITE, {
+  const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITE_COURSES, variables: { id: course_id } })
-      const removedCourse = response.data.deleteCourseAsCoursePrerequisite
+      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
+      const removedCourseLink = response.data.deleteCourseLink
       const dataInStoreCopy = { ...dataInStore }
-      const prerequisiteCourses = dataInStoreCopy.courseById.prerequisiteCourses
-      if (includedIn(prerequisiteCourses, removedCourse)) {
-        dataInStoreCopy.courseById.prerequisiteCourses = prerequisiteCourses.filter(course => course.id !== removedCourse.id)
+      const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
+      if (includedIn(courseLinks, removedCourseLink)) {
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => course.id !== removedCourseLink.id)
         client.writeQuery({
-          query: COURSE_PREREQUISITE_COURSES,
-          variables: { id: course_id },
+          query: COURSE_PREREQUISITES,
+          variables: { courseId, workspaceId },
           data: dataInStoreCopy
         })
       }
     }
-
   })
 
   const handleKeywordInput = (e) => {
@@ -159,11 +153,15 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
   }
 
   const isPrerequisite = (course) => {
-    return (prerequisiteCourses.find(c => c.id === course.id) !== undefined)
+    return (courseLinks.find(link => link.from.id === course.id) !== undefined)
+  }
+
+  const getLinkToDelete = (course) => {
+    return courseLinks.find(link => link.from.id === course.id)
   }
 
   return (
-    <React.Fragment>
+    <React.Fragment >
       {
         courseTrayOpen ?
           <Grid item xs={4} lg={3}>
@@ -175,31 +173,34 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
                 titleTypographyProps={{ variant: 'h4' }}
               />
 
-              <CardContent> <TextField
-                margin="dense"
-                id="description"
-                label="Filter"
-                type="text"
-                name="filter"
-                fullWidth
-                value={filterKeyword}
-                onChange={handleKeywordInput}
-              />
+              <CardContent>
+                <TextField
+                  margin="dense"
+                  id="description"
+                  label="Filter"
+                  type="text"
+                  name="filter"
+                  fullWidth
+                  value={filterKeyword}
+                  onChange={handleKeywordInput}
+                />
 
                 {
-                  courses.data.allCourses ?
+                  coursesQuery.data.coursesByWorkspace ?
                     <List disablePadding className={classes.list}>
                       {
-                        courses.data.allCourses.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
+                        coursesQuery.data.coursesByWorkspace.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
                           return (
                             <PrerequisiteCourse
                               key={course.id}
                               course={course}
-                              activeCourse={activeCourse}
-                              addCourseAsPrerequisite={addCourseAsPrerequisite}
-                              deleteCourseAsPrerequisite={deleteCourseAsPrerequisite}
+                              activeCourseId={activeCourseId}
+                              createCourseLink={createCourseLink}
+                              deleteCourseLink={deleteCourseLink}
                               isPrerequisite={isPrerequisite(course)}
+                              getLinkToDelete={getLinkToDelete}
                               classes={classes}
+                              workspaceId={workspaceId}
                             />
                           )
                         })
@@ -210,13 +211,13 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourse, course_id, pr
                 }
                 <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
               </CardContent>
-            </Card>
-            <CourseCreationDialog state={state} handleClose={handleClose} createCourse={createCourse} />
-          </Grid>
+            </Card >
+            <CourseCreationDialog state={state} handleClose={handleClose} workspaceId={workspaceId} createCourse={createCourse} />
+          </Grid >
           :
           null
       }
-    </React.Fragment>
+    </React.Fragment >
   )
 }
 

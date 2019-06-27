@@ -2,46 +2,79 @@ type User {
   id: ID! @id
   tmcId: Int! @unique
   role: Role!
+  asWorkspaceOwner: [Workspace!]! @relation(name:"WorkspaceOwner")
+  asProjectOwner: [Project!]! @relation(name:"ProjectOwner")
+  asProjectParticipant: [Project!]! @relation(name:"ProjectParticipant")
 }
 
 enum Role {
   GUEST
-  USER
+  STUDENT
+  STAFF
   ADMIN
 }
 
+type Project {
+  id: ID! @id
+  name: String!
+  owner: User! @relation(name:"ProjectOwner")
+  participants: [User!]! @relation(name:"ProjectParticipant")
+  workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
+  template: Workspace @relation(link: INLINE, name:"Template")
+}
+
+type Workspace {
+  id: ID! @id
+  name: String!
+  project: Project @relation(name: "UserWorkspaces")
+  owner: User @relation(name:"WorkspaceOwner")
+  public: Boolean! @default(value: false)
+  defaultCourse: Course @relation(link: INLINE, name:"DefaultCourse", onDelete: CASCADE)
+  courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
+  concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
+  conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
+  courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
+}
+
+type CourseLink {
+  id: ID! @id
+  from: Course! @relation(link: INLINE, name: "FromCourse")
+  to: Course! @relation(link: INLINE, name: "ToCourse")
+  official: Boolean! @default(value: false)
+  createdBy: User!
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
+}
 
 type Course {
   id: ID! @id
   name: String!
+  createdBy: User!
+  linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
+  linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"Courses")
-  prerequisites: [Concept!]! @relation(name:"Prerequisite")
-  learningObjectives: [Concept!]! @relation(name:"LearningObjective")
-  prerequisiteCourses: [Course!]! 
-#   instances: [Instance!]!
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
 }
 
-# type Instance {
-#   id: ID! @id
-#   start_date: DateTime!
-#   end_date: DateTime!
-#   periods: [Int!]! @scalarList(strategy:RELATION)
-#   course: Course!
-#   concepts: [Concept!]!
-# }
+type ConceptLink { 
+  id: ID! @id
+  from: Concept! @relation(link: INLINE, name: "FromConcept")
+  to: Concept! @relation(link: INLINE, name: "ToConcept")
+  official: Boolean! @default(value: false)
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
+  createdBy: User!
+}
 
 type Concept {
   id: ID! @id
   name: String!
   description: String
-  # user: User! @relation(link: INLINE)
   official: Boolean! @default(value: false)
-  linksFromConcept: [Link!]! @relation(name: "From")
-  linksToConcept: [Link!]! @relation(name: "To")
+  createdBy: User!
+  linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
+  linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
   courses: [Course!]! @relation(name: "Courses")
   resources: [Resource!]!
-  asPrerequisite: [Course!]! @relation(name:"Prerequisite")
-  asLearningObjective: [Course!]! @relation(name:"LearningObjective")
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
 }
 
 type Resource {
@@ -56,12 +89,4 @@ type URL {
   id: ID! @id
   address: String!
   resource: Resource!
-}
-
-type Link {
-  id: ID! @id
-  from: Concept! @relation(link: INLINE, name: "From")
-  to: Concept! @relation(link: INLINE, name: "To")
-  # user: User! @relation(link: INLINE)
-  official: Boolean! @default(value: false)
 }
