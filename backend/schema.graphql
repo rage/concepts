@@ -41,6 +41,8 @@ type Mutation {
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
   deleteCourseLink(id: ID!): CourseLink
   
+  createConceptLinks(to: ID!, from:[ID!]!, workspaceId: ID!, official: Boolean): [ConceptLink!]!
+  deleteConceptLinks(ids: [ID!]): [ConceptLink!]!
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
   deleteConceptLink(id: ID!): ConceptLink
 
