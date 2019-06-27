@@ -39,6 +39,13 @@ const ADD_DEFAULT_COURSE = gql`
 mutation addDefaultCourseForWorkspace($courseId: ID!, $workspaceId: ID!) {
   addDefaultCourseForWorkspace(courseId: $courseId, workspaceId: $workspaceId) {
     id
+    name
+    defaultCourse {
+      id
+    }
+    owner {
+      id
+    }
   }
 }
 `
