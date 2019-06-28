@@ -1,6 +1,6 @@
 .scrollSyncTable {
-  max-width: 40em;
-  max-height: 5em;
+  width: 100%;
+  height: 100%;
   overflow: scroll;
   position: relative;
 }
@@ -27,7 +27,6 @@ tbody th {
   position: sticky;
   left: 0;
   background: #FFF;
-  border-right: 1px solid #CCC;
 }
 
 thead th:first-child {
