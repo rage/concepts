@@ -202,7 +202,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                             <th> {fromCourse.name} </th>
                             {
                               workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
-                                <TableCell workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} value={Math.random() * 255} />
+                                <TableCell workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} />
                               ))
                             }
                           </tr>
