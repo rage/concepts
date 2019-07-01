@@ -129,8 +129,8 @@ const App = ({ classes }) => {
           <Route exact path="/auth" render={() => <AuthenticationForm />} />
           <Route exact path="/user" render={() => <UserView />} />
           
-          <Route exact path="/workspaces/demo/heatmap" render={({ match, location }) => (
-            <CourseHeatmap/> 
+          <Route exact path="/workspaces/:wid/heatmap" render={({ match, location }) => (
+            <CourseHeatmap workspaceId={match.params.wid}/> 
           )}/>
 
           <Route exact path="/workspaces/:id/(mapper|matrix|graph)" render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />

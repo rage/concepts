@@ -7,8 +7,12 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
-import './heatmap.css'
+import { useQuery } from 'react-apollo-hooks'
+import {
+  WORKSPACE_COURSES_AND_CONCEPTS
+} from '../../graphql/Query'
 
+import './heatmap.css'
 
 const cellDimension = {
   width: 50,
@@ -50,16 +54,16 @@ const HeaderCell = ({ title }) => {
           maxHeight: '50px',
           paddingLeft: '5px'
         }}>
-          <div style={{ 
-            wordBreak: 'break-word', 
+          <div style={{
+            wordBreak: 'break-word',
             maxWidth: '14ch',
             maxHeight: '38px',
             overflow: 'hidden',
             textAlign: 'center',
             textOverflow: 'ellipsis'
-            
+
           }}>
-            { title }
+            {title}
           </div>
         </div >
       </div>
@@ -67,94 +71,63 @@ const HeaderCell = ({ title }) => {
   )
 }
 
-const TableCell = (props) => {
+const TableCell = ({ value }) => {
   const classes = useStyles()
 
   return (
-    <td className={classes.tableCell} style={{ backgroundColor: "RGB(0, " + Math.random() * 255 + ", 0)" }}>
+    <td className={classes.tableCell} style={{ backgroundColor: `RGB(0, ${value}, 0)` }}>
     </td>
   )
 }
 
-const CourseHeatmap = (props) => {
+const CourseHeatmap = ({ workspaceId }) => {
   const classes = useStyles()
+
+  const workspaceCourseQuery = useQuery(WORKSPACE_COURSES_AND_CONCEPTS, {
+    variables: { id: workspaceId }
+  })
 
   return (
     <Grid item xs={12}>
       <Container maxWidth="md">
         <Card className={classes.paper} >
-
           <CardHeader title="Course overview" />
-          <CardContent>
+          {
+            workspaceCourseQuery.data.workspaceById ?
+              <CardContent>
+                <div className="scrollSyncTable">
+                  <table>
+                    <thead>
+                      <tr>
+                        <HeaderCell />
+                        {workspaceCourseQuery.data.workspaceById.courses.map(course => (
+                          <HeaderCell title={course.name} />
+                        ))
+                        }
 
-            <div className="scrollSyncTable">
-              <table>
-                <thead>
-                  <tr>
-                    <HeaderCell />
+                      </tr>
+                    </thead>
 
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-                    <HeaderCell title="Ohjelmistotuotantoprojekti"/>
-
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr>
-                    <th>HEAD</th>
-
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                  </tr>
-                  <tr>
-                    <th>HEAD</th>
-
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                  </tr>
-                  <tr>
-                    <th>HEAD</th>
-
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                    <TableCell />
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
+                    <tbody>
+                      {
+                        workspaceCourseQuery.data.workspaceById.courses.map(course => (
+                          <tr>
+                            <th> {course.name} </th>
+                            {
+                              workspaceCourseQuery.data.workspaceById.courses.map(course => (
+                                <TableCell value={Math.random() * 255}/>
+                              ))
+                            }
+                          </tr>
+                        ))
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+              :
+              <div> Loading </div>
+          }
         </Card>
       </Container>
     </Grid>
