@@ -158,7 +158,7 @@ const CourseHeatmap = ({ workspaceId }) => {
 
   return (
     <Grid item xs={12}>
-      <Container maxWidth="md">
+      <Container maxWidth="xl">
         <Card className={classes.paper} >
           <CardHeader title="Course overview" />
           {
