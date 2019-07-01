@@ -71,11 +71,18 @@ const HeaderCell = ({ title }) => {
   )
 }
 
-const TableCell = ({ value }) => {
+const TableCell = ({ toCourse, fromCourse }) => {
   const classes = useStyles()
-
+  const concepts = toCourse.concepts.map(concept => {
+    return concept.linksToConcept.filter(conceptLink => {
+      return conceptLink.from.courses.find(course => course.id === fromCourse.id)
+    }).length
+  }).reduce((a, b) => a + b, 0)
+  const weight = 25
+  const greenWeight = 5;
+  
   return (
-    <td className={classes.tableCell} style={{ backgroundColor: `RGB(0, ${value}, 0)` }}>
+    <td className={classes.tableCell} style={{ backgroundColor: `RGB(${255 - concepts * weight}, ${255 - concepts * greenWeight}, ${255 - concepts * weight})` }}>
     </td>
   )
 }
@@ -86,6 +93,20 @@ const CourseHeatmap = ({ workspaceId }) => {
   const workspaceCourseQuery = useQuery(WORKSPACE_COURSES_AND_CONCEPTS, {
     variables: { id: workspaceId }
   })
+
+  const maxGradVal = workspaceCourseQuery.data.workspaceById ? 
+  workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => {
+    return workspaceCourseQuery.data.workspaceById.courses.map(toCourse => {
+      return toCourse.concepts.map(concept => {
+        return concept.linksToConcept.filter(conceptLink => {
+          return conceptLink.from.courses.find(course => course.id === fromCourse.id)
+        }).length
+      }).reduce((a, b) => a + b, 0)
+    }).reduce((a, b) => a > b ? a : b, 0)
+  }).reduce((a, b) => a > b ? a : b, 0)
+  : null
+
+  console.log(maxGradVal)
 
   return (
     <Grid item xs={12}>
@@ -101,7 +122,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                       <tr>
                         <HeaderCell />
                         {workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                          <HeaderCell title={course.name} />
+                          <HeaderCell key={course.id} title={course.name} />
                         ))
                         }
 
@@ -110,12 +131,12 @@ const CourseHeatmap = ({ workspaceId }) => {
 
                     <tbody>
                       {
-                        workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                          <tr>
-                            <th> {course.name} </th>
+                        workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
+                          <tr key={`${fromCourse.id}`}>
+                            <th> {fromCourse.name} </th>
                             {
-                              workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                                <TableCell value={Math.random() * 255}/>
+                              workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
+                                <TableCell key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} value={Math.random() * 255}/>
                               ))
                             }
                           </tr>
