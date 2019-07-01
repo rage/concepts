@@ -20,6 +20,8 @@ import LandingView from './components/common/LandingView'
 
 import WorkspaceView from './components/workspace/WorkspaceView'
 
+import CourseHeatmap from './components/course/CourseHeatmap'
+
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
 import { ALL_COURSES } from './graphql/Query/Course'
@@ -126,6 +128,10 @@ const App = ({ classes }) => {
 
           <Route exact path="/auth" render={() => <AuthenticationForm />} />
           <Route exact path="/user" render={() => <UserView />} />
+          
+          <Route exact path="/workspaces/:wid/heatmap" render={({ match, location }) => (
+            <CourseHeatmap workspaceId={match.params.wid}/> 
+          )}/>
 
           <Route exact path="/workspaces/:id/(mapper|matrix|graph)" render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />
           <Route exact path="/workspaces/:wid/mapper/:cid" render={({ match }) => (
