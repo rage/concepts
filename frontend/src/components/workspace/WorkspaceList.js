@@ -15,6 +15,7 @@ import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import GridOnIcon from '@material-ui/icons/GridOn'
+import ShowChartIcon from '@material-ui/icons/ShowChart'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
@@ -100,6 +101,11 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
     history.push(`/workspaces/${id}/matrix`)
   }
 
+  const handleNavigateHeatmap = (id) => () => {
+    history.push(`/workspaces/${id}/heatmap`)
+  }
+
+
   return (
     <Grid container justify="center">
       <Grid item md={8} xs={12}>
@@ -133,6 +139,9 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
                     {
                       loggedIn ?
                         <ListItemSecondaryAction>
+                          <IconButton aria-label="Heatmap" onClick={handleNavigateHeatmap(workspace.id)}>
+                            <ShowChartIcon/>
+                          </IconButton>
                           <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(workspace.id)}>
                             <GridOnIcon />
                           </IconButton>

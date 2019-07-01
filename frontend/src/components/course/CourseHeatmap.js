@@ -71,18 +71,21 @@ const HeaderCell = ({ title }) => {
   )
 }
 
-const TableCell = ({ toCourse, fromCourse }) => {
+const TableCell = ({ toCourse, fromCourse, minGradVal, maxGradVal }) => {
   const classes = useStyles()
   const concepts = toCourse.concepts.map(concept => {
     return concept.linksToConcept.filter(conceptLink => {
       return conceptLink.from.courses.find(course => course.id === fromCourse.id)
     }).length
   }).reduce((a, b) => a + b, 0)
-  const weight = 25
-  const greenWeight = 5;
+  const weight = 5;
   
+  const mapToGrad = (weight) => {
+    return ((255) / maxGradVal)*(weight)
+  }
+
   return (
-    <td className={classes.tableCell} style={{ backgroundColor: `RGB(${255 - concepts * weight}, ${255 - concepts * greenWeight}, ${255 - concepts * weight})` }}>
+    <td className={classes.tableCell} style={{ backgroundColor: `RGB(${255 - mapToGrad(concepts)}, ${255 - concepts * weight}, ${255 - mapToGrad(concepts)})` }}>
     </td>
   )
 }
@@ -106,7 +109,6 @@ const CourseHeatmap = ({ workspaceId }) => {
   }).reduce((a, b) => a > b ? a : b, 0)
   : null
 
-  console.log(maxGradVal)
 
   return (
     <Grid item xs={12}>
@@ -136,7 +138,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                             <th> {fromCourse.name} </th>
                             {
                               workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
-                                <TableCell key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} value={Math.random() * 255}/>
+                                <TableCell minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} value={Math.random() * 255}/>
                               ))
                             }
                           </tr>
