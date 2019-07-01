@@ -28,11 +28,15 @@ const useStyles = makeStyles(theme => ({
   tableCell: {
     width: `${cellDimension.width}px`,
     height: `${cellDimension.height}px`,
-    border: "1px solid #fff"
+    border: "1px solid #fff",
+    "&:hover": {
+      outline: "50px solid rgba(0, 0, 0, 0.05)",
+      outlineOffset: "-50px"
+    }
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
-    minHeight: "100%"
+    minHeight: "100%",
   },
   headerText: {
     minWidth: `100%`,
