@@ -21,7 +21,7 @@ const AuthenticationMutations = {
     if (!user) {
       const createdUser = await context.prisma.createUser({
         tmcId: tmcId,
-        role: administrator ? 'ADMIN' : 'STUDENT'
+        role: 'STAFF'
       })
       const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
       return {
