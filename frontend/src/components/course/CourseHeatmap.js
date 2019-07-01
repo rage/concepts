@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
     textOverflow: 'ellipsis'
   },
   paper: {
+    maxHeight: '85vh'
   }
 }))
 
