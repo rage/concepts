@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 
+import pink from '@material-ui/core/colors/pink'
 import Popper from '@material-ui/core/Popper'
 import Fade from '@material-ui/core/Fade'
 import Paper from '@material-ui/core/Paper'
@@ -104,10 +105,10 @@ const TableCell = ({ toCourse, fromCourse, minGradVal, maxGradVal }) => {
   .map(concept => concept.from.name)
   .filter(onlyUnique)
 
-  const weight = 5;
-
-  const mapToGrad = (weight) => {
-    return ((255) / maxGradVal) * (weight)
+  const mapToGrad = (amount) => {
+    const colorStrength = ["#fffff", ...Object.values(pink).slice(0, 9)]
+    let val =  (8 / maxGradVal) * (amount)
+    return colorStrength[Math.ceil(val)]
   }
 
   const togglePopper = (event) => {
@@ -115,11 +116,11 @@ const TableCell = ({ toCourse, fromCourse, minGradVal, maxGradVal }) => {
       setAnchorElement(anchorElement ? null : event.currentTarget);
     }
   }
-
+  
   return (
     <>
       <td key={`table-${toCourse.id}-${fromCourse.id}`} className={classes.tableCell} style={{
-        backgroundColor: `RGB(${255 - mapToGrad(conceptsLinked)}, ${255 - conceptsLinked * weight}, ${255 - mapToGrad(conceptsLinked)})`
+        backgroundColor: mapToGrad(conceptsLinked)
       }} onClick={togglePopper}>
       </td>
 
