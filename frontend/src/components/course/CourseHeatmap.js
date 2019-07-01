@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 
+import { withRouter } from 'react-router-dom'
+
 import pink from '@material-ui/core/colors/pink'
-import Popper from '@material-ui/core/Popper'
-import Fade from '@material-ui/core/Fade'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
@@ -29,11 +29,18 @@ const useStyles = makeStyles(theme => ({
   tableCell: {
     width: `${cellDimension.width}px`,
     height: `${cellDimension.height}px`,
-    border: "1px solid #fff",
     "&:hover": {
       outline: "50px solid rgba(0, 0, 0, 0.05)",
-      outlineOffset: "-50px"
-    }
+      outlineOffset: "-50px",
+      cursor: 'pointer',
+      "& + div": {
+        display: 'block'
+      }
+    },
+    
+  },
+  tableCellContainer: {
+    padding: '1px'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
@@ -48,7 +55,16 @@ const useStyles = makeStyles(theme => ({
     maxHeight: '85vh'
   },
   popper: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    position: 'relative',
+    top: '-52px',
+    left: '53px'
+  },
+  popperWrap: {
+    position: 'absolute',
+    display: 'none',
+    "&:hover": {
+    }
   }
 }))
 
@@ -85,10 +101,8 @@ const HeaderCell = ({ title }) => {
   )
 }
 
-const TableCell = ({ toCourse, fromCourse, minGradVal, maxGradVal }) => {
+const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, workspaceId, history }) => {
   const classes = useStyles()
-  const [anchorElement, setAnchorElement] = useState(null)
-  const open = Boolean(anchorElement)
 
   const conceptsLinked = toCourse.concepts.map(concept => {
     return concept.linksToConcept.filter(conceptLink => {
@@ -102,31 +116,30 @@ const TableCell = ({ toCourse, fromCourse, minGradVal, maxGradVal }) => {
       return conceptLink.from.courses.find(course => course.id === fromCourse.id)
     })
   }).reduce((first, second) => { return first.concat(second) }, [])
-  .map(concept => concept.from.name)
-  .filter(onlyUnique)
+    .map(concept => concept.from.name)
+    .filter(onlyUnique)
 
   const mapToGrad = (amount) => {
     const colorStrength = ["#fffff", ...Object.values(pink).slice(0, 9)]
-    let val =  (8 / maxGradVal) * (amount)
+    let val = (8 / maxGradVal) * (amount)
     return colorStrength[Math.ceil(val)]
   }
 
-  const togglePopper = (event) => {
-    if (concepts.length > 0) {
-      setAnchorElement(anchorElement ? null : event.currentTarget);
-    }
+  const navigateToMapper = (courseId) => () => {
+    history.push(`/workspaces/${workspaceId}/mapper/${courseId}`)
   }
-  
+
   return (
     <>
-      <td key={`table-${toCourse.id}-${fromCourse.id}`} className={classes.tableCell} style={{
+      <td key={`table-${toCourse.id}-${fromCourse.id}`} className={classes.tableCellContainer}>
+      <div className={classes.tableCell} style={{
         backgroundColor: mapToGrad(conceptsLinked)
-      }} onClick={togglePopper}>
-      </td>
+      }} onClick={navigateToMapper(toCourse.id)}>
 
-      <Popper key={`popper-${toCourse.id}-${fromCourse.id}`} id={toCourse.id} open={open} anchorEl={anchorElement} transition>
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
+      </div>
+        {
+          concepts.length !== 0 &&
+          <div className={classes.popperWrap}>
             <Paper key={`paper-${toCourse.id}-${fromCourse.id}`} className={classes.popper}>
               {
                 concepts.map(concept => (
@@ -134,12 +147,12 @@ const TableCell = ({ toCourse, fromCourse, minGradVal, maxGradVal }) => {
                 ))
               }
             </Paper>
-          </Fade>
-        )}
-      </Popper>
+          </div>
+        }
+      </td>
     </>
   )
-}
+})
 
 const CourseHeatmap = ({ workspaceId }) => {
   const classes = useStyles()
@@ -189,7 +202,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                             <th> {fromCourse.name} </th>
                             {
                               workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
-                                <TableCell minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} value={Math.random() * 255} />
+                                <TableCell workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} value={Math.random() * 255} />
                               ))
                             }
                           </tr>
