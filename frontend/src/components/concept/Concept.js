@@ -2,23 +2,24 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation } from 'react-apollo-hooks'
-import { 
-  DELETE_CONCEPT, 
-  CREATE_CONCEPT_LINK, 
-  DELETE_CONCEPT_LINK 
+import {
+  DELETE_CONCEPT,
+  CREATE_CONCEPT_LINK,
+  DELETE_CONCEPT_LINK
 } from '../../graphql/Mutation'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import Switch from '@material-ui/core/Switch'
+import LensIcon from "@material-ui/icons/Lens"
 
-import { 
+import {
   deleteConceptLinkUpdate,
   createConceptLinkUpdate,
   deleteConceptUpdate
@@ -49,7 +50,7 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog, workspaceId }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, conceptCircleRef, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
@@ -75,7 +76,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
 
   const onClick = async () => {
     if (isActive()) {
-      concept.linksFromConcept.forEach(async (link) => {
+      concept.sFromConcept.forEach(async (link) => {
         const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
         if (hasLink) {
           try {
@@ -144,6 +145,11 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
       className={classes.inactive}
       id={'concept-' + concept.id}
     >
+      <ListItemIcon>
+        <IconButton ref={conceptCircleRef} id={`concept-circle-${concept.id}`} style={{padding: "4px"}}>
+          <LensIcon/>
+        </IconButton>
+      </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
@@ -170,13 +176,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
               <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
             </Menu>
           </React.Fragment>
-          :
-          <Switch
-            checked={isActive()}
-            color='primary'
-            onClick={onClick}
-            id={'concept-switch' + concept.id}
-          />
+          : null
         }
       </ListItemSecondaryAction>
     </ListItem>

@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
-// List 
+// List
 import List from '@material-ui/core/List'
 
 // Icons
@@ -63,6 +63,7 @@ const Course = ({
   classes, // UI
   course,
   activeCourseId,
+  conceptCircleRef,
   openCourseDialog,
   openConceptDialog,
   openConceptEditDialog,
@@ -99,6 +100,7 @@ const Course = ({
                 key={concept.id}
                 course={course}
                 activeConceptIds={activeConceptIds}
+                conceptCircleRef={conceptCircleRef}
                 openConceptEditDialog={openConceptEditDialog}
                 activeCourseId={activeCourseId}
                 workspaceId={workspaceId}

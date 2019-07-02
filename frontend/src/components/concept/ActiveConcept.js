@@ -10,8 +10,11 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
-import Switch from '@material-ui/core/Switch'
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip'
+
+import LensIcon from "@material-ui/icons/Lens"
+
+import LineTo from "../common/LineTo"
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
@@ -20,6 +23,9 @@ const styles = theme => ({
   conceptName: {
     maxWidth: '70%',
     wordBreak: 'break-word'
+  },
+  conceptCircle: {
+    zIndex: 2,
   },
   active: {
     backgroundColor: '#9ecae1',
@@ -48,12 +54,12 @@ const styles = theme => ({
   },
 })
 
-const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
+const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCircleRef, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
-  
+
   const isActive = () => {
     return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
   }
@@ -88,7 +94,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
     openConceptEditDialog(id, name, description)()
   }
 
-  return (
+  return <>
     <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
       <ListItem button divider className={classes.listItem} onClick={toggleConcept(concept.id)} id={'concept-' + concept.id} >
         <ListItemText
@@ -108,7 +114,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
                 >
                   <MoreVertIcon />
                 </IconButton>
-                  : null 
+                  : null
               }
               <Menu
                 id="simple-menu"
@@ -126,16 +132,13 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
             </React.Fragment>
             : null
           }
-          <Switch
-            checked={isActive()}
-            color='primary'
-            onClick={toggleConcept(concept.id)}
-            id={'concept-switch' + concept.id}
-          />
+          <IconButton className={classes.conceptCircle} ref={conceptCircleRef} id={`concept-circle-active-${concept.id}`}>
+            <LensIcon />
+          </IconButton>
         </ListItemSecondaryAction>
       </ListItem >
     </Tooltip>
-  )
+  </>
 }
 
 export default withStyles(styles)(Concept)

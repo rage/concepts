@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState, useEffect, useCallback} from "react"
 import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -23,14 +23,38 @@ import {
   createCourseUpdate,
   updateCourseUpdate
 } from '../../apollo/update'
+import Tooltip from "@material-ui/core/Tooltip"
+import LineTo from "../common/LineTo"
 const styles = theme => ({
 })
+
+const debounce = (fn, delay) => {
+  let lastTime = Date.now()
+  return (...args) => {
+    if (lastTime + delay < Date.now()) {
+      fn(...args)
+      lastTime = Date.now()
+    }
+  }
+}
 
 const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
+  const [redrawLines, setRedrawLines] = useState(0)
+  const [conceptCircles, setConceptCircles] = useState({})
   const { loggedIn } = useLoginStateValue()[0]
+  const [width, setWidth] = useState(window.innerWidth)
 
+  useEffect(() => {
+    const handleResize = debounce(() => setWidth(window.innerWidth), 100)
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, [])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -51,6 +75,22 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const updateCourse = useMutation(UPDATE_COURSE, {
     update: updateCourseUpdate(workspaceId)
   })
+
+  const conceptCircleRef = useCallback(node => {
+    if (node !== null) {
+      const box = node.getBoundingClientRect()
+      conceptCircles[node.id] = {
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+      }
+    }
+  })
+
+  useEffect(() => {
+    setRedrawLines(redrawLines+1)
+  }, [workspaceQuery, prereqQuery, courseQuery])
 
   const toggleConcept = (id) => () => {
     const alreadyActive = activeConceptIds.find(i => i === id)
@@ -76,6 +116,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
             <ActiveCourse
               course={courseQuery.data.courseById}
               activeConceptIds={activeConceptIds}
+              conceptCircleRef={conceptCircleRef}
               toggleConcept={toggleConcept}
               resetConceptToggle={resetConceptToggle}
               courseTrayOpen={courseTrayOpen}
@@ -85,6 +126,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
               courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
+              conceptCircleRef={conceptCircleRef}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
               activeCourse={courseQuery.data.courseById}
@@ -130,6 +172,13 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
             </Grid>
           </Grid>
       }
+      {courseQuery.data.courseById && courseQuery.data.courseById.concepts.map(concept => (
+        concept.linksToConcept.map(link => (
+          <LineTo key={`concept-link-${concept.id}-${link.from.id}`} within="App" delay={1}
+                  from={conceptCircles[`concept-circle-active-${concept.id}`]} to={conceptCircles[`concept-circle-${link.from.id}`]}
+                  innerColor="#757575" redrawLines={redrawLines}/>
+        ))
+      ))}
     </React.Fragment>
   )
 }

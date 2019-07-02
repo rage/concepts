@@ -14,7 +14,7 @@ import { COURSE_BY_ID } from '../../graphql/Query'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
 
-// List 
+// List
 import List from '@material-ui/core/List'
 
 
@@ -65,6 +65,7 @@ const ActiveCourse = ({
   course,
   workspaceId,
   activeConceptIds,
+  conceptCircleRef,
   toggleConcept,
   resetConceptToggle
 }) => {
@@ -190,6 +191,7 @@ const ActiveCourse = ({
                 <ActiveConcept concept={concept}
                   key={concept.id}
                   activeConceptIds={activeConceptIds}
+                  conceptCircleRef={conceptCircleRef}
                   deleteConcept={deleteConcept}
                   openConceptDialog={handleConceptOpen}
                   openConceptEditDialog={handleConceptEditOpen}
