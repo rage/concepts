@@ -175,8 +175,10 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
       {courseQuery.data.courseById && courseQuery.data.courseById.concepts.map(concept => (
         concept.linksToConcept.map(link => (
           <LineTo key={`concept-link-${concept.id}-${link.from.id}`} within="App" delay={1}
+                  innerColor={activeConceptIds.includes(concept.id) ? "red" : "rgba(117, 117, 117, 0.1)"}
+                  selectable={activeConceptIds.includes(concept.id)}
                   from={conceptCircles[`concept-circle-active-${concept.id}`]} to={conceptCircles[`concept-circle-${link.from.id}`]}
-                  innerColor="#757575" redrawLines={redrawLines}/>
+                  redrawLines={redrawLines} wrapperWidth={1} fromAnchor="right middle" toAnchor="left middle"/>
         ))
       ))}
     </React.Fragment>

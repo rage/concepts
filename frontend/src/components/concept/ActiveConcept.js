@@ -132,8 +132,8 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCir
             </React.Fragment>
             : null
           }
-          <IconButton className={classes.conceptCircle} ref={conceptCircleRef} id={`concept-circle-active-${concept.id}`}>
-            <LensIcon />
+          <IconButton className={classes.conceptCircle}>
+            <LensIcon ref={conceptCircleRef} id={`concept-circle-active-${concept.id}`}/>
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem >

@@ -76,7 +76,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, c
 
   const onClick = async () => {
     if (isActive()) {
-      concept.sFromConcept.forEach(async (link) => {
+      concept.linksFromConcept.forEach(async (link) => {
         const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
         if (hasLink) {
           try {
@@ -146,8 +146,8 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, c
       id={'concept-' + concept.id}
     >
       <ListItemIcon>
-        <IconButton ref={conceptCircleRef} id={`concept-circle-${concept.id}`} style={{padding: "4px"}}>
-          <LensIcon/>
+        <IconButton style={{padding: "4px"}}>
+          <LensIcon ref={conceptCircleRef} id={`concept-circle-${concept.id}`}/>
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>

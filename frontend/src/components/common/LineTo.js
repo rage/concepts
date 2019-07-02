@@ -1,19 +1,12 @@
-// import PropTypes from "prop-types"
 import React, {Component, PureComponent} from "react"
+
+import { withStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = {x: 0.5, y: 0.5}
 const defaultInnerColor = "#f00"
 const defaultInnerStyle = "solid"
 const defaultInnerWidth = 1
 const defaultWrapperWidth = 11
-
-// const optionalStyleProps = {
-// 	borderColor: PropTypes.string,
-// 	borderStyle: PropTypes.string,
-// 	borderWidth: PropTypes.number,
-// 	className: PropTypes.string,
-// 	zIndex: PropTypes.number,
-// }
 
 export default class LineTo extends Component {
   componentWillMount() {
@@ -142,8 +135,6 @@ export default class LineTo extends Component {
 
   detect() {
     const {within = "", from: fromBox, to: toBox} = this.props
-    //const from = document.getElementById(fromId)
-    //const to = document.getElementById(toId)
 
     if (!fromBox || !toBox) {
       return false
@@ -151,9 +142,6 @@ export default class LineTo extends Component {
 
     const anchor0 = this.fromAnchor
     const anchor1 = this.toAnchor
-
-    //const fromBox = from.getBoundingClientRect()
-    //const toBox = to.getBoundingClientRect()
 
     let offsetX = window.pageXOffset
     let offsetY = window.pageYOffset
@@ -169,30 +157,32 @@ export default class LineTo extends Component {
       offsetY += boxp.top
     }
 
-    const x0 = fromBox.x + fromBox.width * anchor0.x + offsetX + 4
-    const x1 = toBox.x + toBox.width * anchor1.x + offsetX + 4
-    const y0 = fromBox.y + fromBox.height * anchor0.y + offsetY - 4
-    const y1 = toBox.y + toBox.height * anchor1.y + offsetY - 4
+    const x0 = fromBox.x + fromBox.width * anchor0.x + offsetX
+    const x1 = toBox.x + toBox.width * anchor1.x + offsetX
+    const y0 = fromBox.y + fromBox.height * anchor0.y + offsetY
+    const y1 = toBox.y + toBox.height * anchor1.y + offsetY
 
-    return {x0, y0, x1, y1}
+    return {x0: x0 - 1, y0, x1: x1 + 2, y1}
   }
 
   render() {
     const points = this.detect()
     return points ? (
-      <Line {...points} {...this.props}/>
+      <StyledLine {...points} {...this.props}/>
     ) : null
   }
 }
 
-// LineTo.propTypes = Object.assign({}, {
-// 	from: PropTypes.object.isRequired,
-// 	to: PropTypes.object.isRequired,
-// 	within: PropTypes.string,
-// 	fromAnchor: PropTypes.string,
-// 	toAnchor: PropTypes.string,
-// 	delay: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
-// }, optionalStyleProps)
+const lineStyles = theme => ({
+	linetoHover: {
+	  "&:hover": {
+	    backgroundColor: "rgba(255, 0, 0, 0.25)",
+    },
+  },
+  linetoLine: {
+    borderTop: "1px solid red",
+  }
+})
 
 export class Line extends PureComponent {
   constructor(props) {
@@ -220,6 +210,7 @@ export class Line extends PureComponent {
 
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
     const length = Math.sqrt(dx * dx + dy * dy)
+    const wrapperWidth = this.props.wrapperWidth || defaultWrapperWidth
 
     const commonStyle = {
       position: "absolute",
@@ -233,8 +224,7 @@ export class Line extends PureComponent {
       position: "absolute",
       top: `${y0}px`,
       left: `${x0}px`,
-      height: `${this.props.wrapperWidth || defaultWrapperWidth}px`,
-      color: "transparent",
+      height: `${wrapperWidth}px`,
       transform: `rotate(${angle}deg)`,
       // Rotate around (x0, y0)
       transformOrigin: "0 0",
@@ -242,32 +232,39 @@ export class Line extends PureComponent {
 
     const innerStyle = Object.assign({}, commonStyle, {
       position: "absolute",
-      top: `${Math.floor((this.props.wrapperWidth || defaultWrapperWidth) / 2)}px`,
+      top: `${Math.floor(wrapperWidth / 2)}px`,
       left: 0,
       borderTopColor: this.props.innerColor || defaultInnerColor,
       borderTopStyle: this.props.innerStyle || defaultInnerStyle,
       borderTopWidth: this.props.innerWidth || defaultInnerWidth,
     })
 
+		const hoverAreaWidth = 11;
+    const hoverAreaOffset = 10;
+
+		const hoverAreaStyle = Object.assign({}, commonStyle, {
+			position: "relative",
+			width: `${length - hoverAreaOffset*2}px`,
+			height: `${hoverAreaWidth}px`,
+			color: "transparent",
+			transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth/2)}px)`,
+		})
+
     // We need a wrapper element to prevent an exception when then
     // React component is removed. This is because we manually
     // move the rendered DOM element after creation.
     return (
-      <div className={this.props.placeholderClassName || "react-lineto-placeholder"}
+      <div className={this.props.classes.linetoPlaceholder}
            data-link-from={this.props.from}
            data-link-to={this.props.to} {...this.props.attributes}>
-        <div className={this.props.wrapperClassName || "react-lineto-wrapper"} ref={this.el}
-             style={wrapperStyle}>
-          <div style={innerStyle} className={this.props.className || "react-lineto-line"}/>
+        <div className={this.props.classes.linetoWrapper} ref={this.el} style={wrapperStyle}>
+          {this.props.selectable && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
+					<div style={innerStyle} className={this.props.classes.linetoLine}>
+					</div>
         </div>
       </div>
     )
   }
 }
 
-// Line.propTypes = Object.assign({}, {
-// 	x0: PropTypes.number.isRequired,
-// 	y0: PropTypes.number.isRequired,
-// 	x1: PropTypes.number.isRequired,
-// 	y1: PropTypes.number.isRequired,
-// }, optionalStyleProps)
+const StyledLine = withStyles(lineStyles)(Line)
