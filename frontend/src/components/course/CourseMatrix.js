@@ -227,7 +227,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
           // in the header grid
           style={{
             overflowX: 'hidden',
-            overflowY: 'hidden',
+            overflowY: 'hidden'
             // borderBottom: `1px solid gray`,
           }}
           itemData={filteredPrerequisiteConcepts()}
@@ -253,7 +253,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
           // in the header grid
           style={{
             overflowX: 'hidden',
-            overflowY: 'hidden',
+            overflowY: 'hidden'
             // backgroundColor: 'lightgray',
             // borderBottom: `1px solid gray`,
           }}

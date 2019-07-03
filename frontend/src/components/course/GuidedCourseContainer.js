@@ -243,7 +243,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             className={classes.snackbar}
             ClickAwayListenerProps={{ onClickAway: () => null }}
             ContentProps={{
-              'aria-describedby': 'message-id',
+              'aria-describedby': 'message-id'
             }}
           >
             <SnackbarContent className={classes.info}
@@ -269,7 +269,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             ClickAwayListenerProps={{ onClickAway: () => null }}
             className={classes.snackbar}
             ContentProps={{
-              'aria-describedby': 'message-id',
+              'aria-describedby': 'message-id'
             }}
           >
             <SnackbarContent className={classes.info}
@@ -296,7 +296,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             autoHideDuration={6000}
             className={classes.snackbar}
             ContentProps={{
-              'aria-describedby': 'message-id',
+              'aria-describedby': 'message-id'
             }}
           >
             <SnackbarContent className={classes.info}

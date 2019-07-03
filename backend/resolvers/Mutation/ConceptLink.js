@@ -8,7 +8,7 @@ const ConceptLink = {
         connect: { id: to }
       },
       from: {
-        connect: { id: from, }
+        connect: { id: from }
       },
       createdBy: {
         connect: { id: context.user.id }

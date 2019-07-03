@@ -27,14 +27,14 @@ import { useErrorStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: '90vh',
+    height: '90vh'
   },
   courseName: {
     wordBreak: 'break-word'
   },
   cardHeader: {
     // marginTop: '5px',
-    paddingBottom: '0px',
+    paddingBottom: '0px'
     // textAlign: 'center',
   },
   title: {

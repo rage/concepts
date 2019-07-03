@@ -176,7 +176,7 @@ const App = ({ classes }) => {
         autoHideDuration={4000}
         className={classes.snackbar}
         ContentProps={{
-          'aria-describedby': 'message-id',
+          'aria-describedby': 'message-id'
         }}
       >
         <SnackbarContent className={classes.error}

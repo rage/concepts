@@ -45,7 +45,7 @@ const styles = theme => ({
   },
   otherNameActive: {
     color: 'grey'
-  },
+  }
 })
 
 const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {

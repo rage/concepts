@@ -25,7 +25,7 @@ const styles = {
   },
   menuButton: {
     marginLeft: -18,
-    marginRight: 10,
+    marginRight: 10
   },
   title: {
     flexGrow: 1
@@ -81,13 +81,13 @@ const AuthenticationIcon = withRouter(({ history }) => {
             anchorEl={anchorElement}
             anchorOrigin={{
               vertical: 'top',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
             open={anchorElementOpen}
             keepMounted
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
             onClose={handleAnchorClose}
           >

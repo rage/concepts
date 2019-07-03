@@ -31,7 +31,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing(2),
     position: 'relative',
     overflow: 'auto',
-    maxHeight: 300,
+    maxHeight: 300
   },
   cardHeader: {
     paddingBottom: '0px'
@@ -45,11 +45,11 @@ const styles = theme => ({
 
   },
   listSection: {
-    backgroundColor: 'inherit',
+    backgroundColor: 'inherit'
   },
   ul: {
     backgroundColor: 'inherit',
-    padding: 0,
+    padding: 0
   },
   highlight: {
     backgroundColor: 'cyan'

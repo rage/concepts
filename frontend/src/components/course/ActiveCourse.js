@@ -28,7 +28,7 @@ import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: '90vh',
+    height: '90vh'
   },
   list: {
     width: '100%',
@@ -46,11 +46,11 @@ const styles = theme => ({
     textAlign: 'center'
   },
   listSection: {
-    backgroundColor: 'inherit',
+    backgroundColor: 'inherit'
   },
   ul: {
     backgroundColor: 'inherit',
-    padding: 0,
+    padding: 0
   },
   highlight: {
     backgroundColor: 'cyan'

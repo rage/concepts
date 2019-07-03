@@ -9,7 +9,7 @@ const CourseQueries = {
           connect: { id: args.to }
         },
         from: {
-          connect: { id: args.from, }
+          connect: { id: args.from }
         },
         official: args.official,
         createdBy: { connect: { id: context.user.id } },

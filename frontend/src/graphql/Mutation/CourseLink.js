@@ -35,5 +35,5 @@ mutation deleteCourseLink($id: ID!) {
 
 export {
   CREATE_COURSE_LINK,
-  DELETE_COURSE_LINK,
+  DELETE_COURSE_LINK
 }

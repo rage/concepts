@@ -10,7 +10,7 @@ const ConceptQueries = {
     return context.prisma.concept({
       id: args.id
     })
-  },
+  }
 }
 
 module.exports = ConceptQueries
