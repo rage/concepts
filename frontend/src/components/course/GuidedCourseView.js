@@ -26,71 +26,12 @@ import LineTo from '../common/LineTo'
 const styles = theme => ({
 })
 
-const debounce = (fn, delay) => {
-  let lastTime = Date.now()
-  let timeout = null
-  return (...args) => {
-    if (lastTime + delay < Date.now()) {
-      if (timeout !== null) {
-        clearTimeout(timeout)
-        timeout = null
-      }
-      fn(...args)
-      lastTime = Date.now()
-    } else if (timeout === null) {
-      timeout = setTimeout(() => {
-        fn(...args)
-        clearTimeout(timeout)
-        timeout = null
-      }, delay)
-    }
-  }
-}
-
-let hackyAddingLink = null
-
-const useMousePosition = (addingLink) => {
-  const [mousePosition, setMousePosition] = useState(null)
-  hackyAddingLink = addingLink
-
-  useEffect(() => {
-    const handleMouse = evt => {
-      if (hackyAddingLink !== null) {
-        setMousePosition({
-          x: evt.pageX - 4,
-          y: evt.pageY - 4,
-          width: 1,
-          height: 1
-        })
-      }
-    }
-    window.addEventListener('mousemove', handleMouse)
-    return () => {
-      window.removeEventListener('mousemove', handleMouse)
-    }
-  })
-
-  return mousePosition
-}
-
 const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const [redrawLines, setRedrawLines] = useState(0)
-  const [conceptCircles] = useState({})
   const [addingLink, setAddingLink] = useState(null)
-  const mousePosition = useMousePosition(addingLink)
   const { loggedIn } = useLoginStateValue()[0]
-  const [, setWidth] = useState(window.innerWidth)
-
-  useEffect(() => {
-    const handleResize = debounce(() => setWidth(window.innerWidth), 100)
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -112,18 +53,6 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
     update: updateCourseUpdate(workspaceId)
   })
 
-  const conceptCircleRef = useCallback(node => {
-    if (node !== null) {
-      const box = node.getBoundingClientRect()
-      conceptCircles[node.id] = {
-        x: box.x,
-        y: box.y,
-        width: box.width,
-        height: box.height
-      }
-    }
-  }, )
-
   useEffect(() => {
     setRedrawLines(redrawLines+1)
   }, [workspaceQuery, prereqQuery, courseQuery])
@@ -136,10 +65,6 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
     )
   }
 
-  const resetConceptToggle = () => {
-    setActiveConceptIds([])
-  }
-
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
   }
@@ -148,25 +73,25 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
     <React.Fragment>
       {
         courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
-          <Grid container spacing={0} direction='row'>
+          <Grid id='course-view' container spacing={0} direction='row'>
             <ActiveCourse
+              onClick={() => setAddingLink(null)}
               course={courseQuery.data.courseById}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
-              conceptCircleRef={conceptCircleRef}
               toggleConcept={toggleConcept}
-              resetConceptToggle={resetConceptToggle}
               courseTrayOpen={courseTrayOpen}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseContainer
+              onClick={() => setAddingLink(null)}
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
               courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
-              conceptCircleRef={conceptCircleRef}
+              doRedrawLines={() => setRedrawLines(redrawLines+1)}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
               activeCourse={courseQuery.data.courseById}
@@ -214,14 +139,15 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
       }
       {courseQuery.data.courseById && courseQuery.data.courseById.concepts.map(concept => (
         concept.linksToConcept.map(link => (
-          <LineTo key={`concept-link-${link.id}`} within='App' delay={1}
+          <LineTo key={`concept-link-${link.id}`} within='course-view' delay={1}
             active={activeConceptIds.includes(concept.id)}
-            from={conceptCircles[`concept-circle-active-${concept.id}`]} to={conceptCircles[`concept-circle-${link.from.id}`]}
+            from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
             redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'/>
         ))
       ))}
-      {addingLink && <LineTo key='concept-link-creating' within='App' active={true}
-        from={conceptCircles[`${addingLink.type}-${addingLink.id}`]} to={mousePosition}/>}
+      {addingLink && <LineTo key='concept-link-creating' within='course-view' active={true}
+        from={`${addingLink.type}-${addingLink.id}`} to='root'
+        followMouse={true}/>}
     </React.Fragment>
   )
 }

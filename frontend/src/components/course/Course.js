@@ -65,7 +65,6 @@ const Course = ({
   activeCourseId,
   addingLink,
   setAddingLink,
-  conceptCircleRef,
   openCourseDialog,
   openConceptDialog,
   openConceptEditDialog,
@@ -104,7 +103,6 @@ const Course = ({
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
-                conceptCircleRef={conceptCircleRef}
                 openConceptEditDialog={openConceptEditDialog}
                 activeCourseId={activeCourseId}
                 workspaceId={workspaceId}

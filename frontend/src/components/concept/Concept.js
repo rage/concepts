@@ -50,7 +50,7 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, addingLink, setAddingLink, conceptCircleRef, openConceptEditDialog, workspaceId }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, addingLink, setAddingLink, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
@@ -68,29 +68,26 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     update: deleteConceptUpdate(activeCourseId, workspaceId, course.id)
   })
 
-  const onClick = async () => {
+  const onClick = evt => {
     if (addingLink) {
       setAddingLink(null)
-      try {
-        await createConceptLink({
-          variables: {
-            to: addingLink.id,
-            from: concept.id,
-            workspaceId
-          }
-        })
-      } catch (err) {
-        errorDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
-      }
+      createConceptLink({
+        variables: {
+          to: addingLink.id,
+          from: concept.id,
+          workspaceId
+        }
+      }).catch(() => errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      }))
     } else {
       setAddingLink({
         id: concept.id,
         type: 'concept-circle'
       })
     }
+    evt.stopPropagation()
   }
 
   const handleMenuOpen = (event) => {
@@ -131,7 +128,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     >
       <ListItemIcon>
         <IconButton onClick={onClick} style={{padding: '4px'}}>
-          <LensIcon ref={conceptCircleRef} id={`concept-circle-${concept.id}`}/>
+          <LensIcon id={`concept-circle-${concept.id}`}/>
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>

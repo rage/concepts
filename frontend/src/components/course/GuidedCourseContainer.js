@@ -63,9 +63,23 @@ class CustomMasonry extends Masonry {
   componentWillMount() {
     this.reCalculateColumnCount()
   }
+
+  reCalculateColumnCount() {
+    super.reCalculateColumnCount()
+    this.props.handleRecalculateColumnCount()
+  }
 }
 
-const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, addingLink, setAddingLink, conceptCircleRef, updateCourse, workspaceId, courseId }) => {
+const GuidedCourseContainer = ({
+  classes,
+  onClick,
+  courseTrayOpen, setCourseTrayOpen,
+  activeCourse, updateCourse, courses,
+  activeConceptIds,
+  addingLink, setAddingLink,
+  doRedrawLines,
+  workspaceId, courseId
+}) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -169,7 +183,6 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
           activeConceptIds={activeConceptIds}
           addingLink={addingLink}
           setAddingLink={setAddingLink}
-          conceptCircleRef={conceptCircleRef}
           openCourseDialog={handleCourseOpen}
           openConceptDialog={handleConceptOpen}
           openConceptEditDialog={handleConceptEditOpen}
@@ -181,8 +194,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   }
 
   return (
-    <React.Fragment>
-      <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
+    <>
+      <Grid onClick={onClick} container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
         <Grid item>
           <Typography style={{ margin: '2px 0px 0px 10px' }} variant='h4'>Prerequisites</Typography>
         </Grid>
@@ -202,6 +215,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                       breakpointCols={breakpointColumnsObj}
                       className='my-masonry-grid'
                       columnClassName='my-masonry-grid_column'
+                      handleRecalculateColumnCount={doRedrawLines}
                     >
                       {
                         courses && courses.map(course =>
@@ -211,7 +225,6 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                             activeConceptIds={activeConceptIds}
                             addingLink={addingLink}
                             setAddingLink={setAddingLink}
-                            conceptCircleRef={conceptCircleRef}
                             openCourseDialog={handleCourseOpen}
                             openConceptDialog={handleConceptOpen}
                             openConceptEditDialog={handleConceptEditOpen}
@@ -337,7 +350,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         </React.Fragment>
         : null
       }
-    </React.Fragment>
+    </>
   )
 }
 

@@ -52,7 +52,7 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, conceptCircleRef, deleteConcept, openConceptEditDialog }) => {
+const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
@@ -88,7 +88,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
     openConceptEditDialog(id, name, description)()
   }
 
-  const onClick = () => {
+  const onClick = evt => {
     if (addingLink) {
       alert('Adding links by clicking on prerequisite first is not yet implemented')
     } else {
@@ -97,6 +97,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
         type: 'concept-circle-active'
       })
     }
+    evt.stopPropagation()
   }
 
   return <>
@@ -144,7 +145,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
           <IconButton onClick={onClick}
             className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
             <LensIcon
-              ref={conceptCircleRef} id={`concept-circle-active-${concept.id}`}
+              id={`concept-circle-active-${concept.id}`}
               color={activeConceptIds.includes(concept.id) ? 'secondary' : undefined}
             />
           </IconButton>

@@ -62,14 +62,13 @@ const styles = theme => ({
 
 const ActiveCourse = ({
   classes, // UI
+  onClick,
   course,
   workspaceId,
   activeConceptIds,
   addingLink,
   setAddingLink,
-  conceptCircleRef,
-  toggleConcept,
-  resetConceptToggle
+  toggleConcept
 }) => {
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
@@ -151,18 +150,6 @@ const ActiveCourse = ({
     }
   })
 
-  const handleClickAway = (event) => {
-    try {
-      const isConceptButton = event.composedPath()
-        .map(el => el.id)
-        .find(id => (id + '').substring(0, 7) === 'concept')
-      if (!isConceptButton) {
-        resetConceptToggle()
-      }
-    }
-    catch (err) { console.log('Unsuccessful clickaway') }
-  }
-
   const handleConceptClose = () => {
     setConceptState({ ...conceptState, open: false })
   }
@@ -181,29 +168,26 @@ const ActiveCourse = ({
 
 
   return (
-    <Grid item xs={4} lg={3}>
+    <Grid item xs={4} lg={3} onClick={onClick}>
       <Card elevation={0} className={classes.root}>
         <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
         </CardHeader>
 
         <CardContent>
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <List className={classes.list}>
-              {course.concepts.map(concept =>
-                <ActiveConcept concept={concept}
-                  key={concept.id}
-                  activeConceptIds={activeConceptIds}
-                  addingLink={addingLink}
-                  setAddingLink={setAddingLink}
-                  conceptCircleRef={conceptCircleRef}
-                  deleteConcept={deleteConcept}
-                  openConceptDialog={handleConceptOpen}
-                  openConceptEditDialog={handleConceptEditOpen}
-                  toggleConcept={toggleConcept}
-                />
-              )}
-            </List>
-          </ClickAwayListener>
+          <List className={classes.list}>
+            {course.concepts.map(concept =>
+              <ActiveConcept concept={concept}
+                key={concept.id}
+                activeConceptIds={activeConceptIds}
+                addingLink={addingLink}
+                setAddingLink={setAddingLink}
+                deleteConcept={deleteConcept}
+                openConceptDialog={handleConceptOpen}
+                openConceptEditDialog={handleConceptEditOpen}
+                toggleConcept={toggleConcept}
+              />
+            )}
+          </List>
 
           {loggedIn ?
             <Button

@@ -21,26 +21,6 @@ export default class LineTo extends Component {
     }
   }
 
-  static nodeEquals(otherNode) {
-    return otherNode.x === this.x && otherNode.y === this.y
-      && otherNode.width === this.width && otherNode.height === this.height
-  }
-
-  static copyNode(node) {
-    if (!node) {
-      return {
-        equals: () => false
-      }
-    }
-    return {
-      x: node.x,
-      y: node.y,
-      width: node.width,
-      height: node.height,
-      equals: LineTo.nodeEquals
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.fromAnchor !== this.props.fromAnchor) {
       this.fromAnchor = this.parseAnchor(this.props.fromAnchor)
@@ -133,41 +113,31 @@ export default class LineTo extends Component {
   }
 
   detect() {
-    const { within = '', from: fromBox, to: toBox } = this.props
+    const { from: fromId, to: toId } = this.props
 
-    if (!fromBox || !toBox) {
+    const from = document.getElementById(fromId)
+    const to = document.getElementById(toId)
+    if (!from || !to) {
       return false
     }
 
-    const anchor0 = this.fromAnchor
-    const anchor1 = this.toAnchor
+    return () => {
+      const fromBox = from.getBoundingClientRect()
+      const toBox = to.getBoundingClientRect()
 
-    let offsetX = window.pageXOffset
-    let offsetY = window.pageYOffset
+      const x0 = fromBox.x + fromBox.width * this.fromAnchor.x + window.pageXOffset
+      const y0 = fromBox.y + fromBox.height * this.fromAnchor.y + window.pageYOffset
+      const x1 = toBox.x + toBox.width * this.toAnchor.x + window.pageXOffset
+      const y1 = toBox.y + toBox.height * this.toAnchor.y + window.pageYOffset
 
-    if (within) {
-      const p = document.getElementsByClassName(within)[0]
-      if (!p) {
-        return false
-      }
-      const boxp = p.getBoundingClientRect()
-
-      offsetX += boxp.left
-      offsetY += boxp.top
+      return { x0: x0 - 1, y0, x1: x1 + 2, y1 }
     }
-
-    const x0 = fromBox.x + fromBox.width * anchor0.x + offsetX
-    const x1 = toBox.x + toBox.width * anchor1.x + offsetX
-    const y0 = fromBox.y + fromBox.height * anchor0.y + offsetY
-    const y1 = toBox.y + toBox.height * anchor1.y + offsetY
-
-    return { x0: x0 - 1, y0, x1: x1 + 2, y1 }
   }
 
   render() {
     const points = this.detect()
     return points ? (
-      <StyledLine {...points} {...this.props}/>
+      <StyledLine {...points()} refreshPoints={points} {...this.props}/>
     ) : null
   }
 }
@@ -197,25 +167,89 @@ export class Line extends PureComponent {
   constructor(props) {
     super(props)
     this.el = React.createRef()
+    this.handleMouse = this.handleMouse.bind(this)
+    this.handleResize = this.handleResize.bind(this)
+    this.pos = {
+      x0: this.props.x0,
+      y0: this.props.y0,
+      x1: this.props.x1,
+      y1: this.props.y1
+    }
+    this.dynX = null
+    this.dynY = null
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.pos = {
+      x0: nextProps.x0,
+      y0: nextProps.y0,
+      x1: nextProps.x1,
+      y1: nextProps.y1
+    }
   }
 
   componentDidMount() {
     // Append rendered DOM element to the container the
     // offsets were calculated for
     this.within.appendChild(this.el.current)
+    if (this.props.followMouse) {
+      this.within.addEventListener('mousemove', this.handleMouse)
+    }
+    window.addEventListener('resize', this.handleResize)
+    window.addEventListener('scroll', this.handleResize, true)
   }
 
   componentWillUnmount() {
     this.within.removeChild(this.el.current)
+    if (this.props.followMouse) {
+      this.within.removeEventListener('mousemove', this.handleMouse)
+    }
+    window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('scroll', this.handleResize)
+  }
+
+  handleMouse(evt) {
+    this.dynX = evt.pageX
+    this.dynY = evt.pageY - 4
+    this.recalculate()
+  }
+
+  handleResize() {
+    this.pos = this.props.refreshPoints()
+    this.recalculate()
+  }
+
+  recalculate() {
+    const { x0, y0, x1, y1 } = this.pos
+
+    const dy = (this.dynY || y1) - y0
+    const dx = (this.dynX || x1) - x0
+
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI
+    const length = Math.sqrt(dx * dx + dy * dy)
+
+    if (!this.el.current) {
+      console.log(this.el, "Reference disappeared 3:")
+      return
+    }
+
+    this.el.current.style.top = `${y0}px`
+    this.el.current.style.left = `${x0}px`
+    this.el.current.style.transform = `rotate(${angle}deg)`
+    this.el.current.style.width = `${length}px`
+    for (const elem of this.el.current.getElementsByTagName('div')) {
+      elem.style.width = `${length}px`
+    }
   }
 
   render() {
-    const { x0, y0, x1, y1, within = '' } = this.props
+    const { x0, y0, x1, y1 } = this.pos
+    const within = this.props.within || ''
 
-    this.within = within ? document.getElementsByClassName(within)[0] : document.body
+    this.within = within ? document.getElementById(within) : document.body
 
-    const dy = y1 - y0
-    const dx = x1 - x0
+    const dy = (this.dynY || y1) - y0
+    const dx = (this.dynX || x1) - x0
 
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
     const length = Math.sqrt(dx * dx + dy * dy)
@@ -259,13 +293,13 @@ export class Line extends PureComponent {
     // move the rendered DOM element after creation.
     return (
       <div className={this.props.classes.linetoPlaceholder}
-           data-link-from={this.props.from}
-           data-link-to={this.props.to} {...this.props.attributes}>
+        data-link-from={this.props.from}
+        data-link-to={this.props.to} {...this.props.attributes}>
         <div className={`${this.props.classes.linetoWrapper} ${this.props.active ? 'linetoActive' : ''}`}
-             ref={this.el} style={wrapperStyle}>
-          {this.props.active && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
+          ref={this.el} style={wrapperStyle}>
+          {(this.props.active && !this.props.followMouse) && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
           <div style={innerStyle}
-               className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
+            className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
           </div>
         </div>
       </div>
