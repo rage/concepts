@@ -30,11 +30,11 @@ const useStyles = makeStyles(theme => ({
   tableCell: {
     width: `${cellDimension.width}px`,
     height: `${cellDimension.height}px`,
-    "&:hover": {
-      outline: "50px solid rgba(0, 0, 0, 0.05)",
-      outlineOffset: "-50px",
+    '&:hover': {
+      outline: '50px solid rgba(0, 0, 0, 0.05)',
+      outlineOffset: '-50px',
       cursor: 'pointer',
-      "& + div": {
+      '& + div': {
         display: 'block'
       }
     },
@@ -45,10 +45,10 @@ const useStyles = makeStyles(theme => ({
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
-    minHeight: "100%",
+    minHeight: '100%',
   },
   headerText: {
-    minWidth: `100%`,
+    minWidth: '100%',
     minHeight: `${cellDimension.height}px`,
     textOverflow: 'ellipsis'
   },
@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
   popperWrap: {
     position: 'absolute',
     display: 'none',
-    "&:hover": {
+    '&:hover': {
     }
   },
   progress: {
@@ -124,7 +124,7 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
     .filter(onlyUnique)
 
   const mapToGrad = (amount) => {
-    const colorStrength = ["#fffff", ...Object.values(pink).slice(0, 9)]
+    const colorStrength = ['#fffff', ...Object.values(pink).slice(0, 9)]
     let val = (8 / maxGradVal) * (amount)
     return colorStrength[Math.ceil(val)]
   }
@@ -136,11 +136,11 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
   return (
     <>
       <td key={`table-${toCourse.id}-${fromCourse.id}`} className={classes.tableCellContainer}>
-      <div className={classes.tableCell} style={{
-        backgroundColor: mapToGrad(conceptsLinked)
-      }} onClick={navigateToMapper(toCourse.id)}>
+        <div className={classes.tableCell} style={{
+          backgroundColor: mapToGrad(conceptsLinked)
+        }} onClick={navigateToMapper(toCourse.id)}>
 
-      </div>
+        </div>
         {
           concepts.length !== 0 &&
           <div className={classes.popperWrap}>

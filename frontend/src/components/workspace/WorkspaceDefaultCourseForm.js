@@ -174,7 +174,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
               error ?
                 <span>
                   Something went wrong
-              </span>
+                </span>
                 : null
             }
           </FormHelperText>

@@ -53,10 +53,10 @@ export async function apiAuthentication(accessToken) {
 
 export async function userDetails(accessToken) {
   const res = await axios.get(
-    `https://tmc.mooc.fi/api/v8/users/current?show_user_fields=true`,
+    'https://tmc.mooc.fi/api/v8/users/current?show_user_fields=true',
     {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
     },

@@ -54,7 +54,7 @@ const CourseCreationDialog = ({ state, handleClose, createCourse, workspaceId })
       <DialogContent>
         <DialogContentText>
           Courses can be connected to other courses as prerequisites.
-          </DialogContentText>
+        </DialogContentText>
         <TextField
           autoFocus
           margin="dense"
@@ -70,10 +70,10 @@ const CourseCreationDialog = ({ state, handleClose, createCourse, workspaceId })
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
-          </Button>
+        </Button>
         <Button onClick={handleCreate} color="primary">
           Create
-          </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )

@@ -37,11 +37,11 @@ const LandingView = (props) => {
         <Container maxWidth="sm">
           <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
             Curriculum mapper
-            </Typography>
+          </Typography>
           <Typography variant="h5" align="center" color="textSecondary" paragraph>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
             ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-            </Typography>
+          </Typography>
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify="center">
               <Grid item>
@@ -52,7 +52,7 @@ const LandingView = (props) => {
               <Grid item>
                 <Button variant="outlined" color="primary" onClick={(e) => alert('Work in progress')}>
                   Create guest workspace
-                  </Button>
+                </Button>
               </Grid>
             </Grid>
           </div>

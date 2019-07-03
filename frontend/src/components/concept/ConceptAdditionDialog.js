@@ -78,10 +78,10 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
-      </Button>
+        </Button>
         <Button onClick={handleConceptAdding} color="primary">
           Add concept
-      </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )

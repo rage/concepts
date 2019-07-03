@@ -70,10 +70,10 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
-          </Button>
+        </Button>
         <Button onClick={handleCreate} color="primary">
           Create
-          </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )
