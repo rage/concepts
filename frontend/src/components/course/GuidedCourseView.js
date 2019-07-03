@@ -147,7 +147,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
           )) : null
       ))}
       {addingLink && <LineTo key='concept-link-creating' within='course-view' active={true}
-        from={`${addingLink.type}-${addingLink.id}`} to='root'
+        from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
         followMouse={true}/>}
     </React.Fragment>
   )
