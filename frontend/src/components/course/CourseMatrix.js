@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles'
 
-import { FixedSizeGrid } from 'react-window';
+import { FixedSizeGrid } from 'react-window'
 
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
@@ -24,16 +24,16 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: '#9ecae1',
-    "&:hover": {
+    '&:hover': {
       backgroundColor: '#9ecae1'
     },
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#9ecae1'
     }
   },
   inactive: {
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   }
@@ -41,7 +41,7 @@ const styles = theme => ({
 
 
 const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
-  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={checked ? "primary" : "secondary"}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
+  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={checked ? 'primary' : 'secondary'}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
 )
 
 const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions }) => {
@@ -50,14 +50,14 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
     return allConcepts.concat(concepts)}
   , [])
 
-  const headerGrid = React.createRef();
+  const headerGrid = React.createRef()
   const sideGrid = React.createRef()
 
-  const rowCount = courseAndPrerequisites.concepts.length;
-  const columnWidth = 110;
-  const rowHeight = 70;
+  const rowCount = courseAndPrerequisites.concepts.length
+  const columnWidth = 110
+  const rowHeight = 70
 
-  const headerHeight = 160;
+  const headerHeight = 160
   const sideHeaderWidth = 250
   const height = 470
 
@@ -79,7 +79,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
         </span>
       </div >
     </div>
-  );
+  )
 
   const RowHeaderCell = ({ data, rowIndex, style }) => (
     <div style={style}>
@@ -91,7 +91,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
         {data[rowIndex].name}
       </div>
     </div>
-  );
+  )
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
     update: deleteConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
@@ -110,17 +110,17 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
             from: from.id, to: to.id, workspaceId
           },
           optimisticResponse: {
-            __typename: "Mutation",
+            __typename: 'Mutation',
             createConceptLink: {
               id: `${Math.random() * 100}`,
               official: false,
-              __typename: "ConceptLink",
+              __typename: 'ConceptLink',
               to: {
-                __typename: "Concept",
+                __typename: 'Concept',
                 id: to.id
               },
               from: {
-                __typename: "Concept",
+                __typename: 'Concept',
                 id: from.id
               }
             }
@@ -137,10 +137,10 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
             id: link.id
           },
           optimisticResponse: {
-            __typename: "Mutation",
+            __typename: 'Mutation',
             deleteConceptLink: {
               id: link.id,
-              __typename: "ConceptLink"
+              __typename: 'ConceptLink'
             }
           }
         })

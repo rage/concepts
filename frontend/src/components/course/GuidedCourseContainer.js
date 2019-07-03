@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles'
 import Course from './Course'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -50,9 +50,9 @@ const styles = theme => ({
   }
 })
 
-const CONCEPT_ADDING_INSTRUCTION = "Add concept as a learning objective in the left column."
-const COURSE_ADDING_INSTRUCTION = "To add prerequisites, open the drawer on the right."
-const CONCEPT_LINKING_INSTRUCTION = "Switch on a learning objective on the left to start linking prerequisites."
+const CONCEPT_ADDING_INSTRUCTION = 'Add concept as a learning objective in the left column.'
+const COURSE_ADDING_INSTRUCTION = 'To add prerequisites, open the drawer on the right.'
+const CONCEPT_LINKING_INSTRUCTION = 'Switch on a learning objective on the left to start linking prerequisites.'
 
 const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, workspaceId, courseId }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })

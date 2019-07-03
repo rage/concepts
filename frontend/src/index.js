@@ -10,37 +10,37 @@ import { LoginStateProvider, ErrorStateProvider } from './store'
 
 const loginReducer = (state, action) => {
   switch (action.type) {
-    case 'login':
-      return {
-        ...state,
-        loggedIn: true,
-        user: action.data
-      }
-    case 'logout':
-      return {
-        ...state,
-        loggedIn: false,
-        user: {}
-      }
-    default:
-      return state
+  case 'login':
+    return {
+      ...state,
+      loggedIn: true,
+      user: action.data
+    }
+  case 'logout':
+    return {
+      ...state,
+      loggedIn: false,
+      user: {}
+    }
+  default:
+    return state
   }
 }
 
 const errorReducer = (state, action) => {
   switch (action.type) {
-    case 'setError':
-      return {
-        ...state,
-        error: action.data
-      }
-    case 'clearError':
-      return {
-        ...state,
-        error: ''
-      }
-    default:
-      return state
+  case 'setError':
+    return {
+      ...state,
+      error: action.data
+    }
+  case 'clearError':
+    return {
+      ...state,
+      error: ''
+    }
+  default:
+    return state
   }
 }
 

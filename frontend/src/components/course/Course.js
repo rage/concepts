@@ -57,7 +57,7 @@ const styles = theme => ({
   button: {
     width: '100%'
   }
-});
+})
 
 const Course = ({
   classes, // UI

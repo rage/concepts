@@ -6,7 +6,7 @@ require('dotenv').config({
 
 const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
-const express = require("express")
+const express = require('express')
 
 const { authenticate } = require('./middleware/authentication')
 

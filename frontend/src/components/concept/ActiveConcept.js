@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 import Switch from '@material-ui/core/Switch'
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
@@ -23,23 +23,23 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: '#9ecae1',
-    "&:hover": {
+    '&:hover': {
       backgroundColor: '#9ecae1'
     },
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#9ecae1'
     }
   },
   inactive: {
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   },
   listItem: {
     width: '100%',
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   },
@@ -108,7 +108,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
                 >
                   <MoreVertIcon />
                 </IconButton>
-                  : null 
+                : null 
               }
               <Menu
                 id="simple-menu"

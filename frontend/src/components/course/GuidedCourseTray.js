@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 
 // Card
 import Card from '@material-ui/core/Card'
@@ -13,7 +13,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip'
 import TextField from '@material-ui/core/TextField'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
@@ -50,7 +50,7 @@ const styles = theme => ({
   listItem: {
     width: '100%',
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   },
@@ -221,4 +221,4 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
   )
 }
 
-export default withStyles(styles)(GuidedCourseTray);
+export default withStyles(styles)(GuidedCourseTray)
