@@ -185,6 +185,7 @@ const ActiveCourse = ({
                 openConceptDialog={handleConceptOpen}
                 openConceptEditDialog={handleConceptEditOpen}
                 toggleConcept={toggleConcept}
+                workspaceId={workspaceId}
               />
             )}
           </List>

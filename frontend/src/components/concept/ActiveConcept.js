@@ -16,6 +16,9 @@ import LensIcon from '@material-ui/icons/Lens'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMutation } from 'react-apollo-hooks'
+import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
+import { createConceptLinkUpdate } from '../../apollo/update'
 
 const styles = theme => ({
   conceptName: {
@@ -52,7 +55,7 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, deleteConcept, openConceptEditDialog }) => {
+const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, deleteConcept, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
@@ -88,9 +91,23 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
     openConceptEditDialog(id, name, description)()
   }
 
+  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+    update: createConceptLinkUpdate(concept.courses[0].id, workspaceId)
+  })
+
   const onClick = evt => {
     if (addingLink) {
-      alert('Adding links by clicking on prerequisite first is not yet implemented')
+      setAddingLink(null)
+      createConceptLink({
+        variables: {
+          to: concept.id,
+          from: addingLink.id,
+          workspaceId
+        }
+      }).catch(() => errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      }))
     } else {
       setAddingLink({
         id: concept.id,
