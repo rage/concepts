@@ -209,8 +209,8 @@ export class Line extends PureComponent {
   }
 
   handleMouse(evt) {
-    this.dynX = evt.pageX
-    this.dynY = evt.pageY - 4
+    this.dynX = evt.pageX - 1
+    this.dynY = evt.pageY - 5
     this.recalculate()
   }
 
@@ -295,7 +295,7 @@ export class Line extends PureComponent {
       <div className={this.props.classes.linetoPlaceholder}
         data-link-from={this.props.from}
         data-link-to={this.props.to} {...this.props.attributes}>
-        <div className={`${this.props.classes.linetoWrapper} ${this.props.active ? 'linetoActive' : ''}`}
+        <div className={`${this.props.classes.linetoWrapper} ${this.props.active && !this.props.followMouse ? 'linetoActive' : ''}`}
           ref={this.el} style={wrapperStyle}>
           {(this.props.active && !this.props.followMouse) && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
           <div style={innerStyle}
