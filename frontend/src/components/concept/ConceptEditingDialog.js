@@ -17,14 +17,14 @@ const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const errorDispatch = useErrorStateValue()[1]
-  
+
   useEffect(() => {
     setName(defaultName)
     setDescription(defaultDescription)
   }, [defaultDescription, defaultName])
 
   const handleConceptUpdate = async () => {
-    let variables = { id: state.id }
+    let variables = { id: state.conceptId }
     let shouldUpdate = false
     if (defaultName !== name) {
       variables.name = name

@@ -113,9 +113,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     handleMenuClose()
   }
 
-  const handleEditConcept = (id, name, description) => () => {
+  const handleEditConcept = (id, name, description, courseId) => () => {
     handleMenuClose()
-    openConceptEditDialog(id, name, description)()
+    openConceptEditDialog(id, name, description, courseId)()
   }
 
   return (
@@ -153,7 +153,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
               open={Boolean(state.anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
+              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description, course.id)}>Edit</MenuItem>
               <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
             </Menu>
           </React.Fragment>

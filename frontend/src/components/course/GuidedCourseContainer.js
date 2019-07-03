@@ -82,7 +82,7 @@ const GuidedCourseContainer = ({
 }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
-  const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
+  const [conceptEditState, setConceptEditState] = useState({ open: false, conceptId: '', name: '', description: '', courseId: '' })
 
   const [conceptInfoState, setConceptInfoState] = useState(false)
   const [courseInfoState, setCourseInfoState] = useState(false)
@@ -116,7 +116,7 @@ const GuidedCourseContainer = ({
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: updateConceptUpdate(activeCourse.id, workspaceId, conceptEditState.id)
+    update: updateConceptUpdate(activeCourse.id, workspaceId, conceptEditState.courseId)
     // refetchQueries: [{ query: COURSE_PREREQUISITES }]
   })
 
@@ -156,11 +156,11 @@ const GuidedCourseContainer = ({
   }
 
   const handleConceptEditClose = () => {
-    setConceptEditState({ open: false, id: '', name: '', description: '' })
+    setConceptEditState({ open: false, conceptId: '', name: '', description: '', courseId: '' })
   }
 
-  const handleConceptEditOpen = (id, name, description) => () => {
-    setConceptEditState({ open: true, id, name, description })
+  const handleConceptEditOpen = (conceptId, name, description, courseId) => () => {
+    setConceptEditState({ open: true, conceptId, name, description, courseId })
   }
 
   const handleConceptInfoClose = () => {
