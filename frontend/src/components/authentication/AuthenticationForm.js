@@ -40,7 +40,7 @@ const AuthenticationForm = ({ history, classes }) => {
   const dispatch = useLoginStateValue()[1]
 
   const authenticate = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const response = await signIn({ email, password })
       dispatch({
@@ -54,7 +54,7 @@ const AuthenticationForm = ({ history, classes }) => {
       }, 4000)
     }
     if (isSignedIn()) {
-      history.push("/user")
+      history.push('/user')
     }
   }
 
@@ -102,7 +102,7 @@ const AuthenticationForm = ({ history, classes }) => {
               error ?
                 <span>
                   Invalid username or password.
-              </span>
+                </span>
                 : null
             }
           </FormHelperText>

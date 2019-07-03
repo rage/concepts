@@ -35,16 +35,16 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: '#9ecae1',
-    "&:hover": {
+    '&:hover': {
       backgroundColor: '#9ecae1'
     },
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#9ecae1'
     }
   },
   inactive: {
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   }

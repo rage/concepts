@@ -12,9 +12,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 import Tooltip from '@material-ui/core/Tooltip'
 
-import LensIcon from "@material-ui/icons/Lens"
-
-import LineTo from "../common/LineTo"
+import LensIcon from '@material-ui/icons/Lens'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
@@ -29,23 +27,23 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: '#9ecae1',
-    "&:hover": {
+    '&:hover': {
       backgroundColor: '#9ecae1'
     },
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#9ecae1'
     }
   },
   inactive: {
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   },
   listItem: {
     width: '100%',
     backgroundColor: '#fff',
-    "&:focus": {
+    '&:focus': {
       backgroundColor: '#fff'
     }
   },

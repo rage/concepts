@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid'
 
 // Card
 import Card from '@material-ui/core/Card'
@@ -58,7 +58,7 @@ const styles = theme => ({
   button: {
     width: '100%'
   }
-});
+})
 
 const ActiveCourse = ({
   classes, // UI

@@ -31,14 +31,14 @@ const getUser = async (token, context, prisma) => {
     decodedToken = jwt.verify(token, process.env.SECRET)
   } catch (e) {
     console.log(e)
-    throw new AuthenticationError("Bad token")
+    throw new AuthenticationError('Bad token')
   }
 
   let user = null
   if (decodedToken && decodedToken.id) {
     user = await prisma.user({ id: decodedToken.id })
   } else {
-    throw new AuthenticationError("Invalid token: No ID found")
+    throw new AuthenticationError('Invalid token: No ID found')
   }
 
   if (!user) {
@@ -46,17 +46,17 @@ const getUser = async (token, context, prisma) => {
   } else {
     context.user = user
     switch (user.role) {
-      case 'ADMIN':
-        context.role = Role.ADMIN
-        break
-      case 'STUDENT':
-        context.role = Role.STUDENT
-        break
-      case 'STAFF':
-        context.role = Role.STAFF
-        break
-      default:
-        context.role = Role.GUEST
+    case 'ADMIN':
+      context.role = Role.ADMIN
+      break
+    case 'STUDENT':
+      context.role = Role.STUDENT
+      break
+    case 'STAFF':
+      context.role = Role.STAFF
+      break
+    default:
+      context.role = Role.GUEST
     }
   }
 }

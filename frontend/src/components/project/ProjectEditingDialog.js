@@ -79,10 +79,10 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
-          </Button>
+        </Button>
         <Button onClick={handleEdit} color="primary">
           Save
-          </Button>
+        </Button>
       </DialogActions>
     </Dialog>
   )

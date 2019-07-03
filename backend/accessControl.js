@@ -9,7 +9,7 @@ const Role = {
 
 const checkUser = (ctx, userId) => {
   if (ctx.user.id !== userId) {
-    throw new ForbiddenError("Unauthorised user")
+    throw new ForbiddenError('Unauthorised user')
   }
   return true
 }
@@ -29,7 +29,7 @@ const checkAccess = (ctx, {
   if (ctx.role === Role.STUDENT && allowStudent) return true
   if (ctx.role === Role.STAFF && allowStaff) return true
   if (ctx.role === Role.GUEST && allowGuest) return true
-  throw new ForbiddenError("Access denied")
+  throw new ForbiddenError('Access denied')
 }
 
 module.exports = { Role, checkAccess, checkUser }

@@ -25,11 +25,11 @@ import CourseHeatmap from './components/course/CourseHeatmap'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
 import { ALL_COURSES } from './graphql/Query/Course'
-import { Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core'
 
 import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
   error: {

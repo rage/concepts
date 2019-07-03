@@ -30,7 +30,7 @@ const styles = {
   title: {
     flexGrow: 1
   }
-};
+}
 
 const AuthenticationIcon = withRouter(({ history }) => {
   const [{ loggedIn }, dispatch] = useLoginStateValue()
@@ -46,11 +46,11 @@ const AuthenticationIcon = withRouter(({ history }) => {
   }
 
   const navigateToLogin = () => {
-    history.push("/auth")
+    history.push('/auth')
   }
 
   const navigateToAccount = () => {
-    history.push("/user")
+    history.push('/user')
     handleAnchorClose()
   }
 
@@ -59,7 +59,7 @@ const AuthenticationIcon = withRouter(({ history }) => {
     dispatch({
       type: 'logout'
     })
-    history.push("/")
+    history.push('/')
     handleAnchorClose()
   }
 
@@ -96,10 +96,10 @@ const AuthenticationIcon = withRouter(({ history }) => {
           </Menu>
         </div>
       ) : (
-          <Button onClick={navigateToLogin} color="inherit">
+        <Button onClick={navigateToLogin} color="inherit">
             Login
-          </Button>
-        )
+        </Button>
+      )
       }
     </>
   )
@@ -124,4 +124,4 @@ const NavBar = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(NavBar);
+export default withStyles(styles)(NavBar)
