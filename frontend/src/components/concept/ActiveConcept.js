@@ -23,7 +23,7 @@ const styles = theme => ({
     wordBreak: 'break-word'
   },
   conceptCircle: {
-    zIndex: 2,
+    zIndex: 2
   },
   active: {
     backgroundColor: '#9ecae1',
@@ -49,7 +49,7 @@ const styles = theme => ({
   },
   otherNameActive: {
     color: 'grey'
-  },
+  }
 })
 
 const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCircleRef, deleteConcept, openConceptEditDialog }) => {
@@ -112,7 +112,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCir
                 >
                   <MoreVertIcon />
                 </IconButton>
-                  : null
+                : null
               }
               <Menu
                 id="simple-menu"

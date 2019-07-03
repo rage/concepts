@@ -18,7 +18,7 @@ export const isAdmin = () => {
 
 export const signIn = async ({
   email,
-  password,
+  password
 }) => {
   const res = await tmcClient.authenticate({ username: email, password })
   const apiResponse = await apiAuthentication(res.accessToken)
@@ -57,8 +57,8 @@ export async function userDetails(accessToken) {
     {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
+        Authorization: `Bearer ${accessToken}`
+      }
     },
   )
   return res.data

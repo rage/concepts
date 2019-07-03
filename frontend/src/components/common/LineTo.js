@@ -1,10 +1,10 @@
-import React, {Component, PureComponent} from "react"
+import React, {Component, PureComponent} from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = {x: 0.5, y: 0.5}
-const defaultInnerColor = "#f00"
-const defaultInnerStyle = "solid"
+const defaultInnerColor = '#f00'
+const defaultInnerStyle = 'solid'
 const defaultInnerWidth = 1
 const defaultWrapperWidth = 11
 
@@ -19,7 +19,7 @@ export default class LineTo extends Component {
 
   componentDidMount() {
     this.delay = this.parseDelay(this.props.delay)
-    if (typeof this.delay !== "undefined") {
+    if (typeof this.delay !== 'undefined') {
       this.deferUpdate(this.delay)
     }
   }
@@ -32,7 +32,7 @@ export default class LineTo extends Component {
   static copyNode(node) {
     if (!node) {
       return {
-        equals: () => false,
+        equals: () => false
       }
     }
     return {
@@ -40,7 +40,7 @@ export default class LineTo extends Component {
       y: node.y,
       width: node.width,
       height: node.height,
-      equals: LineTo.nodeEquals,
+      equals: LineTo.nodeEquals
     }
   }
 
@@ -55,7 +55,7 @@ export default class LineTo extends Component {
       this.positionChanged = true
     }
     this.delay = this.parseDelay(nextProps.delay)
-    if (typeof this.delay !== "undefined") {
+    if (typeof this.delay !== 'undefined') {
       this.deferUpdate(this.delay)
     }
   }
@@ -88,9 +88,9 @@ export default class LineTo extends Component {
   }
 
   parseDelay(value) {
-    if (typeof value === "undefined") {
+    if (typeof value === 'undefined') {
       return value
-    } else if (typeof value === "boolean" && value) {
+    } else if (typeof value === 'boolean' && value) {
       return 0
     }
     const delay = parseInt(value, 10)
@@ -103,20 +103,20 @@ export default class LineTo extends Component {
   parseAnchorText(value) {
     // Try to infer the relevant axis.
     switch (value) {
-      case "top":
-        return {y: 0}
-      case "left":
-        return {x: 0}
-      case "middle":
-        return {y: 0.5}
-      case "center":
-        return {x: 0.5}
-      case "bottom":
-        return {y: 1}
-      case "right":
-        return {x: 1}
-      default:
-        return {}
+    case 'top':
+      return {y: 0}
+    case 'left':
+      return {x: 0}
+    case 'middle':
+      return {y: 0.5}
+    case 'center':
+      return {x: 0.5}
+    case 'bottom':
+      return {y: 1}
+    case 'right':
+      return {x: 1}
+    default:
+      return {}
     }
   }
 
@@ -124,19 +124,19 @@ export default class LineTo extends Component {
     if (!value) {
       return defaultAnchor
     }
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       return value
     }
-    const parts = value.split(" ")
+    const parts = value.split(' ')
     if (parts.length > 2) {
-      throw new Error("LinkTo anchor format is \"<x> <y>\"")
+      throw new Error('LinkTo anchor format is "<x> <y>"')
     }
     const [x, y] = parts
     return Object.assign({}, defaultAnchor, this.parseAnchorText(x), this.parseAnchorText(y))
   }
 
   detect() {
-    const {within = "", from: fromBox, to: toBox} = this.props
+    const {within = '', from: fromBox, to: toBox} = this.props
 
     if (!fromBox || !toBox) {
       return false
@@ -176,22 +176,22 @@ export default class LineTo extends Component {
 }
 
 const lineStyles = theme => ({
-	linetoHover: {
-	  "&:hover": {
-	    backgroundColor: "rgba(255, 0, 0, 0.25)",
-    },
+  linetoHover: {
+	  '&:hover': {
+	    backgroundColor: 'rgba(255, 0, 0, 0.25)'
+    }
   },
   linetoWrapper: {
-	  "&:not(.linetoActive)": {
-	    pointerEvents: "none",
-    },
+	  '&:not(.linetoActive)': {
+	    pointerEvents: 'none'
+    }
   },
   linetoLine: {
-	  position: "absolute",
-	  pointerEvents: "none",
-    borderTop: "1px solid rgba(117, 117, 117, 0.05)",
-    "&.linetoActive": {
-	    borderTopColor: "red",
+	  position: 'absolute',
+	  pointerEvents: 'none',
+    borderTop: '1px solid rgba(117, 117, 117, 0.05)',
+    '&.linetoActive': {
+	    borderTopColor: 'red'
     }
   }
 })
@@ -213,7 +213,7 @@ export class Line extends PureComponent {
   }
 
   render() {
-    const {x0, y0, x1, y1, within = ""} = this.props
+    const {x0, y0, x1, y1, within = ''} = this.props
 
     this.within = within ? document.getElementsByClassName(within)[0] : document.body
 
@@ -225,11 +225,11 @@ export class Line extends PureComponent {
     const wrapperWidth = this.props.wrapperWidth || defaultWrapperWidth
 
     const commonStyle = {
-      position: "absolute",
+      position: 'absolute',
       width: `${length}px`,
       zIndex: Number.isFinite(this.props.zIndex)
         ? String(this.props.zIndex)
-        : "1",
+        : '1'
     }
 
     const wrapperStyle = Object.assign({}, commonStyle, {
@@ -238,37 +238,37 @@ export class Line extends PureComponent {
       height: `${wrapperWidth}px`,
       transform: `rotate(${angle}deg)`,
       // Rotate around (x0, y0)
-      transformOrigin: "0 0",
+      transformOrigin: '0 0'
     })
 
     const innerStyle = Object.assign({}, commonStyle, {
       top: `${Math.floor(wrapperWidth / 2)}px`,
-      left: 0,
+      left: 0
     })
 
-		const hoverAreaWidth = 11;
-    const hoverAreaOffset = 10;
+    const hoverAreaWidth = 11
+    const hoverAreaOffset = 10
 
-		const hoverAreaStyle = Object.assign({}, commonStyle, {
-			position: "relative",
-			width: `${length - hoverAreaOffset*2}px`,
-			height: `${hoverAreaWidth}px`,
-			color: "transparent",
-			transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth/2)}px)`,
-		})
+    const hoverAreaStyle = Object.assign({}, commonStyle, {
+      position: 'relative',
+      width: `${length - hoverAreaOffset*2}px`,
+      height: `${hoverAreaWidth}px`,
+      color: 'transparent',
+      transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth/2)}px)`
+    })
 
     // We need a wrapper element to prevent an exception when then
     // React component is removed. This is because we manually
     // move the rendered DOM element after creation.
     return (
       <div className={this.props.classes.linetoPlaceholder}
-           data-link-from={this.props.from}
-           data-link-to={this.props.to} {...this.props.attributes}>
-        <div className={`${this.props.classes.linetoWrapper} ${this.props.active ? "linetoActive" : ""}`}
-             ref={this.el} style={wrapperStyle}>
+        data-link-from={this.props.from}
+        data-link-to={this.props.to} {...this.props.attributes}>
+        <div className={`${this.props.classes.linetoWrapper} ${this.props.active ? 'linetoActive' : ''}`}
+          ref={this.el} style={wrapperStyle}>
           {this.props.active && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
-					<div style={innerStyle} className={`${this.props.classes.linetoLine} ${this.props.active ? "linetoActive" : ""}`}>
-					</div>
+          <div style={innerStyle} className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
+          </div>
         </div>
       </div>
     )

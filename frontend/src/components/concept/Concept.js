@@ -11,13 +11,13 @@ import {
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import LensIcon from "@material-ui/icons/Lens"
+import LensIcon from '@material-ui/icons/Lens'
 
 import {
   deleteConceptLinkUpdate,
@@ -146,7 +146,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, c
       id={'concept-' + concept.id}
     >
       <ListItemIcon>
-        <IconButton style={{padding: "4px"}}>
+        <IconButton style={{padding: '4px'}}>
           <LensIcon ref={conceptCircleRef} id={`concept-circle-${concept.id}`}/>
         </IconButton>
       </ListItemIcon>

@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
       '& + div': {
         display: 'block'
       }
-    },
+    }
     
   },
   tableCellContainer: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
-    minHeight: '100%',
+    minHeight: '100%'
   },
   headerText: {
     minWidth: '100%',

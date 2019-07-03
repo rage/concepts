@@ -19,16 +19,16 @@ const styles = theme => ({
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2)
-  },
+  }
 })
 
 const AuthenticationForm = ({ history, classes }) => {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from "react"
+import React, {useState, useEffect, useCallback} from 'react'
 import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -23,8 +23,8 @@ import {
   createCourseUpdate,
   updateCourseUpdate
 } from '../../apollo/update'
-import Tooltip from "@material-ui/core/Tooltip"
-import LineTo from "../common/LineTo"
+import Tooltip from '@material-ui/core/Tooltip'
+import LineTo from '../common/LineTo'
 const styles = theme => ({
 })
 
@@ -59,10 +59,10 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   useEffect(() => {
     const handleResize = debounce(() => setWidth(window.innerWidth), 100)
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize)
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 
@@ -93,7 +93,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
         x: box.x,
         y: box.y,
         width: box.width,
-        height: box.height,
+        height: box.height
       }
     }
   })
@@ -185,9 +185,9 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
       {courseQuery.data.courseById && courseQuery.data.courseById.concepts.map(concept => (
         concept.linksToConcept.map(link => (
           <LineTo key={`concept-link-${concept.id}-${link.from.id}`} within="App" delay={1}
-                  active={activeConceptIds.includes(concept.id)}
-                  from={conceptCircles[`concept-circle-active-${concept.id}`]} to={conceptCircles[`concept-circle-${link.from.id}`]}
-                  redrawLines={redrawLines} wrapperWidth={1} fromAnchor="right middle" toAnchor="left middle"/>
+            active={activeConceptIds.includes(concept.id)}
+            from={conceptCircles[`concept-circle-active-${concept.id}`]} to={conceptCircles[`concept-circle-${link.from.id}`]}
+            redrawLines={redrawLines} wrapperWidth={1} fromAnchor="right middle" toAnchor="left middle"/>
         ))
       ))}
     </React.Fragment>
