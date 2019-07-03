@@ -14,6 +14,7 @@ export default class LineTo extends Component {
     this.toAnchor = this.parseAnchor(this.props.toAnchor)
     this.delay = this.parseDelay(this.props.delay)
     this.positionChanged = true
+    this.prevRedrawLines = 0
   }
 
   componentDidMount() {
@@ -60,7 +61,8 @@ export default class LineTo extends Component {
   }
 
   shouldComponentUpdate() {
-    if (this.props.redrawLines) {
+    if (this.props.redrawLines !== this.prevRedrawLines) {
+      this.prevRedrawLines = this.props.redrawLines
       return true
     }
     if (this.positionChanged) {
@@ -179,8 +181,18 @@ const lineStyles = theme => ({
 	    backgroundColor: "rgba(255, 0, 0, 0.25)",
     },
   },
+  linetoWrapper: {
+	  "&:not(.linetoActive)": {
+	    pointerEvents: "none",
+    },
+  },
   linetoLine: {
-    borderTop: "1px solid red",
+	  position: "absolute",
+	  pointerEvents: "none",
+    borderTop: "1px solid rgba(117, 117, 117, 0.05)",
+    "&.linetoActive": {
+	    borderTopColor: "red",
+    }
   }
 })
 
@@ -221,7 +233,6 @@ export class Line extends PureComponent {
     }
 
     const wrapperStyle = Object.assign({}, commonStyle, {
-      position: "absolute",
       top: `${y0}px`,
       left: `${x0}px`,
       height: `${wrapperWidth}px`,
@@ -231,12 +242,8 @@ export class Line extends PureComponent {
     })
 
     const innerStyle = Object.assign({}, commonStyle, {
-      position: "absolute",
       top: `${Math.floor(wrapperWidth / 2)}px`,
       left: 0,
-      borderTopColor: this.props.innerColor || defaultInnerColor,
-      borderTopStyle: this.props.innerStyle || defaultInnerStyle,
-      borderTopWidth: this.props.innerWidth || defaultInnerWidth,
     })
 
 		const hoverAreaWidth = 11;
@@ -257,9 +264,10 @@ export class Line extends PureComponent {
       <div className={this.props.classes.linetoPlaceholder}
            data-link-from={this.props.from}
            data-link-to={this.props.to} {...this.props.attributes}>
-        <div className={this.props.classes.linetoWrapper} ref={this.el} style={wrapperStyle}>
-          {this.props.selectable && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
-					<div style={innerStyle} className={this.props.classes.linetoLine}>
+        <div className={`${this.props.classes.linetoWrapper} ${this.props.active ? "linetoActive" : ""}`}
+             ref={this.el} style={wrapperStyle}>
+          {this.props.active && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
+					<div style={innerStyle} className={`${this.props.classes.linetoLine} ${this.props.active ? "linetoActive" : ""}`}>
 					</div>
         </div>
       </div>
