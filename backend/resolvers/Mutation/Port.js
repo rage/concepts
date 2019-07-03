@@ -2,7 +2,7 @@ const { checkAccess } = require('../../accessControl')
 
 /**
  * Returns false if there are missing obligatory fields
- * @param {array} courses Array of courses in json format
+ * @param {json} data JSON to be validated
  */
 const validateData= (data) => {
   // Validate workspace from json
@@ -15,7 +15,6 @@ const validateData= (data) => {
   
   data['courses'].forEach(course => {
     if (course['name'] === undefined) return false
-    // if (course['code'] === undefined) return false
     if (course['concepts'] !== undefined &&
         typeof course['concepts'][Symbol.iterator] === 'function') {
       course['concepts'].forEach(concept => {
@@ -41,7 +40,6 @@ const PortMutations = {
       console.log('Error parsing JSON: ', err)
     }
 
-    console.log(json)
     // Create or find workspace
     let workspace
     if (json['workspace'] !== undefined) {
@@ -65,7 +63,7 @@ const PortMutations = {
     let result = await courses.map(async course => {
       let courseObj = await context.prisma.createCourse({
         name: course['name'],
-        createdBy: { connect: { id: context.user.id } },
+        createdBy: { connect: { id: context.user.id }},
         workspace: { connect: { id: workspace.id }}
       })
 
@@ -93,9 +91,10 @@ const PortMutations = {
         if (concept['official'] !== undefined) conceptData['official'] = concept['official']
         await context.prisma.createConcept(conceptData)
       })
+
       return courseObj
     })
-    
+
     return result
   }
 }
