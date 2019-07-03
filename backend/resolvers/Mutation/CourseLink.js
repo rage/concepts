@@ -1,8 +1,16 @@
 const { checkAccess } = require('../../accessControl')
 
 const CourseQueries = {
-  createCourseLink(root, args, context) {
+  async createCourseLink(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
+    const linkExists = await context.prisma.$exists.courseLink({
+      AND: [
+        { workspace: { id: args.workspaceId } },
+        { to: { id: args.to } },
+        { from: { id: args.from } }
+      ]
+    })
+    if (linkExists) return null
     return args.official !== undefined
       ? context.prisma.createCourseLink({
         to: {

@@ -1,8 +1,16 @@
 const { checkAccess } = require('../../accessControl')
 
 const ConceptLink = {
-  createConceptLink(root, { official, to, from, workspaceId }, context) {
+  async createConceptLink(root, { official, to, from, workspaceId }, context) {
     checkAccess(context, { allowStudent: true, allowStaff: true })
+    const linkExists = await context.prisma.$exists.conceptLink({
+      AND: [
+        { workspace: { id: workspaceId } },
+        { to: { id: to } },
+        { from: { id: from } }
+      ]
+    })
+    if (linkExists) return null
     let data = {
       to: {
         connect: { id: to }
