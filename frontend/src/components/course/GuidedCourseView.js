@@ -14,7 +14,6 @@ import GuidedCourseTray from './GuidedCourseTray'
 import ActiveCourse from './ActiveCourse'
 
 import Fab from '@material-ui/core/Fab'
-// import AddIcon from '@material-ui/icons/Add'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
@@ -23,7 +22,6 @@ import {
   createCourseUpdate,
   updateCourseUpdate
 } from '../../apollo/update'
-import Tooltip from '@material-ui/core/Tooltip'
 import LineTo from '../common/LineTo'
 const styles = theme => ({
 })
@@ -39,26 +37,54 @@ const debounce = (fn, delay) => {
       }
       fn(...args)
       lastTime = Date.now()
-    } else {
+    } else if (timeout === null) {
       timeout = setTimeout(() => {
         fn(...args)
         clearTimeout(timeout)
-      })
+        timeout = null
+      }, delay)
     }
   }
+}
+
+let hackyAddingLink = null
+
+const useMousePosition = (addingLink) => {
+  const [mousePosition, setMousePosition] = useState(null)
+  hackyAddingLink = addingLink
+
+  useEffect(() => {
+    const handleMouse = evt => {
+      if (hackyAddingLink !== null) {
+        setMousePosition({
+          x: evt.pageX - 4,
+          y: evt.pageY - 4,
+          width: 1,
+          height: 1
+        })
+      }
+    }
+    window.addEventListener('mousemove', handleMouse)
+    return () => {
+      window.removeEventListener('mousemove', handleMouse)
+    }
+  })
+
+  return mousePosition
 }
 
 const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const [redrawLines, setRedrawLines] = useState(0)
-  const [conceptCircles, setConceptCircles] = useState({})
+  const [conceptCircles] = useState({})
+  const [addingLink, setAddingLink] = useState(null)
+  const mousePosition = useMousePosition(addingLink)
   const { loggedIn } = useLoginStateValue()[0]
-  const [width, setWidth] = useState(window.innerWidth)
+  const [, setWidth] = useState(window.innerWidth)
 
   useEffect(() => {
     const handleResize = debounce(() => setWidth(window.innerWidth), 100)
-
     window.addEventListener('resize', handleResize)
 
     return () => {
@@ -96,7 +122,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
         height: box.height
       }
     }
-  })
+  }, )
 
   useEffect(() => {
     setRedrawLines(redrawLines+1)
@@ -122,10 +148,12 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
     <React.Fragment>
       {
         courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
-          <Grid container spacing={0} direction="row">
+          <Grid container spacing={0} direction='row'>
             <ActiveCourse
               course={courseQuery.data.courseById}
               activeConceptIds={activeConceptIds}
+              addingLink={addingLink}
+              setAddingLink={setAddingLink}
               conceptCircleRef={conceptCircleRef}
               toggleConcept={toggleConcept}
               resetConceptToggle={resetConceptToggle}
@@ -136,6 +164,8 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
               courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
+              addingLink={addingLink}
+              setAddingLink={setAddingLink}
               conceptCircleRef={conceptCircleRef}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
@@ -171,9 +201,9 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
           :
           <Grid container
             spacing={0}
-            direction="row"
-            justify="center"
-            alignItems="center"
+            direction='row'
+            justify='center'
+            alignItems='center'
           >
             <Grid item xs={12}>
               <div style={{ textAlign: 'center' }}>
@@ -184,12 +214,14 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
       }
       {courseQuery.data.courseById && courseQuery.data.courseById.concepts.map(concept => (
         concept.linksToConcept.map(link => (
-          <LineTo key={`concept-link-${concept.id}-${link.from.id}`} within="App" delay={1}
+          <LineTo key={`concept-link-${link.id}`} within='App' delay={1}
             active={activeConceptIds.includes(concept.id)}
             from={conceptCircles[`concept-circle-active-${concept.id}`]} to={conceptCircles[`concept-circle-${link.from.id}`]}
-            redrawLines={redrawLines} wrapperWidth={1} fromAnchor="right middle" toAnchor="left middle"/>
+            redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'/>
         ))
       ))}
+      {addingLink && <LineTo key='concept-link-creating' within='App' active={true}
+        from={conceptCircles[`${addingLink.type}-${addingLink.id}`]} to={mousePosition}/>}
     </React.Fragment>
   )
 }

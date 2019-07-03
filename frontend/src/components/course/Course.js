@@ -63,6 +63,8 @@ const Course = ({
   classes, // UI
   course,
   activeCourseId,
+  addingLink,
+  setAddingLink,
   conceptCircleRef,
   openCourseDialog,
   openConceptDialog,
@@ -100,6 +102,8 @@ const Course = ({
                 key={concept.id}
                 course={course}
                 activeConceptIds={activeConceptIds}
+                addingLink={addingLink}
+                setAddingLink={setAddingLink}
                 conceptCircleRef={conceptCircleRef}
                 openConceptEditDialog={openConceptEditDialog}
                 activeCourseId={activeCourseId}
@@ -109,7 +113,7 @@ const Course = ({
           </List>
           {
             loggedIn ?
-              <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
+              <Button className={classes.button} onClick={openConceptDialog(course.id)} variant='contained' color='primary'> Add concept </Button>
               : null
           }
 

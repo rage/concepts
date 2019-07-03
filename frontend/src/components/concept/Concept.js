@@ -50,7 +50,7 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, conceptCircleRef, openConceptEditDialog, workspaceId }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, addingLink, setAddingLink, conceptCircleRef, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
@@ -68,43 +68,27 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, c
     update: deleteConceptUpdate(activeCourseId, workspaceId, course.id)
   })
 
-  const isActive = () => {
-    return undefined !== concept.linksFromConcept.find(link => {
-      return activeConceptIds.find(conceptId => link.to.id === conceptId)
-    })
-  }
-
   const onClick = async () => {
-    if (isActive()) {
-      concept.linksFromConcept.forEach(async (link) => {
-        const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
-        if (hasLink) {
-          try {
-            await deleteConceptLink({ variables: { id: link.id } })
-          } catch (err) {
-            errorDispatch({
-              type: 'setError',
-              data: 'Access denied'
-            })
+    if (addingLink) {
+      setAddingLink(null)
+      try {
+        await createConceptLink({
+          variables: {
+            to: addingLink.id,
+            from: concept.id,
+            workspaceId
           }
-        }
-      })
+        })
+      } catch (err) {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      }
     } else {
-      activeConceptIds.forEach(async (conceptId) => {
-        try {
-          await createConceptLink({
-            variables: {
-              to: conceptId,
-              from: concept.id,
-              workspaceId
-            }
-          })
-        } catch (err) {
-          errorDispatch({
-            type: 'setError',
-            data: 'Access denied'
-          })
-        }
+      setAddingLink({
+        id: concept.id,
+        type: 'concept-circle'
       })
     }
   }
@@ -146,7 +130,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, c
       id={'concept-' + concept.id}
     >
       <ListItemIcon>
-        <IconButton style={{padding: '4px'}}>
+        <IconButton onClick={onClick} style={{padding: '4px'}}>
           <LensIcon ref={conceptCircleRef} id={`concept-circle-${concept.id}`}/>
         </IconButton>
       </ListItemIcon>
@@ -160,14 +144,14 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, c
               loggedIn ?
                 <IconButton
                   aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup="true"
+                  aria-haspopup='true'
                   onClick={handleMenuOpen}
                 >
                   <MoreVertIcon />
                 </IconButton> : null
             }
             <Menu
-              id="simple-menu"
+              id='simple-menu'
               anchorEl={state.anchorEl}
               open={Boolean(state.anchorEl)}
               onClose={handleMenuClose}

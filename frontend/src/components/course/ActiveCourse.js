@@ -65,6 +65,8 @@ const ActiveCourse = ({
   course,
   workspaceId,
   activeConceptIds,
+  addingLink,
+  setAddingLink,
   conceptCircleRef,
   toggleConcept,
   resetConceptToggle
@@ -191,6 +193,8 @@ const ActiveCourse = ({
                 <ActiveConcept concept={concept}
                   key={concept.id}
                   activeConceptIds={activeConceptIds}
+                  addingLink={addingLink}
+                  setAddingLink={setAddingLink}
                   conceptCircleRef={conceptCircleRef}
                   deleteConcept={deleteConcept}
                   openConceptDialog={handleConceptOpen}
@@ -205,8 +209,8 @@ const ActiveCourse = ({
             <Button
               className={classes.button}
               onClick={handleConceptOpen(course.id)}
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
             >
               Add concept
             </Button> : null

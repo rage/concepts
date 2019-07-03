@@ -1,11 +1,8 @@
-import React, {Component, PureComponent} from 'react'
+import React, { Component, PureComponent } from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
 
-const defaultAnchor = {x: 0.5, y: 0.5}
-const defaultInnerColor = '#f00'
-const defaultInnerStyle = 'solid'
-const defaultInnerWidth = 1
+const defaultAnchor = { x: 0.5, y: 0.5 }
 const defaultWrapperWidth = 11
 
 export default class LineTo extends Component {
@@ -104,17 +101,17 @@ export default class LineTo extends Component {
     // Try to infer the relevant axis.
     switch (value) {
     case 'top':
-      return {y: 0}
+      return { y: 0 }
     case 'left':
-      return {x: 0}
+      return { x: 0 }
     case 'middle':
-      return {y: 0.5}
+      return { y: 0.5 }
     case 'center':
-      return {x: 0.5}
+      return { x: 0.5 }
     case 'bottom':
-      return {y: 1}
+      return { y: 1 }
     case 'right':
-      return {x: 1}
+      return { x: 1 }
     default:
       return {}
     }
@@ -136,7 +133,7 @@ export default class LineTo extends Component {
   }
 
   detect() {
-    const {within = '', from: fromBox, to: toBox} = this.props
+    const { within = '', from: fromBox, to: toBox } = this.props
 
     if (!fromBox || !toBox) {
       return false
@@ -164,7 +161,7 @@ export default class LineTo extends Component {
     const y0 = fromBox.y + fromBox.height * anchor0.y + offsetY
     const y1 = toBox.y + toBox.height * anchor1.y + offsetY
 
-    return {x0: x0 - 1, y0, x1: x1 + 2, y1}
+    return { x0: x0 - 1, y0, x1: x1 + 2, y1 }
   }
 
   render() {
@@ -177,21 +174,21 @@ export default class LineTo extends Component {
 
 const lineStyles = theme => ({
   linetoHover: {
-	  '&:hover': {
-	    backgroundColor: 'rgba(255, 0, 0, 0.25)'
+    '&:hover': {
+      backgroundColor: 'rgba(255, 0, 0, 0.25)'
     }
   },
   linetoWrapper: {
-	  '&:not(.linetoActive)': {
-	    pointerEvents: 'none'
+    '&:not(.linetoActive)': {
+      pointerEvents: 'none'
     }
   },
   linetoLine: {
-	  position: 'absolute',
-	  pointerEvents: 'none',
-    borderTop: '1px solid rgba(117, 117, 117, 0.05)',
+    position: 'absolute',
+    pointerEvents: 'none',
+    borderTop: '1px solid rgba(117, 117, 117, 0.15)',
     '&.linetoActive': {
-	    borderTopColor: 'red'
+      borderTopColor: '#f50057'
     }
   }
 })
@@ -213,7 +210,7 @@ export class Line extends PureComponent {
   }
 
   render() {
-    const {x0, y0, x1, y1, within = ''} = this.props
+    const { x0, y0, x1, y1, within = '' } = this.props
 
     this.within = within ? document.getElementsByClassName(within)[0] : document.body
 
@@ -251,10 +248,10 @@ export class Line extends PureComponent {
 
     const hoverAreaStyle = Object.assign({}, commonStyle, {
       position: 'relative',
-      width: `${length - hoverAreaOffset*2}px`,
+      width: `${length - hoverAreaOffset * 2}px`,
       height: `${hoverAreaWidth}px`,
       color: 'transparent',
-      transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth/2)}px)`
+      transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth / 2)}px)`
     })
 
     // We need a wrapper element to prevent an exception when then
@@ -262,12 +259,13 @@ export class Line extends PureComponent {
     // move the rendered DOM element after creation.
     return (
       <div className={this.props.classes.linetoPlaceholder}
-        data-link-from={this.props.from}
-        data-link-to={this.props.to} {...this.props.attributes}>
+           data-link-from={this.props.from}
+           data-link-to={this.props.to} {...this.props.attributes}>
         <div className={`${this.props.classes.linetoWrapper} ${this.props.active ? 'linetoActive' : ''}`}
-          ref={this.el} style={wrapperStyle}>
+             ref={this.el} style={wrapperStyle}>
           {this.props.active && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
-          <div style={innerStyle} className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
+          <div style={innerStyle}
+               className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
           </div>
         </div>
       </div>

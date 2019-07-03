@@ -65,7 +65,7 @@ class CustomMasonry extends Masonry {
   }
 }
 
-const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, conceptCircleRef, updateCourse, workspaceId, courseId }) => {
+const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, addingLink, setAddingLink, conceptCircleRef, updateCourse, workspaceId, courseId }) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
@@ -167,6 +167,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         <Course
           course={course}
           activeConceptIds={activeConceptIds}
+          addingLink={addingLink}
+          setAddingLink={setAddingLink}
           conceptCircleRef={conceptCircleRef}
           openCourseDialog={handleCourseOpen}
           openConceptDialog={handleConceptOpen}
@@ -198,8 +200,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                     :
                     <CustomMasonry
                       breakpointCols={breakpointColumnsObj}
-                      className="my-masonry-grid"
-                      columnClassName="my-masonry-grid_column"
+                      className='my-masonry-grid'
+                      columnClassName='my-masonry-grid_column'
                     >
                       {
                         courses && courses.map(course =>
@@ -207,6 +209,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                             key={course.id}
                             course={course}
                             activeConceptIds={activeConceptIds}
+                            addingLink={addingLink}
+                            setAddingLink={setAddingLink}
                             conceptCircleRef={conceptCircleRef}
                             openCourseDialog={handleCourseOpen}
                             openConceptDialog={handleConceptOpen}
@@ -262,16 +266,16 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             <SnackbarContent className={classes.info}
               action={[
                 <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
+                  key='close'
+                  aria-label='Close'
+                  color='inherit'
                   onClick={handleConceptInfoClose}
                 >
                   <CloseIcon className={classes.icon} />
                 </IconButton>
               ]}
               message={
-                <span className={classes.message} id="message-id">
+                <span className={classes.message} id='message-id'>
                   <InfoIcon className={classes.infoIcon} />
                   {CONCEPT_ADDING_INSTRUCTION}
                 </span>}
@@ -288,16 +292,16 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             <SnackbarContent className={classes.info}
               action={[
                 <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
+                  key='close'
+                  aria-label='Close'
+                  color='inherit'
                   onClick={handleCourseInfoClose}
                 >
                   <CloseIcon className={classes.icon} />
                 </IconButton>
               ]}
               message={
-                <span className={classes.message} id="message-id">
+                <span className={classes.message} id='message-id'>
                   <InfoIcon className={classes.infoIcon} />
                   {COURSE_ADDING_INSTRUCTION}
                 </span>}
@@ -315,16 +319,16 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             <SnackbarContent className={classes.info}
               action={[
                 <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
+                  key='close'
+                  aria-label='Close'
+                  color='inherit'
                   onClick={handleLinkInfoClose}
                 >
                   <CloseIcon className={classes.icon} />
                 </IconButton>
               ]}
               message={
-                <span className={classes.message} id="message-id">
+                <span className={classes.message} id='message-id'>
                   <InfoIcon className={classes.infoIcon} />
                   {CONCEPT_LINKING_INSTRUCTION}
                 </span>}

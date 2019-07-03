@@ -52,15 +52,11 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCircleRef, deleteConcept, openConceptEditDialog }) => {
+const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, conceptCircleRef, deleteConcept, openConceptEditDialog }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
-
-  const isActive = () => {
-    return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
-  }
 
   const handleMenuOpen = (event) => {
     setState({ anchorEl: event.currentTarget })
@@ -92,9 +88,24 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCir
     openConceptEditDialog(id, name, description)()
   }
 
+  const onClick = () => {
+    if (addingLink) {
+      alert('Adding links by clicking on prerequisite first is not yet implemented')
+    } else {
+      setAddingLink({
+        id: concept.id,
+        type: 'concept-circle-active'
+      })
+    }
+  }
+
   return <>
-    <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
-      <ListItem button divider className={classes.listItem} onClick={toggleConcept(concept.id)} id={'concept-' + concept.id} >
+    <Tooltip title='activate selection of prerequisites' enterDelay={500} leaveDelay={400} placement='left'>
+      <ListItem
+        button divider id={'concept-' + concept.id}
+        className={classes.listItem}
+        onClick={toggleConcept(concept.id)}
+      >
         <ListItemText
           id={'concept-name-' + concept.id}
           className={classes.conceptName}
@@ -104,18 +115,18 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCir
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           {activeConceptIds.length === 0 ?
             <React.Fragment>
-              { loggedIn ?
+              {loggedIn ?
                 <IconButton
                   aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup="true"
+                  aria-haspopup='true'
                   onClick={handleMenuOpen}
                 >
-                  <MoreVertIcon />
+                  <MoreVertIcon/>
                 </IconButton>
                 : null
               }
               <Menu
-                id="simple-menu"
+                id='simple-menu'
                 anchorEl={state.anchorEl}
                 open={Boolean(state.anchorEl)}
                 onClose={handleMenuClose}
@@ -130,11 +141,15 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, conceptCir
             </React.Fragment>
             : null
           }
-          <IconButton className={classes.conceptCircle}>
-            <LensIcon ref={conceptCircleRef} id={`concept-circle-active-${concept.id}`}/>
+          <IconButton onClick={onClick}
+            className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
+            <LensIcon
+              ref={conceptCircleRef} id={`concept-circle-active-${concept.id}`}
+              color={activeConceptIds.includes(concept.id) ? 'secondary' : undefined}
+            />
           </IconButton>
         </ListItemSecondaryAction>
-      </ListItem >
+      </ListItem>
     </Tooltip>
   </>
 }
