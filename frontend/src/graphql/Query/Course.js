@@ -129,6 +129,9 @@ query courseById($id: ID!) {
       name
       description
       official
+      courses {
+          id
+      }
       linksFromConcept {
         id
         official

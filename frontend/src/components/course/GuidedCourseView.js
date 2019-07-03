@@ -137,13 +137,14 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
             </Grid>
           </Grid>
       }
-      {courseQuery.data.courseById && courseQuery.data.courseById.concepts.map(concept => (
-        concept.linksToConcept.map(link => (
-          <LineTo key={`concept-link-${link.id}`} within='course-view' delay={1}
-            active={activeConceptIds.includes(concept.id)}
-            from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-            redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'/>
-        ))
+      {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && courseQuery.data.courseById.concepts.map(concept => (
+        prereqQuery.data.courseAndPrerequisites.linksToCourse.filter(link => link.from.id === concept.courses[0].id)
+          ? concept.linksToConcept.map(link => (
+            <LineTo key={`concept-link-${link.id}`} within='course-view' delay={1}
+              active={activeConceptIds.includes(concept.id)}
+              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
+              redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'/>
+          )) : null
       ))}
       {addingLink && <LineTo key='concept-link-creating' within='course-view' active={true}
         from={`${addingLink.type}-${addingLink.id}`} to='root'
