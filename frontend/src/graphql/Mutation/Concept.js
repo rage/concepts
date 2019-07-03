@@ -7,6 +7,9 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
     name
     description
     official
+    courses {
+          id
+      }
     linksFromConcept {
       id
       official
@@ -32,6 +35,9 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     name
     description
     official
+    courses {
+          id
+      }
     linksFromConcept {
       id
       official

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grid from '@material-ui/core/Grid'
 
 // Card

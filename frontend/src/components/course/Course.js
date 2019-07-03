@@ -29,9 +29,7 @@ const styles = theme => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
     paddingBottom: theme.spacing(2),
-    position: 'relative',
-    overflow: 'auto',
-    maxHeight: 300
+    position: 'relative'
   },
   cardHeader: {
     paddingBottom: '0px'
