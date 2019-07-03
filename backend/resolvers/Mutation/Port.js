@@ -27,7 +27,7 @@ const validateData= (data) => {
 }
 
 const PortMutations = {
-  async portCourses(root, args, context) {
+  async portData(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
     let json
 
