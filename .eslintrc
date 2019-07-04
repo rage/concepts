@@ -2,10 +2,17 @@
   "env": {
     "es6": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
   "parserOptions": {
     "ecmaVersion": 2018
   },
+  "plugins": [
+    "import"
+  ],
   "rules": {
     "indent": [
       "error",
@@ -33,6 +40,17 @@
     ],
     "no-trailing-spaces": [
       "error"
-    ]
+    ],
+    "camelcase": [
+      "error",
+      {
+        "properties": "always"
+      }
+    ],
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/default": "error",
+    "import/export": "error"
   }
 }
