@@ -1,11 +1,11 @@
 import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 
-const PrivateRoute = ({ render: Component, redirectPath, condition, children, ...rest }) => {
+const PrivateRoute = ({ render, redirectPath, condition, children, ...rest }) => {
   return (
     <Route {...rest} render={(props) =>
       condition
-        ? (Component && <Component {...props} />) || children
+        ? (render && render(props)) || children
         : (
           <Redirect
             to={{

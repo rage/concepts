@@ -43,6 +43,9 @@ const styles = theme => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
+  },
+  rowButton: {
+    marginLeft: '4px'
   }
 })
 
@@ -79,8 +82,8 @@ const TEMPLATE = `{
 }
 `
 
-const PortView = ({ classes }) => {
-  const [data, setData] = useState('')
+const PortView = ({ classes }) => {
+  const [data, setData] = useState('')
   const [buttonText, setButtonText] = useState('Port')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false) 
@@ -94,6 +97,20 @@ const PortView = ({ classes }) => {
     }
   }
 
+  const openFile = (event) => {
+    event.preventDefault()
+    if (event.target.files.length === 0) return
+
+    const fileReader = new FileReader()
+    fileReader.onload = (event) => {
+      event.preventDefault()
+      let content = fileReader.result
+      setData(content)
+    }
+    
+    fileReader.readAsText(event.target.files[0])
+  }
+  
   const sendData = async () => {
     setLoading(true)
     
@@ -128,7 +145,15 @@ const PortView = ({ classes }) => {
           
           <CardContent>
             <Button variant="contained" color="secondary" onClick={addTemplate}> Add template </Button>
-            
+            <Button className={classes.rowButton} 
+              variant="contained" 
+              color="secondary" 
+              component='label'
+              label='Open...'> 
+              Open...
+              <input type="file" onChange={openFile} allow="text/*" hidden/> 
+            </Button>
+
             <TextField
               id="json-input"
               label="JSON"
