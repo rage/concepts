@@ -220,21 +220,15 @@ export class Line extends PureComponent {
   }
 
   recalculate() {
-    const { x0, y0, x1, y1 } = this.pos
-
-    const dy = (this.dynY || y1) - y0
-    const dx = (this.dynX || x1) - x0
-
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI
-    const length = Math.sqrt(dx * dx + dy * dy)
+    const {x, y, angle, length} = this.calculate()
 
     if (!this.el.current) {
-      console.log(this.el, "Reference disappeared 3:")
+      console.log(this.el, 'Reference disappeared 3:')
       return
     }
 
-    this.el.current.style.top = `${y0}px`
-    this.el.current.style.left = `${x0}px`
+    this.el.current.style.top = `${y}px`
+    this.el.current.style.left = `${x}px`
     this.el.current.style.transform = `rotate(${angle}deg)`
     this.el.current.style.width = `${length}px`
     for (const elem of this.el.current.getElementsByTagName('div')) {
@@ -242,17 +236,21 @@ export class Line extends PureComponent {
     }
   }
 
-  render() {
+  calculate() {
     const { x0, y0, x1, y1 } = this.pos
+    const dy = (this.dynY || y1) - y0
+    const dx = (this.dynX || x1) - x0
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI
+    const length = Math.sqrt(dx * dx + dy * dy)
+    return {x: x0, y: y0, angle, length}
+  }
+
+  render() {
+    const {x, y, angle, length} = this.calculate()
     const within = this.props.within || ''
 
     this.within = within ? document.getElementById(within) : document.body
 
-    const dy = (this.dynY || y1) - y0
-    const dx = (this.dynX || x1) - x0
-
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI
-    const length = Math.sqrt(dx * dx + dy * dy)
     const wrapperWidth = this.props.wrapperWidth || defaultWrapperWidth
 
     const commonStyle = {
@@ -264,8 +262,8 @@ export class Line extends PureComponent {
     }
 
     const wrapperStyle = Object.assign({}, commonStyle, {
-      top: `${y0}px`,
-      left: `${x0}px`,
+      top: `${y}px`,
+      left: `${x}px`,
       height: `${wrapperWidth}px`,
       transform: `rotate(${angle}deg)`,
       // Rotate around (x0, y0)
