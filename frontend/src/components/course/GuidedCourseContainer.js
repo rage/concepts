@@ -57,7 +57,7 @@ const CONCEPT_LINKING_INSTRUCTION = 'Switch on a learning objective on the left 
 
 // The default Masonry class does reCalculateColumnCount in componentDidMount,
 // which means the component is first rendered once with the default column
-// count. This caused problems in our LineTo's which weren't updating after the
+// count. This caused problems in our ConceptLink's which weren't updating after the
 // Masonry recalculation.
 class CustomMasonry extends Masonry {
   componentWillMount() {

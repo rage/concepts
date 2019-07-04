@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles'
 const defaultAnchor = { x: 0.5, y: 0.5 }
 const defaultWrapperWidth = 11
 
-export default class LineTo extends Component {
+export default class ConceptLink extends Component {
   componentWillMount() {
     this.fromAnchor = this.parseAnchor(this.props.fromAnchor)
     this.toAnchor = this.parseAnchor(this.props.toAnchor)
