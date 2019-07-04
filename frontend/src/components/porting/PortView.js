@@ -37,7 +37,7 @@ const styles = theme => ({
     }
   },
   buttonProgress: {
-    color: green[500],
+    color: 'white',
     position: 'absolute',
     top: '50%',
     left: '50%',
