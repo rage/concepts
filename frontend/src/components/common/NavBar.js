@@ -54,6 +54,11 @@ const AuthenticationIcon = withRouter(({ history }) => {
     handleAnchorClose()
   }
 
+  const navigateToPorting = () => {
+    history.push('/porting')
+    handleAnchorClose()
+  }
+
   const logout = async () => {
     await signOut()
     dispatch({
@@ -92,6 +97,7 @@ const AuthenticationIcon = withRouter(({ history }) => {
             onClose={handleAnchorClose}
           >
             <MenuItem onClick={navigateToAccount}>Account</MenuItem>
+            <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </div>
