@@ -1,24 +1,23 @@
 {
-  "name": "concept",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start-dev": "ENVIRONMENT=development node index.js",
-    "start": "ENVIRONMENT=production node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "ENVIRONMENT=development nodemon index.js"
-  },
+  "name": "concepts-backend",
+  "version": "0.1.0",
+  "author": "RAGE",
+  "contributors": [
+    "Tulir Asokan <tulir@maunium.net> (https://maunium.net)"
+  ],
+  "license": "(Apache-2.0 OR MIT)",
+  "description": "Concept mapping platform for education - backend module",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rage/concepts.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/rage/concepts/issues"
   },
   "homepage": "https://github.com/rage/concepts#readme",
+
+  "main": "index.js",
   "dependencies": {
     "apollo-server-core": "^2.6.2",
     "axios": "^0.19.0",
@@ -31,5 +30,11 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
+  },
+  "scripts": {
+    "start-dev": "ENVIRONMENT=development node index.js",
+    "start": "ENVIRONMENT=production node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "ENVIRONMENT=development nodemon index.js"
   }
 }

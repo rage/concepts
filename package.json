@@ -1,21 +1,25 @@
 {
   "name": "concepts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "cd backend && yarn install && yarn start",
-    "heroku-postbuild": "cd frontend && yarn install && yarn build",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "0.1.0",
+  "author": "RAGE",
+  "contributors": [
+    "Tulir Asokan <tulir@maunium.net> (https://maunium.net)"
+  ],
+  "license": "(Apache-2.0 OR MIT)",
+  "description": "Concept mapping platform for education",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rage/concepts.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/rage/concepts/issues"
   },
-  "homepage": "https://github.com/rage/concepts#readme"
+  "homepage": "https://github.com/rage/concepts#readme",
+
+  "scripts": {
+    "start": "cd backend && yarn install && yarn start",
+    "heroku-postbuild": "cd frontend && yarn install && yarn build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
