@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "author": "RAGE",
   "contributors": [
-    "Tulir Asokan <tulir@maunium.net> (https://maunium.net)"
+    "Tulir Asokan <tulir@maunium.net> (https://maunium.net)",
+    "Jesper Pettersson <jesperleonard@gmail.com> (https://github.com/stadibo)"
   ],
   "license": "(Apache-2.0 OR MIT)",
   "description": "Concept mapping platform for education",
