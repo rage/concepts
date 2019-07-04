@@ -64,7 +64,7 @@ type Mutation {
   createGuestWorkspace(name: String!): Workspace
 
   # Porting mutations
-  portData(data: String!): [Course!]!
+  portData(data: String!): Workspace
 
   ## Resource mutation
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource

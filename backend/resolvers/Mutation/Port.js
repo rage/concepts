@@ -4,25 +4,37 @@ const { checkAccess } = require('../../accessControl')
  * Returns false if there are missing obligatory fields
  * @param {json} data JSON to be validated
  */
-const validateData= (data) => {
+const validateData = (data) => {
   // Validate workspace from json
-  if (data['workspace'] === undefined && data['workspaceId'] === undefined) return false
-  if (data['workspace'] !== undefined && data['workspaceId'] !== undefined) return false
-  
+  if (typeof data['workspace'] === 'string' && typeof data['workspaceId'] === 'string') {
+    throw new Error('workspace and workspaceId cannot be at the same time')
+  }
+  if (typeof data['workspace'] !== 'string' && typeof data['workspaceId'] !== 'string') {
+    throw new Error('workspace or workspaceId not found')
+  }
+
   // Validate courses from json
-  if (data['courses'] === undefined ||
-      typeof data['courses'][Symbol.iterator] !== 'function') return false
+  if (!Array.isArray(data['courses'])) {
+    throw new Error('courses not found or is not an array')
+  }
   
-  data['courses'].forEach(course => {
-    if (course['name'] === undefined) return false
-    if (course['concepts'] !== undefined &&
-        Array.isArray(course['concepts'])) {
-      course['concepts'].forEach(concept => {
-        if (concept.name === undefined) return false
-        if (concept.description === undefined) return false
-      })
+  for (const course of data['courses']) {
+    if (typeof course['name'] !== 'string') {
+      throw new Error('course name missing')
+
     }
-  })
+    if (!Array.isArray(course['concepts'])) {
+      throw new Error('concepts not found or is not an array')
+    }
+    for (const concept of course['concepts']) {
+      if (typeof concept.name !== 'string') {
+        throw new Error('concept name missing')
+      }
+      if (typeof concept.description !== 'string') {
+        throw new Error('concept description missing')
+      }
+    }
+  }
   return true
 }
 
@@ -42,14 +54,14 @@ const PortMutations = {
 
     // Create or find workspace
     let workspace
-    if (json['workspace'] !== undefined) {
+    if (typeof json['workspace'] === 'string') {
       workspace = await context.prisma.createWorkspace({
         name: json['workspace'],
         owner: {
           connect: { id: context.user.id }
         }
       })
-    } else if (json['workspaceId'] !== undefined) {
+    } else if (typeof json['workspaceId'] === 'string') {
       workspace = await context.prisma.workspace({
         id: json['workspaceId']
       })
@@ -60,14 +72,15 @@ const PortMutations = {
 
     // Save data to prisma
     let courses = json['courses']
-    let result = await courses.map(async course => {
+    
+    await Promise.all(courses.map(async course => {
       let courseObj = await context.prisma.createCourse({
         name: course['name'],
         createdBy: { connect: { id: context.user.id }},
         workspace: { connect: { id: workspace.id }}
       })
 
-      if (course['default'] !== undefined && course['default'] === true) {
+      if (course['default'] === true) {
         await context.prisma.updateWorkspace({
           where: {
             id: workspace.id
@@ -80,7 +93,7 @@ const PortMutations = {
         })
       }
 
-      course['concepts'].forEach(async concept => {
+      await Promise.all(course['concepts'].map(async concept => {
         let conceptData = {
           name: concept['name'],
           description: concept['description'],
@@ -88,14 +101,12 @@ const PortMutations = {
           workspace: { connect: { id: workspace.id }},
           courses: { connect: [{ id: courseObj.id }] }
         }
-        if (concept['official'] !== undefined) conceptData['official'] = concept['official']
+        if (concept['official'] === true) conceptData['official'] = concept['official']
         await context.prisma.createConcept(conceptData)
-      })
+      }))
+    }))
 
-      return courseObj
-    })
-
-    return result
+    return workspace
   }
 }
 
