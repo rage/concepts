@@ -2,20 +2,8 @@
   "name": "concepts-backend",
   "version": "0.1.0",
   "author": "RAGE",
-  "contributors": [
-    "Tulir Asokan <tulir@maunium.net> (https://maunium.net)"
-  ],
-  "license": "(Apache-2.0 OR MIT)",
   "description": "Concept mapping platform for education - backend module",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rage/concepts.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rage/concepts/issues"
-  },
-  "homepage": "https://github.com/rage/concepts#readme",
 
   "main": "index.js",
   "dependencies": {
