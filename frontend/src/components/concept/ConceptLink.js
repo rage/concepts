@@ -50,18 +50,18 @@ export default class ConceptLink extends Component {
   }
 
   componentWillUnmount() {
-    if (this.t) {
-      clearTimeout(this.t)
-      this.t = null
+    if (this.deferredUpdate) {
+      clearTimeout(this.deferredUpdate)
+      this.deferredUpdate = null
     }
   }
 
   // Forced update after delay (MS)
   deferUpdate(delay) {
-    if (this.t) {
-      clearTimeout(this.t)
+    if (this.deferredUpdate) {
+      clearTimeout(this.deferredUpdate)
     }
-    this.t = setTimeout(() => this.forceUpdate(), delay)
+    this.deferredUpdate = setTimeout(() => this.forceUpdate(), delay)
   }
 
   parseDelay(value) {
