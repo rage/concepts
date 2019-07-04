@@ -10,6 +10,7 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
+import PortView from './components/porting/PortView'
 import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
 import PrivateRoute from './components/common/PrivateRoute'
@@ -126,6 +127,7 @@ const App = ({ classes }) => {
           </Grid>
           <Route exact path="/" render={() => <Grid item xs={12}><LandingView /></Grid>} />
 
+          <PrivateRoute exact path="/porting" redirectPath="/auth" condition={loggedIn} render={() => <PortView/> } />
           <Route exact path="/auth" render={() => <AuthenticationForm />} />
           <Route exact path="/user" render={() => <UserView />} />
           

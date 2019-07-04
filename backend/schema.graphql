@@ -28,35 +28,48 @@ type Query {
 }
 
 type Mutation {
+  # Authentication mutation
   login(tmcToken: String!): AuthPayload
   
+  # Course mutations
   createCourse(name: String!, workspaceId: ID!): Course
   deleteCourse(id: ID!): Course
   updateCourse(id: ID!, name: String!): Course
 
+  # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   updateConcept(id: ID!, name:String, description: String, official: Boolean): Concept
   
+  # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
   deleteCourseLink(id: ID!): CourseLink
   
+  # Concept link mutations
   createConceptLinks(to: ID!, from:[ID!]!, workspaceId: ID!, official: Boolean): [ConceptLink!]!
   deleteConceptLinks(ids: [ID!]): [ConceptLink!]!
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
   deleteConceptLink(id: ID!): ConceptLink
 
+  # Project mutations
   createProject(name: String!): Project
   updateProject(name: String!): Project
   deleteProject(id: ID!): Project
 
+  # Workspace mutations
   createWorkspace(name: String!, projectId: ID): Workspace
   addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String!): Workspace
   createGuestWorkspace(name: String!): Workspace
+
+  # Porting mutations
+  portData(data: String!): Workspace
+
+  ## Resource mutation
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
+
 
 type User {
   id: ID!
