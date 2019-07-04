@@ -27,6 +27,7 @@ const authenticate = async (resolve, root, args, context, info) => {
 }
 
 const getUser = async (token, context, prisma) => {
+  let decodedToken
   try {
     decodedToken = jwt.verify(token, process.env.SECRET)
   } catch (e) {
