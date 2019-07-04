@@ -12,12 +12,20 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
         id
         name
         description
+        official
+        linksToConcept {
+            official
+            id
+            from {
+              id
+            }
+        }
         linksFromConcept {
           official
           id
           to {
-              id
-            }
+            id
+          }
         }
       }
     }

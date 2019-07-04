@@ -2,23 +2,24 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 import { useMutation } from 'react-apollo-hooks'
-import { 
-  DELETE_CONCEPT, 
-  CREATE_CONCEPT_LINK, 
-  DELETE_CONCEPT_LINK 
+import {
+  DELETE_CONCEPT,
+  CREATE_CONCEPT_LINK,
+  DELETE_CONCEPT_LINK
 } from '../../graphql/Mutation'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import Switch from '@material-ui/core/Switch'
+import LensIcon from '@material-ui/icons/Lens'
 
-import { 
+import {
   deleteConceptLinkUpdate,
   createConceptLinkUpdate,
   deleteConceptUpdate
@@ -49,15 +50,11 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, openConceptEditDialog, workspaceId }) => {
+const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, addingLink, setAddingLink, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
-
-  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: deleteConceptLinkUpdate(activeCourseId, workspaceId)
-  })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: createConceptLinkUpdate(activeCourseId, workspaceId)
@@ -67,45 +64,26 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
     update: deleteConceptUpdate(activeCourseId, workspaceId, course.id)
   })
 
-  const isActive = () => {
-    return undefined !== concept.linksFromConcept.find(link => {
-      return activeConceptIds.find(conceptId => link.to.id === conceptId)
-    })
-  }
-
-  const onClick = async () => {
-    if (isActive()) {
-      concept.linksFromConcept.forEach(async (link) => {
-        const hasLink = activeConceptIds.find(conceptId => link.to.id === conceptId)
-        if (hasLink) {
-          try {
-            await deleteConceptLink({ variables: { id: link.id } })
-          } catch (err) {
-            errorDispatch({
-              type: 'setError',
-              data: 'Access denied'
-            })
-          }
+  const onClick = evt => {
+    if (addingLink) {
+      setAddingLink(null)
+      createConceptLink({
+        variables: {
+          to: addingLink.id,
+          from: concept.id,
+          workspaceId
         }
-      })
+      }).catch(() => errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      }))
     } else {
-      activeConceptIds.forEach(async (conceptId) => {
-        try {
-          await createConceptLink({
-            variables: {
-              to: conceptId,
-              from: concept.id,
-              workspaceId
-            }
-          })
-        } catch (err) {
-          errorDispatch({
-            type: 'setError',
-            data: 'Access denied'
-          })
-        }
+      setAddingLink({
+        id: concept.id,
+        type: 'concept-circle'
       })
     }
+    evt.stopPropagation()
   }
 
   const handleMenuOpen = (event) => {
@@ -131,9 +109,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
     handleMenuClose()
   }
 
-  const handleEditConcept = (id, name, description) => () => {
+  const handleEditConcept = (id, name, description, courseId) => () => {
     handleMenuClose()
-    openConceptEditDialog(id, name, description)()
+    openConceptEditDialog(id, name, description, courseId)()
   }
 
   return (
@@ -144,6 +122,11 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
       className={classes.inactive}
       id={'concept-' + concept.id}
     >
+      <ListItemIcon>
+        <IconButton onClick={onClick} style={{padding: '4px'}}>
+          <LensIcon id={`concept-circle-${concept.id}`}/>
+        </IconButton>
+      </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
         {concept.name}
       </ListItemText>
@@ -154,29 +137,23 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, o
               loggedIn ?
                 <IconButton
                   aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup="true"
+                  aria-haspopup='true'
                   onClick={handleMenuOpen}
                 >
                   <MoreVertIcon />
                 </IconButton> : null
             }
             <Menu
-              id="simple-menu"
+              id='simple-menu'
               anchorEl={state.anchorEl}
               open={Boolean(state.anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description)}>Edit</MenuItem>
+              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description, course.id)}>Edit</MenuItem>
               <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
             </Menu>
           </React.Fragment>
-          :
-          <Switch
-            checked={isActive()}
-            color='primary'
-            onClick={onClick}
-            id={'concept-switch' + concept.id}
-          />
+          : null
         }
       </ListItemSecondaryAction>
     </ListItem>

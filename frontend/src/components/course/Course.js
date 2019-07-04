@@ -7,7 +7,7 @@ import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
-// List 
+// List
 import List from '@material-ui/core/List'
 
 // Icons
@@ -29,9 +29,7 @@ const styles = theme => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
     paddingBottom: theme.spacing(2),
-    position: 'relative',
-    overflow: 'auto',
-    maxHeight: 300
+    position: 'relative'
   },
   cardHeader: {
     paddingBottom: '0px'
@@ -63,6 +61,8 @@ const Course = ({
   classes, // UI
   course,
   activeCourseId,
+  addingLink,
+  setAddingLink,
   openCourseDialog,
   openConceptDialog,
   openConceptEditDialog,
@@ -99,6 +99,8 @@ const Course = ({
                 key={concept.id}
                 course={course}
                 activeConceptIds={activeConceptIds}
+                addingLink={addingLink}
+                setAddingLink={setAddingLink}
                 openConceptEditDialog={openConceptEditDialog}
                 activeCourseId={activeCourseId}
                 workspaceId={workspaceId}
@@ -107,7 +109,7 @@ const Course = ({
           </List>
           {
             loggedIn ?
-              <Button className={classes.button} onClick={openConceptDialog(course.id)} variant="contained" color="primary"> Add concept </Button>
+              <Button className={classes.button} onClick={openConceptDialog(course.id)} variant='contained' color='primary'> Add concept </Button>
               : null
           }
 

@@ -24,6 +24,7 @@ import '../../MasonryLayout.css'
 import { updateConceptUpdate } from '../../apollo/update'
 
 import { useLoginStateValue } from '../../store'
+import ActiveCourse from './ActiveCourse'
 
 const breakpointColumnsObj = {
   default: 3,
@@ -54,10 +55,34 @@ const CONCEPT_ADDING_INSTRUCTION = 'Add concept as a learning objective in the l
 const COURSE_ADDING_INSTRUCTION = 'To add prerequisites, open the drawer on the right.'
 const CONCEPT_LINKING_INSTRUCTION = 'Switch on a learning objective on the left to start linking prerequisites.'
 
-const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, courses, courseTrayOpen, activeConceptIds, updateCourse, workspaceId, courseId }) => {
+// The default Masonry class does reCalculateColumnCount in componentDidMount,
+// which means the component is first rendered once with the default column
+// count. This caused problems in our ConceptLink's which weren't updating after the
+// Masonry recalculation.
+class CustomMasonry extends Masonry {
+  componentWillMount() {
+    this.reCalculateColumnCount()
+  }
+
+  reCalculateColumnCount() {
+    super.reCalculateColumnCount()
+    this.props.handleRecalculateColumnCount()
+  }
+}
+
+const GuidedCourseContainer = ({
+  classes,
+  onClick,
+  courseTrayOpen, setCourseTrayOpen,
+  activeCourse, updateCourse, courses,
+  activeConceptIds,
+  addingLink, setAddingLink,
+  doRedrawLines,
+  workspaceId, courseId
+}) => {
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
-  const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
+  const [conceptEditState, setConceptEditState] = useState({ open: false, conceptId: '', name: '', description: '', courseId: '' })
 
   const [conceptInfoState, setConceptInfoState] = useState(false)
   const [courseInfoState, setCourseInfoState] = useState(false)
@@ -91,7 +116,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
     set.map(p => p.id).includes(object.id)
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: updateConceptUpdate(activeCourse.id, workspaceId, conceptEditState.id)
+    update: updateConceptUpdate(activeCourse.id, workspaceId, conceptEditState.courseId)
     // refetchQueries: [{ query: COURSE_PREREQUISITES }]
   })
 
@@ -131,11 +156,11 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   }
 
   const handleConceptEditClose = () => {
-    setConceptEditState({ open: false, id: '', name: '', description: '' })
+    setConceptEditState({ open: false, conceptId: '', name: '', description: '', courseId: '' })
   }
 
-  const handleConceptEditOpen = (id, name, description) => () => {
-    setConceptEditState({ open: true, id, name, description })
+  const handleConceptEditOpen = (conceptId, name, description, courseId) => () => {
+    setConceptEditState({ open: true, conceptId, name, description, courseId })
   }
 
   const handleConceptInfoClose = () => {
@@ -156,6 +181,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         <Course
           course={course}
           activeConceptIds={activeConceptIds}
+          addingLink={addingLink}
+          setAddingLink={setAddingLink}
           openCourseDialog={handleCourseOpen}
           openConceptDialog={handleConceptOpen}
           openConceptEditDialog={handleConceptEditOpen}
@@ -167,8 +194,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
   }
 
   return (
-    <React.Fragment>
-      <Grid container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
+    <>
+      <Grid onClick={onClick} container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
         <Grid item>
           <Typography style={{ margin: '2px 0px 0px 10px' }} variant='h4'>Prerequisites</Typography>
         </Grid>
@@ -184,10 +211,11 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                       }
                     </Grid>
                     :
-                    <Masonry
+                    <CustomMasonry
                       breakpointCols={breakpointColumnsObj}
-                      className="my-masonry-grid"
-                      columnClassName="my-masonry-grid_column"
+                      className='my-masonry-grid'
+                      columnClassName='my-masonry-grid_column'
+                      handleRecalculateColumnCount={doRedrawLines}
                     >
                       {
                         courses && courses.map(course =>
@@ -195,6 +223,8 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                             key={course.id}
                             course={course}
                             activeConceptIds={activeConceptIds}
+                            addingLink={addingLink}
+                            setAddingLink={setAddingLink}
                             openCourseDialog={handleCourseOpen}
                             openConceptDialog={handleConceptOpen}
                             openConceptEditDialog={handleConceptEditOpen}
@@ -203,7 +233,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
                           />
                         )
                       }
-                    </Masonry>
+                    </CustomMasonry>
                 }
 
               </div>
@@ -249,16 +279,16 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             <SnackbarContent className={classes.info}
               action={[
                 <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
+                  key='close'
+                  aria-label='Close'
+                  color='inherit'
                   onClick={handleConceptInfoClose}
                 >
                   <CloseIcon className={classes.icon} />
                 </IconButton>
               ]}
               message={
-                <span className={classes.message} id="message-id">
+                <span className={classes.message} id='message-id'>
                   <InfoIcon className={classes.infoIcon} />
                   {CONCEPT_ADDING_INSTRUCTION}
                 </span>}
@@ -275,16 +305,16 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             <SnackbarContent className={classes.info}
               action={[
                 <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
+                  key='close'
+                  aria-label='Close'
+                  color='inherit'
                   onClick={handleCourseInfoClose}
                 >
                   <CloseIcon className={classes.icon} />
                 </IconButton>
               ]}
               message={
-                <span className={classes.message} id="message-id">
+                <span className={classes.message} id='message-id'>
                   <InfoIcon className={classes.infoIcon} />
                   {COURSE_ADDING_INSTRUCTION}
                 </span>}
@@ -302,16 +332,16 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
             <SnackbarContent className={classes.info}
               action={[
                 <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
+                  key='close'
+                  aria-label='Close'
+                  color='inherit'
                   onClick={handleLinkInfoClose}
                 >
                   <CloseIcon className={classes.icon} />
                 </IconButton>
               ]}
               message={
-                <span className={classes.message} id="message-id">
+                <span className={classes.message} id='message-id'>
                   <InfoIcon className={classes.infoIcon} />
                   {CONCEPT_LINKING_INSTRUCTION}
                 </span>}
@@ -320,7 +350,7 @@ const GuidedCourseContainer = ({ classes, setCourseTrayOpen, activeCourse, cours
         </React.Fragment>
         : null
       }
-    </React.Fragment>
+    </>
   )
 }
 

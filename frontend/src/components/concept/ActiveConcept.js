@@ -10,16 +10,23 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
-import Switch from '@material-ui/core/Switch'
 import Tooltip from '@material-ui/core/Tooltip'
+
+import LensIcon from '@material-ui/icons/Lens'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMutation } from 'react-apollo-hooks'
+import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
+import { createConceptLinkUpdate } from '../../apollo/update'
 
 const styles = theme => ({
   conceptName: {
     maxWidth: '70%',
     wordBreak: 'break-word'
+  },
+  conceptCircle: {
+    zIndex: 2
   },
   active: {
     backgroundColor: '#9ecae1',
@@ -48,15 +55,11 @@ const styles = theme => ({
   }
 })
 
-const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConcept, openConceptEditDialog }) => {
+const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, deleteConcept, openConceptEditDialog, workspaceId }) => {
   const [state, setState] = useState({ anchorEl: null })
 
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
-  
-  const isActive = () => {
-    return undefined !== activeConceptIds.find(activeConceptId => activeConceptId === concept.id)
-  }
 
   const handleMenuOpen = (event) => {
     setState({ anchorEl: event.currentTarget })
@@ -88,9 +91,39 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
     openConceptEditDialog(id, name, description)()
   }
 
-  return (
-    <Tooltip title="activate selection of prerequisites" enterDelay={500} leaveDelay={400} placement="left">
-      <ListItem button divider className={classes.listItem} onClick={toggleConcept(concept.id)} id={'concept-' + concept.id} >
+  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+    update: createConceptLinkUpdate(concept.courses[0].id, workspaceId)
+  })
+
+  const onClick = evt => {
+    if (addingLink) {
+      setAddingLink(null)
+      createConceptLink({
+        variables: {
+          to: concept.id,
+          from: addingLink.id,
+          workspaceId
+        }
+      }).catch(() => errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      }))
+    } else {
+      setAddingLink({
+        id: concept.id,
+        type: 'concept-circle-active'
+      })
+    }
+    evt.stopPropagation()
+  }
+
+  return <>
+    <Tooltip title='activate selection of prerequisites' enterDelay={500} leaveDelay={400} placement='left'>
+      <ListItem
+        button divider id={'concept-' + concept.id}
+        className={classes.listItem}
+        onClick={toggleConcept(concept.id)}
+      >
         <ListItemText
           id={'concept-name-' + concept.id}
           className={classes.conceptName}
@@ -100,18 +133,18 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
           {activeConceptIds.length === 0 ?
             <React.Fragment>
-              { loggedIn ?
+              {loggedIn ?
                 <IconButton
                   aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup="true"
+                  aria-haspopup='true'
                   onClick={handleMenuOpen}
                 >
-                  <MoreVertIcon />
+                  <MoreVertIcon/>
                 </IconButton>
-                : null 
+                : null
               }
               <Menu
-                id="simple-menu"
+                id='simple-menu'
                 anchorEl={state.anchorEl}
                 open={Boolean(state.anchorEl)}
                 onClose={handleMenuClose}
@@ -126,16 +159,17 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, deleteConc
             </React.Fragment>
             : null
           }
-          <Switch
-            checked={isActive()}
-            color='primary'
-            onClick={toggleConcept(concept.id)}
-            id={'concept-switch' + concept.id}
-          />
+          <IconButton onClick={onClick}
+            className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
+            <LensIcon
+              id={`concept-circle-active-${concept.id}`}
+              color={activeConceptIds.includes(concept.id) ? 'secondary' : undefined}
+            />
+          </IconButton>
         </ListItemSecondaryAction>
-      </ListItem >
+      </ListItem>
     </Tooltip>
-  )
+  </>
 }
 
 export default withStyles(styles)(Concept)

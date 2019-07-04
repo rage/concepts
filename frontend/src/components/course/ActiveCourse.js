@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grid from '@material-ui/core/Grid'
 
 // Card
@@ -14,7 +13,7 @@ import { COURSE_BY_ID } from '../../graphql/Query'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
 
-// List 
+// List
 import List from '@material-ui/core/List'
 
 
@@ -62,11 +61,13 @@ const styles = theme => ({
 
 const ActiveCourse = ({
   classes, // UI
+  onClick,
   course,
   workspaceId,
   activeConceptIds,
-  toggleConcept,
-  resetConceptToggle
+  addingLink,
+  setAddingLink,
+  toggleConcept
 }) => {
 
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
@@ -148,18 +149,6 @@ const ActiveCourse = ({
     }
   })
 
-  const handleClickAway = (event) => {
-    try {
-      const isConceptButton = event.composedPath()
-        .map(el => el.id)
-        .find(id => (id + '').substring(0, 7) === 'concept')
-      if (!isConceptButton) {
-        resetConceptToggle()
-      }
-    }
-    catch (err) { console.log('Unsuccessful clickaway') }
-  }
-
   const handleConceptClose = () => {
     setConceptState({ ...conceptState, open: false })
   }
@@ -178,33 +167,34 @@ const ActiveCourse = ({
 
 
   return (
-    <Grid item xs={4} lg={3}>
+    <Grid item xs={4} lg={3} onClick={onClick}>
       <Card elevation={0} className={classes.root}>
         <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
         </CardHeader>
 
         <CardContent>
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <List className={classes.list}>
-              {course.concepts.map(concept =>
-                <ActiveConcept concept={concept}
-                  key={concept.id}
-                  activeConceptIds={activeConceptIds}
-                  deleteConcept={deleteConcept}
-                  openConceptDialog={handleConceptOpen}
-                  openConceptEditDialog={handleConceptEditOpen}
-                  toggleConcept={toggleConcept}
-                />
-              )}
-            </List>
-          </ClickAwayListener>
+          <List className={classes.list}>
+            {course.concepts.map(concept =>
+              <ActiveConcept concept={concept}
+                key={concept.id}
+                activeConceptIds={activeConceptIds}
+                addingLink={addingLink}
+                setAddingLink={setAddingLink}
+                deleteConcept={deleteConcept}
+                openConceptDialog={handleConceptOpen}
+                openConceptEditDialog={handleConceptEditOpen}
+                toggleConcept={toggleConcept}
+                workspaceId={workspaceId}
+              />
+            )}
+          </List>
 
           {loggedIn ?
             <Button
               className={classes.button}
               onClick={handleConceptOpen(course.id)}
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
             >
               Add concept
             </Button> : null

@@ -26,6 +26,13 @@
     "comma-dangle": [
       "error",
       "never"
+    ],
+    "eol-last": [
+      "error",
+      "always"
+    ],
+    "no-trailing-spaces": [
+      "error"
     ]
   }
 }
