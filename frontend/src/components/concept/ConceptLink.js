@@ -297,7 +297,8 @@ export class Line extends PureComponent {
         data-link-to={this.props.to} {...this.props.attributes}>
         <div className={`${this.props.classes.linetoWrapper} ${this.props.active && !this.props.followMouse ? 'linetoActive' : ''}`}
           ref={this.el} style={wrapperStyle}>
-          {(this.props.active && !this.props.followMouse) && <div style={hoverAreaStyle} className={this.props.classes.linetoHover}/>}
+          {(this.props.active && !this.props.followMouse) &&
+          <div style={hoverAreaStyle} className={this.props.classes.linetoHover} onContextMenu={evt => this.props.onContextMenu(evt, this)}/>}
           <div style={innerStyle}
             className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
           </div>

@@ -56,10 +56,6 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
-  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: deleteConceptLinkUpdate(activeCourseId, workspaceId)
-  })
-
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: createConceptLinkUpdate(activeCourseId, workspaceId)
   })

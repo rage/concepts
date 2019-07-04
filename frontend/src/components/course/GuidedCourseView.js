@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -7,7 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { withStyles } from '@material-ui/core/styles'
 
 import { WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
-import { CREATE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'
+import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 
 import GuidedCourseContainer from './GuidedCourseContainer'
 import GuidedCourseTray from './GuidedCourseTray'
@@ -19,10 +19,12 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 
 import { useLoginStateValue } from '../../store'
 import {
-  createCourseUpdate,
+  createCourseUpdate, deleteConceptLinkUpdate,
   updateCourseUpdate
 } from '../../apollo/update'
 import ConceptLink from '../concept/ConceptLink'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
 const styles = theme => ({
 })
 
@@ -31,7 +33,35 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const [redrawLines, setRedrawLines] = useState(0)
   const [addingLink, setAddingLink] = useState(null)
+  const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
+  const conceptLinkMenuRef = useRef()
   const { loggedIn } = useLoginStateValue()[0]
+
+  const handleMenuOpen = (event, link) => {
+    event.preventDefault()
+    setConceptLinkMenu({
+      x: event.pageX + window.pageXOffset,
+      y: event.pageY + 32 + window.pageYOffset,
+      linkId: link.props.linkId
+    })
+  }
+
+  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+    update: deleteConceptLinkUpdate(courseId, workspaceId)
+  })
+
+  const handleMenuClose = () => {
+    setConceptLinkMenu(null)
+  }
+
+  const deleteLink = async () => {
+    await deleteConceptLink({
+      variables: {
+        id: conceptLinkMenu.linkId
+      }
+    })
+    setConceptLinkMenu(null)
+  }
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -143,10 +173,33 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
             <ConceptLink
               key={`concept-link-${link.id}`} within='course-view' delay={1}
               active={activeConceptIds.includes(concept.id)}
-              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-              redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'/>
+              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`} linkId={link.id}
+              redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'
+              onContextMenu={handleMenuOpen}/>
           )) : null
       ))}
+      {conceptLinkMenu && <div ref={conceptLinkMenuRef} style={{
+        position:'absolute',
+        width: '1px',
+        height: '1px',
+        top: `${conceptLinkMenu.y}px`,
+        left: `${conceptLinkMenu.x}px`}}/>}
+      <Menu
+        id='concept-link-menu'
+        anchorEl={conceptLinkMenuRef.current}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={deleteLink}>Delete link</MenuItem>
+      </Menu>
       {addingLink && <ConceptLink
         key='concept-link-creating' within='course-view' active={true}
         from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}

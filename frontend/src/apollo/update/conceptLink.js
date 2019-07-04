@@ -57,21 +57,29 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
 const deleteConceptLinkUpdate = (courseId, workspaceId) => {
   return (store, response) => {
     try {
-      const dataInStore = store.readQuery({
+      const prereq = store.readQuery({
         query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId
         }
       })
+      const course = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: courseId
+        }
+      })
 
       const deletedConceptLink = response.data.deleteConceptLink
-      const dataInStoreCopy = { ...dataInStore }
 
-      dataInStoreCopy.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
+      prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
         courseLink.from.concepts.forEach(concept => {
           concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
         })
+      })
+      course.courseById.concepts.forEach(concept => {
+        concept.linksToConcept = concept.linksToConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
       })
 
       client.writeQuery({
@@ -80,7 +88,14 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
           courseId,
           workspaceId
         },
-        data: dataInStoreCopy
+        data: prereq
+      })
+      client.writeQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: courseId
+        },
+        data: course
       })
     } catch (err) {
     }
