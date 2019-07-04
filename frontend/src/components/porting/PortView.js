@@ -106,7 +106,7 @@ const PortView = ({ classes }) => {
       event.preventDefault()
       let content = fileReader.result
       // eslint-disable-next-line no-control-regex
-      if (/[\x00-\x1F]/.test(content)) {
+      if (/[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/.test(content)) {
         let confirm = window.confirm('File contains unprintable characters, continue?')
         if (!confirm) {
           return
