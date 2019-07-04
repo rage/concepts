@@ -100,24 +100,38 @@ const PortView = ({ classes }) => {
   const openFile = (event) => {
     event.preventDefault()
     if (event.target.files.length === 0) return
-
     const fileReader = new FileReader()
+
     fileReader.onload = (event) => {
       event.preventDefault()
       let content = fileReader.result
-      setData(content)
+      // eslint-disable-next-line no-control-regex
+      if (/[\x00-\x1F]/.test(content)) {
+        let confirm = window.confirm('File contains unprintable characters, continue?')
+        if (!confirm) {
+          return
+        }
+      }
+      if (content.length > 50 * 1024) {
+        let sendDirectly = window.confirm('File too big, send directly?')
+        if (sendDirectly) {
+          sendData(content)
+        }
+      } else {
+        setData(content)
+      }
     }
     
     fileReader.readAsText(event.target.files[0])
   }
   
-  const sendData = async () => {
+  const sendData = async (jsonData) => {
     setLoading(true)
     
     try {
       await dataPortingMutation({
         variables: {
-          data
+          data: jsonData
         }
       })
 
@@ -168,7 +182,7 @@ const PortView = ({ classes }) => {
               disabled={loading}
             />
             <div className={classes.wrapper}>
-              <Button  className={success ? classes.buttonSuccess : ''} color="primary" variant="contained" fullWidth onClick={sendData}> {buttonText} </Button>
+              <Button  className={success ? classes.buttonSuccess : ''} color="primary" variant="contained" fullWidth onClick={() => sendData(data)}> {buttonText} </Button>
               {
                 loading && <CircularProgress size={24} className={classes.buttonProgress}/>
               }
