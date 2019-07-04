@@ -120,41 +120,41 @@ const App = ({ classes }) => {
 
   return (
     <React.Fragment>
-      <div className="App">
+      <div className='App'>
         <Grid container>
           <Grid item xs={12}>
             <NavBar />
           </Grid>
-          <Route exact path="/" render={() => <Grid item xs={12}><LandingView /></Grid>} />
+          <Route exact path='/' render={() => <Grid item xs={12}><LandingView /></Grid>} />
 
-          <PrivateRoute exact path="/porting" redirectPath="/auth" condition={loggedIn} render={() => <PortView/> } />
-          <Route exact path="/auth" render={() => <AuthenticationForm />} />
-          <Route exact path="/user" render={() => <UserView />} />
-          
-          <Route exact path="/workspaces/:wid/heatmap" render={({ match, location }) => (
-            <CourseHeatmap workspaceId={match.params.wid}/> 
+          <PrivateRoute exact path='/porting' redirectPath='/auth' condition={loggedIn} render={() => <PortView/> } />
+          <Route exact path='/auth' render={() => <AuthenticationForm />} />
+          <Route exact path='/user' render={() => <UserView />} />
+
+          <Route exact path='/workspaces/:wid/heatmap' render={({ match, location }) => (
+            <CourseHeatmap workspaceId={match.params.wid}/>
           )}/>
 
-          <Route exact path="/workspaces/:id/(mapper|matrix|graph)" render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />
-          <Route exact path="/workspaces/:wid/mapper/:cid" render={({ match }) => (
+          <Route exact path='/workspaces/:id/(mapper|matrix|graph)' render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />
+          <Route exact path='/workspaces/:wid/mapper/:cid' render={({ match }) => (
             <GuidedCourseView
               courseId={match.params.cid}
               workspaceId={match.params.wid}
             />
           )}
           />
-          <Route exact path="/workspaces/:wid/matrix/:cid" render={({ match }) => (
+          <Route exact path='/workspaces/:wid/matrix/:cid' render={({ match }) => (
             <MatrixView
               courseId={match.params.cid}
               workspaceId={match.params.wid}
             />
           )} />
-          <Route exact path="/workspaces/:wid/graph/:cid" render={({ match }) => <div>GRAPH</div>} />
-          <Route exact path="/workspaces/:id/courses" render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
+          <Route exact path='/workspaces/:wid/graph/:cid' render={({ match }) => <div>GRAPH</div>} />
+          <Route exact path='/workspaces/:id/courses' render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
 
-          <Route exact path="/courses" render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+          <Route exact path='/courses' render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
 
-          <Route exact path="/courses/:id" render={({ match }) => {
+          <Route exact path='/courses/:id' render={({ match }) => {
             return <GuidedCourseView
               course_id={match.params.id}
               createCourse={createCourse}
@@ -163,7 +163,7 @@ const App = ({ classes }) => {
           }}
           />
           <Grid item xs={12}>
-            <PrivateRoute exact path="/courses/:id/matrix" redirectPath="/auth" condition={loggedIn} render={({ match }) => {
+            <PrivateRoute exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn} render={({ match }) => {
               return <MatrixView
                 course_id={match.params.id}
               />
@@ -184,16 +184,16 @@ const App = ({ classes }) => {
         <SnackbarContent className={classes.error}
           action={[
             <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
+              key='close'
+              aria-label='Close'
+              color='inherit'
               onClick={handleCloseErrorMessage}
             >
               <CloseIcon className={classes.icon} />
             </IconButton>
           ]}
           message={
-            <span className={classes.message} id="message-id">
+            <span className={classes.message} id='message-id'>
               <ErrorIcon className={classes.errorIcon} />
               {error}
             </span>}

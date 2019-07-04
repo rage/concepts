@@ -1,4 +1,4 @@
-import React, { useState } from 'react' 
+import React, { useState } from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -86,7 +86,7 @@ const PortView = ({ classes }) => {
   const [data, setData] = useState('')
   const [buttonText, setButtonText] = useState('Port')
   const [success, setSuccess] = useState(false)
-  const [loading, setLoading] = useState(false) 
+  const [loading, setLoading] = useState(false)
 
   const errorDispatch = useErrorStateValue()[1]
   const dataPortingMutation = useMutation(PORT_DATA, {})
@@ -121,13 +121,13 @@ const PortView = ({ classes }) => {
         setData(content)
       }
     }
-    
+
     fileReader.readAsText(event.target.files[0])
   }
-  
+
   const sendData = async (jsonData) => {
     setLoading(true)
-    
+
     try {
       await dataPortingMutation({
         variables: {
@@ -155,34 +155,34 @@ const PortView = ({ classes }) => {
     <Grid item xs={12}>
       <Container>
         <Card>
-          <CardHeader title="Port data"/>
-          
+          <CardHeader title='Port data'/>
+
           <CardContent>
-            <Button variant="contained" color="secondary" onClick={addTemplate}> Add template </Button>
-            <Button className={classes.rowButton} 
-              variant="contained" 
-              color="secondary" 
+            <Button variant='contained' color='secondary' onClick={addTemplate}> Add template </Button>
+            <Button className={classes.rowButton}
+              variant='contained'
+              color='secondary'
               component='label'
-              label='Open...'> 
+              label='Open...'>
               Open...
-              <input type="file" onChange={openFile} allow="text/*" hidden/> 
+              <input type='file' onChange={openFile} allow='text/*' hidden/>
             </Button>
 
             <TextField
-              id="json-input"
-              label="JSON"
+              id='json-input'
+              label='JSON'
               placeholder={PLACEHOLDER}
               multiline
-              rowsMax="32"
+              rowsMax='32'
               className={classes.jsonField}
-              margin="normal"
-              variant="outlined"
+              margin='normal'
+              variant='outlined'
               onChange={(e) => setData(e.target.value)}
               value={data}
               disabled={loading}
             />
             <div className={classes.wrapper}>
-              <Button  className={success ? classes.buttonSuccess : ''} color="primary" variant="contained" fullWidth onClick={() => sendData(data)}> {buttonText} </Button>
+              <Button  className={success ? classes.buttonSuccess : ''} color='primary' variant='contained' fullWidth onClick={() => sendData(data)}> {buttonText} </Button>
               {
                 loading && <CircularProgress size={24} className={classes.buttonProgress}/>
               }
@@ -194,4 +194,4 @@ const PortView = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(PortView) 
+export default withStyles(styles)(PortView)

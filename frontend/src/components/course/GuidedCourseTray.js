@@ -82,11 +82,11 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, getLinkToDelete, course, 
     }
   }
   return (
-    <Tooltip title="Add course as prerequisite" enterDelay={500} leaveDelay={400} placement="right">
+    <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
       <ListItem divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
-          <Checkbox checked={isPrerequisite} onClick={onClick} color="primary"></Checkbox>
+          <Checkbox checked={isPrerequisite} onClick={onClick} color='primary'></Checkbox>
         </ListItemSecondaryAction>
       </ListItem>
     </Tooltip>
@@ -169,17 +169,17 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
               <CardHeader
                 className={classes.cardHeader}
                 classes={{ title: classes.title }}
-                title="Add course"
+                title='Add course'
                 titleTypographyProps={{ variant: 'h4' }}
               />
 
               <CardContent>
                 <TextField
-                  margin="dense"
-                  id="description"
-                  label="Filter"
-                  type="text"
-                  name="filter"
+                  margin='dense'
+                  id='description'
+                  label='Filter'
+                  type='text'
+                  name='filter'
                   fullWidth
                   value={filterKeyword}
                   onChange={handleKeywordInput}
@@ -209,7 +209,7 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
                     :
                     null
                 }
-                <Button onClick={handleClickOpen} className={classes.button} variant="contained" color="secondary"> New course </Button>
+                <Button onClick={handleClickOpen} className={classes.button} variant='contained' color='secondary'> New course </Button>
               </CardContent>
             </Card >
             <CourseCreationDialog state={state} handleClose={handleClose} workspaceId={workspaceId} createCourse={createCourse} />

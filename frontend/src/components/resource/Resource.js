@@ -3,7 +3,7 @@ import React from 'react'
 const Resource = ({ resource }) => {
   return (
     <div>
-      <table className="resourceDetails">
+      <table className='resourceDetails'>
         <tbody>
           <tr>
             <td>{resource.id}</td>
@@ -17,7 +17,7 @@ const Resource = ({ resource }) => {
         </tbody>
       </table>
 
-      <table className="resourceUrls">
+      <table className='resourceUrls'>
         <thead>
           <th></th>
         </thead>

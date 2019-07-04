@@ -41,12 +41,12 @@ const styles = theme => ({
 
 
 const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
-  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant="contained" color={checked ? 'primary' : 'secondary'}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
+  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant='contained' color={checked ? 'primary' : 'secondary'}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
 )
 
 const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions }) => {
-  
-  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => { 
+
+  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => {
     return allConcepts.concat(concepts)}
   , [])
 
@@ -197,15 +197,15 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
             setFilter(e.target.filter.value.toLowerCase())
           }} >
             <TextField
-              margin="dense"
-              id="description"
-              label="Filter"
-              type="text"
-              name="filter"
+              margin='dense'
+              id='description'
+              label='Filter'
+              type='text'
+              name='filter'
               fullWidth
-              variant="outlined"
+              variant='outlined'
             />
-            <Button variant="contained" type="submit" fullWidth> Filter </Button>
+            <Button variant='contained' type='submit' fullWidth> Filter </Button>
           </form>
         </div>
       </Grid>

@@ -147,24 +147,24 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           Select or create default course
         </Typography>
 
         <div className={classes.form}>
           <TextField
             error={error}
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            id="name"
-            label="Name of the course"
-            name="name"
-            autoComplete="name"
+            id='name'
+            label='Name of the course'
+            name='name'
+            autoComplete='name'
             onChange={(e) => setName(e.target.value)}
             value={name}
             autoFocus
@@ -179,10 +179,10 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
             }
           </FormHelperText>
           <Button
-            type="submit"
+            type='submit'
             fullWidth
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             className={classes.submit}
             onClick={createDefaultCourse}
           >
@@ -196,7 +196,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
                 <ListItem button divider key={course.id} onClick={setAsInput(course.name)}>
                   <ListItemText
                     primary={
-                      <Typography variant="h6">
+                      <Typography variant='h6'>
                         {course.name}
                       </Typography>
                     }

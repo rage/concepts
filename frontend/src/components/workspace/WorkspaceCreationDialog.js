@@ -48,19 +48,19 @@ const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
     <Dialog
       open={state.open}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id="form-dialog-title">Create workspace</DialogTitle>
+      <DialogTitle id='form-dialog-title'>Create workspace</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Workspaces work as a sandbox for you to create and connect concepts with each other.
         </DialogContentText>
         <TextField
           autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
+          margin='dense'
+          id='name'
+          label='Name'
+          type='text'
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
@@ -68,10 +68,10 @@ const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleCreate} color="primary">
+        <Button onClick={handleCreate} color='primary'>
           Create
         </Button>
       </DialogActions>

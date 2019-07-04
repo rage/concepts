@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
         display: 'block'
       }
     }
-    
+
   },
   tableCellContainer: {
     padding: '1px'
@@ -180,13 +180,13 @@ const CourseHeatmap = ({ workspaceId }) => {
 
   return (
     <Grid item xs={12}>
-      <Container maxWidth="xl">
+      <Container maxWidth='xl'>
         <Card className={classes.paper} >
-          <CardHeader title="Course overview" />
+          <CardHeader title='Course overview' />
           {
             workspaceCourseQuery.data.workspaceById ?
               <CardContent>
-                <div className="scrollSyncTable">
+                <div className='scrollSyncTable'>
                   <table>
                     <thead>
                       <tr>

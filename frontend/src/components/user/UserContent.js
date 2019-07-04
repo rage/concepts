@@ -50,15 +50,15 @@ const UserView = ({ classes, userId }) => {
     <React.Fragment>
       {
         workspaceQuery.data.workspacesByOwner ?
-          <Grid container spacing={0} direction="column">
+          <Grid container spacing={0} direction='column'>
             <WorkspaceList workspaces={workspaceQuery.data.workspacesByOwner} updateWorkspace={updateWorkspace} createWorkspace={createWorkspace} deleteWorkspace={deleteWorkspace} />
           </Grid>
           :
           <Grid container
             spacing={0}
-            direction="row"
-            justify="center"
-            alignItems="center"
+            direction='row'
+            justify='center'
+            alignItems='center'
           >
             <Grid item xs={12}>
               <div style={{ textAlign: 'center' }}>

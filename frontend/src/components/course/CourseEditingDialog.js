@@ -27,7 +27,7 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
     if (name === '') {
       window.alert('Course needs a name!')
       return
-    } 
+    }
     try {
       if (defaultName !== name) {
         await updateCourse({
@@ -57,19 +57,19 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
     <Dialog
       open={state.open}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id="form-dialog-title">Edit course</DialogTitle>
+      <DialogTitle id='form-dialog-title'>Edit course</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Courses can be connected to other courses as prerequisites.
         </DialogContentText>
         <TextField
           autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
+          margin='dense'
+          id='name'
+          label='Name'
+          type='text'
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
@@ -77,10 +77,10 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleEdit} color="primary">
+        <Button onClick={handleEdit} color='primary'>
           Save
         </Button>
       </DialogActions>

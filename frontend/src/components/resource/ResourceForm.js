@@ -42,11 +42,11 @@ const ResourceForm = ({ createResource, concept_id }) => {
         <hr />
         <div>
           <label>Name </label>
-          <input name="name" value={name} onChange={(e) => setName(e.target.value)}></input>
+          <input name='name' value={name} onChange={(e) => setName(e.target.value)}></input>
         </div>
         <div>
           <label>Description </label>
-          <input name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <input name='description' value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div style={{ display: visible ? '' : 'none' }}>
           {urls.length > 0 &&
@@ -66,12 +66,12 @@ const ResourceForm = ({ createResource, concept_id }) => {
             <label>
               New url
             </label>
-            <input name="url" value={url} onChange={(e) => setUrl(e.target.value)}></input>
+            <input name='url' value={url} onChange={(e) => setUrl(e.target.value)}></input>
           </div>
-          <button type="button" onClick={addAddress}>Add url</button>
+          <button type='button' onClick={addAddress}>Add url</button>
         </div>
-        <button type="submit">Create</button>
-        <button type="button" onClick={toggleVisibility}>Cancel</button>
+        <button type='submit'>Create</button>
+        <button type='button' onClick={toggleVisibility}>Cancel</button>
         <hr />
       </form>
       <button style={{ display: visible ? 'none' : '' }} onClick={toggleVisibility}>Create resource</button>

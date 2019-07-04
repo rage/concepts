@@ -82,7 +82,7 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
       })
       return
     }
-    
+
     let willDelete = window.confirm('Are you sure you want to delete this course?')
     if (willDelete) {
       try {
@@ -106,18 +106,18 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justify='center'>
       <Grid item md={8} xs={12}>
         <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
-              loggedIn ? 
-                <IconButton aria-label="Add" onClick={handleClickOpen}>
+              loggedIn ?
+                <IconButton aria-label='Add' onClick={handleClickOpen}>
                   <AddIcon />
                 </IconButton> : null
             }
             title={
-              <Typography variant="h5" component="h3">
+              <Typography variant='h5' component='h3'>
                 Courses
               </Typography>
             }
@@ -129,27 +129,27 @@ const CourseList = ({ classes, history, updateCourse, deleteCourse, createCourse
                   <ListItem button key={course.id} onClick={handleNavigateColumns(course.id)}>
                     <ListItemText
                       primary={
-                        <Typography variant="h6">
+                        <Typography variant='h6'>
                           {course.name}
                         </Typography>
                       }
                       secondary={true ? 'Concepts: ' + course.concepts.length : null}
                     />
                     {
-                      loggedIn ? 
+                      loggedIn ?
                         <ListItemSecondaryAction>
-                          <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(course.id)}>
+                          <IconButton aria-label='Matrix' onClick={handleNavigateMatrix(course.id)}>
                             <GridOnIcon />
                           </IconButton>
-                          <IconButton aria-label="Delete" onClick={handleDelete(course.id)}>
+                          <IconButton aria-label='Delete' onClick={handleDelete(course.id)}>
                             <DeleteIcon />
                           </IconButton>
-                          <IconButton aria-label="Edit" onClick={handleEditOpen(course.id, course.name)}>
+                          <IconButton aria-label='Edit' onClick={handleEditOpen(course.id, course.name)}>
                             <EditIcon />
                           </IconButton>
                         </ListItemSecondaryAction> : null
                     }
-                    
+
                   </ListItem>
                 )) :
                 <div style={{ textAlign: 'center' }}>

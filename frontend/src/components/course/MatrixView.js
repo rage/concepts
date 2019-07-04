@@ -43,9 +43,9 @@ const MatriceView = ({ courseId, workspaceId }) => {
           :
           <Grid container
             spacing={0}
-            direction="row"
-            justify="center"
-            alignItems="center"
+            direction='row'
+            justify='center'
+            alignItems='center'
           >
             <Grid item xs={12}>
               <div style={{ textAlign: 'center' }}>

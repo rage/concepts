@@ -48,19 +48,19 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
     <Dialog
       open={state.open}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id="form-dialog-title">Create project</DialogTitle>
+      <DialogTitle id='form-dialog-title'>Create project</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Projects are used to manage the creation of workspaces
         </DialogContentText>
         <TextField
           autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
+          margin='dense'
+          id='name'
+          label='Name'
+          type='text'
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
@@ -68,10 +68,10 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleCreate} color="primary">
+        <Button onClick={handleCreate} color='primary'>
           Create
         </Button>
       </DialogActions>

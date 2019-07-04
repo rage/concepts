@@ -1,7 +1,7 @@
 module.exports = {
   Workspace: {
     owner(root, args, context) {
-      return context.prisma.workspace({ 
+      return context.prisma.workspace({
         id: root.id
       }).owner()
     },

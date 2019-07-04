@@ -57,19 +57,19 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
     <Dialog
       open={state.open}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id="form-dialog-title">Edit project</DialogTitle>
+      <DialogTitle id='form-dialog-title'>Edit project</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Projects are used to manage the creation of workspaces
         </DialogContentText>
         <TextField
           autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
+          margin='dense'
+          id='name'
+          label='Name'
+          type='text'
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
@@ -77,10 +77,10 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleEdit} color="primary">
+        <Button onClick={handleEdit} color='primary'>
           Save
         </Button>
       </DialogActions>

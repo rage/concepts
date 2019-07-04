@@ -97,18 +97,18 @@ const ProjectList = ({ classes, history, projects, deleteProject, createProject,
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justify='center'>
       <Grid item md={8} xs={12}>
         <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
               loggedIn ?
-                <IconButton aria-label="Add" onClick={handleClickOpen}>
+                <IconButton aria-label='Add' onClick={handleClickOpen}>
                   <AddIcon />
                 </IconButton> : null
             }
             title={
-              <Typography variant="h5" component="h3">
+              <Typography variant='h5' component='h3'>
                 Projects
               </Typography>
             }
@@ -120,7 +120,7 @@ const ProjectList = ({ classes, history, projects, deleteProject, createProject,
                   <ListItem button key={project.id} onClick={handleNavigateProject(project.id)}>
                     <ListItemText
                       primary={
-                        <Typography variant="h6">
+                        <Typography variant='h6'>
                           {project.name}
                         </Typography>
                       }
@@ -129,10 +129,10 @@ const ProjectList = ({ classes, history, projects, deleteProject, createProject,
                     {
                       loggedIn ?
                         <ListItemSecondaryAction>
-                          <IconButton aria-label="Delete" onClick={handleDelete(project.id)}>
+                          <IconButton aria-label='Delete' onClick={handleDelete(project.id)}>
                             <DeleteIcon />
                           </IconButton>
-                          <IconButton aria-label="Edit" onClick={handleEditOpen(project.id, project.name)}>
+                          <IconButton aria-label='Edit' onClick={handleEditOpen(project.id, project.name)}>
                             <EditIcon />
                           </IconButton>
                         </ListItemSecondaryAction> : null

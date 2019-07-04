@@ -45,18 +45,18 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
     <Dialog
       open={state.open}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title"
+      aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id="form-dialog-title">
+      <DialogTitle id='form-dialog-title'>
         Add concept
       </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
-          margin="dense"
-          id="name"
-          label="Name"
-          type="text"
+          margin='dense'
+          id='name'
+          label='Name'
+          type='text'
           value={name}
           onChange={(e) => setName(e.target.value)}
           fullWidth
@@ -64,22 +64,22 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
 
         <TextField
           multiline
-          margin="dense"
-          id="description"
-          label="Description"
-          type="text"
+          margin='dense'
+          id='description'
+          label='Description'
+          type='text'
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           fullWidth
-          variant="outlined"
+          variant='outlined'
         />
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleConceptAdding} color="primary">
+        <Button onClick={handleConceptAdding} color='primary'>
           Add concept
         </Button>
       </DialogActions>

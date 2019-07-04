@@ -17,7 +17,7 @@ const validateData = (data) => {
   if (!Array.isArray(data['courses'])) {
     throw new Error('courses not found or is not an array')
   }
-  
+
   for (const course of data['courses']) {
     if (typeof course['name'] !== 'string') {
       throw new Error('course name missing')
@@ -72,7 +72,7 @@ const PortMutations = {
 
     // Save data to prisma
     let courses = json['courses']
-    
+
     await Promise.all(courses.map(async course => {
       let courseObj = await context.prisma.createCourse({
         name: course['name'],

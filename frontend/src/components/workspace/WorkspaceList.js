@@ -107,18 +107,18 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
 
 
   return (
-    <Grid container justify="center">
+    <Grid container justify='center'>
       <Grid item md={8} xs={12}>
         <Card elevation={0} className={classes.root}>
           <CardHeader
             action={
               loggedIn ?
-                <IconButton aria-label="Add" onClick={handleClickOpen}>
+                <IconButton aria-label='Add' onClick={handleClickOpen}>
                   <AddIcon />
                 </IconButton> : null
             }
             title={
-              <Typography variant="h5" component="h3">
+              <Typography variant='h5' component='h3'>
                 Workspaces
               </Typography>
             }
@@ -130,7 +130,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
                   <ListItem button key={workspace.id} onClick={handleNavigateMapper(workspace.id)}>
                     <ListItemText
                       primary={
-                        <Typography variant="h6">
+                        <Typography variant='h6'>
                           {workspace.name}
                         </Typography>
                       }
@@ -139,16 +139,16 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
                     {
                       loggedIn ?
                         <ListItemSecondaryAction>
-                          <IconButton aria-label="Heatmap" onClick={handleNavigateHeatmap(workspace.id)}>
+                          <IconButton aria-label='Heatmap' onClick={handleNavigateHeatmap(workspace.id)}>
                             <ShowChartIcon/>
                           </IconButton>
-                          <IconButton aria-label="Matrix" onClick={handleNavigateMatrix(workspace.id)}>
+                          <IconButton aria-label='Matrix' onClick={handleNavigateMatrix(workspace.id)}>
                             <GridOnIcon />
                           </IconButton>
-                          <IconButton aria-label="Delete" onClick={handleDelete(workspace.id)}>
+                          <IconButton aria-label='Delete' onClick={handleDelete(workspace.id)}>
                             <DeleteIcon />
                           </IconButton>
-                          <IconButton aria-label="Edit" onClick={handleEditOpen(workspace.id, workspace.name)}>
+                          <IconButton aria-label='Edit' onClick={handleEditOpen(workspace.id, workspace.name)}>
                             <EditIcon />
                           </IconButton>
                         </ListItemSecondaryAction> : null

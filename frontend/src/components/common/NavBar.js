@@ -73,16 +73,16 @@ const AuthenticationIcon = withRouter(({ history }) => {
       {loggedIn ? (
         <div>
           <IconButton
-            aria-label="Account of current user"
-            aria-controls="login-menu"
-            aria-haspopup="true"
+            aria-label='Account of current user'
+            aria-controls='login-menu'
+            aria-haspopup='true'
             onClick={handleMenu}
-            color="inherit"
+            color='inherit'
           >
             <AccountCircle />
           </IconButton>
           <Menu
-            id="login-menu"
+            id='login-menu'
             anchorEl={anchorElement}
             anchorOrigin={{
               vertical: 'top',
@@ -102,7 +102,7 @@ const AuthenticationIcon = withRouter(({ history }) => {
           </Menu>
         </div>
       ) : (
-        <Button onClick={navigateToLogin} color="inherit">
+        <Button onClick={navigateToLogin} color='inherit'>
             Login
         </Button>
       )
@@ -115,13 +115,13 @@ const NavBar = ({ classes }) => {
 
   return (
     <div className={classes.root}>
-      <AppBar elevation={0} position="static" >
-        <Toolbar variant="dense">
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+      <AppBar elevation={0} position='static' >
+        <Toolbar variant='dense'>
+          <IconButton className={classes.menuButton} color='inherit' aria-label='Menu'>
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" color="inherit">
-            <Link style={{ textDecoration: 'none', color: 'inherit' }} to="/">Home</Link>
+          <Typography className={classes.title} variant='h6' color='inherit'>
+            <Link style={{ textDecoration: 'none', color: 'inherit' }} to='/'>Home</Link>
           </Typography>
           <AuthenticationIcon />
         </Toolbar>

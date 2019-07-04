@@ -59,10 +59,10 @@ const AuthenticationForm = ({ history, classes }) => {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component='main' maxWidth='xs'>
       <CssBaseline />
       <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
+        <Typography component='h1' variant='h5'>
           Sign in with TMC account
         </Typography>
 
@@ -70,14 +70,14 @@ const AuthenticationForm = ({ history, classes }) => {
         <form className={classes.form} onSubmit={authenticate} noValidate>
           <TextField
             error={error}
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            id="email"
-            label="email or username"
-            name="email"
-            autoComplete="email"
+            id='email'
+            label='email or username'
+            name='email'
+            autoComplete='email'
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             autoFocus
@@ -85,15 +85,15 @@ const AuthenticationForm = ({ history, classes }) => {
 
           <TextField
             error={error}
-            variant="outlined"
-            margin="normal"
+            variant='outlined'
+            margin='normal'
             required
             fullWidth
-            name="password"
-            label="password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
+            name='password'
+            label='password'
+            type='password'
+            id='password'
+            autoComplete='current-password'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
@@ -107,10 +107,10 @@ const AuthenticationForm = ({ history, classes }) => {
             }
           </FormHelperText>
           <Button
-            type="submit"
+            type='submit'
             fullWidth
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             className={classes.submit}
           >
             Sign In
