@@ -12,13 +12,17 @@ import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
 
 import green from '@material-ui/core/colors/green'
-import { useErrorStateValue } from '../../store'
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 import Button from '@material-ui/core/Button'
 import { useMutation } from 'react-apollo-hooks'
 import {
   PORT_DATA
 } from '../../graphql/Mutation'
+
+import {
+  WORKSPACES_BY_OWNER, STAFF_BY_ID
+} from '../../graphql/Query'
 
 
 const styles = theme => ({
@@ -88,8 +92,19 @@ const PortView = ({ classes }) => {
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [{ user }] = useLoginStateValue()
   const errorDispatch = useErrorStateValue()[1]
-  const dataPortingMutation = useMutation(PORT_DATA, {})
+
+  const dataPortingMutation = useMutation(PORT_DATA, {
+    refetchQueries: [
+      {
+        query: WORKSPACES_BY_OWNER,
+        variables: {
+          ownerId: user.id
+        }
+      }
+    ]
+  })
 
   const addTemplate = () => {
     if (data.length === 0) {
@@ -155,7 +170,7 @@ const PortView = ({ classes }) => {
     <Grid item xs={12}>
       <Container>
         <Card>
-          <CardHeader title='Port data'/>
+          <CardHeader title='Port data' />
 
           <CardContent>
             <Button variant='contained' color='secondary' onClick={addTemplate}> Add template </Button>
@@ -165,7 +180,7 @@ const PortView = ({ classes }) => {
               component='label'
               label='Open...'>
               Open...
-              <input type='file' onChange={openFile} allow='text/*' hidden/>
+              <input type='file' onChange={openFile} allow='text/*' hidden />
             </Button>
 
             <TextField
@@ -182,9 +197,9 @@ const PortView = ({ classes }) => {
               disabled={loading}
             />
             <div className={classes.wrapper}>
-              <Button  className={success ? classes.buttonSuccess : ''} color='primary' variant='contained' fullWidth onClick={() => sendData(data)}> {buttonText} </Button>
+              <Button className={success ? classes.buttonSuccess : ''} color='primary' variant='contained' fullWidth onClick={() => sendData(data)}> {buttonText} </Button>
               {
-                loading && <CircularProgress size={24} className={classes.buttonProgress}/>
+                loading && <CircularProgress size={24} className={classes.buttonProgress} />
               }
             </div>
           </CardContent>
