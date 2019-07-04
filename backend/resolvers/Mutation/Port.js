@@ -16,7 +16,7 @@ const validateData= (data) => {
   data['courses'].forEach(course => {
     if (course['name'] === undefined) return false
     if (course['concepts'] !== undefined &&
-        typeof course['concepts'][Symbol.iterator] === 'function') {
+        Array.isArray(course['concepts'])) {
       course['concepts'].forEach(concept => {
         if (concept.name === undefined) return false
         if (concept.description === undefined) return false
