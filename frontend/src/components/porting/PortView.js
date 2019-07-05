@@ -52,7 +52,8 @@ const styles = theme => ({
 })
 
 const PLACEHOLDER = `{
-  "workpace|workspaceId": "id",
+  "workspace | workspaceId": "id",
+  "defaultCourse": "Name of the default course",
   "courses": [
     {
       "name": "Example",
@@ -60,8 +61,18 @@ const PLACEHOLDER = `{
       "concepts": [
         {
           "name": "Concept 1",
-          "description": "Description"
+          "description": "Description",
+          "prerequisites": [
+            {
+              "name": "",
+              "official": true, // Optional field
+              "course": "" // Optional field
+            }
+          ]
         }
+      ],
+      "prerequisites": [
+        "Prerequisite course name"
       ]
     }
   ]
@@ -70,14 +81,23 @@ const PLACEHOLDER = `{
 
 const TEMPLATE = `{
   "workpace": "",
+  "defaultCourse":"",
   "courses": [
     {
       "name": "",
       "concepts": [
         {
           "name": "",
-          "description": ""
+          "description": "",
+          "prerequisites": [
+            {
+              "name":""
+            }
+          ]
         }
+      ],
+      "prerequisites":[
+        ""
       ]
     }
   ]

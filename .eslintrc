@@ -57,6 +57,13 @@
       {
         "code": 100
       }
+    ],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "all",
+        "ignoreReadBeforeAssign": false
+      }
     ]
   }
 }
