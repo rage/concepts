@@ -23,7 +23,7 @@ import { createConceptLinkUpdate } from '../../apollo/update'
 const styles = theme => ({
   conceptName: {
     maxWidth: '70%',
-    wordBreak: 'break-word'
+    overflowWrap: 'break-word'
   },
   conceptCircle: {
     zIndex: 2
@@ -139,7 +139,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
                   aria-haspopup='true'
                   onClick={handleMenuOpen}
                 >
-                  <MoreVertIcon/>
+                  <MoreVertIcon />
                 </IconButton>
                 : null
               }
