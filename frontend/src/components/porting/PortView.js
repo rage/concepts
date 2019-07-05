@@ -50,7 +50,7 @@ const styles = theme => ({
 })
 
 const PLACEHOLDER = `{
-  "workpace | workspaceId": "id",
+  "workspace | workspaceId": "id",
   "courses": [
     {
       "name": "Example",
