@@ -51,6 +51,7 @@ const styles = theme => ({
 
 const PLACEHOLDER = `{
   "workspace | workspaceId": "id",
+  "defaultCourse": "Name of the default course",
   "courses": [
     {
       "name": "Example",
@@ -78,6 +79,7 @@ const PLACEHOLDER = `{
 
 const TEMPLATE = `{
   "workpace": "",
+  "defaultCourse":"",
   "courses": [
     {
       "name": "",
