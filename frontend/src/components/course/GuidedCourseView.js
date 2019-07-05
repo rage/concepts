@@ -177,7 +177,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               active={activeConceptIds.includes(concept.id)} linkId={link.id}
               from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
               redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
-              onContextMenu={handleMenuOpen} posOffsets={{x0: -4, x1: +6}}/>
+              onContextMenu={handleMenuOpen} posOffsets={{x0: -5, x1: +6}}/>
           )) : null
       ))}
       {conceptLinkMenu && <div ref={conceptLinkMenuRef} style={{
