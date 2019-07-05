@@ -1,32 +1,42 @@
 scalar DateTime
 
 type Query {
+  # Authentication
   allUsers: [User!]!
   userById(id: ID!): User!
 
+  # Workspace queries
   allWorkspaces: [Workspace!]!
   workspaceById(id: ID!): Workspace
   workspacesByOwner(ownerId: ID!): [Workspace!]!
 
+  # Project queries
   allProjects: [Project!]!
   projectById(id: ID!): Project
   projectsByOwner(ownerId: ID!): [Project!]!
 
-
+  # Course queries
   allCourses: [Course!]!
   courseById(id: ID!): Course
   coursesByWorkspace(workspaceId: ID!): [Course!]!
   courseAndPrerequisites(courseId: ID!, workspaceId: ID!): Course
 
+  # Course link queries
   allCourseLinks: [CourseLink!]!
   linksToCourse(id: ID!): [CourseLink!]!
   linksFromCourse(id: ID!): [CourseLink!]!
 
+  # Concept queries
   allConcepts: [Concept!]!
   conceptById(id: ID!): Concept
+  
+  # Concept link queries
   allConceptLinks: [ConceptLink!]!
   linksToConcept(id: ID!): [ConceptLink!]!
   linksFromConcept(id: ID!): [ConceptLink!]!
+
+  # Porting queries
+  exportData(workspaceId: ID!): String!
 }
 
 type Mutation {
@@ -66,7 +76,7 @@ type Mutation {
   createGuestWorkspace(name: String!): Workspace
 
   # Porting mutations
-  portData(data: String!): Workspace
+  importData(data: String!): Workspace
 
   ## Resource mutation
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource

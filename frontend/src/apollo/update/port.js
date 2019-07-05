@@ -16,7 +16,7 @@ const jsonPortUpdate = (ownerId) => {
           ownerId: ownerId
         }
       })
-      const updatedWorkspace = response.data.portData
+      const updatedWorkspace = response.data.importData
 
       if (includedIn(workspaces.workspacesByOwner, updatedWorkspace)) {
         workspaces.workspacesByOwner.map(workspace =>
