@@ -28,6 +28,7 @@ import { useQuery } from 'react-apollo-hooks'
 import {
   EXPORT_QUERY
 } from '../../graphql/Query'
+import client from '../../apollo/apolloClient'
 
 const styles = theme => ({
   root: {
@@ -45,7 +46,32 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
 
-  const exportWorkspaceQuery = useQuery(EXPORT_QUERY)
+
+  const handleWorkspaceExport = (workspaceId) => async () =>  {
+    try {
+      const queryResponse = await client.query({
+        query: EXPORT_QUERY,
+        variables: {
+          workspaceId: workspaceId
+        }
+      })
+
+      const jsonData = queryResponse['data']['exportData']
+
+      // Download JSON file
+      const element = document.createElement('a')
+      element.href = URL.createObjectURL(new Blob([jsonData], {'type':'application/json'}))
+      element.download = `workspace_${workspaceId}.json`
+      document.body.appendChild(element)
+      element.click()
+      document.body.removeChild(element)
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
+  }
 
   const handleClickOpen = () => {
     if (!loggedIn) {
