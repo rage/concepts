@@ -27,20 +27,20 @@ const PortMutations = {
 
     // Create or find workspace
     let workspace
-    if (typeof json['workspace'] === 'string') {
-      workspace = await context.prisma.createWorkspace({
-        name: json['workspace'],
-        owner: {
-          connect: { id: context.user.id }
-        }
-      })
-    } else if (typeof json['workspaceId'] === 'string') {
+    if (typeof json['workspaceId'] === 'string') {
       workspace = await context.prisma.workspace({
         id: json['workspaceId']
       })
       if (workspace === null) {
         throw Error('No such workspace')
       }
+    } else if (typeof json['workspace'] === 'string') {
+      workspace = await context.prisma.createWorkspace({
+        name: json['workspace'],
+        owner: {
+          connect: { id: context.user.id }
+        }
+      })
     }
 
     // Save data to prisma
