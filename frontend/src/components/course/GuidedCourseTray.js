@@ -30,15 +30,17 @@ const styles = theme => ({
     height: '90vh'
   },
   courseName: {
-    wordBreak: 'break-word'
+    maxWidth: '80%',
+    overflowWrap: 'break-word'
   },
   cardHeader: {
-    // marginTop: '5px',
     paddingBottom: '0px'
-    // textAlign: 'center',
+  },
+  headerContent: {
+    maxWidth: '100%'
   },
   title: {
-
+    overflowWrap: 'break-word'
   },
   list: {
     backgroundColor: theme.palette.background.paper,
@@ -59,7 +61,16 @@ const styles = theme => ({
   }
 })
 
-const PrerequisiteCourse = ({ classes, isPrerequisite, getLinkToDelete, course, activeCourseId, workspaceId, createCourseLink, deleteCourseLink }) => {
+const PrerequisiteCourse = ({
+  classes,
+  isPrerequisite,
+  getLinkToDelete,
+  course,
+  activeCourseId,
+  workspaceId,
+  createCourseLink,
+  deleteCourseLink
+}) => {
   const errorDispatch = useErrorStateValue()[1]
 
   const onClick = async () => {
@@ -93,7 +104,15 @@ const PrerequisiteCourse = ({ classes, isPrerequisite, getLinkToDelete, course, 
   )
 }
 
-const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, workspaceId, courseLinks, createCourse }) => {
+const GuidedCourseTray = ({
+  classes,
+  courseTrayOpen,
+  activeCourseId,
+  courseId,
+  workspaceId,
+  courseLinks,
+  createCourse
+}) => {
   const [state, setState] = useState({ open: false })
   const [filterKeyword, setFilterKeyword] = useState('')
 
@@ -108,7 +127,10 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
+      const dataInStore = store.readQuery({
+        query: COURSE_PREREQUISITES,
+        variables: { courseId, workspaceId }
+      })
       const addedCourseLink = response.data.createCourseLink
       const dataInStoreCopy = { ...dataInStore }
       const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
@@ -125,12 +147,17 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
 
   const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
     update: (store, response) => {
-      const dataInStore = store.readQuery({ query: COURSE_PREREQUISITES, variables: { courseId, workspaceId } })
+      const dataInStore = store.readQuery({
+        query: COURSE_PREREQUISITES,
+        variables: { courseId, workspaceId }
+      })
       const removedCourseLink = response.data.deleteCourseLink
       const dataInStoreCopy = { ...dataInStore }
       const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
       if (includedIn(courseLinks, removedCourseLink)) {
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => course.id !== removedCourseLink.id)
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => {
+          return course.id !== removedCourseLink.id
+        })
         client.writeQuery({
           query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
@@ -168,8 +195,8 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
             <Card elevation={0} className={classes.root}>
               <CardHeader
                 className={classes.cardHeader}
-                classes={{ title: classes.title }}
-                title='Add course'
+                classes={{ title: classes.title, content: classes.headerContent }}
+                title='Courses in workspace'
                 titleTypographyProps={{ variant: 'h4' }}
               />
 
@@ -189,8 +216,11 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
                   coursesQuery.data.coursesByWorkspace ?
                     <List disablePadding className={classes.list}>
                       {
-                        coursesQuery.data.coursesByWorkspace.filter(course => course.name.toLowerCase().includes(filterKeyword.toLowerCase())).map(course => {
-                          return (
+                        coursesQuery.data.coursesByWorkspace
+                          .filter(course => {
+                            return course.name.toLowerCase().includes(filterKeyword.toLowerCase())
+                          })
+                          .map(course =>
                             <PrerequisiteCourse
                               key={course.id}
                               course={course}
@@ -203,16 +233,27 @@ const GuidedCourseTray = ({ classes, courseTrayOpen, activeCourseId, courseId, w
                               workspaceId={workspaceId}
                             />
                           )
-                        })
                       }
                     </List>
                     :
                     null
                 }
-                <Button onClick={handleClickOpen} className={classes.button} variant='contained' color='secondary'> New course </Button>
+                <Button
+                  onClick={handleClickOpen}
+                  className={classes.button}
+                  variant='contained'
+                  color='secondary'
+                >
+                  New course
+                </Button>
               </CardContent>
             </Card >
-            <CourseCreationDialog state={state} handleClose={handleClose} workspaceId={workspaceId} createCourse={createCourse} />
+            <CourseCreationDialog
+              state={state}
+              handleClose={handleClose}
+              workspaceId={workspaceId}
+              createCourse={createCourse}
+            />
           </Grid >
           :
           null

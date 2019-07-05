@@ -31,8 +31,8 @@ import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   conceptName: {
-    maxWidth: '85%',
-    wordBreak: 'break-word'
+    maxWidth: '60%',
+    overflowWrap: 'break-word'
   },
   active: {
     backgroundColor: '#9ecae1',
@@ -124,8 +124,8 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
       id={'concept-' + concept.id}
     >
       <ListItemIcon>
-        <IconButton onClick={onClick} style={{padding: '4px'}}>
-          <ArrowLeftIcon viewBox='9 7 10 10' id={`concept-circle-${concept.id}`}/>
+        <IconButton onClick={onClick} style={{ padding: '4px' }}>
+          <ArrowLeftIcon viewBox='9 7 10 10' id={`concept-circle-${concept.id}`} />
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>

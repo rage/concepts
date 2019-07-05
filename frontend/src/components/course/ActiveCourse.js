@@ -29,6 +29,12 @@ const styles = theme => ({
   root: {
     height: '90vh'
   },
+  title: {
+    overflowWrap: 'break-word'
+  },
+  headerContent: {
+    maxWidth: '100%'
+  },
   list: {
     width: '100%',
     // maxWidth: 360,
@@ -41,8 +47,7 @@ const styles = theme => ({
   },
   cardHeader: {
     marginTop: '5px',
-    paddingBottom: '0px',
-    textAlign: 'center'
+    paddingBottom: '0px'
   },
   listSection: {
     backgroundColor: 'inherit'
@@ -169,7 +174,7 @@ const ActiveCourse = ({
   return (
     <Grid item xs={4} lg={3} onClick={onClick}>
       <Card elevation={0} className={classes.root}>
-        <CardHeader className={classes.cardHeader} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
+        <CardHeader className={classes.cardHeader} classes={{ title: classes.title, content: classes.headerContent }} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
         </CardHeader>
 
         <CardContent>
