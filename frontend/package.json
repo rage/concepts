@@ -1,7 +1,10 @@
 {
-  "name": "frontend",
+  "name": "concepts-frontend",
   "version": "0.1.0",
+  "author": "RAGE",
+  "description": "Concept mapping platform for education - frontend module",
   "private": true,
+
   "dependencies": {
     "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.0.1",
