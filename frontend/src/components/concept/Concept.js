@@ -14,10 +14,11 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
+import SvgIcon from '@material-ui/core/SvgIcon'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
-import LensIcon from '@material-ui/icons/Lens'
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 
 import {
   deleteConceptLinkUpdate,
@@ -124,7 +125,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     >
       <ListItemIcon>
         <IconButton onClick={onClick} style={{padding: '4px'}}>
-          <LensIcon id={`concept-circle-${concept.id}`}/>
+          <ArrowLeftIcon viewBox='9 7 10 10' id={`concept-circle-${concept.id}`}/>
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
