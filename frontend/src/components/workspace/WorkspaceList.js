@@ -146,8 +146,8 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
     }
   }
 
-  const handleNavigateMapper = () => {
-    history.push(`/workspaces/${menu.workspace.id}/mapper`)
+  const handleNavigateMapper = (workspaceId) => {
+    history.push(`/workspaces/${workspaceId}/mapper`)
   }
 
   const handleNavigateMatrix = () => {
@@ -180,7 +180,9 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
             {
               workspaces ?
                 workspaces.map(workspace => (
-                  <ListItem button key={workspace.id} onClick={handleNavigateMapper}>
+                  <ListItem
+                    button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+                  >
                     <ListItemText
                       primary={
                         <Typography variant='h6'>
