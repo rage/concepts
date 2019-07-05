@@ -125,7 +125,7 @@ const AuthenticationForm = ({ history, classes }) => {
               variant='contained'
               color='primary'
             >
-              Sign In
+              {!loading ? 'Sign In' : '\u00A0'}
             </Button>
             {
               loading && <CircularProgress size={24} className={classes.buttonProgress} />
