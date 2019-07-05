@@ -1,71 +1,9 @@
 const { checkAccess } = require('../../accessControl')
+const schema = require('./port.schema')
+const Ajv = require('ajv')
 
-/**
- * Returns false if there are missing obligatory fields
- * @param {json} data JSON to be validated
- */
-const validateData = (data) => {
-  // Validate workspace from json
-  if (typeof data['workspace'] === 'string' && typeof data['workspaceId'] === 'string') {
-    throw new Error('workspace and workspaceId cannot be at the same time')
-  }
-  if (typeof data['workspace'] !== 'string' && typeof data['workspaceId'] !== 'string') {
-    throw new Error('workspace or workspaceId not found')
-  }
-
-  // Validate courses from json
-  if (!Array.isArray(data['courses'])) {
-    throw new Error('courses not found or is not an array')
-  }
-
-  for (const course of data['courses']) {
-    if (typeof course['name'] !== 'string') {
-      throw new Error('course name missing')
-
-    }
-    if (!Array.isArray(course['concepts'])) {
-      throw new Error('concepts not found or is not an array')
-    }
-    if (typeof course['prerequisites'] !== 'undefined' && Arrays.isArray(course['prerequisites'])) {
-      throw new Error('courses prerequisites was not an array')
-    } else {
-      for (const prerequisiteCourse of course['prerequisites']) {
-        if (typeof prerequisiteCourse['name'] !== 'string') {
-          throw new Error('prerequisite course name missing')
-        }
-        if (typeof prerequisiteCourse['official'] !== 'undefined' && typeof prerequisiteCourse['official'] !== 'boolean') {
-          throw new Error('prerequisite course official field was not a boolean')
-        }
-      }
-    }
-    for (const concept of course['concepts']) {
-      if (typeof concept.name !== 'string') {
-        throw new Error('concept name missing')
-      }
-      if (typeof concept.description !== 'string') {
-        throw new Error('concept description missing')
-      }
-      if (typeof concept.prerequisites !== 'undefined' || Arrays.isArray(concept.prerequisites)) {
-        throw new Error('concept prequisites was not an array')
-      } else {
-        for (const prerequisiteConcept of concept.prerequisites) {
-          if (typeof prerequisiteConcept.name !== 'string') {
-            throw new Error('prerequisite concept name is missing')
-          }
-          if (typeof prerequisiteConcept.official !== 'undefined' && typeof prerequisiteConcept.official !== 'boolean') {
-            throw new Error('prerequisite concept official field was not a boolean')
-          }
-          if (typeof prerequisiteConcept.course !== 'undefined' && typeof prerequisiteConcept.course !== 'string') {
-            throw new Error('prerequisite concept course field was not a string')
-          }
-        }
-      }
-      
-
-    }
-  }
-  return true
-}
+const ajv = Ajv()
+const validateData = ajv.compile(schema)
 
 const PortMutations = {
   async portData(root, args, context) {
@@ -74,9 +12,14 @@ const PortMutations = {
 
     try {
       json = JSON.parse(args.data)
-      validateData(json)
     } catch (err) {
       console.log('Error parsing JSON: ', err)
+      return null
+    }
+    if (!validateData(json)) {
+      console.log(validateData.errors.map(error => error.message).join('\n'))
+      // TODO maybe show error to client (or just add client-side validation for displaying errors)
+      return null
     }
 
     // Create or find workspace

@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "oneOf": [
+    {
+      "required": ["workspaceId"],
+      "properties": {
+        "workspaceId": {
+          "type": "string",
+          "description": "Existing workspace ID to use",
+          "examples": [
+            "cjxk1l6uf001707606jgv7f9z"
+          ]
+        }
+      }
+    },
+    {
+      "required": ["workspace"],
+      "properties": {
+        "workspace": {
+          "type": "string",
+          "description": "Name to set for new workspace",
+          "examples": [
+            "Tietojenkäsittelytieteen kandiohjelma"
+          ]
+        }
+      }
+    }
+  ],
+  "required": [
+    "courses"
+  ],
+  "properties": {
+    "courses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Course object",
+        "required": [
+          "name",
+          "concepts"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of course",
+            "examples": [
+              "Ohjelmoinnin perusteet"
+            ]
+          },
+          "concepts": {
+            "type": "array",
+            "description": "List of concepts in course",
+            "items": {
+              "type": "object",
+              "description": "Concept object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of concept",
+                  "examples": [
+                    "Toistolause", "Ehtolause"
+                  ]
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description for concept"
+                },
+                "prerequisites": {
+                  "type": "array",
+                  "description": "List of prerequisites for concept",
+                  "items": {
+                    "type": "object",
+                    "description": "Concept prerequisite identifier",
+                    "required": [
+                      "name"
+                    ],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the prerequisite concept",
+                        "examples": [
+                          "Ehtolause"
+                        ]
+                      },
+                      "course": {
+                        "type": "string",
+                        "description": "The name of the course where the prerequisite concept exists. If not specified, all concepts with the given name will be linked.",
+                        "examples": [
+                          "Ohjelmoinnin perusteet"
+                        ]
+                      },
+                      "official": {
+                        "type": "boolean",
+                        "description": "Whether or not the prerequisite link is official, rather than user-specified",
+                        "examples": [
+                          true
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
