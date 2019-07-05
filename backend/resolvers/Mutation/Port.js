@@ -82,24 +82,26 @@ const PortMutations = {
     }))
 
     let courseDictionary = {}
-    let conceptDictionary = {}
     courseData.forEach(course => {
-      courseDictionary[course.name] = course.id
+      courseDictionary[course.name] = {
+        id: course.id,
+        concepts: {}
+      }
       course.concepts.forEach(concept => {
-        conceptDictionary[concept.name] = concept.id
+        courseDictionary[course.name].concepts[concept.name] = concept.id
       })
     })
 
     await Promise.all(courses.map(async (course, idx) => {
-      // Link course prerequisites  
+      // Link course prerequisites
       if (Array.isArray(course['prerequisites'])) {
         await Promise.all(course['prerequisites'].map(async prerequisiteCourse => {
-          let prerequisteCourseId = courseDictionary[prerequisiteCourse]
+          let prerequisteCourseId = courseDictionary[prerequisiteCourse].id
           let courseLinkData = {
             to: { connect: { id: courseData[idx].id } },
             from: { connect: { id: prerequisteCourseId } },
             workspace: { connect: { id: workspace.id } },
-            createdBy: { connect: { id: context.user.id } }
+            createdBy: { connect: { id: context.user.id } }
           }
           if (typeof prerequisiteCourse['official'] === 'boolean') {
             courseLinkData.official = prerequisiteCourse['official']
@@ -107,22 +109,33 @@ const PortMutations = {
           await context.prisma.createCourseLink(courseLinkData)
         }))
       }
-      // Link concept prerequisites
-      
-
+      // Link concept prerequisite
       for (const concept of course['concepts']) {
         if (Array.isArray(concept['prerequisites'])) {
           for (const prerequisiteConcept of concept['prerequisites']) {
-            let conceptLinkData = {
-              to: { connect: { id: conceptDictionary[concept['name']] } },
-              from: { connect: { id: conceptDictionary[prerequisiteConcept['name']] } },
-              createdBy: { connect: { id: context.user.id } },
-              workspace: { connect: { id: workspace.id } }
+            const toConceptId = courseDictionary[course['name']].concepts[concept['name']]
+            let fromConceptIds
+            if (prerequisiteConcept['course']) {
+              fromConceptIds = [courseDictionary[prerequisiteConcept['course']]]
+                .concepts[prerequisiteConcept['name']]
+            } else {
+              fromConceptIds = Object.values(courseDictionary)
+                .filter(course => Object.prototype.hasOwnProperty.call(
+                  course.concepts, prerequisiteConcept['name']))
+                .map(course => course.concepts[prerequisiteConcept['name']])
             }
-            if (typeof prerequisiteConcept['official'] === 'boolean') {
-              conceptLinkData.official = prerequisiteConcept['official']
-            }
-            await context.prisma.createConceptLink(conceptLinkData)
+            await Promise.all(fromConceptIds.map(async (fromConceptId) => {
+              let conceptLinkData = {
+                to: { connect: { id: toConceptId } },
+                from: { connect: { id: fromConceptId } },
+                createdBy: { connect: { id: context.user.id } },
+                workspace: { connect: { id: workspace.id } }
+              }
+              if (typeof prerequisiteConcept['official'] === 'boolean') {
+                conceptLinkData.official = prerequisiteConcept['official']
+              }
+              await context.prisma.createConceptLink(conceptLinkData)
+            }))
           }
         }
       }
