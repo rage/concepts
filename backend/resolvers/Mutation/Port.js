@@ -26,6 +26,18 @@ const validateData = (data) => {
     if (!Array.isArray(course['concepts'])) {
       throw new Error('concepts not found or is not an array')
     }
+    if (typeof course['prerequisites'] !== 'undefined' && Arrays.isArray(course['prerequisites'])) {
+      throw new Error('courses prerequisites was not an array')
+    } else {
+      for (const prerequisiteCourse of course['prerequisites']) {
+        if (typeof prerequisiteCourse['name'] !== 'string') {
+          throw new Error('prerequisite course name missing')
+        }
+        if (typeof prerequisiteCourse['official'] !== 'undefined' && typeof prerequisiteCourse['official'] !== 'boolean') {
+          throw new Error('prerequisite course official field was not a boolean')
+        }
+      }
+    }
     for (const concept of course['concepts']) {
       if (typeof concept.name !== 'string') {
         throw new Error('concept name missing')
@@ -33,6 +45,23 @@ const validateData = (data) => {
       if (typeof concept.description !== 'string') {
         throw new Error('concept description missing')
       }
+      if (typeof concept.prerequisites !== 'undefined' || Arrays.isArray(concept.prerequisites)) {
+        throw new Error('concept prequisites was not an array')
+      } else {
+        for (const prerequisiteConcept of concept.prerequisites) {
+          if (typeof prerequisiteConcept.name !== 'string') {
+            throw new Error('prerequisite concept name is missing')
+          }
+          if (typeof prerequisiteConcept.official !== 'undefined' && typeof prerequisiteConcept.official !== 'boolean') {
+            throw new Error('prerequisite concept official field was not a boolean')
+          }
+          if (typeof prerequisiteConcept.course !== 'undefined' && typeof prerequisiteConcept.course !== 'string') {
+            throw new Error('prerequisite concept course field was not a string')
+          }
+        }
+      }
+      
+
     }
   }
   return true
@@ -45,9 +74,7 @@ const PortMutations = {
 
     try {
       json = JSON.parse(args.data)
-      if (!validateData(json)) {
-        throw new Error('Invalid data format')
-      }
+      validateData(json)
     } catch (err) {
       console.log('Error parsing JSON: ', err)
     }
@@ -73,7 +100,7 @@ const PortMutations = {
     // Save data to prisma
     let courses = json['courses']
 
-    await Promise.all(courses.map(async course => {
+    let courseData = await Promise.all(courses.map(async course => {
       let courseObj = await context.prisma.createCourse({
         name: course['name'],
         createdBy: { connect: { id: context.user.id }},
@@ -104,7 +131,35 @@ const PortMutations = {
         if (concept['official'] === true) conceptData['official'] = concept['official']
         await context.prisma.createConcept(conceptData)
       }))
+
+      return courseObj 
     }))
+
+    let courseDictionary = {}
+    courseData.forEach(course => {
+      courseDictionary[course.name] = course.id
+    })
+
+    await Promise.all(courses.map(async (course, idx) => {
+        if (Arrays.isArray(course['prerequisites'])) {
+          await Promise.all(course['prerequisites'].map(async prerequisiteCourse => {
+            let prerequisteCourseId = courseDictionary[prerequisiteCourse]
+            // await context.prisma.createCourseLink({
+            //   to: {
+            //     connect: { 
+            //       id: prerequisteCourseId
+            //     }
+            //   },
+            //   from: {
+            //     connect: {
+            //       id: courseData[idx].id
+            //     }
+            //   }
+            // })
+            
+          }))
+        }
+    }))    
 
     return workspace
   }

@@ -50,7 +50,7 @@ const styles = theme => ({
 })
 
 const PLACEHOLDER = `{
-  "workpace|workspaceId": "id",
+  "workpace | workspaceId": "id",
   "courses": [
     {
       "name": "Example",
@@ -58,7 +58,20 @@ const PLACEHOLDER = `{
       "concepts": [
         {
           "name": "Concept 1",
-          "description": "Description"
+          "description": "Description",
+          "prerequisites": [
+            {
+              "name": "",
+              "official": true, // Optional field
+              "course": "" // Optional field
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "name of prerequisite course",
+          "official": true // Optional field
         }
       ]
     }
