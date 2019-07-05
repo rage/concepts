@@ -3,7 +3,7 @@ import React, { Component, PureComponent } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
-const defaultWrapperWidth = 11
+const defaultWrapperWidth = 1
 
 export default class ConceptLink extends Component {
   componentWillMount() {
@@ -121,16 +121,18 @@ export default class ConceptLink extends Component {
       return false
     }
 
+    const offset = Object.assign({x0: 0, y0: 0, x1: 0, y1: 0}, this.props.posOffsets)
+
     return () => {
       const fromBox = from.getBoundingClientRect()
       const toBox = to.getBoundingClientRect()
 
-      const x0 = fromBox.x + fromBox.width * this.fromAnchor.x + window.pageXOffset
-      const y0 = fromBox.y + fromBox.height * this.fromAnchor.y + window.pageYOffset
-      const x1 = toBox.x + toBox.width * this.toAnchor.x + window.pageXOffset
-      const y1 = toBox.y + toBox.height * this.toAnchor.y + window.pageYOffset
+      const x0 = fromBox.x + fromBox.width * this.fromAnchor.x + window.pageXOffset + offset.x0
+      const y0 = fromBox.y + fromBox.height * this.fromAnchor.y + window.pageYOffset + offset.y0
+      const x1 = toBox.x + toBox.width * this.toAnchor.x + window.pageXOffset + offset.x1
+      const y1 = toBox.y + toBox.height * this.toAnchor.y + window.pageYOffset + offset.y1
 
-      return { x0: x0, y0, x1: x1 + 2, y1 }
+      return { x0, y0, x1, y1 }
     }
   }
 

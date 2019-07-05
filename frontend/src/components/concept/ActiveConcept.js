@@ -163,7 +163,7 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
           <IconButton onClick={onClick}
             className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
             <ArrowRightIcon
-              viewBox='5 7 10 10' id={`concept-circle-active-${concept.id}`}
+              viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
               color={activeConceptIds.includes(concept.id) ? 'secondary' : undefined}
             />
           </IconButton>

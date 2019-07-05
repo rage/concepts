@@ -125,7 +125,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     >
       <ListItemIcon>
         <IconButton onClick={onClick} style={{ padding: '4px' }}>
-          <ArrowLeftIcon viewBox='9 7 10 10' id={`concept-circle-${concept.id}`} />
+          <ArrowLeftIcon viewBox='7 7 10 10' id={`concept-circle-${concept.id}`} />
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
