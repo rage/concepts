@@ -17,6 +17,11 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import GridOnIcon from '@material-ui/icons/GridOn'
 import ShowChartIcon from '@material-ui/icons/ShowChart'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
@@ -42,17 +47,29 @@ const styles = theme => ({
 const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace }) => {
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
+  const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
 
+  const handleMenuOpen = (workspace, event) => {
+    setMenu({
+      anchor: event.currentTarget,
+      workspace
+    })
+  }
 
-  const handleWorkspaceExport = (workspaceId) => async () =>  {
+  const handleMenuClose = () => {
+    setMenu(null)
+  }
+
+  const handleWorkspaceExport = async () => {
+    handleMenuClose()
     try {
       const queryResponse = await client.query({
         query: EXPORT_QUERY,
         variables: {
-          workspaceId: workspaceId
+          workspaceId: menu.workspace.id
         }
       })
 
@@ -61,7 +78,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
       // Download JSON file
       const element = document.createElement('a')
       element.href = URL.createObjectURL(new Blob([jsonData], {'type':'application/json'}))
-      element.download = `workspace_${workspaceId}.json`
+      element.download = `${menu.workspace.name}.json`
       document.body.appendChild(element)
       element.click()
       document.body.removeChild(element)
@@ -73,7 +90,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
     }
   }
 
-  const handleClickOpen = () => {
+  const handleCreateOpen = () => {
     if (!loggedIn) {
       errorDispatch({
         type: 'setError',
@@ -84,11 +101,12 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
     setStateCreate({ open: true })
   }
 
-  const handleClose = () => {
+  const handleCreateClose = () => {
     setStateCreate({ open: false })
   }
 
-  const handleEditOpen = (id, name) => () => {
+  const handleEditOpen = () => {
+    handleMenuClose()
     if (!loggedIn) {
       errorDispatch({
         type: 'setError',
@@ -96,14 +114,15 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
       })
       return
     }
-    setStateEdit({ open: true, id, name })
+    setStateEdit({ open: true, id: menu.workspace.id, name: menu.workspace.name })
   }
 
   const handleEditClose = () => {
     setStateEdit({ open: false, id: '', name: '' })
   }
 
-  const handleDelete = (id) => async (e) => {
+  const handleDelete = async () => {
+    handleMenuClose()
     if (!loggedIn) {
       errorDispatch({
         type: 'setError',
@@ -116,7 +135,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
     if (willDelete) {
       try {
         await deleteWorkspace({
-          variables: { id }
+          variables: { id: menu.workspace.id }
         })
       } catch (err) {
         errorDispatch({
@@ -127,15 +146,16 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
     }
   }
 
-  const handleNavigateMapper = (id) => () => {
-    history.push(`/workspaces/${id}/mapper`)
-  }
-  const handleNavigateMatrix = (id) => () => {
-    history.push(`/workspaces/${id}/matrix`)
+  const handleNavigateMapper = () => {
+    history.push(`/workspaces/${menu.workspace.id}/mapper`)
   }
 
-  const handleNavigateHeatmap = (id) => () => {
-    history.push(`/workspaces/${id}/heatmap`)
+  const handleNavigateMatrix = () => {
+    history.push(`/workspaces/${menu.workspace.id}/matrix`)
+  }
+
+  const handleNavigateHeatmap = () => {
+    history.push(`/workspaces/${menu.workspace.id}/heatmap`)
   }
 
 
@@ -146,7 +166,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
           <CardHeader
             action={
               loggedIn ?
-                <IconButton aria-label='Add' onClick={handleClickOpen}>
+                <IconButton aria-label='Add' onClick={handleCreateOpen}>
                   <AddIcon />
                 </IconButton> : null
             }
@@ -160,7 +180,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
             {
               workspaces ?
                 workspaces.map(workspace => (
-                  <ListItem button key={workspace.id} onClick={handleNavigateMapper(workspace.id)}>
+                  <ListItem button key={workspace.id} onClick={handleNavigateMapper}>
                     <ListItemText
                       primary={
                         <Typography variant='h6'>
@@ -172,17 +192,10 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
                     {
                       loggedIn ?
                         <ListItemSecondaryAction>
-                          <IconButton aria-label='Heatmap' onClick={handleNavigateHeatmap(workspace.id)}>
-                            <ShowChartIcon/>
-                          </IconButton>
-                          <IconButton aria-label='Matrix' onClick={handleNavigateMatrix(workspace.id)}>
-                            <GridOnIcon />
-                          </IconButton>
-                          <IconButton aria-label='Delete' onClick={handleDelete(workspace.id)}>
-                            <DeleteIcon />
-                          </IconButton>
-                          <IconButton aria-label='Edit' onClick={handleEditOpen(workspace.id, workspace.name)}>
-                            <EditIcon />
+                          <IconButton
+                            aria-owns={menu ? 'workspace-list-menu' : undefined}
+                            onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                            <MoreVertIcon />
                           </IconButton>
                         </ListItemSecondaryAction> : null
                     }
@@ -194,11 +207,49 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
                 </div>
             }
           </List>
+          <Menu
+            id='workspace-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
+              <ListItemIcon>
+                <ShowChartIcon/>
+              </ListItemIcon>
+              Heatmap
+            </MenuItem>
+            <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
+              <ListItemIcon>
+                <GridOnIcon />
+              </ListItemIcon>
+              Matrix
+            </MenuItem>
+            <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+              <ListItemIcon>
+                <CloudDownloadIcon/>
+              </ListItemIcon>
+              Export
+            </MenuItem>
+            <MenuItem aria-label='Delete' onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+            <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              Edit
+            </MenuItem>
+          </Menu>
         </Card>
       </Grid>
 
-      <WorkspaceCreationDialog state={stateCreate} handleClose={handleClose} createWorkspace={createWorkspace} />
-      <WorkspaceEditingDialog state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace} defaultName={stateEdit.name} />
+      <WorkspaceCreationDialog
+        state={stateCreate} handleClose={handleCreateClose}createWorkspace={createWorkspace} />
+      <WorkspaceEditingDialog
+        state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
+        defaultName={stateEdit.name} />
     </Grid>
   )
 }
