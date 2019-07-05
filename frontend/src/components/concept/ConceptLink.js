@@ -130,7 +130,7 @@ export default class ConceptLink extends Component {
       const x1 = toBox.x + toBox.width * this.toAnchor.x + window.pageXOffset
       const y1 = toBox.y + toBox.height * this.toAnchor.y + window.pageYOffset
 
-      return { x0: x0 - 1, y0, x1: x1 + 2, y1 }
+      return { x0: x0, y0, x1: x1 + 2, y1 }
     }
   }
 

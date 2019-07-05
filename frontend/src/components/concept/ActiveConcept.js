@@ -12,13 +12,14 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 import Tooltip from '@material-ui/core/Tooltip'
 
-import LensIcon from '@material-ui/icons/Lens'
+import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
 import { createConceptLinkUpdate } from '../../apollo/update'
+import ArrowLeftIcon from '@material-ui/core/SvgIcon/SvgIcon'
 
 const styles = theme => ({
   conceptName: {
@@ -161,8 +162,8 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
           }
           <IconButton onClick={onClick}
             className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
-            <LensIcon
-              id={`concept-circle-active-${concept.id}`}
+            <ArrowRightIcon
+              viewBox='5 7 10 10' id={`concept-circle-active-${concept.id}`}
               color={activeConceptIds.includes(concept.id) ? 'secondary' : undefined}
             />
           </IconButton>
