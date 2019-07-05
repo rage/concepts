@@ -6,34 +6,48 @@ const includedIn = (set, object) =>
 
 const createCourseUpdate = (workspaceId) => {
   return (store, response) => {
-    const dataInStore = store.readQuery({ query: COURSES_BY_WORKSPACE, variables: { workspaceId } })
-    const addedCourse = response.data.createCourse
-
-    if (!includedIn(dataInStore.coursesByWorkspace, addedCourse)) {
-      dataInStore.coursesByWorkspace.push(addedCourse)
-      client.writeQuery({
+    try {
+      const dataInStore = store.readQuery({
         query: COURSES_BY_WORKSPACE,
-        variables: { workspaceId },
-        data: dataInStore
+        variables: { workspaceId }
       })
+      const addedCourse = response.data.createCourse
+
+      if (!includedIn(dataInStore.coursesByWorkspace, addedCourse)) {
+        dataInStore.coursesByWorkspace.push(addedCourse)
+        client.writeQuery({
+          query: COURSES_BY_WORKSPACE,
+          variables: { workspaceId },
+          data: dataInStore
+        })
+      }
+    } catch (e) {
+      return
     }
   }
 }
 
 const updateCourseUpdate = (workspaceId) => {
   return (store, response) => {
-    const dataInStore = store.readQuery({ query: COURSES_BY_WORKSPACE, variables: { workspaceId } })
-    const updatedCourse = response.data.updateCourse
-
-    if (includedIn(dataInStore.coursesByWorkspace, updatedCourse)) {
-      dataInStore.coursesByWorkspace = dataInStore.coursesByWorkspace.map(course => {
-        return course.id === updatedCourse.id ? updatedCourse : course
-      })
-      client.writeQuery({
+    try {
+      const dataInStore = store.readQuery({
         query: COURSES_BY_WORKSPACE,
-        variables: { workspaceId },
-        data: dataInStore
+        variables: { workspaceId }
       })
+      const updatedCourse = response.data.updateCourse
+
+      if (includedIn(dataInStore.coursesByWorkspace, updatedCourse)) {
+        dataInStore.coursesByWorkspace = dataInStore.coursesByWorkspace.map(course => {
+          return course.id === updatedCourse.id ? updatedCourse : course
+        })
+        client.writeQuery({
+          query: COURSES_BY_WORKSPACE,
+          variables: { workspaceId },
+          data: dataInStore
+        })
+      }
+    } catch (e) {
+      return
     }
   }
 }

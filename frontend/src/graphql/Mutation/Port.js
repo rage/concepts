@@ -8,6 +8,14 @@ mutation portData($data: String!) {
     owner {
       id
     }
+    courses {
+      id
+      name
+      concepts {
+        id
+        name
+      }
+    }
   }
 }
 `
