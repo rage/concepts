@@ -17,6 +17,7 @@
     "workspaceId": {
       "type": "string",
       "description": "Existing workspace ID to use",
+      "pattern": "[0-9a-z]{25}",
       "examples": [
         "cjxk1l6uf001707606jgv7f9z"
       ]
@@ -35,6 +36,8 @@
     },
     "courses": {
       "type": "array",
+      "description": "List of courses in workspace",
+      "uniqueItems": true,
       "items": {
         "type": "object",
         "description": "Course object",
@@ -51,9 +54,18 @@
               "Ohjelmoinnin perusteet"
             ]
           },
+          "prerequisites": {
+            "type": "array",
+            "description": "List of prerequisite courses for this course",
+            "items": {
+              "type": "string",
+              "description": "Course prerequisite name"
+            }
+          },
           "concepts": {
             "type": "array",
             "description": "List of concepts in course",
+            "uniqueItems": true,
             "items": {
               "type": "object",
               "description": "Concept object",
@@ -75,10 +87,10 @@
                 },
                 "prerequisites": {
                   "type": "array",
-                  "description": "List of prerequisites for concept",
+                  "description": "List of prerequisite concepts for this concept",
                   "items": {
                     "type": "object",
-                    "description": "Concept prerequisite identifier",
+                    "description": "Concept prerequisite name",
                     "required": [
                       "name"
                     ],
