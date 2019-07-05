@@ -130,16 +130,16 @@ const PortView = ({ classes }) => {
 
     fileReader.onload = (event) => {
       event.preventDefault()
-      let content = fileReader.result
+      const content = fileReader.result
       // eslint-disable-next-line no-control-regex
       if (/[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/.test(content)) {
-        let confirm = window.confirm('File contains unprintable characters, continue?')
+        const confirm = window.confirm('File contains unprintable characters, continue?')
         if (!confirm) {
           return
         }
       }
       if (content.length > 50 * 1024) {
-        let sendDirectly = window.confirm('File too big, send directly?')
+        const sendDirectly = window.confirm('File too big, send directly?')
         if (sendDirectly) {
           sendData(content)
         }
