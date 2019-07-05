@@ -167,15 +167,17 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
             </Grid>
           </Grid>
       }
-      {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && courseQuery.data.courseById.concepts.map(concept => (
-        prereqQuery.data.courseAndPrerequisites.linksToCourse.filter(link => link.from.id === concept.courses[0].id)
+      {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
+      && courseQuery.data.courseById.concepts.map(concept => (
+        prereqQuery.data.courseAndPrerequisites.linksToCourse
+          .filter(link => link.from.id === concept.courses[0].id)
           ? concept.linksToConcept.map(link => (
             <ConceptLink
               key={`concept-link-${link.id}`} within='course-view' delay={1}
-              active={activeConceptIds.includes(concept.id)}
-              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`} linkId={link.id}
-              redrawLines={redrawLines} wrapperWidth={1} fromAnchor='right middle' toAnchor='left middle'
-              onContextMenu={handleMenuOpen}/>
+              active={activeConceptIds.includes(concept.id)} linkId={link.id}
+              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
+              redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
+              onContextMenu={handleMenuOpen} posOffsets={{x0: -5, x1: +6}}/>
           )) : null
       ))}
       {conceptLinkMenu && <div ref={conceptLinkMenuRef} style={{
@@ -203,7 +205,8 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
       {addingLink && <ConceptLink
         key='concept-link-creating' within='course-view' active={true}
         from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-        followMouse={true}/>}
+        followMouse={true} posOffsets={{x0: addingLink.type === 'concept-circle-active' ? 7 : -7}}
+      />}
     </React.Fragment>
   )
 }
