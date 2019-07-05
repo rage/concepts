@@ -10,6 +10,8 @@ type Query {
 
   allProjects: [Project!]!
   projectById(id: ID!): Project
+  projectsByOwner(ownerId: ID!): [Project!]!
+
 
   allCourses: [Course!]!
   courseById(id: ID!): Course
@@ -53,7 +55,7 @@ type Mutation {
 
   # Project mutations
   createProject(name: String!): Project
-  updateProject(name: String!): Project
+  updateProject(id: ID!, name: String!): Project
   deleteProject(id: ID!): Project
 
   # Workspace mutations

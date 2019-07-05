@@ -23,12 +23,16 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
       const createdConceptLink = response.data.createConceptLink
 
       prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-        const concept = courseLink.from.concepts.find(concept => concept.id === createdConceptLink.from.id)
+        const concept = courseLink.from.concepts.find(concept => {
+          return concept.id === createdConceptLink.from.id
+        })
         if (concept) {
           concept.linksFromConcept.push(createdConceptLink)
         }
       })
-      const concept = course.courseById.concepts.find(concept => concept.id === createdConceptLink.to.id)
+      const concept = course.courseById.concepts.find(concept => {
+        return concept.id === createdConceptLink.to.id
+      })
       if (concept) {
         concept.linksToConcept.push(createdConceptLink)
       }
@@ -49,7 +53,7 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
         data: course
       })
     } catch (err) {
-
+      return
     }
   }
 }
@@ -75,11 +79,15 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
 
       prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
         courseLink.from.concepts.forEach(concept => {
-          concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
+          concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => {
+            return conceptLink.id !== deletedConceptLink.id
+          })
         })
       })
       course.courseById.concepts.forEach(concept => {
-        concept.linksToConcept = concept.linksToConcept.filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
+        concept.linksToConcept = concept.linksToConcept.filter(conceptLink => {
+          return conceptLink.id !== deletedConceptLink.id
+        })
       })
 
       client.writeQuery({
@@ -98,6 +106,7 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
         data: course
       })
     } catch (err) {
+      return
     }
   }
 }
