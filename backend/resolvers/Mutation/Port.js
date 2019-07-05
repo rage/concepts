@@ -6,7 +6,7 @@ const ajv = Ajv()
 const validateData = ajv.compile(schema)
 
 const PortMutations = {
-  async portData(root, args, context) {
+  async importData(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
     let json
 

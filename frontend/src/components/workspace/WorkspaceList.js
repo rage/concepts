@@ -29,6 +29,12 @@ import WorkspaceEditingDialog from './WorkspaceEditingDialog'
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 
+import { useQuery } from 'react-apollo-hooks'
+import {
+  EXPORT_QUERY
+} from '../../graphql/Query'
+import client from '../../apollo/apolloClient'
+
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters()
@@ -55,6 +61,33 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
 
   const handleMenuClose = () => {
     setMenu(null)
+  }
+
+  const handleWorkspaceExport = async () => {
+    handleMenuClose()
+    try {
+      const queryResponse = await client.query({
+        query: EXPORT_QUERY,
+        variables: {
+          workspaceId: menu.workspace.id
+        }
+      })
+
+      const jsonData = queryResponse['data']['exportData']
+
+      // Download JSON file
+      const element = document.createElement('a')
+      element.href = URL.createObjectURL(new Blob([jsonData], {'type':'application/json'}))
+      element.download = `${menu.workspace.name}.json`
+      document.body.appendChild(element)
+      element.click()
+      document.body.removeChild(element)
+    } catch (err) {
+      errorDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
   }
 
   const handleCreateOpen = () => {
@@ -190,7 +223,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
               </ListItemIcon>
               Matrix
             </MenuItem>
-            <MenuItem aria-label='Export' onClick={() => alert("handleExport is not defined")}>
+            <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
               <ListItemIcon>
                 <CloudDownloadIcon/>
               </ListItemIcon>

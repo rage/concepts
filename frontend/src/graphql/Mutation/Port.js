@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost'
 
-const PORT_DATA = gql`
-mutation portData($data: String!) {
-  portData(data: $data) {
+const IMPORT_DATA = gql`
+mutation importData($data: String!) {
+  importData(data: $data) {
     id
     name
     owner {
@@ -21,5 +21,5 @@ mutation portData($data: String!) {
 `
 
 export {
-  PORT_DATA
+  IMPORT_DATA
 }
