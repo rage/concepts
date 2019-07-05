@@ -50,7 +50,7 @@ const PortMutations = {
         workspace: { connect: { id: workspace.id }}
       })
 
-      if (course['default'] === true) {
+      if (json['defaultCourse'] === course['name']) {
         await context.prisma.updateWorkspace({
           where: {
             id: workspace.id

@@ -30,7 +30,13 @@
   "required": [
     "courses"
   ],
+  "additionalProperties": false,
   "properties": {
+    "defaultCourse": {
+      "type": "string",
+      "description": "Name of course to view by default. Must be defined in courses.",
+      "examples": ["Ohjelmoinnin perusteet"]
+    },
     "courses": {
       "type": "array",
       "items": {
@@ -40,6 +46,7 @@
           "name",
           "concepts"
         ],
+        "additionalProperties": false,
         "properties": {
           "name": {
             "type": "string",
@@ -57,6 +64,7 @@
               "required": [
                 "name"
               ],
+              "additionalProperties": false,
               "properties": {
                 "name": {
                   "type": "string",
@@ -78,6 +86,7 @@
                     "required": [
                       "name"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                       "name": {
                         "type": "string",
