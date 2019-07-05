@@ -157,8 +157,7 @@ const GuidedCourseTray = ({
       if (includedIn(courseLinks, removedCourseLink)) {
         dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => {
           return course.id !== removedCourseLink.id
-        }
-        )
+        })
         client.writeQuery({
           query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
