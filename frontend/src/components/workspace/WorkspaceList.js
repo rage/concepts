@@ -24,6 +24,11 @@ import WorkspaceEditingDialog from './WorkspaceEditingDialog'
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 
+import { useQuery } from 'react-apollo-hooks'
+import {
+  EXPORT_QUERY
+} from '../../graphql/Query'
+
 const styles = theme => ({
   root: {
     ...theme.mixins.gutters()
@@ -39,6 +44,8 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
 
   const { loggedIn } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
+
+  const exportWorkspaceQuery = useQuery(EXPORT_QUERY)
 
   const handleClickOpen = () => {
     if (!loggedIn) {
@@ -79,7 +86,7 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
       return
     }
 
-    let willDelete = window.confirm('Are you sure you want to delete this workspace?')
+    const willDelete = window.confirm('Are you sure you want to delete this workspace?')
     if (willDelete) {
       try {
         await deleteWorkspace({
