@@ -69,10 +69,7 @@ const PLACEHOLDER = `{
         }
       ],
       "prerequisites": [
-        {
-          "name": "name of prerequisite course",
-          "official": true // Optional field
-        }
+        "Prerequisite course name"
       ]
     }
   ]
@@ -87,8 +84,16 @@ const TEMPLATE = `{
       "concepts": [
         {
           "name": "",
-          "description": ""
+          "description": "",
+          "prerequisites": [
+            {
+              "name":""
+            }
+          ]
         }
+      ],
+      "prerequisites":[
+        ""
       ]
     }
   ]
