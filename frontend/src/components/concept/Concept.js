@@ -115,6 +115,10 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     openConceptEditDialog(id, name, description, courseId)()
   }
 
+  const hasLinkToAddingLink = addingLink &&
+    concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined
+  const addingLinkIsOpposite = addingLink && addingLink.type !== 'concept-circle'
+
   return (
     <ListItem
       divider
@@ -125,7 +129,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     >
       <ListItemIcon>
         <IconButton onClick={onClick} style={{ padding: '4px' }}>
-          <ArrowLeftIcon viewBox='7 7 10 10' id={`concept-circle-${concept.id}`} />
+          <ArrowLeftIcon
+            viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
+            color={!hasLinkToAddingLink && addingLinkIsOpposite ? 'primary' : undefined}/>
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
@@ -150,7 +156,8 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
               open={Boolean(state.anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description, course.id)}>Edit</MenuItem>
+              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description,
+                course.id)}>Edit</MenuItem>
               <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
             </Menu>
           </React.Fragment>
