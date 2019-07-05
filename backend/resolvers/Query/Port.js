@@ -3,7 +3,6 @@ const { checkAccess } = require('../../accessControl')
 const PortQueries = {
   async exportData(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
-
     const query = `
     query($id : ID!) {
       workspace(where: {
@@ -32,6 +31,7 @@ const PortQueries = {
       }
     }
     `
+
     const result = await context.prisma.$graphql(query, {
       id: args.workspaceId
     })
@@ -67,8 +67,7 @@ const PortQueries = {
         for (const prerequisiteConcept of concept['prerequisites'] ) {
           // Add concept prerequisite to concept
           conceptData['prerequisites'].push({
-            'name': prerequisiteConcept['to']['name'],
-            'official': prerequisiteConcept['to']['official']
+            'name': prerequisiteConcept['to']['name']
           })
         }
         // Add concept to course
