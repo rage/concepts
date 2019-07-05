@@ -98,7 +98,6 @@ const UserView = ({ classes, userId }) => {
                 deleteWorkspace={deleteWorkspace}
               />
             </Grid>
-            <br />
             <Grid item>
               <ProjectList
                 projects={projectQuery.data.projectsByOwner}

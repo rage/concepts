@@ -20,9 +20,7 @@ import {
   PORT_DATA
 } from '../../graphql/Mutation'
 
-import {
-  WORKSPACES_BY_OWNER, STAFF_BY_ID
-} from '../../graphql/Query'
+import { jsonPortUpdate } from '../../apollo/update'
 
 
 const styles = theme => ({
@@ -96,14 +94,7 @@ const PortView = ({ classes }) => {
   const errorDispatch = useErrorStateValue()[1]
 
   const dataPortingMutation = useMutation(PORT_DATA, {
-    refetchQueries: [
-      {
-        query: WORKSPACES_BY_OWNER,
-        variables: {
-          ownerId: user.id
-        }
-      }
-    ]
+    update: jsonPortUpdate(user.id)
   })
 
   const addTemplate = () => {

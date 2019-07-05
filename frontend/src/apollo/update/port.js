@@ -8,30 +8,33 @@ const includedIn = (set, object) =>
 
 const jsonPortUpdate = (ownerId) => {
   return (store, response) => {
-    const workspaces = store.readQuery({
-      query: WORKSPACES_BY_OWNER,
-      variables: {
-        ownerId: ownerId
+    try {
+      const workspaces = store.readQuery({
+        query: WORKSPACES_BY_OWNER,
+        variables: {
+          ownerId: ownerId
+        }
+      })
+
+      const updatedWorkspace = response.data.portData
+
+      if (includedIn(workspaces.workspacesByOwner, updatedWorkspace)) {
+        workspaces.map(workspace =>
+          workspace.id !== updatedWorkspace.id ? workspace : updatedWorkspace
+        )
+      } else {
+        workspaces.workspacesByOwner.push(updatedWorkspace)
       }
-    })
 
-    const updatedWorkspace = response.data.portData
-
-    if (includedIn(workspaces.workspacesByOwner, updatedWorkspace)) {
-      workspaces.map(workspace =>
-        workspace.id !== updatedWorkspace.id ? workspace : updatedWorkspace
-      )
-    } else {
-      workspaces.workspacesByOwner.push(updatedWorkspace)
+      client.writeQuery({
+        query: WORKSPACES_BY_OWNER,
+        variables: {
+          ownerId
+        },
+        data: workspaces
+      })
+    } catch (e) {
     }
-
-    client.writeQuery({
-      query: WORKSPACES_BY_OWNER,
-      variables: {
-        ownerId
-      },
-      data: workspaces
-    })
   }
 }
 
