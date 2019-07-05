@@ -44,10 +44,10 @@ const PortMutations = {
     }
 
     // Save data to prisma
-    let courses = json['courses']
+    const courses = json['courses']
 
-    let courseData = await Promise.all(courses.map(async course => {
-      let courseObj = await context.prisma.createCourse({
+    const courseData = await Promise.all(courses.map(async course => {
+      const courseObj = await context.prisma.createCourse({
         name: course['name'],
         createdBy: { connect: { id: context.user.id } },
         workspace: { connect: { id: workspace.id } }
@@ -66,8 +66,8 @@ const PortMutations = {
         })
       }
 
-      let concepts = await Promise.all(course['concepts'].map(async concept => {
-        let conceptData = {
+      const concepts = await Promise.all(course['concepts'].map(async concept => {
+        const conceptData = {
           name: concept['name'],
           description: concept['description'],
           createdBy: { connect: { id: context.user.id } },
@@ -81,7 +81,7 @@ const PortMutations = {
       return {...courseObj, concepts}
     }))
 
-    let courseDictionary = {}
+    const courseDictionary = {}
     courseData.forEach(course => {
       courseDictionary[course.name] = {
         id: course.id,
@@ -96,8 +96,8 @@ const PortMutations = {
       // Link course prerequisites
       if (Array.isArray(course['prerequisites'])) {
         await Promise.all(course['prerequisites'].map(async prerequisiteCourse => {
-          let prerequisteCourseId = courseDictionary[prerequisiteCourse].id
-          let courseLinkData = {
+          const prerequisteCourseId = courseDictionary[prerequisiteCourse].id
+          const courseLinkData = {
             to: { connect: { id: courseData[idx].id } },
             from: { connect: { id: prerequisteCourseId } },
             workspace: { connect: { id: workspace.id } },
@@ -125,7 +125,7 @@ const PortMutations = {
                 .map(course => course.concepts[prerequisiteConcept['name']])
             }
             await Promise.all(fromConceptIds.map(async (fromConceptId) => {
-              let conceptLinkData = {
+              const conceptLinkData = {
                 to: { connect: { id: toConceptId } },
                 from: { connect: { id: fromConceptId } },
                 createdBy: { connect: { id: context.user.id } },
