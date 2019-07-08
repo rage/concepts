@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -39,6 +39,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
 
   const handleMenuOpen = (event, link) => {
     event.preventDefault()
+    console.log('handleMenuOpen(', event.pageX, event.pageY, link.props.linkId, conceptLinkMenu, ')')
     setConceptLinkMenu({
       x: event.pageX + window.pageXOffset,
       y: event.pageY + 32 + window.pageYOffset,
@@ -180,12 +181,13 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               onContextMenu={handleMenuOpen} posOffsets={{x0: -5, x1: +6}}/>
           )) : null
       ))}
-      {conceptLinkMenu && <div ref={conceptLinkMenuRef} style={{
+      <div ref={conceptLinkMenuRef} style={{
         position:'absolute',
         width: '1px',
         height: '1px',
-        top: `${conceptLinkMenu.y}px`,
-        left: `${conceptLinkMenu.x}px`}}/>}
+        display: conceptLinkMenu ? 'block' : 'none',
+        top: `${conceptLinkMenu ? conceptLinkMenu.y : 0}px`,
+        left: `${conceptLinkMenu ? conceptLinkMenu.x : 0}px`}}/>
       <Menu
         id='concept-link-menu'
         anchorEl={conceptLinkMenuRef.current}
