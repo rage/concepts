@@ -10,20 +10,23 @@ const PortQueries = {
       }) {
         id
         name
+        defaultCourse {
+          name
+        }
         courses {
           name
           concepts {
             name
             description
-            prerequisites: linksFromConcept {
-              to {
+            prerequisites: linksToConcept {
+              from {
                 name
                 official
               }
             }
           }
-          prerequisites: linksFromCourse {
-            to {
+          prerequisites: linksToCourse {
+            from {
               name
             }
           }
@@ -49,6 +52,11 @@ const PortQueries = {
       'courses': []
     }
 
+    if (workspace.defaultCourse) {
+      jsonData['defaultCourse'] = workspace.defaultCourse.name
+    }
+
+
     for (const course of workspace['courses']) {
       const courseData = {
         'name': course['name'],
@@ -56,7 +64,7 @@ const PortQueries = {
         'prerequisites': []
       }
       for (const prerequisiteCourse of course['prerequisites']) {
-        courseData['prerequisites'].push(prerequisiteCourse['to']['name'])
+        courseData['prerequisites'].push(prerequisiteCourse['from']['name'])
       }
       for (const concept of course['concepts']) {
         const conceptData = {
@@ -67,7 +75,7 @@ const PortQueries = {
         for (const prerequisiteConcept of concept['prerequisites'] ) {
           // Add concept prerequisite to concept
           conceptData['prerequisites'].push({
-            'name': prerequisiteConcept['to']['name']
+            'name': prerequisiteConcept['from']['name']
           })
         }
         // Add concept to course
@@ -77,7 +85,6 @@ const PortQueries = {
       // Add course prerequisites
       jsonData['courses'].push(courseData)
     }
-
 
     return JSON.stringify(jsonData)
   }
