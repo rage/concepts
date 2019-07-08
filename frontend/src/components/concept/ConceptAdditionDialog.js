@@ -29,6 +29,7 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
   }, [state])
 
   const handleConceptAdding = () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Concept needs a name!')
       return
@@ -91,7 +92,7 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleConceptAdding : () => null}
+          onClick={handleConceptAdding}
           disabled={submitDisabled}
           color='primary'
         >

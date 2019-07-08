@@ -35,6 +35,7 @@ const ConceptEditingDialog = ({
   }, [defaultDescription, defaultName, state])
 
   const handleConceptUpdate = () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Concept needs a name!')
       return
@@ -106,7 +107,7 @@ const ConceptEditingDialog = ({
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleConceptUpdate : () => null}
+          onClick={handleConceptUpdate}
           disabled={submitDisabled}
           color='primary'
         >

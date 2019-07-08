@@ -27,7 +27,8 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
     setName(defaultName)
   }, [defaultName, state])
 
-  const handleEdit = async (e) => {
+  const handleEdit = async () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Project needs a name!')
       return
@@ -85,7 +86,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleEdit : () => null}
+          onClick={handleEdit}
           disabled={submitDisabled}
           color='primary'
         >

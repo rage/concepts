@@ -26,7 +26,8 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
     }
   }, [state])
 
-  const handleCreate = async (e) => {
+  const handleCreate = async () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Project needs a name!')
       return
@@ -45,7 +46,7 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
   }
 
   const handleKey = (e) => {
-    if (e.key === 'Enter' && !submitDisabled) {
+    if (e.key === 'Enter') {
       handleCreate(e)
     }
   }
@@ -78,7 +79,7 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleCreate : () => null}
+          onClick={handleCreate}
           disabled={submitDisabled}
           color='primary'
         >

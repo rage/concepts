@@ -27,7 +27,8 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
     setName(defaultName)
   }, [defaultName, state])
 
-  const handleEdit = async (e) => {
+  const handleEdit = async () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Workspace needs a name!')
       return
@@ -53,7 +54,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
   }
 
   const handleKey = (e) => {
-    if (e.key === 'Enter' && !submitDisabled) {
+    if (e.key === 'Enter') {
       handleEdit(e)
     }
   }
@@ -86,7 +87,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleEdit : () => null}
+          onClick={handleEdit}
           disabled={submitDisabled}
           color='primary'
         >

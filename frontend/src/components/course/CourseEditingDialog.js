@@ -27,7 +27,8 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
     setName(defaultName)
   }, [defaultName, state])
 
-  const handleEdit = (e) => {
+  const handleEdit = () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Course needs a name!')
       return
@@ -52,7 +53,7 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
   }
 
   const handleKey = (e) => {
-    if (e.key === 'Enter' && !submitDisabled) {
+    if (e.key === 'Enter') {
       handleEdit(e)
     }
   }
@@ -85,7 +86,7 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleEdit : () => null}
+          onClick={handleEdit}
           disabled={submitDisabled}
           color='primary'
         >

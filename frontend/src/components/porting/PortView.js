@@ -152,6 +152,8 @@ const PortView = ({ classes }) => {
   }
 
   const sendData = async (jsonData) => {
+    if (loading || success) return
+
     setLoading(true)
 
     try {
@@ -213,7 +215,7 @@ const PortView = ({ classes }) => {
                 color='primary'
                 variant='contained'
                 fullWidth
-                onClick={!loading && !success ? () => sendData(data) : () => null}
+                onClick={() => sendData(data)}
               >
                 {!loading ? buttonText : '\u00A0'}
               </Button>

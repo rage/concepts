@@ -26,7 +26,8 @@ const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
     }
   }, [state])
 
-  const handleCreate = (e) => {
+  const handleCreate = () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Workspace needs a name!')
       return
@@ -45,7 +46,7 @@ const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
   }
 
   const handleKey = (e) => {
-    if (e.key === 'Enter' && !submitDisabled) {
+    if (e.key === 'Enter') {
       handleCreate(e)
     }
   }
@@ -78,7 +79,7 @@ const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
           Cancel
         </Button>
         <Button
-          onClick={!submitDisabled ? handleCreate : () => null}
+          onClick={handleCreate}
           disabled={submitDisabled}
           color='primary'
         >
