@@ -4,8 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { useMutation } from 'react-apollo-hooks'
 import {
   DELETE_CONCEPT,
-  CREATE_CONCEPT_LINK,
-  DELETE_CONCEPT_LINK
+  CREATE_CONCEPT_LINK
 } from '../../graphql/Mutation'
 
 import ListItem from '@material-ui/core/ListItem'
@@ -14,14 +13,12 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import SvgIcon from '@material-ui/core/SvgIcon'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 
 import {
-  deleteConceptLinkUpdate,
   createConceptLinkUpdate,
   deleteConceptUpdate
 } from '../../apollo/update'

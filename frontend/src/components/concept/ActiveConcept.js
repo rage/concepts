@@ -19,7 +19,6 @@ import { useErrorStateValue, useLoginStateValue } from '../../store'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
 import { createConceptLinkUpdate } from '../../apollo/update'
-import ArrowLeftIcon from '@material-ui/core/SvgIcon/SvgIcon'
 
 const styles = theme => ({
   conceptName: {
