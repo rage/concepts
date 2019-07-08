@@ -80,7 +80,7 @@ const PLACEHOLDER = `{
 `
 
 const TEMPLATE = `{
-  "workpace": "",
+  "workspace": "",
   "defaultCourse":"",
   "courses": [
     {
@@ -208,7 +208,15 @@ const PortView = ({ classes }) => {
               disabled={loading}
             />
             <div className={classes.wrapper}>
-              <Button className={success ? classes.buttonSuccess : ''} color='primary' variant='contained' fullWidth onClick={() => sendData(data)}> {!loading ? buttonText : '\u00A0'} </Button>
+              <Button
+                className={success ? classes.buttonSuccess : ''}
+                color='primary'
+                variant='contained'
+                fullWidth
+                onClick={!loading && !success ? () => sendData(data) : () => null}
+              >
+                {!loading ? buttonText : '\u00A0'}
+              </Button>
               {
                 loading && <CircularProgress size={24} className={classes.buttonProgress} />
               }
