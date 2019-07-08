@@ -48,14 +48,15 @@ const PortQueries = {
     // Create json from workspace
     const jsonData = {
       'workspaceId': workspace.id,
-      'workspace': workspace.name
+      'workspace': workspace.name,
+      'courses': []
     }
 
     if (workspace.defaultCourse) {
       jsonData['defaultCourse'] = workspace.defaultCourse.name
     }
 
-    jsonData['courses'] = []
+
     for (const course of workspace['courses']) {
       const courseData = {
         'name': course['name'],
