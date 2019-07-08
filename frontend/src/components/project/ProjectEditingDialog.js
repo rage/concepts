@@ -53,7 +53,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
   }
 
   const handleKey = (e) => {
-    if (e.key === 'Enter' && !submitDisabled) {
+    if (e.key === 'Enter') {
       handleEdit(e)
     }
   }

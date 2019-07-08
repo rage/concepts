@@ -35,10 +35,9 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
     }
     setSubmitDisabled(true)
     const shouldUpdate = defaultName !== name
-    const variables = { id: state.id, name }
     if (shouldUpdate) {
       updateCourse({
-        variables
+        variables: { id: state.id, name }
       })
         .catch(() => {
           errorDispatch({

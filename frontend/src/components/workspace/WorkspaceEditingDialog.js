@@ -34,13 +34,12 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
       return
     }
     setSubmitDisabled(true)
-    const variables = { id: state.id, name }
     const shouldUpdate = defaultName !== name
     if (shouldUpdate) {
       try {
         if (defaultName !== name) {
           await updateWorkspace({
-            variables
+            variables: { id: state.id, name }
           })
         }
       } catch (err) {
