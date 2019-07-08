@@ -39,7 +39,6 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
 
   const handleMenuOpen = (event, link) => {
     event.preventDefault()
-    console.log('handleMenuOpen(', event.pageX, event.pageY, link.props.linkId, conceptLinkMenu, ')')
     setConceptLinkMenu({
       x: event.pageX + window.pageXOffset,
       y: event.pageY + 32 + window.pageYOffset,
@@ -103,7 +102,8 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   return (
     <React.Fragment>
       {
-        courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
+        courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
+        && workspaceQuery.data.workspaceById ?
           <Grid id='course-view' container spacing={0} direction='row'>
             <ActiveCourse
               onClick={() => setAddingLink(null)}
