@@ -263,7 +263,7 @@ export class Line extends PureComponent {
     const wrapperStyle = Object.assign({}, commonStyle, {
       top: `${y}px`,
       left: `${x}px`,
-      height: 0,
+      height: '1px',
       transform: `rotate(${angle}deg)`,
       // Rotate around (x0, y0)
       transformOrigin: '0 0'
