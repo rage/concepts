@@ -13,18 +13,35 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useErrorStateValue } from '../../store'
 
-const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, defaultDescription }) => {
+const ConceptEditingDialog = ({
+  state,
+  handleClose,
+  updateConcept,
+  defaultName,
+  defaultDescription
+}) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [submitDisabled, setSubmitDisabled] = useState(false)
+
   const errorDispatch = useErrorStateValue()[1]
 
   useEffect(() => {
+    if (state.open) {
+      setSubmitDisabled(false)
+    }
     setName(defaultName)
     setDescription(defaultDescription)
-  }, [defaultDescription, defaultName])
+  }, [defaultDescription, defaultName, state])
 
-  const handleConceptUpdate = async () => {
-    let variables = { id: state.conceptId }
+  const handleConceptUpdate = () => {
+    if (submitDisabled) return
+    if (name === '') {
+      window.alert('Concept needs a name!')
+      return
+    }
+    setSubmitDisabled(true)
+    const variables = { id: state.conceptId }
     let shouldUpdate = false
     if (defaultName !== name) {
       variables.name = name
@@ -34,22 +51,22 @@ const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, 
       variables.description = description
       shouldUpdate = true
     }
-    try {
-      if (shouldUpdate) {
-        await updateConcept({
-          variables: variables
-        })
-      }
-      setName('')
-      setDescription('')
-      handleClose()
-    } catch (err) {
-      errorDispatch({
-        type: 'setError',
-        data: 'Access denied'
+    if (shouldUpdate) {
+      updateConcept({
+        variables
       })
+        .catch(() => {
+          errorDispatch({
+            type: 'setError',
+            data: 'Access denied'
+          })
+        })
+        .finally(handleClose)
+    } else {
+      handleClose()
     }
   }
+
 
   return (
     <Dialog
@@ -89,7 +106,11 @@ const ConceptEditingDialog = ({ state, handleClose, updateConcept, defaultName, 
         <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleConceptUpdate} color='primary'>
+        <Button
+          onClick={handleConceptUpdate}
+          disabled={submitDisabled}
+          color='primary'
+        >
           Save
         </Button>
       </DialogActions>

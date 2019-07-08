@@ -135,7 +135,6 @@ const GuidedCourseContainer = ({
           data: dataInStoreCopy
         })
       }
-      setConceptState({ ...conceptState, id: '' })
     }
   })
 
@@ -148,7 +147,7 @@ const GuidedCourseContainer = ({
   }
 
   const handleConceptClose = () => {
-    setConceptState({ ...conceptState, open: false })
+    setConceptState({ ...conceptState, open: false, id: '' })
   }
 
   const handleConceptOpen = (courseId) => () => {

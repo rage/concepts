@@ -16,35 +16,40 @@ import { useErrorStateValue } from '../../store'
 
 const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultName }) => {
   const [name, setName] = useState('')
+  const [submitDisabled, setSubmitDisabled] = useState(false)
 
   const errorDispatch = useErrorStateValue()[1]
 
   useEffect(() => {
+    if (state.open) {
+      setSubmitDisabled(false)
+    }
     setName(defaultName)
-  }, [defaultName])
+  }, [defaultName, state])
 
-  const handleEdit = async (e) => {
+  const handleEdit = async () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Workspace needs a name!')
       return
     }
-    try {
-      if (defaultName !== name) {
-        await updateWorkspace({
-          variables: {
-            id: state.id,
-            name
-          }
+    setSubmitDisabled(true)
+    const shouldUpdate = defaultName !== name
+    if (shouldUpdate) {
+      try {
+        if (defaultName !== name) {
+          await updateWorkspace({
+            variables: { id: state.id, name }
+          })
+        }
+      } catch (err) {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
         })
       }
-      setName('')
-      handleClose()
-    } catch (err) {
-      errorDispatch({
-        type: 'setError',
-        data: 'Access denied'
-      })
     }
+    handleClose()
   }
 
   const handleKey = (e) => {
@@ -80,7 +85,11 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
         <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleEdit} color='primary'>
+        <Button
+          onClick={handleEdit}
+          disabled={submitDisabled}
+          color='primary'
+        >
           Save
         </Button>
       </DialogActions>

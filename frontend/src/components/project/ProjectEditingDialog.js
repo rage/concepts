@@ -16,18 +16,24 @@ import { useErrorStateValue } from '../../store'
 
 const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName }) => {
   const [name, setName] = useState('')
+  const [submitDisabled, setSubmitDisabled] = useState(false)
 
   const errorDispatch = useErrorStateValue()[1]
 
   useEffect(() => {
+    if (state.open) {
+      setSubmitDisabled(false)
+    }
     setName(defaultName)
-  }, [defaultName])
+  }, [defaultName, state])
 
-  const handleEdit = async (e) => {
+  const handleEdit = async () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Project needs a name!')
       return
     }
+    setSubmitDisabled(true)
     try {
       if (defaultName !== name) {
         await updateProject({
@@ -37,14 +43,13 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
           }
         })
       }
-      setName('')
-      handleClose()
     } catch (err) {
       errorDispatch({
         type: 'setError',
         data: 'Access denied'
       })
     }
+    handleClose()
   }
 
   const handleKey = (e) => {
@@ -80,7 +85,11 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
         <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleEdit} color='primary'>
+        <Button
+          onClick={handleEdit}
+          disabled={submitDisabled}
+          color='primary'
+        >
           Save
         </Button>
       </DialogActions>

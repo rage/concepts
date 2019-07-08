@@ -16,34 +16,38 @@ import { useErrorStateValue } from '../../store'
 
 const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) => {
   const [name, setName] = useState('')
+  const [submitDisabled, setSubmitDisabled] = useState(false)
 
   const errorDispatch = useErrorStateValue()[1]
 
   useEffect(() => {
+    if (state.open) {
+      setSubmitDisabled(false)
+    }
     setName(defaultName)
-  }, [defaultName])
+  }, [defaultName, state])
 
-  const handleEdit = async (e) => {
+  const handleEdit = () => {
+    if (submitDisabled) return
     if (name === '') {
       window.alert('Course needs a name!')
       return
     }
-    try {
-      if (defaultName !== name) {
-        await updateCourse({
-          variables: {
-            id: state.id,
-            name
-          }
-        })
-      }
-      setName('')
-      handleClose()
-    } catch (err) {
-      errorDispatch({
-        type: 'setError',
-        data: 'Access denied'
+    setSubmitDisabled(true)
+    const shouldUpdate = defaultName !== name
+    if (shouldUpdate) {
+      updateCourse({
+        variables: { id: state.id, name }
       })
+        .catch(() => {
+          errorDispatch({
+            type: 'setError',
+            data: 'Access denied'
+          })
+        })
+        .finally(handleClose)
+    } else {
+      handleClose()
     }
   }
 
@@ -80,7 +84,11 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
         <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleEdit} color='primary'>
+        <Button
+          onClick={handleEdit}
+          disabled={submitDisabled}
+          color='primary'
+        >
           Save
         </Button>
       </DialogActions>

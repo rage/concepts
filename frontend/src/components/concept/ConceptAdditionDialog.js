@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 //  dialog
 import Dialog from '@material-ui/core/Dialog'
@@ -16,29 +16,41 @@ import { useErrorStateValue } from '../../store'
 const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [submitDisabled, setSubmitDisabled] = useState(false)
 
   const errorDispatch = useErrorStateValue()[1]
 
-  const handleConceptAdding = async () => {
-    try {
-      await createConcept({
-        variables: {
-          courseId: state.id,
-          workspaceId,
-          name,
-          description,
-          official: false
-        }
-      })
+  useEffect(() => {
+    if (state.open) {
       setName('')
       setDescription('')
-      handleClose()
-    } catch (err) {
-      errorDispatch({
-        type: 'setError',
-        data: 'Access denied'
-      })
+      setSubmitDisabled(false)
     }
+  }, [state])
+
+  const handleConceptAdding = () => {
+    if (submitDisabled) return
+    if (name === '') {
+      window.alert('Concept needs a name!')
+      return
+    }
+    setSubmitDisabled(true)
+    createConcept({
+      variables: {
+        courseId: state.id,
+        workspaceId,
+        name,
+        description,
+        official: false
+      }
+    })
+      .catch(() => {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      })
+      .finally(handleClose)
   }
 
   return (
@@ -79,7 +91,11 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
         <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleConceptAdding} color='primary'>
+        <Button
+          onClick={handleConceptAdding}
+          disabled={submitDisabled}
+          color='primary'
+        >
           Add concept
         </Button>
       </DialogActions>
