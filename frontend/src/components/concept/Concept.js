@@ -116,6 +116,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined
   const addingLinkIsOpposite = addingLink && addingLink.type !== 'concept-circle'
 
+  const linkButtonColor = (addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    ? 'secondary' : undefined
+
   return (
     <ListItem
       divider
@@ -128,7 +131,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
         <IconButton onClick={onClick} style={{ padding: '4px' }}>
           <ArrowLeftIcon
             viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
-            color={!hasLinkToAddingLink && addingLinkIsOpposite ? 'primary' : undefined}/>
+            color={linkButtonColor}/>
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>

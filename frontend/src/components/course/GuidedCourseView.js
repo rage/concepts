@@ -175,7 +175,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
           ? concept.linksToConcept.map(link => (
             <ConceptLink
               key={`concept-link-${link.id}`} within='course-view' delay={1}
-              active={activeConceptIds.includes(concept.id)} linkId={link.id}
+              active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
               from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
               redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
               onContextMenu={handleMenuOpen} posOffsets={{x0: -5, x1: +6}}/>

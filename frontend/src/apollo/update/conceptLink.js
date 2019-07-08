@@ -14,12 +14,6 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
           workspaceId
         }
       })
-      const course = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: courseId
-        }
-      })
       const createdConceptLink = response.data.createConceptLink
 
       prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
@@ -30,13 +24,6 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
           concept.linksFromConcept.push(createdConceptLink)
         }
       })
-      const concept = course.courseById.concepts.find(concept => {
-        return concept.id === createdConceptLink.to.id
-      })
-      if (concept) {
-        concept.linksToConcept.push(createdConceptLink)
-      }
-
       client.writeQuery({
         query: COURSE_PREREQUISITES,
         variables: {
@@ -45,6 +32,21 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
         },
         data: prereq
       })
+
+      const course = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: courseId
+        }
+      })
+
+      const concept = course.courseById.concepts.find(concept => {
+        return concept.id === createdConceptLink.to.id
+      })
+      if (concept) {
+        concept.linksToConcept.push(createdConceptLink)
+      }
+
       client.writeQuery({
         query: COURSE_BY_ID,
         variables: {
@@ -68,12 +70,6 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
           workspaceId
         }
       })
-      const course = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: courseId
-        }
-      })
 
       const deletedConceptLink = response.data.deleteConceptLink
 
@@ -82,11 +78,6 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
           concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => {
             return conceptLink.id !== deletedConceptLink.id
           })
-        })
-      })
-      course.courseById.concepts.forEach(concept => {
-        concept.linksToConcept = concept.linksToConcept.filter(conceptLink => {
-          return conceptLink.id !== deletedConceptLink.id
         })
       })
 
@@ -98,6 +89,20 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
         },
         data: prereq
       })
+
+      const course = store.readQuery({
+        query: COURSE_BY_ID,
+        variables: {
+          id: courseId
+        }
+      })
+
+      course.courseById.concepts.forEach(concept => {
+        concept.linksToConcept = concept.linksToConcept.filter(conceptLink => {
+          return conceptLink.id !== deletedConceptLink.id
+        })
+      })
+
       client.writeQuery({
         query: COURSE_BY_ID,
         variables: {

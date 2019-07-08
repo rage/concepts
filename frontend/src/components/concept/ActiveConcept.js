@@ -121,6 +121,10 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
     concept.linksToConcept.find(link => link.from.id === addingLink.id) !== undefined
   const addingLinkIsOpposite = addingLink && addingLink.type !== 'concept-circle-active'
 
+  const linkButtonColor = ((addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    || (!addingLink && activeConceptIds.includes(concept.id)))
+    ? 'secondary' : undefined
+
   return <>
     <Tooltip
       title='activate selection of prerequisites' enterDelay={500} leaveDelay={400} placement='left'
@@ -165,12 +169,13 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
             </React.Fragment>
             : null
           }
-          <IconButton onClick={onClick}
-            className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
+          <IconButton
+            onClick={onClick} className={`${classes.conceptCircle}
+            ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
+          >
             <ArrowRightIcon
               viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
-              color={activeConceptIds.includes(concept.id) ? 'secondary' :
-                (!hasLinkToAddingLink && addingLinkIsOpposite ? 'primary' : undefined)}
+              color={linkButtonColor}
             />
           </IconButton>
         </ListItemSecondaryAction>
