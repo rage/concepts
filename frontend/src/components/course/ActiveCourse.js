@@ -74,9 +74,13 @@ const ActiveCourse = ({
   setAddingLink,
   toggleConcept
 }) => {
-
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
-  const [conceptEditState, setConceptEditState] = useState({ open: false, id: '', name: '', description: '' })
+  const [conceptEditState, setConceptEditState] = useState({
+    open: false,
+    id: '',
+    name: '',
+    description: ''
+  })
 
   const { loggedIn } = useLoginStateValue()[0]
 
@@ -97,7 +101,9 @@ const ActiveCourse = ({
       const dataInStoreCopy = { ...dataInStore }
       const concepts = dataInStoreCopy.courseById.concepts
       if (includedIn(concepts, updatedConcept)) {
-        dataInStoreCopy.courseById.concepts = concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c)
+        dataInStoreCopy.courseById.concepts = concepts.map(c =>
+          c.id === updatedConcept.id ? updatedConcept : c
+        )
         client.writeQuery({
           query: COURSE_BY_ID,
           variables: { id: course.id },
@@ -155,7 +161,7 @@ const ActiveCourse = ({
   })
 
   const handleConceptClose = () => {
-    setConceptState({ ...conceptState, open: false })
+    setConceptState({ ...conceptState, open: false, id: '' })
   }
 
   const handleConceptOpen = (courseId) => () => {
@@ -174,8 +180,12 @@ const ActiveCourse = ({
   return (
     <Grid item xs={4} lg={3} onClick={onClick}>
       <Card elevation={0} className={classes.root}>
-        <CardHeader className={classes.cardHeader} classes={{ title: classes.title, content: classes.headerContent }} title={course.name} titleTypographyProps={{ variant: 'h4' }}>
-        </CardHeader>
+        <CardHeader
+          className={classes.cardHeader}
+          classes={{ title: classes.title, content: classes.headerContent }}
+          title={course.name}
+          titleTypographyProps={{ variant: 'h4' }}
+        />
 
         <CardContent>
           <List className={classes.list}>

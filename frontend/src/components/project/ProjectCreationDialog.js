@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 //  dialog
 import Dialog from '@material-ui/core/Dialog'
@@ -17,29 +17,35 @@ import { useErrorStateValue } from '../../store'
 const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
   const errorDispatch = useErrorStateValue()[1]
   const [name, setName] = useState('')
+  const [submitDisabled, setSubmitDisabled] = useState(false)
+
+  useEffect(() => {
+    if (state.open) {
+      setSubmitDisabled(false)
+      setName('')
+    }
+  }, [state])
 
   const handleCreate = async (e) => {
     if (name === '') {
       window.alert('Project needs a name!')
       return
     }
-    try {
-      await createProject({
-        variables: { name }
+    setSubmitDisabled(true)
+    createProject({
+      variables: { name }
+    })
+      .catch(() => {
+        errorDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
       })
-      setName('')
-      handleClose()
-
-    } catch (err) {
-      errorDispatch({
-        type: 'setError',
-        data: 'Access denied'
-      })
-    }
+      .finally(handleClose)
   }
 
   const handleKey = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !submitDisabled) {
       handleCreate(e)
     }
   }
@@ -71,7 +77,11 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
         <Button onClick={handleClose} color='primary'>
           Cancel
         </Button>
-        <Button onClick={handleCreate} color='primary'>
+        <Button
+          onClick={!submitDisabled ? handleCreate : () => null}
+          disabled={submitDisabled}
+          color='primary'
+        >
           Create
         </Button>
       </DialogActions>
