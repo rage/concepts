@@ -3,7 +3,6 @@ import React, { Component, PureComponent } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
-const defaultWrapperWidth = 1
 
 export default class ConceptLink extends Component {
   componentWillMount() {
@@ -147,7 +146,7 @@ export default class ConceptLink extends Component {
 const lineStyles = theme => ({
   linetoHover: {
     '&:hover': {
-      backgroundColor: 'rgba(255, 0, 0, 0.25)'
+      backgroundColor: 'rgba(245, 0, 87, 0.25)'
     }
   },
   linetoWrapper: {
@@ -158,7 +157,7 @@ const lineStyles = theme => ({
   linetoLine: {
     position: 'absolute',
     pointerEvents: 'none',
-    borderTop: '1px solid rgba(117, 117, 117, 0.15)',
+    borderTop: '3px solid rgba(117, 117, 117, 0.15)',
     '&.linetoActive': {
       borderTopColor: '#f50057'
     }
@@ -253,8 +252,6 @@ export class Line extends PureComponent {
 
     this.within = within ? document.getElementById(within) : document.body
 
-    const wrapperWidth = this.props.wrapperWidth || defaultWrapperWidth
-
     const commonStyle = {
       position: 'absolute',
       width: `${length}px`,
@@ -266,18 +263,20 @@ export class Line extends PureComponent {
     const wrapperStyle = Object.assign({}, commonStyle, {
       top: `${y}px`,
       left: `${x}px`,
-      height: `${wrapperWidth}px`,
+      height: '1px',
       transform: `rotate(${angle}deg)`,
       // Rotate around (x0, y0)
       transformOrigin: '0 0'
     })
 
+    const lineWidth = 3
     const innerStyle = Object.assign({}, commonStyle, {
-      top: `${Math.floor(wrapperWidth / 2)}px`,
-      left: 0
+      top: 0,
+      left: 0,
+      transform: `translateY(-${Math.floor(lineWidth / 2)}px)`
     })
 
-    const hoverAreaWidth = 11
+    const hoverAreaWidth = 15
     const hoverAreaOffset = 10
 
     const hoverAreaStyle = Object.assign({}, commonStyle, {

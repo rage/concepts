@@ -4,8 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { useMutation } from 'react-apollo-hooks'
 import {
   DELETE_CONCEPT,
-  CREATE_CONCEPT_LINK,
-  DELETE_CONCEPT_LINK
+  CREATE_CONCEPT_LINK
 } from '../../graphql/Mutation'
 
 import ListItem from '@material-ui/core/ListItem'
@@ -14,14 +13,12 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import SvgIcon from '@material-ui/core/SvgIcon'
 
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
 
 import {
-  deleteConceptLinkUpdate,
   createConceptLinkUpdate,
   deleteConceptUpdate
 } from '../../apollo/update'
@@ -115,6 +112,13 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     openConceptEditDialog(id, name, description, courseId)()
   }
 
+  const hasLinkToAddingLink = addingLink &&
+    concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined
+  const addingLinkIsOpposite = addingLink && addingLink.type !== 'concept-circle'
+
+  const linkButtonColor = (addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    ? 'secondary' : undefined
+
   return (
     <ListItem
       divider
@@ -125,7 +129,9 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
     >
       <ListItemIcon>
         <IconButton onClick={onClick} style={{ padding: '4px' }}>
-          <ArrowLeftIcon viewBox='7 7 10 10' id={`concept-circle-${concept.id}`} />
+          <ArrowLeftIcon
+            viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
+            color={linkButtonColor}/>
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
@@ -150,7 +156,8 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
               open={Boolean(state.anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description, course.id)}>Edit</MenuItem>
+              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description,
+                course.id)}>Edit</MenuItem>
               <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
             </Menu>
           </React.Fragment>

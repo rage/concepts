@@ -19,7 +19,6 @@ import { useErrorStateValue, useLoginStateValue } from '../../store'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
 import { createConceptLinkUpdate } from '../../apollo/update'
-import ArrowLeftIcon from '@material-ui/core/SvgIcon/SvgIcon'
 
 const styles = theme => ({
   conceptName: {
@@ -118,8 +117,18 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
     evt.stopPropagation()
   }
 
+  const hasLinkToAddingLink = addingLink &&
+    concept.linksToConcept.find(link => link.from.id === addingLink.id) !== undefined
+  const addingLinkIsOpposite = addingLink && addingLink.type !== 'concept-circle-active'
+
+  const linkButtonColor = ((addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    || (!addingLink && activeConceptIds.includes(concept.id)))
+    ? 'secondary' : undefined
+
   return <>
-    <Tooltip title='activate selection of prerequisites' enterDelay={500} leaveDelay={400} placement='left'>
+    <Tooltip
+      title='activate selection of prerequisites' enterDelay={500} leaveDelay={400} placement='left'
+    >
       <ListItem
         button divider id={'concept-' + concept.id}
         className={classes.listItem}
@@ -160,11 +169,13 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
             </React.Fragment>
             : null
           }
-          <IconButton onClick={onClick}
-            className={`${classes.conceptCircle} ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}>
+          <IconButton
+            onClick={onClick} className={`${classes.conceptCircle}
+            ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
+          >
             <ArrowRightIcon
               viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
-              color={activeConceptIds.includes(concept.id) ? 'secondary' : undefined}
+              color={linkButtonColor}
             />
           </IconButton>
         </ListItemSecondaryAction>
