@@ -31,7 +31,8 @@ const styles = theme => ({
   },
   courseName: {
     maxWidth: '80%',
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    hyphens: 'auto'
   },
   cardHeader: {
     paddingBottom: '0px'
@@ -40,7 +41,8 @@ const styles = theme => ({
     maxWidth: '100%'
   },
   title: {
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    hyphens: 'auto'
   },
   list: {
     backgroundColor: theme.palette.background.paper,

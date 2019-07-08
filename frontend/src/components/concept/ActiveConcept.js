@@ -23,7 +23,8 @@ import { createConceptLinkUpdate } from '../../apollo/update'
 const styles = theme => ({
   conceptName: {
     maxWidth: '70%',
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    hyphens: 'auto'
   },
   conceptCircle: {
     zIndex: 2

@@ -35,7 +35,8 @@ const styles = theme => ({
     paddingBottom: '0px'
   },
   title: {
-    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    hyphens: 'auto',
     '&:hover': {
       textDecoration: 'underline',
       cursor: 'pointer'

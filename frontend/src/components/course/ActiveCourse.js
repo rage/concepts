@@ -30,7 +30,8 @@ const styles = theme => ({
     height: '90vh'
   },
   title: {
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    hyphens: 'auto'
   },
   headerContent: {
     maxWidth: '100%'

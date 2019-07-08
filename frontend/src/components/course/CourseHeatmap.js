@@ -86,7 +86,8 @@ const HeaderCell = ({ title }) => {
           paddingLeft: '5px'
         }}>
           <div style={{
-            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            hyphens: 'auto',
             maxWidth: '14ch',
             maxHeight: '38px',
             overflow: 'hidden',
