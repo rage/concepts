@@ -37,11 +37,8 @@ const useStyles = makeStyles(theme => ({
       '& + div': {
         display: 'block'
       }
-    }
-
-  },
-  tableCellContainer: {
-    padding: '1px'
+    },
+    backgroundColor: '#ebedf0'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
@@ -125,7 +122,7 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
 
   const mapToGrad = (amount) => {
     const colorStrength = ['#fffff', ...Object.values(pink).slice(0, 9)]
-    let val = (8 / maxGradVal) * (amount)
+    const val = (8 / maxGradVal) * (amount)
     return colorStrength[Math.ceil(val)]
   }
 
@@ -135,7 +132,7 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
 
   return (
     <>
-      <td key={`table-${toCourse.id}-${fromCourse.id}`} className={classes.tableCellContainer}>
+      <td key={`table-${toCourse.id}-${fromCourse.id}`}>
         <div className={classes.tableCell} style={{
           backgroundColor: mapToGrad(conceptsLinked)
         }} onClick={navigateToMapper(toCourse.id)}>
