@@ -106,7 +106,7 @@ const TEMPLATE = `{
 
 const PortView = ({ classes }) => {
   const [data, setData] = useState('')
-  const [buttonText, setButtonText] = useState('Port')
+  const [buttonText, setButtonText] = useState('Import')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -162,10 +162,10 @@ const PortView = ({ classes }) => {
       })
 
       setSuccess(true)
-      setButtonText('Data ported')
+      setButtonText('Data imported')
       setTimeout(() => {
         setSuccess(false)
-        setButtonText('Port')
+        setButtonText('Import')
       }, 2000)
     } catch (err) {
       errorDispatch({
@@ -181,7 +181,7 @@ const PortView = ({ classes }) => {
     <Grid item xs={12}>
       <Container>
         <Card>
-          <CardHeader title='Port data' />
+          <CardHeader title='Import data' />
 
           <CardContent>
             <Button variant='contained' color='secondary' onClick={addTemplate}> Add template </Button>
@@ -208,7 +208,7 @@ const PortView = ({ classes }) => {
               disabled={loading}
             />
             <div className={classes.wrapper}>
-              <Button className={success ? classes.buttonSuccess : ''} color='primary' variant='contained' fullWidth onClick={() => sendData(data)}> {buttonText} </Button>
+              <Button className={success ? classes.buttonSuccess : ''} color='primary' variant='contained' fullWidth onClick={() => sendData(data)}> {!loading ? buttonText : '\u00A0'} </Button>
               {
                 loading && <CircularProgress size={24} className={classes.buttonProgress} />
               }

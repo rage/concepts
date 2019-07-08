@@ -35,11 +35,11 @@ const PortQueries = {
     const result = await context.prisma.$graphql(query, {
       id: args.workspaceId
     })
-    
+
     const workspace = result['workspace']
 
     if (!workspace) {
-      throw new Error("Workspace not found")
+      throw new Error('Workspace not found')
     }
 
     // Create json from workspace
@@ -48,7 +48,7 @@ const PortQueries = {
       'workspace': workspace.name,
       'courses': []
     }
-    
+
     for (const course of workspace['courses']) {
       const courseData = {
         'name': course['name'],
@@ -71,7 +71,7 @@ const PortQueries = {
           })
         }
         // Add concept to course
-        courseData['prerequisites'].push(conceptData)
+        courseData['concepts'].push(conceptData)
       }
 
       // Add course prerequisites
