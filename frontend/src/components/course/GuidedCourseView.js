@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -102,7 +102,8 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   return (
     <React.Fragment>
       {
-        courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites && workspaceQuery.data.workspaceById ?
+        courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
+        && workspaceQuery.data.workspaceById ?
           <Grid id='course-view' container spacing={0} direction='row'>
             <ActiveCourse
               onClick={() => setAddingLink(null)}
@@ -180,12 +181,13 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               onContextMenu={handleMenuOpen} posOffsets={{x0: -5, x1: +6}}/>
           )) : null
       ))}
-      {conceptLinkMenu && <div ref={conceptLinkMenuRef} style={{
+      <div ref={conceptLinkMenuRef} style={{
         position:'absolute',
         width: '1px',
         height: '1px',
-        top: `${conceptLinkMenu.y}px`,
-        left: `${conceptLinkMenu.x}px`}}/>}
+        display: conceptLinkMenu ? 'block' : 'none',
+        top: `${conceptLinkMenu ? conceptLinkMenu.y : 0}px`,
+        left: `${conceptLinkMenu ? conceptLinkMenu.x : 0}px`}}/>
       <Menu
         id='concept-link-menu'
         anchorEl={conceptLinkMenuRef.current}
