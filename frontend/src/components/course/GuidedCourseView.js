@@ -26,6 +26,21 @@ import ConceptLink from '../concept/ConceptLink'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 const styles = theme => ({
+  root: {
+    display: 'grid',
+    height: 'calc(100vh - 58px)',
+    width: '100%',
+    gridTemplateAreas:
+      `"activeCourse contentHeader contentHeader"
+       "activeCourse courses       courses"`,
+    gridTemplateColumns: '25% auto 25%',
+    gridTemplateRows: '64px auto',
+    '&.courseTrayOpen': {
+      gridTemplateAreas:
+        `"activeCourse contentHeader courseTray"
+         "activeCourse courses       courseTray"`
+    }
+  }
 })
 
 const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
@@ -100,11 +115,14 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       {
         courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
         && workspaceQuery.data.workspaceById ?
-          <Grid id='course-view' container spacing={0} direction='row'>
+          <div
+            id='course-view'
+            className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
+          >
             <ActiveCourse
               onClick={() => setAddingLink(null)}
               course={courseQuery.data.courseById}
@@ -153,20 +171,11 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
                 </Fab>
                 : null
             }
-          </Grid>
+          </div>
           :
-          <Grid container
-            spacing={0}
-            direction='row'
-            justify='center'
-            alignItems='center'
-          >
-            <Grid item xs={12}>
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress />
-              </div>
-            </Grid>
-          </Grid>
+          <div style={{ textAlign: 'center' }}>
+            <CircularProgress />
+          </div>
       }
       {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
       && courseQuery.data.courseById.concepts.map(concept => (
@@ -209,7 +218,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
         from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
         followMouse={true} posOffsets={{x0: addingLink.type === 'concept-circle-active' ? 7 : -7}}
       />}
-    </React.Fragment>
+    </>
   )
 }
 

@@ -17,7 +17,8 @@ import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: 'calc(100vh - 58px)',
+    gridArea: 'activeCourse',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
@@ -163,57 +164,55 @@ const ActiveCourse = ({
   }
 
 
-  return (
-    <Grid item xs={4} lg={3} onClick={onClick}>
-      <Paper elevation={0} className={classes.root}>
-        <Typography className={classes.title} variant='h4'>
-          {course.name}
-        </Typography>
+  return <>
+    <Paper elevation={0} className={classes.root}>
+      <Typography className={classes.title} variant='h4'>
+        {course.name}
+      </Typography>
 
-        <List className={classes.list}>
-          {course.concepts.map(concept =>
-            <ActiveConcept concept={concept}
-              key={concept.id}
-              activeConceptIds={activeConceptIds}
-              addingLink={addingLink}
-              setAddingLink={setAddingLink}
-              deleteConcept={deleteConcept}
-              openConceptDialog={handleConceptOpen}
-              openConceptEditDialog={handleConceptEditOpen}
-              toggleConcept={toggleConcept}
-              workspaceId={workspaceId}
-            />
-          )}
-        </List>
+      <List className={classes.list}>
+        {course.concepts.map(concept =>
+          <ActiveConcept concept={concept}
+            key={concept.id}
+            activeConceptIds={activeConceptIds}
+            addingLink={addingLink}
+            setAddingLink={setAddingLink}
+            deleteConcept={deleteConcept}
+            openConceptDialog={handleConceptOpen}
+            openConceptEditDialog={handleConceptEditOpen}
+            toggleConcept={toggleConcept}
+            workspaceId={workspaceId}
+          />
+        )}
+      </List>
 
-        {loggedIn ?
-          <Button
-            className={classes.button}
-            onClick={handleConceptOpen(course.id)}
-            variant='contained'
-            color='secondary'
-          >
-            Add concept
-          </Button> : null
-        }
-      </Paper>
+      {loggedIn ?
+        <Button
+          className={classes.button}
+          onClick={handleConceptOpen(course.id)}
+          variant='contained'
+          color='secondary'
+        >
+          Add concept
+        </Button> : null
+      }
+    </Paper>
 
-      <ConceptEditingDialog
-        state={conceptEditState}
-        handleClose={handleConceptEditClose}
-        updateConcept={updateConcept}
-        workspaceId={workspaceId}
-        defaultName={conceptEditState.name}
-        defaultDescription={conceptEditState.description}
-      />
-      <ConceptAdditionDialog
-        state={conceptState}
-        handleClose={handleConceptClose}
-        createConcept={createConcept}
-        workspaceId={workspaceId}
-      />
-    </Grid>
-  )
+    <ConceptEditingDialog
+      state={conceptEditState}
+      handleClose={handleConceptEditClose}
+      updateConcept={updateConcept}
+      workspaceId={workspaceId}
+      defaultName={conceptEditState.name}
+      defaultDescription={conceptEditState.description}
+    />
+    <ConceptAdditionDialog
+      state={conceptState}
+      handleClose={handleConceptClose}
+      createConcept={createConcept}
+      workspaceId={workspaceId}
+    />
+  </>
 }
 
 export default withStyles(styles)(ActiveCourse)

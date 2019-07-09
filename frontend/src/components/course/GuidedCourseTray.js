@@ -16,7 +16,8 @@ import { useErrorStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: 'calc(100vh - 58px)',
+    gridArea: 'courseTray',
+    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
@@ -172,67 +173,66 @@ const GuidedCourseTray = ({
 
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
-  return (
-    <React.Fragment >
-      {courseTrayOpen &&
-        <Grid item xs={4} lg={3}>
-          <Paper elevation={0} className={classes.root}>
-            <Typography className={classes.title} variant='h4'>
-              Courses in workspace
-            </Typography>
+  if (!courseTrayOpen) {
+    return null
+  }
 
-            <TextField
-              margin='dense'
-              id='description'
-              label='Filter'
-              type='text'
-              name='filter'
-              fullWidth
-              variant='outlined'
-              className={classes.filterInput}
-              value={filterKeyword}
-              onChange={handleKeywordInput}
-            />
+  return <>
+    <Paper elevation={0} className={classes.root}>
+      <Typography className={classes.title} variant='h4'>
+        Courses in workspace
+      </Typography>
 
-            {coursesQuery.data.coursesByWorkspace &&
-              <List disablePadding className={classes.list}>
-                {coursesQuery.data.coursesByWorkspace
-                  .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
-                  .map(course =>
-                    <PrerequisiteCourse
-                      key={course.id}
-                      course={course}
-                      activeCourseId={activeCourseId}
-                      createCourseLink={createCourseLink}
-                      deleteCourseLink={deleteCourseLink}
-                      isPrerequisite={isPrerequisite(course)}
-                      getLinkToDelete={getLinkToDelete}
-                      classes={classes}
-                      workspaceId={workspaceId}
-                    />
-                  )
-                }
-              </List>
-            }
+      <TextField
+        margin='dense'
+        id='description'
+        label='Filter'
+        type='text'
+        name='filter'
+        fullWidth
+        variant='outlined'
+        className={classes.filterInput}
+        value={filterKeyword}
+        onChange={handleKeywordInput}
+      />
 
-            <Button
-              onClick={handleClickOpen}
-              className={classes.button}
-              variant='contained'
-              color='secondary'
-            >
-              New course
-            </Button>
-          </Paper >
-          <CourseCreationDialog
-            state={state}
-            handleClose={handleClose}
-            workspaceId={workspaceId}
-            createCourse={createCourse}
-          />
-        </Grid >}
-    </React.Fragment >
-  )
+      {coursesQuery.data.coursesByWorkspace &&
+        <List disablePadding className={classes.list}>
+          {coursesQuery.data.coursesByWorkspace
+            .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
+            .map(course =>
+              <PrerequisiteCourse
+                key={course.id}
+                course={course}
+                activeCourseId={activeCourseId}
+                createCourseLink={createCourseLink}
+                deleteCourseLink={deleteCourseLink}
+                isPrerequisite={isPrerequisite(course)}
+                getLinkToDelete={getLinkToDelete}
+                classes={classes}
+                workspaceId={workspaceId}
+              />
+            )
+          }
+        </List>
+      }
+
+      <Button
+        onClick={handleClickOpen}
+        className={classes.button}
+        variant='contained'
+        color='secondary'
+      >
+        New course
+      </Button>
+    </Paper >
+    <CourseCreationDialog
+      state={state}
+      handleClose={handleClose}
+      workspaceId={workspaceId}
+      createCourse={createCourse}
+    />
+  </>
 }
 
 export default withStyles(styles)(GuidedCourseTray)
