@@ -153,33 +153,30 @@ const GuidedCourseContainer = ({
 
   return (
     <>
-      <Grid onClick={onClick} container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
-        <Grid item>
-          <Typography style={{ margin: '2px 0px 0px 10px' }} variant='h4'>Prerequisites</Typography>
-        </Grid>
+      <Grid onClick={onClick} item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
+        <Typography style={{ margin: '16px', height: '40px' }} variant='h4'>
+          Prerequisites
+        </Typography>
         {
           courses && courses.length !== 0 ?
-            <Grid container item>
-              <div style={{ overflowY: 'auto', width: '100%', height: '85vh',
-              display: 'flex', flexDirection: 'column', alignItems: 'space-evenly'}}>
-                {courses && <Masonry courseTrayOpen={courseTrayOpen}>
-                  {courses.map(course =>
-                    <Course
-                      key={course.id}
-                      course={course}
-                      activeConceptIds={activeConceptIds}
-                      addingLink={addingLink}
-                      setAddingLink={setAddingLink}
-                      openCourseDialog={handleCourseOpen}
-                      openConceptDialog={handleConceptOpen}
-                      openConceptEditDialog={handleConceptEditOpen}
-                      activeCourseId={courseId}
-                      workspaceId={workspaceId}
-                    />
-                  )}
-                </Masonry>}
-              </div>
-            </Grid>
+            <div style={{ overflowY: 'auto', width: '100%', height: 'calc(100vh - 58px - 40px)'}}>
+              {courses && <Masonry courseTrayOpen={courseTrayOpen}>
+                {courses.map(course =>
+                  <Course
+                    key={course.id}
+                    course={course}
+                    activeConceptIds={activeConceptIds}
+                    addingLink={addingLink}
+                    setAddingLink={setAddingLink}
+                    openCourseDialog={handleCourseOpen}
+                    openConceptDialog={handleConceptOpen}
+                    openConceptEditDialog={handleConceptEditOpen}
+                    activeCourseId={courseId}
+                    workspaceId={workspaceId}
+                  />
+                )}
+              </Masonry>}
+            </div>
             :
             null
         }

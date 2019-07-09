@@ -11,7 +11,8 @@ const styles = theme => ({
   },
   columnWrapper: {
     width: '296px',
-    display: 'inline-block'
+    display: 'inline-block',
+    textAlign: 'initial'
   }
 })
 
