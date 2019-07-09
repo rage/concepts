@@ -51,7 +51,9 @@ const useStyles = makeStyles(theme => ({
     padding: '0 0 10px 0'
   },
   blankHeaderCell: {
-    boxShadow: '1px 1px 0 0 black'
+    boxShadow: '1px 1px 0 0 black',
+    minWidth: '150px',
+    minHeight: '150px'
   },
   headerText: {
     minWidth: '100%',
@@ -84,18 +86,15 @@ const BlankHeaderCell = (props) => {
   return (
     <th className={classes.blankHeaderCell}>
       <div style={{
-        height: '160px'
-      }}>
-
-        <div style={{
-          position: 'relative',
-          transform: 'rotate(-90deg)',
-          left: '44%',
-          top: '26%'
-
-        }}>Prerequisite</div>
-        <div style={{ position: 'relative', top: '76%', right: '36%' }}>Target</div>
-      </div>
+        position: 'absolute',
+        transform: 'translate(36px, -30px) rotate(-90deg)',
+        right: '0'
+      }}>Prerequisite</div>
+      <div style={{
+        position: 'absolute',
+        bottom: '2px',
+        right: '65%'
+      }}>Target</div>
     </th>
   )
 }

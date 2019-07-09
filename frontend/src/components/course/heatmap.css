@@ -25,6 +25,7 @@ tbody th {
   position: sticky;
   left: 0;
   background: #fff;
+  width: 150px;
 }
 
 thead th:first-child {
