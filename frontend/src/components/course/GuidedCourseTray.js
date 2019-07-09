@@ -27,6 +27,7 @@ const styles = theme => ({
     paddingBottom: '0px',
     maxWidth: 'calc(100% - 64px)',
     overflowWrap: 'break-word',
+    hyphens: 'auto',
     marginBottom: '16px'
   },
   filterInput: {

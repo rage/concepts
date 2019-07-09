@@ -28,6 +28,7 @@ const styles = theme => ({
     paddingBottom: '0px',
     maxWidth: '100%',
     overflowWrap: 'break-word',
+    hyphens: 'auto',
     marginBottom: '16px'
   },
   list: {

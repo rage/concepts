@@ -37,15 +37,25 @@ const useStyles = makeStyles(theme => ({
       '& + div': {
         display: 'block'
       }
-    }
-
+    },
+    backgroundColor: '#ebedf0'
   },
-  tableCellContainer: {
-    padding: '1px'
+  sideHeaderCell: {
+    boxShadow: '1px 1px 0 0 black',
+    padding: '0 10px 0 0',
+    width: '230px',
+    fontWeight:'normal'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
-    minHeight: '100%'
+    minHeight: '100%',
+    boxShadow: '0 1px 0 0 black',
+    padding: '0 0 10px 0'
+  },
+  blankHeaderCell: {
+    boxShadow: '1px 1px 0 0 black',
+    minWidth: '150px',
+    minHeight: '150px'
   },
   headerText: {
     minWidth: '100%',
@@ -72,6 +82,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const BlankHeaderCell = (props) => {
+  const classes = useStyles()
+
+  return (
+    <th className={classes.blankHeaderCell}>
+      <div style={{
+        position: 'absolute',
+        transform: 'translate(34px, 24px) rotate(-90deg)',
+        right: '0'
+      }}>Prerequisite</div>
+      <div style={{
+        position: 'absolute',
+        bottom: '4px',
+        left: '4px'
+      }}>Target</div>
+    </th>
+  )
+}
+
 const HeaderCell = ({ title }) => {
   const classes = useStyles()
 
@@ -89,13 +118,14 @@ const HeaderCell = ({ title }) => {
           paddingLeft: '5px'
         }}>
           <div style={{
-            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
+            hyphens: 'auto',
             maxWidth: '14ch',
             maxHeight: '38px',
             overflow: 'hidden',
             textAlign: 'center',
-            textOverflow: 'ellipsis'
-
+            textOverflow: 'ellipsis',
+            fontWeight: 'normal'
           }}>
             {title}
           </div>
@@ -125,7 +155,7 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
 
   const mapToGrad = (amount) => {
     const colorStrength = ['#fffff', ...Object.values(pink).slice(0, 9)]
-    let val = (8 / maxGradVal) * (amount)
+    const val = (8 / maxGradVal) * (amount)
     return colorStrength[Math.ceil(val)]
   }
 
@@ -135,7 +165,7 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
 
   return (
     <>
-      <td key={`table-${toCourse.id}-${fromCourse.id}`} className={classes.tableCellContainer}>
+      <td key={`table-${toCourse.id}-${fromCourse.id}`}>
         <div className={classes.tableCell} style={{
           backgroundColor: mapToGrad(conceptsLinked)
         }} onClick={navigateToMapper(toCourse.id)}>
@@ -190,7 +220,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                   <table>
                     <thead>
                       <tr>
-                        <HeaderCell />
+                        <BlankHeaderCell />
                         {workspaceCourseQuery.data.workspaceById.courses.map(course => (
                           <HeaderCell key={course.id} title={course.name} />
                         ))
@@ -203,7 +233,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                       {
                         workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
                           <tr key={`${fromCourse.id}`}>
-                            <th> {fromCourse.name} </th>
+                            <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
                             {
                               workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
                                 <TableCell workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} />
