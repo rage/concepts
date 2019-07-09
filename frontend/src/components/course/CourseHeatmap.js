@@ -42,7 +42,8 @@ const useStyles = makeStyles(theme => ({
   },
   sideHeaderCell: {
     boxShadow: '1px 1px 0 0 black',
-    padding: '0 10px 0 0'
+    padding: '0 10px 0 0',
+    width: '230px'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
