@@ -1,64 +1,47 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-
-// Card
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-
-// List
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Checkbox from '@material-ui/core/Checkbox'
-import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
-import TextField from '@material-ui/core/TextField'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-
-import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import { withStyles } from '@material-ui/core/styles'
+
+import {
+  Grid, Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
+  ListItemSecondaryAction
+} from '@material-ui/core'
 import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
+
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
-// Error dispatcher
+import CourseCreationDialog from './CourseCreationDialog'
+
 import { useErrorStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: '90vh'
-  },
-  courseName: {
-    maxWidth: '80%',
-    overflowWrap: 'break-word',
-    hyphens: 'auto'
-  },
-  cardHeader: {
-    paddingBottom: '0px'
-  },
-  headerContent: {
-    maxWidth: '100%'
+    gridArea: 'courseTray',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '16px',
+    boxSizing: 'border-box'
   },
   title: {
+    paddingBottom: '0px',
+    maxWidth: 'calc(100% - 64px)',
     overflowWrap: 'break-word',
-    hyphens: 'auto'
+    hyphens: 'auto',
+    marginBottom: '16px'
+  },
+  filterInput: {
+    paddingBottom: '16px'
   },
   list: {
     backgroundColor: theme.palette.background.paper,
-    width: '100%',
-    overflow: 'auto',
-    maxHeight: '73vh',
-    padding: 0
+    overflow: 'auto'
   },
-  listItem: {
-    width: '100%',
-    backgroundColor: '#fff',
-    '&:focus': {
-      backgroundColor: '#fff'
-    }
+  courseName: {
+    overflowWrap: 'break-word'
   },
   button: {
+    marginTop: '16px',
     width: '100%'
   }
 })
@@ -189,79 +172,68 @@ const GuidedCourseTray = ({
     return courseLinks.find(link => link.from.id === course.id)
   }
 
-  return (
-    <React.Fragment >
-      {
-        courseTrayOpen ?
-          <Grid item xs={4} lg={3}>
-            <Card elevation={0} className={classes.root}>
-              <CardHeader
-                className={classes.cardHeader}
-                classes={{ title: classes.title, content: classes.headerContent }}
-                title='Courses in workspace'
-                titleTypographyProps={{ variant: 'h4' }}
+  const filterKeywordLowercase = filterKeyword.toLowerCase()
+
+  if (!courseTrayOpen) {
+    return null
+  }
+
+  return <>
+    <Paper elevation={0} className={classes.root}>
+      <Typography className={classes.title} variant='h4'>
+        Courses in workspace
+      </Typography>
+
+      <TextField
+        margin='dense'
+        id='description'
+        label='Filter'
+        type='text'
+        name='filter'
+        fullWidth
+        variant='outlined'
+        className={classes.filterInput}
+        value={filterKeyword}
+        onChange={handleKeywordInput}
+      />
+
+      {coursesQuery.data.coursesByWorkspace &&
+        <List disablePadding className={classes.list}>
+          {coursesQuery.data.coursesByWorkspace
+            .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
+            .map(course =>
+              <PrerequisiteCourse
+                key={course.id}
+                course={course}
+                activeCourseId={activeCourseId}
+                createCourseLink={createCourseLink}
+                deleteCourseLink={deleteCourseLink}
+                isPrerequisite={isPrerequisite(course)}
+                getLinkToDelete={getLinkToDelete}
+                classes={classes}
+                workspaceId={workspaceId}
               />
-
-              <CardContent>
-                <TextField
-                  margin='dense'
-                  id='description'
-                  label='Filter'
-                  type='text'
-                  name='filter'
-                  fullWidth
-                  value={filterKeyword}
-                  onChange={handleKeywordInput}
-                />
-
-                {
-                  coursesQuery.data.coursesByWorkspace ?
-                    <List disablePadding className={classes.list}>
-                      {
-                        coursesQuery.data.coursesByWorkspace
-                          .filter(course => {
-                            return course.name.toLowerCase().includes(filterKeyword.toLowerCase())
-                          })
-                          .map(course =>
-                            <PrerequisiteCourse
-                              key={course.id}
-                              course={course}
-                              activeCourseId={activeCourseId}
-                              createCourseLink={createCourseLink}
-                              deleteCourseLink={deleteCourseLink}
-                              isPrerequisite={isPrerequisite(course)}
-                              getLinkToDelete={getLinkToDelete}
-                              classes={classes}
-                              workspaceId={workspaceId}
-                            />
-                          )
-                      }
-                    </List>
-                    :
-                    null
-                }
-                <Button
-                  onClick={handleClickOpen}
-                  className={classes.button}
-                  variant='contained'
-                  color='secondary'
-                >
-                  New course
-                </Button>
-              </CardContent>
-            </Card >
-            <CourseCreationDialog
-              state={state}
-              handleClose={handleClose}
-              workspaceId={workspaceId}
-              createCourse={createCourse}
-            />
-          </Grid >
-          :
-          null
+            )
+          }
+        </List>
       }
-    </React.Fragment >
-  )
+
+      <Button
+        onClick={handleClickOpen}
+        className={classes.button}
+        variant='contained'
+        color='secondary'
+      >
+        New course
+      </Button>
+    </Paper >
+    <CourseCreationDialog
+      state={state}
+      handleClose={handleClose}
+      workspaceId={workspaceId}
+      createCourse={createCourse}
+    />
+  </>
 }
 
 export default withStyles(styles)(GuidedCourseTray)

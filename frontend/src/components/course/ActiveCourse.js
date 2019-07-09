@@ -1,21 +1,11 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-
-// Card
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-
-import { COURSE_BY_ID } from '../../graphql/Query'
-
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
+import { withStyles } from '@material-ui/core/styles'
+
+import { Button, Grid, Paper, Typography, List } from '@material-ui/core'
+
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
-
-// List
-import List from '@material-ui/core/List'
-
+import { COURSE_BY_ID } from '../../graphql/Query'
 
 import ActiveConcept from '../concept/ActiveConcept'
 
@@ -27,28 +17,24 @@ import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: '90vh'
+    gridArea: 'activeCourse',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '16px',
+    boxSizing: 'border-box'
   },
   title: {
+    paddingBottom: '0px',
+    maxWidth: '100%',
     overflowWrap: 'break-word',
-    hyphens: 'auto'
-  },
-  headerContent: {
-    maxWidth: '100%'
+    hyphens: 'auto',
+    marginBottom: '16px'
   },
   list: {
     width: '100%',
-    // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-    // paddingBottom: theme.spacing.unit * 2,
-    // position: 'relative',
-    overflow: 'auto',
-    maxHeight: '73vh',
-    padding: 0
-  },
-  cardHeader: {
-    marginTop: '5px',
-    paddingBottom: '0px'
+    overflow: 'auto'
   },
   listSection: {
     backgroundColor: 'inherit'
@@ -61,6 +47,7 @@ const styles = theme => ({
     backgroundColor: 'cyan'
   },
   button: {
+    marginTop: '16px',
     width: '100%'
   }
 })
@@ -178,63 +165,55 @@ const ActiveCourse = ({
   }
 
 
-  return (
-    <Grid item xs={4} lg={3} onClick={onClick}>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          className={classes.cardHeader}
-          classes={{ title: classes.title, content: classes.headerContent }}
-          title={course.name}
-          titleTypographyProps={{ variant: 'h4' }}
-        />
+  return <>
+    <Paper elevation={0} className={classes.root}>
+      <Typography className={classes.title} variant='h4'>
+        {course.name}
+      </Typography>
 
-        <CardContent>
-          <List className={classes.list}>
-            {course.concepts.map(concept =>
-              <ActiveConcept concept={concept}
-                key={concept.id}
-                activeConceptIds={activeConceptIds}
-                addingLink={addingLink}
-                setAddingLink={setAddingLink}
-                deleteConcept={deleteConcept}
-                openConceptDialog={handleConceptOpen}
-                openConceptEditDialog={handleConceptEditOpen}
-                toggleConcept={toggleConcept}
-                workspaceId={workspaceId}
-              />
-            )}
-          </List>
+      <List className={classes.list}>
+        {course.concepts.map(concept =>
+          <ActiveConcept concept={concept}
+            key={concept.id}
+            activeConceptIds={activeConceptIds}
+            addingLink={addingLink}
+            setAddingLink={setAddingLink}
+            deleteConcept={deleteConcept}
+            openConceptDialog={handleConceptOpen}
+            openConceptEditDialog={handleConceptEditOpen}
+            toggleConcept={toggleConcept}
+            workspaceId={workspaceId}
+          />
+        )}
+      </List>
 
-          {loggedIn ?
-            <Button
-              className={classes.button}
-              onClick={handleConceptOpen(course.id)}
-              variant='contained'
-              color='secondary'
-            >
-              Add concept
-            </Button> : null
-          }
+      {loggedIn ?
+        <Button
+          className={classes.button}
+          onClick={handleConceptOpen(course.id)}
+          variant='contained'
+          color='secondary'
+        >
+          Add concept
+        </Button> : null
+      }
+    </Paper>
 
-        </CardContent>
-      </Card>
-
-      <ConceptEditingDialog
-        state={conceptEditState}
-        handleClose={handleConceptEditClose}
-        updateConcept={updateConcept}
-        workspaceId={workspaceId}
-        defaultName={conceptEditState.name}
-        defaultDescription={conceptEditState.description}
-      />
-      <ConceptAdditionDialog
-        state={conceptState}
-        handleClose={handleConceptClose}
-        createConcept={createConcept}
-        workspaceId={workspaceId}
-      />
-    </Grid>
-  )
+    <ConceptEditingDialog
+      state={conceptEditState}
+      handleClose={handleConceptEditClose}
+      updateConcept={updateConcept}
+      workspaceId={workspaceId}
+      defaultName={conceptEditState.name}
+      defaultDescription={conceptEditState.description}
+    />
+    <ConceptAdditionDialog
+      state={conceptState}
+      handleClose={handleConceptClose}
+      createConcept={createConcept}
+      workspaceId={workspaceId}
+    />
+  </>
 }
 
 export default withStyles(styles)(ActiveCourse)
