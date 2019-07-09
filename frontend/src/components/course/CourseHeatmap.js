@@ -43,7 +43,8 @@ const useStyles = makeStyles(theme => ({
   sideHeaderCell: {
     boxShadow: '1px 1px 0 0 black',
     padding: '0 10px 0 0',
-    width: '230px'
+    width: '230px',
+    fontWeight:'normal'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
@@ -88,7 +89,7 @@ const BlankHeaderCell = (props) => {
     <th className={classes.blankHeaderCell}>
       <div style={{
         position: 'absolute',
-        transform: 'translate(36px, -30px) rotate(-90deg)',
+        transform: 'translate(34px, 24px) rotate(-90deg)',
         right: '0'
       }}>Prerequisite</div>
       <div style={{
@@ -123,8 +124,8 @@ const HeaderCell = ({ title }) => {
             maxHeight: '38px',
             overflow: 'hidden',
             textAlign: 'center',
-            textOverflow: 'ellipsis'
-
+            textOverflow: 'ellipsis',
+            fontWeight: 'normal'
           }}>
             {title}
           </div>
