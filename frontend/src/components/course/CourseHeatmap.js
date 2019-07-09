@@ -93,8 +93,8 @@ const BlankHeaderCell = (props) => {
       }}>Prerequisite</div>
       <div style={{
         position: 'absolute',
-        bottom: '2px',
-        right: '65%'
+        bottom: '4px',
+        left: '4px'
       }}>Target</div>
     </th>
   )
