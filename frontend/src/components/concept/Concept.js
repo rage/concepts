@@ -29,7 +29,8 @@ import { useErrorStateValue, useLoginStateValue } from '../../store'
 const styles = theme => ({
   conceptName: {
     maxWidth: '60%',
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    hyphens: 'auto'
   },
   active: {
     backgroundColor: '#9ecae1',

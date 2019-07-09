@@ -11,9 +11,6 @@ table {
   border-collapse: collapse;
 }
 
-td, th {
-  padding: 0.25em;
-}
 
 thead th {
   position: -webkit-sticky; /* for Safari */
@@ -28,6 +25,7 @@ tbody th {
   position: sticky;
   left: 0;
   background: #fff;
+  width: 150px;
 }
 
 thead th:first-child {
