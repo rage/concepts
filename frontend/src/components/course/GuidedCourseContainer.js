@@ -201,7 +201,7 @@ const GuidedCourseContainer = ({
         {
           courses && courses.length !== 0 ?
             <Grid container item>
-              <div style={{ overflowY: 'scroll', width: '100%', height: '85vh', paddingTop: '14px', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ overflowY: 'auto', width: '100%', height: '85vh', paddingTop: '14px', display: 'flex', justifyContent: 'center' }}>
                 {
                   courses && courses.length < 3 ?
                     <Grid container justify='space-evenly'>

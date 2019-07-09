@@ -3,10 +3,9 @@ import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 
-// Card
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
+// Paper
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 
 import { COURSE_BY_ID } from '../../graphql/Query'
 
@@ -27,27 +26,22 @@ import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: '90vh'
+    height: 'calc(100vh - 58px)',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '16px',
+    boxSizing: 'border-box'
   },
   title: {
-    overflowWrap: 'break-word'
-  },
-  headerContent: {
-    maxWidth: '100%'
+    paddingBottom: '0px',
+    maxWidth: '100%',
+    overflowWrap: 'break-word',
+    marginBottom: '16px'
   },
   list: {
     width: '100%',
-    // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
-    // paddingBottom: theme.spacing.unit * 2,
-    // position: 'relative',
-    overflow: 'auto',
-    maxHeight: '73vh',
-    padding: 0
-  },
-  cardHeader: {
-    marginTop: '5px',
-    paddingBottom: '0px'
+    overflow: 'auto'
   },
   listSection: {
     backgroundColor: 'inherit'
@@ -60,6 +54,7 @@ const styles = theme => ({
     backgroundColor: 'cyan'
   },
   button: {
+    marginTop: '16px',
     width: '100%'
   }
 })
@@ -179,44 +174,38 @@ const ActiveCourse = ({
 
   return (
     <Grid item xs={4} lg={3} onClick={onClick}>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          className={classes.cardHeader}
-          classes={{ title: classes.title, content: classes.headerContent }}
-          title={course.name}
-          titleTypographyProps={{ variant: 'h4' }}
-        />
+      <Paper elevation={0} className={classes.root}>
+        <Typography className={classes.title} variant='h4'>
+          {course.name}
+        </Typography>
 
-        <CardContent>
-          <List className={classes.list}>
-            {course.concepts.map(concept =>
-              <ActiveConcept concept={concept}
-                key={concept.id}
-                activeConceptIds={activeConceptIds}
-                addingLink={addingLink}
-                setAddingLink={setAddingLink}
-                deleteConcept={deleteConcept}
-                openConceptDialog={handleConceptOpen}
-                openConceptEditDialog={handleConceptEditOpen}
-                toggleConcept={toggleConcept}
-                workspaceId={workspaceId}
-              />
-            )}
-          </List>
+        <List className={classes.list}>
+          {course.concepts.map(concept =>
+            <ActiveConcept concept={concept}
+              key={concept.id}
+              activeConceptIds={activeConceptIds}
+              addingLink={addingLink}
+              setAddingLink={setAddingLink}
+              deleteConcept={deleteConcept}
+              openConceptDialog={handleConceptOpen}
+              openConceptEditDialog={handleConceptEditOpen}
+              toggleConcept={toggleConcept}
+              workspaceId={workspaceId}
+            />
+          )}
+        </List>
 
-          {loggedIn ?
-            <Button
-              className={classes.button}
-              onClick={handleConceptOpen(course.id)}
-              variant='contained'
-              color='secondary'
-            >
-              Add concept
-            </Button> : null
-          }
-
-        </CardContent>
-      </Card>
+        {loggedIn ?
+          <Button
+            className={classes.button}
+            onClick={handleConceptOpen(course.id)}
+            variant='contained'
+            color='secondary'
+          >
+            Add concept
+          </Button> : null
+        }
+      </Paper>
 
       <ConceptEditingDialog
         state={conceptEditState}

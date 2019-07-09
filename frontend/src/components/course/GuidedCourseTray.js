@@ -2,12 +2,8 @@ import React, { useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 
-// Card
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-
-// List
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -27,36 +23,30 @@ import { useErrorStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
-    height: '90vh'
-  },
-  courseName: {
-    maxWidth: '80%',
-    overflowWrap: 'break-word'
-  },
-  cardHeader: {
-    paddingBottom: '0px'
-  },
-  headerContent: {
-    maxWidth: '100%'
+    height: 'calc(100vh - 58px)',
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '16px',
+    boxSizing: 'border-box'
   },
   title: {
-    overflowWrap: 'break-word'
+    paddingBottom: '0px',
+    maxWidth: 'calc(100% - 64px)',
+    overflowWrap: 'break-word',
+    marginBottom: '16px'
+  },
+  filterInput: {
+    paddingBottom: '16px'
   },
   list: {
     backgroundColor: theme.palette.background.paper,
-    width: '100%',
-    overflow: 'auto',
-    maxHeight: '73vh',
-    padding: 0
+    overflow: 'auto'
   },
-  listItem: {
-    width: '100%',
-    backgroundColor: '#fff',
-    '&:focus': {
-      backgroundColor: '#fff'
-    }
+  courseName: {
+    overflowWrap: 'break-word'
   },
   button: {
+    marginTop: '16px',
     width: '100%'
   }
 })
@@ -187,77 +177,67 @@ const GuidedCourseTray = ({
     return courseLinks.find(link => link.from.id === course.id)
   }
 
+  const filterKeywordLowercase = filterKeyword.toLowerCase()
+
   return (
     <React.Fragment >
-      {
-        courseTrayOpen ?
-          <Grid item xs={4} lg={3}>
-            <Card elevation={0} className={classes.root}>
-              <CardHeader
-                className={classes.cardHeader}
-                classes={{ title: classes.title, content: classes.headerContent }}
-                title='Courses in workspace'
-                titleTypographyProps={{ variant: 'h4' }}
-              />
+      {courseTrayOpen &&
+        <Grid item xs={4} lg={3}>
+          <Paper elevation={0} className={classes.root}>
+            <Typography className={classes.title} variant='h4'>
+              Courses in workspace
+            </Typography>
 
-              <CardContent>
-                <TextField
-                  margin='dense'
-                  id='description'
-                  label='Filter'
-                  type='text'
-                  name='filter'
-                  fullWidth
-                  value={filterKeyword}
-                  onChange={handleKeywordInput}
-                />
-
-                {
-                  coursesQuery.data.coursesByWorkspace ?
-                    <List disablePadding className={classes.list}>
-                      {
-                        coursesQuery.data.coursesByWorkspace
-                          .filter(course => {
-                            return course.name.toLowerCase().includes(filterKeyword.toLowerCase())
-                          })
-                          .map(course =>
-                            <PrerequisiteCourse
-                              key={course.id}
-                              course={course}
-                              activeCourseId={activeCourseId}
-                              createCourseLink={createCourseLink}
-                              deleteCourseLink={deleteCourseLink}
-                              isPrerequisite={isPrerequisite(course)}
-                              getLinkToDelete={getLinkToDelete}
-                              classes={classes}
-                              workspaceId={workspaceId}
-                            />
-                          )
-                      }
-                    </List>
-                    :
-                    null
-                }
-                <Button
-                  onClick={handleClickOpen}
-                  className={classes.button}
-                  variant='contained'
-                  color='secondary'
-                >
-                  New course
-                </Button>
-              </CardContent>
-            </Card >
-            <CourseCreationDialog
-              state={state}
-              handleClose={handleClose}
-              workspaceId={workspaceId}
-              createCourse={createCourse}
+            <TextField
+              margin='dense'
+              id='description'
+              label='Filter'
+              type='text'
+              name='filter'
+              fullWidth
+              variant='outlined'
+              className={classes.filterInput}
+              value={filterKeyword}
+              onChange={handleKeywordInput}
             />
-          </Grid >
-          :
-          null
-      }
+
+            {coursesQuery.data.coursesByWorkspace &&
+              <List disablePadding className={classes.list}>
+                {coursesQuery.data.coursesByWorkspace
+                  .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
+                  .map(course =>
+                    <PrerequisiteCourse
+                      key={course.id}
+                      course={course}
+                      activeCourseId={activeCourseId}
+                      createCourseLink={createCourseLink}
+                      deleteCourseLink={deleteCourseLink}
+                      isPrerequisite={isPrerequisite(course)}
+                      getLinkToDelete={getLinkToDelete}
+                      classes={classes}
+                      workspaceId={workspaceId}
+                    />
+                  )
+                }
+              </List>
+            }
+
+            <Button
+              onClick={handleClickOpen}
+              className={classes.button}
+              variant='contained'
+              color='secondary'
+            >
+              New course
+            </Button>
+          </Paper >
+          <CourseCreationDialog
+            state={state}
+            handleClose={handleClose}
+            workspaceId={workspaceId}
+            createCourse={createCourse}
+          />
+        </Grid >}
     </React.Fragment >
   )
 }
