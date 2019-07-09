@@ -11,9 +11,6 @@ table {
   border-collapse: collapse;
 }
 
-td, th {
-  padding: 0.25em;
-}
 
 thead th {
   position: -webkit-sticky; /* for Safari */
