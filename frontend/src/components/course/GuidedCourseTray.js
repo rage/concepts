@@ -1,24 +1,17 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Checkbox from '@material-ui/core/Checkbox'
-import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
-import TextField from '@material-ui/core/TextField'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-
-import CourseCreationDialog from './CourseCreationDialog'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import { withStyles } from '@material-ui/core/styles'
+
+import {
+  Grid, Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
+  ListItemSecondaryAction
+} from '@material-ui/core'
 import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
+
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
-// Error dispatcher
+import CourseCreationDialog from './CourseCreationDialog'
+
 import { useErrorStateValue } from '../../store'
 
 const styles = theme => ({

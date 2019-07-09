@@ -18,19 +18,11 @@ import IconButton from '@material-ui/core/IconButton'
 import InfoIcon from '@material-ui/icons/Info'
 import CloseIcon from '@material-ui/icons/Close'
 
-import Masonry from 'react-masonry-css'
-import '../../MasonryLayout.css'
+import Masonry from './Masonry'
 
 import { updateConceptUpdate } from '../../apollo/update'
 
 import { useLoginStateValue } from '../../store'
-import ActiveCourse from './ActiveCourse'
-
-const breakpointColumnsObj = {
-  default: 3,
-  1900: 2,
-  1279: 1
-}
 
 const styles = theme => ({
   snackbar: {
@@ -54,21 +46,6 @@ const styles = theme => ({
 const CONCEPT_ADDING_INSTRUCTION = 'Add concept as a learning objective in the left column.'
 const COURSE_ADDING_INSTRUCTION = 'To add prerequisites, open the drawer on the right.'
 const CONCEPT_LINKING_INSTRUCTION = 'Switch on a learning objective on the left to start linking prerequisites.'
-
-// The default Masonry class does reCalculateColumnCount in componentDidMount,
-// which means the component is first rendered once with the default column
-// count. This caused problems in our ConceptLink's which weren't updating after the
-// Masonry recalculation.
-class CustomMasonry extends Masonry {
-  componentWillMount() {
-    this.reCalculateColumnCount()
-  }
-
-  reCalculateColumnCount() {
-    super.reCalculateColumnCount()
-    this.props.handleRecalculateColumnCount()
-  }
-}
 
 const GuidedCourseContainer = ({
   classes,
@@ -174,24 +151,6 @@ const GuidedCourseContainer = ({
     setLinkInfoState(false)
   }
 
-  const makeGridCourseElements = () => {
-    return courses && courses.map(course =>
-      <Grid item key={course.id}>
-        <Course
-          course={course}
-          activeConceptIds={activeConceptIds}
-          addingLink={addingLink}
-          setAddingLink={setAddingLink}
-          openCourseDialog={handleCourseOpen}
-          openConceptDialog={handleConceptOpen}
-          openConceptEditDialog={handleConceptEditOpen}
-          activeCourseId={courseId}
-          workspaceId={workspaceId}
-        />
-      </Grid>
-    )
-  }
-
   return (
     <>
       <Grid onClick={onClick} container item xs={courseTrayOpen ? 4 : 8} lg={courseTrayOpen ? 6 : 9}>
@@ -201,40 +160,24 @@ const GuidedCourseContainer = ({
         {
           courses && courses.length !== 0 ?
             <Grid container item>
-              <div style={{ overflowY: 'auto', width: '100%', height: '85vh', paddingTop: '14px', display: 'flex', justifyContent: 'center' }}>
-                {
-                  courses && courses.length < 3 ?
-                    <Grid container justify='space-evenly'>
-                      {
-                        makeGridCourseElements()
-                      }
-                    </Grid>
-                    :
-                    <CustomMasonry
-                      breakpointCols={breakpointColumnsObj}
-                      className='my-masonry-grid'
-                      columnClassName='my-masonry-grid_column'
-                      handleRecalculateColumnCount={doRedrawLines}
-                    >
-                      {
-                        courses && courses.map(course =>
-                          <Course
-                            key={course.id}
-                            course={course}
-                            activeConceptIds={activeConceptIds}
-                            addingLink={addingLink}
-                            setAddingLink={setAddingLink}
-                            openCourseDialog={handleCourseOpen}
-                            openConceptDialog={handleConceptOpen}
-                            openConceptEditDialog={handleConceptEditOpen}
-                            activeCourseId={courseId}
-                            workspaceId={workspaceId}
-                          />
-                        )
-                      }
-                    </CustomMasonry>
-                }
-
+              <div style={{ overflowY: 'auto', width: '100%', height: '85vh',
+              display: 'flex', flexDirection: 'column', alignItems: 'space-evenly'}}>
+                {courses && <Masonry courseTrayOpen={courseTrayOpen}>
+                  {courses.map(course =>
+                    <Course
+                      key={course.id}
+                      course={course}
+                      activeConceptIds={activeConceptIds}
+                      addingLink={addingLink}
+                      setAddingLink={setAddingLink}
+                      openCourseDialog={handleCourseOpen}
+                      openConceptDialog={handleConceptOpen}
+                      openConceptEditDialog={handleConceptEditOpen}
+                      activeCourseId={courseId}
+                      workspaceId={workspaceId}
+                    />
+                  )}
+                </Masonry>}
               </div>
             </Grid>
             :

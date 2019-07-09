@@ -79,7 +79,7 @@ const Course = ({
 
   return (
     <React.Fragment>
-      <Card elevation={0} className={classes.root} id='masonry-element'>
+      <Card elevation={0} className={classes.root}>
         <CardHeader className={classes.cardHeader} title={
           <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
         } action={

@@ -1,20 +1,11 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-
-// Paper
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-
-import { COURSE_BY_ID } from '../../graphql/Query'
-
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
+import { withStyles } from '@material-ui/core/styles'
+
+import { Button, Grid, Paper, Typography, List } from '@material-ui/core'
+
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
-
-// List
-import List from '@material-ui/core/List'
-
+import { COURSE_BY_ID } from '../../graphql/Query'
 
 import ActiveConcept from '../concept/ActiveConcept'
 
