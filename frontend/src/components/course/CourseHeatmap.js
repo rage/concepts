@@ -41,12 +41,14 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#ebedf0'
   },
   sideHeaderCell: {
-    boxShadow: '1px 1px 0 0 black'
+    boxShadow: '1px 1px 0 0 black',
+    padding: '0 10px 0 0'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
     minHeight: '100%',
-    boxShadow: '0 1px 0 0 black'
+    boxShadow: '0 1px 0 0 black',
+    padding: '0 0 10px 0'
   },
   blankHeaderCell: {
     boxShadow: '1px 1px 0 0 black'
@@ -88,11 +90,11 @@ const BlankHeaderCell = (props) => {
         <div style={{
           position: 'relative',
           transform: 'rotate(-90deg)',
-          left: '47%',
-          top: '23%'
+          left: '44%',
+          top: '26%'
 
         }}>Prerequisite</div>
-        <div style={{position:'relative', top: '79%', right: '40%'}}>Target</div>
+        <div style={{ position: 'relative', top: '76%', right: '36%' }}>Target</div>
       </div>
     </th>
   )
@@ -217,7 +219,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                   <table>
                     <thead>
                       <tr>
-                        <BlankHeaderCell/>
+                        <BlankHeaderCell />
                         {workspaceCourseQuery.data.workspaceById.courses.map(course => (
                           <HeaderCell key={course.id} title={course.name} />
                         ))
