@@ -40,9 +40,16 @@ const useStyles = makeStyles(theme => ({
     },
     backgroundColor: '#ebedf0'
   },
+  sideHeaderCell: {
+    boxShadow: '1px 1px 0 0 black'
+  },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
-    minHeight: '100%'
+    minHeight: '100%',
+    boxShadow: '0 1px 0 0 black'
+  },
+  blankHeaderCell: {
+    boxShadow: '1px 1px 0 0 black'
   },
   headerText: {
     minWidth: '100%',
@@ -68,6 +75,28 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   }
 }))
+
+const BlankHeaderCell = (props) => {
+  const classes = useStyles()
+
+  return (
+    <th className={classes.blankHeaderCell}>
+      <div style={{
+        height: '160px'
+      }}>
+
+        <div style={{
+          position: 'relative',
+          transform: 'rotate(-90deg)',
+          left: '47%',
+          top: '23%'
+
+        }}>Prerequisite</div>
+        <div style={{position:'relative', top: '79%', right: '40%'}}>Target</div>
+      </div>
+    </th>
+  )
+}
 
 const HeaderCell = ({ title }) => {
   const classes = useStyles()
@@ -188,7 +217,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                   <table>
                     <thead>
                       <tr>
-                        <HeaderCell />
+                        <BlankHeaderCell/>
                         {workspaceCourseQuery.data.workspaceById.courses.map(course => (
                           <HeaderCell key={course.id} title={course.name} />
                         ))
@@ -201,7 +230,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                       {
                         workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
                           <tr key={`${fromCourse.id}`}>
-                            <th> {fromCourse.name} </th>
+                            <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
                             {
                               workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
                                 <TableCell workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} />
