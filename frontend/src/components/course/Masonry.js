@@ -5,14 +5,15 @@ import { withStyles } from '@material-ui/core'
 const styles = theme => ({
   masonry: {
     columnWidth: '296px',
-    textAlign: 'center',
     width: '100%',
     boxSizing: 'border-box'
   },
   columnWrapper: {
-    width: '296px',
-    display: 'inline-block',
-    textAlign: 'initial'
+    overflow: 'hidden',
+    breakInside: 'avoid-column',
+    columnBreakInside: 'avoid',
+    display: 'flex',
+    justifyContent: 'center'
   }
 })
 
