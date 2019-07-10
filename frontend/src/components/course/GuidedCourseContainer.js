@@ -157,7 +157,7 @@ const GuidedCourseContainer = ({
     </Typography>
     {
       courses && courses.length !== 0 ?
-        <div style={{ gridArea: 'courses', overflowY: 'auto', width: '100%', height: '100%'}}>
+        <div style={{ gridArea: 'courses', overflowY: 'auto' }}>
           {courses && <Masonry courseTrayOpen={courseTrayOpen}>
             {courses.map(course =>
               <Course
