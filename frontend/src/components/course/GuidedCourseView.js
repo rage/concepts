@@ -36,7 +36,7 @@ const styles = theme => ({
     gridTemplateAreas:
       `"activeCourse contentHeader contentHeader"
        "activeCourse courses       courses"`,
-    // gridTemplateColumns: '25% auto 25%',
+    gridTemplateColumns: '25% auto 25%',
     gridTemplateRows: '64px calc(100vh - 58px - 64px)',
     '&.courseTrayOpen': {
       gridTemplateAreas:
@@ -45,9 +45,6 @@ const styles = theme => ({
     },
     '@media screen and (max-width: 1000px)': {
       gridTemplateColumns: '32% auto 32%'
-    },
-    '@media screen and (min-width: 1000px)': {
-      gridTemplateColumns: '25% auto 25%'
     }
   }
 })
