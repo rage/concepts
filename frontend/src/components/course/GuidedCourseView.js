@@ -29,14 +29,12 @@ import Menu from '@material-ui/core/Menu'
 const styles = theme => ({
   root: {
     display: 'grid',
-    // The topbar is 48px + 10px margin
-    height: 'calc(100vh - 58px)',
-    width: '100%',
-    gridTemplateAreas:
-      `"activeCourse contentHeader contentHeader"
-       "activeCourse courses       courses"`,
-    gridTemplateColumns: '25% auto 25%',
-    gridTemplateRows: '64px calc(100vh - 58px - 64px)',
+    // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
+    // objects in the parent-level grid.
+    overflow: 'hidden',
+    gridTemplate: `"activeCourse contentHeader contentHeader" 64px
+                   "activeCourse courses       courses"       1fr
+                   / 25% auto 25%`,
     '&.courseTrayOpen': {
       gridTemplateAreas:
         `"activeCourse contentHeader courseTray"
