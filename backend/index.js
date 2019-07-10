@@ -58,14 +58,19 @@ const options = {
       'path': error['path'].reduce((first, second) => first + '/' + second),
       'now': new Date(Date.now()).toISOString().replace(/T/, ' ').replace(/\..+/, '')
     }
-
     errorData['type'] = getPathType(errorData['path'])
+
+    let errorMessage = errorData['now'] + ' --- '
     if (typeof error['extensions'] !== 'undefined') {
       errorData.code = error['extensions']['code']
-      console.error(errorData['now'], '--- Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, ' + errorData['type'] + ': \x1b[32m' + errorData['path'] + '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
+      errorMessage += 'Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, '
+      errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
+      errorMessage += '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
     } else if (typeof error['locations'] !== 'undefined') {
-      console.error(errorData['now'], '--- ' + errorData['type'] + ': \x1b[32m' + errorData['path'] + '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
+      errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
+      errorMessage += '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
     }
+    console.error(errorMessage)
 
     return error
   }
