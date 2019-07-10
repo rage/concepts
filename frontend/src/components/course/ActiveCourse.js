@@ -18,7 +18,6 @@ import { useLoginStateValue } from '../../store'
 const styles = theme => ({
   root: {
     gridArea: 'activeCourse',
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
