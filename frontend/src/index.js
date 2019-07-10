@@ -58,7 +58,10 @@ ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
       <ErrorStateProvider initialState={{ error: '' }} reducer={errorReducer}>
-        <LoginStateProvider initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }} reducer={loginReducer}>
+        <LoginStateProvider
+          initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
+          reducer={loginReducer}
+        >
           <App />
         </LoginStateProvider>
       </ErrorStateProvider>

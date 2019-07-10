@@ -30,7 +30,6 @@ const styles = theme => ({
   root: {
     display: 'grid',
     // The topbar is 48px + 10px margin
-    // TODO remove when switching whole app to CSS grid
     height: 'calc(100vh - 58px)',
     width: '100%',
     gridTemplateAreas:

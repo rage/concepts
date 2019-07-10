@@ -5,7 +5,6 @@ import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
 
-
 const WorkspaceView = ({ workspaceId, location }) => {
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: {
@@ -13,20 +12,18 @@ const WorkspaceView = ({ workspaceId, location }) => {
     }
   })
 
-  return (
-    <React.Fragment>
-      {
-        workspaceQuery.data.workspaceById ?
-          workspaceQuery.data.workspaceById.defaultCourse ?
-            <Redirect to={{
-              pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.defaultCourse.id}`,
-              state: { from: location }
-            }} />
-            : <WorkspaceDefaultCourseForm workspaceId={workspaceId} />
-          : null
-      }
-    </React.Fragment>
-  )
+  return <>
+    {
+      workspaceQuery.data.workspaceById ?
+        workspaceQuery.data.workspaceById.defaultCourse ?
+          <Redirect to={{
+            pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.defaultCourse.id}`,
+            state: { from: location }
+          }} />
+          : <WorkspaceDefaultCourseForm workspaceId={workspaceId} />
+        : null
+    }
+  </>
 }
 
 export default WorkspaceView

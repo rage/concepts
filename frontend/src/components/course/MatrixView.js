@@ -20,7 +20,7 @@ const MatriceView = ({ courseId, workspaceId }) => {
   })
 
   return (
-    <React.Fragment>
+    <>
       {
         courseQuery && courseQuery.data.courseAndPrerequisites ?
           <Measure
@@ -54,7 +54,7 @@ const MatriceView = ({ courseId, workspaceId }) => {
             </Grid>
           </Grid>
       }
-    </React.Fragment>
+    </>
   )
 }
 

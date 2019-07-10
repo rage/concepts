@@ -26,13 +26,20 @@ import CourseHeatmap from './components/course/CourseHeatmap'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
 import { ALL_COURSES } from './graphql/Query/Course'
-import { Grid } from '@material-ui/core'
 
 import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
+  root: {
+    display: 'grid',
+    height: '100vh',
+    width: '100vw',
+    gridTemplate: `"navbar"  58px
+                   "content" auto
+                   / 100vw`
+  },
   error: {
     backgroundColor: theme.palette.error.dark
   },
@@ -119,58 +126,61 @@ const App = ({ classes }) => {
   })
 
   return (
-    <React.Fragment>
-      <div className='App'>
-        <Grid container>
-          <Grid item xs={12}>
-            <NavBar />
-          </Grid>
-          <Route exact path='/' render={() => <Grid item xs={12}><LandingView /></Grid>} />
+    <>
+      <div className={classes.root}>
+        <NavBar />
 
-          <PrivateRoute exact path='/porting' redirectPath='/auth' condition={loggedIn} render={() => <PortView/> } />
-          <Route exact path='/auth' render={() => <AuthenticationForm />} />
-          <Route exact path='/user' render={() => <UserView />} />
+        <Route exact path='/' render={() => <LandingView />} />
 
-          <Route exact path='/workspaces/:wid/heatmap' render={({ match, location }) => (
-            <CourseHeatmap workspaceId={match.params.wid}/>
-          )}/>
+        <PrivateRoute
+          exact path='/porting' redirectPath='/auth' condition={loggedIn}
+          render={() => <PortView/> } />
+        <Route exact path='/auth' render={() => <AuthenticationForm />} />
+        <Route exact path='/user' render={() => <UserView />} />
 
-          <Route exact path='/workspaces/:id/(mapper|matrix|graph)' render={({ match, location }) => <WorkspaceView workspaceId={match.params.id} location={location} />} />
-          <Route exact path='/workspaces/:wid/mapper/:cid' render={({ match }) => (
-            <GuidedCourseView
-              courseId={match.params.cid}
-              workspaceId={match.params.wid}
-            />
-          )}
+        <Route exact path='/workspaces/:wid/heatmap' render={({ match }) => (
+          <CourseHeatmap workspaceId={match.params.wid}/>
+        )}/>
+
+        <Route
+          exact path='/workspaces/:id/(mapper|matrix|graph)'
+          render={({ match, location }) =>
+            <WorkspaceView workspaceId={match.params.id} location={location} />}
+        />
+        <Route exact path='/workspaces/:wid/mapper/:cid' render={({ match }) => (
+          <GuidedCourseView
+            courseId={match.params.cid}
+            workspaceId={match.params.wid}
           />
-          <Route exact path='/workspaces/:wid/matrix/:cid' render={({ match }) => (
-            <MatrixView
-              courseId={match.params.cid}
-              workspaceId={match.params.wid}
-            />
-          )} />
-          <Route exact path='/workspaces/:wid/graph/:cid' render={({ match }) => <div>GRAPH</div>} />
-          <Route exact path='/workspaces/:id/courses' render={() => <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
+        )}
+        />
+        <Route exact path='/workspaces/:wid/matrix/:cid' render={({ match }) => (
+          <MatrixView
+            courseId={match.params.cid}
+            workspaceId={match.params.wid}
+          />
+        )} />
+        <Route exact path='/workspaces/:wid/graph/:cid' render={() => <div>GRAPH</div>} />
+        <Route exact path='/workspaces/:id/courses' render={() =>
+          <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
 
-          <Route exact path='/courses' render={() => <CourseList updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
+        <Route exact path='/courses' render={() => <CourseList
+          updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
 
-          <Route exact path='/courses/:id' render={({ match }) => {
-            return <GuidedCourseView
-              course_id={match.params.id}
-              createCourse={createCourse}
-              updateCourse={updateCourse}
-            />
+        <Route exact path='/courses/:id' render={({ match }) => {
+          return <GuidedCourseView
+            course_id={match.params.id}
+            createCourse={createCourse}
+            updateCourse={updateCourse}
+          />
+        }}
+        />
+        <PrivateRoute
+          exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn}
+          render={({ match }) => {
+            return <MatrixView course_id={match.params.id}/>
           }}
-          />
-          <Grid item xs={12}>
-            <PrivateRoute exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn} render={({ match }) => {
-              return <MatrixView
-                course_id={match.params.id}
-              />
-            }}
-            />
-          </Grid>
-        </Grid>
+        />
       </div>
       <Snackbar open={error !== ''}
         onClose={handleCloseErrorMessage}
@@ -199,7 +209,7 @@ const App = ({ classes }) => {
             </span>}
         />
       </Snackbar>
-    </React.Fragment>
+    </>
   )
 }
 

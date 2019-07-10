@@ -84,6 +84,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     padding: '16px',
+    // The topbar is 48px + 10px margin, 24px is margin from wrapper
     maxHeight: 'calc(100vh - 58px - 24px)',
     maxWidth: '100%',
     boxSizing: 'border-box',
@@ -237,8 +238,7 @@ const CourseHeatmap = ({ workspaceId }) => {
 
 
   return (
-    <Grid item xs={12}>
-      <div className={classes.paperWrapper}>
+    <div className={classes.paperWrapper}>
       <Paper className={classes.paper} >
         <Typography variant='h5' style={{marginBottom: '32px'}}>Course overview</Typography>
         {
@@ -279,8 +279,7 @@ const CourseHeatmap = ({ workspaceId }) => {
             </div>
         }
       </Paper>
-      </div>
-    </Grid>
+    </div>
   )
 }
 
