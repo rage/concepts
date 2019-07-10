@@ -36,7 +36,8 @@ const styles = theme => ({
     height: '100vh',
     width: '100vw',
     gridTemplate: `"navbar"  58px
-                   "content" calc(100vh - 58px)
+                   "content" calc(100vh - 58px - 64px)
+                   "bottom-navbar" 64px
                    / 100vw`
   },
   error: {
@@ -162,7 +163,11 @@ const App = ({ classes }) => {
         <Route exact path='/workspaces/:wid/graph/:cid' render={() => <div>GRAPH</div>} />
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
-
+        <Route
+          path='/workspaces/:wid/(mapper|matrix|graph|heatmap)'
+          render={({ match, location }) =>
+            <div style={{gridArea: 'bottom-navbar'}}>BOTTOM NAVIGATION BAR</div>}
+        />
         <Route exact path='/courses' render={() => <CourseList
           updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
 
