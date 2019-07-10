@@ -17,7 +17,6 @@ import { useErrorStateValue } from '../../store'
 const styles = theme => ({
   root: {
     gridArea: 'courseTray',
-    height: '100%',
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
