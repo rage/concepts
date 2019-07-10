@@ -9,6 +9,7 @@ const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
 
 const { authenticate } = require('./middleware/authentication')
+const { logError } = require('./errorLogger')
 
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
@@ -27,7 +28,8 @@ const resolvers = {
 const options = {
   endpoint: '/graphql',
   playground: '/playground',
-  port: process.env.PORT || 4000
+  port: process.env.PORT || 4000,
+  formatError: logError
 }
 
 const server = new GraphQLServer({

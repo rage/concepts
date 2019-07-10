@@ -13,8 +13,7 @@ const PortMutations = {
     try {
       json = JSON.parse(args.data)
     } catch (err) {
-      console.log('Error parsing JSON: ', err)
-      return null
+      throw new Error('Error parsing JSON: ' + err.message)
     }
     if (!validateData(json)) {
       for (const error of validateData.errors) {
