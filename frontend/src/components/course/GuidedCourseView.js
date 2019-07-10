@@ -25,6 +25,7 @@ import {
 import ConceptLink from '../concept/ConceptLink'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+
 const styles = theme => ({
   root: {
     display: 'grid',
@@ -41,6 +42,9 @@ const styles = theme => ({
       gridTemplateAreas:
         `"activeCourse contentHeader courseTray"
          "activeCourse courses       courseTray"`
+    },
+    '@media screen and (max-width: 1000px)': {
+      gridTemplateColumns: '32% auto 32%'
     }
   }
 })
@@ -101,7 +105,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   })
 
   useEffect(() => {
-    setRedrawLines(redrawLines+1)
+    setRedrawLines(redrawLines + 1)
   }, [workspaceQuery, prereqQuery, courseQuery])
 
   const toggleConcept = (id) => () => {
@@ -120,7 +124,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
     <>
       {
         courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-        && workspaceQuery.data.workspaceById ?
+          && workspaceQuery.data.workspaceById ?
           <div
             id='course-view'
             className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
@@ -128,6 +132,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
             <ActiveCourse
               onClick={() => setAddingLink(null)}
               course={courseQuery.data.courseById}
+              updateCourse={updateCourse}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
@@ -142,7 +147,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
-              doRedrawLines={() => setRedrawLines(redrawLines+1)}
+              doRedrawLines={() => setRedrawLines(redrawLines + 1)}
               updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
               activeCourse={courseQuery.data.courseById}
@@ -180,25 +185,26 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
           </div>
       }
       {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-      && courseQuery.data.courseById.concepts.map(concept => (
-        prereqQuery.data.courseAndPrerequisites.linksToCourse
-          .filter(link => link.from.id === concept.courses[0].id)
-          ? concept.linksToConcept.map(link => (
-            <ConceptLink
-              key={`concept-link-${link.id}`} within='course-view' delay={1}
-              active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
-              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-              redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
-              onContextMenu={handleMenuOpen} posOffsets={{x0: -5, x1: +6}}/>
-          )) : null
-      ))}
+        && courseQuery.data.courseById.concepts.map(concept => (
+          prereqQuery.data.courseAndPrerequisites.linksToCourse
+            .filter(link => link.from.id === concept.courses[0].id)
+            ? concept.linksToConcept.map(link => (
+              <ConceptLink
+                key={`concept-link-${link.id}`} within='course-view' delay={1}
+                active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
+                from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
+                redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
+                onContextMenu={handleMenuOpen} posOffsets={{ x0: -5, x1: +6 }} />
+            )) : null
+        ))}
       <div ref={conceptLinkMenuRef} style={{
-        position:'absolute',
+        position: 'absolute',
         width: '1px',
         height: '1px',
         display: conceptLinkMenu ? 'block' : 'none',
         top: `${conceptLinkMenu ? conceptLinkMenu.y : 0}px`,
-        left: `${conceptLinkMenu ? conceptLinkMenu.x : 0}px`}}/>
+        left: `${conceptLinkMenu ? conceptLinkMenu.x : 0}px`
+      }} />
       <Menu
         id='concept-link-menu'
         anchorEl={conceptLinkMenuRef.current}
@@ -218,7 +224,7 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
       {addingLink && <ConceptLink
         key='concept-link-creating' within='course-view' active={true}
         from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-        followMouse={true} posOffsets={{x0: addingLink.type === 'concept-circle-active' ? 7 : -7}}
+        followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
       />}
     </>
   )

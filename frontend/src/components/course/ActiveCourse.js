@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { withStyles } from '@material-ui/core/styles'
 
-import { Button, Grid, Paper, Typography, List } from '@material-ui/core'
+import { Button, Paper, Typography, List, IconButton } from '@material-ui/core'
+import { Edit as EditIcon } from '@material-ui/icons'
 
 import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_BY_ID } from '../../graphql/Query'
@@ -11,6 +12,7 @@ import ActiveConcept from '../concept/ActiveConcept'
 
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
+import CourseEditingDialog from './CourseEditingDialog'
 
 import { useLoginStateValue } from '../../store'
 
@@ -53,14 +55,15 @@ const styles = theme => ({
 
 const ActiveCourse = ({
   classes, // UI
-  onClick,
   course,
   workspaceId,
   activeConceptIds,
+  updateCourse,
   addingLink,
   setAddingLink,
   toggleConcept
 }) => {
+  const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
   const [conceptState, setConceptState] = useState({ open: false, id: '' })
   const [conceptEditState, setConceptEditState] = useState({
     open: false,
@@ -147,6 +150,14 @@ const ActiveCourse = ({
     }
   })
 
+  const handleCourseClose = () => {
+    setCourseState({ open: false, id: '', name: '' })
+  }
+
+  const handleCourseOpen = (id, name) => () => {
+    setCourseState({ open: true, id, name })
+  }
+
   const handleConceptClose = () => {
     setConceptState({ ...conceptState, open: false, id: '' })
   }
@@ -163,12 +174,30 @@ const ActiveCourse = ({
     setConceptEditState({ open: true, id, name, description })
   }
 
-
   return <>
     <Paper elevation={0} className={classes.root}>
-      <Typography className={classes.title} variant='h4'>
-        {course.name}
-      </Typography>
+      <div
+        className={'activeCourseHeaderContent'}
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
+        <div style={{ flex: '1 1 auto' }}>
+          <Typography className={classes.title} variant='h4'>
+            {course.name}
+          </Typography>
+        </div>
+        <div
+          style={{
+            flex: '0 0 auto',
+            alignSelf: 'flex-start',
+            marginTop: '-8px',
+            marginRight: '-8px'
+          }}
+        >
+          <IconButton onClick={handleCourseOpen(course.id, course.name)}>
+            <EditIcon />
+          </IconButton>
+        </div>
+      </div>
 
       <List className={classes.list}>
         {course.concepts.map(concept =>
@@ -197,6 +226,13 @@ const ActiveCourse = ({
         </Button> : null
       }
     </Paper>
+
+    <CourseEditingDialog
+      state={courseState}
+      handleClose={handleCourseClose}
+      updateCourse={updateCourse}
+      defaultName={courseState.name}
+    />
 
     <ConceptEditingDialog
       state={conceptEditState}
