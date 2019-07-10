@@ -76,15 +76,22 @@ const useStyles = makeStyles(theme => ({
     minHeight: `${cellDimension.height}px`,
     textOverflow: 'ellipsis'
   },
-  paperWrapper: {
+  paperWrapperHorizontal: {
     display: 'flex',
     justifyContent: 'center',
     margin: '8px 16px',
-    maxWidth: '100%'
+    maxWidth: '100%',
+    overflow: 'hidden'
+  },
+  paperWrapperVertical: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    overflow: 'hidden'
   },
   paper: {
     padding: '16px',
-    maxHeight: 'calc(100vh - 58px - 24px)',
+    maxHeight: '100%',
     maxWidth: '100%',
     boxSizing: 'border-box',
     display: 'flex',
@@ -237,8 +244,7 @@ const CourseHeatmap = ({ workspaceId }) => {
 
 
   return (
-    <Grid item xs={12}>
-      <div className={classes.paperWrapper}>
+    <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
       <Paper className={classes.paper} >
         <Typography variant='h5' style={{marginBottom: '32px'}}>Course overview</Typography>
         {
@@ -279,8 +285,7 @@ const CourseHeatmap = ({ workspaceId }) => {
             </div>
         }
       </Paper>
-      </div>
-    </Grid>
+    </div></div>
   )
 }
 

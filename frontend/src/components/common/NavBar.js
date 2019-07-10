@@ -20,8 +20,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 
 const styles = {
   root: {
-    flexGrow: 1,
-    marginBottom: '10px'
+    marginBottom: '10px',
+    gridArea: 'navbar'
   },
   menuButton: {
     marginLeft: -18,

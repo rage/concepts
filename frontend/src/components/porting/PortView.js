@@ -180,53 +180,51 @@ const PortView = ({ classes }) => {
   }
 
   return (
-    <Grid item xs={12}>
-      <Container>
-        <Card>
-          <CardHeader title='Import data' />
+    <Container>
+      <Card>
+        <CardHeader title='Import data' />
 
-          <CardContent>
-            <Button variant='contained' color='secondary' onClick={addTemplate}> Add template </Button>
-            <Button className={classes.rowButton}
+        <CardContent>
+          <Button variant='contained' color='secondary' onClick={addTemplate}> Add template </Button>
+          <Button className={classes.rowButton}
+            variant='contained'
+            color='secondary'
+            component='label'
+            label='Open...'>
+            Open...
+            <input type='file' onChange={openFile} allow='text/*' hidden />
+          </Button>
+
+          <TextField
+            id='json-input'
+            label='JSON'
+            placeholder={PLACEHOLDER}
+            multiline
+            rowsMax='32'
+            className={classes.jsonField}
+            margin='normal'
+            variant='outlined'
+            onChange={(e) => setData(e.target.value)}
+            value={data}
+            disabled={loading}
+          />
+          <div className={classes.wrapper}>
+            <Button
+              className={success ? classes.buttonSuccess : ''}
+              color='primary'
               variant='contained'
-              color='secondary'
-              component='label'
-              label='Open...'>
-              Open...
-              <input type='file' onChange={openFile} allow='text/*' hidden />
+              fullWidth
+              onClick={() => sendData(data)}
+            >
+              {!loading ? buttonText : '\u00A0'}
             </Button>
-
-            <TextField
-              id='json-input'
-              label='JSON'
-              placeholder={PLACEHOLDER}
-              multiline
-              rowsMax='32'
-              className={classes.jsonField}
-              margin='normal'
-              variant='outlined'
-              onChange={(e) => setData(e.target.value)}
-              value={data}
-              disabled={loading}
-            />
-            <div className={classes.wrapper}>
-              <Button
-                className={success ? classes.buttonSuccess : ''}
-                color='primary'
-                variant='contained'
-                fullWidth
-                onClick={() => sendData(data)}
-              >
-                {!loading ? buttonText : '\u00A0'}
-              </Button>
-              {
-                loading && <CircularProgress size={24} className={classes.buttonProgress} />
-              }
-            </div>
-          </CardContent>
-        </Card>
-      </Container>
-    </Grid>
+            {
+              loading && <CircularProgress size={24} className={classes.buttonProgress} />
+            }
+          </div>
+        </CardContent>
+      </Card>
+    </Container>
   )
 }
 
