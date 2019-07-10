@@ -17,11 +17,9 @@ const cellDimension = {
 
 const useStyles = makeStyles(theme => ({
   scrollSyncTable: {
-    width: '100%',
-    height: '100%',
     overflow: 'auto',
-    position: 'relative',
-    maxHeight: '70vh',
+    maxHeight: '100%',
+    maxWidth: '100%',
     '& > table': {
       position: 'relative',
       borderCollapse: 'collapse',
@@ -78,10 +76,19 @@ const useStyles = makeStyles(theme => ({
     minHeight: `${cellDimension.height}px`,
     textOverflow: 'ellipsis'
   },
+  paperWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '8px 16px',
+    maxWidth: '100%'
+  },
   paper: {
-    maxHeight: '85vh',
     padding: '16px',
-    margin: '8px 16px'
+    maxHeight: 'calc(100vh - 58px - 24px)',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column'
   },
   popper: {
     padding: theme.spacing(2),
@@ -231,6 +238,7 @@ const CourseHeatmap = ({ workspaceId }) => {
 
   return (
     <Grid item xs={12}>
+      <div className={classes.paperWrapper}>
       <Paper className={classes.paper} >
         <Typography variant='h5' style={{marginBottom: '32px'}}>Course overview</Typography>
         {
@@ -271,6 +279,7 @@ const CourseHeatmap = ({ workspaceId }) => {
             </div>
         }
       </Paper>
+      </div>
     </Grid>
   )
 }
