@@ -37,9 +37,9 @@ const options = {
 
     if (typeof error['extensions'] !== 'undefined') {
       errorData.code = error['extensions']['code']
-      console.log(errorData['now'], '--- Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, Path: ' +  errorData['path'] + ', Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
+      console.error(errorData['now'], '--- Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, Path: ' +  errorData['path'] + ', Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
     } else if (typeof error['locations'] !== 'undefined') {
-      console.log(errorData['now'], '--- Path: ' +  errorData['path'] + ', Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
+      console.error(errorData['now'], '--- Path: ' +  errorData['path'] + ', Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
     }
 
     return error
