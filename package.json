@@ -17,6 +17,10 @@
     "url": "https://github.com/rage/concepts/issues"
   },
   "homepage": "https://github.com/rage/concepts#readme",
+  "engines": {
+    "yarn": "1.16.0",
+    "node": "12.6.0"
+  },
 
   "scripts": {
     "start": "cd backend && yarn install && yarn start",
