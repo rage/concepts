@@ -36,7 +36,7 @@ const styles = theme => ({
     height: '100vh',
     width: '100vw',
     gridTemplate: `"navbar"  58px
-                   "content" auto
+                   "content" calc(100vh - 58px)
                    / 100vw`
   },
   error: {
