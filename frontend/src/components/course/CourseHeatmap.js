@@ -1,25 +1,14 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
-import Grid from '@material-ui/core/Grid'
-
 import { withRouter } from 'react-router-dom'
-
-import pink from '@material-ui/core/colors/pink'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
-
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-
 import { useQuery } from 'react-apollo-hooks'
+
+import { makeStyles } from '@material-ui/core/styles'
+import { pink } from '@material-ui/core/colors'
+import { Grid, Paper, Typography, CircularProgress } from '@material-ui/core'
+
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
 } from '../../graphql/Query'
-
-import './heatmap.css'
 
 const cellDimension = {
   width: 50,
@@ -27,6 +16,33 @@ const cellDimension = {
 }
 
 const useStyles = makeStyles(theme => ({
+  scrollSyncTable: {
+    width: '100%',
+    height: '100%',
+    overflow: 'auto',
+    position: 'relative',
+    maxHeight: '70vh',
+    '& > table': {
+      position: 'relative',
+      borderCollapse: 'collapse',
+      '& th': {
+        position: 'sticky',
+        top: 0,
+        background: '#fff'
+      },
+      '& > thead th': {
+        color: '#000',
+        '&:first-child': {
+          left: 0,
+          zIndex: 1
+        }
+      },
+      '& > tbody th': {
+        width: '150px',
+        left: 0
+      }
+    }
+  },
   tableCell: {
     width: `${cellDimension.width}px`,
     height: `${cellDimension.height}px`,
@@ -41,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#ebedf0'
   },
   sideHeaderCell: {
-    boxShadow: '1px 1px 0 0 black',
+    boxShadow: '1px 0 0 0 black',
     padding: '0 10px 0 0',
     width: '230px',
     fontWeight:'normal'
@@ -63,7 +79,9 @@ const useStyles = makeStyles(theme => ({
     textOverflow: 'ellipsis'
   },
   paper: {
-    maxHeight: '85vh'
+    maxHeight: '85vh',
+    padding: '16px',
+    margin: '8px 16px'
   },
   popper: {
     padding: theme.spacing(2),
@@ -82,7 +100,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const BlankHeaderCell = (props) => {
+const BlankHeaderCell = () => {
   const classes = useStyles()
 
   return (
@@ -135,7 +153,9 @@ const HeaderCell = ({ title }) => {
   )
 }
 
-const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, workspaceId, history }) => {
+const TableCell = withRouter(({
+  toCourse, fromCourse, minGradVal, maxGradVal, workspaceId, history
+}) => {
   const classes = useStyles()
 
   const conceptsLinked = toCourse.concepts.map(concept => {
@@ -164,29 +184,30 @@ const TableCell = withRouter(({ toCourse, fromCourse, minGradVal, maxGradVal, wo
   }
 
   return (
-    <>
-      <td key={`table-${toCourse.id}-${fromCourse.id}`}>
-        <div className={classes.tableCell} style={{
-          backgroundColor: mapToGrad(conceptsLinked)
-        }} onClick={navigateToMapper(toCourse.id)}>
-
+    <td key={`table-${toCourse.id}-${fromCourse.id}`}>
+      <div
+        className={classes.tableCell}
+        style={{ backgroundColor: mapToGrad(conceptsLinked) }}
+        onClick={navigateToMapper(toCourse.id)}
+      />
+      {
+        concepts.length !== 0 &&
+        <div className={classes.popperWrap}>
+          <Paper key={`paper-${toCourse.id}-${fromCourse.id}`} className={classes.popper}>
+            {
+              concepts.map(concept => (
+                <Typography key={`typo-${concept}`}> {concept} </Typography>
+              ))
+            }
+          </Paper>
         </div>
-        {
-          concepts.length !== 0 &&
-          <div className={classes.popperWrap}>
-            <Paper key={`paper-${toCourse.id}-${fromCourse.id}`} className={classes.popper}>
-              {
-                concepts.map(concept => (
-                  <Typography key={`typo-${concept}`}> {concept} </Typography>
-                ))
-              }
-            </Paper>
-          </div>
-        }
-      </td>
-    </>
+      }
+    </td>
   )
 })
+
+const maxVal = (a, b) => a > b ? a : b
+const sum = (a, b) => a + b
 
 const CourseHeatmap = ({ workspaceId }) => {
   const classes = useStyles()
@@ -202,57 +223,54 @@ const CourseHeatmap = ({ workspaceId }) => {
           return concept.linksToConcept.filter(conceptLink => {
             return conceptLink.from.courses.find(course => course.id === fromCourse.id)
           }).length
-        }).reduce((a, b) => a + b, 0)
-      }).reduce((a, b) => a > b ? a : b, 0)
-    }).reduce((a, b) => a > b ? a : b, 0)
+        }).reduce(sum, 0)
+      }).reduce(maxVal, 0)
+    }).reduce(maxVal, 0)
     : null
 
 
   return (
     <Grid item xs={12}>
-      <Container maxWidth='xl'>
-        <Card className={classes.paper} >
-          <CardHeader title='Course overview' />
-          {
-            workspaceCourseQuery.data.workspaceById ?
-              <CardContent>
-                <div className='scrollSyncTable'>
-                  <table>
-                    <thead>
-                      <tr>
-                        <BlankHeaderCell />
-                        {workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                          <HeaderCell key={course.id} title={course.name} />
-                        ))
+      <Paper className={classes.paper} >
+        <Typography variant='h5' style={{marginBottom: '32px'}}>Course overview</Typography>
+        {
+          workspaceCourseQuery.data.workspaceById ?
+            <div className={classes.scrollSyncTable}>
+              <table>
+                <thead>
+                  <tr>
+                    <BlankHeaderCell />
+                    {workspaceCourseQuery.data.workspaceById.courses.map(course => (
+                      <HeaderCell key={course.id} title={course.name} />
+                    ))}
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {
+                    workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
+                      <tr key={`${fromCourse.id}`}>
+                        <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
+                        {
+                          workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
+                            <TableCell
+                              workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal}
+                              key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
+                              toCourse={toCourse} />
+                          ))
                         }
-
                       </tr>
-                    </thead>
-
-                    <tbody>
-                      {
-                        workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
-                          <tr key={`${fromCourse.id}`}>
-                            <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
-                            {
-                              workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
-                                <TableCell workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal} key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse} toCourse={toCourse} />
-                              ))
-                            }
-                          </tr>
-                        ))
-                      }
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-              :
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress className={classes.progress} />
-              </div>
-          }
-        </Card>
-      </Container>
+                    ))
+                  }
+                </tbody>
+              </table>
+            </div>
+            :
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress className={classes.progress} />
+            </div>
+        }
+      </Paper>
     </Grid>
   )
 }
