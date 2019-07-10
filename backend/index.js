@@ -27,7 +27,24 @@ const resolvers = {
 const options = {
   endpoint: '/graphql',
   playground: '/playground',
-  port: process.env.PORT || 4000
+  port: process.env.PORT || 4000,
+  formatError: error => {
+    const errorData = {
+      'message': error['message'],
+      'path': error['path'].reduce((first, second) => first + '/' + second, ''),
+      'now': new Date(Date.now()).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    }
+
+    if (typeof error['extensions'] !== 'undefined') {
+      errorData.code = error['extensions']['code']
+      console.log(errorData['now'], '--- Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, Path: ' +  errorData['path'] + ', Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
+    } else if (typeof error['locations'] !== 'undefined') {
+      console.log(errorData['now'], '--- Path: ' +  errorData['path'] + ', Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m')
+    }
+
+    return error
+  }
+
 }
 
 const server = new GraphQLServer({
