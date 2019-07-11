@@ -26,14 +26,9 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
 
-// Error dispatcher
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { exportWorkspace } from '../common/WorkspaceNavBar'
 
-import { useQuery } from 'react-apollo-hooks'
-import {
-  EXPORT_QUERY
-} from '../../graphql/Query'
-import client from '../../apollo/apolloClient'
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   root: {
@@ -64,24 +59,8 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
   }
 
   const handleWorkspaceExport = async () => {
-    handleMenuClose()
     try {
-      const queryResponse = await client.query({
-        query: EXPORT_QUERY,
-        variables: {
-          workspaceId: menu.workspace.id
-        }
-      })
-
-      const jsonData = queryResponse['data']['exportData']
-
-      // Download JSON file
-      const element = document.createElement('a')
-      element.href = URL.createObjectURL(new Blob([jsonData], {'type':'application/json'}))
-      element.download = `${menu.workspace.name}.json`
-      document.body.appendChild(element)
-      element.click()
-      document.body.removeChild(element)
+      await exportWorkspace(menu.workspace.id, menu.workspace.name)
     } catch (err) {
       errorDispatch({
         type: 'setError',

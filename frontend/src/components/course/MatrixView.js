@@ -11,7 +11,7 @@ import {
   FETCH_COURSE_AND_PREREQUISITES
 } from '../../graphql/Query'
 
-const MatriceView = ({ courseId, workspaceId }) => {
+const MatrixView = ({ courseId, workspaceId }) => {
 
   const [dimensions, setDimensions] = useState({ width: -1, height: -1 })
 
@@ -58,4 +58,4 @@ const MatriceView = ({ courseId, workspaceId }) => {
   )
 }
 
-export default MatriceView
+export default MatrixView

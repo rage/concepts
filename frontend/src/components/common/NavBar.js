@@ -20,7 +20,6 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 
 const styles = {
   root: {
-    marginBottom: '10px',
     gridArea: 'navbar'
   },
   menuButton: {

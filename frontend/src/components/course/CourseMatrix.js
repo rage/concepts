@@ -36,6 +36,12 @@ const useStyles = makeStyles(() => ({
     '&:focus': {
       backgroundColor: '#fff'
     }
+  },
+  header: {
+    color: 'gray',
+    '&.bold': {
+      color: 'black'
+    }
   }
 }))
 
@@ -45,18 +51,19 @@ const GridCell = ({ onClick, checked, onHover, onMouseLeave }) => {
   return (
     <Button
       className={classes.cellButton}
-      onMouseOver={onHover}
-      onMouseLeave={onMouseLeave}
       onClick={onClick}
       variant='contained'
-      color={checked ? 'primary' : 'secondary'}
-    >
+      onMouseEnter={onHover}
+      onMouseLeave={onMouseLeave}
+      color={checked ? 'primary' : 'secondary'}>
       {checked ? 'LINKED' : 'UNLINKED'}
     </Button>
   )
 }
 
 const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
+  const classes = useStyles()
+
   const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse
     .map(course => course.from.concepts)
     .reduce((concepts, allConcepts) => {
@@ -74,18 +81,14 @@ const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
   const sideHeaderWidth = 250
   const height = 470
 
-  const [selectedRow, setSelectedRow] = useState(-1)
-  const [selectedColumn, setSelectedColumn] = useState(-1)
-
   const [filter, setFilter] = useState('')
 
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
-      <div style={{
+      <div id={`course-matrix-col-${columnIndex}`} className={classes.header} style={{
         transform: 'translate(0px, 51px) rotate(315deg)',
         width: '150px',
-        textOverflow: 'ellipsis',
-        color: columnIndex !== selectedColumn ? 'grey' : 'black'
+        textOverflow: 'ellipsis'
       }}>
         <span style={{ overflow: 'hidden', maxWidth: '3ch' }}>
           {data[columnIndex].name}
@@ -96,10 +99,9 @@ const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
 
   const RowHeaderCell = ({ data, rowIndex, style }) => (
     <div style={style}>
-      <div style={{
+      <div id={`course-matrix-row-${rowIndex}`} className={classes.header} style={{
         margin: '12px 20px 0px 0px',
-        width: '200px',
-        color: rowIndex !== selectedRow ? 'grey' : 'black'
+        width: '200px'
       }}>
         {data[rowIndex].name}
       </div>
@@ -176,14 +178,14 @@ const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
           }
           onHover={
             () => {
-              setSelectedColumn(columnIndex)
-              setSelectedRow(rowIndex)
+              document.getElementById(`course-matrix-row-${rowIndex}`).classList.add('bold')
+              document.getElementById(`course-matrix-col-${columnIndex}`).classList.add('bold')
             }
           }
           onMouseLeave={
             () => {
-              setSelectedColumn(-1)
-              setSelectedRow(-1)
+              document.getElementById(`course-matrix-row-${rowIndex}`).classList.remove('bold')
+              document.getElementById(`course-matrix-col-${columnIndex}`).classList.remove('bold')
             }
           }
           checked={checked}

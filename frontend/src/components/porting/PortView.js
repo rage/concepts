@@ -57,7 +57,6 @@ const PLACEHOLDER = `{
   "courses": [
     {
       "name": "Example",
-      "default": true, // Only for default course
       "concepts": [
         {
           "name": "Concept 1",
