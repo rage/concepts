@@ -91,41 +91,43 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
         <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon/>} />
         <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon/>} />
       </BottomNavigation>
-      <IconButton
-        onClick={evt => setMenuAnchor(evt.currentTarget)}
-        className={classes.menuButton}
-      >
-        <MoreVertIcon/>
-      </IconButton>
-      {user.role === 'STAFF' && <Menu
-        anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}>
-        <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-          <ListItemIcon>
-            <CloudDownloadIcon/>
-          </ListItemIcon>
-          Export
-        </MenuItem>
-        <MenuItem aria-label='Delete' onClick={handleDelete}>
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          Delete
-        </MenuItem>
-        <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-          <ListItemIcon>
-            <EditIcon />
-          </ListItemIcon>
-          Edit
-        </MenuItem>
-      </Menu>}
+      {user.role === 'STAFF' && <>
+        <IconButton
+          onClick={evt => setMenuAnchor(evt.currentTarget)}
+          className={classes.menuButton}
+        >
+          <MoreVertIcon/>
+        </IconButton>
+        <Menu
+          anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}>
+          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+            <ListItemIcon>
+              <CloudDownloadIcon/>
+            </ListItemIcon>
+            Export
+          </MenuItem>
+          <MenuItem aria-label='Delete' onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            Delete
+          </MenuItem>
+          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            Edit
+          </MenuItem>
+        </Menu>
+      </>}
     </Paper>
   )
 }
