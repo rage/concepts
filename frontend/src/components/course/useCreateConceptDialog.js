@@ -36,7 +36,6 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
             data: dataInStoreCopy
           })
         }
-
       } catch (error) {
         return
       }

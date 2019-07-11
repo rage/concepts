@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { FixedSizeGrid } from 'react-window'
 
@@ -18,7 +18,7 @@ import {
 } from '../../graphql/Mutation'
 
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
   cellButton: {
     width: '90%'
   },
@@ -37,18 +37,31 @@ const styles = theme => ({
       backgroundColor: '#fff'
     }
   }
-})
+}))
 
 
-const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
-  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant='contained' color={checked ? 'primary' : 'secondary'}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
-)
+const GridCell = ({ onClick, checked, onHover, onMouseLeave }) => {
+  const classes = useStyles()
+  return (
+    <Button
+      className={classes.cellButton}
+      onMouseOver={onHover}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
+      variant='contained'
+      color={checked ? 'primary' : 'secondary'}
+    >
+      {checked ? 'LINKED' : 'UNLINKED'}
+    </Button>
+  )
+}
 
-const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions }) => {
-
-  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => {
-    return allConcepts.concat(concepts)}
-  , [])
+const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
+  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse
+    .map(course => course.from.concepts)
+    .reduce((concepts, allConcepts) => {
+      return allConcepts.concat(concepts)
+    }, [])
 
   const headerGrid = React.createRef()
   const sideGrid = React.createRef()
@@ -101,7 +114,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
     update: createConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
-  const linkConcepts = (from, to, checked) => async (event) => {
+  const linkConcepts = (from, to, checked) => async () => {
 
     if (!checked) {
       try {
@@ -126,7 +139,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
             }
           }
         })
-      } catch (err) { }
+      } catch (err) { return }
     } else {
       try {
         const link = from.linksFromConcept.find(link => {
@@ -144,19 +157,20 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
             }
           }
         })
-      } catch (err) { }
+      } catch (err) { return }
     }
 
   }
 
   const Cell = ({ columnIndex, data, rowIndex, style }) => {
     const { columnData, rowData } = data
-    const isPrerequisite = columnData[columnIndex].linksFromConcept.find(l => l.to.id === rowData[rowIndex].id)
-    let checked = isPrerequisite !== undefined
+    const isPrerequisite = columnData[columnIndex].linksFromConcept.find(l =>
+      l.to.id === rowData[rowIndex].id
+    )
+    const checked = isPrerequisite !== undefined
     return (
       <div style={style} key={`${rowData[rowIndex].id}-${columnIndex}-${columnData[columnIndex]}`}>
         <GridCell
-          classes={classes}
           onClick={
             linkConcepts(columnData[columnIndex], rowData[rowIndex], checked)
           }
@@ -171,9 +185,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
               setSelectedColumn(-1)
               setSelectedRow(-1)
             }
-
           }
-
           checked={checked}
         />
       </div>
@@ -182,7 +194,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
 
 
   const filteredPrerequisiteConcepts = () => {
-    let filteredConcepts = allPrerequisiteConcepts.filter(c =>
+    const filteredConcepts = allPrerequisiteConcepts.filter(c =>
       c.name.toLowerCase().includes(filter)
     )
     return filteredConcepts
@@ -291,4 +303,4 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   )
 }
 
-export default withStyles(styles)(CourseMatrix)
+export default CourseMatrix

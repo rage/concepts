@@ -1,5 +1,5 @@
 import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 
 // Card
@@ -19,7 +19,7 @@ import Concept from '../concept/Concept'
 
 import { useLoginStateValue } from '../../store'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '280px',
     margin: '0px 8px 16px 8px'
@@ -56,10 +56,9 @@ const styles = theme => ({
   button: {
     width: '100%'
   }
-})
+}))
 
 const Course = ({
-  classes, // UI
   course,
   activeCourseId,
   addingLink,
@@ -71,9 +70,8 @@ const Course = ({
   history,
   workspaceId
 }) => {
-
   const { loggedIn } = useLoginStateValue()[0]
-
+  const classes = useStyles()
   const onHeaderClickHandle = () => {
     history.push(`/workspaces/${workspaceId}/mapper/${course.id}`)
   }
@@ -110,7 +108,14 @@ const Course = ({
           </List>
           {
             loggedIn ?
-              <Button className={classes.button} onClick={openConceptDialog(course.id)} variant='contained' color='primary'> Add concept </Button>
+              <Button
+                className={classes.button}
+                onClick={openConceptDialog(course.id)}
+                variant='contained'
+                color='primary'
+              >
+                Add concept
+              </Button>
               : null
           }
 
@@ -120,4 +125,4 @@ const Course = ({
   )
 }
 
-export default withRouter(withStyles(styles)(Course))
+export default withRouter(Course)
