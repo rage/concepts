@@ -1,25 +1,20 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 
-import Snackbar from '@material-ui/core/Snackbar'
-import SnackbarContent from '@material-ui/core/SnackbarContent'
-import ErrorIcon from '@material-ui/icons/Error'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
+import { withStyles } from '@material-ui/core/styles'
+import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
+import { Error as ErrorIcon, Close as CloseIcon } from '@material-ui/icons'
 
 import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
 import PortView from './components/porting/PortView'
 import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
+import WorkspaceNavBar from './components/common/WorkspaceNavBar'
 import PrivateRoute from './components/common/PrivateRoute'
-
 import UserView from './components/user/UserView'
-
 import LandingView from './components/common/LandingView'
-
 import WorkspaceView from './components/workspace/WorkspaceView'
-
 import CourseHeatmap from './components/course/CourseHeatmap'
 
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
@@ -28,16 +23,16 @@ import { ALL_COURSES } from './graphql/Query/Course'
 
 import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
-import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
   root: {
     display: 'grid',
     height: '100vh',
     width: '100vw',
-    gridTemplate: `"navbar"  58px
-                   "content" calc(100vh - 58px - 64px)
-                   "bottom-navbar" 64px
+    gridGap: '10px',
+    gridTemplate: `"navbar"  48px
+                   "content" auto
+                   "bottom-navbar" 56px
                    / 100vw`
   },
   error: {
@@ -164,9 +159,9 @@ const App = ({ classes }) => {
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
-          path='/workspaces/:wid/(mapper|matrix|graph|heatmap)'
-          render={({ match, location }) =>
-            <div style={{gridArea: 'bottom-navbar'}}>BOTTOM NAVIGATION BAR</div>}
+          path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
+          render={({ match: { params: {wid, cid, page} } }) =>
+            <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page}/>}
         />
         <Route exact path='/courses' render={() => <CourseList
           updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
