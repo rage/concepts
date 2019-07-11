@@ -47,14 +47,25 @@ const styles = theme => ({
 
 
 const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
-  <Button className={classes.cellButton} onClick={onClick} variant='contained'  onMouseEnter={onHover} onMouseLeave={onMouseLeave} color={checked ? 'primary' : 'secondary'}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
+  <Button
+    className={classes.cellButton}
+    onClick={onClick}
+    variant='contained'
+    onMouseEnter={onHover}
+    onMouseLeave={onMouseLeave}
+    color={checked ? 'primary' : 'secondary'}>
+    {checked ? 'LINKED' : 'UNLINKED'}
+  </Button>
 )
 
 const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions }) => {
 
-  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => {
-    return allConcepts.concat(concepts)}
-  , [])
+  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse
+    .map(course => course.from.concepts)
+    .reduce((concepts, allConcepts) => {
+      return allConcepts.concat(concepts)
+    }
+    , [])
 
   const headerGrid = React.createRef()
   const sideGrid = React.createRef()
@@ -66,9 +77,6 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   const headerHeight = 160
   const sideHeaderWidth = 250
   const height = 470
-
-  const [selectedRow, setSelectedRow] = useState(-1)
-  const [selectedColumn, setSelectedColumn] = useState(-1)
 
   const [filter, setFilter] = useState('')
 
@@ -105,7 +113,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
     update: createConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
-  const linkConcepts = (from, to, checked) => async (event) => {
+  const linkConcepts = (from, to, checked) => async () => {
 
     if (!checked) {
       try {
