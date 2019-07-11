@@ -159,7 +159,7 @@ const App = ({ classes }) => {
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
-          path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
+          exact path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
           render={({ match: { params: {wid, cid, page} } }) =>
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page}/>}
         />
