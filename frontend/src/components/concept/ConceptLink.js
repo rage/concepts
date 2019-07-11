@@ -144,6 +144,9 @@ export default class ConceptLink extends Component {
 }
 
 const lineStyles = theme => ({
+  linetoPlaceholder: {
+    display: 'none'
+  },
   linetoHover: {
     '&:hover': {
       backgroundColor: 'rgba(245, 0, 87, 0.25)'
