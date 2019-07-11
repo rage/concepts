@@ -36,19 +36,36 @@ const styles = theme => ({
     '&:focus': {
       backgroundColor: '#fff'
     }
+  },
+  header: {
+    color: 'gray',
+    '&.bold': {
+      color: 'black'
+    }
   }
 })
 
 
 const GridCell = ({ classes, onClick, checked, onHover, onMouseLeave }) => (
-  <Button className={classes.cellButton} onMouseOver={onHover} onMouseLeave={onMouseLeave} onClick={onClick} variant='contained' color={checked ? 'primary' : 'secondary'}> {checked ? 'LINKED' : 'UNLINKED'} </Button>
+  <Button
+    className={classes.cellButton}
+    onClick={onClick}
+    variant='contained'
+    onMouseEnter={onHover}
+    onMouseLeave={onMouseLeave}
+    color={checked ? 'primary' : 'secondary'}>
+    {checked ? 'LINKED' : 'UNLINKED'}
+  </Button>
 )
 
 const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions }) => {
 
-  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse.map(course => course.from.concepts).reduce((concepts, allConcepts) => {
-    return allConcepts.concat(concepts)}
-  , [])
+  const allPrerequisiteConcepts = courseAndPrerequisites.linksToCourse
+    .map(course => course.from.concepts)
+    .reduce((concepts, allConcepts) => {
+      return allConcepts.concat(concepts)
+    }
+    , [])
 
   const headerGrid = React.createRef()
   const sideGrid = React.createRef()
@@ -61,18 +78,14 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   const sideHeaderWidth = 250
   const height = 470
 
-  const [selectedRow, setSelectedRow] = useState(-1)
-  const [selectedColumn, setSelectedColumn] = useState(-1)
-
   const [filter, setFilter] = useState('')
 
   const HeaderCell = ({ columnIndex, data, style }) => (
     <div style={style}>
-      <div style={{
+      <div id={`course-matrix-col-${columnIndex}`} className={classes.header} style={{
         transform: 'translate(0px, 51px) rotate(315deg)',
         width: '150px',
-        textOverflow: 'ellipsis',
-        color: columnIndex !== selectedColumn ? 'grey' : 'black'
+        textOverflow: 'ellipsis'
       }}>
         <span style={{ overflow: 'hidden', maxWidth: '3ch' }}>
           {data[columnIndex].name}
@@ -83,10 +96,9 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
 
   const RowHeaderCell = ({ data, rowIndex, style }) => (
     <div style={style}>
-      <div style={{
+      <div id={`course-matrix-row-${rowIndex}`} className={classes.header} style={{
         margin: '12px 20px 0px 0px',
-        width: '200px',
-        color: rowIndex !== selectedRow ? 'grey' : 'black'
+        width: '200px'
       }}>
         {data[rowIndex].name}
       </div>
@@ -101,7 +113,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
     update: createConceptLinkUpdate(courseAndPrerequisites.id, workspaceId)
   })
 
-  const linkConcepts = (from, to, checked) => async (event) => {
+  const linkConcepts = (from, to, checked) => async () => {
 
     if (!checked) {
       try {
@@ -152,7 +164,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
   const Cell = ({ columnIndex, data, rowIndex, style }) => {
     const { columnData, rowData } = data
     const isPrerequisite = columnData[columnIndex].linksFromConcept.find(l => l.to.id === rowData[rowIndex].id)
-    let checked = isPrerequisite !== undefined
+    const checked = isPrerequisite !== undefined
     return (
       <div style={style} key={`${rowData[rowIndex].id}-${columnIndex}-${columnData[columnIndex]}`}>
         <GridCell
@@ -162,14 +174,14 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
           }
           onHover={
             () => {
-              setSelectedColumn(columnIndex)
-              setSelectedRow(rowIndex)
+              document.getElementById(`course-matrix-row-${rowIndex}`).classList.add('bold')
+              document.getElementById(`course-matrix-col-${columnIndex}`).classList.add('bold')
             }
           }
           onMouseLeave={
             () => {
-              setSelectedColumn(-1)
-              setSelectedRow(-1)
+              document.getElementById(`course-matrix-row-${rowIndex}`).classList.remove('bold')
+              document.getElementById(`course-matrix-col-${columnIndex}`).classList.remove('bold')
             }
 
           }
@@ -182,7 +194,7 @@ const CourseMatrix = ({ classes, courseAndPrerequisites, workspaceId, dimensions
 
 
   const filteredPrerequisiteConcepts = () => {
-    let filteredConcepts = allPrerequisiteConcepts.filter(c =>
+    const filteredConcepts = allPrerequisiteConcepts.filter(c =>
       c.name.toLowerCase().includes(filter)
     )
     return filteredConcepts
