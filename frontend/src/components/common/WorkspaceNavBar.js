@@ -6,12 +6,17 @@ import {
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, ShowChart as ShowCartIcon, GridOn as GridOnIcon,
-  DeviceHub as DeviceHubIcon,  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,
+  DeviceHub as DeviceHubIcon, CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,
   Edit as EditIcon, MoreVert as MoreVertIcon
 } from '@material-ui/icons'
 
 import client from '../../apollo/apolloClient'
-import { EXPORT_QUERY } from '../../graphql/Query'
+import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_BY_OWNER } from '../../graphql/Query'
+import { DELETE_WORKSPACE } from '../../graphql/Mutation'
+
+import { useQuery, useMutation } from 'react-apollo-hooks'
+
+import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
 
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 
@@ -46,7 +51,7 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
 
   // Download JSON file
   const element = document.createElement('a')
-  element.href = URL.createObjectURL(new Blob([jsonData], {'type':'application/json'}))
+  element.href = URL.createObjectURL(new Blob([jsonData], { 'type': 'application/json' }))
   element.download = `${workspaceName}.json`
   document.body.appendChild(element)
   element.click()
@@ -54,15 +59,51 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
 }
 
 const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
-  const [menuAnchor, setMenuAnchor] = useState(false)
-
   const classes = useStyles()
-
   const { user } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
+  const [menuAnchor, setMenuAnchor] = useState(false)
 
-  const handleEditOpen = () => alert('Not yet implemented')
-  const handleDelete = () => alert('Not yet implemented')
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
+    variables: { id: workspaceId }
+  })
+
+  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
+    refetchQueries: [
+      { query: WORKSPACES_BY_OWNER, variables: { ownerId: user.id } }
+    ]
+  })
+
+  const {
+    openEditWorkspaceDialog,
+    WorkspaceEditDialog
+  } = useEditWorkspaceDialog(workspaceId, user.id)
+
+  const handleEditOpen = () => {
+    openEditWorkspaceDialog(workspaceId, workspaceQuery.data.workspaceById.name)
+  }
+
+  const handleDelete = () => {
+
+    deleteWorkspace({
+      variables: {
+        id: workspaceId
+      }
+    })
+      .catch(() => {
+        errorDispatch({
+          type: 'setError',
+          data: 'Failed to delete workspace'
+        })
+        setTimeout(() =>
+          errorDispatch({ type: 'clearError' })
+        , 2000)
+      })
+      .finally(() => {
+        history.push('/user')
+      })
+  }
+
 
   const handleWorkspaceExport = async () => {
     setMenuAnchor(null)
@@ -82,53 +123,56 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   }
 
   return (
-    <Paper className={classes.root}>
-      {/* Placeholder so flex would align navbar at center*/}
-      {user.role === 'STAFF' && <div className={classes.leftPlaceholder}/>}
-      <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
-        <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon/>} />
-        <BottomNavigationAction value='matrix' label='Concept Matrix' icon={<ShowCartIcon/>} />
-        <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon/>} />
-        <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon/>} />
-      </BottomNavigation>
-      {user.role === 'STAFF' && <>
-        <IconButton
-          onClick={evt => setMenuAnchor(evt.currentTarget)}
-          className={classes.menuButton}
-        >
-          <MoreVertIcon/>
-        </IconButton>
-        <Menu
-          anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}>
-          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-            <ListItemIcon>
-              <CloudDownloadIcon/>
-            </ListItemIcon>
-            Export
-          </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-            <ListItemIcon>
-              <EditIcon />
-            </ListItemIcon>
-            Edit
-          </MenuItem>
-        </Menu>
-      </>}
-    </Paper>
+    <>
+      <Paper className={classes.root}>
+        {/* Placeholder so flex would align navbar at center*/}
+        {user.role === 'STAFF' && <div className={classes.leftPlaceholder} />}
+        <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
+          <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
+          <BottomNavigationAction value='matrix' label='Concept Matrix' icon={<ShowCartIcon />} />
+          <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
+          <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
+        </BottomNavigation>
+        {user.role === 'STAFF' && <>
+          <IconButton
+            onClick={evt => setMenuAnchor(evt.currentTarget)}
+            className={classes.menuButton}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}>
+            <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+              <ListItemIcon>
+                <CloudDownloadIcon />
+              </ListItemIcon>
+              Export
+            </MenuItem>
+            <MenuItem aria-label='Delete' onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+            <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              Edit
+            </MenuItem>
+          </Menu>
+        </>}
+      </Paper>
+      {WorkspaceEditDialog}
+    </>
   )
 }
 
