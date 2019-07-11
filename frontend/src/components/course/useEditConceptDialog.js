@@ -4,7 +4,7 @@ import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import { updateConceptUpdate } from '../../apollo/update'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 
-const useCreateConceptDialog = (activeCourse, workspaceId) => {
+const useEditConceptDialog = (activeCourse, workspaceId) => {
   const [conceptEditState, setConceptEditState] = useState({
     open: false,
     conceptId: '',
@@ -41,4 +41,4 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
   }
 }
 
-export default useCreateConceptDialog
+export default useEditConceptDialog

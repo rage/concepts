@@ -5,8 +5,6 @@ import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 
-import CourseEditingDialog from './CourseEditingDialog'
-
 import IconButton from '@material-ui/core/IconButton'
 import InfoIcon from '@material-ui/icons/Info'
 import CloseIcon from '@material-ui/icons/Close'
@@ -17,6 +15,7 @@ import { useLoginStateValue } from '../../store'
 
 import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
+import useEditCourseDialog from './useEditCourseDialog'
 
 const useStyles = makeStyles(theme => ({
   snackbar: {
@@ -51,7 +50,6 @@ const GuidedCourseContainer = ({
   courseTrayOpen,
   setCourseTrayOpen,
   activeCourse,
-  updateCourse,
   courses,
   activeConceptIds,
   addingLink,
@@ -60,8 +58,6 @@ const GuidedCourseContainer = ({
   courseId
 }) => {
   const classes = useStyles()
-
-  const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
 
   const [conceptInfoState, setConceptInfoState] = useState(false)
   const [courseInfoState, setCourseInfoState] = useState(false)
@@ -78,6 +74,10 @@ const GuidedCourseContainer = ({
     openEditConceptDialog,
     ConceptEditDialog
   } = useEditConceptDialog(activeCourse, workspaceId)
+
+  const { openEditCourseDialog,
+    CourseEditDialog
+  } = useEditCourseDialog(workspaceId)
 
   useEffect(() => {
     if (activeCourse.concepts.length === 0) {
@@ -98,14 +98,6 @@ const GuidedCourseContainer = ({
       setCourseInfoState(false)
     }
   }, [activeCourse.concepts.length, courses.length, setCourseTrayOpen])
-
-  const handleCourseClose = () => {
-    setCourseState({ open: false, id: '', name: '' })
-  }
-
-  const handleCourseOpen = (id, name) => () => {
-    setCourseState({ open: true, id, name })
-  }
 
   const handleConceptInfoClose = () => {
     setConceptInfoState(false)
@@ -134,7 +126,7 @@ const GuidedCourseContainer = ({
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
-                openCourseDialog={handleCourseOpen}
+                openCourseDialog={openEditCourseDialog}
                 openConceptDialog={openCreateConceptDialog}
                 openConceptEditDialog={openEditConceptDialog}
                 activeCourseId={courseId}
@@ -149,13 +141,7 @@ const GuidedCourseContainer = ({
 
     {/* Dialogs */}
 
-    <CourseEditingDialog
-      state={courseState}
-      handleClose={handleCourseClose}
-      updateCourse={updateCourse}
-      defaultName={courseState.name}
-    />
-
+    {CourseEditDialog}
     {ConceptCreateDialog}
     {ConceptEditDialog}
 

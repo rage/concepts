@@ -7,7 +7,7 @@ import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const useCreateConceptDialog = (activeCourse, workspaceId) => {
 
-  const [conceptCreateState, setConceptState] = useState({
+  const [conceptCreateState, setConceptCreateState] = useState({
     open: false,
     id: ''
   })
@@ -44,11 +44,11 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
   })
 
   const handleConceptClose = () => {
-    setConceptState({ ...conceptCreateState, open: false, id: '' })
+    setConceptCreateState({ ...conceptCreateState, open: false, id: '' })
   }
 
   const handleConceptOpen = (courseId) => () => {
-    setConceptState({ open: true, id: courseId })
+    setConceptCreateState({ open: true, id: courseId })
   }
 
   const dialog = (
