@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_PREREQUISITES } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
+import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
 const useCreateConceptDialog = (activeCourse, workspaceId) => {
 
-  const [conceptState, setConceptState] = useState({
+  const [conceptCreateState, setConceptState] = useState({
     open: false,
     id: ''
   })
@@ -24,7 +25,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
         const addedConcept = response.data.createConcept
         const dataInStoreCopy = { ...dataInStore }
         const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link =>
-          link.from.id === conceptState.id
+          link.from.id === conceptCreateState.id
         )
         const course = courseLink.from
         if (!includedIn(course.concepts, addedConcept)) {
@@ -43,18 +44,25 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
   })
 
   const handleConceptClose = () => {
-    setConceptState({ ...conceptState, open: false, id: '' })
+    setConceptState({ ...conceptCreateState, open: false, id: '' })
   }
 
   const handleConceptOpen = (courseId) => () => {
     setConceptState({ open: true, id: courseId })
   }
 
+  const dialog = (
+    <ConceptAdditionDialog
+      state={conceptCreateState}
+      handleClose={handleConceptClose}
+      createConcept={createConcept}
+      workspaceId={workspaceId}
+    />
+  )
+
   return {
     openCreateConceptDialog: handleConceptOpen,
-    closeCreateConceptDialog: handleConceptClose,
-    conceptCreateState: conceptState,
-    createConcept
+    ConceptCreateDialog: dialog
   }
 }
 

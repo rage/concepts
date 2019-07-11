@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Course from './Course'
 import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 
-import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
-import ConceptEditingDialog from '../concept/ConceptEditingDialog'
 import CourseEditingDialog from './CourseEditingDialog'
 
 import IconButton from '@material-ui/core/IconButton'
@@ -20,7 +18,7 @@ import { useLoginStateValue } from '../../store'
 import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   snackbar: {
     margin: theme.spacing(4)
   },
@@ -37,22 +35,32 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center'
   }
-})
+}))
 
-const CONCEPT_ADDING_INSTRUCTION = 'Add concept as a learning objective in the left column.'
-const COURSE_ADDING_INSTRUCTION = 'To add prerequisites, open the drawer on the right.'
-const CONCEPT_LINKING_INSTRUCTION = 'Switch on a learning objective on the left to start linking prerequisites.'
+const CONCEPT_ADDING_INSTRUCTION = (
+  'Add concept as a learning objective in the left column.'
+)
+const COURSE_ADDING_INSTRUCTION = (
+  'To add prerequisites, open the drawer on the right.'
+)
+const CONCEPT_LINKING_INSTRUCTION = (
+  'Switch on a learning objective on the left to start linking prerequisites.'
+)
 
 const GuidedCourseContainer = ({
-  classes,
-  onClick,
-  courseTrayOpen, setCourseTrayOpen,
-  activeCourse, updateCourse, courses,
+  courseTrayOpen,
+  setCourseTrayOpen,
+  activeCourse,
+  updateCourse,
+  courses,
   activeConceptIds,
-  addingLink, setAddingLink,
-  doRedrawLines,
-  workspaceId, courseId
+  addingLink,
+  setAddingLink,
+  workspaceId,
+  courseId
 }) => {
+  const classes = useStyles()
+
   const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
 
   const [conceptInfoState, setConceptInfoState] = useState(false)
@@ -62,17 +70,13 @@ const GuidedCourseContainer = ({
   const { loggedIn } = useLoginStateValue()[0]
 
   const {
-    conceptCreateState,
-    createConcept,
     openCreateConceptDialog,
-    closeCreateConceptDialog
+    ConceptCreateDialog
   } = useCreateConceptDialog(activeCourse, workspaceId)
 
   const {
-    conceptEditState,
-    updateConcept,
     openEditConceptDialog,
-    closeEditConceptDialog
+    ConceptEditDialog
   } = useEditConceptDialog(activeCourse, workspaceId)
 
   useEffect(() => {
@@ -152,20 +156,8 @@ const GuidedCourseContainer = ({
       defaultName={courseState.name}
     />
 
-    <ConceptAdditionDialog
-      state={conceptCreateState}
-      handleClose={closeCreateConceptDialog}
-      createConcept={createConcept}
-      workspaceId={workspaceId}
-    />
-
-    <ConceptEditingDialog
-      state={conceptEditState}
-      handleClose={closeEditConceptDialog}
-      updateConcept={updateConcept}
-      defaultDescription={conceptEditState.description}
-      defaultName={conceptEditState.name}
-    />
+    {ConceptCreateDialog}
+    {ConceptEditDialog}
 
     {/* Intruction snackbars */}
     {loggedIn ?
@@ -255,4 +247,4 @@ const GuidedCourseContainer = ({
   </>
 }
 
-export default withStyles(styles)(GuidedCourseContainer)
+export default GuidedCourseContainer
