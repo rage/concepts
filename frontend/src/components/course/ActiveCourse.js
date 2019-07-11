@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { Button, Paper, Typography, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
-import { UPDATE_CONCEPT, CREATE_CONCEPT, DELETE_CONCEPT } from '../../graphql/Mutation'
+import { DELETE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_BY_ID } from '../../graphql/Query'
 
 import ActiveConcept from '../concept/ActiveConcept'
 
-import ConceptEditingDialog from '../concept/ConceptEditingDialog'
-import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
-import CourseEditingDialog from './CourseEditingDialog'
+import useCreateConceptDialog from './useCreateConceptDialog'
+import useEditConceptDialog from './useEditConceptDialog'
+import useEditCourseDialog from './useEditCourseDialog'
 
 import { useLoginStateValue } from '../../store'
 
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     gridArea: 'activeCourse',
     display: 'flex',
@@ -51,26 +51,31 @@ const styles = theme => ({
     marginTop: '16px',
     width: '100%'
   }
-})
+}))
 
 const ActiveCourse = ({
-  classes, // UI
   course,
   workspaceId,
   activeConceptIds,
-  updateCourse,
   addingLink,
   setAddingLink,
   toggleConcept
 }) => {
-  const [courseState, setCourseState] = useState({ open: false, id: '', name: '' })
-  const [conceptState, setConceptState] = useState({ open: false, id: '' })
-  const [conceptEditState, setConceptEditState] = useState({
-    open: false,
-    id: '',
-    name: '',
-    description: ''
-  })
+  const classes = useStyles()
+
+  const {
+    openCreateConceptDialog,
+    ConceptCreateDialog
+  } = useCreateConceptDialog(course, workspaceId)
+
+  const {
+    openEditConceptDialog,
+    ConceptEditDialog
+  } = useEditConceptDialog(course, workspaceId)
+
+  const { openEditCourseDialog,
+    CourseEditDialog
+  } = useEditCourseDialog(workspaceId)
 
   const { loggedIn } = useLoginStateValue()[0]
 
@@ -78,54 +83,6 @@ const ActiveCourse = ({
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
-
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: course.id
-        }
-      })
-      const updatedConcept = response.data.updateConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const concepts = dataInStoreCopy.courseById.concepts
-      if (includedIn(concepts, updatedConcept)) {
-        dataInStoreCopy.courseById.concepts = concepts.map(c =>
-          c.id === updatedConcept.id ? updatedConcept : c
-        )
-        client.writeQuery({
-          query: COURSE_BY_ID,
-          variables: { id: course.id },
-          data: dataInStoreCopy
-        })
-      }
-    }
-  })
-
-  const createConcept = useMutation(CREATE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: course.id
-        }
-      })
-      const addedConcept = response.data.createConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const concepts = dataInStoreCopy.courseById.concepts
-      if (!includedIn(concepts, addedConcept)) {
-        dataInStoreCopy.courseById.concepts.push(addedConcept)
-        client.writeQuery({
-          query: COURSE_BY_ID,
-          variables: {
-            id: course.id
-          },
-          data: dataInStoreCopy
-        })
-      }
-    }
-  })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: (store, response) => {
@@ -150,30 +107,6 @@ const ActiveCourse = ({
     }
   })
 
-  const handleCourseClose = () => {
-    setCourseState({ open: false, id: '', name: '' })
-  }
-
-  const handleCourseOpen = (id, name) => () => {
-    setCourseState({ open: true, id, name })
-  }
-
-  const handleConceptClose = () => {
-    setConceptState({ ...conceptState, open: false, id: '' })
-  }
-
-  const handleConceptOpen = (courseId) => () => {
-    setConceptState({ open: true, id: courseId })
-  }
-
-  const handleConceptEditClose = () => {
-    setConceptEditState({ open: false, id: '', name: '', description: '' })
-  }
-
-  const handleConceptEditOpen = (id, name, description) => () => {
-    setConceptEditState({ open: true, id, name, description })
-  }
-
   return <>
     <Paper elevation={0} className={classes.root}>
       <div
@@ -193,7 +126,7 @@ const ActiveCourse = ({
             marginRight: '-8px'
           }}
         >
-          <IconButton onClick={handleCourseOpen(course.id, course.name)}>
+          <IconButton onClick={openEditCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>
         </div>
@@ -207,8 +140,7 @@ const ActiveCourse = ({
             addingLink={addingLink}
             setAddingLink={setAddingLink}
             deleteConcept={deleteConcept}
-            openConceptDialog={handleConceptOpen}
-            openConceptEditDialog={handleConceptEditOpen}
+            openConceptEditDialog={openEditConceptDialog}
             toggleConcept={toggleConcept}
             workspaceId={workspaceId}
           />
@@ -218,7 +150,7 @@ const ActiveCourse = ({
       {loggedIn ?
         <Button
           className={classes.button}
-          onClick={handleConceptOpen(course.id)}
+          onClick={openCreateConceptDialog(course.id)}
           variant='contained'
           color='secondary'
         >
@@ -227,28 +159,12 @@ const ActiveCourse = ({
       }
     </Paper>
 
-    <CourseEditingDialog
-      state={courseState}
-      handleClose={handleCourseClose}
-      updateCourse={updateCourse}
-      defaultName={courseState.name}
-    />
+    {/* Dialogs */}
 
-    <ConceptEditingDialog
-      state={conceptEditState}
-      handleClose={handleConceptEditClose}
-      updateConcept={updateConcept}
-      workspaceId={workspaceId}
-      defaultName={conceptEditState.name}
-      defaultDescription={conceptEditState.description}
-    />
-    <ConceptAdditionDialog
-      state={conceptState}
-      handleClose={handleConceptClose}
-      createConcept={createConcept}
-      workspaceId={workspaceId}
-    />
+    {CourseEditDialog}
+    {ConceptCreateDialog}
+    {ConceptEditDialog}
   </>
 }
 
-export default withStyles(styles)(ActiveCourse)
+export default ActiveCourse

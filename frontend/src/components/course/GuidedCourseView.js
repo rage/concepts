@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Grid from '@material-ui/core/Grid'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
 import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
@@ -26,7 +25,7 @@ import ConceptLink from '../concept/ConceptLink'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'grid',
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
@@ -44,9 +43,10 @@ const styles = theme => ({
       gridTemplateColumns: '32% auto 32%'
     }
   }
-})
+}))
 
-const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
+const GuidedCourseView = ({ courseId, workspaceId }) => {
+  const classes = useStyles()
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const [redrawLines, setRedrawLines] = useState(0)
@@ -138,14 +138,11 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseContainer
-              onClick={() => setAddingLink(null)}
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
               courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
-              doRedrawLines={() => setRedrawLines(redrawLines + 1)}
-              updateCourse={updateCourse}
               courseTrayOpen={courseTrayOpen}
               activeCourse={courseQuery.data.courseById}
               setCourseTrayOpen={setCourseTrayOpen}
@@ -227,4 +224,4 @@ const GuidedCourseView = ({ classes, courseId, workspaceId }) => {
   )
 }
 
-export default withStyles(styles)(GuidedCourseView)
+export default GuidedCourseView
