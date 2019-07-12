@@ -82,7 +82,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   }
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={classes.root} square>
       {/* Placeholder so flex would align navbar at center*/}
       {user.role === 'STAFF' && <div className={classes.leftPlaceholder}/>}
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
