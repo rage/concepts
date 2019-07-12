@@ -1,0 +1,36 @@
+{
+  "CREATE_CONCEPT_TARGET": {
+    "title": "Add concepts to a course",
+    "description": "What are these for?"
+  },
+  "CREATE_COURSE": {
+    "title": "Create a course",
+    "description": "Why?"
+  },
+  "CREATE_CONCEPT_PREREQ": {
+    "title": "Add concepts to a prerequisite course",
+    "description": "Why?!"
+  },
+  "ADD_COURSE_AS_PREREQ": {
+    "title": "Add prerequisite courses",
+    "description": "Add a course to the prerequisites of the target course by clicking the checkbox next to the course name."
+  },
+  "DRAW_LINK": [
+    {
+      "title": "Start drawing a link to a prerequisite",
+      "description": "WHAY!?"
+    },
+    {
+      "title": "Link to a prerequisite concept",
+      "description": ""
+    }
+  ],
+  "DELETE_LINK": {
+    "title": "Delete a link between concepts",
+    "description": "..."
+  },
+  "SWITCH_VIEW": {
+    "title": "Switch to another tool",
+    "description": "..."
+  }
+}
