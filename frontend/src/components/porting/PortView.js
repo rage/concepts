@@ -138,6 +138,8 @@ const PortView = ({ classes }) => {
         errorMessage = `Unknown property '${error.params.additionalProperty}'`
       } else if (error.keyword === 'type') {
         errorMessage = `${error.dataPath.replace('.', '')} ${error.message}`
+      } else if (error.keyword === 'oneOf') {
+        errorMessage = 'should have either workspace or workspaceId'
       }
 
       errorDispatch({
