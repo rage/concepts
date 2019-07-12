@@ -128,8 +128,7 @@ const PortView = ({ classes }) => {
     }
   }
 
-  const validateJSON = (data) => {
-    const jsonData = JSON.parse(data)
+  const validateJSON = (jsonData) => {
     if (!validateData(jsonData)) {
       const error = validateData.errors[0]
       let errorMessage
@@ -181,7 +180,7 @@ const PortView = ({ classes }) => {
 
   const sendData = async (data) => {
     if (loading || success) return
-    // Verify JSON
+
     let jsonData
     try {
       jsonData = JSON.parse(data)
@@ -192,8 +191,8 @@ const PortView = ({ classes }) => {
       })
       return
     }
-    // Check JSON schema
-    if(!validateJSON(data)) {
+
+    if(!validateJSON(jsonData)) {
       return
     }
 
