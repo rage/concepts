@@ -20,6 +20,11 @@ const useStyles = makeStyles(() => ({
     }
   },
 
+  box: {
+    position: 'fixed',
+    display: 'none'
+  },
+
   '@keyframes fadein': {
     from: {
       opacity: 0
@@ -39,9 +44,10 @@ const FocusOverlay = ({children, padding = 5}) => {
   })
   const classes = useStyles()
 
-  const ref = useRef()
+  const overlay = useRef()
+  const box = useRef()
   const update = () => {
-    if (!state.element || !ref.current) {
+    if (!state.element || !overlay.current) {
       return
     }
     const rect = state.element.getBoundingClientRect()
@@ -52,7 +58,11 @@ const FocusOverlay = ({children, padding = 5}) => {
       left = rect.left - padding,
       bottom = rect.bottom + padding,
       right = rect.right + padding
-    ref.current.style.clipPath =
+    box.current.style.top = top
+    box.current.style.left = left
+    box.current.style.bottom = bottom
+    box.current.style.right = right
+    overlay.current.style.clipPath =
       `polygon(0 0, 0 100%,  ${left}px 100%,  ${left}px ${top}px,  ${right}px ${top}px,
                ${right}px ${bottom}px,  ${left}px ${bottom}px, ${left}px 100%,  100% 100%, 100% 0)`
   }
@@ -89,11 +99,13 @@ const FocusOverlay = ({children, padding = 5}) => {
   }
 
   return <>
-    <FocusOverlayContext.Provider value={{open, close}}>
+    <FocusOverlayContext.Provider value={{box, open, close}}>
       {children}
     </FocusOverlayContext.Provider>
-    <div ref={ref} className={`${classes.root} ${state.element ? '' : 'hidden'}
-                               ${state.fadeout ? 'fadeout' : ''}`}/>
+    <div ref={overlay} className={`${classes.root} ${state.element ? '' : 'hidden'}
+                                   ${state.fadeout ? 'fadeout' : ''}`}>
+      <div ref={box} className={classes.box}/>
+    </div>
   </>
 }
 
