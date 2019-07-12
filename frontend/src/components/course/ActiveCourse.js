@@ -57,6 +57,7 @@ const ActiveCourse = ({
   course,
   workspaceId,
   activeConceptIds,
+  onClick,
   addingLink,
   setAddingLink,
   toggleConcept
@@ -108,7 +109,7 @@ const ActiveCourse = ({
   })
 
   return <>
-    <Paper elevation={0} className={classes.root}>
+    <Paper onClick={onClick} elevation={0} className={classes.root}>
       <div
         className={'activeCourseHeaderContent'}
         style={{ display: 'flex', alignItems: 'center' }}
