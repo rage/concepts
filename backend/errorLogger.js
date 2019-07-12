@@ -28,13 +28,19 @@ const getPathType = (path) => {
 const logError = error => {
   const errorData = {
     'message': error['message'],
-    'path': error['path'].reduce((first, second) => first + '/' + second),
     'now': new Date(Date.now()).toISOString().replace(/T/, ' ').replace(/\..+/, '')
   }
-  errorData['type'] = getPathType(errorData['path'])
+  
+  // Convert path array into a string
+  if (typeof error['path'] !== 'undefined') {
+    errorData['path'] = error['path'].reduce((first, second) => first + "/" + second)
+    errorData['type'] = getPathType(errorData['path'])
+  }
 
   let errorMessage = errorData['now'] + ' --- '
-  if (typeof error['extensions'] !== 'undefined') {
+  if (typeof error['path'] === 'undefined') {
+    errorMessage += 'Error: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
+  } else if (typeof error['extensions'] !== 'undefined') {
     errorData.code = error['extensions']['code']
     errorMessage += 'Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, '
     errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
