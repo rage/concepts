@@ -187,7 +187,7 @@ const PortView = ({ classes }) => {
     } catch (error) {
       errorDispatch({
         type: 'setError',
-        data: 'Malformated JSON'
+        data: 'Malformed JSON'
       })
       return
     }
