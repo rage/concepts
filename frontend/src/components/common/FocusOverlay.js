@@ -73,27 +73,19 @@ const FocusOverlay = ({children, padding = 5}) => {
     })
   }
 
-  console.log(state.fadeout)
-  console.log(state.element)
   const close = () => {
     if (state.fadeout) {
       return
     }
-    console.log("close", state.fadeout)
-    console.log("close", state.element)
     setState({
       element: state.element,
       fadeout: setTimeout(() => {
-        console.log("closed", state.element)
-        console.log("closed", state.fadeout)
         setState({
           fadeout: null,
           element: null
         })
       }, 5000)
     })
-    console.log("close 2", state.element)
-    console.log("close 2", state.fadeout)
   }
 
   return <>
