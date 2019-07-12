@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -20,7 +20,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
 import { createConceptLinkUpdate } from '../../apollo/update'
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
   conceptName: {
     maxWidth: '70%',
     overflowWrap: 'break-word',
@@ -54,11 +54,20 @@ const styles = theme => ({
   otherNameActive: {
     color: 'grey'
   }
-})
+}))
 
-const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink, setAddingLink, deleteConcept, openConceptEditDialog, workspaceId }) => {
+const ActiveConcept = ({
+  concept,
+  toggleConcept,
+  activeConceptIds,
+  addingLink,
+  setAddingLink,
+  deleteConcept,
+  openConceptEditDialog,
+  workspaceId
+}) => {
   const [state, setState] = useState({ anchorEl: null })
-
+  const classes = useStyles()
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
@@ -185,4 +194,4 @@ const Concept = ({ classes, concept, toggleConcept, activeConceptIds, addingLink
   </>
 }
 
-export default withStyles(styles)(Concept)
+export default ActiveConcept

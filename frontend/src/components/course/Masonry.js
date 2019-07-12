@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { withStyles } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
   masonry: {
     columnWidth: '296px',
     width: '100%',
@@ -23,9 +23,10 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center'
   }
-})
+}))
 
-const Masonry = ({ classes, children, courseTrayOpen }) => {
+const Masonry = ({ children, courseTrayOpen }) => {
+  const classes = useStyles()
   return (
     <div className={`${classes.masonry} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}>
       {children.map((child, i) => <div className={classes.columnWrapper} key={i}>
@@ -35,4 +36,4 @@ const Masonry = ({ classes, children, courseTrayOpen }) => {
   )
 }
 
-export default withStyles(styles)(Masonry)
+export default Masonry

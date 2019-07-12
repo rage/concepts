@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import {
-  Grid, Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
+  Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
   ListItemSecondaryAction
 } from '@material-ui/core'
 import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
 
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
-import CourseCreationDialog from './CourseCreationDialog'
+import useCreateCourseDialog from './useCreateCourseDialog'
 
 import { useErrorStateValue } from '../../store'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     gridArea: 'courseTray',
     display: 'flex',
@@ -43,10 +43,9 @@ const styles = theme => ({
     marginTop: '16px',
     width: '100%'
   }
-})
+}))
 
 const PrerequisiteCourse = ({
-  classes,
   isPrerequisite,
   getLinkToDelete,
   course,
@@ -56,6 +55,7 @@ const PrerequisiteCourse = ({
   deleteCourseLink
 }) => {
   const errorDispatch = useErrorStateValue()[1]
+  const classes = useStyles()
 
   const onClick = async () => {
     try {
@@ -89,20 +89,24 @@ const PrerequisiteCourse = ({
 }
 
 const GuidedCourseTray = ({
-  classes,
   courseTrayOpen,
   activeCourseId,
   courseId,
   workspaceId,
-  courseLinks,
-  createCourse
+  courseLinks
 }) => {
-  const [state, setState] = useState({ open: false })
   const [filterKeyword, setFilterKeyword] = useState('')
 
   const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
     variables: { workspaceId }
   })
+
+  const classes = useStyles()
+
+  const {
+    openCreateCourseDialog,
+    CourseCreateDialog
+  } = useCreateCourseDialog(workspaceId)
 
   const client = useApolloClient()
 
@@ -155,14 +159,6 @@ const GuidedCourseTray = ({
     setFilterKeyword(e.target.value)
   }
 
-  const handleClose = () => {
-    setState({ open: false })
-  }
-
-  const handleClickOpen = () => {
-    setState({ open: true })
-  }
-
   const isPrerequisite = (course) => {
     return (courseLinks.find(link => link.from.id === course.id) !== undefined)
   }
@@ -209,7 +205,6 @@ const GuidedCourseTray = ({
                 deleteCourseLink={deleteCourseLink}
                 isPrerequisite={isPrerequisite(course)}
                 getLinkToDelete={getLinkToDelete}
-                classes={classes}
                 workspaceId={workspaceId}
               />
             )
@@ -218,7 +213,7 @@ const GuidedCourseTray = ({
       }
 
       <Button
-        onClick={handleClickOpen}
+        onClick={openCreateCourseDialog}
         className={classes.button}
         variant='contained'
         color='secondary'
@@ -226,13 +221,9 @@ const GuidedCourseTray = ({
         New course
       </Button>
     </Paper >
-    <CourseCreationDialog
-      state={state}
-      handleClose={handleClose}
-      workspaceId={workspaceId}
-      createCourse={createCourse}
-    />
+
+    {CourseCreateDialog}
   </>
 }
 
-export default withStyles(styles)(GuidedCourseTray)
+export default GuidedCourseTray

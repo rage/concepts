@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { useMutation } from 'react-apollo-hooks'
 import {
@@ -26,7 +26,7 @@ import {
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 
-const styles = theme => ({
+const useStyles = makeStyles(() => ({
   conceptName: {
     maxWidth: '60%',
     overflowWrap: 'break-word',
@@ -47,10 +47,20 @@ const styles = theme => ({
       backgroundColor: '#fff'
     }
   }
-})
+}))
 
-const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, addingLink, setAddingLink, openConceptEditDialog, workspaceId }) => {
+const Concept = ({
+  course,
+  activeCourseId,
+  concept,
+  activeConceptIds,
+  addingLink,
+  setAddingLink,
+  openConceptEditDialog,
+  workspaceId
+}) => {
   const [state, setState] = useState({ anchorEl: null })
+  const classes = useStyles()
 
   const errorDispatch = useErrorStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
@@ -132,7 +142,7 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
         <IconButton onClick={onClick} style={{ padding: '4px' }}>
           <ArrowLeftIcon
             viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
-            color={linkButtonColor}/>
+            color={linkButtonColor} />
         </IconButton>
       </ListItemIcon>
       <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
@@ -169,4 +179,4 @@ const Concept = ({ classes, course, activeCourseId, concept, activeConceptIds, a
   )
 }
 
-export default withStyles(styles)(Concept)
+export default Concept
