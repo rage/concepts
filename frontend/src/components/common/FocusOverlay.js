@@ -89,7 +89,7 @@ const FocusOverlay = ({children, padding = 5}) => {
   }
 
   return <>
-    <FocusOverlayContext.Provider value={{element: state.element, open, close}}>
+    <FocusOverlayContext.Provider value={{open, close}}>
       {children}
     </FocusOverlayContext.Provider>
     <div ref={ref} className={`${classes.root} ${state.element ? '' : 'hidden'}

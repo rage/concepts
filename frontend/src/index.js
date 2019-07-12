@@ -8,6 +8,7 @@ import { ApolloProvider } from 'react-apollo-hooks'
 import { isSignedIn } from './lib/authentication'
 import { LoginStateProvider, ErrorStateProvider } from './store'
 import FocusOverlay from './components/common/FocusOverlay'
+import InfoBox from './components/common/InfoBox'
 
 const loginReducer = (state, action) => {
   switch (action.type) {
@@ -63,9 +64,11 @@ ReactDOM.render(
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}
         >
-          <FocusOverlay>
-            <App />
-          </FocusOverlay>
+          <InfoBox>
+            <FocusOverlay>
+              <App />
+            </FocusOverlay>
+          </InfoBox>
         </LoginStateProvider>
       </ErrorStateProvider>
     </ApolloProvider>
