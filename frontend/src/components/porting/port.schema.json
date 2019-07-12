@@ -1,0 +1,130 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "oneOf": [
+    {
+      "required": ["workspaceId"]
+    },
+    {
+      "required": ["workspace"]
+    }
+  ],
+  "required": [
+    "courses"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "workspaceId": {
+      "type": "string",
+      "description": "Existing workspace ID to use",
+      "pattern": "[0-9a-z]{25}",
+      "examples": [
+        "cjxk1l6uf001707606jgv7f9z"
+      ]
+    },
+    "workspace": {
+      "type": "string",
+      "description": "Name to set for new workspace",
+      "examples": [
+        "Tietojenkäsittelytieteen kandiohjelma"
+      ]
+    },
+    "defaultCourse": {
+      "type": "string",
+      "description": "Name of course to view by default. Must be defined in courses.",
+      "examples": ["Ohjelmoinnin perusteet"]
+    },
+    "courses": {
+      "type": "array",
+      "description": "List of courses in workspace",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "description": "Course object",
+        "required": [
+          "name",
+          "concepts"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of course",
+            "examples": [
+              "Ohjelmoinnin perusteet"
+            ]
+          },
+          "prerequisites": {
+            "type": "array",
+            "description": "List of prerequisite courses for this course",
+            "items": {
+              "type": "string",
+              "description": "Course prerequisite name"
+            }
+          },
+          "concepts": {
+            "type": "array",
+            "description": "List of concepts in course",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "description": "Concept object",
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of concept",
+                  "examples": [
+                    "Toistolause", "Ehtolause"
+                  ]
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description for concept"
+                },
+                "prerequisites": {
+                  "type": "array",
+                  "description": "List of prerequisite concepts for this concept",
+                  "items": {
+                    "type": "object",
+                    "description": "Concept prerequisite name",
+                    "required": [
+                      "name"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the prerequisite concept",
+                        "examples": [
+                          "Ehtolause"
+                        ]
+                      },
+                      "course": {
+                        "type": "string",
+                        "description": "The name of the course where the prerequisite concept exists. If not specified, all concepts with the given name will be linked.",
+                        "examples": [
+                          "Ohjelmoinnin perusteet"
+                        ]
+                      },
+                      "official": {
+                        "type": "boolean",
+                        "description": "Whether or not the prerequisite link is official, rather than user-specified",
+                        "examples": [
+                          true
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

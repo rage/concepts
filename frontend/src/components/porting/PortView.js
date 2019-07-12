@@ -16,6 +16,9 @@ import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 import Button from '@material-ui/core/Button'
 import { useMutation } from 'react-apollo-hooks'
+import Ajv from 'ajv'
+import schema from './port.schema'
+
 import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
@@ -103,6 +106,9 @@ const TEMPLATE = `{
 }
 `
 
+const ajv = Ajv()
+const validateData = ajv.compile(schema)
+
 const PortView = ({ classes }) => {
   const [data, setData] = useState('')
   const [buttonText, setButtonText] = useState('Import')
@@ -120,6 +126,29 @@ const PortView = ({ classes }) => {
     if (data.length === 0) {
       setData(TEMPLATE)
     }
+  }
+
+  const validateJSON = (data) => {
+    const jsonData = JSON.parse(data)
+    if (!validateData(jsonData)) {
+      const error = validateData.errors[0]
+      let errorMessage
+      if (error.keyword === 'required') {
+        errorMessage = error['message']
+      } else if (error.keyword === 'additionalProperties') {
+        errorMessage = `Unknown property '${error.params.additionalProperty}'`
+      } else if (error.keyword === 'type') {
+        errorMessage = `${error.dataPath.replace('.', '')} ${error.message}`
+      }
+
+      errorDispatch({
+        type: 'setError',
+        data: errorMessage
+      })
+
+      return false
+    }
+    return true
   }
 
   const openFile = (event) => {
@@ -150,15 +179,30 @@ const PortView = ({ classes }) => {
     fileReader.readAsText(event.target.files[0])
   }
 
-  const sendData = async (jsonData) => {
+  const sendData = async (data) => {
     if (loading || success) return
+    // Verify JSON
+    let jsonData
+    try {
+      jsonData = JSON.parse(data)
+    } catch (error) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Malformated JSON'
+      })
+      return
+    }
+    // Check JSON schema
+    if(!validateJSON(data)) {
+      return
+    }
 
     setLoading(true)
 
     try {
       await dataPortingMutation({
         variables: {
-          data: jsonData
+          data: data
         }
       })
 
@@ -171,7 +215,7 @@ const PortView = ({ classes }) => {
     } catch (err) {
       errorDispatch({
         type: 'setError',
-        data: 'Malformated json'
+        data: 'Error sending data'
       })
     }
 
