@@ -4,6 +4,20 @@ const { AuthenticationError } = require('apollo-server-core')
 
 
 const AuthenticationMutations = {
+  async createGuest(root, args, context) {
+    const guest = await context.prisma.createUser({
+      role: 'GUEST'
+    })
+    const token = jwt.sign({ 
+      role: guest.role, 
+      id: guest.id }, 
+    process.env.SECRET)
+    
+    return {
+      token,
+      user: guest
+    }
+  },
   async login(root, args, context) {
     // Get user details from tmc
     let userDetails

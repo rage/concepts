@@ -19,10 +19,6 @@ type AggregateCourseLink {
   count: Int!
 }
 
-type AggregateGuest {
-  count: Int!
-}
-
 type AggregateProject {
   count: Int!
 }
@@ -1365,88 +1361,6 @@ input CourseWhereUniqueInput {
 
 scalar DateTime
 
-type Guest {
-  id: ID!
-  createdAt: DateTime!
-}
-
-type GuestConnection {
-  pageInfo: PageInfo!
-  edges: [GuestEdge]!
-  aggregate: AggregateGuest!
-}
-
-input GuestCreateInput {
-  id: ID
-}
-
-type GuestEdge {
-  node: Guest!
-  cursor: String!
-}
-
-enum GuestOrderByInput {
-  id_ASC
-  id_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type GuestPreviousValues {
-  id: ID!
-  createdAt: DateTime!
-}
-
-type GuestSubscriptionPayload {
-  mutation: MutationType!
-  node: Guest
-  updatedFields: [String!]
-  previousValues: GuestPreviousValues
-}
-
-input GuestSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: GuestWhereInput
-  AND: [GuestSubscriptionWhereInput!]
-  OR: [GuestSubscriptionWhereInput!]
-  NOT: [GuestSubscriptionWhereInput!]
-}
-
-input GuestWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  AND: [GuestWhereInput!]
-  OR: [GuestWhereInput!]
-  NOT: [GuestWhereInput!]
-}
-
-input GuestWhereUniqueInput {
-  id: ID
-}
-
 scalar Long
 
 type Mutation {
@@ -1474,9 +1388,6 @@ type Mutation {
   upsertCourseLink(where: CourseLinkWhereUniqueInput!, create: CourseLinkCreateInput!, update: CourseLinkUpdateInput!): CourseLink!
   deleteCourseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   deleteManyCourseLinks(where: CourseLinkWhereInput): BatchPayload!
-  createGuest(data: GuestCreateInput!): Guest!
-  deleteGuest(where: GuestWhereUniqueInput!): Guest
-  deleteManyGuests(where: GuestWhereInput): BatchPayload!
   createProject(data: ProjectCreateInput!): Project!
   updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
   updateManyProjects(data: ProjectUpdateManyMutationInput!, where: ProjectWhereInput): BatchPayload!
@@ -1819,9 +1730,6 @@ type Query {
   courseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink]!
   courseLinksConnection(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseLinkConnection!
-  guest(where: GuestWhereUniqueInput!): Guest
-  guests(where: GuestWhereInput, orderBy: GuestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Guest]!
-  guestsConnection(where: GuestWhereInput, orderBy: GuestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GuestConnection!
   project(where: ProjectWhereUniqueInput!): Project
   projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
   projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
@@ -2109,7 +2017,6 @@ type Subscription {
   conceptLink(where: ConceptLinkSubscriptionWhereInput): ConceptLinkSubscriptionPayload
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   courseLink(where: CourseLinkSubscriptionWhereInput): CourseLinkSubscriptionPayload
-  guest(where: GuestSubscriptionWhereInput): GuestSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
   resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
   uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
@@ -2300,11 +2207,12 @@ input URLWhereUniqueInput {
 
 type User {
   id: ID!
-  tmcId: Int!
+  tmcId: Int
   role: Role!
   asWorkspaceOwner(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
   asProjectOwner(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
   asProjectParticipant(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
+  createdAt: DateTime!
 }
 
 type UserConnection {
@@ -2315,7 +2223,7 @@ type UserConnection {
 
 input UserCreateInput {
   id: ID
-  tmcId: Int!
+  tmcId: Int
   role: Role!
   asWorkspaceOwner: WorkspaceCreateManyWithoutOwnerInput
   asProjectOwner: ProjectCreateManyWithoutOwnerInput
@@ -2344,7 +2252,7 @@ input UserCreateOneWithoutAsWorkspaceOwnerInput {
 
 input UserCreateWithoutAsProjectOwnerInput {
   id: ID
-  tmcId: Int!
+  tmcId: Int
   role: Role!
   asWorkspaceOwner: WorkspaceCreateManyWithoutOwnerInput
   asProjectParticipant: ProjectCreateManyWithoutParticipantsInput
@@ -2352,7 +2260,7 @@ input UserCreateWithoutAsProjectOwnerInput {
 
 input UserCreateWithoutAsProjectParticipantInput {
   id: ID
-  tmcId: Int!
+  tmcId: Int
   role: Role!
   asWorkspaceOwner: WorkspaceCreateManyWithoutOwnerInput
   asProjectOwner: ProjectCreateManyWithoutOwnerInput
@@ -2360,7 +2268,7 @@ input UserCreateWithoutAsProjectParticipantInput {
 
 input UserCreateWithoutAsWorkspaceOwnerInput {
   id: ID
-  tmcId: Int!
+  tmcId: Int
   role: Role!
   asProjectOwner: ProjectCreateManyWithoutOwnerInput
   asProjectParticipant: ProjectCreateManyWithoutParticipantsInput
@@ -2378,12 +2286,15 @@ enum UserOrderByInput {
   tmcId_DESC
   role_ASC
   role_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type UserPreviousValues {
   id: ID!
-  tmcId: Int!
+  tmcId: Int
   role: Role!
+  createdAt: DateTime!
 }
 
 input UserScalarWhereInput {
@@ -2413,6 +2324,14 @@ input UserScalarWhereInput {
   role_not: Role
   role_in: [Role!]
   role_not_in: [Role!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   AND: [UserScalarWhereInput!]
   OR: [UserScalarWhereInput!]
   NOT: [UserScalarWhereInput!]
@@ -2585,6 +2504,14 @@ input UserWhereInput {
   asProjectParticipant_every: ProjectWhereInput
   asProjectParticipant_some: ProjectWhereInput
   asProjectParticipant_none: ProjectWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

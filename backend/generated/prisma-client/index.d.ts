@@ -20,7 +20,6 @@ export interface Exists {
   conceptLink: (where?: ConceptLinkWhereInput) => Promise<boolean>;
   course: (where?: CourseWhereInput) => Promise<boolean>;
   courseLink: (where?: CourseLinkWhereInput) => Promise<boolean>;
-  guest: (where?: GuestWhereInput) => Promise<boolean>;
   project: (where?: ProjectWhereInput) => Promise<boolean>;
   resource: (where?: ResourceWhereInput) => Promise<boolean>;
   uRL: (where?: URLWhereInput) => Promise<boolean>;
@@ -125,25 +124,6 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => CourseLinkConnectionPromise;
-  guest: (where: GuestWhereUniqueInput) => GuestNullablePromise;
-  guests: (args?: {
-    where?: GuestWhereInput;
-    orderBy?: GuestOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => FragmentableArray<Guest>;
-  guestsConnection: (args?: {
-    where?: GuestWhereInput;
-    orderBy?: GuestOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => GuestConnectionPromise;
   project: (where: ProjectWhereUniqueInput) => ProjectNullablePromise;
   projects: (args?: {
     where?: ProjectWhereInput;
@@ -311,9 +291,6 @@ export interface Prisma {
   }) => CourseLinkPromise;
   deleteCourseLink: (where: CourseLinkWhereUniqueInput) => CourseLinkPromise;
   deleteManyCourseLinks: (where?: CourseLinkWhereInput) => BatchPayloadPromise;
-  createGuest: (data: GuestCreateInput) => GuestPromise;
-  deleteGuest: (where: GuestWhereUniqueInput) => GuestPromise;
-  deleteManyGuests: (where?: GuestWhereInput) => BatchPayloadPromise;
   createProject: (data: ProjectCreateInput) => ProjectPromise;
   updateProject: (args: {
     data: ProjectUpdateInput;
@@ -415,9 +392,6 @@ export interface Subscription {
   courseLink: (
     where?: CourseLinkSubscriptionWhereInput
   ) => CourseLinkSubscriptionPayloadSubscription;
-  guest: (
-    where?: GuestSubscriptionWhereInput
-  ) => GuestSubscriptionPayloadSubscription;
   project: (
     where?: ProjectSubscriptionWhereInput
   ) => ProjectSubscriptionPayloadSubscription;
@@ -459,7 +433,9 @@ export type UserOrderByInput =
   | "tmcId_ASC"
   | "tmcId_DESC"
   | "role_ASC"
-  | "role_DESC";
+  | "role_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC";
 
 export type CourseLinkOrderByInput =
   | "id_ASC"
@@ -508,12 +484,6 @@ export type URLOrderByInput =
   | "id_DESC"
   | "address_ASC"
   | "address_DESC";
-
-export type GuestOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -650,6 +620,14 @@ export interface UserWhereInput {
   asProjectParticipant_every?: Maybe<ProjectWhereInput>;
   asProjectParticipant_some?: Maybe<ProjectWhereInput>;
   asProjectParticipant_none?: Maybe<ProjectWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
@@ -915,38 +893,6 @@ export type CourseLinkWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
-export type GuestWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface GuestWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<GuestWhereInput[] | GuestWhereInput>;
-  OR?: Maybe<GuestWhereInput[] | GuestWhereInput>;
-  NOT?: Maybe<GuestWhereInput[] | GuestWhereInput>;
-}
-
 export type ProjectWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
@@ -988,7 +934,7 @@ export interface UserCreateOneInput {
 
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
-  tmcId: Int;
+  tmcId?: Maybe<Int>;
   role: Role;
   asWorkspaceOwner?: Maybe<WorkspaceCreateManyWithoutOwnerInput>;
   asProjectOwner?: Maybe<ProjectCreateManyWithoutOwnerInput>;
@@ -1034,7 +980,7 @@ export interface UserCreateOneWithoutAsProjectOwnerInput {
 
 export interface UserCreateWithoutAsProjectOwnerInput {
   id?: Maybe<ID_Input>;
-  tmcId: Int;
+  tmcId?: Maybe<Int>;
   role: Role;
   asWorkspaceOwner?: Maybe<WorkspaceCreateManyWithoutOwnerInput>;
   asProjectParticipant?: Maybe<ProjectCreateManyWithoutParticipantsInput>;
@@ -1082,7 +1028,7 @@ export interface UserCreateOneWithoutAsWorkspaceOwnerInput {
 
 export interface UserCreateWithoutAsWorkspaceOwnerInput {
   id?: Maybe<ID_Input>;
-  tmcId: Int;
+  tmcId?: Maybe<Int>;
   role: Role;
   asProjectOwner?: Maybe<ProjectCreateManyWithoutOwnerInput>;
   asProjectParticipant?: Maybe<ProjectCreateManyWithoutParticipantsInput>;
@@ -1113,7 +1059,7 @@ export interface UserCreateManyWithoutAsProjectParticipantInput {
 
 export interface UserCreateWithoutAsProjectParticipantInput {
   id?: Maybe<ID_Input>;
-  tmcId: Int;
+  tmcId?: Maybe<Int>;
   role: Role;
   asWorkspaceOwner?: Maybe<WorkspaceCreateManyWithoutOwnerInput>;
   asProjectOwner?: Maybe<ProjectCreateManyWithoutOwnerInput>;
@@ -1760,6 +1706,14 @@ export interface UserScalarWhereInput {
   role_not?: Maybe<Role>;
   role_in?: Maybe<Role[] | Role>;
   role_not_in?: Maybe<Role[] | Role>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
   OR?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
   NOT?: Maybe<UserScalarWhereInput[] | UserScalarWhereInput>;
@@ -2974,10 +2928,6 @@ export interface CourseLinkUpdateManyMutationInput {
   official?: Maybe<Boolean>;
 }
 
-export interface GuestCreateInput {
-  id?: Maybe<ID_Input>;
-}
-
 export interface ProjectCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
@@ -3188,17 +3138,6 @@ export interface CourseLinkSubscriptionWhereInput {
   NOT?: Maybe<
     CourseLinkSubscriptionWhereInput[] | CourseLinkSubscriptionWhereInput
   >;
-}
-
-export interface GuestSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<GuestWhereInput>;
-  AND?: Maybe<GuestSubscriptionWhereInput[] | GuestSubscriptionWhereInput>;
-  OR?: Maybe<GuestSubscriptionWhereInput[] | GuestSubscriptionWhereInput>;
-  NOT?: Maybe<GuestSubscriptionWhereInput[] | GuestSubscriptionWhereInput>;
 }
 
 export interface ProjectSubscriptionWhereInput {
@@ -3420,8 +3359,9 @@ export interface ConceptNullablePromise
 
 export interface User {
   id: ID_Output;
-  tmcId: Int;
+  tmcId?: Int;
   role: Role;
+  createdAt: DateTimeOutput;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -3455,6 +3395,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface UserSubscription
@@ -3492,6 +3433,7 @@ export interface UserSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserNullablePromise
@@ -3527,6 +3469,7 @@ export interface UserNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface Workspace {
@@ -4267,84 +4210,6 @@ export interface AggregateCourseLinkSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface Guest {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-}
-
-export interface GuestPromise extends Promise<Guest>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-}
-
-export interface GuestSubscription
-  extends Promise<AsyncIterator<Guest>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface GuestNullablePromise
-  extends Promise<Guest | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-}
-
-export interface GuestConnection {
-  pageInfo: PageInfo;
-  edges: GuestEdge[];
-}
-
-export interface GuestConnectionPromise
-  extends Promise<GuestConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<GuestEdge>>() => T;
-  aggregate: <T = AggregateGuestPromise>() => T;
-}
-
-export interface GuestConnectionSubscription
-  extends Promise<AsyncIterator<GuestConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<GuestEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateGuestSubscription>() => T;
-}
-
-export interface GuestEdge {
-  node: Guest;
-  cursor: String;
-}
-
-export interface GuestEdgePromise extends Promise<GuestEdge>, Fragmentable {
-  node: <T = GuestPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface GuestEdgeSubscription
-  extends Promise<AsyncIterator<GuestEdge>>,
-    Fragmentable {
-  node: <T = GuestSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateGuest {
-  count: Int;
-}
-
-export interface AggregateGuestPromise
-  extends Promise<AggregateGuest>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateGuestSubscription
-  extends Promise<AsyncIterator<AggregateGuest>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
 export interface ProjectConnection {
   pageInfo: PageInfo;
   edges: ProjectEdge[];
@@ -4817,50 +4682,6 @@ export interface CourseLinkPreviousValuesSubscription
   official: () => Promise<AsyncIterator<Boolean>>;
 }
 
-export interface GuestSubscriptionPayload {
-  mutation: MutationType;
-  node: Guest;
-  updatedFields: String[];
-  previousValues: GuestPreviousValues;
-}
-
-export interface GuestSubscriptionPayloadPromise
-  extends Promise<GuestSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = GuestPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = GuestPreviousValuesPromise>() => T;
-}
-
-export interface GuestSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<GuestSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = GuestSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = GuestPreviousValuesSubscription>() => T;
-}
-
-export interface GuestPreviousValues {
-  id: ID_Output;
-  createdAt: DateTimeOutput;
-}
-
-export interface GuestPreviousValuesPromise
-  extends Promise<GuestPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  createdAt: () => Promise<DateTimeOutput>;
-}
-
-export interface GuestPreviousValuesSubscription
-  extends Promise<AsyncIterator<GuestPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
 export interface ProjectSubscriptionPayload {
   mutation: MutationType;
   node: Project;
@@ -5023,8 +4844,9 @@ export interface UserSubscriptionPayloadSubscription
 
 export interface UserPreviousValues {
   id: ID_Output;
-  tmcId: Int;
+  tmcId?: Int;
   role: Role;
+  createdAt: DateTimeOutput;
 }
 
 export interface UserPreviousValuesPromise
@@ -5033,6 +4855,7 @@ export interface UserPreviousValuesPromise
   id: () => Promise<ID_Output>;
   tmcId: () => Promise<Int>;
   role: () => Promise<Role>;
+  createdAt: () => Promise<DateTimeOutput>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -5041,6 +4864,7 @@ export interface UserPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   tmcId: () => Promise<AsyncIterator<Int>>;
   role: () => Promise<AsyncIterator<Role>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface WorkspaceSubscriptionPayload {
@@ -5130,10 +4954,6 @@ export type Long = string;
 export const models: Model[] = [
   {
     name: "User",
-    embedded: false
-  },
-  {
-    name: "Guest",
     embedded: false
   },
   {
