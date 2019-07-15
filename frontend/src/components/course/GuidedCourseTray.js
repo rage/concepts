@@ -93,13 +93,10 @@ const GuidedCourseTray = ({
   activeCourseId,
   courseId,
   workspaceId,
-  courseLinks
+  courseLinks,
+  coursesQuery
 }) => {
   const [filterKeyword, setFilterKeyword] = useState('')
-
-  const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
-    variables: { workspaceId }
-  })
 
   const classes = useStyles()
 

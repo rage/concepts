@@ -6,7 +6,6 @@ import FocusOverlay, { useFocusOverlay } from './FocusOverlay'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    position: 'fixed',
     zIndex: '200',
     width: '400px',
     display: 'flex',
