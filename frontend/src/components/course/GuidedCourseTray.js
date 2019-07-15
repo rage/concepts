@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -13,6 +13,8 @@ import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 import useCreateCourseDialog from './useCreateCourseDialog'
 
 import { useErrorStateValue } from '../../store'
+
+import { useInfoBox } from '../common/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -100,12 +102,29 @@ const GuidedCourseTray = ({
 
   const classes = useStyles()
 
+  const infoBox = useInfoBox()
+
+  const createButtonRef = useRef()
+
+  const checkboxRef = useRef()
+
   const {
     openCreateCourseDialog,
     CourseCreateDialog
   } = useCreateCourseDialog(workspaceId)
 
   const client = useApolloClient()
+
+  useEffect(() => {
+    const courses = coursesQuery.data.coursesByWorkspace
+      && coursesQuery.data.coursesByWorkspace
+    const enoughCourses = courses && courses.length === 1
+    if (courseTrayOpen && enoughCourses) {
+      infoBox.open(createButtonRef.current, 'left-start', 'Do dis männ', '...', 0, 50)
+    } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
+      infoBox.open(checkboxRef.current, 'left-start', 'Also do dis männ', '...', 0, 50)
+    }
+  }, [courseTrayOpen, coursesQuery, courseLinks])
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -190,7 +209,7 @@ const GuidedCourseTray = ({
       />
 
       {coursesQuery.data.coursesByWorkspace &&
-        <List disablePadding className={classes.list}>
+        <List ref={checkboxRef} disablePadding className={classes.list}>
           {coursesQuery.data.coursesByWorkspace
             .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
             .map(course =>
@@ -210,6 +229,7 @@ const GuidedCourseTray = ({
       }
 
       <Button
+        ref={createButtonRef}
         onClick={openCreateCourseDialog}
         className={classes.button}
         variant='contained'

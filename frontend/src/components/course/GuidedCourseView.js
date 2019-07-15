@@ -86,11 +86,11 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   useEffect(() => {
     const courses = coursesQuery.data.coursesByWorkspace
       && coursesQuery.data.coursesByWorkspace
-
     const conceptsExist = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.length === 1 && loggedIn
+    const enoughCourses = courses && courses.length === 1
 
-    if ((courses && courses.length === 1) && !courseTrayOpen && conceptsExist) {
+    if (enoughCourses && !courseTrayOpen && conceptsExist) {
       infoBox.open(trayFabRef.current, 'left-start', 'Click dis männ', '...', 0, 50)
     }
   }, [coursesQuery, courseTrayOpen])
