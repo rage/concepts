@@ -10,7 +10,7 @@ const WorkspaceQueries = {
       id: args.id
     })
     if (!workspace.public) {
-      checkAccess(context, { allowStaff: true, allowStudent: true })
+      checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true })
     }
     return workspace
   },
@@ -18,6 +18,7 @@ const WorkspaceQueries = {
     checkAccess(context, {
       allowStudent: true,
       allowStaff: true,
+      allowGuest: true,
       verifyUser: true,
       userId: args.ownerId
     })

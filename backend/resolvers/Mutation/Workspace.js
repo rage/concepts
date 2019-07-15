@@ -2,13 +2,19 @@ const { checkAccess } = require('../../accessControl')
 
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
-    checkAccess(context, { allowStudent: true, allowStaff: true })
+    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
     let data = {
       name: args.name,
       owner: {
         connect: { id: context.user.id }
       }
     }
+    
+    // Set guest workspaces to be public
+    if (context.role === 'GUEST') {
+      data.public = true
+    }
+
     if (args.projectId !== undefined) {
       data.project = {
         connect: { id: args.projectId }

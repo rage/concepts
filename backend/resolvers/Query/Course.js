@@ -6,7 +6,7 @@ const CourseQueries = {
     return context.prisma.courses()
   },
   courseById(root, args, context) {
-    checkAccess(context, { allowStaff: true, allowStudent: true })
+    checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true })
     return context.prisma.course({
       id: args.id
     })
@@ -22,7 +22,7 @@ const CourseQueries = {
       })
 
     if (courses.length > 0) {
-      checkAccess(context, { allowStaff: true, allowStudent: true })
+      checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true })
       return await context.prisma.course({
         id: args.courseId
       })
@@ -31,7 +31,7 @@ const CourseQueries = {
   },
   async coursesByWorkspace(root, args, context) {
     const user = await context.prisma.workspace({ id: args.workspaceId }).owner()
-    checkAccess(context, { allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id })
+    checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id })
     return await context.prisma.courses({
       where: {
         workspace: {
