@@ -2,7 +2,7 @@ const { checkAccess, checkUser } = require('../../accessControl')
 
 const ConceptMutations = {
   async createConcept(root, { name, description, official, courseId, workspaceId }, context) {
-    checkAccess(context, { allowStudent: true, allowStaff: true })
+    checkAccess(context, { allowGuest:true, allowStudent: true, allowStaff: true })
     let data = {
       name,
       createdBy: { connect: { id: context.user.id } },
@@ -17,7 +17,7 @@ const ConceptMutations = {
 
   async updateConcept(root, { id, name, description }, context) {
     const user = await context.prisma.concept({ id }).createdBy()
-    checkAccess(context, { allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
+    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
     let data = {}
     if (name !== undefined) data.name = name
     if (description !== undefined) data.description = description
@@ -32,7 +32,7 @@ const ConceptMutations = {
     const user = await context.prisma.concept({
       id: args.id
     }).createdBy()
-    checkAccess(context, { allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
+    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
     await context.prisma.deleteManyConceptLinks({
       OR: [
         {
