@@ -61,7 +61,8 @@ const ActiveCourse = ({
   onClick,
   addingLink,
   setAddingLink,
-  toggleConcept
+  toggleConcept,
+  courseLinks
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -70,8 +71,12 @@ const ActiveCourse = ({
   useEffect(() => {
     if (course.concepts.length === 0) {
       infoBox.open(createButtonRef.current, 'right-start', 'HMM', '...', 0, 50)
+    } else if (courseLinks.length > 0 && !addingLink) {
+      infoBox.open(conceptRef.current, 'right-start', 'HMM', '...', 0, 20)
+    } else {
+      infoBox.close()
     }
-  }, [course.concepts.length])
+  }, [course.concepts.length, addingLink])
 
   const {
     openCreateConceptDialog,
@@ -90,6 +95,7 @@ const ActiveCourse = ({
   const client = useApolloClient()
 
   const createButtonRef = useRef()
+  const conceptRef = useRef()
 
 
   const includedIn = (set, object) =>
@@ -144,8 +150,10 @@ const ActiveCourse = ({
       </div>
 
       <List className={classes.list}>
-        {course.concepts.map(concept =>
-          <ActiveConcept concept={concept}
+        {course.concepts.map((concept, index) =>
+          <ActiveConcept
+            conceptRef={index === 0 && conceptRef}
+            concept={concept}
             key={concept.id}
             activeConceptIds={activeConceptIds}
             addingLink={addingLink}

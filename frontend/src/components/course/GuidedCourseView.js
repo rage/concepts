@@ -156,6 +156,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
               setAddingLink={setAddingLink}
               toggleConcept={toggleConcept}
               courseTrayOpen={courseTrayOpen}
+              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseContainer
