@@ -2,7 +2,7 @@ const { checkAccess } = require('../../accessControl')
 
 const ConceptLink = {
   async createConceptLink(root, { official, to, from, workspaceId }, context) {
-    checkAccess(context, { allowStudent: true, allowStaff: true })
+    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
     const linkExists = await context.prisma.$exists.conceptLink({
       AND: [
         { workspace: { id: workspaceId } },
@@ -30,7 +30,7 @@ const ConceptLink = {
     return context.prisma.createConceptLink(data)
   },
   async createConceptLinks(root, { official, to, from, workspaceId }, context) {
-    checkAccess(context, { allowStudent: true, allowStaff: true })
+    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
     return await from.map(async fromConceptId =>
       await context.prisma.createConceptLink({
         to: {
@@ -69,7 +69,7 @@ const ConceptLink = {
   },
   async deleteConceptLink(root, args, context) {
     const user = await context.prisma.conceptLink({ id: args.id }).createdBy()
-    checkAccess(context, { allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
+    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
     return context.prisma.deleteConceptLink({
       id: args.id
     })

@@ -53,7 +53,7 @@ const LandingView = (props) => {
     if (!loggedIn) {
       await createGuestAccount()
     }
-    props.history.push('/user') // LMFAO!
+    props.history.push('/user')
   }
 
   return (

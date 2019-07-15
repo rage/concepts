@@ -95,8 +95,11 @@ const AuthenticationIcon = withRouter(({ history }) => {
             }}
             onClose={handleAnchorClose}
           >
-            <MenuItem onClick={navigateToAccount}>Account</MenuItem>
-            <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
+            <MenuItem onClick={navigateToAccount}>Workspaces</MenuItem>
+            {
+              loggedIn && JSON.parse(localStorage.current_user).user.role !== 'GUEST' &&
+              <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
+            }
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </div>
