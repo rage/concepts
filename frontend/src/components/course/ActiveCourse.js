@@ -69,14 +69,17 @@ const ActiveCourse = ({
   const { loggedIn } = useLoginStateValue()[0]
 
   useEffect(() => {
+    const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
+    const prereqConceptExists = courseLinks.find(link => link.from.concepts.length > 0)
+    if (hasLinks) return
     if (course.concepts.length === 0) {
       infoBox.open(createButtonRef.current, 'right-start', 'HMM', '...', 0, 50)
-    } else if (courseLinks.length > 0 && !addingLink) {
-      infoBox.open(conceptRef.current, 'right-start', 'HMM', '...', 0, 20)
-    } else {
-      infoBox.close()
     }
-  }, [course.concepts.length, addingLink])
+    if (!prereqConceptExists) return
+    if (courseLinks.length > 0 && !addingLink) {
+      infoBox.open(conceptRef.current, 'right-start', 'HMM', '...', 0, 20)
+    }
+  }, [course.concepts, addingLink, courseLinks])
 
   const {
     openCreateConceptDialog,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Course from './Course'
 import Typography from '@material-ui/core/Typography'
 
@@ -7,6 +7,8 @@ import Masonry from './Masonry'
 import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
+
+import { useInfoBox } from '../common/InfoBox'
 
 const GuidedCourseContainer = ({
   courseTrayOpen,
@@ -18,6 +20,16 @@ const GuidedCourseContainer = ({
   workspaceId,
   courseId
 }) => {
+
+  const infoBox = useInfoBox()
+
+  const connectionRef = useRef()
+
+  useEffect(() => {
+    if (addingLink) {
+      infoBox.open(connectionRef.current, 'right-start', 'Now attach here', '...', 0, 20)
+    }
+  }, [addingLink])
 
   const {
     openCreateConceptDialog,
@@ -41,10 +53,11 @@ const GuidedCourseContainer = ({
       courses && courses.length !== 0 ?
         <div onClick={() => setAddingLink(null)} style={{ gridArea: 'courses', overflowY: 'auto' }}>
           {courses && <Masonry courseTrayOpen={courseTrayOpen}>
-            {courses.map(course =>
+            {courses.map((course, index) =>
               <Course
                 key={course.id}
                 course={course}
+                connectionRef={index === 0 && connectionRef}
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}

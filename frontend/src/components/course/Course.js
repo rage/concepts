@@ -60,6 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 const Course = ({
   course,
+  connectionRef,
   activeCourseId,
   addingLink,
   setAddingLink,
@@ -93,10 +94,11 @@ const Course = ({
 
         <CardContent>
           <List className={classes.list}>
-            {course.concepts.map(concept =>
+            {course.concepts.map((concept, index) =>
               <Concept concept={concept}
                 key={concept.id}
                 course={course}
+                connectionRef={index === 0 && connectionRef}
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
