@@ -11,6 +11,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     zIndex: 100,
     animation: '$fadein .5s',
+    transition: 'clip-path .5s linear',
     '&.fadeout': {
       opacity: 0,
       transition: 'opacity .5s ease-out'
@@ -21,8 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 
   box: {
-    position: 'fixed',
-    // display: 'none'
+    position: 'fixed'
   },
 
   '@keyframes fadein': {
