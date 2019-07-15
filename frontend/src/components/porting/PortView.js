@@ -16,6 +16,9 @@ import { useErrorStateValue, useLoginStateValue } from '../../store'
 
 import Button from '@material-ui/core/Button'
 import { useMutation } from 'react-apollo-hooks'
+import Ajv from 'ajv'
+import schema from './port.schema'
+
 import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
@@ -103,6 +106,9 @@ const TEMPLATE = `{
 }
 `
 
+const ajv = Ajv()
+const validateData = ajv.compile(schema)
+
 const PortView = ({ classes }) => {
   const [data, setData] = useState('')
   const [buttonText, setButtonText] = useState('Import')
@@ -120,6 +126,30 @@ const PortView = ({ classes }) => {
     if (data.length === 0) {
       setData(TEMPLATE)
     }
+  }
+
+  const validateJSON = (jsonData) => {
+    if (!validateData(jsonData)) {
+      const error = validateData.errors[0]
+      let errorMessage
+      if (error.keyword === 'required') {
+        errorMessage = error['message']
+      } else if (error.keyword === 'additionalProperties') {
+        errorMessage = `Unknown property '${error.params.additionalProperty}'`
+      } else if (error.keyword === 'type') {
+        errorMessage = `${error.dataPath.replace('.', '')} ${error.message}`
+      } else if (error.keyword === 'oneOf') {
+        errorMessage = 'should have either workspace or workspaceId'
+      }
+
+      errorDispatch({
+        type: 'setError',
+        data: errorMessage
+      })
+
+      return false
+    }
+    return true
   }
 
   const openFile = (event) => {
@@ -150,15 +180,30 @@ const PortView = ({ classes }) => {
     fileReader.readAsText(event.target.files[0])
   }
 
-  const sendData = async (jsonData) => {
+  const sendData = async (data) => {
     if (loading || success) return
+
+    let jsonData
+    try {
+      jsonData = JSON.parse(data)
+    } catch (error) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Malformed JSON'
+      })
+      return
+    }
+
+    if(!validateJSON(jsonData)) {
+      return
+    }
 
     setLoading(true)
 
     try {
       await dataPortingMutation({
         variables: {
-          data: jsonData
+          data: data
         }
       })
 
@@ -171,7 +216,7 @@ const PortView = ({ classes }) => {
     } catch (err) {
       errorDispatch({
         type: 'setError',
-        data: 'Malformated json'
+        data: 'Error sending data'
       })
     }
 

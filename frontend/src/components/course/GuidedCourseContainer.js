@@ -39,7 +39,7 @@ const GuidedCourseContainer = ({
     </Typography>
     {
       courses && courses.length !== 0 ?
-        <div style={{ gridArea: 'courses', overflowY: 'auto' }}>
+        <div onClick={() => setAddingLink(null)} style={{ gridArea: 'courses', overflowY: 'auto' }}>
           {courses && <Masonry courseTrayOpen={courseTrayOpen}>
             {courses.map(course =>
               <Course
