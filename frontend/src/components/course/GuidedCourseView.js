@@ -49,7 +49,6 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   const classes = useStyles()
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
-  const [redrawLines, setRedrawLines] = useState(0)
   const [addingLink, setAddingLink] = useState(null)
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
   const conceptLinkMenuRef = useRef()
@@ -100,10 +99,6 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   const updateCourse = useMutation(UPDATE_COURSE, {
     update: updateCourseUpdate(workspaceId)
   })
-
-  useEffect(() => {
-    setRedrawLines(redrawLines + 1)
-  }, [workspaceQuery, prereqQuery, courseQuery])
 
   const toggleConcept = (id) => () => {
     const alreadyActive = activeConceptIds.find(i => i === id)
@@ -187,8 +182,8 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
                 key={`concept-link-${link.id}`} within='course-view' delay={1}
                 active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
                 from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-                redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
-                onContextMenu={handleMenuOpen} posOffsets={{ x0: -5, x1: +6 }} />
+                fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
+                posOffsets={{ x0: -5, x1: +6 }} />
             )) : null
         ))}
       <div ref={conceptLinkMenuRef} style={{

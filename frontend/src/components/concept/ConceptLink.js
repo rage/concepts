@@ -37,10 +37,6 @@ export default class ConceptLink extends Component {
   }
 
   shouldComponentUpdate() {
-    if (this.props.redrawLines !== this.prevRedrawLines) {
-      this.prevRedrawLines = this.props.redrawLines
-      return true
-    }
     if (this.positionChanged) {
       this.positionChanged = false
       return true
