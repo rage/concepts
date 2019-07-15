@@ -35,6 +35,9 @@ type Query {
   linksToConcept(id: ID!): [ConceptLink!]!
   linksFromConcept(id: ID!): [ConceptLink!]!
 
+  # Guests
+  allGuests: [Guest!]!
+
   # Porting queries
   exportData(workspaceId: ID!): String!
 }
@@ -78,10 +81,17 @@ type Mutation {
   # Porting mutations
   importData(data: String!): Workspace
 
+  # Guest
+  createGuest: Guest!
+
   ## Resource mutation
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
+type Guest {
+  id: ID!
+  createdAt: DateTime!
+}
 
 type User {
   id: ID!

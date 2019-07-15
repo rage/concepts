@@ -1,54 +1,58 @@
-'use strict'
-Object.defineProperty(exports, '__esModule', { value: true })
-var prisma_lib_1 = require('prisma-client-lib')
-var typeDefs = require('./prisma-schema').typeDefs
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var prisma_lib_1 = require("prisma-client-lib");
+var typeDefs = require("./prisma-schema").typeDefs;
 
 var models = [
   {
-    name: 'User',
+    name: "User",
     embedded: false
   },
   {
-    name: 'Role',
+    name: "Guest",
     embedded: false
   },
   {
-    name: 'Project',
+    name: "Role",
     embedded: false
   },
   {
-    name: 'Workspace',
+    name: "Project",
     embedded: false
   },
   {
-    name: 'CourseLink',
+    name: "Workspace",
     embedded: false
   },
   {
-    name: 'Course',
+    name: "CourseLink",
     embedded: false
   },
   {
-    name: 'ConceptLink',
+    name: "Course",
     embedded: false
   },
   {
-    name: 'Concept',
+    name: "ConceptLink",
     embedded: false
   },
   {
-    name: 'Resource',
+    name: "Concept",
     embedded: false
   },
   {
-    name: 'URL',
+    name: "Resource",
+    embedded: false
+  },
+  {
+    name: "URL",
     embedded: false
   }
-]
+];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `${process.env['ENDPOINT']}`,
-  secret: '$(env:SECRET)'
-})
-exports.prisma = new exports.Prisma()
+  endpoint: `${process.env["ENDPOINT"]}`,
+  secret: `$(env:SECRET)`
+});
+exports.prisma = new exports.Prisma();

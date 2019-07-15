@@ -6,6 +6,7 @@ const workspace = require('./Workspace')
 const project = require('./Project')
 const user = require('./User')
 const port = require('./Port')
+const guest = require('./Guest')
 
 module.exports = {
   ...concept,
@@ -15,5 +16,6 @@ module.exports = {
   ...workspace,
   ...project,
   ...user,
-  ...port
+  ...port,
+  ...guest
 }
