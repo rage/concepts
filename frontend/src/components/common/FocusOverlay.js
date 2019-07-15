@@ -47,24 +47,24 @@ const FocusOverlay = ({ children, padding = 5 }) => {
   const overlay = useRef()
   const box = useRef()
   const update = () => {
-    if (!state.element || !overlay.current) {
+    if (!state.element || !overlay.current || !box.current) {
       return
     }
     const rect = state.element.getBoundingClientRect()
     if (!rect) {
       return
     }
-    const top = rect.top - padding,
-      left = rect.left - padding,
-      bottom = rect.bottom + padding,
-      right = rect.right + padding
-    box.current.style.top = top
-    box.current.style.left = left
-    box.current.style.bottom = bottom
-    box.current.style.right = right
+    const y = rect.top - padding,
+      x = rect.left - padding,
+      yEnd = rect.bottom + padding,
+      xEnd = rect.right + padding
+    box.current.style.top = `${y}px`
+    box.current.style.left = `${x}px`
+    box.current.style.height = `${yEnd - y}px`
+    box.current.style.width = `${xEnd - x}px`
     overlay.current.style.clipPath =
-      `polygon(0 0, 0 100%,  ${left}px 100%,  ${left}px ${top}px,  ${right}px ${top}px,
-               ${right}px ${bottom}px,  ${left}px ${bottom}px, ${left}px 100%,  100% 100%, 100% 0)`
+      `polygon(0 0, 0 100%,  ${x}px 100%,  ${x}px ${y}px,  ${xEnd}px ${y}px,
+               ${xEnd}px ${yEnd}px,  ${x}px ${yEnd}px, ${x}px 100%,  100% 100%, 100% 0)`
   }
 
   useEffect(() => {
