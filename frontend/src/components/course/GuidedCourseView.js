@@ -208,7 +208,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
             .filter(link => link.from.id === concept.courses[0].id)
             ? concept.linksToConcept.map(link => (
               <ConceptLink
-                key={`concept-link-${link.id}`} within='course-view' delay={1}
+                key={`concept-link-${link.id}`} delay={1}
                 active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
                 from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
                 fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
@@ -240,7 +240,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
         <MenuItem onClick={deleteLink}>Delete link</MenuItem>
       </Menu>
       {addingLink && <ConceptLink
-        key='concept-link-creating' within='course-view' active={true}
+        key='concept-link-creating' active={true}
         from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
         followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
       />}
