@@ -16,7 +16,9 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     zIndex: '200',
-    transition: 'transform .5s linear'
+    '&.enableTransition': {
+      transition: 'transform .5s linear'
+    }
   },
   infoHeader: {
     display: 'flex',
@@ -59,6 +61,7 @@ const InfoBoxContext = createContext(null)
 
 const InfoBox = ({ children }) => {
   const [state, setState] = useState({
+    enableTransition: false,
     open: false,
     offset: {
       alignment: '0px',
@@ -77,6 +80,7 @@ const InfoBox = ({ children }) => {
     overlay.open(target)
     setState({
       ...state,
+      enableTransition: state.open,
       anchorEl: overlay.box.current,
       open: true,
       placement: newPlacement,
@@ -88,6 +92,7 @@ const InfoBox = ({ children }) => {
 
   const closePopper = () => {
     setState({
+      enableTransition: false,
       open: false,
       offset: {
         alignment: '0px',
@@ -116,7 +121,7 @@ const InfoBox = ({ children }) => {
         placement={placement}
         modifiers={POPPER_MODIFIERS}
         transition
-        className={classes.popper}
+        className={`${classes.popper} ${state.enableTransition ? 'enableTransition' : ''}`}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={500}>

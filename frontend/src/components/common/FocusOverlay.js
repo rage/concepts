@@ -11,10 +11,12 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     zIndex: 100,
     animation: '$fadein .5s',
-    transition: 'clip-path .5s linear',
     '&.fadeout': {
       opacity: 0,
       transition: 'opacity .5s ease-out'
+    },
+    '&.enableTransition': {
+      transition: 'clip-path .5s linear'
     },
     '&.hidden': {
       display: 'none'
@@ -39,6 +41,7 @@ const FocusOverlayContext = createContext(null)
 
 const FocusOverlay = ({ children, padding = 5 }) => {
   const [state, setState] = useState({
+    enableTransition: false,
     fadeout: null,
     element: null
   })
@@ -78,6 +81,7 @@ const FocusOverlay = ({ children, padding = 5 }) => {
       clearTimeout(state.fadeout)
     }
     setState({
+      enableTransition: state.element !== null,
       element: elem,
       fadeout: null
     })
@@ -88,9 +92,11 @@ const FocusOverlay = ({ children, padding = 5 }) => {
       return
     }
     setState({
+      enableTransition: false,
       element: state.element,
       fadeout: setTimeout(() => {
         setState({
+          enableTransition: false,
           fadeout: null,
           element: null
         })
@@ -103,7 +109,8 @@ const FocusOverlay = ({ children, padding = 5 }) => {
       {children}
     </FocusOverlayContext.Provider>
     <div ref={overlay} className={`${classes.root} ${state.element ? '' : 'hidden'}
-                                   ${state.fadeout ? 'fadeout' : ''}`}>
+                                   ${state.fadeout ? 'fadeout' : ''}
+                                   ${state.enableTransition ? 'enableTransition' : ''}`}>
       <div ref={box} className={classes.box} />
     </div>
   </>
