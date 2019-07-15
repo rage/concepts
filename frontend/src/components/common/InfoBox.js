@@ -74,16 +74,16 @@ const InfoBox = ({ children }) => {
   const overlay = useFocusOverlay()
 
   const openPopper = (target, newPlacement, title, description, alignment = 0, separation = 0) => {
+    overlay.open(target)
     setState({
       ...state,
-      anchorEl: target,
+      anchorEl: overlay.box.current,
       open: true,
       placement: newPlacement,
       offset: { alignment, separation },
       title,
       description
     })
-    overlay.open(target)
   }
 
   const closePopper = () => {

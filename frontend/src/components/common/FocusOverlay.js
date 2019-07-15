@@ -94,7 +94,7 @@ const FocusOverlay = ({ children, padding = 5 }) => {
           fadeout: null,
           element: null
         })
-      }, 5000)
+      }, 500)
     })
   }
 
