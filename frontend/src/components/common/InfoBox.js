@@ -71,7 +71,7 @@ const InfoBox = ({ children }) => {
   })
   const classes = useStyles()
 
-  const openPopper = (target, newPlacement, title, description, alignment, separation) => {
+  const openPopper = (target, newPlacement, title, description, alignment = 0, separation = 0) => {
     setState({
       ...state,
       anchorEl: target,
@@ -103,7 +103,7 @@ const InfoBox = ({ children }) => {
 
   return (
     <>
-      <InfoBoxContext.Provider value={{ openPopper, closePopper }}>
+      <InfoBoxContext.Provider value={{ open: openPopper, close: closePopper }}>
         {children}
       </InfoBoxContext.Provider>
       <Popper
@@ -117,7 +117,7 @@ const InfoBox = ({ children }) => {
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={500}>
 
-            <Paper elevation={0} className={classes.root} style={{ position: 'absolute', top: '50%', left: '50%' }}>
+            <Paper elevation={0} className={classes.root}>
 
               <div className={classes.infoHeader}>
                 <div

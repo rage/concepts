@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -15,6 +15,9 @@ import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
 
 import { useLoginStateValue } from '../../store'
+
+import { useFocusOverlay } from '../common/FocusOverlay'
+import { useInfoBox } from '../common/InfoBox'
 
 
 const useStyles = makeStyles(theme => ({
@@ -62,6 +65,16 @@ const ActiveCourse = ({
   toggleConcept
 }) => {
   const classes = useStyles()
+  const overlay = useFocusOverlay()
+  const infoBox = useInfoBox()
+  const { loggedIn } = useLoginStateValue()[0]
+
+  useEffect(() => {
+    if (course.concepts.length === 0) {
+      overlay.open(createButtonRef.current)
+      infoBox.open(createButtonRef.current, 'right-start', 'HMM', '...', 0, 50)
+    }
+  }, [course.concepts.length])
 
   const {
     openCreateConceptDialog,
@@ -77,9 +90,10 @@ const ActiveCourse = ({
     CourseEditDialog
   } = useEditCourseDialog(workspaceId)
 
-  const { loggedIn } = useLoginStateValue()[0]
-
   const client = useApolloClient()
+
+  const createButtonRef = useRef()
+
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -153,6 +167,7 @@ const ActiveCourse = ({
           onClick={openCreateConceptDialog(course.id)}
           variant='contained'
           color='secondary'
+          ref={createButtonRef}
         >
           Add concept
         </Button> : null

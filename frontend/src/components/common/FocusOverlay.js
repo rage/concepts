@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 
   box: {
     position: 'fixed',
-    display: 'none'
+    // display: 'none'
   },
 
   '@keyframes fadein': {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
 
 const FocusOverlayContext = createContext(null)
 
-const FocusOverlay = ({children, padding = 5}) => {
+const FocusOverlay = ({ children, padding = 5 }) => {
   const [state, setState] = useState({
     fadeout: null,
     element: null
@@ -99,12 +99,12 @@ const FocusOverlay = ({children, padding = 5}) => {
   }
 
   return <>
-    <FocusOverlayContext.Provider value={{box, open, close}}>
+    <FocusOverlayContext.Provider value={{ box, open, close }}>
       {children}
     </FocusOverlayContext.Provider>
     <div ref={overlay} className={`${classes.root} ${state.element ? '' : 'hidden'}
                                    ${state.fadeout ? 'fadeout' : ''}`}>
-      <div ref={box} className={classes.box}/>
+      <div ref={box} className={classes.box} />
     </div>
   </>
 }
