@@ -1,36 +1,48 @@
 {
   "CREATE_CONCEPT_TARGET": {
-    "title": "Add concepts to a course",
-    "description": "What are these for?"
+    "title": "Add a concept",
+    "description": "Click \"ADD CONCEPT\" to add a concept for your new course."
+  },
+  "OPEN_COURSE_TRAY": {
+    "title": "Open course tray",
+    "description": "Click the floating arrow button to open the course tray. The course tray lets you choose courses that are prerequisites for the current course."
   },
   "CREATE_COURSE": {
-    "title": "Create a course",
-    "description": "Why?"
+    "title": "Create another course",
+    "description": "Create a new course that is a prerequisite for the course you created first."
   },
   "CREATE_CONCEPT_PREREQ": {
-    "title": "Add concepts to a prerequisite course",
-    "description": "Why?!"
+    "title": "Add a concept to the new course",
+    "description": "Add a concept to the newly created prerequisite course"
   },
   "ADD_COURSE_AS_PREREQ": {
-    "title": "Add prerequisite courses",
-    "description": "Add a course to the prerequisites of the target course by clicking the checkbox next to the course name."
+    "title": "Mark course as a prerequisite",
+    "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray."
   },
   "DRAW_LINK": [
     {
       "title": "Start drawing a link to a prerequisite",
-      "description": "WHAY!?"
+      "description": "Click a right-pointing triangle to start drawing a link to a prerequisite concept."
     },
     {
       "title": "Link to a prerequisite concept",
-      "description": ""
+      "description": "Click a left-pointing triangle to create the link."
     }
   ],
+  "FOCUS_CONCEPT": {
+    "title": "Focus a concept",
+    "description": "Click on a concept to focus it and highlight links from it."
+  },
   "DELETE_LINK": {
     "title": "Delete a link between concepts",
-    "description": "..."
+    "description": "Click the link and click \"DELETE\" in the context menu to delete the link."
   },
-  "SWITCH_VIEW": {
-    "title": "Switch to another tool",
-    "description": "..."
+  "SWITCH_VIEW_GRAPH": {
+    "title": "Switch to the graph view",
+    "description": "The graph view is a read-only view of your workspace, with all the courses and links."
+  },
+  "SWITCH_VIEW_HEATMAP": {
+    "title": "Switch to the heatmap view",
+    "description": "The heatmap view lets you see how strongly courses are connected by showing the number of concept links as a heat map."
   }
 }
