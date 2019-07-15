@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
-import { COURSE_PREREQUISITES } from '../../graphql/Query'
+import { COURSE_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
-const useCreateConceptDialog = (activeCourse, workspaceId) => {
+const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite) => {
 
   const [conceptCreateState, setConceptCreateState] = useState({
     open: false,
@@ -16,7 +16,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
     set.map(p => p.id).includes(object.id)
 
   const createConcept = useMutation(CREATE_CONCEPT, {
-    update: (store, response) => {
+    update: prerequisite ? (store, response) => {
       try {
         const dataInStore = store.readQuery({
           query: COURSE_PREREQUISITES,
@@ -40,6 +40,28 @@ const useCreateConceptDialog = (activeCourse, workspaceId) => {
         return
       }
     }
+      :
+      (store, response) => {
+        const dataInStore = store.readQuery({
+          query: COURSE_BY_ID,
+          variables: {
+            id: activeCourse.id
+          }
+        })
+        const addedConcept = response.data.createConcept
+        const dataInStoreCopy = { ...dataInStore }
+        const concepts = dataInStoreCopy.courseById.concepts
+        if (!includedIn(concepts, addedConcept)) {
+          dataInStoreCopy.courseById.concepts.push(addedConcept)
+          client.writeQuery({
+            query: COURSE_BY_ID,
+            variables: {
+              id: activeCourse.id
+            },
+            data: dataInStoreCopy
+          })
+        }
+      }
   })
 
   const handleConceptClose = () => {

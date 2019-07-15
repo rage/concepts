@@ -64,11 +64,11 @@ ReactDOM.render(
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}
         >
-          <InfoBox>
-            <FocusOverlay>
+          <FocusOverlay>
+            <InfoBox>
               <App />
-            </FocusOverlay>
-          </InfoBox>
+            </InfoBox>
+          </FocusOverlay>
         </LoginStateProvider>
       </ErrorStateProvider>
     </ApolloProvider>

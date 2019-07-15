@@ -15,8 +15,6 @@ import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
 
 import { useLoginStateValue } from '../../store'
-
-import { useFocusOverlay } from '../common/FocusOverlay'
 import { useInfoBox } from '../common/InfoBox'
 
 
@@ -65,13 +63,11 @@ const ActiveCourse = ({
   toggleConcept
 }) => {
   const classes = useStyles()
-  const overlay = useFocusOverlay()
   const infoBox = useInfoBox()
   const { loggedIn } = useLoginStateValue()[0]
 
   useEffect(() => {
     if (course.concepts.length === 0) {
-      overlay.open(createButtonRef.current)
       infoBox.open(createButtonRef.current, 'right-start', 'HMM', '...', 0, 50)
     }
   }, [course.concepts.length])
@@ -79,7 +75,7 @@ const ActiveCourse = ({
   const {
     openCreateConceptDialog,
     ConceptCreateDialog
-  } = useCreateConceptDialog(course, workspaceId)
+  } = useCreateConceptDialog(course, workspaceId, false)
 
   const {
     openEditConceptDialog,
