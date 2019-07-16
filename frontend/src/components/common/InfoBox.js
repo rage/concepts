@@ -1,6 +1,6 @@
 import React, { useState, createContext, useContext, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Paper, Typography, IconButton, Popper, Fade } from '@material-ui/core'
+import { Button, Paper, Typography, IconButton, Popper } from '@material-ui/core'
 import { InfoOutlined as InfoIcon } from '@material-ui/icons'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../../static/userGuide'
@@ -19,6 +19,19 @@ const useStyles = makeStyles(theme => ({
     zIndex: '200',
     '&.enableTransition': {
       transition: 'transform .5s linear'
+    },
+    animation: '$fadein .5s',
+    '&.fadeout': {
+      opacity: 0,
+      transition: 'opacity .5s ease-out'
+    }
+  },
+  '@keyframes fadein': {
+    from: {
+      opacity: 0
+    },
+    to: {
+      opacity: 1
     }
   },
   infoHeader: {
@@ -72,6 +85,9 @@ const InfoBox = ({ children }) => {
     if (seen.current.includes(id)) {
       return
     }
+    if (state.fadeout) {
+      clearTimeout(state.fadeout)
+    }
     overlay.open(target)
     const info = userGuide[id]
     seen.current.push(id)
@@ -87,7 +103,15 @@ const InfoBox = ({ children }) => {
   }
 
   const closePopper = () => {
-    setState({ open: false })
+    if (state.fadeout) {
+      return
+    }
+    setState({
+      ...state,
+      fadeout: setTimeout(() => setState({
+        open: false
+      }), 500)
+    })
     overlay.close()
   }
 
@@ -109,37 +133,31 @@ const InfoBox = ({ children }) => {
         anchorEl={anchorEl}
         placement={placement}
         modifiers={POPPER_MODIFIERS}
-        transition
-        className={`${classes.popper} ${state.enableTransition ? 'enableTransition' : ''}`}
+        className={`${classes.popper} ${state.enableTransition ? 'enableTransition' : ''}
+                    ${state.fadeout ? 'fadeout' : ''}`}
       >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={500}>
-
-            <Paper elevation={0} className={classes.root}>
-
-              <div className={classes.infoHeader}>
-                <div
-                  className={classes.infoHeaderIcon}
-                >
-                  <IconButton className={classes.infoIcon} onClick={() => null}>
-                    <InfoIcon className={classes.icon} />
-                  </IconButton>
-                </div>
-                <div className={classes.headerTitleContainer}>
-                  <Typography className={classes.title} variant='h6'>
-                    {title}
-                  </Typography>
-                </div>
-              </div>
-              <Typography className={classes.body} variant='body1'>
-                {description}
+        <Paper elevation={0} className={classes.root}>
+          <div className={classes.infoHeader}>
+            <div
+              className={classes.infoHeaderIcon}
+            >
+              <IconButton className={classes.infoIcon} onClick={() => null}>
+                <InfoIcon className={classes.icon} />
+              </IconButton>
+            </div>
+            <div className={classes.headerTitleContainer}>
+              <Typography className={classes.title} variant='h6'>
+                {title}
               </Typography>
-              <Button aria-label='Close' className={classes.button} onClick={closePopper}>
-                Close
-              </Button>
-            </Paper>
-          </Fade>
-        )}
+            </div>
+          </div>
+          <Typography className={classes.body} variant='body1'>
+            {description}
+          </Typography>
+          <Button aria-label='Close' className={classes.button} onClick={closePopper}>
+            Close
+          </Button>
+        </Paper>
       </Popper>
     </>
   )
