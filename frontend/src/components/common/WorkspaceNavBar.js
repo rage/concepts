@@ -62,7 +62,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   const classes = useStyles()
   const { user } = useLoginStateValue()[0]
   const errorDispatch = useErrorStateValue()[1]
-  const [menuAnchor, setMenuAnchor] = useState(false)
+  const [menuAnchor, setMenuAnchor] = useState(null)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
