@@ -27,10 +27,12 @@ const GuidedCourseContainer = ({
   const createConceptRef = useRef()
 
   useEffect(() => {
-    if (addingLink) {
+    if (courses.length === 1 && courses[0].concepts.length === 0) {
+      infoBox.open(createConceptRef.current, 'right-start', 'CREATE_CONCEPT_PREREQ', 0, 20)
+    } else if (addingLink) {
       infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_END', 0, 20)
     }
-  }, [infoBox, addingLink])
+  }, [infoBox, addingLink, courses])
 
   const {
     openCreateConceptDialog,
