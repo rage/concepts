@@ -102,11 +102,8 @@ const GuidedCourseTray = ({
   const [filterKeyword, setFilterKeyword] = useState('')
 
   const classes = useStyles()
-
   const infoBox = useInfoBox()
-
   const createButtonRef = useRef()
-
   const checkboxRef = useRef()
 
   const {
@@ -125,7 +122,7 @@ const GuidedCourseTray = ({
     } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
       infoBox.open(checkboxRef.current, 'left-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
     }
-  }, [infoBox, courseTrayOpen, coursesQuery, courseLinks])
+  }, [courseTrayOpen, coursesQuery, courseLinks])
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)

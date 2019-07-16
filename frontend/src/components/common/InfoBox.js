@@ -1,9 +1,11 @@
-import React, { useState, createContext, useContext, useRef } from 'react'
+import React, { useState, createContext, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Paper, Typography, IconButton, Popper } from '@material-ui/core'
 import { InfoOutlined as InfoIcon } from '@material-ui/icons'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../../static/userGuide'
+import { getProgress, setProgress } from '../../lib/userProgress'
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,30 +81,46 @@ const InfoBox = ({ children }) => {
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
-  const seen = useRef([])
+  const [{ user }, dispatch] = useLoginStateValue()
 
-  const openPopper = (target, newPlacement, id, alignment = 0, separation = 0) => {
-    if (seen.current.includes(id)) {
-      return
+  const {
+    title,
+    description,
+    open,
+    offset,
+    placement,
+    fadeout,
+    enableTransition
+  } = state
+
+  const openPopper = async (target, newPlacement, id, alignment = 0, separation = 0) => {
+    if (user) {
+      const info = userGuide[id]
+      const index = await getProgress(user.id)
+      console.log('popper', info.index, index)
+      if (index >= info.index) {
+        console.log('Guide too high')
+        closePopper()
+        return
+      }
+      if (fadeout) {
+        clearTimeout(fadeout)
+      }
+      overlay.open(target)
+      setState({
+        enableTransition: open,
+        open: true,
+        placement: newPlacement,
+        offset: { alignment, separation },
+        title: info.title,
+        description: info.description
+      })
+      await setProgress(info.index, user.id)
     }
-    if (state.fadeout) {
-      clearTimeout(state.fadeout)
-    }
-    overlay.open(target)
-    const info = userGuide[id]
-    seen.current.push(id)
-    setState({
-      enableTransition: state.open,
-      open: true,
-      placement: newPlacement,
-      offset: { alignment, separation },
-      title: info.title,
-      description: info.description
-    })
   }
 
   const closePopper = () => {
-    if (state.fadeout) {
+    if (fadeout) {
       return
     }
     setState({
@@ -114,7 +132,6 @@ const InfoBox = ({ children }) => {
     overlay.close()
   }
 
-  const { title, description, open, offset, placement } = state
 
   const POPPER_MODIFIERS = {
     offset: {
@@ -132,8 +149,8 @@ const InfoBox = ({ children }) => {
         anchorEl={open && overlay.box && overlay.box.current ? overlay.box.current : undefined}
         placement={placement}
         modifiers={POPPER_MODIFIERS}
-        className={`${classes.popper} ${state.enableTransition ? 'enableTransition' : ''}
-                    ${state.fadeout ? 'fadeout' : ''}`}
+        className={`${classes.popper} ${enableTransition ? 'enableTransition' : ''}
+                    ${fadeout ? 'fadeout' : ''}`}
       >
         <Paper elevation={0} className={classes.root}>
           <div className={classes.infoHeader}>

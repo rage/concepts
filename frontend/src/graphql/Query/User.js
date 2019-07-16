@@ -29,6 +29,18 @@ query userById($id: ID!) {
 }
 `
 
+const USER_BY_ID = gql`
+query userById($id: ID!) {
+  userById(id: $id) {
+    id
+    tmcId
+    role
+    guideProgress
+  }
+}
+`
+
 export {
-  STAFF_BY_ID
+  STAFF_BY_ID,
+  USER_BY_ID
 }

@@ -24,6 +24,16 @@ const loginReducer = (state, action) => {
       loggedIn: false,
       user: {}
     }
+  case 'setUserGuideProgress': {
+
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        guideProgress: action.data.guideProgress
+      }
+    }
+  }
   default:
     return state
   }

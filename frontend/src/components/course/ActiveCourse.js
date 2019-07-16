@@ -80,7 +80,7 @@ const ActiveCourse = ({
     }
     if (!prereqConceptExists) return
     if (courseLinks.length > 0 && !addingLink) {
-      infoBox.open(conceptLinkRef.current, 'right-start', 'DRAW_LINK_START', '...', 0, 20)
+      infoBox.open(conceptLinkRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
     }
   }, [course.concepts, addingLink, courseLinks])
 
