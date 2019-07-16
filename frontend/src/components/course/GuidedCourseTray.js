@@ -51,6 +51,7 @@ const PrerequisiteCourse = ({
   isPrerequisite,
   getLinkToDelete,
   course,
+  checkboxRef,
   activeCourseId,
   workspaceId,
   createCourseLink,
@@ -80,7 +81,7 @@ const PrerequisiteCourse = ({
   }
   return (
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
-      <ListItem divider button onClick={onClick} className={classes.listItem}>
+      <ListItem ref={checkboxRef} divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary'></Checkbox>
@@ -209,13 +210,14 @@ const GuidedCourseTray = ({
       />
 
       {coursesQuery.data.coursesByWorkspace &&
-        <List ref={checkboxRef} disablePadding className={classes.list}>
+        <List disablePadding className={classes.list}>
           {coursesQuery.data.coursesByWorkspace
             .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
-            .map(course =>
+            .map((course, index) =>
               <PrerequisiteCourse
                 key={course.id}
                 course={course}
+                checkboxRef={index === 1 && checkboxRef}
                 activeCourseId={activeCourseId}
                 createCourseLink={createCourseLink}
                 deleteCourseLink={deleteCourseLink}
