@@ -1,8 +1,9 @@
-import React, { useState, createContext, useContext } from 'react'
+import React, { useState, createContext, useContext, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Paper, Typography, IconButton, Popper, Fade } from '@material-ui/core'
 import { InfoOutlined as InfoIcon } from '@material-ui/icons'
 import { useFocusOverlay } from './FocusOverlay'
+import userGuide from '../../static/userGuide'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -75,9 +76,15 @@ const InfoBox = ({ children }) => {
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
+  const seen = useRef([])
 
-  const openPopper = (target, newPlacement, title, description, alignment = 0, separation = 0) => {
+  const openPopper = (target, newPlacement, id, alignment = 0, separation = 0) => {
+    if (seen.current.includes(id)) {
+      return
+    }
     overlay.open(target)
+    const info = userGuide[id]
+    seen.current.push(id)
     setState({
       ...state,
       enableTransition: state.open,
@@ -85,8 +92,8 @@ const InfoBox = ({ children }) => {
       open: true,
       placement: newPlacement,
       offset: { alignment, separation },
-      title,
-      description
+      title: info.title,
+      description: info.description
     })
   }
 

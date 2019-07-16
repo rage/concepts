@@ -27,7 +27,7 @@ const GuidedCourseContainer = ({
 
   useEffect(() => {
     if (addingLink) {
-      infoBox.open(connectionRef.current, 'right-start', 'Now attach here', '...', 0, 20)
+      infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_END', 0, 20)
     }
   }, [addingLink])
 

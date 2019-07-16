@@ -73,11 +73,11 @@ const ActiveCourse = ({
     const prereqConceptExists = courseLinks.find(link => link.from.concepts.length > 0)
     if (hasLinks) return
     if (course.concepts.length === 0) {
-      infoBox.open(createButtonRef.current, 'right-start', 'HMM', '...', 0, 50)
+      infoBox.open(createButtonRef.current, 'right-start', 'CREATE_CONCEPT_TARGET', 0, 50)
     }
     if (!prereqConceptExists) return
     if (courseLinks.length > 0 && !addingLink) {
-      infoBox.open(conceptRef.current, 'right-start', 'HMM', '...', 0, 20)
+      infoBox.open(conceptRef.current, 'right-start', 'DRAW_LINK_START', '...', 0, 20)
     }
   }, [course.concepts, addingLink, courseLinks])
 

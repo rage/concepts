@@ -91,7 +91,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
     const enoughCourses = courses && courses.length === 1
 
     if (enoughCourses && !courseTrayOpen && conceptsExist) {
-      infoBox.open(trayFabRef.current, 'left-start', 'Click dis männ', '...', 0, 50)
+      infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
   }, [coursesQuery, courseTrayOpen])
 
