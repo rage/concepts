@@ -2,7 +2,7 @@ const { checkAccess } = require('../../accessControl')
 
 const PortQueries = {
   async exportData(root, args, context) {
-    checkAccess(context, { allowStaff: true, allowStudent: true })
+    checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true })
     const query = `
     query($id : ID!) {
       workspace(where: {
