@@ -56,7 +56,8 @@ const useStyles = makeStyles(() => ({
 
 const ActiveConcept = ({
   concept,
-  conceptRef,
+  conceptLinkRef,
+  activeConceptRef,
   toggleConcept,
   activeConceptIds,
   addingLink,
@@ -136,6 +137,7 @@ const ActiveConcept = ({
 
   return <>
     <ListItem
+      ref={activeConceptRef}
       button divider id={'concept-' + concept.id}
       className={classes.listItem}
       onClick={toggleConcept(concept.id)}
@@ -176,7 +178,7 @@ const ActiveConcept = ({
           : null
         }
         <IconButton
-          buttonRef={conceptRef}
+          buttonRef={conceptLinkRef}
           onClick={onClick}
           className={`${classes.conceptCircle}
           ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}

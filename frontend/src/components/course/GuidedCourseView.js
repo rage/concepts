@@ -55,6 +55,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
   const conceptLinkMenuRef = useRef()
   const trayFabRef = useRef()
+  const conceptConnectionRef = useRef()
   const { loggedIn } = useLoginStateValue()[0]
 
   const infoBox = useInfoBox()
@@ -89,11 +90,18 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
     const conceptsExist = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.length === 1 && loggedIn
     const enoughCourses = courses && courses.length === 1
-
+    const activeConceptHasLinks = courseQuery.data.courseById
+      && courseQuery.data.courseById.concepts.find(concept => {
+        return concept.linksToConcept.length > 0
+          && activeConceptIds.includes(concept.id)
+      })
     if (enoughCourses && !courseTrayOpen && conceptsExist) {
       infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
-  }, [coursesQuery, courseTrayOpen])
+    if (activeConceptHasLinks && activeConceptIds.length > 0) {
+      infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
+    }
+  }, [coursesQuery, courseTrayOpen, activeConceptIds, courseQuery])
 
   // Closes infoBox when leaving the page
   useEffect(() => {
@@ -203,11 +211,12 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
           </div>
       }
       {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-        && courseQuery.data.courseById.concepts.map(concept => (
+        && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
           prereqQuery.data.courseAndPrerequisites.linksToCourse
             .filter(link => link.from.id === concept.courses[0].id)
-            ? concept.linksToConcept.map(link => (
+            ? concept.linksToConcept.map((link, lIdx) => (
               <ConceptLink
+                linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
                 key={`concept-link-${link.id}`} delay={1}
                 active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
                 from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}

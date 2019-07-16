@@ -71,13 +71,16 @@ const ActiveCourse = ({
   useEffect(() => {
     const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
     const prereqConceptExists = courseLinks.find(link => link.from.concepts.length > 0)
+    if (hasLinks && activeConceptIds.length === 0) {
+      infoBox.open(activeConceptRef.current, 'right-start', 'FOCUS_CONCEPT', 0, 50)
+    }
     if (hasLinks) return
     if (course.concepts.length === 0) {
       infoBox.open(createButtonRef.current, 'right-start', 'CREATE_CONCEPT_TARGET', 0, 50)
     }
     if (!prereqConceptExists) return
     if (courseLinks.length > 0 && !addingLink) {
-      infoBox.open(conceptRef.current, 'right-start', 'DRAW_LINK_START', '...', 0, 20)
+      infoBox.open(conceptLinkRef.current, 'right-start', 'DRAW_LINK_START', '...', 0, 20)
     }
   }, [course.concepts, addingLink, courseLinks])
 
@@ -98,7 +101,8 @@ const ActiveCourse = ({
   const client = useApolloClient()
 
   const createButtonRef = useRef()
-  const conceptRef = useRef()
+  const conceptLinkRef = useRef()
+  const activeConceptRef = useRef()
 
 
   const includedIn = (set, object) =>
@@ -155,7 +159,8 @@ const ActiveCourse = ({
       <List className={classes.list}>
         {course.concepts.map((concept, index) =>
           <ActiveConcept
-            conceptRef={index === 0 ? conceptRef : undefined}
+            conceptLinkRef={index === 0 ? conceptLinkRef : undefined}
+            activeConceptRef={index === 0 ? activeConceptRef : undefined}
             concept={concept}
             key={concept.id}
             activeConceptIds={activeConceptIds}

@@ -115,7 +115,7 @@ export default class ConceptLink extends Component {
       return false
     }
 
-    const offset = Object.assign({x0: 0, y0: 0, x1: 0, y1: 0}, this.props.posOffsets)
+    const offset = Object.assign({ x0: 0, y0: 0, x1: 0, y1: 0 }, this.props.posOffsets)
 
     return () => {
       const fromBox = from.getBoundingClientRect()
@@ -133,7 +133,7 @@ export default class ConceptLink extends Component {
   render() {
     const points = this.detect()
     return points ? (
-      <StyledLine {...points()} refreshPoints={points} {...this.props}/>
+      <StyledLine {...points()} refreshPoints={points} {...this.props} />
     ) : null
   }
 }
@@ -220,10 +220,9 @@ export class Line extends PureComponent {
   }
 
   recalculate() {
-    const {x, y, angle, length} = this.calculate()
+    const { x, y, angle, length } = this.calculate()
 
     if (!this.el.current) {
-      console.log(this.el, 'Reference disappeared 3:')
       return
     }
 
@@ -242,7 +241,7 @@ export class Line extends PureComponent {
     const dx = (this.dynX || x1) - x0
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
     const length = Math.sqrt(dx * dx + dy * dy)
-    return {x: x0, y: y0, angle, length}
+    return { x: x0, y: y0, angle, length }
   }
 
   elCallback(el) {
@@ -253,7 +252,7 @@ export class Line extends PureComponent {
   }
 
   render() {
-    const {x, y, angle, length} = this.calculate()
+    const { x, y, angle, length } = this.calculate()
     const within = this.props.within || ''
 
     this.within = within ? document.getElementById(within) : document.body
@@ -306,10 +305,10 @@ export class Line extends PureComponent {
           ref={this.elCallback} style={wrapperStyle}
         >
           {(this.props.active && !this.props.followMouse) &&
-          <div
-            style={hoverAreaStyle} className={this.props.classes.linetoHover}
-            onContextMenu={evt => this.props.onContextMenu(evt, this)}
-            onClick={evt => this.props.onContextMenu(evt, this)}/>}
+            <div
+              style={hoverAreaStyle} className={this.props.classes.linetoHover}
+              onContextMenu={evt => this.props.onContextMenu(evt, this)}
+              onClick={evt => this.props.onContextMenu(evt, this)} />}
           <div style={innerStyle}
             className={`${this.props.classes.linetoLine}
                         ${this.props.active ? 'linetoActive' : ''}`}>
