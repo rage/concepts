@@ -6,7 +6,7 @@ import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   CircularProgress
 } from '@material-ui/core'
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon  } from '@material-ui/icons'
+import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import ProjectCreationDialog from './ProjectCreationDialog'
 import ProjectEditingDialog from './ProjectEditingDialog'

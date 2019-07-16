@@ -4,7 +4,7 @@ import { useQuery } from 'react-apollo-hooks'
 
 import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'
-import { Grid, Paper, Typography, CircularProgress } from '@material-ui/core'
+import { Paper, Typography, CircularProgress } from '@material-ui/core'
 
 import {
   WORKSPACE_COURSES_AND_CONCEPTS

@@ -1,21 +1,12 @@
 import React, { useState } from 'react'
-
-import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import Container from '@material-ui/core/Container'
-
-import TextField from '@material-ui/core/TextField'
-import CircularProgress from '@material-ui/core/CircularProgress'
-
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-
-import green from '@material-ui/core/colors/green'
-import { useErrorStateValue, useLoginStateValue } from '../../store'
-
-import Button from '@material-ui/core/Button'
 import { useMutation } from 'react-apollo-hooks'
+import { makeStyles } from '@material-ui/core/styles'
+
+import {
+  Container, TextField, CircularProgress, Card, CardHeader, CardContent, Button
+} from '@material-ui/core'
+import green from '@material-ui/core/colors/green'
+
 import Ajv from 'ajv'
 import schema from './port.schema'
 
@@ -23,10 +14,11 @@ import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
 
+import { useErrorStateValue, useLoginStateValue } from '../../store'
 import { jsonPortUpdate } from '../../apollo/update'
 
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   jsonField: {
     width: '100%',
     maxHeight: '50%'
@@ -52,7 +44,7 @@ const styles = theme => ({
   rowButton: {
     marginLeft: '4px'
   }
-})
+}))
 
 const PLACEHOLDER = `{
   "workspace | workspaceId": "id",
@@ -109,7 +101,8 @@ const TEMPLATE = `{
 const ajv = Ajv()
 const validateData = ajv.compile(schema)
 
-const PortView = ({ classes }) => {
+const PortView = () => {
+  const classes = useStyles()
   const [data, setData] = useState('')
   const [buttonText, setButtonText] = useState('Import')
   const [success, setSuccess] = useState(false)
@@ -229,7 +222,7 @@ const PortView = ({ classes }) => {
         <CardHeader title='Import data' />
 
         <CardContent>
-          <Button variant='contained' color='secondary' onClick={addTemplate}> Add template </Button>
+          <Button variant='contained' color='secondary' onClick={addTemplate}>Add template</Button>
           <Button className={classes.rowButton}
             variant='contained'
             color='secondary'
@@ -272,4 +265,4 @@ const PortView = ({ classes }) => {
   )
 }
 
-export default withStyles(styles)(PortView)
+export default PortView
