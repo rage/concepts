@@ -93,7 +93,6 @@ const InfoBox = ({ children }) => {
     seen.current.push(id)
     setState({
       enableTransition: state.open,
-      anchorEl: overlay.box.current,
       open: true,
       placement: newPlacement,
       offset: { alignment, separation },
@@ -115,7 +114,7 @@ const InfoBox = ({ children }) => {
     overlay.close()
   }
 
-  const { title, description, anchorEl, open, offset, placement } = state
+  const { title, description, open, offset, placement } = state
 
   const POPPER_MODIFIERS = {
     offset: {
@@ -130,7 +129,7 @@ const InfoBox = ({ children }) => {
       </InfoBoxContext.Provider>
       <Popper
         open={open}
-        anchorEl={anchorEl}
+        anchorEl={open && overlay.box && overlay.box.current ? overlay.box.current : undefined}
         placement={placement}
         modifiers={POPPER_MODIFIERS}
         className={`${classes.popper} ${state.enableTransition ? 'enableTransition' : ''}

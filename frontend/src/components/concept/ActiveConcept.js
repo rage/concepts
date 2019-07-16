@@ -7,8 +7,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import { RootRef } from '@material-ui/core'
-
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 

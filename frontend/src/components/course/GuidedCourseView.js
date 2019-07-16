@@ -219,9 +219,8 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
         position: 'absolute',
         width: '1px',
         height: '1px',
-        display: conceptLinkMenu ? 'block' : 'none',
-        top: `${conceptLinkMenu ? conceptLinkMenu.y : 0}px`,
-        left: `${conceptLinkMenu ? conceptLinkMenu.x : 0}px`
+        top: `${conceptLinkMenu ? conceptLinkMenu.y : -1}px`,
+        left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
       }} />
       <Menu
         id='concept-link-menu'

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
   Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
   ListItemSecondaryAction
 } from '@material-ui/core'
-import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
+import { COURSE_PREREQUISITES } from '../../graphql/Query/Course'
 
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
@@ -125,7 +125,7 @@ const GuidedCourseTray = ({
     } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
       infoBox.open(checkboxRef.current, 'left-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
     }
-  }, [courseTrayOpen, coursesQuery, courseLinks])
+  }, [infoBox, courseTrayOpen, coursesQuery, courseLinks])
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)

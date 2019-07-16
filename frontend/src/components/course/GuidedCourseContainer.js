@@ -30,7 +30,7 @@ const GuidedCourseContainer = ({
     if (addingLink) {
       infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_END', 0, 20)
     }
-  }, [addingLink])
+  }, [infoBox, addingLink])
 
   const {
     openCreateConceptDialog,
