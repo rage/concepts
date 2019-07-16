@@ -11,13 +11,13 @@
     "title": "Create another course",
     "description": "Create a new course that is a prerequisite for the course you created first."
   },
-  "CREATE_CONCEPT_PREREQ": {
-    "title": "Add a concept to the new course",
-    "description": "Add a concept to the newly created prerequisite course"
-  },
   "ADD_COURSE_AS_PREREQ": {
     "title": "Mark a course as a prerequisite",
     "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray."
+  },
+  "CREATE_CONCEPT_PREREQ": {
+    "title": "Add a concept to the new course",
+    "description": "Add a concept to the newly created prerequisite course."
   },
   "DRAW_LINK_START": {
     "title": "Start drawing a link to a prerequisite",
