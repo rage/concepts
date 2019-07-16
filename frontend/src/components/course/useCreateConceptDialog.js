@@ -5,7 +5,7 @@ import { COURSE_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
 
-const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite) => {
+const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false) => {
 
   const [conceptCreateState, setConceptCreateState] = useState({
     open: false,

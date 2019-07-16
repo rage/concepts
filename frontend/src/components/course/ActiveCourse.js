@@ -155,7 +155,7 @@ const ActiveCourse = ({
       <List className={classes.list}>
         {course.concepts.map((concept, index) =>
           <ActiveConcept
-            conceptRef={index === 0 && conceptRef}
+            conceptRef={index === 0 ? conceptRef : undefined}
             concept={concept}
             key={concept.id}
             activeConceptIds={activeConceptIds}

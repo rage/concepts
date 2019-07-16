@@ -24,6 +24,7 @@ const GuidedCourseContainer = ({
   const infoBox = useInfoBox()
 
   const connectionRef = useRef()
+  const createConceptRef = useRef()
 
   useEffect(() => {
     if (addingLink) {
@@ -34,7 +35,7 @@ const GuidedCourseContainer = ({
   const {
     openCreateConceptDialog,
     ConceptCreateDialog
-  } = useCreateConceptDialog(activeCourse, workspaceId)
+  } = useCreateConceptDialog(activeCourse, workspaceId, true)
 
   const {
     openEditConceptDialog,
@@ -57,7 +58,8 @@ const GuidedCourseContainer = ({
               <Course
                 key={course.id}
                 course={course}
-                connectionRef={index === 0 && connectionRef}
+                connectionRef={index === 0 ? connectionRef : undefined}
+                createConceptRef={(index === 0 && course.concepts.length === 0) ? createConceptRef : undefined}
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}

@@ -61,6 +61,7 @@ const useStyles = makeStyles(theme => ({
 const Course = ({
   course,
   connectionRef,
+  createConceptRef,
   activeCourseId,
   addingLink,
   setAddingLink,
@@ -97,7 +98,7 @@ const Course = ({
             <Concept concept={concept}
               key={concept.id}
               course={course}
-              connectionRef={index === 0 && connectionRef}
+              connectionRef={index === 0 ? connectionRef : undefined}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
@@ -114,6 +115,7 @@ const Course = ({
               onClick={openConceptDialog(course.id)}
               variant='contained'
               color='primary'
+              ref={createConceptRef}
             >
               Add concept
             </Button>
