@@ -78,6 +78,9 @@ type Mutation {
   # Porting mutations
   importData(data: String!): Workspace
 
+  # User mutations
+  updateUser(id: ID!, guideProgress: Int!): User
+
   ## Resource mutation
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
@@ -89,6 +92,7 @@ type User {
   asWorkspaceOwner: [Workspace!]!
   asProjectOwner: [Project!]!
   asProjectParticipant: [Project!]!
+  guideProgress: Int!
 }
 
 enum Role {

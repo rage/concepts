@@ -8,6 +8,7 @@ type User {
   asProjectOwner: [Project!]! @relation(name:"ProjectOwner")
   asProjectParticipant: [Project!]! @relation(name:"ProjectParticipant")
   createdAt: DateTime! @createdAt
+  guideProgress: Int! @default(value: 0)
 }
 
 

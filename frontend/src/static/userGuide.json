@@ -1,45 +1,56 @@
 {
   "CREATE_CONCEPT_TARGET": {
+    "index": 1,
     "title": "Add a concept",
     "description": "Click \"ADD CONCEPT\" to add a concept for your new course."
   },
   "OPEN_COURSE_TRAY": {
+    "index": 2,
     "title": "Open course tray",
     "description": "Click the floating arrow button to open the course tray. The course tray lets you choose courses that are prerequisites for the current course."
   },
   "CREATE_COURSE": {
+    "index": 3,
     "title": "Create another course",
     "description": "Create a new course that is a prerequisite for the course you created first."
   },
   "ADD_COURSE_AS_PREREQ": {
+    "index": 4,
     "title": "Mark a course as a prerequisite",
     "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray."
   },
   "CREATE_CONCEPT_PREREQ": {
+    "index": 5,
     "title": "Add a concept to the new course",
     "description": "Add a concept to the newly created prerequisite course."
   },
   "DRAW_LINK_START": {
+    "index": 6,
     "title": "Start drawing a link to a prerequisite",
     "description": "Click a right-pointing triangle to start drawing a link to a prerequisite concept."
   },
   "DRAW_LINK_END": {
+    "index": 7,
     "title": "Link to a prerequisite concept",
     "description": "Click a left-pointing triangle to create the link."
   },
   "FOCUS_CONCEPT": {
+    "index": 8,
     "title": "Focus a concept",
     "description": "Click on a concept to focus it and highlight links from it."
   },
   "DELETE_LINK": {
+    "index": 9,
     "title": "Delete a link between concepts",
     "description": "Click the link and click \"DELETE\" in the context menu to delete the link."
   },
   "SWITCH_VIEW_GRAPH": {
+    "index": 10,
     "title": "Switch to the graph view",
     "description": "The graph view is a read-only view of your workspace, with all the courses and links."
   },
   "SWITCH_VIEW_HEATMAP": {
+    "index": 11,
     "title": "Switch to the heatmap view",
     "description": "The heatmap view lets you see how strongly courses are connected by showing the number of concept links as a heat map."
   }
