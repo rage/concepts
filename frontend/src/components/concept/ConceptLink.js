@@ -10,7 +10,6 @@ export default class ConceptLink extends Component {
     this.toAnchor = this.parseAnchor(this.props.toAnchor)
     this.delay = this.parseDelay(this.props.delay)
     this.positionChanged = true
-    this.prevRedrawLines = 0
   }
 
   componentDidMount() {
@@ -169,6 +168,7 @@ export class Line extends PureComponent {
     this.el = React.createRef()
     this.handleMouse = this.handleMouse.bind(this)
     this.handleResize = this.handleResize.bind(this)
+    this.elCallback = this.elCallback.bind(this)
     this.pos = {
       x0: this.props.x0,
       y0: this.props.y0,
@@ -245,6 +245,13 @@ export class Line extends PureComponent {
     return {x: x0, y: y0, angle, length}
   }
 
+  elCallback(el) {
+    this.el.current = el
+    if (this.props.linkRef) {
+      this.props.linkRef.current = el
+    }
+  }
+
   render() {
     const {x, y, angle, length} = this.calculate()
     const within = this.props.within || ''
@@ -293,15 +300,19 @@ export class Line extends PureComponent {
       <div className={this.props.classes.linetoPlaceholder}
         data-link-from={this.props.from}
         data-link-to={this.props.to} {...this.props.attributes}>
-        <div className={`${this.props.classes.linetoWrapper} ${this.props.active && !this.props.followMouse ? 'linetoActive' : ''}`}
-          ref={this.el} style={wrapperStyle}>
+        <div
+          className={`${this.props.classes.linetoWrapper}
+                      ${this.props.active && !this.props.followMouse ? 'linetoActive' : ''}`}
+          ref={this.elCallback} style={wrapperStyle}
+        >
           {(this.props.active && !this.props.followMouse) &&
           <div
             style={hoverAreaStyle} className={this.props.classes.linetoHover}
             onContextMenu={evt => this.props.onContextMenu(evt, this)}
             onClick={evt => this.props.onContextMenu(evt, this)}/>}
           <div style={innerStyle}
-            className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
+            className={`${this.props.classes.linetoLine}
+                        ${this.props.active ? 'linetoActive' : ''}`}>
           </div>
         </div>
       </div>
