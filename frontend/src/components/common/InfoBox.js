@@ -62,17 +62,7 @@ const InfoBoxContext = createContext(null)
 
 const InfoBox = ({ children }) => {
   const [state, setState] = useState({
-    enableTransition: false,
-    open: false,
-    offset: {
-      alignment: '0px',
-      separation: '0px'
-    },
-    title: 'InfoBox',
-    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-    sed do eiusmod tempor incididunt
-    ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
-    quis nostrud exercitation.`
+    open: false
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
@@ -86,7 +76,6 @@ const InfoBox = ({ children }) => {
     const info = userGuide[id]
     seen.current.push(id)
     setState({
-      ...state,
       enableTransition: state.open,
       anchorEl: overlay.box.current,
       open: true,
@@ -98,14 +87,7 @@ const InfoBox = ({ children }) => {
   }
 
   const closePopper = () => {
-    setState({
-      enableTransition: false,
-      open: false,
-      offset: {
-        alignment: '0px',
-        separation: '0px'
-      }
-    })
+    setState({ open: false })
     overlay.close()
   }
 
@@ -113,7 +95,7 @@ const InfoBox = ({ children }) => {
 
   const POPPER_MODIFIERS = {
     offset: {
-      offset: `${offset.alignment}, ${offset.separation}`
+      offset: offset ? `${offset.alignment}, ${offset.separation}` : '0px, 0px'
     }
   }
 
