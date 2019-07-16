@@ -20,7 +20,8 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.1",
     "react-window": "^1.8.1",
-    "tmc-client-js": "^0.0.9"
+    "tmc-client-js": "^0.0.9",
+    "vis": "^4.21.0"
   },
   "scripts": {
     "start": "react-scripts start",

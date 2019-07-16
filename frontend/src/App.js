@@ -23,6 +23,7 @@ import { ALL_COURSES } from './graphql/Query/Course'
 
 import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
+import GraphView from './components/graph/GraphView'
 
 const styles = theme => ({
   root: {
@@ -155,7 +156,7 @@ const App = ({ classes }) => {
             workspaceId={match.params.wid}
           />
         )} />
-        <Route exact path='/workspaces/:wid/graph/:cid' render={() => <div>GRAPH</div>} />
+        <Route exact path='/workspaces/:wid/graph/:cid' render={({ match: { params: {wid, cid} } })  => <GraphView workspaceId={wid} courseId={cid}/>} />
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
