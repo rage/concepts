@@ -9,6 +9,12 @@ import Container from '@material-ui/core/Container'
 import { withRouter } from 'react-router-dom'
 import { useLoginStateValue } from '../../store'
 
+import {
+  CREATE_GUEST_ACCOUNT
+} from '../../graphql/Mutation'
+
+import { useMutation } from 'react-apollo-hooks'
+
 const useStyles = makeStyles(theme => ({
   icon: {
     marginRight: theme.spacing(2)
@@ -24,10 +30,30 @@ const useStyles = makeStyles(theme => ({
 
 const LandingView = (props) => {
   const { loggedIn } = useLoginStateValue()[0]
+  const dispatch = useLoginStateValue()[1]
+
+  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const classes = useStyles()
   const redirectTo = (path) => () => {
     props.history.push(path)
+  }
+
+  const createGuestAccount = async () => {
+    const result = await createGuestMutation()
+    const userData = result.data.createGuest
+    await window.localStorage.setItem('current_user', JSON.stringify(userData))
+    await dispatch({
+      type: 'login',
+      data: userData.user
+    })
+  }
+
+  const navigateToGuestWorkspace = async () => {
+    if (!loggedIn) {
+      await createGuestAccount()
+    }
+    props.history.push('/user')
   }
 
   return (
@@ -49,11 +75,14 @@ const LandingView = (props) => {
                   {loggedIn ? 'Choose workspace' : 'Login and choose workspace'}
                 </Button>
               </Grid>
-              <Grid item>
-                <Button variant='outlined' color='primary' onClick={(e) => alert('Work in progress')}>
-                  Create guest workspace
-                </Button>
-              </Grid>
+              {
+                !loggedIn &&
+                <Grid item>
+                  <Button variant='outlined' color='primary' onClick={navigateToGuestWorkspace}>
+                  Continue as guest
+                  </Button>
+                </Grid>
+              }
             </Grid>
           </div>
         </Container>

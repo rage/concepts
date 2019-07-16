@@ -1,11 +1,15 @@
+scalar DateTime
+
 type User {
   id: ID! @id
-  tmcId: Int! @unique
+  tmcId: Int @unique
   role: Role!
   asWorkspaceOwner: [Workspace!]! @relation(name:"WorkspaceOwner")
   asProjectOwner: [Project!]! @relation(name:"ProjectOwner")
   asProjectParticipant: [Project!]! @relation(name:"ProjectParticipant")
+  createdAt: DateTime! @createdAt
 }
+
 
 enum Role {
   GUEST
