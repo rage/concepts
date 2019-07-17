@@ -30,7 +30,7 @@ const GraphView = ({ classes, workspaceId }) => {
       },
       edges: {
         width: 2,
-        shadow:true
+        shadow: true
       }
     }
     new vis.Network(container, {
