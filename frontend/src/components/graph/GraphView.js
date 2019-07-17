@@ -26,6 +26,17 @@ const GraphView = ({ classes, workspaceId }) => {
       layout: {
         randomSeed: 1,
         improvedLayout: true
+        // hierarchical: {
+        //   enabled: true,
+        //   levelSeparation: 150,
+        //   nodeSpacing: 100,
+        //   treeSpacing: 200,
+        //   blockShifting: true,
+        //   edgeMinimization: true,
+        //   parentCentralization: false,
+        //   direction: 'LR',        // UD, DU, LR, RL
+        //   sortMethod: 'directed'   // hubsize, directed
+        // }
       },
       nodes: {
         shape: 'box',
@@ -37,13 +48,21 @@ const GraphView = ({ classes, workspaceId }) => {
       },
       physics: {
         barnesHut: {
-          centralGravity: 0.2,
-          springLength: 200
+          gravitationalConstant: -2000,
+          centralGravity: 0.6,
+          springLength: 95,
+          springConstant: 0.02,
+          damping: 0.4,
+          avoidOverlap: 0.015
         },
-        forceAtlas2Based: {
-          avoidOverlap: 1,
-          springLength: 200
-        }
+        repulsion: {
+          centralGravity: 0.1,
+          springLength: 200,
+          springConstant: 0.05,
+          nodeDistance: 200,
+          damping: 0.09
+        },
+        solver: 'barnesHut'
       }
     }
     new vis.Network(container, {
@@ -79,7 +98,17 @@ const GraphView = ({ classes, workspaceId }) => {
             links.push({
               from: conceptLink.from.id,
               to: concept.id,
-              arrows: 'to',
+              arrows: {
+                to: { enabled: true, scaleFactor: 0.4, type: 'arrow' }
+              },
+              shadow: {
+                enabled: false
+              },
+              smooth: {
+                enabled: true,
+                type: 'cubicBezier',
+                roundness: 0.4
+              },
               physics: conceptLink.from.courses[0].id === course.id
             })
           }
@@ -87,7 +116,9 @@ const GraphView = ({ classes, workspaceId }) => {
             from: course.id,
             to: concept.id,
             dashes: true,
-            length: 50
+            shadow: {
+              enabled: false
+            }
           })
         }
         nodes.push({
