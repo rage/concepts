@@ -1,27 +1,15 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 
-import Grid from '@material-ui/core/Grid'
-import { withStyles } from '@material-ui/core/styles'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete'
-import GridOnIcon from '@material-ui/icons/GridOn'
-import ShowChartIcon from '@material-ui/icons/ShowChart'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
+import {
+  List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
+  CircularProgress, Menu, MenuItem, ListItemIcon
+} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import {
+  Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon,
+  ShowChart as ShowChartIcon, MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon
+} from '@material-ui/icons'
 
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
@@ -30,16 +18,28 @@ import { exportWorkspace } from '../common/WorkspaceNavBar'
 
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters()
+    ...theme.mixins.gutters(),
+    maxWidth: '720px',
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    boxSizing: 'border-box',
+    overflow: 'visible',
+    '@media screen and (max-width: 752px)': {
+      width: 'calc(100% - 32px)'
+    }
   },
   progress: {
     margin: theme.spacing(2)
   }
-})
+}))
 
-const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace }) => {
+const WorkspaceList = ({
+  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace
+}) => {
+  const classes = useStyles()
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
   const [menu, setMenu] = useState(null)
@@ -139,100 +139,98 @@ const WorkspaceList = ({ classes, history, workspaces, deleteWorkspace, createWo
 
 
   return (
-    <Grid container justify='center'>
-      <Grid item md={8} xs={12}>
-        <Card elevation={0} className={classes.root}>
-          <CardHeader
-            action={
-              loggedIn ?
-                <IconButton aria-label='Add' onClick={handleCreateOpen}>
-                  <AddIcon />
-                </IconButton> : null
-            }
-            title={
-              <Typography variant='h5' component='h3'>
-                Workspaces
-              </Typography>
-            }
-          />
-          <List dense={false}>
-            {
-              workspaces ?
-                workspaces.map(workspace => (
-                  <ListItem
-                    button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
-                  >
-                    <ListItemText
-                      primary={
-                        <Typography variant='h6'>
-                          {workspace.name}
-                        </Typography>
-                      }
-                      secondary={workspace.owner.id}
-                    />
-                    {
-                      loggedIn ?
-                        <ListItemSecondaryAction>
-                          <IconButton
-                            aria-owns={menu ? 'workspace-list-menu' : undefined}
-                            onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                            <MoreVertIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction> : null
+    <>
+      <Card elevation={0} className={classes.root}>
+        <CardHeader
+          action={
+            loggedIn ?
+              <IconButton aria-label='Add' onClick={handleCreateOpen}>
+                <AddIcon />
+              </IconButton> : null
+          }
+          title={
+            <Typography variant='h5' component='h3'>
+              Workspaces
+            </Typography>
+          }
+        />
+        <List dense={false}>
+          {
+            workspaces ?
+              workspaces.map(workspace => (
+                <ListItem
+                  button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+                >
+                  <ListItemText
+                    primary={
+                      <Typography variant='h6'>
+                        {workspace.name}
+                      </Typography>
                     }
+                    secondary={workspace.owner.id}
+                  />
+                  {
+                    loggedIn ?
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          aria-owns={menu ? 'workspace-list-menu' : undefined}
+                          onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                          <MoreVertIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction> : null
+                  }
 
-                  </ListItem>
-                )) :
-                <div style={{ textAlign: 'center' }}>
-                  <CircularProgress className={classes.progress} />
-                </div>
-            }
-          </List>
-          <Menu
-            id='workspace-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
-            onClose={handleMenuClose}
-          >
-            <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
-              <ListItemIcon>
-                <ShowChartIcon/>
-              </ListItemIcon>
-              Heatmap
-            </MenuItem>
-            <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
-              <ListItemIcon>
-                <GridOnIcon />
-              </ListItemIcon>
-              Matrix
-            </MenuItem>
-            <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-              <ListItemIcon>
-                <CloudDownloadIcon/>
-              </ListItemIcon>
-              Export
-            </MenuItem>
-            <MenuItem aria-label='Delete' onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteIcon />
-              </ListItemIcon>
-              Delete
-            </MenuItem>
-            <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              Edit
-            </MenuItem>
-          </Menu>
-        </Card>
-      </Grid>
+                </ListItem>
+              )) :
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress className={classes.progress} />
+              </div>
+          }
+        </List>
+        <Menu
+          id='workspace-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+          onClose={handleMenuClose}
+        >
+          <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
+            <ListItemIcon>
+              <ShowChartIcon />
+            </ListItemIcon>
+            Heatmap
+          </MenuItem>
+          <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
+            <ListItemIcon>
+              <GridOnIcon />
+            </ListItemIcon>
+            Matrix
+          </MenuItem>
+          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+            <ListItemIcon>
+              <CloudDownloadIcon />
+            </ListItemIcon>
+            Export
+          </MenuItem>
+          <MenuItem aria-label='Delete' onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            Delete
+          </MenuItem>
+          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            Edit
+          </MenuItem>
+        </Menu>
+      </Card>
 
       <WorkspaceCreationDialog
         state={stateCreate} handleClose={handleCreateClose}createWorkspace={createWorkspace} />
       <WorkspaceEditingDialog
         state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
         defaultName={stateEdit.name} />
-    </Grid>
+    </>
   )
 }
 
-export default withRouter(withStyles(styles)(WorkspaceList))
+export default withRouter(WorkspaceList)

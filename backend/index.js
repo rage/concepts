@@ -50,4 +50,5 @@ if (process.env.ENVIRONMENT === 'production') {
   })
 }
 
-server.start(options, () => console.log(`Server is running on http://localhost:${process.env.PORT || 4000}`))
+server.start(options, () =>
+  console.log(`Server is running on http://localhost:${process.env.PORT || 4000}`))

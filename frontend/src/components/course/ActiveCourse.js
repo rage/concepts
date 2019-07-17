@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -15,6 +15,7 @@ import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
 
 import { useLoginStateValue } from '../../store'
+import { useInfoBox } from '../common/InfoBox'
 
 
 const useStyles = makeStyles(theme => ({
@@ -60,14 +61,33 @@ const ActiveCourse = ({
   onClick,
   addingLink,
   setAddingLink,
-  toggleConcept
+  toggleConcept,
+  courseLinks
 }) => {
   const classes = useStyles()
+  const infoBox = useInfoBox()
+  const { loggedIn } = useLoginStateValue()[0]
+
+  useEffect(() => {
+    const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
+    const prereqConceptExists = courseLinks.find(link => link.from.concepts.length > 0)
+    if (hasLinks && activeConceptIds.length === 0) {
+      infoBox.open(activeConceptRef.current, 'right-start', 'FOCUS_CONCEPT', 0, 50)
+    }
+    if (hasLinks) return
+    if (course.concepts.length === 0) {
+      infoBox.open(createButtonRef.current, 'right-start', 'CREATE_CONCEPT_TARGET', 0, 50)
+    }
+    if (!prereqConceptExists) return
+    if (courseLinks.length > 0 && !addingLink) {
+      infoBox.open(conceptLinkRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
+    }
+  }, [course.concepts, addingLink, courseLinks])
 
   const {
     openCreateConceptDialog,
     ConceptCreateDialog
-  } = useCreateConceptDialog(course, workspaceId)
+  } = useCreateConceptDialog(course, workspaceId, false)
 
   const {
     openEditConceptDialog,
@@ -78,9 +98,12 @@ const ActiveCourse = ({
     CourseEditDialog
   } = useEditCourseDialog(workspaceId)
 
-  const { loggedIn } = useLoginStateValue()[0]
-
   const client = useApolloClient()
+
+  const createButtonRef = useRef()
+  const conceptLinkRef = useRef()
+  const activeConceptRef = useRef()
+
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -134,8 +157,11 @@ const ActiveCourse = ({
       </div>
 
       <List className={classes.list}>
-        {course.concepts.map(concept =>
-          <ActiveConcept concept={concept}
+        {course.concepts.map((concept, index) =>
+          <ActiveConcept
+            conceptLinkRef={index === 0 ? conceptLinkRef : undefined}
+            activeConceptRef={index === 0 ? activeConceptRef : undefined}
+            concept={concept}
             key={concept.id}
             activeConceptIds={activeConceptIds}
             addingLink={addingLink}
@@ -154,6 +180,7 @@ const ActiveCourse = ({
           onClick={openCreateConceptDialog(course.id)}
           variant='contained'
           color='secondary'
+          ref={createButtonRef}
         >
           Add concept
         </Button> : null

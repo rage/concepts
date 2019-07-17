@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Grid from '@material-ui/core/Grid'
+import { CircularProgress, makeStyles } from '@material-ui/core'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
@@ -17,14 +17,19 @@ import { WORKSPACES_BY_OWNER, PROJECTS_BY_OWNER } from '../../graphql/Query'
 import WorkspaceList from '../workspace/WorkspaceList'
 import ProjectList from '../project/ProjectList'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { withStyles } from '@material-ui/core/styles'
+const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    gridArea: 'content / content / bottom-navbar / bottom-navbar',
+    overflow: 'auto',
+    '& > div:not(:first-child)': {
+      marginTop: '16px'
+    }
+  }
+}))
 
-const styles = theme => ({
-})
-
-const UserView = ({ classes, userId }) => {
-
+const StaffView = ({ userId }) => {
   const workspaceQuery = useQuery(WORKSPACES_BY_OWNER, {
     variables: {
       ownerId: userId
@@ -85,44 +90,29 @@ const UserView = ({ classes, userId }) => {
     }]
   })
 
+  const classes = useStyles()
+
   return (
-    <React.Fragment>
-      {
-        workspaceQuery.data.workspacesByOwner && projectQuery.data.projectsByOwner ?
-          <Grid container spacing={0} direction='column'>
-            <Grid item>
-              <WorkspaceList
-                workspaces={workspaceQuery.data.workspacesByOwner}
-                updateWorkspace={updateWorkspace}
-                createWorkspace={createWorkspace}
-                deleteWorkspace={deleteWorkspace}
-              />
-            </Grid>
-            <Grid item>
-              <ProjectList
-                projects={projectQuery.data.projectsByOwner}
-                updateProject={updateProject}
-                createProject={createProject}
-                deleteProject={deleteProject}
-              />
-            </Grid>
-          </Grid>
-          :
-          <Grid container
-            spacing={0}
-            direction='row'
-            justify='center'
-            alignItems='center'
-          >
-            <Grid item xs={12}>
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress />
-              </div>
-            </Grid>
-          </Grid>
-      }
-    </ React.Fragment>
+    workspaceQuery.data.workspacesByOwner && projectQuery.data.projectsByOwner ?
+      <div className={classes.root}>
+        <WorkspaceList
+          workspaces={workspaceQuery.data.workspacesByOwner}
+          updateWorkspace={updateWorkspace}
+          createWorkspace={createWorkspace}
+          deleteWorkspace={deleteWorkspace}
+        />
+        <ProjectList
+          projects={projectQuery.data.projectsByOwner}
+          updateProject={updateProject}
+          createProject={createProject}
+          deleteProject={deleteProject}
+        />
+      </div>
+      :
+      <div style={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </div>
   )
 }
 
-export default withStyles(styles)(UserView)
+export default StaffView

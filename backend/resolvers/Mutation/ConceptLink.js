@@ -11,7 +11,7 @@ const ConceptLink = {
       ]
     })
     if (linkExists) return null
-    let data = {
+    const data = {
       to: {
         connect: { id: to }
       },
@@ -69,7 +69,9 @@ const ConceptLink = {
   },
   async deleteConceptLink(root, args, context) {
     const user = await context.prisma.conceptLink({ id: args.id }).createdBy()
-    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id })
+    checkAccess(context, {
+      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id
+    })
     return context.prisma.deleteConceptLink({
       id: args.id
     })

@@ -8,11 +8,11 @@ const AuthenticationMutations = {
     const guest = await context.prisma.createUser({
       role: 'GUEST'
     })
-    const token = jwt.sign({ 
-      role: guest.role, 
-      id: guest.id }, 
+    const token = jwt.sign({
+      role: guest.role,
+      id: guest.id },
     process.env.SECRET)
-    
+
     return {
       token,
       user: guest
@@ -27,8 +27,7 @@ const AuthenticationMutations = {
       return new AuthenticationError('Invalid tmc-token')
     }
 
-    let tmcId = userDetails.id
-    let administrator = userDetails.administrator
+    const tmcId = userDetails.id
     const user = await context.prisma.user({ tmcId })
 
     // New user

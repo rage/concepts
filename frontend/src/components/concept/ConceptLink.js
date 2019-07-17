@@ -10,7 +10,6 @@ export default class ConceptLink extends Component {
     this.toAnchor = this.parseAnchor(this.props.toAnchor)
     this.delay = this.parseDelay(this.props.delay)
     this.positionChanged = true
-    this.prevRedrawLines = 0
   }
 
   componentDidMount() {
@@ -37,10 +36,6 @@ export default class ConceptLink extends Component {
   }
 
   shouldComponentUpdate() {
-    if (this.props.redrawLines !== this.prevRedrawLines) {
-      this.prevRedrawLines = this.props.redrawLines
-      return true
-    }
     if (this.positionChanged) {
       this.positionChanged = false
       return true
@@ -120,7 +115,7 @@ export default class ConceptLink extends Component {
       return false
     }
 
-    const offset = Object.assign({x0: 0, y0: 0, x1: 0, y1: 0}, this.props.posOffsets)
+    const offset = Object.assign({ x0: 0, y0: 0, x1: 0, y1: 0 }, this.props.posOffsets)
 
     return () => {
       const fromBox = from.getBoundingClientRect()
@@ -138,12 +133,12 @@ export default class ConceptLink extends Component {
   render() {
     const points = this.detect()
     return points ? (
-      <StyledLine {...points()} refreshPoints={points} {...this.props}/>
+      <StyledLine {...points()} refreshPoints={points} {...this.props} />
     ) : null
   }
 }
 
-const lineStyles = theme => ({
+const lineStyles = () => ({
   linetoPlaceholder: {
     display: 'none'
   },
@@ -173,6 +168,7 @@ export class Line extends PureComponent {
     this.el = React.createRef()
     this.handleMouse = this.handleMouse.bind(this)
     this.handleResize = this.handleResize.bind(this)
+    this.elCallback = this.elCallback.bind(this)
     this.pos = {
       x0: this.props.x0,
       y0: this.props.y0,
@@ -224,10 +220,9 @@ export class Line extends PureComponent {
   }
 
   recalculate() {
-    const {x, y, angle, length} = this.calculate()
+    const { x, y, angle, length } = this.calculate()
 
     if (!this.el.current) {
-      console.log(this.el, 'Reference disappeared 3:')
       return
     }
 
@@ -246,11 +241,18 @@ export class Line extends PureComponent {
     const dx = (this.dynX || x1) - x0
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
     const length = Math.sqrt(dx * dx + dy * dy)
-    return {x: x0, y: y0, angle, length}
+    return { x: x0, y: y0, angle, length }
+  }
+
+  elCallback(el) {
+    this.el.current = el
+    if (this.props.linkRef) {
+      this.props.linkRef.current = el
+    }
   }
 
   render() {
-    const {x, y, angle, length} = this.calculate()
+    const { x, y, angle, length } = this.calculate()
     const within = this.props.within || ''
 
     this.within = within ? document.getElementById(within) : document.body
@@ -297,15 +299,19 @@ export class Line extends PureComponent {
       <div className={this.props.classes.linetoPlaceholder}
         data-link-from={this.props.from}
         data-link-to={this.props.to} {...this.props.attributes}>
-        <div className={`${this.props.classes.linetoWrapper} ${this.props.active && !this.props.followMouse ? 'linetoActive' : ''}`}
-          ref={this.el} style={wrapperStyle}>
+        <div
+          className={`${this.props.classes.linetoWrapper}
+                      ${this.props.active && !this.props.followMouse ? 'linetoActive' : ''}`}
+          ref={this.elCallback} style={wrapperStyle}
+        >
           {(this.props.active && !this.props.followMouse) &&
-          <div
-            style={hoverAreaStyle} className={this.props.classes.linetoHover}
-            onContextMenu={evt => this.props.onContextMenu(evt, this)}
-            onClick={evt => this.props.onContextMenu(evt, this)}/>}
+            <div
+              style={hoverAreaStyle} className={this.props.classes.linetoHover}
+              onContextMenu={evt => this.props.onContextMenu(evt, this)}
+              onClick={evt => this.props.onContextMenu(evt, this)} />}
           <div style={innerStyle}
-            className={`${this.props.classes.linetoLine} ${this.props.active ? 'linetoActive' : ''}`}>
+            className={`${this.props.classes.linetoLine}
+                        ${this.props.active ? 'linetoActive' : ''}`}>
           </div>
         </div>
       </div>

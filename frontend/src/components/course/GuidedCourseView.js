@@ -5,7 +5,9 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { makeStyles } from '@material-ui/core/styles'
 
-import { WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
+import {
+  WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES, COURSES_BY_WORKSPACE
+} from '../../graphql/Query'
 import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 
 import GuidedCourseContainer from './GuidedCourseContainer'
@@ -24,6 +26,8 @@ import {
 import ConceptLink from '../concept/ConceptLink'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+
+import { useInfoBox } from '../common/InfoBox'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -49,11 +53,59 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   const classes = useStyles()
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
-  const [redrawLines, setRedrawLines] = useState(0)
   const [addingLink, setAddingLink] = useState(null)
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
   const conceptLinkMenuRef = useRef()
-  const { loggedIn } = useLoginStateValue()[0]
+  const trayFabRef = useRef()
+  const conceptConnectionRef = useRef()
+  const [{ loggedIn }] = useLoginStateValue()
+
+  const infoBox = useInfoBox()
+
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
+    variables: { id: workspaceId }
+  })
+
+  const prereqQuery = useQuery(COURSE_PREREQUISITES, {
+    variables: { courseId, workspaceId }
+  })
+
+  const courseQuery = useQuery(COURSE_BY_ID, {
+    variables: { id: courseId }
+  })
+
+  const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
+    variables: { workspaceId }
+  })
+
+  const createCourse = useMutation(CREATE_COURSE, {
+    update: createCourseUpdate(workspaceId)
+  })
+
+  const updateCourse = useMutation(UPDATE_COURSE, {
+    update: updateCourseUpdate(workspaceId)
+  })
+
+  useEffect(() => {
+    const conceptsExist = courseQuery.data.courseById
+      && courseQuery.data.courseById.concepts.length === 1
+    const activeConceptHasLinks = courseQuery.data.courseById
+      && courseQuery.data.courseById.concepts.find(concept => {
+        return concept.linksToConcept.length > 0
+          && activeConceptIds.includes(concept.id)
+      })
+    if (!courseTrayOpen && conceptsExist) {
+      infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
+    }
+    if (activeConceptHasLinks && activeConceptIds.length > 0) {
+      infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
+    }
+  }, [courseTrayOpen, activeConceptIds, courseQuery])
+
+  // Closes infoBox when leaving the page
+  useEffect(() => {
+    return infoBox.close
+  }, [])
 
   const handleMenuOpen = (event, link) => {
     event.preventDefault()
@@ -78,32 +130,9 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
         id: conceptLinkMenu.linkId
       }
     })
+    infoBox.close()
     setConceptLinkMenu(null)
   }
-
-  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
-    variables: { id: workspaceId }
-  })
-
-  const prereqQuery = useQuery(COURSE_PREREQUISITES, {
-    variables: { courseId, workspaceId }
-  })
-
-  const courseQuery = useQuery(COURSE_BY_ID, {
-    variables: { id: courseId }
-  })
-
-  const createCourse = useMutation(CREATE_COURSE, {
-    update: createCourseUpdate(workspaceId)
-  })
-
-  const updateCourse = useMutation(UPDATE_COURSE, {
-    update: updateCourseUpdate(workspaceId)
-  })
-
-  useEffect(() => {
-    setRedrawLines(redrawLines + 1)
-  }, [workspaceQuery, prereqQuery, courseQuery])
 
   const toggleConcept = (id) => () => {
     const alreadyActive = activeConceptIds.find(i => i === id)
@@ -135,10 +164,12 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
               setAddingLink={setAddingLink}
               toggleConcept={toggleConcept}
               courseTrayOpen={courseTrayOpen}
+              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             <GuidedCourseContainer
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
+              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
@@ -155,11 +186,13 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
               setCourseTrayOpen={setCourseTrayOpen}
               courseTrayOpen={courseTrayOpen}
               createCourse={createCourse}
+              coursesQuery={coursesQuery}
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             {
               courseQuery.data.courseById.concepts.length !== 0 && loggedIn ?
                 <Fab
+                  ref={trayFabRef}
                   style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
                   onClick={handleTrayToggle}
                 >
@@ -179,25 +212,25 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
           </div>
       }
       {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-        && courseQuery.data.courseById.concepts.map(concept => (
+        && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
           prereqQuery.data.courseAndPrerequisites.linksToCourse
             .filter(link => link.from.id === concept.courses[0].id)
-            ? concept.linksToConcept.map(link => (
+            ? concept.linksToConcept.map((link, lIdx) => (
               <ConceptLink
-                key={`concept-link-${link.id}`} within='course-view' delay={1}
+                linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
+                key={`concept-link-${link.id}`} delay={1}
                 active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
                 from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-                redrawLines={redrawLines} fromAnchor='right middle' toAnchor='left middle'
-                onContextMenu={handleMenuOpen} posOffsets={{ x0: -5, x1: +6 }} />
+                fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
+                posOffsets={{ x0: -5, x1: +6 }} />
             )) : null
         ))}
       <div ref={conceptLinkMenuRef} style={{
         position: 'absolute',
         width: '1px',
         height: '1px',
-        display: conceptLinkMenu ? 'block' : 'none',
-        top: `${conceptLinkMenu ? conceptLinkMenu.y : 0}px`,
-        left: `${conceptLinkMenu ? conceptLinkMenu.x : 0}px`
+        top: `${conceptLinkMenu ? conceptLinkMenu.y : -1}px`,
+        left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
       }} />
       <Menu
         id='concept-link-menu'
@@ -216,7 +249,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
         <MenuItem onClick={deleteLink}>Delete link</MenuItem>
       </Menu>
       {addingLink && <ConceptLink
-        key='concept-link-creating' within='course-view' active={true}
+        key='concept-link-creating' active={true}
         from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
         followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
       />}

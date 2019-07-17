@@ -6,6 +6,7 @@ const conceptLink = require('./ConceptLink')
 const workspace = require('./Workspace')
 const project = require('./Project')
 const port = require('./Port')
+const user = require('./User')
 
 module.exports = {
   ...authentication,
@@ -15,5 +16,6 @@ module.exports = {
   ...conceptLink,
   ...workspace,
   ...project,
-  ...port
+  ...port,
+  ...user
 }

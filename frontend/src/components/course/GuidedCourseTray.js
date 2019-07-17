@@ -1,18 +1,20 @@
-import React, { useState } from 'react'
-import { useQuery, useMutation, useApolloClient } from 'react-apollo-hooks'
+import React, { useState, useEffect, useRef } from 'react'
+import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
   Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
   ListItemSecondaryAction
 } from '@material-ui/core'
-import { COURSES_BY_WORKSPACE, COURSE_PREREQUISITES } from '../../graphql/Query/Course'
+import { COURSE_PREREQUISITES } from '../../graphql/Query/Course'
 
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
 import useCreateCourseDialog from './useCreateCourseDialog'
 
 import { useErrorStateValue } from '../../store'
+
+import { useInfoBox } from '../common/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,6 +51,7 @@ const PrerequisiteCourse = ({
   isPrerequisite,
   getLinkToDelete,
   course,
+  checkboxRef,
   activeCourseId,
   workspaceId,
   createCourseLink,
@@ -78,7 +81,7 @@ const PrerequisiteCourse = ({
   }
   return (
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
-      <ListItem divider button onClick={onClick} className={classes.listItem}>
+      <ListItem ref={checkboxRef} divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary'></Checkbox>
@@ -93,15 +96,15 @@ const GuidedCourseTray = ({
   activeCourseId,
   courseId,
   workspaceId,
-  courseLinks
+  courseLinks,
+  coursesQuery
 }) => {
   const [filterKeyword, setFilterKeyword] = useState('')
 
-  const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
-    variables: { workspaceId }
-  })
-
   const classes = useStyles()
+  const infoBox = useInfoBox()
+  const createButtonRef = useRef()
+  const checkboxRef = useRef()
 
   const {
     openCreateCourseDialog,
@@ -109,6 +112,17 @@ const GuidedCourseTray = ({
   } = useCreateCourseDialog(workspaceId)
 
   const client = useApolloClient()
+
+  useEffect(() => {
+    const courses = coursesQuery.data.coursesByWorkspace
+      && coursesQuery.data.coursesByWorkspace
+    const enoughCourses = courses && courses.length === 1
+    if (courseTrayOpen && enoughCourses) {
+      infoBox.open(createButtonRef.current, 'left-start', 'CREATE_COURSE', 0, 50)
+    } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
+      infoBox.open(checkboxRef.current, 'left-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
+    }
+  }, [courseTrayOpen, coursesQuery, courseLinks])
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -196,10 +210,11 @@ const GuidedCourseTray = ({
         <List disablePadding className={classes.list}>
           {coursesQuery.data.coursesByWorkspace
             .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
-            .map(course =>
+            .map((course, index) =>
               <PrerequisiteCourse
                 key={course.id}
                 course={course}
+                checkboxRef={index === 1 && checkboxRef}
                 activeCourseId={activeCourseId}
                 createCourseLink={createCourseLink}
                 deleteCourseLink={deleteCourseLink}
@@ -213,6 +228,7 @@ const GuidedCourseTray = ({
       }
 
       <Button
+        ref={createButtonRef}
         onClick={openCreateCourseDialog}
         className={classes.button}
         variant='contained'
@@ -220,7 +236,7 @@ const GuidedCourseTray = ({
       >
         New course
       </Button>
-    </Paper >
+    </Paper>
 
     {CourseCreateDialog}
   </>
