@@ -88,13 +88,15 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
 
   useEffect(() => {
     const conceptsExist = courseQuery.data.courseById
-      && courseQuery.data.courseById.concepts.length === 1 && loggedIn
+      && courseQuery.data.courseById.concepts.length === 1
     const activeConceptHasLinks = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.find(concept => {
         return concept.linksToConcept.length > 0
           && activeConceptIds.includes(concept.id)
       })
+    console.log('effect')
     if (!courseTrayOpen && conceptsExist) {
+      console.log('open tray guide')
       infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
     if (activeConceptHasLinks && activeConceptIds.length > 0) {

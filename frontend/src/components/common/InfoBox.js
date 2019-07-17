@@ -94,13 +94,13 @@ const InfoBox = ({ children }) => {
   } = state
 
   const openPopper = async (target, newPlacement, id, alignment = 0, separation = 0) => {
+    console.log('user: ', user)
     if (user) {
       const info = userGuide[id]
       const index = await getProgress(user.id)
       console.log('popper', info.index, index)
       if (index >= info.index) {
         console.log('Guide too high')
-        closePopper()
         return
       }
       if (fadeout) {
@@ -123,6 +123,7 @@ const InfoBox = ({ children }) => {
     if (fadeout) {
       return
     }
+    console.log('closing popper')
     setState({
       ...state,
       fadeout: setTimeout(() => setState({
