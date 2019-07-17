@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => ({
     left: '53px'
   },
   popperWrap: {
-    position: 'absolute',
+    position: 'fixed',
     display: 'none',
     '&:hover': {
     }
