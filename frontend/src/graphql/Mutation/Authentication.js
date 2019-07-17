@@ -7,6 +7,7 @@ mutation createGuest {
     user {
       id,
       role
+      guideProgress
     }
   }
 }

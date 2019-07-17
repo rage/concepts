@@ -1,9 +1,11 @@
-import React, { useState, createContext, useContext, useRef } from 'react'
+import React, { useState, createContext, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Paper, Typography, IconButton, Popper } from '@material-ui/core'
 import { InfoOutlined as InfoIcon } from '@material-ui/icons'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../../static/userGuide'
+import { setProgress, getUser } from '../../lib/userProgress'
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,20 +81,32 @@ const InfoBox = ({ children }) => {
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
-  const seen = useRef([])
+
+  const {
+    title,
+    description,
+    open,
+    offset,
+    placement,
+    fadeout,
+    enableTransition
+  } = state
 
   const openPopper = (target, newPlacement, id, alignment = 0, separation = 0) => {
-    if (seen.current.includes(id)) {
+    const user = getUser()
+    if (!user || !user.id) return
+    const info = userGuide[id]
+    const progress = user.guideProgress
+    if (progress >= info.index) {
       return
     }
-    if (state.fadeout) {
-      clearTimeout(state.fadeout)
+    setProgress(info.index, user.id).catch(err => console.error("setProgress error:", err))
+    if (fadeout) {
+      clearTimeout(fadeout)
     }
     overlay.open(target)
-    const info = userGuide[id]
-    seen.current.push(id)
     setState({
-      enableTransition: state.open,
+      enableTransition: open,
       open: true,
       placement: newPlacement,
       offset: { alignment, separation },
@@ -102,7 +116,7 @@ const InfoBox = ({ children }) => {
   }
 
   const closePopper = () => {
-    if (state.fadeout) {
+    if (fadeout) {
       return
     }
     setState({
@@ -114,7 +128,6 @@ const InfoBox = ({ children }) => {
     overlay.close()
   }
 
-  const { title, description, open, offset, placement } = state
 
   const POPPER_MODIFIERS = {
     offset: {
@@ -132,8 +145,8 @@ const InfoBox = ({ children }) => {
         anchorEl={open && overlay.box && overlay.box.current ? overlay.box.current : undefined}
         placement={placement}
         modifiers={POPPER_MODIFIERS}
-        className={`${classes.popper} ${state.enableTransition ? 'enableTransition' : ''}
-                    ${state.fadeout ? 'fadeout' : ''}`}
+        className={`${classes.popper} ${enableTransition ? 'enableTransition' : ''}
+                    ${fadeout ? 'fadeout' : ''}`}
       >
         <Paper elevation={0} className={classes.root}>
           <div className={classes.infoHeader}>

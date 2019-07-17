@@ -56,7 +56,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   const conceptLinkMenuRef = useRef()
   const trayFabRef = useRef()
   const conceptConnectionRef = useRef()
-  const { loggedIn } = useLoginStateValue()[0]
+  const [{ loggedIn }] = useLoginStateValue()
 
   const infoBox = useInfoBox()
 
@@ -85,23 +85,20 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
   })
 
   useEffect(() => {
-    const courses = coursesQuery.data.coursesByWorkspace
-      && coursesQuery.data.coursesByWorkspace
     const conceptsExist = courseQuery.data.courseById
-      && courseQuery.data.courseById.concepts.length === 1 && loggedIn
-    const enoughCourses = courses && courses.length === 1
+      && courseQuery.data.courseById.concepts.length === 1
     const activeConceptHasLinks = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.find(concept => {
         return concept.linksToConcept.length > 0
           && activeConceptIds.includes(concept.id)
       })
-    if (enoughCourses && !courseTrayOpen && conceptsExist) {
+    if (!courseTrayOpen && conceptsExist) {
       infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
     if (activeConceptHasLinks && activeConceptIds.length > 0) {
       infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
     }
-  }, [coursesQuery, courseTrayOpen, activeConceptIds, courseQuery])
+  }, [courseTrayOpen, activeConceptIds, courseQuery])
 
   // Closes infoBox when leaving the page
   useEffect(() => {
@@ -131,6 +128,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
         id: conceptLinkMenu.linkId
       }
     })
+    infoBox.close()
     setConceptLinkMenu(null)
   }
 
@@ -169,6 +167,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
             />
             <GuidedCourseContainer
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
+              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               courseId={courseQuery.data.courseById.id}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}
