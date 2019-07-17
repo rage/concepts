@@ -83,7 +83,7 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
             conceptLinkData.push({
               from: prerequisiteConcept.id,
               to: conceptLink.to.id,
-              arrows: 'from'
+              arrows: 'to'
             })
           }
         }
