@@ -246,7 +246,7 @@ const CourseHeatmap = ({ workspaceId }) => {
   return (
     <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
       <Paper className={classes.paper} >
-        <Typography variant='h5' style={{marginBottom: '32px'}}>Course overview</Typography>
+        <Typography variant='h5' style={{ marginBottom: '32px' }}>Course overview</Typography>
         {
           workspaceCourseQuery.data.workspaceById ?
             <div className={classes.scrollSyncTable}>

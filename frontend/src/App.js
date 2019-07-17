@@ -101,7 +101,7 @@ const App = ({ classes }) => {
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
           exact path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
-          render={({ match: { params: {wid, cid, page} } }) =>
+          render={({ match: { params: { wid, cid, page } } }) =>
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page}/>}
         />
         <PrivateRoute
