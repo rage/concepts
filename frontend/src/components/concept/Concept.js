@@ -57,7 +57,8 @@ const Concept = ({
   addingLink,
   setAddingLink,
   openConceptEditDialog,
-  workspaceId
+  workspaceId,
+  connectionRef
 }) => {
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
@@ -139,7 +140,7 @@ const Concept = ({
       id={'concept-' + concept.id}
     >
       <ListItemIcon>
-        <IconButton onClick={onClick} style={{ padding: '4px' }}>
+        <IconButton buttonRef={connectionRef} onClick={onClick} style={{ padding: '4px' }}>
           <ArrowLeftIcon
             viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
             color={linkButtonColor} />

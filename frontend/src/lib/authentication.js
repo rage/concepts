@@ -34,7 +34,7 @@ export const signOut = async () => {
 }
 
 export async function apiAuthentication(accessToken) {
-  const res = client.mutate({
+  const res = await client.mutate({
     mutation: gql`
       mutation authenticateUser($tmcToken: String!) {
         login(tmcToken: $tmcToken) {
@@ -42,6 +42,7 @@ export async function apiAuthentication(accessToken) {
           user {
             id
             role
+            guideProgress
           }
         }
       }

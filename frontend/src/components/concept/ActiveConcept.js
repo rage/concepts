@@ -10,8 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
-import Tooltip from '@material-ui/core/Tooltip'
-
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 
 // Error dispatcher
@@ -58,6 +56,8 @@ const useStyles = makeStyles(() => ({
 
 const ActiveConcept = ({
   concept,
+  conceptLinkRef,
+  activeConceptRef,
   toggleConcept,
   activeConceptIds,
   addingLink,
@@ -136,61 +136,60 @@ const ActiveConcept = ({
     ? 'secondary' : undefined
 
   return <>
-    <Tooltip
-      title='activate selection of prerequisites' enterDelay={500} leaveDelay={400} placement='left'
+    <ListItem
+      ref={activeConceptRef}
+      button divider id={'concept-' + concept.id}
+      className={classes.listItem}
+      onClick={toggleConcept(concept.id)}
     >
-      <ListItem
-        button divider id={'concept-' + concept.id}
-        className={classes.listItem}
-        onClick={toggleConcept(concept.id)}
+      <ListItemText
+        id={'concept-name-' + concept.id}
+        className={classes.conceptName}
       >
-        <ListItemText
-          id={'concept-name-' + concept.id}
-          className={classes.conceptName}
-        >
-          {concept.name}
-        </ListItemText>
-        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-          {activeConceptIds.length === 0 ?
-            <React.Fragment>
-              {loggedIn ?
-                <IconButton
-                  aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup='true'
-                  onClick={handleMenuOpen}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                : null
-              }
-              <Menu
-                id='simple-menu'
-                anchorEl={state.anchorEl}
-                open={Boolean(state.anchorEl)}
-                onClose={handleMenuClose}
+        {concept.name}
+      </ListItemText>
+      <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+        {activeConceptIds.length === 0 ?
+          <React.Fragment>
+            {loggedIn ?
+              <IconButton
+                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                aria-haspopup='true'
+                onClick={handleMenuOpen}
               >
-                <MenuItem
-                  onClick={handleEditConcept(concept.id, concept.name, concept.description)}
-                >
-                  Edit
-                </MenuItem>
-                <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
-              </Menu>
-            </React.Fragment>
-            : null
-          }
-          <IconButton
-            onClick={onClick} className={`${classes.conceptCircle}
-            ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
-          >
-            <ArrowRightIcon
-              viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
-              color={linkButtonColor}
-            />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
-    </Tooltip>
+                <MoreVertIcon />
+              </IconButton>
+              : null
+            }
+            <Menu
+              id='simple-menu'
+              anchorEl={state.anchorEl}
+              open={Boolean(state.anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem
+                onClick={handleEditConcept(concept.id, concept.name, concept.description)}
+              >
+                Edit
+              </MenuItem>
+              <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
+            </Menu>
+          </React.Fragment>
+          : null
+        }
+        <IconButton
+          buttonRef={conceptLinkRef}
+          onClick={onClick}
+          className={`${classes.conceptCircle}
+          ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
+        >
+          <ArrowRightIcon
+            viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
+            color={linkButtonColor}
+          />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   </>
 }
 

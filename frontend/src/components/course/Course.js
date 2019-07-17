@@ -60,6 +60,8 @@ const useStyles = makeStyles(theme => ({
 
 const Course = ({
   course,
+  connectionRef,
+  createConceptRef,
   activeCourseId,
   addingLink,
   setAddingLink,
@@ -77,51 +79,51 @@ const Course = ({
   }
 
   return (
-    <React.Fragment>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader className={classes.cardHeader} title={
-          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
-        } action={
+    <Card elevation={0} className={classes.root}>
+      <CardHeader className={classes.cardHeader} title={
+        <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
+      } action={
+        loggedIn ?
+          <IconButton onClick={openCourseDialog(course.id, course.name)}>
+            <EditIcon />
+          </IconButton>
+          : null
+
+      }>
+      </CardHeader>
+
+      <CardContent>
+        <List className={classes.list}>
+          {course.concepts.map((concept, index) =>
+            <Concept concept={concept}
+              key={concept.id}
+              course={course}
+              connectionRef={index === 0 ? connectionRef : undefined}
+              activeConceptIds={activeConceptIds}
+              addingLink={addingLink}
+              setAddingLink={setAddingLink}
+              openConceptEditDialog={openConceptEditDialog}
+              activeCourseId={activeCourseId}
+              workspaceId={workspaceId}
+            />
+          )}
+        </List>
+        {
           loggedIn ?
-            <IconButton onClick={openCourseDialog(course.id, course.name)}>
-              <EditIcon />
-            </IconButton>
+            <Button
+              className={classes.button}
+              onClick={openConceptDialog(course.id)}
+              variant='contained'
+              color='primary'
+              ref={createConceptRef}
+            >
+              Add concept
+            </Button>
             : null
+        }
 
-        }>
-        </CardHeader>
-
-        <CardContent>
-          <List className={classes.list}>
-            {course.concepts.map(concept =>
-              <Concept concept={concept}
-                key={concept.id}
-                course={course}
-                activeConceptIds={activeConceptIds}
-                addingLink={addingLink}
-                setAddingLink={setAddingLink}
-                openConceptEditDialog={openConceptEditDialog}
-                activeCourseId={activeCourseId}
-                workspaceId={workspaceId}
-              />
-            )}
-          </List>
-          {
-            loggedIn ?
-              <Button
-                className={classes.button}
-                onClick={openConceptDialog(course.id)}
-                variant='contained'
-                color='primary'
-              >
-                Add concept
-              </Button>
-              : null
-          }
-
-        </CardContent>
-      </Card>
-    </React.Fragment>
+      </CardContent>
+    </Card>
   )
 }
 
