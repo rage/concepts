@@ -1,4 +1,4 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess } = require('../../accessControl')
 
 const PortQueries = {
   async exportData(root, args, context) {

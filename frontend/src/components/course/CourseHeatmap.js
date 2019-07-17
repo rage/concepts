@@ -168,7 +168,7 @@ const HeaderCell = ({ title }) => {
 }
 
 const TableCell = withRouter(({
-  toCourse, fromCourse, minGradVal, maxGradVal, workspaceId, history
+  toCourse, fromCourse, maxGradVal, workspaceId, history
 }) => {
   const classes = useStyles()
 
@@ -268,7 +268,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                         {
                           workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
                             <TableCell
-                              workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal}
+                              workspaceId={workspaceId} maxGradVal={maxGradVal}
                               key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
                               toCourse={toCourse} />
                           ))

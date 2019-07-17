@@ -5,7 +5,6 @@ import { InfoOutlined as InfoIcon } from '@material-ui/icons'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../../static/userGuide'
 import { setProgress, getUser } from '../../lib/userProgress'
-import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -100,7 +99,7 @@ const InfoBox = ({ children }) => {
     if (progress >= info.index) {
       return
     }
-    setProgress(info.index, user.id).catch(err => console.error("setProgress error:", err))
+    setProgress(info.index, user.id).catch(err => console.error('setProgress error:', err))
     if (fadeout) {
       clearTimeout(fadeout)
     }

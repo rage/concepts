@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const ResourceForm = ({ createResource, concept_id }) => {
+const ResourceForm = ({ createResource, conceptId }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
@@ -15,7 +15,7 @@ const ResourceForm = ({ createResource, concept_id }) => {
       return
     }
     await createResource({
-      variables: { name, desc: description, urls, concept_id }
+      variables: { name, desc: description, urls, concept_id: conceptId }
     })
 
     setName('')
@@ -42,11 +42,13 @@ const ResourceForm = ({ createResource, concept_id }) => {
         <hr />
         <div>
           <label>Name </label>
-          <input name='name' value={name} onChange={(e) => setName(e.target.value)}></input>
+          <input name='name' value={name} onChange={(e) => setName(e.target.value)}/>
         </div>
         <div>
           <label>Description </label>
-          <input name='description' value={description} onChange={(e) => setDescription(e.target.value)} />
+          <input
+            name='description' value={description}
+            onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div style={{ display: visible ? '' : 'none' }}>
           {urls.length > 0 &&
@@ -66,7 +68,7 @@ const ResourceForm = ({ createResource, concept_id }) => {
             <label>
               New url
             </label>
-            <input name='url' value={url} onChange={(e) => setUrl(e.target.value)}></input>
+            <input name='url' value={url} onChange={(e) => setUrl(e.target.value)}/>
           </div>
           <button type='button' onClick={addAddress}>Add url</button>
         </div>
@@ -74,7 +76,9 @@ const ResourceForm = ({ createResource, concept_id }) => {
         <button type='button' onClick={toggleVisibility}>Cancel</button>
         <hr />
       </form>
-      <button style={{ display: visible ? 'none' : '' }} onClick={toggleVisibility}>Create resource</button>
+      <button style={{ display: visible ? 'none' : '' }} onClick={toggleVisibility}>
+        Create resource
+      </button>
     </div>
   )
 }

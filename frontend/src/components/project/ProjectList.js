@@ -55,7 +55,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
     setStateCreate({ open: false })
   }
 
-  const handleEditOpen = (id, name) => () => {
+  const handleEditOpen = (id, name) => {
     if (!loggedIn) {
       errorDispatch({
         type: 'setError',
@@ -70,7 +70,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
     setStateEdit({ open: false, id: '', name: '' })
   }
 
-  const handleDelete = (id) => async (e) => {
+  const handleDelete = async (id) => {
     if (!loggedIn) {
       errorDispatch({
         type: 'setError',
@@ -130,11 +130,11 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
                   {
                     loggedIn ?
                       <ListItemSecondaryAction>
-                        <IconButton aria-label='Delete' onClick={handleDelete(project.id)}>
+                        <IconButton aria-label='Delete' onClick={() => handleDelete(project.id)}>
                           <DeleteIcon />
                         </IconButton>
                         <IconButton
-                          aria-label='Edit' onClick={handleEditOpen(project.id, project.name)}
+                          aria-label='Edit' onClick={() => handleEditOpen(project.id, project.name)}
                         >
                           <EditIcon />
                         </IconButton>
