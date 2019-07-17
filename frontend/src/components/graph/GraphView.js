@@ -25,13 +25,8 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
     var container = document.getElementById('graph')
     var options = {
       nodes: {
-        shape: 'dot',
-        size: 30,
-        font: {
-          size: 32
-        },
-        borderWidth: 2,
-        shadow:true
+        shape: 'box',
+        shadow: true
       },
       edges: {
         width: 2,
@@ -64,8 +59,8 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
       for (const concept of courseAndPrerequisites.concepts) {
         conceptNodeData.push({
           id: concept.id,
-          label: concept.name,
-          group: courseAndPrerequisites.id
+          label: concept.name
+          // group: courseAndPrerequisites.id
         })
       }
 
@@ -79,8 +74,8 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
           }) === 'undefined') {
             conceptNodeData.push({
               id: prerequisiteConcept.id,
-              label: prerequisiteConcept.name,
-              group: prerequisiteCourse.id
+              label: prerequisiteConcept.name
+              // group: prerequisiteCourse.id
             })
           }
 
