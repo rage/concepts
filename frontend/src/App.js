@@ -8,7 +8,6 @@ import { Error as ErrorIcon, Close as CloseIcon } from '@material-ui/icons'
 import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
 import PortView from './components/porting/PortView'
-import CourseList from './components/course/CourseList'
 import NavBar from './components/common/NavBar'
 import WorkspaceNavBar from './components/common/WorkspaceNavBar'
 import PrivateRoute from './components/common/PrivateRoute'
@@ -16,10 +15,6 @@ import UserView from './components/user/UserView'
 import LandingView from './components/common/LandingView'
 import WorkspaceView from './components/workspace/WorkspaceView'
 import CourseHeatmap from './components/course/CourseHeatmap'
-
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
-import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from './graphql/Mutation/Course'
-import { ALL_COURSES } from './graphql/Query/Course'
 
 import { useErrorStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
@@ -54,8 +49,6 @@ const styles = theme => ({
 })
 
 const App = ({ classes }) => {
-  const client = useApolloClient()
-
   const { loggedIn } = useLoginStateValue()[0]
 
   // Error handling
@@ -67,58 +60,6 @@ const App = ({ classes }) => {
       type: 'clearError'
     })
   }
-
-  const includedIn = (set, object) =>
-    set.map(p => p.id).includes(object.id)
-
-  const createCourse = useMutation(CREATE_COURSE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
-      const addedCourse = response.data.createCourse
-
-      if (!includedIn(dataInStore.allCourses, addedCourse)) {
-        dataInStore.allCourses.push(addedCourse)
-        client.writeQuery({
-          query: ALL_COURSES,
-          data: dataInStore
-        })
-      }
-    }
-  })
-
-  const deleteCourse = useMutation(DELETE_COURSE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
-      const deletedCourse = response.data.deleteCourse
-
-      if (includedIn(dataInStore.allCourses, deletedCourse)) {
-        dataInStore.allCourses = dataInStore.allCourses.filter(course => {
-          return course.id !== deletedCourse.id
-        })
-        client.writeQuery({
-          query: ALL_COURSES,
-          data: dataInStore
-        })
-      }
-    }
-  })
-
-  const updateCourse = useMutation(UPDATE_COURSE, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({ query: ALL_COURSES })
-      const updatedCourse = response.data.updateCourse
-
-      if (includedIn(dataInStore.allCourses, updatedCourse)) {
-        dataInStore.allCourses = dataInStore.allCourses.map(course => {
-          return course.id === updatedCourse.id ? updatedCourse : course
-        })
-        client.writeQuery({
-          query: ALL_COURSES,
-          data: dataInStore
-        })
-      }
-    }
-  })
 
   return (
     <>
@@ -162,17 +103,6 @@ const App = ({ classes }) => {
           exact path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
           render={({ match: { params: {wid, cid, page} } }) =>
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page}/>}
-        />
-        <Route exact path='/courses' render={() => <CourseList
-          updateCourse={updateCourse} createCourse={createCourse} deleteCourse={deleteCourse} />} />
-
-        <Route exact path='/courses/:id' render={({ match }) => {
-          return <GuidedCourseView
-            course_id={match.params.id}
-            createCourse={createCourse}
-            updateCourse={updateCourse}
-          />
-        }}
         />
         <PrivateRoute
           exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn}

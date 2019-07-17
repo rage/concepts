@@ -1,20 +1,12 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
 
-import Grid from '@material-ui/core/Grid'
-import { withStyles } from '@material-ui/core/styles'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add'
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import {
+  List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
+  CircularProgress
+} from '@material-ui/core'
+import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import ProjectCreationDialog from './ProjectCreationDialog'
 import ProjectEditingDialog from './ProjectEditingDialog'
@@ -22,16 +14,26 @@ import ProjectEditingDialog from './ProjectEditingDialog'
 // Error dispatcher
 import { useErrorStateValue, useLoginStateValue } from '../../store'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters()
+    ...theme.mixins.gutters(),
+    maxWidth: '720px',
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    boxSizing: 'border-box',
+    overflow: 'visible',
+    '@media screen and (max-width: 752px)': {
+      width: 'calc(100% - 32px)'
+    }
   },
   progress: {
     margin: theme.spacing(2)
   }
-})
+}))
 
-const ProjectList = ({ classes, history, projects, deleteProject, createProject, updateProject }) => {
+const ProjectList = ({ history, projects, deleteProject, createProject, updateProject }) => {
+  const classes = useStyles()
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
@@ -77,7 +79,7 @@ const ProjectList = ({ classes, history, projects, deleteProject, createProject,
       return
     }
 
-    let willDelete = window.confirm('Are you sure you want to delete this project?')
+    const willDelete = window.confirm('Are you sure you want to delete this project?')
     if (willDelete) {
       try {
         await deleteProject({
@@ -97,61 +99,64 @@ const ProjectList = ({ classes, history, projects, deleteProject, createProject,
   }
 
   return (
-    <Grid container justify='center'>
-      <Grid item md={8} xs={12}>
-        <Card elevation={0} className={classes.root}>
-          <CardHeader
-            action={
-              loggedIn ?
-                <IconButton aria-label='Add' onClick={handleClickOpen}>
-                  <AddIcon />
-                </IconButton> : null
-            }
-            title={
-              <Typography variant='h5' component='h3'>
+    <>
+      <Card elevation={0} className={classes.root}>
+        <CardHeader
+          action={
+            loggedIn ?
+              <IconButton aria-label='Add' onClick={handleClickOpen}>
+                <AddIcon />
+              </IconButton> : null
+          }
+          title={
+            <Typography variant='h5' component='h3'>
                 Projects
-              </Typography>
-            }
-          />
-          <List dense={false}>
-            {
-              projects ?
-                projects.map(project => (
-                  <ListItem button key={project.id} onClick={handleNavigateProject(project.id)}>
-                    <ListItemText
-                      primary={
-                        <Typography variant='h6'>
-                          {project.name}
-                        </Typography>
-                      }
-                      secondary={project.owner.id}
-                    />
-                    {
-                      loggedIn ?
-                        <ListItemSecondaryAction>
-                          <IconButton aria-label='Delete' onClick={handleDelete(project.id)}>
-                            <DeleteIcon />
-                          </IconButton>
-                          <IconButton aria-label='Edit' onClick={handleEditOpen(project.id, project.name)}>
-                            <EditIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction> : null
+            </Typography>
+          }
+        />
+        <List dense={false}>
+          {
+            projects ?
+              projects.map(project => (
+                <ListItem button key={project.id} onClick={handleNavigateProject(project.id)}>
+                  <ListItemText
+                    primary={
+                      <Typography variant='h6'>
+                        {project.name}
+                      </Typography>
                     }
+                    secondary={project.owner.id}
+                  />
+                  {
+                    loggedIn ?
+                      <ListItemSecondaryAction>
+                        <IconButton aria-label='Delete' onClick={handleDelete(project.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                        <IconButton
+                          aria-label='Edit' onClick={handleEditOpen(project.id, project.name)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction> : null
+                  }
 
-                  </ListItem>
-                )) :
-                <div style={{ textAlign: 'center' }}>
-                  <CircularProgress className={classes.progress} />
-                </div>
-            }
-          </List>
-        </Card>
-      </Grid>
+                </ListItem>
+              )) :
+              <div style={{ textAlign: 'center' }}>
+                <CircularProgress className={classes.progress} />
+              </div>
+          }
+        </List>
+      </Card>
 
-      <ProjectCreationDialog state={stateCreate} handleClose={handleClose} createProject={createProject} />
-      <ProjectEditingDialog state={stateEdit} handleClose={handleEditClose} updateProject={updateProject} defaultName={stateEdit.name} />
-    </Grid>
+      <ProjectCreationDialog
+        state={stateCreate} handleClose={handleClose} createProject={createProject} />
+      <ProjectEditingDialog
+        state={stateEdit} handleClose={handleEditClose} updateProject={updateProject}
+        defaultName={stateEdit.name} />
+    </>
   )
 }
 
-export default withRouter(withStyles(styles)(ProjectList))
+export default withRouter(ProjectList)
