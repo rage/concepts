@@ -4,7 +4,7 @@ import { Button, Paper, Typography, IconButton, Popper } from '@material-ui/core
 import { InfoOutlined as InfoIcon } from '@material-ui/icons'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../../static/userGuide'
-import { getProgress, setProgress } from '../../lib/userProgress'
+import { setProgress, getUser } from '../../lib/userProgress'
 import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -81,7 +81,7 @@ const InfoBox = ({ children }) => {
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
-  const [{ user }, dispatch] = useLoginStateValue()
+  const [, dispatch] = useLoginStateValue()
 
   const {
     title,
@@ -93,37 +93,38 @@ const InfoBox = ({ children }) => {
     enableTransition
   } = state
 
-  const openPopper = async (target, newPlacement, id, alignment = 0, separation = 0) => {
-    console.log('user: ', user)
-    if (user) {
-      const info = userGuide[id]
-      const index = await getProgress(user.id)
-      console.log('popper', info.index, index)
-      if (index >= info.index) {
-        console.log('Guide too high')
-        return
-      }
-      if (fadeout) {
-        clearTimeout(fadeout)
-      }
-      overlay.open(target)
-      setState({
-        enableTransition: open,
-        open: true,
-        placement: newPlacement,
-        offset: { alignment, separation },
-        title: info.title,
-        description: info.description
-      })
-      await setProgress(info.index, user.id)
+  const openPopper = (target, newPlacement, id, alignment = 0, separation = 0) => {
+    const user = getUser()
+    if (!user || !user.id) return
+    const info = userGuide[id]
+    const progress = user.guideProgress
+    if (progress >= info.index) {
+      return
     }
+    setProgress(info.index, user.id).then((response) => {
+      dispatch({
+        type: 'setUserGuideProgress',
+        data: { guideProgress: response.guideProgress }
+      })
+    })
+    if (fadeout) {
+      clearTimeout(fadeout)
+    }
+    overlay.open(target)
+    setState({
+      enableTransition: open,
+      open: true,
+      placement: newPlacement,
+      offset: { alignment, separation },
+      title: info.title,
+      description: info.description
+    })
   }
 
   const closePopper = () => {
     if (fadeout) {
       return
     }
-    console.log('closing popper')
     setState({
       ...state,
       fadeout: setTimeout(() => setState({

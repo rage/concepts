@@ -7,6 +7,7 @@ const User = {
   },
   userById(root, args, context) {
     checkAccess(context, {
+      allowGuest: true,
       allowStudent: true,
       allowStaff: true,
       verifyUser: true,

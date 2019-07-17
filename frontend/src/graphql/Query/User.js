@@ -33,7 +33,6 @@ const USER_BY_ID = gql`
 query userById($id: ID!) {
   userById(id: $id) {
     id
-    tmcId
     role
     guideProgress
   }

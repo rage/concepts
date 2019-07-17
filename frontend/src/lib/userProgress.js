@@ -1,5 +1,4 @@
 import { UPDATE_USER } from '../graphql/Mutation'
-import { USER_BY_ID } from '../graphql/Query'
 import client from '../apollo/apolloClient'
 
 export const setProgress = async (index, userId) => {
@@ -9,7 +8,7 @@ export const setProgress = async (index, userId) => {
     })
     const currentUser = JSON.parse(localStorage.getItem('current_user'))
     const newUser = currentUser.user
-    newUser.guideProgress = index
+    newUser.guideProgress = response.data.updateUser.guideProgress
     localStorage.setItem('current_user', JSON.stringify(currentUser))
     return response.data.updateUser
   } catch (error) {
@@ -17,22 +16,9 @@ export const setProgress = async (index, userId) => {
   }
 }
 
-export const getProgress = async (userId) => {
-  try {
-    const response = await getUser({
-      variables: { id: userId }
-    })
-    return response.data.userById.guideProgress
-  } catch (error) {
-    return
-  }
-}
-
-const getUser = async ({ variables }) => {
-  return await client.query({
-    query: USER_BY_ID,
-    variables
-  })
+export const getUser = () => {
+  const local = JSON.parse(localStorage.getItem('current_user'))
+  return local && local.user
 }
 
 const updateUser = async ({ variables }) => {

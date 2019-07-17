@@ -4,7 +4,6 @@ const UPDATE_USER = gql`
 mutation updateUser($id: ID!, $guideProgress: Int!) {
   updateUser(id: $id, guideProgress: $guideProgress) {
     id
-    tmcId
     role
     guideProgress
   }

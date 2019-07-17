@@ -3,6 +3,7 @@ const { checkAccess } = require('../../accessControl')
 const UserMutations = {
   updateUser(root, { id, guideProgress }, context) {
     checkAccess(context, {
+      allowGuest: true,
       allowStudent: true,
       allowStaff: true,
       verifyUser: true,
