@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Container from '@material-ui/core/Container'
 import { withStyles } from '@material-ui/core'
 import {
@@ -23,10 +23,6 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
   const init = (nodes, edges) => {
     // create a network
     var container = document.getElementById('graph')
-    var data = {
-      nodes,
-      edges
-    }
     var options = {
       nodes: {
         shape: 'dot',
@@ -42,7 +38,10 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
         shadow:true
       }
     }
-    new vis.Network(container, data, options)
+    new vis.Network(container, {
+      nodes,
+      edges
+    }, options)
   }
 
   useEffect( () => {
@@ -74,16 +73,22 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
       for (const courseLink of courseAndPrerequisites.linksToCourse) {
         const prerequisiteCourse = courseLink.from
         for (const prerequisiteConcept of prerequisiteCourse.concepts) {
-          conceptNodeData.push({
-            id: prerequisiteConcept.id,
-            label: prerequisiteConcept.name,
-            group: prerequisiteCourse.id
-          })
+          // Disallow duplicate concepts
+          if (typeof conceptNodeData.find(concept => {
+            return concept.id === prerequisiteConcept.id
+          }) === 'undefined') {
+            conceptNodeData.push({
+              id: prerequisiteConcept.id,
+              label: prerequisiteConcept.name,
+              group: prerequisiteCourse.id
+            })
+          }
 
           for (const conceptLink of prerequisiteConcept.linksFromConcept) {
             conceptLinkData.push({
               from: prerequisiteConcept.id,
-              to: conceptLink.to.id
+              to: conceptLink.to.id,
+              arrows: 'from'
             })
           }
         }
