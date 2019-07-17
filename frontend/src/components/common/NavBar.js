@@ -117,7 +117,7 @@ const NavBar = ({ classes }) => {
 
   return (
     <div className={classes.root}>
-      <AppBar elevation={0} position='static' >
+      <AppBar elevation={0} position='static'>
         <Toolbar variant='dense'>
           <IconButton className={classes.menuButton} color='inherit' aria-label='Menu'>
             <MenuIcon />

@@ -72,7 +72,7 @@ const PortQueries = {
           'description': concept['description'],
           'prerequisites': []
         }
-        for (const prerequisiteConcept of concept['prerequisites'] ) {
+        for (const prerequisiteConcept of concept['prerequisites']) {
           // Add concept prerequisite to concept
           conceptData['prerequisites'].push({
             'name': prerequisiteConcept['from']['name']

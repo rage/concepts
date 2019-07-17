@@ -187,7 +187,7 @@ const PortView = () => {
       return
     }
 
-    if(!validateJSON(jsonData)) {
+    if (!validateJSON(jsonData)) {
       return
     }
 

@@ -42,7 +42,7 @@ const ResourceForm = ({ createResource, conceptId }) => {
         <hr />
         <div>
           <label>Name </label>
-          <input name='name' value={name} onChange={(e) => setName(e.target.value)}/>
+          <input name='name' value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div>
           <label>Description </label>
@@ -68,7 +68,7 @@ const ResourceForm = ({ createResource, conceptId }) => {
             <label>
               New url
             </label>
-            <input name='url' value={url} onChange={(e) => setUrl(e.target.value)}/>
+            <input name='url' value={url} onChange={(e) => setUrl(e.target.value)} />
           </div>
           <button type='button' onClick={addAddress}>Add url</button>
         </div>

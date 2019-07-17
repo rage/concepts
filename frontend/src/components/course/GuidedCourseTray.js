@@ -236,7 +236,7 @@ const GuidedCourseTray = ({
       >
         New course
       </Button>
-    </Paper >
+    </Paper>
 
     {CourseCreateDialog}
   </>

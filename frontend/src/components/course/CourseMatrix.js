@@ -93,7 +93,7 @@ const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
         <span style={{ overflow: 'hidden', maxWidth: '3ch' }}>
           {data[columnIndex].name}
         </span>
-      </div >
+      </div>
     </div>
   )
 
@@ -209,7 +209,7 @@ const CourseMatrix = ({ courseAndPrerequisites, workspaceId, dimensions }) => {
           <form onSubmit={(e) => {
             e.preventDefault()
             setFilter(e.target.filter.value.toLowerCase())
-          }} >
+          }}>
             <TextField
               margin='dense'
               id='description'

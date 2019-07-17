@@ -161,7 +161,7 @@ const HeaderCell = ({ title }) => {
           }}>
             {title}
           </div>
-        </div >
+        </div>
       </div>
     </th>
   )
@@ -245,7 +245,7 @@ const CourseHeatmap = ({ workspaceId }) => {
 
   return (
     <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
-      <Paper className={classes.paper} >
+      <Paper className={classes.paper}>
         <Typography variant='h5' style={{ marginBottom: '32px' }}>Course overview</Typography>
         {
           workspaceCourseQuery.data.workspaceById ?

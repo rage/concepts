@@ -83,6 +83,21 @@
     "array-bracket-spacing": [
       "error",
       "never"
+    ],
+    "space-in-parens": [
+      "error",
+      "never"
+    ],
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "template-curly-spacing": [
+      "error",
+      "never"
     ]
   }
 }
