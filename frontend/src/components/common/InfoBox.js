@@ -81,7 +81,6 @@ const InfoBox = ({ children }) => {
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
-  const [, dispatch] = useLoginStateValue()
 
   const {
     title,
@@ -101,12 +100,7 @@ const InfoBox = ({ children }) => {
     if (progress >= info.index) {
       return
     }
-    setProgress(info.index, user.id).then((response) => {
-      dispatch({
-        type: 'setUserGuideProgress',
-        data: { guideProgress: response.guideProgress }
-      })
-    })
+    setProgress(info.index, user.id).catch(err => console.error("setProgress error:", err))
     if (fadeout) {
       clearTimeout(fadeout)
     }
