@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Container from '@material-ui/core/Container'
 import { withStyles } from '@material-ui/core'
 import {
-  FETCH_COURSE_AND_PREREQUISITES
+  WORKSPACE_COURSES_AND_CONCEPTS
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 
@@ -15,7 +15,7 @@ const styles = theme => ({
   }
 })
 
-const GraphView = ({ classes, workspaceId, courseId }) => {
+const GraphView = ({ classes, workspaceId }) => {
 
   /**
      * Initialize graph view for vis.js
@@ -39,56 +39,38 @@ const GraphView = ({ classes, workspaceId, courseId }) => {
     }, options)
   }
 
-  useEffect( () => {
+  useEffect(() => {
     // Prepare data for loader
     const fillData = async () => {
       const response = await client.query({
-        query: FETCH_COURSE_AND_PREREQUISITES,
+        query: WORKSPACE_COURSES_AND_CONCEPTS,
         variables: {
-          workspaceId,
-          courseId
+          id: workspaceId
         }
       })
-      const courseAndPrerequisites = response.data.courseAndPrerequisites
+      const courses = response.data.workspaceById.courses
 
       // Initialize data for states
       const conceptNodeData = []
       const conceptLinkData = []
 
-      // Create concept nodes for the main course
-      for (const concept of courseAndPrerequisites.concepts) {
-        conceptNodeData.push({
-          id: concept.id,
-          label: concept.name
-          // group: courseAndPrerequisites.id
-        })
-      }
+      for (const course of courses) {
+        for (const concept of course.concepts) {
+          conceptNodeData.push({
+            id: concept.id,
+            label: concept.name,
+            group: course.id
+          })
 
-      // Create concept nodes for prerequisite courses
-      for (const courseLink of courseAndPrerequisites.linksToCourse) {
-        const prerequisiteCourse = courseLink.from
-        for (const prerequisiteConcept of prerequisiteCourse.concepts) {
-          // Disallow duplicate concepts
-          if (typeof conceptNodeData.find(concept => {
-            return concept.id === prerequisiteConcept.id
-          }) === 'undefined') {
-            conceptNodeData.push({
-              id: prerequisiteConcept.id,
-              label: prerequisiteConcept.name
-              // group: prerequisiteCourse.id
-            })
-          }
-
-          for (const conceptLink of prerequisiteConcept.linksFromConcept) {
+          for (const conceptLink of concept.linksToConcept) {
             conceptLinkData.push({
-              from: prerequisiteConcept.id,
-              to: conceptLink.to.id,
+              from: conceptLink.from.id,
+              to: concept.id,
               arrows: 'to'
             })
           }
         }
       }
-
       init(conceptNodeData, conceptLinkData)
     }
     // Fill data and initialize the graph

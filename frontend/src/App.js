@@ -97,7 +97,7 @@ const App = ({ classes }) => {
             workspaceId={match.params.wid}
           />
         )} />
-        <Route exact path='/workspaces/:wid/graph/:cid' render={({ match: { params: {wid, cid} } })  => <GraphView workspaceId={wid} courseId={cid}/>} />
+        <Route exact path='/workspaces/:wid/graph/:cid' render={({ match: { params: { wid } } })  => <GraphView workspaceId={wid} />} />
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
