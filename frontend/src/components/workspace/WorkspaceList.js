@@ -193,7 +193,7 @@ const WorkspaceList = ({
         >
           <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
             <ListItemIcon>
-              <ShowChartIcon/>
+              <ShowChartIcon />
             </ListItemIcon>
             Heatmap
           </MenuItem>
@@ -205,7 +205,7 @@ const WorkspaceList = ({
           </MenuItem>
           <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
             <ListItemIcon>
-              <CloudDownloadIcon/>
+              <CloudDownloadIcon />
             </ListItemIcon>
             Export
           </MenuItem>

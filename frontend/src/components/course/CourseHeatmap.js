@@ -161,14 +161,14 @@ const HeaderCell = ({ title }) => {
           }}>
             {title}
           </div>
-        </div >
+        </div>
       </div>
     </th>
   )
 }
 
 const TableCell = withRouter(({
-  toCourse, fromCourse, minGradVal, maxGradVal, workspaceId, history
+  toCourse, fromCourse, maxGradVal, workspaceId, history
 }) => {
   const classes = useStyles()
 
@@ -245,8 +245,8 @@ const CourseHeatmap = ({ workspaceId }) => {
 
   return (
     <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
-      <Paper className={classes.paper} >
-        <Typography variant='h5' style={{marginBottom: '32px'}}>Course overview</Typography>
+      <Paper className={classes.paper}>
+        <Typography variant='h5' style={{ marginBottom: '32px' }}>Course overview</Typography>
         {
           workspaceCourseQuery.data.workspaceById ?
             <div className={classes.scrollSyncTable}>
@@ -268,7 +268,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                         {
                           workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
                             <TableCell
-                              workspaceId={workspaceId} minGradVal={0} maxGradVal={maxGradVal}
+                              workspaceId={workspaceId} maxGradVal={maxGradVal}
                               key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
                               toCourse={toCourse} />
                           ))

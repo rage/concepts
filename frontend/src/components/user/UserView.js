@@ -16,7 +16,7 @@ const UserView = () => {
     case 'ADMIN':
       return <Redirect to={'/admin'} />
     case 'GUEST':
-      return <UserContent userId={user.id}/>
+      return <UserContent userId={user.id} />
     default:
       return <Redirect to={'/'} />
     }

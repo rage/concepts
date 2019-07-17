@@ -1,4 +1,3 @@
-const TMCClient = require('tmc-client-js')
 const axios = require('axios')
 
 async function userDetails(accessToken) {

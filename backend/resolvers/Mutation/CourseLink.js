@@ -37,7 +37,9 @@ const CourseQueries = {
 
   async deleteCourseLink(root, args, context) {
     const user = await context.prisma.courseLink({ id: args.id }).createdBy()
-    checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id })
+    checkAccess(context, {
+      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
+    })
     return context.prisma.deleteCourseLink({
       id: args.id
     })

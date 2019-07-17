@@ -70,13 +70,13 @@ const App = ({ classes }) => {
 
         <PrivateRoute
           exact path='/porting' redirectPath='/auth' condition={loggedIn}
-          render={() => <PortView/> } />
+          render={() => <PortView />} />
         <Route exact path='/auth' render={() => <AuthenticationForm />} />
         <Route exact path='/user' render={() => <UserView />} />
 
         <Route exact path='/workspaces/:wid/heatmap' render={({ match }) => (
-          <CourseHeatmap workspaceId={match.params.wid}/>
-        )}/>
+          <CourseHeatmap workspaceId={match.params.wid} />
+        )} />
 
         <Route
           exact path='/workspaces/:id/(mapper|matrix|graph)'
@@ -101,13 +101,13 @@ const App = ({ classes }) => {
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
           exact path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
-          render={({ match: { params: {wid, cid, page} } }) =>
-            <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page}/>}
+          render={({ match: { params: { wid, cid, page } } }) =>
+            <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />}
         />
         <PrivateRoute
           exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn}
           render={({ match }) => {
-            return <MatrixView course_id={match.params.id}/>
+            return <MatrixView course_id={match.params.id} />
           }}
         />
       </div>

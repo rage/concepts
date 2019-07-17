@@ -77,7 +77,7 @@ const PortMutations = {
         return await context.prisma.createConcept(conceptData)
       }))
 
-      return {...courseObj, concepts}
+      return { ...courseObj, concepts }
     }))
 
     const courseDictionary = {}

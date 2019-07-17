@@ -138,7 +138,7 @@ export default class ConceptLink extends Component {
   }
 }
 
-const lineStyles = theme => ({
+const lineStyles = () => ({
   linetoPlaceholder: {
     display: 'none'
   },

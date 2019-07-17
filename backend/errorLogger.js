@@ -30,10 +30,10 @@ const logError = error => {
     'message': error['message'],
     'now': new Date(Date.now()).toISOString().replace(/T/, ' ').replace(/\..+/, '')
   }
-  
+
   // Convert path array into a string
   if (typeof error['path'] !== 'undefined') {
-    errorData['path'] = error['path'].reduce((first, second) => first + "/" + second)
+    errorData['path'] = error['path'].reduce((first, second) => first + '/' + second)
     errorData['type'] = getPathType(errorData['path'])
   }
 

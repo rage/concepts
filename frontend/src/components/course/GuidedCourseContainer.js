@@ -62,7 +62,8 @@ const GuidedCourseContainer = ({
                 key={course.id}
                 course={course}
                 connectionRef={index === 0 ? connectionRef : undefined}
-                createConceptRef={(index === 0 && course.concepts.length === 0) ? createConceptRef : undefined}
+                createConceptRef={(index === 0 && course.concepts.length === 0)
+                  ? createConceptRef : undefined}
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}

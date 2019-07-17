@@ -57,7 +57,7 @@ const LandingView = (props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <CssBaseline />
       <div className={classes.heroContent}>
         <Container maxWidth='sm'>
@@ -65,13 +65,17 @@ const LandingView = (props) => {
             Curriculum mapper
           </Typography>
           <Typography variant='h5' align='center' color='textSecondary' paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation.
           </Typography>
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify='center'>
               <Grid item>
-                <Button variant='contained' color='primary' onClick={loggedIn ? redirectTo('/user') : redirectTo('/auth')}>
+                <Button
+                  variant='contained' color='primary'
+                  onClick={loggedIn ? redirectTo('/user') : redirectTo('/auth')}
+                >
                   {loggedIn ? 'Choose workspace' : 'Login and choose workspace'}
                 </Button>
               </Grid>
@@ -87,7 +91,7 @@ const LandingView = (props) => {
           </div>
         </Container>
       </div>
-    </React.Fragment>
+    </>
   )
 }
 
