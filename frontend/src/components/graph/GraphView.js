@@ -6,6 +6,7 @@ import {
 import client from '../../apollo/apolloClient'
 
 import vis from 'vis'
+import randomColor from 'randomcolor'
 
 const styles = () => ({
   graph: {
@@ -52,7 +53,7 @@ const GraphView = ({ classes, workspaceId }) => {
           centralGravity: 0.6,
           springLength: 95,
           springConstant: 0.02,
-          damping: 0.4,
+          damping: 0.2,
           avoidOverlap: 0.015
         },
         repulsion: {
@@ -86,12 +87,21 @@ const GraphView = ({ classes, workspaceId }) => {
       const nodes = []
       const links = []
 
+      const colors = {}
+
+      const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
+
       for (const course of courses) {
+        colors[course.id] = randomColor({
+          luminosity: 'light',
+          format: 'rgbArray',
+          seed: course.id
+        })
         for (const concept of course.concepts) {
           nodes.push({
             id: concept.id,
             label: concept.name,
-            group: course.id
+            color: colorToString(colors[course.id], 1)
           })
 
           for (const conceptLink of concept.linksToConcept) {
@@ -99,17 +109,24 @@ const GraphView = ({ classes, workspaceId }) => {
               from: conceptLink.from.id,
               to: concept.id,
               arrows: {
-                to: { enabled: true, scaleFactor: 0.4, type: 'arrow' }
+                to: {
+                  enabled: true,
+                  scaleFactor: 0.4,
+                  type: 'arrow'
+                }
+              },
+              color: {
+                inherit: 'both'
               },
               shadow: {
                 enabled: false
               },
               smooth: {
                 enabled: true,
-                type: 'cubicBezier',
+                type: 'straightCross',
                 roundness: 0.4
               },
-              physics: conceptLink.from.courses[0].id === course.id
+              physics: false
             })
           }
           links.push({
@@ -124,10 +141,16 @@ const GraphView = ({ classes, workspaceId }) => {
         nodes.push({
           id: course.id,
           label: course.name,
-          group: course.id,
+          color: {
+            background: colorToString(colors[course.id], 0.25),
+            border: colorToString(colors[course.id], 0.25),
+            highlight: colorToString(colors[course.id], 0.5)
+          },
+          font: {
+            color: 'rgba(52, 52, 52, 0.5)'
+          },
           shape: 'ellipse',
-          mass: 1,
-          hidden: true
+          mass: 1
         })
       }
       init(nodes, links)
