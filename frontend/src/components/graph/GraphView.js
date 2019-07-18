@@ -46,7 +46,9 @@ const conceptEdgeStyle = {
 }
 
 // Style for edges between courses (course links)
-const courseEdgeStyle = conceptEdgeStyle
+const courseEdgeStyle = {
+  ...conceptEdgeStyle
+}
 
 // Style for edges linking concepts to their courses
 const conceptToCourseEdgeStyle = {
@@ -145,7 +147,7 @@ const GraphView = ({ classes, workspaceId }) => {
           })
         }
       }
-      for (const courseLink of course.linksToCourse) {
+      /*for (const courseLink of course.linksToCourse) {
         if (courseLink.from.id === course.id) {
           continue
         }
@@ -154,7 +156,7 @@ const GraphView = ({ classes, workspaceId }) => {
           from: courseLink.from.id,
           to: course.id
         })
-      }
+      }*/
       nodes.push({
         ...courseNodeStyle(course.color),
         id: course.id,
