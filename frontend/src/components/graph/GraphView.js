@@ -50,10 +50,10 @@ const GraphView = ({ classes, workspaceId }) => {
       physics: {
         barnesHut: {
           gravitationalConstant: -2000,
-          centralGravity: 0.6,
+          centralGravity: 0.5,
           springLength: 95,
           springConstant: 0.02,
-          damping: 0.2,
+          damping: 0.4,
           avoidOverlap: 0.015
         },
         repulsion: {
