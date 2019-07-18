@@ -146,6 +146,9 @@ const GraphView = ({ classes, workspaceId }) => {
         }
       }
       for (const courseLink of course.linksToCourse) {
+        if (courseLink.from.id === course.id) {
+          continue
+        }
         edges.push({
           ...courseEdgeStyle,
           from: courseLink.from.id,
