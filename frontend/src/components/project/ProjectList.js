@@ -125,7 +125,6 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
                         {project.name}
                       </Typography>
                     }
-                    secondary={project.owner.id}
                   />
                   {
                     loggedIn ?
