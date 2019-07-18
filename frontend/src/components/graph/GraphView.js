@@ -57,13 +57,22 @@ const conceptToCourseEdgeStyle = {
     enabled: false
   }
 }
+
+const commonNodeStyle = {
+  widthConstraint: {
+    maximum: 175
+  }
+}
+
 // Style for concept nodes
 const conceptNodeStyle = (color = [255, 0, 0]) => ({
+  ...commonNodeStyle,
   color: colorToString(color, 1)
 })
 
 // Style for course nodes
 const courseNodeStyle = (color = [255, 0, 0]) => ({
+  ...commonNodeStyle,
   font: {
     color: 'rgba(52, 52, 52, 0.5)'
   },
@@ -147,7 +156,7 @@ const GraphView = ({ classes, workspaceId }) => {
           })
         }
       }
-      /*for (const courseLink of course.linksToCourse) {
+      for (const courseLink of course.linksToCourse) {
         if (courseLink.from.id === course.id) {
           continue
         }
@@ -156,9 +165,10 @@ const GraphView = ({ classes, workspaceId }) => {
           from: courseLink.from.id,
           to: course.id
         })
-      }*/
+      }
       nodes.push({
         ...courseNodeStyle(course.color),
+        shape: 'dot',
         id: course.id,
         label: course.name
       })
