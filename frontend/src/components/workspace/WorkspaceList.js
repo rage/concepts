@@ -193,13 +193,13 @@ const WorkspaceList = ({
         >
           <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
             <ListItemIcon>
-              <ShowChartIcon />
+              <GridOnIcon />
             </ListItemIcon>
             Heatmap
           </MenuItem>
           <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
             <ListItemIcon>
-              <GridOnIcon />
+              <ShowChartIcon />
             </ListItemIcon>
             Matrix
           </MenuItem>
