@@ -60,4 +60,4 @@ const finalColors = colors.map(bg => {
 
 fs.writeFile('colors.json', JSON.stringify(finalColors), err => err
   ? console.error(err)
-  : console.log(`Wrote ${finalColors.length} colors to graphColors.json`))
+  : console.log(`Wrote ${finalColors.length} colors to colors.json`))
