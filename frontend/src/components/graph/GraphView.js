@@ -72,92 +72,88 @@ const GraphView = ({ classes, workspaceId }) => {
     }, options)
   }
 
-  useEffect(() => {
+  useEffect(() => {(async () => {
     // Prepare data for loader
-    const fillData = async () => {
-      const response = await client.query({
-        query: WORKSPACE_COURSES_AND_CONCEPTS,
-        variables: {
-          id: workspaceId
-        }
+    const response = await client.query({
+      query: WORKSPACE_COURSES_AND_CONCEPTS,
+      variables: {
+        id: workspaceId
+      }
+    })
+    const courses = response.data.workspaceById.courses
+
+    // Initialize data for states
+    const nodes = []
+    const links = []
+
+    const colors = {}
+
+    const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
+
+    for (const course of courses) {
+      colors[course.id] = randomColor({
+        luminosity: 'light',
+        format: 'rgbArray',
+        seed: course.id
       })
-      const courses = response.data.workspaceById.courses
-
-      // Initialize data for states
-      const nodes = []
-      const links = []
-
-      const colors = {}
-
-      const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
-
-      for (const course of courses) {
-        colors[course.id] = randomColor({
-          luminosity: 'light',
-          format: 'rgbArray',
-          seed: course.id
+      for (const concept of course.concepts) {
+        nodes.push({
+          id: concept.id,
+          label: concept.name,
+          color: colorToString(colors[course.id], 1)
         })
-        for (const concept of course.concepts) {
-          nodes.push({
-            id: concept.id,
-            label: concept.name,
-            color: colorToString(colors[course.id], 1)
-          })
 
-          for (const conceptLink of concept.linksToConcept) {
-            links.push({
-              from: conceptLink.from.id,
-              to: concept.id,
-              arrows: {
-                to: {
-                  enabled: true,
-                  scaleFactor: 0.4,
-                  type: 'arrow'
-                }
-              },
-              color: {
-                inherit: 'both'
-              },
-              shadow: {
-                enabled: false
-              },
-              smooth: {
-                enabled: true,
-                type: 'straightCross',
-                roundness: 0.4
-              },
-              physics: false
-            })
-          }
+        for (const conceptLink of concept.linksToConcept) {
           links.push({
-            from: course.id,
+            from: conceptLink.from.id,
             to: concept.id,
-            dashes: true,
+            arrows: {
+              to: {
+                enabled: true,
+                scaleFactor: 0.4,
+                type: 'arrow'
+              }
+            },
+            color: {
+              inherit: 'both'
+            },
             shadow: {
               enabled: false
-            }
+            },
+            smooth: {
+              enabled: true,
+              type: 'straightCross',
+              roundness: 0.4
+            },
+            physics: false
           })
         }
-        nodes.push({
-          id: course.id,
-          label: course.name,
-          color: {
-            background: colorToString(colors[course.id], 0.25),
-            border: colorToString(colors[course.id], 0.25),
-            highlight: colorToString(colors[course.id], 0.5)
-          },
-          font: {
-            color: 'rgba(52, 52, 52, 0.5)'
-          },
-          shape: 'ellipse',
-          mass: 1
+        links.push({
+          from: course.id,
+          to: concept.id,
+          dashes: true,
+          shadow: {
+            enabled: false
+          }
         })
       }
-      init(nodes, links)
+      nodes.push({
+        id: course.id,
+        label: course.name,
+        color: {
+          background: colorToString(colors[course.id], 0.25),
+          border: colorToString(colors[course.id], 0.25),
+          highlight: colorToString(colors[course.id], 0.5)
+        },
+        font: {
+          color: 'rgba(52, 52, 52, 0.5)'
+        },
+        shape: 'ellipse',
+        mass: 1
+      })
     }
-    // Fill data and initialize the graph
-    fillData()
-  }, [])
+    init(nodes, links)
+  })()}, [])
 
   return <div className={classes.graph} id='graph' />
 }
