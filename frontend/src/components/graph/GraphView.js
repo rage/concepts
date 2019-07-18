@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
+import vis from 'vis'
 import { withStyles } from '@material-ui/core'
 import {
   WORKSPACE_DATA_FOR_GRAPH
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
-
-import vis from 'vis'
-import randomColor from 'randomcolor'
+import colors from './colors'
 
 const styles = () => ({
   graph: {
@@ -15,10 +14,6 @@ const styles = () => ({
   }
 })
 
-const colorSettings = {
-  luminosity: 'light',
-  format: 'rgbArray'
-}
 // Function to converting rgbArray into CSS rgba() color
 const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
 
@@ -65,21 +60,22 @@ const commonNodeStyle = {
 }
 
 // Style for concept nodes
-const conceptNodeStyle = (color = [255, 0, 0]) => ({
+const conceptNodeStyle = (color) => ({
   ...commonNodeStyle,
-  color: colorToString(color, 1)
+  color: colorToString(color.bg, 1)
 })
 
 // Style for course nodes
-const courseNodeStyle = (color = [255, 0, 0]) => ({
+const courseNodeStyle = (color) => ({
   ...commonNodeStyle,
   font: {
     color: 'rgba(52, 52, 52, 0.5)'
   },
   color: {
-    background: colorToString(color, 0.25),
-    border: colorToString(color, 0.25),
-    highlight: colorToString(color, 0.5)
+    background: colorToString(color.bg, 0.25),
+    border: colorToString(color.bg, 0.5),
+    foreground: colorToString(color.fg, 1),
+    highlight: colorToString(color.bg, 0.5)
   },
   shape: 'ellipse',
   mass: 2
@@ -131,11 +127,11 @@ const GraphView = ({ classes, workspaceId }) => {
     const nodes = []
     const edges = []
 
+    let colorIndex = 0
+
     for (const course of response.data.workspaceById.courses) {
-      course.color = randomColor({
-        ...colorSettings,
-        seed: course.id
-      })
+      course.color = colors[colorIndex++]
+      console.log(course.color)
       for (const concept of course.concepts) {
         nodes.push({
           ...conceptNodeStyle(course.color),
