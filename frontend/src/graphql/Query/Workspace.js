@@ -39,6 +39,32 @@ query workspaceById($id: ID!) {
 }
 `
 
+const WORKSPACE_DATA_FOR_GRAPH = gql`
+query workspaceById($id: ID!) {
+workspaceById(id: $id) {
+  id
+  courses {
+    id
+    name
+    linksToCourse {
+      from {
+        id
+      }
+    }
+    concepts {
+      id
+      name
+      linksToConcept {
+        from {
+          id
+        }
+      }
+    }
+  }
+}
+}
+`
+
 const WORKSPACE_COURSES_AND_CONCEPTS = gql`
 query workspaceById($id: ID!) {
 workspaceById(id: $id) {
@@ -68,5 +94,6 @@ export {
   ALL_WORKSPACES,
   WORKSPACES_BY_OWNER,
   WORKSPACE_BY_ID,
-  WORKSPACE_COURSES_AND_CONCEPTS
+  WORKSPACE_COURSES_AND_CONCEPTS,
+  WORKSPACE_DATA_FOR_GRAPH
 }

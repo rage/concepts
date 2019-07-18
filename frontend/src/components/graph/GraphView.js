@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { withStyles } from '@material-ui/core'
 import {
-  WORKSPACE_COURSES_AND_CONCEPTS
+  WORKSPACE_DATA_FOR_GRAPH
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 
@@ -15,144 +15,154 @@ const styles = () => ({
   }
 })
 
-const GraphView = ({ classes, workspaceId }) => {
+const colorSettings = {
+  luminosity: 'light',
+  format: 'rgbArray'
+}
+// Function to converting rgbArray into CSS rgba() color
+const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
 
-  /**
-     * Initialize graph view for vis.js
-     */
-  const init = (nodes, edges) => {
-    // create a network
-    var container = document.getElementById('graph')
-    var options = {
-      layout: {
-        randomSeed: 1,
-        improvedLayout: true
-        // hierarchical: {
-        //   enabled: true,
-        //   levelSeparation: 150,
-        //   nodeSpacing: 100,
-        //   treeSpacing: 200,
-        //   blockShifting: true,
-        //   edgeMinimization: true,
-        //   parentCentralization: false,
-        //   direction: 'LR',        // UD, DU, LR, RL
-        //   sortMethod: 'directed'   // hubsize, directed
-        // }
-      },
-      nodes: {
-        shape: 'box',
-        shadow: true
-      },
-      edges: {
-        width: 2,
-        shadow: true
-      },
-      physics: {
-        barnesHut: {
-          gravitationalConstant: -2000,
-          centralGravity: 0.5,
-          springLength: 95,
-          springConstant: 0.02,
-          damping: 0.4,
-          avoidOverlap: 0.015
-        },
-        repulsion: {
-          centralGravity: 0.1,
-          springLength: 200,
-          springConstant: 0.05,
-          nodeDistance: 200,
-          damping: 0.09
-        },
-        solver: 'barnesHut'
-      }
+// Style for edges between concepts (concept links)
+const conceptEdgeStyle = {
+  arrows: {
+    to: {
+      enabled: true,
+      scaleFactor: 0.4,
+      type: 'arrow'
     }
-    new vis.Network(container, {
-      nodes,
-      edges
-    }, options)
-  }
+  },
+  color: {
+    inherit: 'both'
+  },
+  shadow: {
+    enabled: false
+  },
+  smooth: {
+    enabled: true,
+    type: 'straightCross',
+    roundness: 0.4
+  },
+  physics: false
+}
 
+// Style for edges between courses (course links)
+const courseEdgeStyle = conceptEdgeStyle
+
+// Style for edges linking concepts to their courses
+const conceptToCourseEdgeStyle = {
+  dashes: true,
+  shadow: {
+    enabled: false
+  }
+}
+// Style for concept nodes
+const conceptNodeStyle = (color = [255, 0, 0]) => ({
+  color: colorToString(color, 1)
+})
+
+// Style for course nodes
+const courseNodeStyle = (color = [255, 0, 0]) => ({
+  font: {
+    color: 'rgba(52, 52, 52, 0.5)'
+  },
+  color: {
+    background: colorToString(color, 0.25),
+    border: colorToString(color, 0.25),
+    highlight: colorToString(color, 0.5)
+  },
+  shape: 'ellipse',
+  mass: 1
+})
+
+// Global vis.js options
+const visOptions = {
+  layout: {
+    randomSeed: 1,
+    improvedLayout: true
+  },
+  nodes: {
+    shape: 'box',
+    shadow: true
+  },
+  edges: {
+    width: 2,
+    shadow: true
+  },
+  physics: {
+    barnesHut: {
+      gravitationalConstant: -2000,
+      centralGravity: 0.5,
+      springLength: 95,
+      springConstant: 0.02,
+      damping: 0.4,
+      avoidOverlap: 0.015
+    },
+    repulsion: {
+      centralGravity: 0.1,
+      springLength: 200,
+      springConstant: 0.05,
+      nodeDistance: 200,
+      damping: 0.09
+    },
+    solver: 'barnesHut'
+  }
+}
+
+const GraphView = ({ classes, workspaceId }) => {
   useEffect(() => {(async () => {
-    // Prepare data for loader
     const response = await client.query({
-      query: WORKSPACE_COURSES_AND_CONCEPTS,
+      query: WORKSPACE_DATA_FOR_GRAPH,
       variables: {
         id: workspaceId
       }
     })
-    const courses = response.data.workspaceById.courses
 
-    // Initialize data for states
     const nodes = []
-    const links = []
+    const edges = []
 
-    const colors = {}
-
-    const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
-
-    for (const course of courses) {
-      colors[course.id] = randomColor({
-        luminosity: 'light',
-        format: 'rgbArray',
+    for (const course of response.data.workspaceById.courses) {
+      course.color = randomColor({
+        ...colorSettings,
         seed: course.id
       })
       for (const concept of course.concepts) {
         nodes.push({
+          ...conceptNodeStyle(course.color),
           id: concept.id,
-          label: concept.name,
-          color: colorToString(colors[course.id], 1)
+          label: concept.name
+        })
+        edges.push({
+          ...conceptToCourseEdgeStyle,
+          from: course.id,
+          to: concept.id
         })
 
         for (const conceptLink of concept.linksToConcept) {
-          links.push({
+          edges.push({
+            ...conceptEdgeStyle,
             from: conceptLink.from.id,
-            to: concept.id,
-            arrows: {
-              to: {
-                enabled: true,
-                scaleFactor: 0.4,
-                type: 'arrow'
-              }
-            },
-            color: {
-              inherit: 'both'
-            },
-            shadow: {
-              enabled: false
-            },
-            smooth: {
-              enabled: true,
-              type: 'straightCross',
-              roundness: 0.4
-            },
-            physics: false
+            to: concept.id
           })
         }
-        links.push({
-          from: course.id,
-          to: concept.id,
-          dashes: true,
-          shadow: {
-            enabled: false
-          }
+      }
+      for (const courseLink of course.linksToCourse) {
+        edges.push({
+          ...courseEdgeStyle,
+          from: courseLink.from.id,
+          to: course.id
         })
       }
       nodes.push({
+        ...courseNodeStyle(course.color),
         id: course.id,
-        label: course.name,
-        color: {
-          background: colorToString(colors[course.id], 0.25),
-          border: colorToString(colors[course.id], 0.25),
-          highlight: colorToString(colors[course.id], 0.5)
-        },
-        font: {
-          color: 'rgba(52, 52, 52, 0.5)'
-        },
-        shape: 'ellipse',
-        mass: 1
+        label: course.name
       })
     }
-    init(nodes, links)
+
+    new vis.Network(document.getElementById('graph'), {
+      nodes,
+      edges
+    }, visOptions)
   })()}, [])
 
   return <div className={classes.graph} id='graph' />
