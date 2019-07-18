@@ -82,7 +82,7 @@ const courseNodeStyle = (color = [255, 0, 0]) => ({
     highlight: colorToString(color, 0.5)
   },
   shape: 'ellipse',
-  mass: 1
+  mass: 2
 })
 
 // Global vis.js options
