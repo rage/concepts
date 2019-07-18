@@ -167,7 +167,6 @@ const WorkspaceList = ({
                         {workspace.name}
                       </Typography>
                     }
-                    secondary={workspace.owner.id}
                   />
                   {
                     loggedIn ?
