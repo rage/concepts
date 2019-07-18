@@ -80,7 +80,7 @@ const App = ({ classes }) => {
         )} />
 
         <Route
-          exact path='/workspaces/:id/(mapper|matrix|graph)'
+          exact path='/workspaces/:id/(mapper|matrix)'
           render={({ match, location }) =>
             <WorkspaceView workspaceId={match.params.id} location={location} />}
         />
@@ -97,7 +97,8 @@ const App = ({ classes }) => {
             workspaceId={match.params.wid}
           />
         )} />
-        <Route exact path='/workspaces/:wid/graph/:cid' render={({ match: { params: { wid } } })  => <GraphView workspaceId={wid} />} />
+        <Route exact path='/workspaces/:wid/graph' render={({ match: { params: { wid } } }) =>
+          <GraphView workspaceId={wid} />} />
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route

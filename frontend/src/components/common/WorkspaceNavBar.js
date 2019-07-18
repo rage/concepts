@@ -118,7 +118,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   }
 
   const onChange = (event, newPage) => {
-    const cid = courseId && newPage !== 'heatmap' ? `/${courseId}` : ''
+    const cid = courseId && newPage !== 'heatmap' && newPage !== 'graph' ? `/${courseId}` : ''
     history.push(`/workspaces/${workspaceId}/${newPage}${cid}`)
   }
 
