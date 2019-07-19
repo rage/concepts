@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { Button, Paper, Typography, List, IconButton } from '@material-ui/core'
+import { Button, Paper, FormControl, Select, MenuItem, InputLabel, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
 import { DELETE_CONCEPT } from '../../graphql/Mutation'
@@ -16,7 +16,6 @@ import useEditCourseDialog from './useEditCourseDialog'
 
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../common/InfoBox'
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,6 +50,9 @@ const useStyles = makeStyles(theme => ({
   button: {
     marginTop: '16px',
     width: '100%'
+  },
+  courseNavigationButton: {
+
   }
 }))
 
@@ -131,17 +133,52 @@ const ActiveCourse = ({
     }
   })
 
+
+  const handleCourseNavigationOpen = () => {
+
+  }
+
+  const handleCourseNavigationClose = () => {
+
+  }
+
+  const handleCourseNavigationChange = () => {
+
+  }
+
   return <>
     <Paper onClick={onClick} elevation={0} className={classes.root}>
       <div
         className={'activeCourseHeaderContent'}
         style={{ display: 'flex', alignItems: 'center' }}
       >
-        <div style={{ flex: '1 1 auto' }}>
-          <Typography className={classes.title} variant='h4'>
+        <form autoComplete='off' style={{ flex: '1 1 auto' }}>
+          <Button className={classes.title} variant='h4'>
             {course.name}
-          </Typography>
-        </div>
+          </Button>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor='select-course'>Course</InputLabel>
+            <Select
+              open={true}
+              onClose={handleCourseNavigationClose}
+              onOpen={handleCourseNavigationOpen}
+              value={course.name}
+              onChange={handleCourseNavigationChange}
+              inputProps={{
+                name: 'age',
+                id: 'select-course'
+              }}
+            >
+              <MenuItem value=''>
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={'First'}>Course 1</MenuItem>
+              <MenuItem value={'Second'}>Course 2</MenuItem>
+              <MenuItem value={'Third'}>Course 3</MenuItem>
+            </Select>
+          </FormControl>
+
+        </form>
         <div
           style={{
             flex: '0 0 auto',
