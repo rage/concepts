@@ -20,3 +20,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/generated/nexus.d.ts
+/generated/schema.graphql
