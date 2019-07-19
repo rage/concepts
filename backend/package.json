@@ -23,6 +23,7 @@
     "nodemon": "^1.19.0"
   },
   "scripts": {
+    "start-dev": "ENVIRONMENT=development node index.js",
     "start": "ENVIRONMENT=production node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "ENVIRONMENT=development nodemon index.js"

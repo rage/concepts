@@ -57,7 +57,6 @@ const options = {
 }
 
 const server = new GraphQLServer({
-  // typeDefs: './schema.graphql',
   schema,
   context: req => ({
     prisma,
