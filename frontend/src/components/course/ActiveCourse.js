@@ -37,7 +37,8 @@ const useStyles = makeStyles(theme => ({
     hyphens: 'auto'
   },
   titleSelect: {
-    fontSize: '1.25rem'
+    fontSize: '1.4rem',
+    fontWeight: 'bold'
   },
   titleEditWrapper: {
     flex: '0 0 auto',
