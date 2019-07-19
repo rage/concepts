@@ -23,6 +23,14 @@ type AggregateProject {
   count: Int!
 }
 
+type AggregateProjectParticipant {
+  count: Int!
+}
+
+type AggregateProjectToken {
+  count: Int!
+}
+
 type AggregateResource {
   count: Int!
 }
@@ -36,6 +44,14 @@ type AggregateUser {
 }
 
 type AggregateWorkspace {
+  count: Int!
+}
+
+type AggregateWorkspaceParticipant {
+  count: Int!
+}
+
+type AggregateWorkspaceToken {
   count: Int!
 }
 
@@ -1394,6 +1410,17 @@ type Mutation {
   upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
   deleteProject(where: ProjectWhereUniqueInput!): Project
   deleteManyProjects(where: ProjectWhereInput): BatchPayload!
+  createProjectParticipant(data: ProjectParticipantCreateInput!): ProjectParticipant!
+  updateProjectParticipant(data: ProjectParticipantUpdateInput!, where: ProjectParticipantWhereUniqueInput!): ProjectParticipant
+  updateManyProjectParticipants(data: ProjectParticipantUpdateManyMutationInput!, where: ProjectParticipantWhereInput): BatchPayload!
+  upsertProjectParticipant(where: ProjectParticipantWhereUniqueInput!, create: ProjectParticipantCreateInput!, update: ProjectParticipantUpdateInput!): ProjectParticipant!
+  deleteProjectParticipant(where: ProjectParticipantWhereUniqueInput!): ProjectParticipant
+  deleteManyProjectParticipants(where: ProjectParticipantWhereInput): BatchPayload!
+  createProjectToken(data: ProjectTokenCreateInput!): ProjectToken!
+  updateProjectToken(data: ProjectTokenUpdateInput!, where: ProjectTokenWhereUniqueInput!): ProjectToken
+  upsertProjectToken(where: ProjectTokenWhereUniqueInput!, create: ProjectTokenCreateInput!, update: ProjectTokenUpdateInput!): ProjectToken!
+  deleteProjectToken(where: ProjectTokenWhereUniqueInput!): ProjectToken
+  deleteManyProjectTokens(where: ProjectTokenWhereInput): BatchPayload!
   createResource(data: ResourceCreateInput!): Resource!
   updateResource(data: ResourceUpdateInput!, where: ResourceWhereUniqueInput!): Resource
   updateManyResources(data: ResourceUpdateManyMutationInput!, where: ResourceWhereInput): BatchPayload!
@@ -1418,6 +1445,17 @@ type Mutation {
   upsertWorkspace(where: WorkspaceWhereUniqueInput!, create: WorkspaceCreateInput!, update: WorkspaceUpdateInput!): Workspace!
   deleteWorkspace(where: WorkspaceWhereUniqueInput!): Workspace
   deleteManyWorkspaces(where: WorkspaceWhereInput): BatchPayload!
+  createWorkspaceParticipant(data: WorkspaceParticipantCreateInput!): WorkspaceParticipant!
+  updateWorkspaceParticipant(data: WorkspaceParticipantUpdateInput!, where: WorkspaceParticipantWhereUniqueInput!): WorkspaceParticipant
+  updateManyWorkspaceParticipants(data: WorkspaceParticipantUpdateManyMutationInput!, where: WorkspaceParticipantWhereInput): BatchPayload!
+  upsertWorkspaceParticipant(where: WorkspaceParticipantWhereUniqueInput!, create: WorkspaceParticipantCreateInput!, update: WorkspaceParticipantUpdateInput!): WorkspaceParticipant!
+  deleteWorkspaceParticipant(where: WorkspaceParticipantWhereUniqueInput!): WorkspaceParticipant
+  deleteManyWorkspaceParticipants(where: WorkspaceParticipantWhereInput): BatchPayload!
+  createWorkspaceToken(data: WorkspaceTokenCreateInput!): WorkspaceToken!
+  updateWorkspaceToken(data: WorkspaceTokenUpdateInput!, where: WorkspaceTokenWhereUniqueInput!): WorkspaceToken
+  upsertWorkspaceToken(where: WorkspaceTokenWhereUniqueInput!, create: WorkspaceTokenCreateInput!, update: WorkspaceTokenUpdateInput!): WorkspaceToken!
+  deleteWorkspaceToken(where: WorkspaceTokenWhereUniqueInput!): WorkspaceToken
+  deleteManyWorkspaceTokens(where: WorkspaceTokenWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1437,13 +1475,20 @@ type PageInfo {
   endCursor: String
 }
 
+enum Privilege {
+  VIEW
+  EDIT
+  INVITE
+  OWNER
+}
+
 type Project {
   id: ID!
   name: String!
-  owner: User!
-  participants(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
   template: Workspace
+  participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
+  tokens(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectToken!]
 }
 
 type ProjectConnection {
@@ -1455,20 +1500,15 @@ type ProjectConnection {
 input ProjectCreateInput {
   id: ID
   name: String!
-  owner: UserCreateOneWithoutAsProjectOwnerInput!
-  participants: UserCreateManyWithoutAsProjectParticipantInput
   workspaces: WorkspaceCreateManyWithoutProjectInput
   template: WorkspaceCreateOneInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+  tokens: ProjectTokenCreateManyInput
 }
 
-input ProjectCreateManyWithoutOwnerInput {
-  create: [ProjectCreateWithoutOwnerInput!]
-  connect: [ProjectWhereUniqueInput!]
-}
-
-input ProjectCreateManyWithoutParticipantsInput {
-  create: [ProjectCreateWithoutParticipantsInput!]
-  connect: [ProjectWhereUniqueInput!]
+input ProjectCreateOneWithoutParticipantsInput {
+  create: ProjectCreateWithoutParticipantsInput
+  connect: ProjectWhereUniqueInput
 }
 
 input ProjectCreateOneWithoutWorkspacesInput {
@@ -1476,28 +1516,20 @@ input ProjectCreateOneWithoutWorkspacesInput {
   connect: ProjectWhereUniqueInput
 }
 
-input ProjectCreateWithoutOwnerInput {
-  id: ID
-  name: String!
-  participants: UserCreateManyWithoutAsProjectParticipantInput
-  workspaces: WorkspaceCreateManyWithoutProjectInput
-  template: WorkspaceCreateOneInput
-}
-
 input ProjectCreateWithoutParticipantsInput {
   id: ID
   name: String!
-  owner: UserCreateOneWithoutAsProjectOwnerInput!
   workspaces: WorkspaceCreateManyWithoutProjectInput
   template: WorkspaceCreateOneInput
+  tokens: ProjectTokenCreateManyInput
 }
 
 input ProjectCreateWithoutWorkspacesInput {
   id: ID
   name: String!
-  owner: UserCreateOneWithoutAsProjectOwnerInput!
-  participants: UserCreateManyWithoutAsProjectParticipantInput
   template: WorkspaceCreateOneInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+  tokens: ProjectTokenCreateManyInput
 }
 
 type ProjectEdge {
@@ -1512,12 +1544,82 @@ enum ProjectOrderByInput {
   name_DESC
 }
 
-type ProjectPreviousValues {
+type ProjectParticipant {
   id: ID!
-  name: String!
+  privilege: Privilege!
+  project: Project!
+  token: ProjectToken!
+  user: User!
 }
 
-input ProjectScalarWhereInput {
+type ProjectParticipantConnection {
+  pageInfo: PageInfo!
+  edges: [ProjectParticipantEdge]!
+  aggregate: AggregateProjectParticipant!
+}
+
+input ProjectParticipantCreateInput {
+  id: ID
+  privilege: Privilege!
+  project: ProjectCreateOneWithoutParticipantsInput!
+  token: ProjectTokenCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutProjectParticipationsInput!
+}
+
+input ProjectParticipantCreateManyWithoutProjectInput {
+  create: [ProjectParticipantCreateWithoutProjectInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+}
+
+input ProjectParticipantCreateManyWithoutTokenInput {
+  create: [ProjectParticipantCreateWithoutTokenInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+}
+
+input ProjectParticipantCreateManyWithoutUserInput {
+  create: [ProjectParticipantCreateWithoutUserInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+}
+
+input ProjectParticipantCreateWithoutProjectInput {
+  id: ID
+  privilege: Privilege!
+  token: ProjectTokenCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutProjectParticipationsInput!
+}
+
+input ProjectParticipantCreateWithoutTokenInput {
+  id: ID
+  privilege: Privilege!
+  project: ProjectCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutProjectParticipationsInput!
+}
+
+input ProjectParticipantCreateWithoutUserInput {
+  id: ID
+  privilege: Privilege!
+  project: ProjectCreateOneWithoutParticipantsInput!
+  token: ProjectTokenCreateOneWithoutParticipantsInput!
+}
+
+type ProjectParticipantEdge {
+  node: ProjectParticipant!
+  cursor: String!
+}
+
+enum ProjectParticipantOrderByInput {
+  id_ASC
+  id_DESC
+  privilege_ASC
+  privilege_DESC
+}
+
+type ProjectParticipantPreviousValues {
+  id: ID!
+  privilege: Privilege!
+}
+
+input ProjectParticipantScalarWhereInput {
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -1532,23 +1634,174 @@ input ProjectScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  AND: [ProjectScalarWhereInput!]
-  OR: [ProjectScalarWhereInput!]
-  NOT: [ProjectScalarWhereInput!]
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  AND: [ProjectParticipantScalarWhereInput!]
+  OR: [ProjectParticipantScalarWhereInput!]
+  NOT: [ProjectParticipantScalarWhereInput!]
+}
+
+type ProjectParticipantSubscriptionPayload {
+  mutation: MutationType!
+  node: ProjectParticipant
+  updatedFields: [String!]
+  previousValues: ProjectParticipantPreviousValues
+}
+
+input ProjectParticipantSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ProjectParticipantWhereInput
+  AND: [ProjectParticipantSubscriptionWhereInput!]
+  OR: [ProjectParticipantSubscriptionWhereInput!]
+  NOT: [ProjectParticipantSubscriptionWhereInput!]
+}
+
+input ProjectParticipantUpdateInput {
+  privilege: Privilege
+  project: ProjectUpdateOneRequiredWithoutParticipantsInput
+  token: ProjectTokenUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutProjectParticipationsInput
+}
+
+input ProjectParticipantUpdateManyDataInput {
+  privilege: Privilege
+}
+
+input ProjectParticipantUpdateManyMutationInput {
+  privilege: Privilege
+}
+
+input ProjectParticipantUpdateManyWithoutProjectInput {
+  create: [ProjectParticipantCreateWithoutProjectInput!]
+  delete: [ProjectParticipantWhereUniqueInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+  set: [ProjectParticipantWhereUniqueInput!]
+  disconnect: [ProjectParticipantWhereUniqueInput!]
+  update: [ProjectParticipantUpdateWithWhereUniqueWithoutProjectInput!]
+  upsert: [ProjectParticipantUpsertWithWhereUniqueWithoutProjectInput!]
+  deleteMany: [ProjectParticipantScalarWhereInput!]
+  updateMany: [ProjectParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectParticipantUpdateManyWithoutTokenInput {
+  create: [ProjectParticipantCreateWithoutTokenInput!]
+  delete: [ProjectParticipantWhereUniqueInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+  set: [ProjectParticipantWhereUniqueInput!]
+  disconnect: [ProjectParticipantWhereUniqueInput!]
+  update: [ProjectParticipantUpdateWithWhereUniqueWithoutTokenInput!]
+  upsert: [ProjectParticipantUpsertWithWhereUniqueWithoutTokenInput!]
+  deleteMany: [ProjectParticipantScalarWhereInput!]
+  updateMany: [ProjectParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectParticipantUpdateManyWithoutUserInput {
+  create: [ProjectParticipantCreateWithoutUserInput!]
+  delete: [ProjectParticipantWhereUniqueInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+  set: [ProjectParticipantWhereUniqueInput!]
+  disconnect: [ProjectParticipantWhereUniqueInput!]
+  update: [ProjectParticipantUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [ProjectParticipantUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [ProjectParticipantScalarWhereInput!]
+  updateMany: [ProjectParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectParticipantUpdateManyWithWhereNestedInput {
+  where: ProjectParticipantScalarWhereInput!
+  data: ProjectParticipantUpdateManyDataInput!
+}
+
+input ProjectParticipantUpdateWithoutProjectDataInput {
+  privilege: Privilege
+  token: ProjectTokenUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutProjectParticipationsInput
+}
+
+input ProjectParticipantUpdateWithoutTokenDataInput {
+  privilege: Privilege
+  project: ProjectUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutProjectParticipationsInput
+}
+
+input ProjectParticipantUpdateWithoutUserDataInput {
+  privilege: Privilege
+  project: ProjectUpdateOneRequiredWithoutParticipantsInput
+  token: ProjectTokenUpdateOneRequiredWithoutParticipantsInput
+}
+
+input ProjectParticipantUpdateWithWhereUniqueWithoutProjectInput {
+  where: ProjectParticipantWhereUniqueInput!
+  data: ProjectParticipantUpdateWithoutProjectDataInput!
+}
+
+input ProjectParticipantUpdateWithWhereUniqueWithoutTokenInput {
+  where: ProjectParticipantWhereUniqueInput!
+  data: ProjectParticipantUpdateWithoutTokenDataInput!
+}
+
+input ProjectParticipantUpdateWithWhereUniqueWithoutUserInput {
+  where: ProjectParticipantWhereUniqueInput!
+  data: ProjectParticipantUpdateWithoutUserDataInput!
+}
+
+input ProjectParticipantUpsertWithWhereUniqueWithoutProjectInput {
+  where: ProjectParticipantWhereUniqueInput!
+  update: ProjectParticipantUpdateWithoutProjectDataInput!
+  create: ProjectParticipantCreateWithoutProjectInput!
+}
+
+input ProjectParticipantUpsertWithWhereUniqueWithoutTokenInput {
+  where: ProjectParticipantWhereUniqueInput!
+  update: ProjectParticipantUpdateWithoutTokenDataInput!
+  create: ProjectParticipantCreateWithoutTokenInput!
+}
+
+input ProjectParticipantUpsertWithWhereUniqueWithoutUserInput {
+  where: ProjectParticipantWhereUniqueInput!
+  update: ProjectParticipantUpdateWithoutUserDataInput!
+  create: ProjectParticipantCreateWithoutUserInput!
+}
+
+input ProjectParticipantWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  project: ProjectWhereInput
+  token: ProjectTokenWhereInput
+  user: UserWhereInput
+  AND: [ProjectParticipantWhereInput!]
+  OR: [ProjectParticipantWhereInput!]
+  NOT: [ProjectParticipantWhereInput!]
+}
+
+input ProjectParticipantWhereUniqueInput {
+  id: ID
+}
+
+type ProjectPreviousValues {
+  id: ID!
+  name: String!
 }
 
 type ProjectSubscriptionPayload {
@@ -1569,49 +1822,167 @@ input ProjectSubscriptionWhereInput {
   NOT: [ProjectSubscriptionWhereInput!]
 }
 
-input ProjectUpdateInput {
-  name: String
-  owner: UserUpdateOneRequiredWithoutAsProjectOwnerInput
-  participants: UserUpdateManyWithoutAsProjectParticipantInput
-  workspaces: WorkspaceUpdateManyWithoutProjectInput
-  template: WorkspaceUpdateOneInput
+type ProjectToken {
+  id: ID!
+  participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
 }
 
-input ProjectUpdateManyDataInput {
+type ProjectTokenConnection {
+  pageInfo: PageInfo!
+  edges: [ProjectTokenEdge]!
+  aggregate: AggregateProjectToken!
+}
+
+input ProjectTokenCreateInput {
+  id: ID
+  participants: ProjectParticipantCreateManyWithoutTokenInput
+}
+
+input ProjectTokenCreateManyInput {
+  create: [ProjectTokenCreateInput!]
+  connect: [ProjectTokenWhereUniqueInput!]
+}
+
+input ProjectTokenCreateOneWithoutParticipantsInput {
+  create: ProjectTokenCreateWithoutParticipantsInput
+  connect: ProjectTokenWhereUniqueInput
+}
+
+input ProjectTokenCreateWithoutParticipantsInput {
+  id: ID
+}
+
+type ProjectTokenEdge {
+  node: ProjectToken!
+  cursor: String!
+}
+
+enum ProjectTokenOrderByInput {
+  id_ASC
+  id_DESC
+}
+
+type ProjectTokenPreviousValues {
+  id: ID!
+}
+
+input ProjectTokenScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  AND: [ProjectTokenScalarWhereInput!]
+  OR: [ProjectTokenScalarWhereInput!]
+  NOT: [ProjectTokenScalarWhereInput!]
+}
+
+type ProjectTokenSubscriptionPayload {
+  mutation: MutationType!
+  node: ProjectToken
+  updatedFields: [String!]
+  previousValues: ProjectTokenPreviousValues
+}
+
+input ProjectTokenSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ProjectTokenWhereInput
+  AND: [ProjectTokenSubscriptionWhereInput!]
+  OR: [ProjectTokenSubscriptionWhereInput!]
+  NOT: [ProjectTokenSubscriptionWhereInput!]
+}
+
+input ProjectTokenUpdateDataInput {
+  participants: ProjectParticipantUpdateManyWithoutTokenInput
+}
+
+input ProjectTokenUpdateInput {
+  participants: ProjectParticipantUpdateManyWithoutTokenInput
+}
+
+input ProjectTokenUpdateManyInput {
+  create: [ProjectTokenCreateInput!]
+  update: [ProjectTokenUpdateWithWhereUniqueNestedInput!]
+  upsert: [ProjectTokenUpsertWithWhereUniqueNestedInput!]
+  delete: [ProjectTokenWhereUniqueInput!]
+  connect: [ProjectTokenWhereUniqueInput!]
+  set: [ProjectTokenWhereUniqueInput!]
+  disconnect: [ProjectTokenWhereUniqueInput!]
+  deleteMany: [ProjectTokenScalarWhereInput!]
+}
+
+input ProjectTokenUpdateOneRequiredWithoutParticipantsInput {
+  create: ProjectTokenCreateWithoutParticipantsInput
+  connect: ProjectTokenWhereUniqueInput
+}
+
+input ProjectTokenUpdateWithWhereUniqueNestedInput {
+  where: ProjectTokenWhereUniqueInput!
+  data: ProjectTokenUpdateDataInput!
+}
+
+input ProjectTokenUpsertWithWhereUniqueNestedInput {
+  where: ProjectTokenWhereUniqueInput!
+  update: ProjectTokenUpdateDataInput!
+  create: ProjectTokenCreateInput!
+}
+
+input ProjectTokenWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  participants_every: ProjectParticipantWhereInput
+  participants_some: ProjectParticipantWhereInput
+  participants_none: ProjectParticipantWhereInput
+  AND: [ProjectTokenWhereInput!]
+  OR: [ProjectTokenWhereInput!]
+  NOT: [ProjectTokenWhereInput!]
+}
+
+input ProjectTokenWhereUniqueInput {
+  id: ID
+}
+
+input ProjectUpdateInput {
   name: String
+  workspaces: WorkspaceUpdateManyWithoutProjectInput
+  template: WorkspaceUpdateOneInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+  tokens: ProjectTokenUpdateManyInput
 }
 
 input ProjectUpdateManyMutationInput {
   name: String
 }
 
-input ProjectUpdateManyWithoutOwnerInput {
-  create: [ProjectCreateWithoutOwnerInput!]
-  delete: [ProjectWhereUniqueInput!]
-  connect: [ProjectWhereUniqueInput!]
-  set: [ProjectWhereUniqueInput!]
-  disconnect: [ProjectWhereUniqueInput!]
-  update: [ProjectUpdateWithWhereUniqueWithoutOwnerInput!]
-  upsert: [ProjectUpsertWithWhereUniqueWithoutOwnerInput!]
-  deleteMany: [ProjectScalarWhereInput!]
-  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
-}
-
-input ProjectUpdateManyWithoutParticipantsInput {
-  create: [ProjectCreateWithoutParticipantsInput!]
-  delete: [ProjectWhereUniqueInput!]
-  connect: [ProjectWhereUniqueInput!]
-  set: [ProjectWhereUniqueInput!]
-  disconnect: [ProjectWhereUniqueInput!]
-  update: [ProjectUpdateWithWhereUniqueWithoutParticipantsInput!]
-  upsert: [ProjectUpsertWithWhereUniqueWithoutParticipantsInput!]
-  deleteMany: [ProjectScalarWhereInput!]
-  updateMany: [ProjectUpdateManyWithWhereNestedInput!]
-}
-
-input ProjectUpdateManyWithWhereNestedInput {
-  where: ProjectScalarWhereInput!
-  data: ProjectUpdateManyDataInput!
+input ProjectUpdateOneRequiredWithoutParticipantsInput {
+  create: ProjectCreateWithoutParticipantsInput
+  update: ProjectUpdateWithoutParticipantsDataInput
+  upsert: ProjectUpsertWithoutParticipantsInput
+  connect: ProjectWhereUniqueInput
 }
 
 input ProjectUpdateOneWithoutWorkspacesInput {
@@ -1623,52 +1994,28 @@ input ProjectUpdateOneWithoutWorkspacesInput {
   connect: ProjectWhereUniqueInput
 }
 
-input ProjectUpdateWithoutOwnerDataInput {
-  name: String
-  participants: UserUpdateManyWithoutAsProjectParticipantInput
-  workspaces: WorkspaceUpdateManyWithoutProjectInput
-  template: WorkspaceUpdateOneInput
-}
-
 input ProjectUpdateWithoutParticipantsDataInput {
   name: String
-  owner: UserUpdateOneRequiredWithoutAsProjectOwnerInput
   workspaces: WorkspaceUpdateManyWithoutProjectInput
   template: WorkspaceUpdateOneInput
+  tokens: ProjectTokenUpdateManyInput
 }
 
 input ProjectUpdateWithoutWorkspacesDataInput {
   name: String
-  owner: UserUpdateOneRequiredWithoutAsProjectOwnerInput
-  participants: UserUpdateManyWithoutAsProjectParticipantInput
   template: WorkspaceUpdateOneInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+  tokens: ProjectTokenUpdateManyInput
 }
 
-input ProjectUpdateWithWhereUniqueWithoutOwnerInput {
-  where: ProjectWhereUniqueInput!
-  data: ProjectUpdateWithoutOwnerDataInput!
-}
-
-input ProjectUpdateWithWhereUniqueWithoutParticipantsInput {
-  where: ProjectWhereUniqueInput!
-  data: ProjectUpdateWithoutParticipantsDataInput!
+input ProjectUpsertWithoutParticipantsInput {
+  update: ProjectUpdateWithoutParticipantsDataInput!
+  create: ProjectCreateWithoutParticipantsInput!
 }
 
 input ProjectUpsertWithoutWorkspacesInput {
   update: ProjectUpdateWithoutWorkspacesDataInput!
   create: ProjectCreateWithoutWorkspacesInput!
-}
-
-input ProjectUpsertWithWhereUniqueWithoutOwnerInput {
-  where: ProjectWhereUniqueInput!
-  update: ProjectUpdateWithoutOwnerDataInput!
-  create: ProjectCreateWithoutOwnerInput!
-}
-
-input ProjectUpsertWithWhereUniqueWithoutParticipantsInput {
-  where: ProjectWhereUniqueInput!
-  update: ProjectUpdateWithoutParticipantsDataInput!
-  create: ProjectCreateWithoutParticipantsInput!
 }
 
 input ProjectWhereInput {
@@ -1700,14 +2047,16 @@ input ProjectWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  owner: UserWhereInput
-  participants_every: UserWhereInput
-  participants_some: UserWhereInput
-  participants_none: UserWhereInput
   workspaces_every: WorkspaceWhereInput
   workspaces_some: WorkspaceWhereInput
   workspaces_none: WorkspaceWhereInput
   template: WorkspaceWhereInput
+  participants_every: ProjectParticipantWhereInput
+  participants_some: ProjectParticipantWhereInput
+  participants_none: ProjectParticipantWhereInput
+  tokens_every: ProjectTokenWhereInput
+  tokens_some: ProjectTokenWhereInput
+  tokens_none: ProjectTokenWhereInput
   AND: [ProjectWhereInput!]
   OR: [ProjectWhereInput!]
   NOT: [ProjectWhereInput!]
@@ -1733,6 +2082,12 @@ type Query {
   project(where: ProjectWhereUniqueInput!): Project
   projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
   projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
+  projectParticipant(where: ProjectParticipantWhereUniqueInput!): ProjectParticipant
+  projectParticipants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant]!
+  projectParticipantsConnection(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectParticipantConnection!
+  projectToken(where: ProjectTokenWhereUniqueInput!): ProjectToken
+  projectTokens(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectToken]!
+  projectTokensConnection(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectTokenConnection!
   resource(where: ResourceWhereUniqueInput!): Resource
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource]!
   resourcesConnection(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResourceConnection!
@@ -1745,6 +2100,12 @@ type Query {
   workspace(where: WorkspaceWhereUniqueInput!): Workspace
   workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace]!
   workspacesConnection(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceConnection!
+  workspaceParticipant(where: WorkspaceParticipantWhereUniqueInput!): WorkspaceParticipant
+  workspaceParticipants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant]!
+  workspaceParticipantsConnection(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceParticipantConnection!
+  workspaceToken(where: WorkspaceTokenWhereUniqueInput!): WorkspaceToken
+  workspaceTokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken]!
+  workspaceTokensConnection(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceTokenConnection!
   node(id: ID!): Node
 }
 
@@ -2018,10 +2379,14 @@ type Subscription {
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   courseLink(where: CourseLinkSubscriptionWhereInput): CourseLinkSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
+  projectParticipant(where: ProjectParticipantSubscriptionWhereInput): ProjectParticipantSubscriptionPayload
+  projectToken(where: ProjectTokenSubscriptionWhereInput): ProjectTokenSubscriptionPayload
   resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
   uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
+  workspaceParticipant(where: WorkspaceParticipantSubscriptionWhereInput): WorkspaceParticipantSubscriptionPayload
+  workspaceToken(where: WorkspaceTokenSubscriptionWhereInput): WorkspaceTokenSubscriptionPayload
 }
 
 type URL {
@@ -2209,9 +2574,8 @@ type User {
   id: ID!
   tmcId: Int
   role: Role!
-  asWorkspaceOwner(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
-  asProjectOwner(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
-  asProjectParticipant(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project!]
+  workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
+  projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   createdAt: DateTime!
   guideProgress: Int!
 }
@@ -2226,15 +2590,9 @@ input UserCreateInput {
   id: ID
   tmcId: Int
   role: Role!
-  asWorkspaceOwner: WorkspaceCreateManyWithoutOwnerInput
-  asProjectOwner: ProjectCreateManyWithoutOwnerInput
-  asProjectParticipant: ProjectCreateManyWithoutParticipantsInput
+  workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
+  projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   guideProgress: Int
-}
-
-input UserCreateManyWithoutAsProjectParticipantInput {
-  create: [UserCreateWithoutAsProjectParticipantInput!]
-  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneInput {
@@ -2242,40 +2600,29 @@ input UserCreateOneInput {
   connect: UserWhereUniqueInput
 }
 
-input UserCreateOneWithoutAsProjectOwnerInput {
-  create: UserCreateWithoutAsProjectOwnerInput
+input UserCreateOneWithoutProjectParticipationsInput {
+  create: UserCreateWithoutProjectParticipationsInput
   connect: UserWhereUniqueInput
 }
 
-input UserCreateOneWithoutAsWorkspaceOwnerInput {
-  create: UserCreateWithoutAsWorkspaceOwnerInput
+input UserCreateOneWithoutWorkspaceParticipationsInput {
+  create: UserCreateWithoutWorkspaceParticipationsInput
   connect: UserWhereUniqueInput
 }
 
-input UserCreateWithoutAsProjectOwnerInput {
+input UserCreateWithoutProjectParticipationsInput {
   id: ID
   tmcId: Int
   role: Role!
-  asWorkspaceOwner: WorkspaceCreateManyWithoutOwnerInput
-  asProjectParticipant: ProjectCreateManyWithoutParticipantsInput
+  workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   guideProgress: Int
 }
 
-input UserCreateWithoutAsProjectParticipantInput {
+input UserCreateWithoutWorkspaceParticipationsInput {
   id: ID
   tmcId: Int
   role: Role!
-  asWorkspaceOwner: WorkspaceCreateManyWithoutOwnerInput
-  asProjectOwner: ProjectCreateManyWithoutOwnerInput
-  guideProgress: Int
-}
-
-input UserCreateWithoutAsWorkspaceOwnerInput {
-  id: ID
-  tmcId: Int
-  role: Role!
-  asProjectOwner: ProjectCreateManyWithoutOwnerInput
-  asProjectParticipant: ProjectCreateManyWithoutParticipantsInput
+  projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   guideProgress: Int
 }
 
@@ -2305,54 +2652,6 @@ type UserPreviousValues {
   guideProgress: Int!
 }
 
-input UserScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  tmcId: Int
-  tmcId_not: Int
-  tmcId_in: [Int!]
-  tmcId_not_in: [Int!]
-  tmcId_lt: Int
-  tmcId_lte: Int
-  tmcId_gt: Int
-  tmcId_gte: Int
-  role: Role
-  role_not: Role
-  role_in: [Role!]
-  role_not_in: [Role!]
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  guideProgress: Int
-  guideProgress_not: Int
-  guideProgress_in: [Int!]
-  guideProgress_not_in: [Int!]
-  guideProgress_lt: Int
-  guideProgress_lte: Int
-  guideProgress_gt: Int
-  guideProgress_gte: Int
-  AND: [UserScalarWhereInput!]
-  OR: [UserScalarWhereInput!]
-  NOT: [UserScalarWhereInput!]
-}
-
 type UserSubscriptionPayload {
   mutation: MutationType!
   node: User
@@ -2374,24 +2673,16 @@ input UserSubscriptionWhereInput {
 input UserUpdateDataInput {
   tmcId: Int
   role: Role
-  asWorkspaceOwner: WorkspaceUpdateManyWithoutOwnerInput
-  asProjectOwner: ProjectUpdateManyWithoutOwnerInput
-  asProjectParticipant: ProjectUpdateManyWithoutParticipantsInput
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   guideProgress: Int
 }
 
 input UserUpdateInput {
   tmcId: Int
   role: Role
-  asWorkspaceOwner: WorkspaceUpdateManyWithoutOwnerInput
-  asProjectOwner: ProjectUpdateManyWithoutOwnerInput
-  asProjectParticipant: ProjectUpdateManyWithoutParticipantsInput
-  guideProgress: Int
-}
-
-input UserUpdateManyDataInput {
-  tmcId: Int
-  role: Role
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   guideProgress: Int
 }
 
@@ -2401,23 +2692,6 @@ input UserUpdateManyMutationInput {
   guideProgress: Int
 }
 
-input UserUpdateManyWithoutAsProjectParticipantInput {
-  create: [UserCreateWithoutAsProjectParticipantInput!]
-  delete: [UserWhereUniqueInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutAsProjectParticipantInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutAsProjectParticipantInput!]
-  deleteMany: [UserScalarWhereInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-}
-
-input UserUpdateManyWithWhereNestedInput {
-  where: UserScalarWhereInput!
-  data: UserUpdateManyDataInput!
-}
-
 input UserUpdateOneRequiredInput {
   create: UserCreateInput
   update: UserUpdateDataInput
@@ -2425,49 +2699,32 @@ input UserUpdateOneRequiredInput {
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneRequiredWithoutAsProjectOwnerInput {
-  create: UserCreateWithoutAsProjectOwnerInput
-  update: UserUpdateWithoutAsProjectOwnerDataInput
-  upsert: UserUpsertWithoutAsProjectOwnerInput
+input UserUpdateOneRequiredWithoutProjectParticipationsInput {
+  create: UserCreateWithoutProjectParticipationsInput
+  update: UserUpdateWithoutProjectParticipationsDataInput
+  upsert: UserUpsertWithoutProjectParticipationsInput
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneWithoutAsWorkspaceOwnerInput {
-  create: UserCreateWithoutAsWorkspaceOwnerInput
-  update: UserUpdateWithoutAsWorkspaceOwnerDataInput
-  upsert: UserUpsertWithoutAsWorkspaceOwnerInput
-  delete: Boolean
-  disconnect: Boolean
+input UserUpdateOneRequiredWithoutWorkspaceParticipationsInput {
+  create: UserCreateWithoutWorkspaceParticipationsInput
+  update: UserUpdateWithoutWorkspaceParticipationsDataInput
+  upsert: UserUpsertWithoutWorkspaceParticipationsInput
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateWithoutAsProjectOwnerDataInput {
+input UserUpdateWithoutProjectParticipationsDataInput {
   tmcId: Int
   role: Role
-  asWorkspaceOwner: WorkspaceUpdateManyWithoutOwnerInput
-  asProjectParticipant: ProjectUpdateManyWithoutParticipantsInput
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   guideProgress: Int
 }
 
-input UserUpdateWithoutAsProjectParticipantDataInput {
+input UserUpdateWithoutWorkspaceParticipationsDataInput {
   tmcId: Int
   role: Role
-  asWorkspaceOwner: WorkspaceUpdateManyWithoutOwnerInput
-  asProjectOwner: ProjectUpdateManyWithoutOwnerInput
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   guideProgress: Int
-}
-
-input UserUpdateWithoutAsWorkspaceOwnerDataInput {
-  tmcId: Int
-  role: Role
-  asProjectOwner: ProjectUpdateManyWithoutOwnerInput
-  asProjectParticipant: ProjectUpdateManyWithoutParticipantsInput
-  guideProgress: Int
-}
-
-input UserUpdateWithWhereUniqueWithoutAsProjectParticipantInput {
-  where: UserWhereUniqueInput!
-  data: UserUpdateWithoutAsProjectParticipantDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -2475,20 +2732,14 @@ input UserUpsertNestedInput {
   create: UserCreateInput!
 }
 
-input UserUpsertWithoutAsProjectOwnerInput {
-  update: UserUpdateWithoutAsProjectOwnerDataInput!
-  create: UserCreateWithoutAsProjectOwnerInput!
+input UserUpsertWithoutProjectParticipationsInput {
+  update: UserUpdateWithoutProjectParticipationsDataInput!
+  create: UserCreateWithoutProjectParticipationsInput!
 }
 
-input UserUpsertWithoutAsWorkspaceOwnerInput {
-  update: UserUpdateWithoutAsWorkspaceOwnerDataInput!
-  create: UserCreateWithoutAsWorkspaceOwnerInput!
-}
-
-input UserUpsertWithWhereUniqueWithoutAsProjectParticipantInput {
-  where: UserWhereUniqueInput!
-  update: UserUpdateWithoutAsProjectParticipantDataInput!
-  create: UserCreateWithoutAsProjectParticipantInput!
+input UserUpsertWithoutWorkspaceParticipationsInput {
+  update: UserUpdateWithoutWorkspaceParticipationsDataInput!
+  create: UserCreateWithoutWorkspaceParticipationsInput!
 }
 
 input UserWhereInput {
@@ -2518,15 +2769,12 @@ input UserWhereInput {
   role_not: Role
   role_in: [Role!]
   role_not_in: [Role!]
-  asWorkspaceOwner_every: WorkspaceWhereInput
-  asWorkspaceOwner_some: WorkspaceWhereInput
-  asWorkspaceOwner_none: WorkspaceWhereInput
-  asProjectOwner_every: ProjectWhereInput
-  asProjectOwner_some: ProjectWhereInput
-  asProjectOwner_none: ProjectWhereInput
-  asProjectParticipant_every: ProjectWhereInput
-  asProjectParticipant_some: ProjectWhereInput
-  asProjectParticipant_none: ProjectWhereInput
+  workspaceParticipations_every: WorkspaceParticipantWhereInput
+  workspaceParticipations_some: WorkspaceParticipantWhereInput
+  workspaceParticipations_none: WorkspaceParticipantWhereInput
+  projectParticipations_every: ProjectParticipantWhereInput
+  projectParticipations_some: ProjectParticipantWhereInput
+  projectParticipations_none: ProjectParticipantWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2557,13 +2805,14 @@ type Workspace {
   id: ID!
   name: String!
   project: Project
-  owner: User
   public: Boolean!
   defaultCourse: Course
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
+  participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
+  tokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken!]
 }
 
 type WorkspaceConnection {
@@ -2576,18 +2825,14 @@ input WorkspaceCreateInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  owner: UserCreateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-}
-
-input WorkspaceCreateManyWithoutOwnerInput {
-  create: [WorkspaceCreateWithoutOwnerInput!]
-  connect: [WorkspaceWhereUniqueInput!]
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
 input WorkspaceCreateManyWithoutProjectInput {
@@ -2620,55 +2865,64 @@ input WorkspaceCreateOneWithoutCoursesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceCreateOneWithoutParticipantsInput {
+  create: WorkspaceCreateWithoutParticipantsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceCreateWithoutConceptLinksInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  owner: UserCreateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
 input WorkspaceCreateWithoutConceptsInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  owner: UserCreateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
 input WorkspaceCreateWithoutCourseLinksInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  owner: UserCreateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
 input WorkspaceCreateWithoutCoursesInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  owner: UserCreateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseCreateOneInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
-input WorkspaceCreateWithoutOwnerInput {
+input WorkspaceCreateWithoutParticipantsInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
@@ -2678,18 +2932,20 @@ input WorkspaceCreateWithoutOwnerInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
 input WorkspaceCreateWithoutProjectInput {
   id: ID
   name: String!
-  owner: UserCreateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyInput
 }
 
 type WorkspaceEdge {
@@ -2704,6 +2960,261 @@ enum WorkspaceOrderByInput {
   name_DESC
   public_ASC
   public_DESC
+}
+
+type WorkspaceParticipant {
+  id: ID!
+  privilege: Privilege!
+  workspace: Workspace!
+  token: WorkspaceToken!
+  user: User!
+}
+
+type WorkspaceParticipantConnection {
+  pageInfo: PageInfo!
+  edges: [WorkspaceParticipantEdge]!
+  aggregate: AggregateWorkspaceParticipant!
+}
+
+input WorkspaceParticipantCreateInput {
+  id: ID
+  privilege: Privilege!
+  workspace: WorkspaceCreateOneWithoutParticipantsInput!
+  token: WorkspaceTokenCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutWorkspaceParticipationsInput!
+}
+
+input WorkspaceParticipantCreateManyWithoutTokenInput {
+  create: [WorkspaceParticipantCreateWithoutTokenInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+}
+
+input WorkspaceParticipantCreateManyWithoutUserInput {
+  create: [WorkspaceParticipantCreateWithoutUserInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+}
+
+input WorkspaceParticipantCreateManyWithoutWorkspaceInput {
+  create: [WorkspaceParticipantCreateWithoutWorkspaceInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+}
+
+input WorkspaceParticipantCreateWithoutTokenInput {
+  id: ID
+  privilege: Privilege!
+  workspace: WorkspaceCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutWorkspaceParticipationsInput!
+}
+
+input WorkspaceParticipantCreateWithoutUserInput {
+  id: ID
+  privilege: Privilege!
+  workspace: WorkspaceCreateOneWithoutParticipantsInput!
+  token: WorkspaceTokenCreateOneWithoutParticipantsInput!
+}
+
+input WorkspaceParticipantCreateWithoutWorkspaceInput {
+  id: ID
+  privilege: Privilege!
+  token: WorkspaceTokenCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutWorkspaceParticipationsInput!
+}
+
+type WorkspaceParticipantEdge {
+  node: WorkspaceParticipant!
+  cursor: String!
+}
+
+enum WorkspaceParticipantOrderByInput {
+  id_ASC
+  id_DESC
+  privilege_ASC
+  privilege_DESC
+}
+
+type WorkspaceParticipantPreviousValues {
+  id: ID!
+  privilege: Privilege!
+}
+
+input WorkspaceParticipantScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  AND: [WorkspaceParticipantScalarWhereInput!]
+  OR: [WorkspaceParticipantScalarWhereInput!]
+  NOT: [WorkspaceParticipantScalarWhereInput!]
+}
+
+type WorkspaceParticipantSubscriptionPayload {
+  mutation: MutationType!
+  node: WorkspaceParticipant
+  updatedFields: [String!]
+  previousValues: WorkspaceParticipantPreviousValues
+}
+
+input WorkspaceParticipantSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WorkspaceParticipantWhereInput
+  AND: [WorkspaceParticipantSubscriptionWhereInput!]
+  OR: [WorkspaceParticipantSubscriptionWhereInput!]
+  NOT: [WorkspaceParticipantSubscriptionWhereInput!]
+}
+
+input WorkspaceParticipantUpdateInput {
+  privilege: Privilege
+  workspace: WorkspaceUpdateOneRequiredWithoutParticipantsInput
+  token: WorkspaceTokenUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutWorkspaceParticipationsInput
+}
+
+input WorkspaceParticipantUpdateManyDataInput {
+  privilege: Privilege
+}
+
+input WorkspaceParticipantUpdateManyMutationInput {
+  privilege: Privilege
+}
+
+input WorkspaceParticipantUpdateManyWithoutTokenInput {
+  create: [WorkspaceParticipantCreateWithoutTokenInput!]
+  delete: [WorkspaceParticipantWhereUniqueInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+  set: [WorkspaceParticipantWhereUniqueInput!]
+  disconnect: [WorkspaceParticipantWhereUniqueInput!]
+  update: [WorkspaceParticipantUpdateWithWhereUniqueWithoutTokenInput!]
+  upsert: [WorkspaceParticipantUpsertWithWhereUniqueWithoutTokenInput!]
+  deleteMany: [WorkspaceParticipantScalarWhereInput!]
+  updateMany: [WorkspaceParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceParticipantUpdateManyWithoutUserInput {
+  create: [WorkspaceParticipantCreateWithoutUserInput!]
+  delete: [WorkspaceParticipantWhereUniqueInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+  set: [WorkspaceParticipantWhereUniqueInput!]
+  disconnect: [WorkspaceParticipantWhereUniqueInput!]
+  update: [WorkspaceParticipantUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [WorkspaceParticipantUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [WorkspaceParticipantScalarWhereInput!]
+  updateMany: [WorkspaceParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceParticipantUpdateManyWithoutWorkspaceInput {
+  create: [WorkspaceParticipantCreateWithoutWorkspaceInput!]
+  delete: [WorkspaceParticipantWhereUniqueInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+  set: [WorkspaceParticipantWhereUniqueInput!]
+  disconnect: [WorkspaceParticipantWhereUniqueInput!]
+  update: [WorkspaceParticipantUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [WorkspaceParticipantUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [WorkspaceParticipantScalarWhereInput!]
+  updateMany: [WorkspaceParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceParticipantUpdateManyWithWhereNestedInput {
+  where: WorkspaceParticipantScalarWhereInput!
+  data: WorkspaceParticipantUpdateManyDataInput!
+}
+
+input WorkspaceParticipantUpdateWithoutTokenDataInput {
+  privilege: Privilege
+  workspace: WorkspaceUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutWorkspaceParticipationsInput
+}
+
+input WorkspaceParticipantUpdateWithoutUserDataInput {
+  privilege: Privilege
+  workspace: WorkspaceUpdateOneRequiredWithoutParticipantsInput
+  token: WorkspaceTokenUpdateOneRequiredWithoutParticipantsInput
+}
+
+input WorkspaceParticipantUpdateWithoutWorkspaceDataInput {
+  privilege: Privilege
+  token: WorkspaceTokenUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutWorkspaceParticipationsInput
+}
+
+input WorkspaceParticipantUpdateWithWhereUniqueWithoutTokenInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  data: WorkspaceParticipantUpdateWithoutTokenDataInput!
+}
+
+input WorkspaceParticipantUpdateWithWhereUniqueWithoutUserInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  data: WorkspaceParticipantUpdateWithoutUserDataInput!
+}
+
+input WorkspaceParticipantUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  data: WorkspaceParticipantUpdateWithoutWorkspaceDataInput!
+}
+
+input WorkspaceParticipantUpsertWithWhereUniqueWithoutTokenInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  update: WorkspaceParticipantUpdateWithoutTokenDataInput!
+  create: WorkspaceParticipantCreateWithoutTokenInput!
+}
+
+input WorkspaceParticipantUpsertWithWhereUniqueWithoutUserInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  update: WorkspaceParticipantUpdateWithoutUserDataInput!
+  create: WorkspaceParticipantCreateWithoutUserInput!
+}
+
+input WorkspaceParticipantUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  update: WorkspaceParticipantUpdateWithoutWorkspaceDataInput!
+  create: WorkspaceParticipantCreateWithoutWorkspaceInput!
+}
+
+input WorkspaceParticipantWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  workspace: WorkspaceWhereInput
+  token: WorkspaceTokenWhereInput
+  user: UserWhereInput
+  AND: [WorkspaceParticipantWhereInput!]
+  OR: [WorkspaceParticipantWhereInput!]
+  NOT: [WorkspaceParticipantWhereInput!]
+}
+
+input WorkspaceParticipantWhereUniqueInput {
+  id: ID
 }
 
 type WorkspacePreviousValues {
@@ -2766,28 +3277,174 @@ input WorkspaceSubscriptionWhereInput {
   NOT: [WorkspaceSubscriptionWhereInput!]
 }
 
+type WorkspaceToken {
+  id: ID!
+  participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
+}
+
+type WorkspaceTokenConnection {
+  pageInfo: PageInfo!
+  edges: [WorkspaceTokenEdge]!
+  aggregate: AggregateWorkspaceToken!
+}
+
+input WorkspaceTokenCreateInput {
+  id: ID
+  participants: WorkspaceParticipantCreateManyWithoutTokenInput
+}
+
+input WorkspaceTokenCreateManyInput {
+  create: [WorkspaceTokenCreateInput!]
+  connect: [WorkspaceTokenWhereUniqueInput!]
+}
+
+input WorkspaceTokenCreateOneWithoutParticipantsInput {
+  create: WorkspaceTokenCreateWithoutParticipantsInput
+  connect: WorkspaceTokenWhereUniqueInput
+}
+
+input WorkspaceTokenCreateWithoutParticipantsInput {
+  id: ID
+}
+
+type WorkspaceTokenEdge {
+  node: WorkspaceToken!
+  cursor: String!
+}
+
+enum WorkspaceTokenOrderByInput {
+  id_ASC
+  id_DESC
+}
+
+type WorkspaceTokenPreviousValues {
+  id: ID!
+}
+
+input WorkspaceTokenScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  AND: [WorkspaceTokenScalarWhereInput!]
+  OR: [WorkspaceTokenScalarWhereInput!]
+  NOT: [WorkspaceTokenScalarWhereInput!]
+}
+
+type WorkspaceTokenSubscriptionPayload {
+  mutation: MutationType!
+  node: WorkspaceToken
+  updatedFields: [String!]
+  previousValues: WorkspaceTokenPreviousValues
+}
+
+input WorkspaceTokenSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WorkspaceTokenWhereInput
+  AND: [WorkspaceTokenSubscriptionWhereInput!]
+  OR: [WorkspaceTokenSubscriptionWhereInput!]
+  NOT: [WorkspaceTokenSubscriptionWhereInput!]
+}
+
+input WorkspaceTokenUpdateDataInput {
+  participants: WorkspaceParticipantUpdateManyWithoutTokenInput
+}
+
+input WorkspaceTokenUpdateInput {
+  participants: WorkspaceParticipantUpdateManyWithoutTokenInput
+}
+
+input WorkspaceTokenUpdateManyInput {
+  create: [WorkspaceTokenCreateInput!]
+  update: [WorkspaceTokenUpdateWithWhereUniqueNestedInput!]
+  upsert: [WorkspaceTokenUpsertWithWhereUniqueNestedInput!]
+  delete: [WorkspaceTokenWhereUniqueInput!]
+  connect: [WorkspaceTokenWhereUniqueInput!]
+  set: [WorkspaceTokenWhereUniqueInput!]
+  disconnect: [WorkspaceTokenWhereUniqueInput!]
+  deleteMany: [WorkspaceTokenScalarWhereInput!]
+}
+
+input WorkspaceTokenUpdateOneRequiredWithoutParticipantsInput {
+  create: WorkspaceTokenCreateWithoutParticipantsInput
+  connect: WorkspaceTokenWhereUniqueInput
+}
+
+input WorkspaceTokenUpdateWithWhereUniqueNestedInput {
+  where: WorkspaceTokenWhereUniqueInput!
+  data: WorkspaceTokenUpdateDataInput!
+}
+
+input WorkspaceTokenUpsertWithWhereUniqueNestedInput {
+  where: WorkspaceTokenWhereUniqueInput!
+  update: WorkspaceTokenUpdateDataInput!
+  create: WorkspaceTokenCreateInput!
+}
+
+input WorkspaceTokenWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  participants_every: WorkspaceParticipantWhereInput
+  participants_some: WorkspaceParticipantWhereInput
+  participants_none: WorkspaceParticipantWhereInput
+  AND: [WorkspaceTokenWhereInput!]
+  OR: [WorkspaceTokenWhereInput!]
+  NOT: [WorkspaceTokenWhereInput!]
+}
+
+input WorkspaceTokenWhereUniqueInput {
+  id: ID
+}
+
 input WorkspaceUpdateDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateManyDataInput {
@@ -2798,18 +3455,6 @@ input WorkspaceUpdateManyDataInput {
 input WorkspaceUpdateManyMutationInput {
   name: String
   public: Boolean
-}
-
-input WorkspaceUpdateManyWithoutOwnerInput {
-  create: [WorkspaceCreateWithoutOwnerInput!]
-  delete: [WorkspaceWhereUniqueInput!]
-  connect: [WorkspaceWhereUniqueInput!]
-  set: [WorkspaceWhereUniqueInput!]
-  disconnect: [WorkspaceWhereUniqueInput!]
-  update: [WorkspaceUpdateWithWhereUniqueWithoutOwnerInput!]
-  upsert: [WorkspaceUpsertWithWhereUniqueWithoutOwnerInput!]
-  deleteMany: [WorkspaceScalarWhereInput!]
-  updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
 }
 
 input WorkspaceUpdateManyWithoutProjectInput {
@@ -2866,51 +3511,62 @@ input WorkspaceUpdateOneRequiredWithoutCoursesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceUpdateOneRequiredWithoutParticipantsInput {
+  create: WorkspaceCreateWithoutParticipantsInput
+  update: WorkspaceUpdateWithoutParticipantsDataInput
+  upsert: WorkspaceUpsertWithoutParticipantsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceUpdateWithoutConceptLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutConceptsDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutCourseLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutCoursesDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
-input WorkspaceUpdateWithoutOwnerDataInput {
+input WorkspaceUpdateWithoutParticipantsDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
@@ -2919,22 +3575,19 @@ input WorkspaceUpdateWithoutOwnerDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutProjectDataInput {
   name: String
-  owner: UserUpdateOneWithoutAsWorkspaceOwnerInput
   public: Boolean
   defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-}
-
-input WorkspaceUpdateWithWhereUniqueWithoutOwnerInput {
-  where: WorkspaceWhereUniqueInput!
-  data: WorkspaceUpdateWithoutOwnerDataInput!
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyInput
 }
 
 input WorkspaceUpdateWithWhereUniqueWithoutProjectInput {
@@ -2967,10 +3620,9 @@ input WorkspaceUpsertWithoutCoursesInput {
   create: WorkspaceCreateWithoutCoursesInput!
 }
 
-input WorkspaceUpsertWithWhereUniqueWithoutOwnerInput {
-  where: WorkspaceWhereUniqueInput!
-  update: WorkspaceUpdateWithoutOwnerDataInput!
-  create: WorkspaceCreateWithoutOwnerInput!
+input WorkspaceUpsertWithoutParticipantsInput {
+  update: WorkspaceUpdateWithoutParticipantsDataInput!
+  create: WorkspaceCreateWithoutParticipantsInput!
 }
 
 input WorkspaceUpsertWithWhereUniqueWithoutProjectInput {
@@ -3009,7 +3661,6 @@ input WorkspaceWhereInput {
   name_ends_with: String
   name_not_ends_with: String
   project: ProjectWhereInput
-  owner: UserWhereInput
   public: Boolean
   public_not: Boolean
   defaultCourse: CourseWhereInput
@@ -3025,6 +3676,12 @@ input WorkspaceWhereInput {
   courseLinks_every: CourseLinkWhereInput
   courseLinks_some: CourseLinkWhereInput
   courseLinks_none: CourseLinkWhereInput
+  participants_every: WorkspaceParticipantWhereInput
+  participants_some: WorkspaceParticipantWhereInput
+  participants_none: WorkspaceParticipantWhereInput
+  tokens_every: WorkspaceTokenWhereInput
+  tokens_some: WorkspaceTokenWhereInput
+  tokens_none: WorkspaceTokenWhereInput
   AND: [WorkspaceWhereInput!]
   OR: [WorkspaceWhereInput!]
   NOT: [WorkspaceWhereInput!]

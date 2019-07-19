@@ -89,9 +89,9 @@ type User {
   id: ID!
   tmcId: Int!
   role: Role!
-  asWorkspaceOwner: [Workspace!]!
-  asProjectOwner: [Project!]!
-  asProjectParticipant: [Project!]!
+  workspaceParticipations: [WorkspaceParticipant!]!
+  projectParticipations: [ProjectParticipant!]!
+  createdAt: DateTime!
   guideProgress: Int!
 }
 
@@ -102,6 +102,13 @@ enum Role {
   ADMIN
 }
 
+enum Privilege {
+  VIEW,
+  EDIT,
+  INVITE,
+  OWNER
+}
+
 type Project {
   id: ID!
   name: String!
@@ -109,6 +116,7 @@ type Project {
   participants: [User!]!
   workspaces: [Workspace!]!
   template: Workspace
+  participants: [ProjectParticipant!]!
 }
 
 type Workspace {
@@ -122,6 +130,39 @@ type Workspace {
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  participants: [WorkspaceParticipant!]!
+  token: [WorkspaceToken!]!
+}
+
+type WorkspaceParticipant {
+  id: ID!
+  privileges: [Privilege!]!
+  workspace: Workspace! 
+  token: WorkspaceToken! 
+  user: User! 
+}
+
+type ProjectParticipant {
+  id: ID!
+  privileges: [Privilege!]!
+  project: Project! 
+  token: ProjectToken! 
+  user: User! 
+}
+
+interface Token {
+  id: ID!
+  privileges: [Privilege!]!
+  revoked: Boolean!
+  secret: String!
+}
+
+type WorkspaceToken implements Token {
+  participants: [WorkspaceParticipant!]! 
+}
+
+type ProjectToken implements Token {
+  participants: [ProjectParticipant!]!
 }
 
 type AuthPayload {

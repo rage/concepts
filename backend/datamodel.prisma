@@ -4,9 +4,8 @@ type User {
   id: ID! @id
   tmcId: Int @unique
   role: Role!
-  asWorkspaceOwner: [Workspace!]! @relation(name:"WorkspaceOwner")
-  asProjectOwner: [Project!]! @relation(name:"ProjectOwner")
-  asProjectParticipant: [Project!]! @relation(name:"ProjectParticipant")
+  workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser")
+  projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser")
   createdAt: DateTime! @createdAt
   guideProgress: Int! @default(value: 0)
 }
@@ -19,26 +18,67 @@ enum Role {
   ADMIN
 }
 
+enum Privilege {
+  VIEW,
+  EDIT,
+  INVITE,
+  OWNER
+}
+
 type Project {
   id: ID! @id
   name: String!
-  owner: User! @relation(name:"ProjectOwner")
-  participants: [User!]! @relation(name:"ProjectParticipant")
   workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
   template: Workspace @relation(link: INLINE, name:"Template")
+  participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject")
+  tokens: [ProjectToken!]!
 }
 
 type Workspace {
   id: ID! @id
   name: String!
   project: Project @relation(name: "UserWorkspaces")
-  owner: User @relation(name:"WorkspaceOwner")
   public: Boolean! @default(value: false)
   defaultCourse: Course @relation(link: INLINE, name:"DefaultCourse", onDelete: CASCADE)
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
+  participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace")
+  tokens: [WorkspaceToken!]!
+}
+
+type WorkspaceParticipant {
+  id: ID! @id
+  privilege: Privilege!
+  workspace: Workspace! @relation(name:"WorkspaceParticipantWorkspace")
+  token: WorkspaceToken! @relation(name:"WorkspaceParticipationToken")
+  user: User! @relation(name:"WorkspaceParticipantUser")
+}
+
+type ProjectParticipant {
+  id: ID! @id
+  privilege: Privilege!
+  project: Project! @relation(name:"ProjectParticipantProject")
+  token: ProjectToken! @relation(name:"ProjectParticipationToken")
+  user: User! @relation(name:"ProjectParticipantUser")
+}
+
+interface Token {
+  id: ID! @id
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+}
+
+type WorkspaceToken implements Token {
+  id: ID! @id
+  participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken")
+}
+
+type ProjectToken implements Token {
+  id: ID! @id
+  participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken")
 }
 
 type CourseLink {
