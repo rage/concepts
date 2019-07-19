@@ -158,6 +158,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
             <ActiveCourse
               onClick={() => setAddingLink(null)}
               course={courseQuery.data.courseById}
+              courses={coursesQuery.data.coursesByWorkspace}
               updateCourse={updateCourse}
               activeConceptIds={activeConceptIds}
               addingLink={addingLink}

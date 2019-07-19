@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { Button, Paper, Typography, List, IconButton } from '@material-ui/core'
+import { Button, Paper, Select, MenuItem, InputBase, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
 import { DELETE_CONCEPT } from '../../graphql/Mutation'
@@ -17,7 +18,6 @@ import useEditCourseDialog from './useEditCourseDialog'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../common/InfoBox'
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     gridArea: 'activeCourse',
@@ -26,12 +26,25 @@ const useStyles = makeStyles(theme => ({
     padding: '16px',
     boxSizing: 'border-box'
   },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   title: {
-    paddingBottom: '0px',
-    maxWidth: '100%',
+    maxWidth: 'calc(100% - 48px)',
     overflowWrap: 'break-word',
-    hyphens: 'auto',
-    marginBottom: '16px'
+    hyphens: 'auto'
+  },
+  titleSelect: {
+    fontSize: '1.4rem',
+    fontWeight: 'bold'
+  },
+  titleEditWrapper: {
+    flex: '0 0 auto',
+    alignSelf: 'flex-start',
+    marginTop: '-8px',
+    marginRight: '-8px'
   },
   list: {
     width: '100%',
@@ -56,6 +69,8 @@ const useStyles = makeStyles(theme => ({
 
 const ActiveCourse = ({
   course,
+  courses,
+  history,
   workspaceId,
   activeConceptIds,
   onClick,
@@ -133,23 +148,18 @@ const ActiveCourse = ({
 
   return <>
     <Paper onClick={onClick} elevation={0} className={classes.root}>
-      <div
-        className={'activeCourseHeaderContent'}
-        style={{ display: 'flex', alignItems: 'center' }}
-      >
-        <div style={{ flex: '1 1 auto' }}>
-          <Typography className={classes.title} variant='h4'>
-            {course.name}
-          </Typography>
-        </div>
-        <div
-          style={{
-            flex: '0 0 auto',
-            alignSelf: 'flex-start',
-            marginTop: '-8px',
-            marginRight: '-8px'
-          }}
+      <div className={classes.header}>
+        <Select
+          value={course.id}
+          classes={{ root: classes.titleSelect }}
+          input={<InputBase classes={{ root: classes.title }} />}
+          onChange={evt => history.push(`/workspaces/${workspaceId}/mapper/${evt.target.value}`)}
         >
+          {courses ? courses.map(course => (
+            <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+          )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
+        </Select>
+        <div className={classes.titleEditWrapper}>
           <IconButton onClick={openEditCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>
@@ -195,4 +205,4 @@ const ActiveCourse = ({
   </>
 }
 
-export default ActiveCourse
+export default withRouter(ActiveCourse)
