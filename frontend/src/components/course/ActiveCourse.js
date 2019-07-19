@@ -151,9 +151,7 @@ const ActiveCourse = ({
       <div className={classes.header}>
         <Select
           value={course.id}
-          classes={{
-            root: classes.titleSelect
-          }}
+          classes={{ root: classes.titleSelect }}
           input={<InputBase classes={{ root: classes.title }} />}
           onChange={evt => history.push(`/workspaces/${workspaceId}/mapper/${evt.target.value}`)}
         >
