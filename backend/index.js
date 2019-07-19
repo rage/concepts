@@ -17,6 +17,8 @@ const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 const types = require('./resolvers/Type')
 
+const { rule, shield, and, or, not } = require('graphql-shield')
+
 const Query = prismaObjectType({
   name: "Query",
   definition: (type) => type.prismaFields(['*'])
@@ -56,13 +58,50 @@ const options = {
   formatError: logError
 }
 
+const Role = {
+  VISITOR: 'VISITOR',
+  GUEST: 'GUEST',
+  STUDENT: 'STUDENT',
+  STAFF: 'STAFF',
+  ADMIN: 'ADMIN'
+}
+
+const isAdmin = rule()(async (parent, args, ctx, info) => {
+  return ctx.role === Role.ADMIN
+})
+
+const isGuest = rule()(async (parent, args, ctx, info) => {
+  return ctx.role === Role.GUEST
+})
+
+const isStudent = rule()(async (parent, args, ctx, info) => {
+  return ctx.role === Role.STUDENT
+})
+
+const isStaff = rule()(async (parent, args, ctx, info) => {
+  return ctx.role === Role.STAFF
+})
+
+const isVisitor = rule()(async (parent, args, ctx, info) => {
+  return ctx.role === Role.VISITOR
+})
+
+const permissions = shield({
+  Query: {
+  },
+  Mutation: {
+  },
+  User: isAdmin,
+})
+
 const server = new GraphQLServer({
+  typeDefs: './generated/schema.graphql',
   schema,
   context: req => ({
     prisma,
     ...req
   }),
-  middlewares: [authenticate]
+  middlewares: [authenticate, permissions]
 })
 
 if (process.env.ENVIRONMENT === 'production') {
