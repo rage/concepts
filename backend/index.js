@@ -8,12 +8,36 @@ const { prisma } = require('./generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
 
+const datamodelInfo = require("./generated/nexus-prisma")
+const { makePrismaSchema, prismaObjectType } = require('nexus-prisma')
 const { authenticate } = require('./middleware/authentication')
 const { logError } = require('./errorLogger')
 
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 const types = require('./resolvers/Type')
+
+const Query = prismaObjectType({
+  name: "Query",
+  definition: (type) => type.prismaFields(['*'])
+})
+
+const Mutation = prismaObjectType({
+  name: "Mutation",
+  definition: (type) => type.prismaFields(['*'])
+})
+
+const schema = makePrismaSchema({
+  types: [Query, Mutation],
+  prisma: {
+    datamodelInfo,
+    client: prisma
+  },
+  outputs: {
+    schema: path.join(__dirname, "./generated/schema.graphql"),
+    typegen: path.join(__dirname, "./generated/nexus.ts"),
+  }
+})
 
 const resolvers = {
   Query: {
@@ -33,8 +57,8 @@ const options = {
 }
 
 const server = new GraphQLServer({
-  typeDefs: './schema.graphql',
-  resolvers,
+  // typeDefs: './schema.graphql',
+  schema,
   context: req => ({
     prisma,
     ...req

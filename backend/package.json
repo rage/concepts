@@ -4,7 +4,6 @@
   "author": "RAGE",
   "description": "Concept mapping platform for education - backend module",
   "private": true,
-
   "main": "index.js",
   "dependencies": {
     "ajv": "^6.10.0",
@@ -13,15 +12,20 @@
     "dotenv": "^8.0.0",
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.18.0",
-    "graphql-yoga": "^1.17.4",
-    "prisma-client-lib": "^1.30.4",
+    "graphql": "^14.4.2",
+    "graphql-yoga": "^1.18.1",
+    "nexus": "^0.12.0-beta.6",
+    "nexus-prisma": "^0.3.7",
+    "prisma-client-lib": "^1.34.1",
     "tmc-client-js": "^0.0.9"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0"
+    "nodemon": "^1.19.0",
+    "ts-node-dev": "^1.0.0-pre.40",
+    "typescript": "^3.5.3"
   },
   "scripts": {
-    "start-dev": "ENVIRONMENT=development node index.js",
+    "start-dev": "ENVIRONMENT=development ts-node-dev --no-notify --respawn --transpileOnly ./",
     "start": "ENVIRONMENT=production node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "ENVIRONMENT=development nodemon index.js"
