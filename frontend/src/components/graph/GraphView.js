@@ -131,7 +131,6 @@ const GraphView = ({ classes, workspaceId }) => {
 
     for (const course of response.data.workspaceById.courses) {
       course.color = colors[colorIndex++]
-      console.log(course.color)
       for (const concept of course.concepts) {
         nodes.push({
           ...conceptNodeStyle(course.color),
