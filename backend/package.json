@@ -20,12 +20,9 @@
     "tmc-client-js": "^0.0.9"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0",
-    "ts-node-dev": "^1.0.0-pre.40",
-    "typescript": "^3.5.3"
+    "nodemon": "^1.19.0"
   },
   "scripts": {
-    "start-dev": "ENVIRONMENT=development ts-node-dev --no-notify --respawn --transpileOnly ./",
     "start": "ENVIRONMENT=production node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "ENVIRONMENT=development nodemon index.js"
