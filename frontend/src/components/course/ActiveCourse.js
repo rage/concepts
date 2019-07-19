@@ -1,8 +1,9 @@
 import React, { useRef, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { Button, Paper, FormControl, Select, MenuItem, InputLabel, List, IconButton } from '@material-ui/core'
+import { Button, Paper, Select, MenuItem, InputBase, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
 import { DELETE_CONCEPT } from '../../graphql/Mutation'
@@ -25,12 +26,24 @@ const useStyles = makeStyles(theme => ({
     padding: '16px',
     boxSizing: 'border-box'
   },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   title: {
-    paddingBottom: '0px',
-    maxWidth: '100%',
+    maxWidth: 'calc(100% - 48px)',
     overflowWrap: 'break-word',
-    hyphens: 'auto',
-    marginBottom: '16px'
+    hyphens: 'auto'
+  },
+  titleSelect: {
+    fontSize: '1.25rem'
+  },
+  titleEditWrapper: {
+    flex: '0 0 auto',
+    alignSelf: 'flex-start',
+    marginTop: '-8px',
+    marginRight: '-8px'
   },
   list: {
     width: '100%',
@@ -58,6 +71,8 @@ const useStyles = makeStyles(theme => ({
 
 const ActiveCourse = ({
   course,
+  courses,
+  history,
   workspaceId,
   activeConceptIds,
   onClick,
@@ -133,60 +148,22 @@ const ActiveCourse = ({
     }
   })
 
-
-  const handleCourseNavigationOpen = () => {
-
-  }
-
-  const handleCourseNavigationClose = () => {
-
-  }
-
-  const handleCourseNavigationChange = () => {
-
-  }
-
   return <>
     <Paper onClick={onClick} elevation={0} className={classes.root}>
-      <div
-        className={'activeCourseHeaderContent'}
-        style={{ display: 'flex', alignItems: 'center' }}
-      >
-        <form autoComplete='off' style={{ flex: '1 1 auto' }}>
-          <Button className={classes.title} variant='h4'>
-            {course.name}
-          </Button>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor='select-course'>Course</InputLabel>
-            <Select
-              open={true}
-              onClose={handleCourseNavigationClose}
-              onOpen={handleCourseNavigationOpen}
-              value={course.name}
-              onChange={handleCourseNavigationChange}
-              inputProps={{
-                name: 'age',
-                id: 'select-course'
-              }}
-            >
-              <MenuItem value=''>
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={'First'}>Course 1</MenuItem>
-              <MenuItem value={'Second'}>Course 2</MenuItem>
-              <MenuItem value={'Third'}>Course 3</MenuItem>
-            </Select>
-          </FormControl>
-
-        </form>
-        <div
-          style={{
-            flex: '0 0 auto',
-            alignSelf: 'flex-start',
-            marginTop: '-8px',
-            marginRight: '-8px'
+      <div className={classes.header}>
+        <Select
+          value={course.id}
+          classes={{
+            root: classes.titleSelect
           }}
+          input={<InputBase classes={{ root: classes.title }} />}
+          onChange={evt => history.push(`/workspaces/${workspaceId}/mapper/${evt.target.value}`)}
         >
+          {courses ? courses.map(course => (
+            <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+          )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
+        </Select>
+        <div className={classes.titleEditWrapper}>
           <IconButton onClick={openEditCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>
@@ -232,4 +209,4 @@ const ActiveCourse = ({
   </>
 }
 
-export default ActiveCourse
+export default withRouter(ActiveCourse)
