@@ -112,17 +112,16 @@ enum Privilege {
 type Project {
   id: ID!
   name: String!
-  owner: User!
   workspaces: [Workspace!]!
   template: Workspace
   participants: [ProjectParticipant!]!
+  tokens: [ProjectToken!]!
 }
 
 type Workspace {
   id: ID!
   name: String!
   project: Project
-  owner: User
   public: Boolean!
   defaultCourse: Course
   courses: [Course!]!
@@ -130,7 +129,7 @@ type Workspace {
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
   participants: [WorkspaceParticipant!]!
-  token: [WorkspaceToken!]!
+  tokens: [WorkspaceToken!]!
 }
 
 type WorkspaceParticipant {

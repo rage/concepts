@@ -1,9 +1,14 @@
 module.exports = {
   Workspace: {
-    owner(root, args, context) {
+    tokens(root, args, context) {
       return context.prisma.workspace({
         id: root.id
-      }).owner()
+      }).tokens()
+    },
+    participants(root, args, context) {
+      return context.prisma.workspace({
+        id: root.id
+      }).participants()
     },
     defaultCourse(root, args, context) {
       return context.prisma.workspace({

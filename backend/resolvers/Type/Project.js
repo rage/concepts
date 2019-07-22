@@ -1,10 +1,5 @@
 module.exports = {
   Project: {
-    owner(root, args, context) {
-      return context.prisma.project({
-        id: root.id
-      }).owner()
-    },
     participants(root, args, context) {
       return context.prisma.project({
         id: root.id
@@ -19,6 +14,11 @@ module.exports = {
       return context.prisma.project({
         id: root.id
       }).template()
+    },
+    tokens(root, args, context) {
+      return context.prisma.project({
+        id: root.id
+      }).tokens()
     }
   }
 }
