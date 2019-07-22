@@ -36,8 +36,13 @@ const PortMutations = {
     } else if (typeof json['workspace'] === 'string') {
       workspace = await context.prisma.createWorkspace({
         name: json['workspace'],
-        owner: {
-          connect: { id: context.user.id }
+        participants: {
+          create: [{
+            privilege: 'OWNER',
+            user: {
+              connect: { id: context.user.id }
+            }
+          }]
         }
       })
     }
