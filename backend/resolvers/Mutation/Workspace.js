@@ -1,11 +1,4 @@
-const { checkAccess } = require('../../accessControl')
-
-async function hackyGetOwner(context, id) {
-  const participants = await context.prisma.workspace({ id }).participants()
-  return await context.prisma.workspaceParticipant({
-    id: participants.filter(pcp => pcp.privilege === 'OWNER')[0].id
-  }).user()
-}
+const { checkAccess, checkPrivilege } = require('../../accessControl')
 
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
@@ -26,31 +19,32 @@ const WorkspaceMutations = {
       }
     })
   },
-  async deleteWorkspace(root, args, context) {
-    const owner = hackyGetOwner(args.id)
+  async deleteWorkspace(root, { id }, context) {
     checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: owner.id
+      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true
     })
-    return context.prisma.deleteWorkspace({ id: args.id })
+    await checkPrivilege(context, { requiredPrivilege: 'OWNER', workspaceId: id })
+    return context.prisma.deleteWorkspace({ id })
   },
   async updateWorkspace(root, { id, name }, context) {
-    const owner = hackyGetOwner(id)
     checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: owner.id
+      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true
     })
+    await checkPrivilege(context, { requiredPrivilege: 'EDIT', workspaceId: id })
     return context.prisma.updateWorkspace({
       where: { id },
       data: { name }
     })
   },
-  async addDefaultCourseForWorkspace(root, args, context) {
+  async addDefaultCourseForWorkspace(root, { workspaceId, courseId }, context) {
+    await checkPrivilege(context, { requiredPrivilege: 'EDIT', workspaceId })
     return await context.prisma.updateWorkspace({
       where: {
-        id: args.workspaceId
+        id: workspaceId
       },
       data: {
         defaultCourse: {
-          connect: { id: args.courseId }
+          connect: { id: courseId }
         }
       }
     })
