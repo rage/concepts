@@ -11,7 +11,7 @@ import {
 } from '@material-ui/icons'
 
 import client from '../../apollo/apolloClient'
-import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_BY_OWNER } from '../../graphql/Query'
+import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { DELETE_WORKSPACE } from '../../graphql/Mutation'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -70,7 +70,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
 
   const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [
-      { query: WORKSPACES_BY_OWNER, variables: { ownerId: user.id } }
+      { query: WORKSPACES_FOR_USER }
     ]
   })
 

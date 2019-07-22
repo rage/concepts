@@ -1,6 +1,6 @@
 import client from '../apolloClient'
 import {
-  WORKSPACES_BY_OWNER,
+  WORKSPACES_FOR_USER,
   COURSES_BY_WORKSPACE
 } from '../../graphql/Query'
 
@@ -11,25 +11,19 @@ const jsonPortUpdate = (ownerId) => {
   return (store, response) => {
     try {
       const workspaces = store.readQuery({
-        query: WORKSPACES_BY_OWNER,
-        variables: {
-          ownerId: ownerId
-        }
+        query: WORKSPACES_FOR_USER
       })
       const updatedWorkspace = response.data.importData
 
-      if (includedIn(workspaces.workspacesByOwner, updatedWorkspace)) {
-        workspaces.workspacesByOwner.map(workspace =>
+      if (includedIn(workspaces.workspacesForUser, updatedWorkspace)) {
+        workspaces.workspacesForUser.map(workspace =>
           workspace.id !== updatedWorkspace.id ? workspace : updatedWorkspace
         )
       } else {
-        workspaces.workspacesByOwner.push(updatedWorkspace)
+        workspaces.workspacesForUser.push(updatedWorkspace)
       }
       client.writeQuery({
-        query: WORKSPACES_BY_OWNER,
-        variables: {
-          ownerId
-        },
+        query: WORKSPACES_FOR_USER,
         data: workspaces
       })
 
