@@ -71,7 +71,6 @@ type Mutation {
   addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String!): Workspace
-  createGuestWorkspace(name: String!): Workspace
 
   # Porting mutations
   importData(data: String!): Workspace

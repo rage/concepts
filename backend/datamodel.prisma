@@ -29,7 +29,7 @@ type Project {
   name: String!
   workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
   template: Workspace @relation(link: INLINE, name:"Template")
-  participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject")
+  participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject", onDelete: CASCADE)
   tokens: [ProjectToken!]!
 }
 
@@ -43,7 +43,7 @@ type Workspace {
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
-  participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace")
+  participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace", onDelete: CASCADE)
   tokens: [WorkspaceToken!]!
 }
 
@@ -68,7 +68,7 @@ type WorkspaceToken {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
-  participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken")
+  participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken", onDelete: CASCADE)
 }
 
 type ProjectToken {
@@ -76,7 +76,7 @@ type ProjectToken {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
-  participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken")
+  participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken", onDelete: CASCADE)
 }
 
 type CourseLink {

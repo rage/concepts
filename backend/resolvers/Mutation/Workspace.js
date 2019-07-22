@@ -1,5 +1,12 @@
 const { checkAccess } = require('../../accessControl')
 
+async function hackyGetOwner(context, id) {
+  const participants = await context.prisma.workspace({ id }).participants()
+  return await context.prisma.workspaceParticipant({
+    id: participants.filter(pcp => pcp.privilege === 'OWNER')[0].id
+  }).user()
+}
+
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
     checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
@@ -20,16 +27,14 @@ const WorkspaceMutations = {
     })
   },
   async deleteWorkspace(root, args, context) {
-    const owner = await context.prisma.workspace({
-      id: args.id
-    }).owner()
+    const owner = hackyGetOwner(args.id)
     checkAccess(context, {
       allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: owner.id
     })
     return context.prisma.deleteWorkspace({ id: args.id })
   },
   async updateWorkspace(root, { id, name }, context) {
-    const owner = await context.prisma.workspace({ id }).owner()
+    const owner = hackyGetOwner(id)
     checkAccess(context, {
       allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: owner.id
     })
@@ -48,12 +53,6 @@ const WorkspaceMutations = {
           connect: { id: args.courseId }
         }
       }
-    })
-  },
-  async createGuestWorkspace(root, args, context) {
-    return await context.prisma.createWorkspace({
-      name: args.name,
-      public: true
     })
   }
 }
