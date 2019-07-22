@@ -37,9 +37,9 @@ const CourseQueries = {
     return null
   },
   async coursesByWorkspace(root, args, context) {
-    const owner = await hackyGetOwner(context, user.id)
+    const owner = await hackyGetOwner(context, args.workspaceId)
     checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
+      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: owner.id
     })
     return await context.prisma.courses({
       where: {
