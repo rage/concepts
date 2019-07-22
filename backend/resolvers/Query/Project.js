@@ -15,7 +15,7 @@ const ProjectQueries = {
     checkAccess(context, { allowStaff: true })
     return context.prisma.user({
       where: {
-        id: args.ownerId 
+        id: context.user.id
       }
     }).projectParticipations()
   }

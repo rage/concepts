@@ -5,8 +5,13 @@ const ProjectMutations = {
     checkAccess(context, { allowStaff: true })
     return context.prisma.createProject({
       name: args.name,
-      owner: {
-        connect: { id : context.user.id }
+      participants: {
+        create: [{
+          privilege: 'OWNER',
+          user: {
+            connect: { id: context.user.id }
+          }
+        }]
       }
     })
   },

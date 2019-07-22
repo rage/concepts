@@ -2,18 +2,18 @@ module.exports = {
   WorkspaceParticipant: {
     workspace(root, args, context) {
       return context.prisma.workspaceParticipant({
-          id: root.id
-       })
+        id: root.id
+      }).workspace()
     },
     token(root, args, context) {
       return context.prisma.workspaceParticipant({
-          id: root.id
-       }).token()
+        id: root.id
+      }).token()
     },
     user(root, args, context) {
       return context.prisma.workspaceParticipant({
-          id: root.id
-       }).user()
+        id: root.id
+      }).user()
     }
   }
 }

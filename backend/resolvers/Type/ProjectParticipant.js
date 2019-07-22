@@ -3,7 +3,7 @@ module.exports = {
     project(root, args, context) {
       return context.prisma.projectParticipant({
         id: root.id
-      })
+      }).project()
     },
     token(root, args, context) {
       return context.prisma.projectParticipant({

@@ -19,15 +19,12 @@ const WorkspaceQueries = {
       allowStudent: true,
       allowStaff: true,
       allowGuest: true,
-      verifyUser: true,
-      userId: args.ownerId
+      verifyUser: true
     })
 
     return await context.prisma.user({
-        id: args.ownerId
-      
+      id: context.user.id
     }).workspaceParticipations()
-    
   }
 }
 
