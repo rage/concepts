@@ -85,4 +85,4 @@ const checkAccess = async (ctx, {
   throw new ForbiddenError('Access denied')
 }
 
-module.exports = { Role, checkAccess, checkUser, checkPrivilege: checkPrivilege }
+module.exports = { Role, checkAccess, checkUser, checkPrivilege: checkPrivilegeInt }

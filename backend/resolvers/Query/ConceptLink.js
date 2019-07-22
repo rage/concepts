@@ -1,17 +1,20 @@
 const { checkAccess } = require('../../accessControl')
 
 const ConceptLinkQueries = {
-  allConceptLinks(root, args, context) {
-    return context.prisma.conceptLinks()
+  async allConceptLinks(root, args, context) {
+    await checkAccess(context, { allowStaff: true })
+    return await context.prisma.conceptLinks()
   },
-  linksToConcept(root, args, context) {
-    checkAccess(context, { allowStaff: true, allowStudent: true })
-    return context.prisma.conceptLink({
+  async linksToConcept(root, args, context) {
+    // TODO check privileges
+    await checkAccess(context, { allowStaff: true, allowStudent: true })
+    return await context.prisma.conceptLink({
       id: args.id
     }).to()
   },
-  linksFromConcept(root, args, context) {
-    checkAccess(context, { allowStaff: true, allowStudent: true })
+  async linksFromConcept(root, args, context) {
+    // TODO check privileges
+    await checkAccess(context, { allowStaff: true, allowStudent: true })
     return context.prisma.conceptLink({
       id: args.id
     }).from()

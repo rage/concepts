@@ -2,7 +2,10 @@ const { checkAccess } = require('../../accessControl')
 
 const ConceptLink = {
   async createConceptLink(root, { official, to, from, workspaceId }, context) {
-    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
+    await checkAccess(context, {
+      allowGuest: true, allowStudent: true, allowStaff: true,
+      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
+    })
     const linkExists = await context.prisma.$exists.conceptLink({
       AND: [
         { workspace: { id: workspaceId } },
@@ -12,67 +15,22 @@ const ConceptLink = {
     })
     if (linkExists) return null
     const data = {
-      to: {
-        connect: { id: to }
-      },
-      from: {
-        connect: { id: from }
-      },
-      createdBy: {
-        connect: { id: context.user.id }
-      },
-      workspace: {
-        connect: { id: workspaceId }
-      }
+      to:        { connect: { id: to } },
+      from:      { connect: { id: from } },
+      createdBy: { connect: { id: context.user.id } },
+      workspace: { connect: { id: workspaceId } }
     }
     if (official !== undefined) data.official = official
 
-    return context.prisma.createConceptLink(data)
-  },
-  async createConceptLinks(root, { official, to, from, workspaceId }, context) {
-    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
-    return await from.map(async fromConceptId =>
-      await context.prisma.createConceptLink({
-        to: {
-          connect: { id: to }
-        },
-        from: {
-          connect: { id: fromConceptId }
-        },
-        createdBy: {
-          connect: { id: context.user.id }
-        },
-        workspace: {
-          connect: { id: workspaceId }
-        },
-        official: official !== undefined
-      })
-    )
-  },
-  async deleteConceptLinks(root, args, context) {
-    checkAccess(context, { allowStudent: true, allowStaff: true })
-    const data = await context.prisma.conceptLinks({
-      where: {
-        AND: [
-          { id_in: args.ids },
-          { createdBy: { id: context.user.id } }
-        ]
-      }
-    })
-    await context.prisma.deleteManyConceptLinks({
-      AND: [
-        { id_in: args.ids },
-        { createdBy: { id: context.user.id } }
-      ]
-    })
-    return data
+    return await context.prisma.createConceptLink(data)
   },
   async deleteConceptLink(root, args, context) {
-    const user = await context.prisma.conceptLink({ id: args.id }).createdBy()
-    checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id
+    const { id: workspaceId } = await context.prisma.conceptLink({ id: args.id }).workspace()
+    await checkAccess(context, {
+      allowGuest: true, allowStudent: true, allowStaff: true,
+      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
     })
-    return context.prisma.deleteConceptLink({
+    return await context.prisma.deleteConceptLink({
       id: args.id
     })
   }

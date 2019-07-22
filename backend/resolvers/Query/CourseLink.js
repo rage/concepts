@@ -1,18 +1,21 @@
 const { checkAccess } = require('../../accessControl')
 
 const CourseLinkQueries = {
-  allCourseLinks(root, args, context) {
-    return context.prisma.courseLinks()
+  async allCourseLinks(root, args, context) {
+    await checkAccess(context, { allowStaff: true })
+    return await context.prisma.courseLinks()
   },
-  linksToCourse(root, args, context) {
-    checkAccess(context, { allowStaff: true, allowStudent: true })
-    return context.prisma.courseLink({
+  async linksToCourse(root, args, context) {
+    // TODO check privileges
+    await checkAccess(context, { allowStaff: true, allowStudent: true })
+    return await context.prisma.courseLink({
       id: args.id
     }).to()
   },
-  linksFromCourse(root, args, context) {
-    checkAccess(context, { allowStaff: true, allowStudent: true })
-    return context.prisma.courseLink({
+  async linksFromCourse(root, args, context) {
+    // TODO check privileges
+    await checkAccess(context, { allowStaff: true, allowStudent: true })
+    return await context.prisma.courseLink({
       id: args.id
     }).from()
   }

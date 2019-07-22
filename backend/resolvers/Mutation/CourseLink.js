@@ -1,48 +1,42 @@
 const { checkAccess } = require('../../accessControl')
 
 const CourseQueries = {
-  async createCourseLink(root, args, context) {
-    checkAccess(context, { allowGuest: true, allowStaff: true, allowStudent: true })
+  async createCourseLink(root, { workspaceId, official, from, to }, context) {
+    await checkAccess(context, {
+      allowGuest: !official, allowStaff: true, allowStudent: !official,
+      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
+    })
     const linkExists = await context.prisma.$exists.courseLink({
       AND: [
-        { workspace: { id: args.workspaceId } },
-        { to: { id: args.to } },
-        { from: { id: args.from } }
+        { workspace: { id: workspaceId } },
+        { to: { id: to } },
+        { from: { id: from } }
       ]
     })
     if (linkExists) return null
-    return args.official !== undefined
-      ? context.prisma.createCourseLink({
-        to: {
-          connect: { id: args.to }
-        },
-        from: {
-          connect: { id: args.from }
-        },
-        official: args.official,
+    return official !== undefined
+      ? await context.prisma.createCourseLink({
+        to: { connect: { id: to } },
+        from: { connect: { id: from } },
+        official: official,
         createdBy: { connect: { id: context.user.id } },
-        workspace: { connect: { id: args.workspaceId } }
+        workspace: { connect: { id: workspaceId } }
       })
-      : context.prisma.createCourseLink({
-        to: {
-          connect: { id: args.to }
-        },
-        from: {
-          connect: { id: args.from }
-        },
+      : await context.prisma.createCourseLink({
+        to: { connect: { id: to } },
+        from: { connect: { id: from } },
         createdBy: { connect: { id: context.user.id } },
-        workspace: { connect: { id: args.workspaceId } }
+        workspace: { connect: { id: workspaceId } }
       })
   },
 
-  async deleteCourseLink(root, args, context) {
-    const user = await context.prisma.courseLink({ id: args.id }).createdBy()
-    checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
+  async deleteCourseLink(root, { id }, context) {
+    const { id: workspaceId } = await context.prisma.courseLink({ id }).workspace()
+    await checkAccess(context, {
+      allowGuest: true, allowStaff: true, allowStudent: true,
+      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
     })
-    return context.prisma.deleteCourseLink({
-      id: args.id
-    })
+    return await context.prisma.deleteCourseLink({ id })
   }
 }
 
