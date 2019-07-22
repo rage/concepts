@@ -24,8 +24,11 @@ query($id: ID!, $userId: ID!) {
   }
 }
 `
-const workspacePrivilegeQuery = privilegeQuery.replace('%s', 'workspace')
-const projectPrivilegeQuery = privilegeQuery.replace('%s', 'project')
+
+const privilegeQueryTyped = {
+  workspace: privilegeQuery.replace('%s', 'workspace'),
+  project: privilegeQuery.replace('%s', 'project')
+}
 
 const privilegeToInt = privilege => {
   switch (privilege) {
@@ -42,20 +45,19 @@ const privilegeToInt = privilege => {
   }
 }
 
-const checkPrivilege = async (ctx, { requiredPrivilege, workspaceId, projectId }) => {
+const checkPrivilegeInt = async (ctx, { requiredPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
     throw Error('Invalid checkPrivilege call')
   }
-  const resp = await ctx.prisma.$graphql(
-    workspaceId ? workspacePrivilegeQuery : projectPrivilegeQuery,
-    {
-      id: workspaceId || projectId,
-      userId: ctx.user.id
-    })
-  if (!resp.workspace.participants[0]) {
+  const type = workspaceId ? 'workspace' : 'project'
+  const resp = await ctx.prisma.$graphql(privilegeQueryTyped[type], {
+    id: workspaceId || projectId,
+    userId: ctx.user.id
+  })
+  if (!resp[type].participants[0]) {
     throw new ForbiddenError('Access denied')
   }
-  const privilege = resp.workspace.participants[0].privilege
+  const privilege = resp[type].participants[0].privilege
 
   if (privilegeToInt(privilege) < privilegeToInt(requiredPrivilege)) {
     throw new ForbiddenError('Access denied')
@@ -64,24 +66,23 @@ const checkPrivilege = async (ctx, { requiredPrivilege, workspaceId, projectId }
   return true
 }
 
-const checkAccess = (ctx, {
+const checkAccess = async (ctx, {
   disallowAdmin = false,
   allowVisitor = false,
   allowStudent = false,
   allowStaff = false,
   allowGuest = false,
-  verifyUser = false,
-  userId = null
+  checkPrivilege = null
 } = {}) => {
   if (ctx.role === Role.ADMIN && !disallowAdmin) return true
-  if (verifyUser && userId) {
-    checkUser(ctx, userId)
-  }
   if (ctx.role === Role.STUDENT && allowStudent) return true
   if (ctx.role === Role.STAFF && allowStaff) return true
   if (ctx.role === Role.GUEST && allowGuest) return true
   if (ctx.role === Role.VISITOR && allowVisitor) return true
+  if (checkPrivilege) {
+    await checkPrivilegeInt(ctx, checkPrivilege)
+  }
   throw new ForbiddenError('Access denied')
 }
 
-module.exports = { Role, checkAccess, checkUser, checkPrivilege }
+module.exports = { Role, checkAccess, checkUser, checkPrivilege: checkPrivilege }

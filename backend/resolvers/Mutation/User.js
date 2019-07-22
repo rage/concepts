@@ -1,15 +1,15 @@
 const { checkAccess } = require('../../accessControl')
 
 const UserMutations = {
-  updateUser(root, { id, guideProgress }, context) {
-    checkAccess(context, {
+  async updateUser(root, { id, guideProgress }, context) {
+    await checkAccess(context, {
       allowGuest: true,
       allowStudent: true,
       allowStaff: true,
       verifyUser: true,
       userId: id
     })
-    return context.prisma.updateUser({
+    return await context.prisma.updateUser({
       where: { id },
       data: { guideProgress }
     })
