@@ -51,7 +51,7 @@ type WorkspaceParticipant {
   id: ID! @id
   privilege: Privilege!
   workspace: Workspace! @relation(name:"WorkspaceParticipantWorkspace")
-  token: WorkspaceToken! @relation(name:"WorkspaceParticipationToken")
+  token: WorkspaceToken @relation(name:"WorkspaceParticipationToken")
   user: User! @relation(name:"WorkspaceParticipantUser")
 }
 
@@ -59,7 +59,7 @@ type ProjectParticipant {
   id: ID! @id
   privilege: Privilege!
   project: Project! @relation(name:"ProjectParticipantProject")
-  token: ProjectToken! @relation(name:"ProjectParticipationToken")
+  token: ProjectToken @relation(name:"ProjectParticipationToken")
   user: User! @relation(name:"ProjectParticipantUser")
 }
 

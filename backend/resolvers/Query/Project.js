@@ -11,13 +11,13 @@ const ProjectQueries = {
       id: args.id
     })
   },
-  projectsByOwner(root, args, context) {
+  projectsForUser(root, args, context) {
     checkAccess(context, { allowStaff: true })
-    return context.prisma.projects({
+    return context.prisma.user({
       where: {
-        owner: { id: args.ownerId }
+        id: args.ownerId 
       }
-    })
+    }).projectParticipations()
   }
 }
 

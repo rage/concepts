@@ -5,8 +5,15 @@ const WorkspaceMutations = {
     checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
     const data = {
       name: args.name,
-      owner: {
-        connect: { id: context.user.id }
+      participants: {
+        create: [
+          {
+            privilege: 'OWNER',
+            user: {
+              connect: { id: context.user.id }
+            }
+          }
+        ]
       }
     }
 

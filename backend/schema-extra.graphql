@@ -6,12 +6,12 @@ type Query {
   # Workspace queries
   allWorkspaces: [Workspace!]!
   workspaceById(id: ID!): Workspace
-  workspacesByOwner(ownerId: ID!): [Workspace!]!
+  workspacesForUser(ownerId: ID!): [WorkspaceParticipant!]!
 
   # Project queries
   allProjects: [Project!]!
   projectById(id: ID!): Project
-  projectsByOwner(ownerId: ID!): [Project!]!
+  projectsForUser(ownerId: ID!): [ProjectParticipant!]!
 
   # Course queries
   allCourses: [Course!]!

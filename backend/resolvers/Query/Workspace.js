@@ -14,7 +14,7 @@ const WorkspaceQueries = {
     }
     return workspace
   },
-  async workspacesByOwner(root, args, context) {
+  async workspacesForUser(root, args, context) {
     checkAccess(context, {
       allowStudent: true,
       allowStaff: true,
@@ -22,14 +22,12 @@ const WorkspaceQueries = {
       verifyUser: true,
       userId: args.ownerId
     })
-    const workspaces = await context.prisma.workspaces({
-      where: {
-        owner: {
-          id: args.ownerId
-        }
-      }
-    })
-    return workspaces
+
+    return await context.prisma.user({
+        id: args.ownerId
+      
+    }).workspaceParticipations()
+    
   }
 }
 
