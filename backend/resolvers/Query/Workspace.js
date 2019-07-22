@@ -1,8 +1,8 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const WorkspaceQueries = {
   async allWorkspaces(root, args, context) {
-    await checkAccess(context, { allowStaff: true })
+    await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.workspaces()
   },
   async workspaceById(root, args, context) {
@@ -11,19 +11,15 @@ const WorkspaceQueries = {
     })
     if (!workspace.public) {
       await checkAccess(context, {
-        allowGuest: true, allowStaff: true, allowStudent: true,
-        checkPrivilege: { requiredPrivilege: 'READ', workspaceId: args.id }
+        minimumRole: Role.GUEST,
+        minimumPrivilege: Privilege.READ,
+        workspaceId: args.id
       })
     }
     return workspace
   },
   async workspacesForUser(root, args, context) {
-    await checkAccess(context, {
-      allowStudent: true,
-      allowStaff: true,
-      allowGuest: true,
-      verifyUser: true
-    })
+    await checkAccess(context, { minimumRole: Role.GUEST })
     return await context.prisma.user({
       id: context.user.id
     }).workspaceParticipations()

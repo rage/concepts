@@ -1,22 +1,24 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const CourseQueries = {
   async allCourses(root, args, context) {
-    await checkAccess(context, { allowStaff: true })
+    await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.courses()
   },
   async courseById(root, { id }, context) {
     const { id: workspaceId } = await context.prisma.course({ id }).workspace()
     await checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'READ', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.READ,
+      workspaceId
     })
     return await context.prisma.course({ id: id })
   },
   async courseAndPrerequisites(root, { courseId, workspaceId }, context) {
     await checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'READ', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.READ,
+      workspaceId
     })
     // Check if the course is related to the workspace
     const courses = await context.prisma
@@ -36,8 +38,9 @@ const CourseQueries = {
   },
   async coursesByWorkspace(root, { workspaceId }, context) {
     await checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'READ', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.READ,
+      workspaceId
     })
     return await context.prisma.courses({
       where: {

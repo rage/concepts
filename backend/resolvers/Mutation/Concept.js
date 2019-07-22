@@ -1,10 +1,11 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const ConceptMutations = {
   async createConcept(root, { name, description, official, courseId, workspaceId }, context) {
     await checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true,
-      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     const data = {
       name,
@@ -21,8 +22,9 @@ const ConceptMutations = {
   async updateConcept(root, { id, name, description }, context) {
     const { id: workspaceId } = await context.prisma.concept({ id }).workspace()
     await checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true,
-      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     const data = {}
     if (name !== undefined) data.name = name
@@ -37,8 +39,9 @@ const ConceptMutations = {
   async deleteConcept(root, { id }, context) {
     const { workspaceId } = await context.prisma.concept({ id }).workspace()
     await checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true,
-      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     return await context.prisma.deleteConcept({ id })
   }

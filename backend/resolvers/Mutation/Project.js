@@ -1,8 +1,8 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const ProjectMutations = {
   async createProject(root, args, context) {
-    await checkAccess(context, { allowStaff: true })
+    await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.createProject({
       name: args.name,
       participants: {
@@ -17,8 +17,9 @@ const ProjectMutations = {
   },
   async deleteProject(root, args, context) {
     await checkAccess(context, {
-      allowStaff: true,
-      checkPrivilege: { requiredPrivilege: 'OWNER', projectId: args.id }
+      minimumRole: Role.STAFF,
+      minimumPrivilege: Privilege.OWNER,
+      projectId: args.id
     })
     return await context.prisma.deleteProject({
       id: args.id
@@ -26,8 +27,9 @@ const ProjectMutations = {
   },
   async updateProject(root, args, context) {
     await checkAccess(context, {
-      allowStaff: true,
-      checkPrivilege: { requiredPrivilege: 'EDIT', projectId: args.id }
+      minimumRole: Role.STAFF,
+      minimumPrivilege: Privilege.EDIT,
+      projectId: args.id
     })
     return await context.prisma.updateProject({
       where: { id: args.id },

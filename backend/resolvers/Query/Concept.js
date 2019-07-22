@@ -1,15 +1,16 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const ConceptQueries = {
   async allConcepts(root, args, context) {
-    await checkAccess(context, { allowStaff: true })
+    await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.concepts()
   },
   async conceptById(root, { id }, context) {
     const { id: workspaceId } = await context.prisma.concept({ id }).workspace()
     await checkAccess(context, {
-      allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'READ', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.READ,
+      workspaceId
     })
     return await context.prisma.concept({ id })
   }

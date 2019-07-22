@@ -1,4 +1,4 @@
-const { checkAccess, checkPrivilege } = require('../../accessControl')
+const { checkAccess, checkPrivilege, Role, Privilege } = require('../../accessControl')
 const schema = require('./port.schema')
 const Ajv = require('ajv')
 
@@ -7,7 +7,7 @@ const validateData = ajv.compile(schema)
 
 const PortMutations = {
   async importData(root, { data }, context) {
-    await checkAccess(context, { allowStaff: true, allowStudent: true })
+    await checkAccess(context, { minimumRole: Role.STUDENT })
     let json
 
     try {
@@ -27,7 +27,10 @@ const PortMutations = {
     // Create or find workspace
     let workspace
     if (typeof json['workspaceId'] === 'string') {
-      checkPrivilege(context, { requiredPrivilege: 'WRITE', workspaceId: json['workspaceId'] })
+      await checkPrivilege(context, {
+        minimumPrivilege: Privilege.EDIT,
+        workspaceId: json['workspaceId']
+      })
       workspace = await context.prisma.workspace({
         id: json['workspaceId']
       })

@@ -1,8 +1,8 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
-    await checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
+    await checkAccess(context, { minimumRole: Role.GUEST })
     return await context.prisma.createWorkspace({
       name: args.name,
       public: context.role === 'GUEST',
@@ -21,15 +21,17 @@ const WorkspaceMutations = {
   },
   async deleteWorkspace(root, { id }, context) {
     await checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true,
-      checkPrivilege: { requiredPrivilege: 'OWNER', workspaceId: id }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.OWNER,
+      workspaceId: id
     })
     return context.prisma.deleteWorkspace({ id })
   },
   async updateWorkspace(root, { id, name }, context) {
     await checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId: id }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId: id
     })
     return context.prisma.updateWorkspace({
       where: { id },
@@ -38,8 +40,9 @@ const WorkspaceMutations = {
   },
   async addDefaultCourseForWorkspace(root, { workspaceId, courseId }, context) {
     await checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'EDIT', workspaceId }
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     return await context.prisma.updateWorkspace({
       where: {

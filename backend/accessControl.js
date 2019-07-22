@@ -8,6 +8,22 @@ const Role = {
   ADMIN: 'ADMIN'
 }
 
+const roleToInt = role => {
+  switch (role) {
+  case Role.ADMIN:
+    return 4
+  case Role.STAFF:
+    return 3
+  case Role.STUDENT:
+    return 2
+  case Role.GUEST:
+    return 1
+  case Role.VISITOR:
+  default:
+    return 0
+  }
+}
+
 const checkUser = (ctx, userId) => {
   if (ctx.user.id !== userId) {
     throw new ForbiddenError('Unauthorised user')
@@ -30,6 +46,14 @@ const privilegeQueryTyped = {
   project: privilegeQuery.replace('%s', 'project')
 }
 
+const Privilege = {
+  OWNER: 'OWNER',
+  EDIT: 'EDIT',
+  INVITE: 'INVITE',
+  READ: 'READ',
+  NONE: null
+}
+
 const privilegeToInt = privilege => {
   switch (privilege) {
   case 'OWNER':
@@ -45,7 +69,7 @@ const privilegeToInt = privilege => {
   }
 }
 
-const checkPrivilegeInt = async (ctx, { requiredPrivilege, workspaceId, projectId }) => {
+const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
     throw Error('Invalid checkPrivilege call')
   }
@@ -59,7 +83,7 @@ const checkPrivilegeInt = async (ctx, { requiredPrivilege, workspaceId, projectI
   }
   const privilege = resp[type].participants[0].privilege
 
-  if (privilegeToInt(privilege) < privilegeToInt(requiredPrivilege)) {
+  if (privilegeToInt(privilege) < privilegeToInt(minimumPrivilege)) {
     throw new ForbiddenError('Access denied')
   }
 
@@ -67,22 +91,17 @@ const checkPrivilegeInt = async (ctx, { requiredPrivilege, workspaceId, projectI
 }
 
 const checkAccess = async (ctx, {
-  disallowAdmin = false,
-  allowVisitor = false,
-  allowStudent = false,
-  allowStaff = false,
-  allowGuest = false,
-  checkPrivilege = null
-} = {}) => {
-  if (ctx.role === Role.ADMIN && !disallowAdmin) return true
-  if (ctx.role === Role.STUDENT && allowStudent) return true
-  if (ctx.role === Role.STAFF && allowStaff) return true
-  if (ctx.role === Role.GUEST && allowGuest) return true
-  if (ctx.role === Role.VISITOR && allowVisitor) return true
-  if (checkPrivilege) {
-    await checkPrivilegeInt(ctx, checkPrivilege)
+  minimumRole = null,
+  minimumPrivilege = null,
+  workspaceId, projectId
+}) => {
+  if (minimumRole !== null && roleToInt(ctx.role) < roleToInt(minimumRole)) {
+    throw new ForbiddenError('Access denied')
   }
-  throw new ForbiddenError('Access denied')
+  if (minimumPrivilege !== null) {
+    await checkPrivilegeInt(ctx, { minimumPrivilege, workspaceId, projectId })
+  }
+  return true
 }
 
-module.exports = { Role, checkAccess, checkUser, checkPrivilege: checkPrivilegeInt }
+module.exports = { Role, Privilege, checkAccess, checkUser, checkPrivilege: checkPrivilegeInt }
