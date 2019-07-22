@@ -34,9 +34,6 @@ mutation addDefaultCourseForWorkspace($courseId: ID!, $workspaceId: ID!) {
     defaultCourse {
       id
     }
-    owner {
-      id
-    }
   }
 }
 `

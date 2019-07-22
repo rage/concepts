@@ -1,5 +1,12 @@
 const { checkAccess } = require('../../accessControl')
 
+async function hackyGetOwner(context, id) {
+  const participants = await context.prisma.workspace({ id }).participants()
+  return await context.prisma.workspaceParticipant({
+    id: participants.filter(pcp => pcp.privilege === 'OWNER')[0].id
+  }).user()
+}
+
 const CourseQueries = {
   allCourses(root, args, context) {
     checkAccess(context, { allowStaff: true, allowStudent: true })
@@ -30,10 +37,7 @@ const CourseQueries = {
     return null
   },
   async coursesByWorkspace(root, args, context) {
-    context.prisma.workspaceParticipant({
-      id: participants.filter(pcp => pcp.privilege === 'OWNER')[0].id
-    }).user()
-    
+    const owner = await hackyGetOwner(context, user.id)
     checkAccess(context, {
       allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
     })
