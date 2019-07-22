@@ -10,7 +10,6 @@ type User {
   guideProgress: Int! @default(value: 0)
 }
 
-
 enum Role {
   GUEST
   STUDENT
@@ -99,7 +98,7 @@ type Course {
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
 }
 
-type ConceptLink { 
+type ConceptLink {
   id: ID! @id
   from: Concept! @relation(link: INLINE, name: "FromConcept")
   to: Concept! @relation(link: INLINE, name: "ToConcept")

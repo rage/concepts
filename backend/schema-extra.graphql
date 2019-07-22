@@ -1,5 +1,3 @@
-scalar DateTime
-
 type Query {
   # Authentication
   allUsers: [User!]!
@@ -29,7 +27,7 @@ type Query {
   # Concept queries
   allConcepts: [Concept!]!
   conceptById(id: ID!): Concept
-  
+
   # Concept link queries
   allConceptLinks: [ConceptLink!]!
   linksToConcept(id: ID!): [ConceptLink!]!
@@ -52,11 +50,11 @@ type Mutation {
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   updateConcept(id: ID!, name:String, description: String, official: Boolean): Concept
-  
+
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
   deleteCourseLink(id: ID!): CourseLink
-  
+
   # Concept link mutations
   createConceptLinks(to: ID!, from:[ID!]!, workspaceId: ID!, official: Boolean): [ConceptLink!]!
   deleteConceptLinks(ids: [ID!]): [ConceptLink!]!
@@ -85,142 +83,7 @@ type Mutation {
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
-type User {
-  id: ID!
-  tmcId: Int!
-  role: Role!
-  workspaceParticipations: [WorkspaceParticipant!]!
-  projectParticipations: [ProjectParticipant!]!
-  createdAt: DateTime!
-  guideProgress: Int!
-}
-
-enum Role {
-  GUEST
-  STUDENT
-  STAFF
-  ADMIN
-}
-
-enum Privilege {
-  VIEW,
-  EDIT,
-  INVITE,
-  OWNER
-}
-
-type Project {
-  id: ID!
-  name: String!
-  workspaces: [Workspace!]!
-  template: Workspace
-  participants: [ProjectParticipant!]!
-  tokens: [ProjectToken!]!
-}
-
-type Workspace {
-  id: ID!
-  name: String!
-  project: Project
-  public: Boolean!
-  defaultCourse: Course
-  courses: [Course!]!
-  concepts: [Concept!]!
-  conceptLinks: [ConceptLink!]!
-  courseLinks: [CourseLink!]!
-  participants: [WorkspaceParticipant!]!
-  tokens: [WorkspaceToken!]!
-}
-
-type WorkspaceParticipant {
-  id: ID!
-  privileges: [Privilege!]!
-  workspace: Workspace! 
-  token: WorkspaceToken! 
-  user: User! 
-}
-
-type ProjectParticipant {
-  id: ID!
-  privileges: [Privilege!]!
-  project: Project! 
-  token: ProjectToken! 
-  user: User! 
-}
-
-
-type WorkspaceToken{
-  id: ID!
-  privileges: [Privilege!]!
-  revoked: Boolean!
-  secret: String!
-  participants: [WorkspaceParticipant!]! 
-}
-
-type ProjectToken{
-  id: ID!
-  privileges: [Privilege!]!
-  revoked: Boolean!
-  secret: String!
-  participants: [ProjectParticipant!]!
-}
-
 type AuthPayload {
   token: String!
   user: User!
-}
-
-type Course {
-  id: ID!
-  name: String!
-  createdBy: User!
-  linksFromCourse: [CourseLink!]! 
-  linksToCourse: [CourseLink!]! 
-  concepts: [Concept!]! 
-  workspace: Workspace! 
-}
-
-type Concept {
-  id: ID!
-  name: String!
-  description: String
-  official: Boolean!
-  createdBy: User!
-  linksFromConcept: [ConceptLink!]! 
-  linksToConcept: [ConceptLink!]! 
-  courses: [Course!]! 
-  resources: [Resource!]!
-  workspace: Workspace! 
-}
-
-type Resource {
-  id: ID!
-  concept: [Concept]!
-  name: String!
-  description: String!
-  urls: [URL!]!
-}
-
-type URL {
-  id: ID!
-  address: String!
-  resource: Resource!
-}
-
-type CourseLink {
-  id: ID!
-  from: Course!
-  to: Course!
-  official: Boolean!
-  createdBy: User!
-  workspace: Workspace!
-}
-
-type ConceptLink {
-  id: ID!
-  from: Concept!
-  to: Concept!
-  official: Boolean!
-  createdBy: User!
-  workspace: Workspace!
 }
