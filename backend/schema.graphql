@@ -113,7 +113,6 @@ type Project {
   id: ID!
   name: String!
   owner: User!
-  participants: [User!]!
   workspaces: [Workspace!]!
   template: Workspace
   participants: [ProjectParticipant!]!
@@ -150,18 +149,20 @@ type ProjectParticipant {
   user: User! 
 }
 
-interface Token {
+
+type WorkspaceToken{
   id: ID!
   privileges: [Privilege!]!
   revoked: Boolean!
   secret: String!
-}
-
-type WorkspaceToken implements Token {
   participants: [WorkspaceParticipant!]! 
 }
 
-type ProjectToken implements Token {
+type ProjectToken{
+  id: ID!
+  privileges: [Privilege!]!
+  revoked: Boolean!
+  secret: String!
   participants: [ProjectParticipant!]!
 }
 

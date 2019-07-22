@@ -4,7 +4,6 @@
   "author": "RAGE",
   "description": "Concept mapping platform for education - backend module",
   "private": true,
-
   "main": "index.js",
   "dependencies": {
     "ajv": "^6.10.0",

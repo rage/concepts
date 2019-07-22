@@ -1,19 +1,14 @@
 module.exports = {
   User: {
-    asWorkspaceOwner(root, args, context) {
+    workspaceParticipations(root, args, context) {
       return context.prisma.user({
         id: root.id
-      }).asWorkspaceOwner()
+      }).workspaceParticipations()
     },
-    asProjectOwner(root, args, context) {
+    projectParticipations(root, args, context) {
       return context.prisma.user({
         id: root.id
-      }).asProjectOwner()
-    },
-    asProjectParticipant(root, args, context) {
-      return context.prisma.user({
-        id: root.id
-      }).asProjectParticipant()
+      }).projectParticipations()
     }
   }
 }

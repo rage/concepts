@@ -64,20 +64,19 @@ type ProjectParticipant {
   user: User! @relation(name:"ProjectParticipantUser")
 }
 
-interface Token {
+type WorkspaceToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
-}
-
-type WorkspaceToken implements Token {
-  id: ID! @id
   participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken")
 }
 
-type ProjectToken implements Token {
+type ProjectToken {
   id: ID! @id
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
   participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken")
 }
 
