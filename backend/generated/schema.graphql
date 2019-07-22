@@ -1,0 +1,221 @@
+type Query {
+  # Authentication
+  allUsers: [User!]!
+  userById(id: ID!): User!
+
+  # Workspace queries
+  allWorkspaces: [Workspace!]!
+  workspaceById(id: ID!): Workspace
+  workspacesForUser: [WorkspaceParticipant!]!
+
+  # Project queries
+  allProjects: [Project!]!
+  projectById(id: ID!): Project
+  projectsForUser: [ProjectParticipant!]!
+
+  # Course queries
+  allCourses: [Course!]!
+  courseById(id: ID!): Course
+  coursesByWorkspace(workspaceId: ID!): [Course!]!
+  courseAndPrerequisites(courseId: ID!, workspaceId: ID!): Course
+
+  # Course link queries
+  allCourseLinks: [CourseLink!]!
+  linksToCourse(id: ID!): [CourseLink!]!
+  linksFromCourse(id: ID!): [CourseLink!]!
+
+  # Concept queries
+  allConcepts: [Concept!]!
+  conceptById(id: ID!): Concept
+
+  # Concept link queries
+  allConceptLinks: [ConceptLink!]!
+  linksToConcept(id: ID!): [ConceptLink!]!
+  linksFromConcept(id: ID!): [ConceptLink!]!
+
+  # Porting queries
+  exportData(workspaceId: ID!): String!
+}
+
+type Mutation {
+  # Authentication mutation
+  login(tmcToken: String!): AuthPayload
+  createGuest: AuthPayload
+  # Course mutations
+  createCourse(name: String!, workspaceId: ID!): Course
+  deleteCourse(id: ID!): Course
+  updateCourse(id: ID!, name: String!): Course
+
+  # Concept mutations
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
+  deleteConcept(id: ID!): Concept
+  updateConcept(id: ID!, name:String, description: String, official: Boolean): Concept
+
+  # Course link mutations
+  createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
+  deleteCourseLink(id: ID!): CourseLink
+
+  # Concept link mutations
+  createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
+  deleteConceptLink(id: ID!): ConceptLink
+
+  # Project mutations
+  createProject(name: String!): Project
+  updateProject(id: ID!, name: String!): Project
+  deleteProject(id: ID!): Project
+
+  # Workspace mutations
+  createWorkspace(name: String!, projectId: ID): Workspace
+  addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
+  deleteWorkspace(id: ID!): Workspace
+  updateWorkspace(id: ID!, name: String!): Workspace
+
+  # Porting mutations
+  importData(data: String!): Workspace
+
+  # User mutations
+  updateUser(id: ID!, guideProgress: Int!): User
+
+  ## Resource mutation
+  # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+scalar DateTime
+
+type User {
+  id: ID!
+  tmcId: Int
+  role: Role!
+  workspaceParticipations: [WorkspaceParticipant!]!
+  projectParticipations: [ProjectParticipant!]!
+  createdAt: DateTime!
+  guideProgress: Int!
+}
+
+enum Role {
+  GUEST
+  STUDENT
+  STAFF
+  ADMIN
+}
+
+enum Privilege {
+  VIEW,
+  EDIT,
+  INVITE,
+  OWNER
+}
+
+type Project {
+  id: ID!
+  name: String!
+  workspaces: [Workspace!]!
+  template: Workspace
+  participants: [ProjectParticipant!]!
+  tokens: [ProjectToken!]!
+}
+
+type Workspace {
+  id: ID!
+  name: String!
+  project: Project
+  public: Boolean!
+  defaultCourse: Course
+  courses: [Course!]!
+  concepts: [Concept!]!
+  conceptLinks: [ConceptLink!]!
+  courseLinks: [CourseLink!]!
+  participants: [WorkspaceParticipant!]!
+  tokens: [WorkspaceToken!]!
+}
+
+type WorkspaceParticipant {
+  id: ID!
+  privilege: Privilege!
+  workspace: Workspace!
+  token: WorkspaceToken
+  user: User!
+}
+
+type ProjectParticipant {
+  id: ID!
+  privilege: Privilege!
+  project: Project!
+  token: ProjectToken
+  user: User!
+}
+
+type WorkspaceToken {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+  participants: [WorkspaceParticipant!]!
+}
+
+type ProjectToken {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+  participants: [ProjectParticipant!]!
+}
+
+type CourseLink {
+  id: ID!
+  from: Course!
+  to: Course!
+  official: Boolean!
+  createdBy: User!
+  workspace: Workspace!
+}
+
+type Course {
+  id: ID!
+  name: String!
+  createdBy: User!
+  linksFromCourse: [CourseLink!]!
+  linksToCourse: [CourseLink!]!
+  concepts: [Concept!]!
+  workspace: Workspace!
+}
+
+type ConceptLink {
+  id: ID!
+  from: Concept!
+  to: Concept!
+  official: Boolean!
+  workspace: Workspace!
+  createdBy: User!
+}
+
+type Concept {
+  id: ID!
+  name: String!
+  description: String
+  official: Boolean!
+  createdBy: User!
+  linksFromConcept: [ConceptLink!]!
+  linksToConcept: [ConceptLink!]!
+  courses: [Course!]!
+  resources: [Resource!]!
+  workspace: Workspace!
+}
+
+type Resource {
+  id: ID!
+  concept: Concept!
+  name: String!
+  description: String!
+  urls: [URL!]!
+}
+
+type URL {
+  id: ID!
+  address: String!
+  resource: Resource!
+}
