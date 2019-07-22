@@ -1,10 +1,10 @@
 const { checkAccess } = require('../../accessControl')
 
 const PortQueries = {
-  async exportData(root, args, context) {
+  async exportData(root, { workspaceId }, context) {
     await checkAccess(context, {
       allowGuest: true, allowStaff: true, allowStudent: true,
-      checkPrivilege: { requiredPrivilege: 'READ', workspaceId: args.workspaceId }
+      checkPrivilege: { requiredPrivilege: 'READ', workspaceId }
     })
     const query = `
     query($id : ID!) {
@@ -39,7 +39,7 @@ const PortQueries = {
     `
 
     const result = await context.prisma.$graphql(query, {
-      id: args.workspaceId
+      id: workspaceId
     })
 
     const workspace = result['workspace']

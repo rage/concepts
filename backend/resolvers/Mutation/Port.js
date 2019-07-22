@@ -6,12 +6,12 @@ const ajv = Ajv()
 const validateData = ajv.compile(schema)
 
 const PortMutations = {
-  async importData(root, args, context) {
+  async importData(root, { data }, context) {
     await checkAccess(context, { allowStaff: true, allowStudent: true })
     let json
 
     try {
-      json = JSON.parse(args.data)
+      json = JSON.parse(data)
     } catch (err) {
       throw new Error('Error parsing JSON: ' + err.message)
     }
