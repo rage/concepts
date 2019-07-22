@@ -30,7 +30,10 @@ const CourseQueries = {
     return null
   },
   async coursesByWorkspace(root, args, context) {
-    const user = await context.prisma.workspace({ id: args.workspaceId }).owner()
+    context.prisma.workspaceParticipant({
+      id: participants.filter(pcp => pcp.privilege === 'OWNER')[0].id
+    }).user()
+    
     checkAccess(context, {
       allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
     })
