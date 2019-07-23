@@ -37,23 +37,6 @@ const WorkspaceMutations = {
       where: { id },
       data: { name }
     })
-  },
-  async addDefaultCourseForWorkspace(root, { workspaceId, courseId }, context) {
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.EDIT,
-      workspaceId
-    })
-    return await context.prisma.updateWorkspace({
-      where: {
-        id: workspaceId
-      },
-      data: {
-        defaultCourse: {
-          connect: { id: courseId }
-        }
-      }
-    })
   }
 }
 

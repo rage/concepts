@@ -29,11 +29,6 @@
         "Tietojenkäsittelytieteen kandiohjelma"
       ]
     },
-    "defaultCourse": {
-      "type": "string",
-      "description": "Name of course to view by default. Must be defined in courses.",
-      "examples": ["Ohjelmoinnin perusteet"]
-    },
     "courses": {
       "type": "array",
       "description": "List of courses in workspace",

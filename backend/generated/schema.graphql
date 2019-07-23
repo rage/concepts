@@ -66,7 +66,6 @@ type Mutation {
 
   # Workspace mutations
   createWorkspace(name: String!, projectId: ID): Workspace
-  addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String!): Workspace
 
