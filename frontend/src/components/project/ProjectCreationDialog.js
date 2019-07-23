@@ -12,10 +12,10 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
 // Error dispatcher
-import { useErrorStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
   const [name, setName] = useState('')
   const [submitDisabled, setSubmitDisabled] = useState(false)
 
@@ -37,7 +37,7 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
       variables: { name }
     })
       .catch(() => {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })

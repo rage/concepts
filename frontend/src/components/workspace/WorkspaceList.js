@@ -18,7 +18,7 @@ import WorkspaceSharingDialog from './WorkspaceSharingDialog'
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
 
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,7 +49,7 @@ const WorkspaceList = ({
   const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
 
   const handleMenuOpen = (workspace, event) => {
     setMenu({
@@ -67,7 +67,7 @@ const WorkspaceList = ({
     try {
       await exportWorkspace(menu.workspace.id, menu.workspace.name)
     } catch (err) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: err.message
       })
@@ -77,7 +77,7 @@ const WorkspaceList = ({
   const handleCreateOpen = () => {
     handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -93,7 +93,7 @@ const WorkspaceList = ({
   const handleEditOpen = () => {
     handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -109,7 +109,7 @@ const WorkspaceList = ({
   const handleShareOpen = () => {
     handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -125,7 +125,7 @@ const WorkspaceList = ({
   const handleDelete = async () => {
     handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -139,7 +139,7 @@ const WorkspaceList = ({
           variables: { id: menu.workspace.id }
         })
       } catch (err) {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })
@@ -259,7 +259,7 @@ const WorkspaceList = ({
       <WorkspaceSharingDialog
         open={stateShare.open} workspace={workspaces.find(ws => ws.id === stateShare.id)}
         handleClose={handleShareClose} createShareLink={createShareLink}
-        deleteShareLink={deleteShareLink}/>
+        deleteShareLink={deleteShareLink} />
     </>
   )
 }

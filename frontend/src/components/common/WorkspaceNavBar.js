@@ -18,7 +18,7 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
 
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles({
   root: {
@@ -61,7 +61,7 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
 const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   const classes = useStyles()
   const { user } = useLoginStateValue()[0]
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
   const [menuAnchor, setMenuAnchor] = useState(null)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -92,12 +92,12 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
       }
     })
       .catch(() => {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Failed to delete workspace'
         })
         setTimeout(() =>
-          errorDispatch({ type: 'clearError' })
+          messageDispatch({ type: 'clearError' })
         , 2000)
       })
       .finally(() => {
@@ -111,7 +111,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
     try {
       await exportWorkspace(workspaceId, workspaceId)
     } catch (err) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: err.message
       })

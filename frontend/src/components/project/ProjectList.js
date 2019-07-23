@@ -12,7 +12,7 @@ import ProjectCreationDialog from './ProjectCreationDialog'
 import ProjectEditingDialog from './ProjectEditingDialog'
 
 // Error dispatcher
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,11 +38,11 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   const { loggedIn } = useLoginStateValue()[0]
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
 
   const handleClickOpen = () => {
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -57,7 +57,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
 
   const handleEditOpen = (id, name) => {
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -72,7 +72,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
 
   const handleDelete = async (id) => {
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -86,7 +86,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
           variables: { id }
         })
       } catch (err) {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })

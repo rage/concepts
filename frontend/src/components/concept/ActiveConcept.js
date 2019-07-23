@@ -13,7 +13,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 
 // Error dispatcher
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
 import { createConceptLinkUpdate } from '../../apollo/update'
@@ -68,7 +68,7 @@ const ActiveConcept = ({
 }) => {
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
   const handleMenuOpen = (event) => {
@@ -88,7 +88,7 @@ const ActiveConcept = ({
           variables: { id }
         })
       } catch (err) {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })
@@ -114,7 +114,7 @@ const ActiveConcept = ({
           from: addingLink.id,
           workspaceId
         }
-      }).catch(() => errorDispatch({
+      }).catch(() => messageDispatch({
         type: 'setError',
         data: 'Access denied'
       }))

@@ -14,7 +14,7 @@ import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
 
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { jsonPortUpdate } from '../../apollo/update'
 
 
@@ -107,7 +107,7 @@ const PortView = () => {
   const [loading, setLoading] = useState(false)
 
   const [{ user }] = useLoginStateValue()
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
 
   const dataPortingMutation = useMutation(IMPORT_DATA, {
     update: jsonPortUpdate(user.id)
@@ -133,7 +133,7 @@ const PortView = () => {
         errorMessage = 'should have either workspace or workspaceId'
       }
 
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: errorMessage
       })
@@ -178,7 +178,7 @@ const PortView = () => {
     try {
       jsonData = JSON.parse(data)
     } catch (error) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Malformed JSON'
       })
@@ -205,7 +205,7 @@ const PortView = () => {
         setButtonText('Import')
       }, 2000)
     } catch (err) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Error sending data'
       })

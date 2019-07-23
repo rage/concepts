@@ -4,13 +4,13 @@ import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button
 } from '@material-ui/core'
 
-import { useErrorStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 const WorkspaceSharingDialog = ({
   open, workspace, handleClose, createShareLink, deleteShareLink
 }) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
 
   const existingToken = workspace && workspace.tokens.length > 0 ? workspace.tokens[0].id : null
 
@@ -28,7 +28,7 @@ const WorkspaceSharingDialog = ({
         id: existingToken
       }
     }).then(del) : del()
-    promise.catch(() => errorDispatch({
+    promise.catch(() => messageDispatch({
       type: 'setError',
       data: 'Access denied'
     })).then(() => setSubmitDisabled(false))
@@ -43,9 +43,12 @@ const WorkspaceSharingDialog = ({
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(url.props.href.href).then(() => {
-
+      messageDispatch({
+        type: 'setNotification',
+        data: 'Copied to clipboard!'
+      })
     }, (err) => {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: err.message
       })

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 export const LoginStateContext = createContext(false)
-export const ErrorStateContext = createContext('')
+export const MessageStateContext = createContext('')
 
 
 export const LoginStateProvider = ({ reducer, initialState, children }) => (
@@ -10,11 +10,11 @@ export const LoginStateProvider = ({ reducer, initialState, children }) => (
   </LoginStateContext.Provider>
 )
 
-export const ErrorStateProvider = ({ reducer, initialState, children }) => (
-  <ErrorStateContext.Provider value={useReducer(reducer, initialState)}>
+export const MessagingStateProvider = ({ reducer, initialState, children }) => (
+  <MessageStateContext.Provider value={useReducer(reducer, initialState)}>
     {children}
-  </ErrorStateContext.Provider>
+  </MessageStateContext.Provider>
 )
 
-export const useErrorStateValue = () => useContext(ErrorStateContext)
+export const useMessageStateValue = () => useContext(MessageStateContext)
 export const useLoginStateValue = () => useContext(LoginStateContext)
