@@ -10,21 +10,27 @@ const includedIn = (set, object) =>
 const jsonPortUpdate = () => {
   return (store, response) => {
     try {
-      const workspaces = store.readQuery({
+      const data = store.readQuery({
         query: WORKSPACES_FOR_USER
       })
       const updatedWorkspace = response.data.importData
 
-      if (includedIn(workspaces.workspacesForUser, updatedWorkspace)) {
-        workspaces.workspacesForUser.map(workspace =>
-          workspace.id !== updatedWorkspace.id ? workspace : updatedWorkspace
+      if (data.workspacesForUser.map(p => p.workspace.id).includes(updatedWorkspace.id)) {
+        data.workspacesForUser.map(p =>
+          p.workspace.id !== updatedWorkspace.id ? p : {
+            privilege: p.privilege || 'OWNER',
+            updatedWorkspace
+          }
         )
       } else {
-        workspaces.workspacesForUser.push(updatedWorkspace)
+        data.workspacesForUser.push({
+          privilege: 'OWNER',
+          workspace: updatedWorkspace
+        })
       }
       client.writeQuery({
         query: WORKSPACES_FOR_USER,
-        data: workspaces
+        data
       })
 
       const courses = store.readQuery({
