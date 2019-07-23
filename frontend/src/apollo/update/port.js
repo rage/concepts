@@ -19,13 +19,15 @@ const jsonPortUpdate = () => {
         data.workspacesForUser.map(p =>
           p.workspace.id !== updatedWorkspace.id ? p : {
             privilege: p.privilege || 'OWNER',
-            updatedWorkspace
+            updatedWorkspace,
+            __typename: 'WorkspaceParticipant'
           }
         )
       } else {
         data.workspacesForUser.push({
           privilege: 'OWNER',
-          workspace: updatedWorkspace
+          workspace: updatedWorkspace,
+          __typename: 'WorkspaceParticipant'
         })
       }
       client.writeQuery({
