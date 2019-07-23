@@ -118,7 +118,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
     }
   }
 
-  const handleShare = async () => {
+  const handleShareOpen = async () => {
     setMenuAnchor(null)
   }
 
@@ -161,7 +161,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
               </ListItemIcon>
               Export
             </MenuItem>
-            <MenuItem aria-label='Share link' onClick={handleShare}>
+            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
               <ListItemIcon>
                 <ShareIcon />
               </ListItemIcon>

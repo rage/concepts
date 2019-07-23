@@ -49,7 +49,6 @@ const privilegeQueryTyped = {
 const Privilege = {
   OWNER: 'OWNER',
   EDIT: 'EDIT',
-  INVITE: 'INVITE',
   READ: 'READ',
   NONE: null
 }
@@ -57,10 +56,8 @@ const Privilege = {
 const privilegeToInt = privilege => {
   switch (privilege) {
   case 'OWNER':
-    return 4
-  case 'EDIT':
     return 3
-  case 'INVITE':
+  case 'EDIT':
     return 2
   case 'READ':
     return 1
@@ -79,15 +76,11 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
     userId: ctx.user.id
   })
   if (!resp[type].participants[0]) {
-    throw new ForbiddenError('Access denied')
+    return false
   }
   const privilege = resp[type].participants[0].privilege
 
-  if (privilegeToInt(privilege) < privilegeToInt(minimumPrivilege)) {
-    throw new ForbiddenError('Access denied')
-  }
-
-  return true
+  return privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)
 }
 
 const checkAccess = async (ctx, {
@@ -99,7 +92,9 @@ const checkAccess = async (ctx, {
     throw new ForbiddenError('Access denied')
   }
   if (minimumPrivilege !== null) {
-    await checkPrivilegeInt(ctx, { minimumPrivilege, workspaceId, projectId })
+    if (!(await checkPrivilegeInt(ctx, { minimumPrivilege, workspaceId, projectId }))) {
+      throw new ForbiddenError('Access denied')
+    }
   }
   return true
 }

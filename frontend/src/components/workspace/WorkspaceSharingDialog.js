@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField
 } from '@material-ui/core'
 
-import { useErrorStateValue } from '../../store'
-
-const WorkspaceSharingDialog = ({ state, handleClose  }) => {
+const WorkspaceSharingDialog = ({ open, workspace, handleClose  }) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
-  const errorDispatch = useErrorStateValue()[1]
 
   const handleRegenerate = () => {
     setSubmitDisabled(true)
@@ -16,14 +13,14 @@ const WorkspaceSharingDialog = ({ state, handleClose  }) => {
 
   return (
     <Dialog
-      open={state.open}
+      open={open}
       onClose={handleClose}
       aria-labelledby='form-dialog-title'
     >
       <DialogTitle id='form-dialog-title'>Share workspace</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Workspaces work as a sandbox for you to create and connect concepts with each other.
+          Let other users view and edit your workspace
         </DialogContentText>
         <TextField
           autoFocus
@@ -32,7 +29,8 @@ const WorkspaceSharingDialog = ({ state, handleClose  }) => {
           id='link'
           label='Link'
           type='text'
-          value={link || 'Generating...'}
+          value={workspace && workspace.tokens.length ?
+            workspace.tokens[0].id : 'No share links created'}
           fullWidth
         />
       </DialogContent>

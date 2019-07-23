@@ -14,6 +14,7 @@ import {
 
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
+import WorkspaceSharingDialog from './WorkspaceSharingDialog'
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
 
@@ -43,6 +44,7 @@ const WorkspaceList = ({
   const classes = useStyles()
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
+  const [stateShare, setStateShare] = useState({ open: false, workspace: null })
   const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
@@ -101,6 +103,22 @@ const WorkspaceList = ({
 
   const handleEditClose = () => {
     setStateEdit({ open: false, id: '', name: '' })
+  }
+
+  const handleShareOpen = () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      errorDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    setStateShare({ open: true, workspace: menu.workspace })
+  }
+
+  const handleShareClose = () => {
+    setStateShare({ open: false, workspace: null })
   }
 
   const handleDelete = async () => {
@@ -211,7 +229,7 @@ const WorkspaceList = ({
             </ListItemIcon>
             Export
           </MenuItem>
-          <MenuItem aria-label='Share link' onClick={handleShare}>
+          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>
               <ShareIcon />
             </ListItemIcon>
@@ -237,6 +255,8 @@ const WorkspaceList = ({
       <WorkspaceEditingDialog
         state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
         defaultName={stateEdit.name} />
+      <WorkspaceSharingDialog
+        open={stateShare.open} workspace={stateShare.workspace} handleClose={handleShareClose} />
     </>
   )
 }

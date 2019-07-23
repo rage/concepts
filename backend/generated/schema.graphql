@@ -75,8 +75,18 @@ type Mutation {
   # User mutations
   updateUser(id: ID!, guideProgress: Int!): User
 
-  ## Resource mutation
-  # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
+  # Sharing
+  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
+  createWorkspaceParticipant(workspaceId: ID!, privilege: Privilege!, userId: ID!): WorkspaceParticipant
+  updateWorkspaceParticipant(id: ID!, privilege: Privilege!): WorkspaceParticipant
+  deleteWorkspaceParticipant(id: ID!): WorkspaceParticipant
+  joinWorkspace(tokenId: ID!): WorkspaceParticipant
+
+  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
+  createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
+  updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
+  deleteProjectParticipant(id: ID!): ProjectParticipant
+  joinProject(tokenId: ID!): ProjectParticipant
 }
 
 type AuthPayload {
@@ -105,7 +115,6 @@ enum Role {
 enum Privilege {
   VIEW,
   EDIT,
-  INVITE,
   OWNER
 }
 
@@ -122,7 +131,6 @@ type Workspace {
   id: ID!
   name: String!
   project: Project
-  public: Boolean!
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!

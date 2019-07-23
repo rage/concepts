@@ -37,7 +37,7 @@ const ConceptMutations = {
   },
 
   async deleteConcept(root, { id }, context) {
-    const { workspaceId } = await context.prisma.concept({ id }).workspace()
+    const { id: workspaceId } = await context.prisma.concept({ id }).workspace()
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
