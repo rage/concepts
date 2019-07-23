@@ -8,12 +8,12 @@ import {
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { USE_SHARE_LINK } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, PEEK_SHARE_LINK } from '../../graphql/Query'
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const JoinView = ({ history, token }) => {
   const [loading, setLoading] = useState(false)
   const [{ user }] = useLoginStateValue()
-  const [,errorDispatch] = useErrorStateValue()
+  const [, messageDispatch] = useMessageStateValue()
 
   const fuckingReactRulesJustUseShareLink = useMutation(USE_SHARE_LINK, {
     refetchQueries: [{
@@ -37,7 +37,7 @@ const JoinView = ({ history, token }) => {
     }).then(resp => {
       history.push(`/workspaces/${resp.data.joinWorkspace.workspace.id}/mapper`)
     }).catch(() => {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
