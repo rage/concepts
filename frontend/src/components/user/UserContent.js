@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import {
-  CREATE_WORKSPACE, DELETE_WORKSPACE, UPDATE_WORKSPACE, CREATE_SHARE_LINK
+  CREATE_WORKSPACE, DELETE_WORKSPACE, UPDATE_WORKSPACE, CREATE_SHARE_LINK, DELETE_SHARE_LINK
 } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER } from '../../graphql/Query/Workspace'
 
@@ -37,6 +37,12 @@ const UserView = () => {
     }]
   })
 
+  const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
+    refetchQueries: [{
+      query: WORKSPACES_FOR_USER
+    }]
+  })
+
   return (
     workspaceQuery.data.workspacesForUser ?
       <WorkspaceList
@@ -45,6 +51,7 @@ const UserView = () => {
         createWorkspace={createWorkspace}
         deleteWorkspace={deleteWorkspace}
         createShareLink={createShareLink}
+        deleteShareLink={deleteShareLink}
       />
       :
       <div style={{ textAlign: 'center' }}>

@@ -15,6 +15,18 @@ const WorkspaceSharingMutations = {
       revoked: false
     })
   },
+  async deleteWorkspaceToken(root, { id }, context) {
+    // TODO revoke instead of deleting
+    const { id: workspaceId } = await context.prisma.workspaceToken({ id }).workspace()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.OWNER,
+      workspaceId
+    })
+    return await context.prisma.deleteWorkspaceToken({
+      id
+    })
+  },
   async createWorkspaceParticipant(root, { workspaceId, privilege, userId }, context) {
     await checkAccess(context, {
       minimumRole: Role.GUEST,

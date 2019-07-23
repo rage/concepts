@@ -1,34 +1,46 @@
 import React, { useState } from 'react'
 
 import {
-  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField
+  Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button
 } from '@material-ui/core'
 
 import { useErrorStateValue } from '../../store'
 
-const WorkspaceSharingDialog = ({ open, workspace, handleClose, createShareLink }) => {
+const WorkspaceSharingDialog = ({
+  open, workspace, handleClose, createShareLink, deleteShareLink
+}) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const errorDispatch = useErrorStateValue()[1]
 
+  const existingToken = workspace && workspace.tokens.length > 0 ? workspace.tokens[0].id : null
+
   const handleRegenerate = () => {
     setSubmitDisabled(true)
-    createShareLink({
+    const del = () => createShareLink({
       variables: {
         workspaceId: workspace.id,
         privilege: 'EDIT'
       }
-    }).catch(() => errorDispatch({
+    })
+
+    const promise = existingToken ? deleteShareLink({
+      variables: {
+        id: existingToken
+      }
+    }).then(del) : del()
+    promise.catch(() => errorDispatch({
       type: 'setError',
       data: 'Access denied'
     })).then(() => setSubmitDisabled(false))
   }
 
   let url = 'No share links created'
-  if (workspace && workspace.tokens.length > 0) {
+  if (existingToken) {
     const realURL = new URL(window.location)
-    realURL.pathname = `/join/w${workspace.tokens[0].id}`
+    realURL.pathname = `/join/w${existingToken}`
     url = <a href={realURL}>{realURL.host}{realURL.pathname}</a>
   }
+
 
   return (
     <Dialog
@@ -51,7 +63,7 @@ const WorkspaceSharingDialog = ({ open, workspace, handleClose, createShareLink 
           disabled={submitDisabled}
           color='primary'
         >
-          Regenerate link
+          {submitDisabled ? 'Generating...' : existingToken ? 'Regenerate link' : 'Generate link'}
         </Button>
         <Button onClick={handleClose} color='primary'>
           Close

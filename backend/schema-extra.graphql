@@ -77,12 +77,14 @@ type Mutation {
 
   # Sharing
   createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
+  deleteWorkspaceToken(id: ID!): WorkspaceToken
   createWorkspaceParticipant(workspaceId: ID!, privilege: Privilege!, userId: ID!): WorkspaceParticipant
   updateWorkspaceParticipant(id: ID!, privilege: Privilege!): WorkspaceParticipant
   deleteWorkspaceParticipant(id: ID!): WorkspaceParticipant
   joinWorkspace(tokenId: ID!): WorkspaceParticipant
 
   createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
+  deleteProjectToken(id: ID!): ProjectToken
   createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
   updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
   deleteProjectParticipant(id: ID!): ProjectParticipant

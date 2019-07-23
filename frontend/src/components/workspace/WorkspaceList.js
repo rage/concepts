@@ -39,7 +39,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const WorkspaceList = ({
-  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace, createShareLink
+  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace,
+  createShareLink, deleteShareLink
 }) => {
   const classes = useStyles()
   const [stateCreate, setStateCreate] = useState({ open: false })
@@ -114,11 +115,11 @@ const WorkspaceList = ({
       })
       return
     }
-    setStateShare({ open: true, workspace: menu.workspace })
+    setStateShare({ open: true, id: menu.workspace.id })
   }
 
   const handleShareClose = () => {
-    setStateShare({ open: false, workspace: null })
+    setStateShare({ open: false, id: null })
   }
 
   const handleDelete = async () => {
@@ -256,8 +257,9 @@ const WorkspaceList = ({
         state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
         defaultName={stateEdit.name} />
       <WorkspaceSharingDialog
-        open={stateShare.open} workspace={stateShare.workspace} handleClose={handleShareClose}
-        createShareLink={createShareLink} />
+        open={stateShare.open} workspace={workspaces.find(ws => ws.id === stateShare.id)}
+        handleClose={handleShareClose} createShareLink={createShareLink}
+        deleteShareLink={deleteShareLink}/>
     </>
   )
 }
