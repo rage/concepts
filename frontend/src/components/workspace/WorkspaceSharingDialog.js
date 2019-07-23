@@ -41,6 +41,16 @@ const WorkspaceSharingDialog = ({
     url = <a href={realURL}>{realURL.host}{realURL.pathname}</a>
   }
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(url.props.href.href).then(() => {
+
+    }, (err) => {
+      errorDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    })
+  }
 
   return (
     <Dialog
@@ -59,13 +69,23 @@ const WorkspaceSharingDialog = ({
       </DialogContent>
       <DialogActions>
         <Button
+          onClick={copyToClipboard}
+          color='secondary'
+        >
+          Copy to clipboard
+        </Button>
+
+        <Button
           onClick={handleRegenerate}
           disabled={submitDisabled}
           color='primary'
         >
           {submitDisabled ? 'Generating...' : existingToken ? 'Regenerate link' : 'Generate link'}
         </Button>
-        <Button onClick={handleClose} color='primary'>
+        <Button
+          onClick={handleClose}
+          color='primary'
+        >
           Close
         </Button>
       </DialogActions>
