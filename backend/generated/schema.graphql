@@ -124,7 +124,6 @@ type Workspace {
   name: String!
   project: Project
   public: Boolean!
-  defaultCourse: Course
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!

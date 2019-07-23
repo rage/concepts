@@ -15,11 +15,6 @@ module.exports = {
         id: root.id
       }).participants()
     },
-    defaultCourse(root, args, context) {
-      return context.prisma.workspace({
-        id: root.id
-      }).defaultCourse()
-    },
     project(root, args, context) {
       return context.prisma.workspace({
         id: root.id
