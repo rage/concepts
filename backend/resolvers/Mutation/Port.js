@@ -61,19 +61,6 @@ const PortMutations = {
         workspace: { connect: { id: workspace.id } }
       })
 
-      if (json['defaultCourse'] === course['name']) {
-        await context.prisma.updateWorkspace({
-          where: {
-            id: workspace.id
-          },
-          data: {
-            defaultCourse: {
-              connect: { id: courseObj.id }
-            }
-          }
-        })
-      }
-
       const concepts = await Promise.all(course['concepts'].map(async concept => {
         const conceptData = {
           name: concept['name'],
