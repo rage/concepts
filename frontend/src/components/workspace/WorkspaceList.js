@@ -8,7 +8,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon,
-  ShowChart as ShowChartIcon, MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon
+  ShowChart as ShowChartIcon, MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon,
+  Share as ShareIcon
 } from '@material-ui/icons'
 
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
@@ -59,6 +60,7 @@ const WorkspaceList = ({
   }
 
   const handleWorkspaceExport = async () => {
+    handleMenuClose()
     try {
       await exportWorkspace(menu.workspace.id, menu.workspace.name)
     } catch (err) {
@@ -70,6 +72,7 @@ const WorkspaceList = ({
   }
 
   const handleCreateOpen = () => {
+    handleMenuClose()
     if (!loggedIn) {
       errorDispatch({
         type: 'setError',
@@ -207,6 +210,12 @@ const WorkspaceList = ({
               <CloudDownloadIcon />
             </ListItemIcon>
             Export
+          </MenuItem>
+          <MenuItem aria-label='Share link' onClick={handleShare}>
+            <ListItemIcon>
+              <ShareIcon />
+            </ListItemIcon>
+            Share link
           </MenuItem>
           <MenuItem aria-label='Delete' onClick={handleDelete}>
             <ListItemIcon>

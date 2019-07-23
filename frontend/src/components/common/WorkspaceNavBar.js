@@ -7,7 +7,7 @@ import {
 import {
   Shuffle as ShuffleIcon, ShowChart as ShowCartIcon, GridOn as GridOnIcon,
   DeviceHub as DeviceHubIcon, CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,
-  Edit as EditIcon, MoreVert as MoreVertIcon
+  Edit as EditIcon, MoreVert as MoreVertIcon, Share as ShareIcon
 } from '@material-ui/icons'
 
 import client from '../../apollo/apolloClient'
@@ -80,11 +80,12 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   } = useEditWorkspaceDialog(workspaceId, user.id)
 
   const handleEditOpen = () => {
+    setMenuAnchor(null)
     openEditWorkspaceDialog(workspaceId, workspaceQuery.data.workspaceById.name)
   }
 
   const handleDelete = () => {
-
+    setMenuAnchor(null)
     deleteWorkspace({
       variables: {
         id: workspaceId
@@ -115,6 +116,10 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
         data: err.message
       })
     }
+  }
+
+  const handleShare = async () => {
+    setMenuAnchor(null)
   }
 
   const onChange = (event, newPage) => {
@@ -155,6 +160,12 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
                 <CloudDownloadIcon />
               </ListItemIcon>
               Export
+            </MenuItem>
+            <MenuItem aria-label='Share link' onClick={handleShare}>
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              Share link
             </MenuItem>
             <MenuItem aria-label='Delete' onClick={handleDelete}>
               <ListItemIcon>
