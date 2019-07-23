@@ -35,6 +35,8 @@ type Query {
 
   # Porting queries
   exportData(workspaceId: ID!): String!
+
+  peekWorkspace(tokenId: ID!): Workspace
 }
 
 type Mutation {

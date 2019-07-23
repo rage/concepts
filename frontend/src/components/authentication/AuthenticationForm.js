@@ -13,6 +13,13 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { withRouter } from 'react-router-dom'
 
+import { useMutation } from 'react-apollo-hooks'
+
+import {
+  CREATE_GUEST_ACCOUNT
+} from '../../graphql/Mutation'
+
+
 import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
@@ -40,34 +47,59 @@ const styles = theme => ({
   }
 })
 
-const AuthenticationForm = ({ history, classes }) => {
+const AuthenticationForm = ({ history, location, classes }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingGuest, setLoadingGuest] = useState(false)
 
   const dispatch = useLoginStateValue()[1]
+  const params = new URLSearchParams(location.search)
+  const showGuestButton = params.get('then')
+  const nextPath = params.get('then') || '/user'
 
-  const authenticate = async (event) => {
+  const authenticate = (event) => {
     event.preventDefault()
     setLoading(true)
-    try {
-      const response = await signIn({ email, password })
-      dispatch({
-        type: 'login',
-        data: response.user
-      })
-    } catch (e) {
+    signIn({ email, password }).then(response => dispatch({
+      type: 'login',
+      data: response.user
+    })).catch(() => {
       setError(true)
       setTimeout(() => {
         setError(false)
       }, 4000)
-    }
-    setLoading(false)
-    if (isSignedIn()) {
-      history.push('/user')
-    }
+    }).finally(() => {
+      setLoading(false)
+      if (isSignedIn()) {
+        history.push(nextPath)
+      }
+    })
+  }
+
+  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
+
+  const createGuestAccount = async () => {
+    const result = await createGuestMutation()
+    const userData = result.data.createGuest
+    await window.localStorage.setItem('current_user', JSON.stringify(userData))
+    await dispatch({
+      type: 'login',
+      data: userData.user
+    })
+  }
+
+  const continueAsGuest = evt => {
+    evt.preventDefault()
+    setLoadingGuest(true)
+    createGuestAccount().then(() => {
+      setLoadingGuest(false)
+      if (isSignedIn()) {
+        history.push(nextPath)
+      }
+    })
   }
 
   return (
@@ -79,7 +111,11 @@ const AuthenticationForm = ({ history, classes }) => {
         </Typography>
 
 
-        <form className={classes.form} onSubmit={authenticate} noValidate>
+        <form
+          className={classes.form}
+          onSubmit={!loading && !loadingGuest ? authenticate : () => {}}
+          noValidate
+        >
           <TextField
             error={error}
             variant='outlined'
@@ -133,7 +169,23 @@ const AuthenticationForm = ({ history, classes }) => {
           </div>
         </form>
       </div>
-
+      {showGuestButton && <>
+        <hr />
+        <div className={classes.wrapper}>
+          <Button
+            type='button'
+            fullWidth
+            variant='contained'
+            color='primary'
+            onClick={!loading && !loadingGuest ? continueAsGuest : () => {}}
+          >
+            {!loadingGuest ? 'Continue as guest' : '\u00A0'}
+          </Button>
+          {
+            loadingGuest && <CircularProgress size={24} className={classes.buttonProgress} />
+          }
+        </div>
+      </>}
     </Container>
   )
 

@@ -20,6 +20,13 @@ const WorkspaceQueries = {
     return await context.prisma.user({
       id: context.user.id
     }).workspaceParticipations()
+  },
+  async peekWorkspace(root, { tokenId }, context) {
+    await checkAccess(context, { minimumRole: Role.GUEST })
+    // TODO check if token is valid
+    return await context.prisma.workspaceToken({
+      id: tokenId
+    }).workspace()
   }
 }
 

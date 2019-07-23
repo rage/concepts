@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 
-const PrivateRoute = ({ render, redirectPath, condition, children, ...rest }) => {
+const PrivateRoute = ({ render, redirectPath, redirectPathFunc, condition, children, ...rest }) => {
   return (
     <Route {...rest} render={(props) =>
       condition
@@ -9,7 +9,7 @@ const PrivateRoute = ({ render, redirectPath, condition, children, ...rest }) =>
         : (
           <Redirect
             to={{
-              pathname: redirectPath,
+              pathname: redirectPathFunc ? redirectPathFunc(props.match.params) : redirectPath,
               state: { from: props.location }
             }}
           />

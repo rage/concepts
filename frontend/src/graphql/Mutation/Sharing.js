@@ -21,7 +21,32 @@ const DELETE_SHARE_LINK = gql`
   }
 `
 
+const USE_SHARE_LINK = gql`
+  mutation useShareLink($token: ID!) {
+    joinWorkspace(tokenId: $token) {
+      privilege
+      workspace {
+        id
+        name
+        courses {
+          id
+        }
+        tokens {
+          id
+        }
+        participants {
+          privilege
+          user {
+            id
+          }
+        }
+      }
+    }
+  }
+`
+
 export {
   CREATE_SHARE_LINK,
-  DELETE_SHARE_LINK
+  DELETE_SHARE_LINK,
+  USE_SHARE_LINK
 }

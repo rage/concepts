@@ -14,6 +14,7 @@ import PrivateRoute from './components/common/PrivateRoute'
 import UserView from './components/user/UserView'
 import LandingView from './components/common/LandingView'
 import WorkspaceView from './components/workspace/WorkspaceView'
+import JoinView from './components/common/JoinView'
 import CourseHeatmap from './components/course/CourseHeatmap'
 
 import { useMessageStateValue, useLoginStateValue } from './store'
@@ -83,6 +84,11 @@ const App = ({ classes }) => {
           render={() => <PortView />} />
         <Route exact path='/auth' render={() => <AuthenticationForm />} />
         <Route exact path='/user' render={() => <UserView />} />
+
+        <PrivateRoute
+          exact condition={loggedIn} path='/join/:token'
+          redirectPathFunc={({ token }) => `/auth/?then=/join/${token}`}
+          render={({ match: { params: { token } } }) => <JoinView token={token} />} />
 
         <Route exact path='/workspaces/:wid/heatmap' render={({ match }) => (
           <CourseHeatmap workspaceId={match.params.wid} />
