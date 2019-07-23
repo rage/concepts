@@ -93,6 +93,7 @@ type User {
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!
   guideProgress: Int!
+  lastActivity: DateTime
 }
 
 enum Role {
