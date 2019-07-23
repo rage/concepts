@@ -1,12 +1,12 @@
 import { gql } from 'apollo-boost'
 
-const PROJECTS_BY_OWNER = gql`
-query projectsByOwner($ownerId: ID!) {
-  projectsByOwner(ownerId: $ownerId) {
-    id
-    name
-    owner {
+const PROJECTS_FOR_USER = gql`
+query projectsForUser {
+  projectsForUser {
+    privilege
+    project {
       id
+      name
     }
   }
 }
@@ -17,14 +17,17 @@ query projectById($id: ID!) {
   projectById(id: $id) {
     id
     name
-    owner {
-      id
+    participants {
+      privilege
+      user {
+        id
+      }
     }
   }
 }
 `
 
 export {
-  PROJECTS_BY_OWNER,
+  PROJECTS_FOR_USER,
   PROJECT_BY_ID
 }

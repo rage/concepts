@@ -18,7 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import { CREATE_COURSE, ADD_DEFAULT_COURSE } from '../../graphql/Mutation'
-import { WORKSPACES_BY_OWNER } from '../../graphql/Query'
+import { WORKSPACES_FOR_USER } from '../../graphql/Query'
 
 import { useLoginStateValue } from '../../store'
 
@@ -54,7 +54,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
   const createCourse = useMutation(CREATE_COURSE)
   const addDefaultCourseForWorkspace = useMutation(ADD_DEFAULT_COURSE, {
     refetchQueries: [
-      { query: WORKSPACES_BY_OWNER, variables: { ownerId: user.id } }
+      { query: WORKSPACES_FOR_USER }
     ]
   })
 

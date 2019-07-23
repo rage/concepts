@@ -1,23 +1,28 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const ProjectQueries = {
-  allProjects(root, args, context) {
-    checkAccess(context, { allowStaff: true })
-    return context.prisma.projects()
+  async allProjects(root, args, context) {
+    await checkAccess(context, { minimumRole: Role.STAFF })
+    return await context.prisma.projects()
   },
-  projectById(root, args, context) {
-    checkAccess(context, { allowStaff: true })
+  async projectById(root, args, context) {
+    await checkAccess(context, {
+      allowStaff: true,
+      checkPrivilege: {
+        minimumRole: Role.STAFF,
+        minimumPrivilege: Privilege.READ,
+        projectId: args.id
+      }
+    })
     return context.prisma.project({
       id: args.id
     })
   },
-  projectsByOwner(root, args, context) {
-    checkAccess(context, { allowStaff: true })
-    return context.prisma.projects({
-      where: {
-        owner: { id: args.ownerId }
-      }
-    })
+  async projectsForUser(root, args, context) {
+    await checkAccess(context, { minimumRole: Role.STAFF })
+    return await context.prisma.user({
+      id: context.user.id
+    }).projectParticipations()
   }
 }
 

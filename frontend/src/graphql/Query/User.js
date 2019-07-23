@@ -4,25 +4,18 @@ const STAFF_BY_ID = gql`
 query userById($id: ID!) {
   userById(id: $id) {
     id
-    asWorkspaceOwner {
-      id
-      name
-      owner {
+    workspaceParticipations {
+      privilege
+      workspace {
         id
+        name
       }
     }
-    asProjectOwner {
-      id
-      name
-      owner {
+    projectParticipations {
+      privilege
+      project {
         id
-      }
-    }
-    asProjectParticipant {
-      id
-      name
-      owner {
-        id
+        name
       }
     }
   }

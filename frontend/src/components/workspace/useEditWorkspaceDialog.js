@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { UPDATE_WORKSPACE } from '../../graphql/Mutation'
-import { WORKSPACES_BY_OWNER, WORKSPACE_BY_ID } from '../../graphql/Query'
+import { WORKSPACES_FOR_USER, WORKSPACE_BY_ID } from '../../graphql/Query'
 import WorkspaceEditingDialog from '../workspace/WorkspaceEditingDialog'
 
 const useEditWorkspaceDialog = (workspaceId, userId) => {
@@ -13,7 +13,7 @@ const useEditWorkspaceDialog = (workspaceId, userId) => {
 
   const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
     refetchQueries: [
-      { query: WORKSPACES_BY_OWNER, variables: { ownerId: userId } },
+      { query: WORKSPACES_FOR_USER },
       { query: WORKSPACE_BY_ID, variables: { id: workspaceId } }
     ]
   })

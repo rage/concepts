@@ -5,9 +5,6 @@ mutation importData($data: String!) {
   importData(data: $data) {
     id
     name
-    owner {
-      id
-    }
     courses {
       id
       name

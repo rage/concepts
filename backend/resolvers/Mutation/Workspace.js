@@ -1,62 +1,58 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
-    checkAccess(context, { allowGuest: true, allowStudent: true, allowStaff: true })
-    const data = {
+    await checkAccess(context, { minimumRole: Role.GUEST })
+    return await context.prisma.createWorkspace({
       name: args.name,
-      owner: {
-        connect: { id: context.user.id }
-      }
-    }
-
-    // Set guest workspaces to be public
-    if (context.role === 'GUEST') {
-      data.public = true
-    }
-
-    if (args.projectId !== undefined) {
-      data.project = {
+      public: context.role === 'GUEST',
+      project: args.projectId !== undefined ? {
         connect: { id: args.projectId }
+      } : null,
+      participants: {
+        create: [{
+          privilege: 'OWNER',
+          user: {
+            connect: { id: context.user.id }
+          }
+        }]
       }
-    }
-    return await context.prisma.createWorkspace(data)
-  },
-  async deleteWorkspace(root, args, context) {
-    const owner = await context.prisma.workspace({
-      id: args.id
-    }).owner()
-    checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: owner.id
     })
-    return context.prisma.deleteWorkspace({ id: args.id })
+  },
+  async deleteWorkspace(root, { id }, context) {
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.OWNER,
+      workspaceId: id
+    })
+    return context.prisma.deleteWorkspace({ id })
   },
   async updateWorkspace(root, { id, name }, context) {
-    const owner = await context.prisma.workspace({ id }).owner()
-    checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: owner.id
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId: id
     })
     return context.prisma.updateWorkspace({
       where: { id },
       data: { name }
     })
   },
-  async addDefaultCourseForWorkspace(root, args, context) {
+  async addDefaultCourseForWorkspace(root, { workspaceId, courseId }, context) {
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
+    })
     return await context.prisma.updateWorkspace({
       where: {
-        id: args.workspaceId
+        id: workspaceId
       },
       data: {
         defaultCourse: {
-          connect: { id: args.courseId }
+          connect: { id: courseId }
         }
       }
-    })
-  },
-  async createGuestWorkspace(root, args, context) {
-    return await context.prisma.createWorkspace({
-      name: args.name,
-      public: true
     })
   }
 }

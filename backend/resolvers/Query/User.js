@@ -1,21 +1,15 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role } = require('../../accessControl')
 
 const User = {
-  allUsers(root, args, context) {
-    checkAccess(context, { allowStaff: true })
-    return context.prisma.users()
+  async allUsers(root, args, context) {
+    await checkAccess(context, { minimumRole: Role.STAFF })
+    return await context.prisma.users()
   },
-  userById(root, args, context) {
-    checkAccess(context, {
-      allowGuest: true,
-      allowStudent: true,
-      allowStaff: true,
-      verifyUser: true,
-      userId: args.id
+  async userById(root, { id }, context) {
+    await checkAccess(context, {
+      minimumRole: id === context.user.id ? Role.GUEST : Role.STAFF
     })
-    return context.prisma.user({
-      id: args.id
-    })
+    return context.prisma.user({ id })
   }
 }
 

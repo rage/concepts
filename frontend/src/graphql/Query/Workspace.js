@@ -5,20 +5,23 @@ const ALL_WORKSPACES = gql`
   allWorkspaces {
     id
     name
-    owner {
-      id
+    participants {
+      privilege
+      user {
+        id
+      }
     }
   }
 }
 `
 
-const WORKSPACES_BY_OWNER = gql`
-query workspacesByOwner($ownerId: ID!) {
-  workspacesByOwner(ownerId: $ownerId) {
-    id
-    name
-    owner {
+const WORKSPACES_FOR_USER = gql`
+query workspacesForUser {
+  workspacesForUser {
+    privilege
+    workspace {
       id
+      name
     }
   }
 }
@@ -32,8 +35,11 @@ query workspaceById($id: ID!) {
     defaultCourse {
       id
     }
-    owner {
-      id
+    participants {
+      privilege
+      user {
+        id
+      }
     }
   }
 }
@@ -92,7 +98,7 @@ workspaceById(id: $id) {
 
 export {
   ALL_WORKSPACES,
-  WORKSPACES_BY_OWNER,
+  WORKSPACES_FOR_USER,
   WORKSPACE_BY_ID,
   WORKSPACE_COURSES_AND_CONCEPTS,
   WORKSPACE_DATA_FOR_GRAPH

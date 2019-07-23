@@ -13,11 +13,31 @@ var models = [
     embedded: false
   },
   {
+    name: "Privilege",
+    embedded: false
+  },
+  {
     name: "Project",
     embedded: false
   },
   {
     name: "Workspace",
+    embedded: false
+  },
+  {
+    name: "WorkspaceParticipant",
+    embedded: false
+  },
+  {
+    name: "ProjectParticipant",
+    embedded: false
+  },
+  {
+    name: "WorkspaceToken",
+    embedded: false
+  },
+  {
+    name: "ProjectToken",
     embedded: false
   },
   {

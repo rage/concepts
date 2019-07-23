@@ -1,9 +1,19 @@
+const { checkAccess } = require('../../accessControl')
+
 module.exports = {
   Workspace: {
-    owner(root, args, context) {
+    async tokens(root, args, context) {
+      await checkAccess(context, {
+        checkPrivilege: { requiredPrivilege: 'OWNER', workspaceId: root.id }
+      })
+      return await context.prisma.workspace({
+        id: root.id
+      }).tokens()
+    },
+    participants(root, args, context) {
       return context.prisma.workspace({
         id: root.id
-      }).owner()
+      }).participants()
     },
     defaultCourse(root, args, context) {
       return context.prisma.workspace({

@@ -7,6 +7,10 @@ const project = require('./Project')
 const url = require('./URL')
 const resource = require('./Resource')
 const user = require('./User')
+const workspaceToken = require('./WorkspaceToken')
+const projectToken = require('./ProjectToken')
+const workspaceParticipant = require('./WorkspaceParticipant')
+const projectParticipant = require('./ProjectParticipant')
 
 module.exports = {
   ...concept,
@@ -17,5 +21,9 @@ module.exports = {
   ...project,
   ...url,
   ...resource,
-  ...user
+  ...user,
+  ...workspaceToken,
+  ...projectToken,
+  ...workspaceParticipant,
+  ...projectParticipant
 }

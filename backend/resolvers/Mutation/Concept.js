@@ -1,8 +1,12 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const ConceptMutations = {
   async createConcept(root, { name, description, official, courseId, workspaceId }, context) {
-    checkAccess(context, { allowGuest:true, allowStudent: true, allowStaff: true })
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
+    })
     const data = {
       name,
       createdBy: { connect: { id: context.user.id } },
@@ -12,50 +16,34 @@ const ConceptMutations = {
     if (official !== undefined) data.official = official
     if (courseId !== undefined) data.courses = { connect: [{ id: courseId }] }
 
-    return context.prisma.createConcept(data)
+    return await context.prisma.createConcept(data)
   },
 
   async updateConcept(root, { id, name, description }, context) {
-    const user = await context.prisma.concept({ id }).createdBy()
-    checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id
+    const { id: workspaceId } = await context.prisma.concept({ id }).workspace()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     const data = {}
     if (name !== undefined) data.name = name
     if (description !== undefined) data.description = description
 
-    return context.prisma.updateConcept({
+    return await context.prisma.updateConcept({
       where: { id },
       data: data
     })
   },
 
-  async deleteConcept(root, args, context) {
-    const user = await context.prisma.concept({
-      id: args.id
-    }).createdBy()
-    checkAccess(context, {
-      allowGuest: true, allowStudent: true, allowStaff: true, verifyUser: true, userId: user.id
+  async deleteConcept(root, { id }, context) {
+    const { workspaceId } = await context.prisma.concept({ id }).workspace()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
-    await context.prisma.deleteManyConceptLinks({
-      OR: [
-        {
-          from: {
-            id: args.id
-          }
-
-        },
-        {
-          to: {
-            id: args.id
-          }
-        }
-      ]
-
-    })
-    return context.prisma.deleteConcept({
-      id: args.id
-    })
+    return await context.prisma.deleteConcept({ id })
   }
 }
 

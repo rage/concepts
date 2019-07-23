@@ -12,7 +12,7 @@ import {
   UPDATE_PROJECT
 } from '../../graphql/Mutation'
 
-import { WORKSPACES_BY_OWNER, PROJECTS_BY_OWNER } from '../../graphql/Query'
+import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
 
 import WorkspaceList from '../workspace/WorkspaceList'
 import ProjectList from '../project/ProjectList'
@@ -30,79 +30,59 @@ const useStyles = makeStyles(() => ({
 }))
 
 const StaffView = ({ userId }) => {
-  const workspaceQuery = useQuery(WORKSPACES_BY_OWNER, {
-    variables: {
-      ownerId: userId
-    }
-  })
+  const workspaceQuery = useQuery(WORKSPACES_FOR_USER)
 
-  const projectQuery = useQuery(PROJECTS_BY_OWNER, {
-    variables: {
-      ownerId: userId
-    }
-  })
+  const projectQuery = useQuery(PROJECTS_FOR_USER)
 
   const createWorkspace = useMutation(CREATE_WORKSPACE, {
     refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
-      }
+      query: WORKSPACES_FOR_USER
     }]
   })
 
   const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
-      }
+      query: WORKSPACES_FOR_USER
     }]
   })
 
   const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
     refetchQueries: [{
-      query: WORKSPACES_BY_OWNER, variables: {
-        ownerId: userId
-      }
+      query: WORKSPACES_FOR_USER
     }]
   })
 
   const createProject = useMutation(CREATE_PROJECT, {
     refetchQueries: [{
-      query: PROJECTS_BY_OWNER, variables: {
-        ownerId: userId
-      }
+      query: WORKSPACES_FOR_USER
     }]
   })
 
   const deleteProject = useMutation(DELETE_PROJECT, {
     refetchQueries: [{
-      query: PROJECTS_BY_OWNER, variables: {
-        ownerId: userId
-      }
+      query: PROJECTS_FOR_USER
     }]
   })
 
   const updateProject = useMutation(UPDATE_PROJECT, {
     refetchQueries: [{
-      query: PROJECTS_BY_OWNER, variables: {
-        ownerId: userId
-      }
+      query: PROJECTS_FOR_USER
     }]
   })
 
   const classes = useStyles()
 
   return (
-    workspaceQuery.data.workspacesByOwner && projectQuery.data.projectsByOwner ?
+    workspaceQuery.data.workspacesForUser && projectQuery.data.projectsForUser ?
       <div className={classes.root}>
         <WorkspaceList
-          workspaces={workspaceQuery.data.workspacesByOwner}
+          workspaces={workspaceQuery.data.workspacesForUser.map(ws => ws.workspace)}
           updateWorkspace={updateWorkspace}
           createWorkspace={createWorkspace}
           deleteWorkspace={deleteWorkspace}
         />
         <ProjectList
-          projects={projectQuery.data.projectsByOwner}
+          projects={projectQuery.data.projectsForUser.map(p => p.project)}
           updateProject={updateProject}
           createProject={createProject}
           deleteProject={deleteProject}

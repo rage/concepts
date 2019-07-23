@@ -1,5 +1,3 @@
-scalar DateTime
-
 type Query {
   # Authentication
   allUsers: [User!]!
@@ -8,12 +6,12 @@ type Query {
   # Workspace queries
   allWorkspaces: [Workspace!]!
   workspaceById(id: ID!): Workspace
-  workspacesByOwner(ownerId: ID!): [Workspace!]!
+  workspacesForUser: [WorkspaceParticipant!]!
 
   # Project queries
   allProjects: [Project!]!
   projectById(id: ID!): Project
-  projectsByOwner(ownerId: ID!): [Project!]!
+  projectsForUser: [ProjectParticipant!]!
 
   # Course queries
   allCourses: [Course!]!
@@ -29,7 +27,7 @@ type Query {
   # Concept queries
   allConcepts: [Concept!]!
   conceptById(id: ID!): Concept
-  
+
   # Concept link queries
   allConceptLinks: [ConceptLink!]!
   linksToConcept(id: ID!): [ConceptLink!]!
@@ -52,14 +50,12 @@ type Mutation {
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
   deleteConcept(id: ID!): Concept
   updateConcept(id: ID!, name:String, description: String, official: Boolean): Concept
-  
+
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
   deleteCourseLink(id: ID!): CourseLink
-  
+
   # Concept link mutations
-  createConceptLinks(to: ID!, from:[ID!]!, workspaceId: ID!, official: Boolean): [ConceptLink!]!
-  deleteConceptLinks(ids: [ID!]): [ConceptLink!]!
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
   deleteConceptLink(id: ID!): ConceptLink
 
@@ -73,7 +69,6 @@ type Mutation {
   addDefaultCourseForWorkspace(courseId: ID!, workspaceId: ID!): Workspace
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String!): Workspace
-  createGuestWorkspace(name: String!): Workspace
 
   # Porting mutations
   importData(data: String!): Workspace
@@ -85,13 +80,19 @@ type Mutation {
   # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
 }
 
+type AuthPayload {
+  token: String!
+  user: User!
+}
+scalar DateTime
+
 type User {
   id: ID!
-  tmcId: Int!
+  tmcId: Int
   role: Role!
-  asWorkspaceOwner: [Workspace!]!
-  asProjectOwner: [Project!]!
-  asProjectParticipant: [Project!]!
+  workspaceParticipations: [WorkspaceParticipant!]!
+  projectParticipations: [ProjectParticipant!]!
+  createdAt: DateTime!
   guideProgress: Int!
 }
 
@@ -102,68 +103,68 @@ enum Role {
   ADMIN
 }
 
+enum Privilege {
+  VIEW,
+  EDIT,
+  INVITE,
+  OWNER
+}
+
 type Project {
   id: ID!
   name: String!
-  owner: User!
-  participants: [User!]!
   workspaces: [Workspace!]!
   template: Workspace
+  participants: [ProjectParticipant!]!
+  tokens: [ProjectToken!]!
 }
 
 type Workspace {
   id: ID!
   name: String!
   project: Project
-  owner: User
   public: Boolean!
   defaultCourse: Course
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  participants: [WorkspaceParticipant!]!
+  tokens: [WorkspaceToken!]!
 }
 
-type AuthPayload {
-  token: String!
+type WorkspaceParticipant {
+  id: ID!
+  privilege: Privilege!
+  workspace: Workspace!
+  token: WorkspaceToken
   user: User!
 }
 
-type Course {
+type ProjectParticipant {
   id: ID!
-  name: String!
-  createdBy: User!
-  linksFromCourse: [CourseLink!]! 
-  linksToCourse: [CourseLink!]! 
-  concepts: [Concept!]! 
-  workspace: Workspace! 
+  privilege: Privilege!
+  project: Project!
+  token: ProjectToken
+  user: User!
 }
 
-type Concept {
+type WorkspaceToken {
   id: ID!
-  name: String!
-  description: String
-  official: Boolean!
-  createdBy: User!
-  linksFromConcept: [ConceptLink!]! 
-  linksToConcept: [ConceptLink!]! 
-  courses: [Course!]! 
-  resources: [Resource!]!
-  workspace: Workspace! 
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+  workspace: Workspace!
+  participants: [WorkspaceParticipant!]!
 }
 
-type Resource {
+type ProjectToken {
   id: ID!
-  concept: [Concept]!
-  name: String!
-  description: String!
-  urls: [URL!]!
-}
-
-type URL {
-  id: ID!
-  address: String!
-  resource: Resource!
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+  project: Project!
+  participants: [ProjectParticipant!]!
 }
 
 type CourseLink {
@@ -175,11 +176,48 @@ type CourseLink {
   workspace: Workspace!
 }
 
+type Course {
+  id: ID!
+  name: String!
+  createdBy: User!
+  linksFromCourse: [CourseLink!]!
+  linksToCourse: [CourseLink!]!
+  concepts: [Concept!]!
+  workspace: Workspace!
+}
+
 type ConceptLink {
   id: ID!
   from: Concept!
   to: Concept!
   official: Boolean!
-  createdBy: User!
   workspace: Workspace!
+  createdBy: User!
+}
+
+type Concept {
+  id: ID!
+  name: String!
+  description: String
+  official: Boolean!
+  createdBy: User!
+  linksFromConcept: [ConceptLink!]!
+  linksToConcept: [ConceptLink!]!
+  courses: [Course!]!
+  resources: [Resource!]!
+  workspace: Workspace!
+}
+
+type Resource {
+  id: ID!
+  concept: Concept!
+  name: String!
+  description: String!
+  urls: [URL!]!
+}
+
+type URL {
+  id: ID!
+  address: String!
+  resource: Resource!
 }

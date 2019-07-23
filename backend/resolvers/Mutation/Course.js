@@ -1,48 +1,45 @@
-const { checkAccess } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const CourseQueries = {
-  createCourse(root, args, context) {
-    checkAccess(context, { allowGuest:true, allowStaff: true, allowStudent: true })
+  async createCourse(root, { name, workspaceId }, context) {
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
+    })
     return context.prisma.createCourse({
-      name: args.name,
+      name: name,
       createdBy: { connect: { id: context.user.id } },
-      workspace: { connect: { id: args.workspaceId } }
+      workspace: { connect: { id: workspaceId } }
     })
   },
 
-  async deleteCourse(root, args, context) {
-    const user = await context.prisma.courseLink({ id: args.id }).createdBy()
-    checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
+  async deleteCourse(root, { id }, context) {
+    const { id: workspaceId } = await context.prisma.courseLink({ id }).workspace()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     await context.prisma.deleteManyCourseLinks({
       OR: [
-        {
-          from: {
-            id: args.id
-          }
-
-        },
-        {
-          to: {
-            id: args.id
-          }
-        }
+        { from: { id } },
+        { to: { id } }
       ]
     })
-    return context.prisma.deleteCourse({
-      id: args.id
-    })
+    return await context.prisma.deleteCourse({ id })
   },
 
-  async updateCourse(root, args, context) {
-    const user = await context.prisma.course({ id: args.id }).createdBy()
-    checkAccess(context, {
-      allowGuest: true, allowStaff: true, allowStudent: true, verifyUser: true, userId: user.id
+  async updateCourse(root, { id, name }, context) {
+    const { id: workspaceId } = await context.prisma.course({ id }).workspace()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
     })
     return await context.prisma.updateCourse({
-      where: { id: args.id },
-      data: { name: args.name }
+      where: { id },
+      data: { name }
     })
   }
 }
