@@ -57,17 +57,16 @@ const App = ({ classes }) => {
   const { loggedIn } = useLoginStateValue()[0]
 
   // Error handling
-  const { error, notification } = useMessageStateValue()[0]
-  const dispatchError = useMessageStateValue()[1]
+  const [{ error, notification }, dispatchMessage] = useMessageStateValue()
 
   const handleCloseErrorMessage = () => {
-    dispatchError({
+    dispatchMessage({
       type: 'clearError'
     })
   }
 
   const handleCloseNotificationMessage = () => {
-    dispatchError({
+    dispatchMessage({
       type: 'clearNotification'
     })
   }
