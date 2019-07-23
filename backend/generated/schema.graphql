@@ -154,6 +154,7 @@ type WorkspaceToken {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  workspace: Workspace!
   participants: [WorkspaceParticipant!]!
 }
 
@@ -162,6 +163,7 @@ type ProjectToken {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  project: Project!
   participants: [ProjectParticipant!]!
 }
 

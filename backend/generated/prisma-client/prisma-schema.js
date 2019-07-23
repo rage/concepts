@@ -1505,11 +1505,16 @@ input ProjectCreateInput {
   workspaces: WorkspaceCreateManyWithoutProjectInput
   template: WorkspaceCreateOneInput
   participants: ProjectParticipantCreateManyWithoutProjectInput
-  tokens: ProjectTokenCreateManyInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
 }
 
 input ProjectCreateOneWithoutParticipantsInput {
   create: ProjectCreateWithoutParticipantsInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutTokensInput {
+  create: ProjectCreateWithoutTokensInput
   connect: ProjectWhereUniqueInput
 }
 
@@ -1523,7 +1528,15 @@ input ProjectCreateWithoutParticipantsInput {
   name: String!
   workspaces: WorkspaceCreateManyWithoutProjectInput
   template: WorkspaceCreateOneInput
-  tokens: ProjectTokenCreateManyInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutTokensInput {
+  id: ID
+  name: String!
+  workspaces: WorkspaceCreateManyWithoutProjectInput
+  template: WorkspaceCreateOneInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
 }
 
 input ProjectCreateWithoutWorkspacesInput {
@@ -1531,7 +1544,7 @@ input ProjectCreateWithoutWorkspacesInput {
   name: String!
   template: WorkspaceCreateOneInput
   participants: ProjectParticipantCreateManyWithoutProjectInput
-  tokens: ProjectTokenCreateManyInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
 }
 
 type ProjectEdge {
@@ -1829,6 +1842,7 @@ type ProjectToken {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  project: Project!
   participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
 }
 
@@ -1843,11 +1857,12 @@ input ProjectTokenCreateInput {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  project: ProjectCreateOneWithoutTokensInput!
   participants: ProjectParticipantCreateManyWithoutTokenInput
 }
 
-input ProjectTokenCreateManyInput {
-  create: [ProjectTokenCreateInput!]
+input ProjectTokenCreateManyWithoutProjectInput {
+  create: [ProjectTokenCreateWithoutProjectInput!]
   connect: [ProjectTokenWhereUniqueInput!]
 }
 
@@ -1861,6 +1876,15 @@ input ProjectTokenCreateWithoutParticipantsInput {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  project: ProjectCreateOneWithoutTokensInput!
+}
+
+input ProjectTokenCreateWithoutProjectInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+  participants: ProjectParticipantCreateManyWithoutTokenInput
 }
 
 type ProjectTokenEdge {
@@ -1944,17 +1968,11 @@ input ProjectTokenSubscriptionWhereInput {
   NOT: [ProjectTokenSubscriptionWhereInput!]
 }
 
-input ProjectTokenUpdateDataInput {
-  privilege: Privilege
-  revoked: Boolean
-  secret: String
-  participants: ProjectParticipantUpdateManyWithoutTokenInput
-}
-
 input ProjectTokenUpdateInput {
   privilege: Privilege
   revoked: Boolean
   secret: String
+  project: ProjectUpdateOneRequiredWithoutTokensInput
   participants: ProjectParticipantUpdateManyWithoutTokenInput
 }
 
@@ -1964,22 +1982,22 @@ input ProjectTokenUpdateManyDataInput {
   secret: String
 }
 
-input ProjectTokenUpdateManyInput {
-  create: [ProjectTokenCreateInput!]
-  update: [ProjectTokenUpdateWithWhereUniqueNestedInput!]
-  upsert: [ProjectTokenUpsertWithWhereUniqueNestedInput!]
-  delete: [ProjectTokenWhereUniqueInput!]
-  connect: [ProjectTokenWhereUniqueInput!]
-  set: [ProjectTokenWhereUniqueInput!]
-  disconnect: [ProjectTokenWhereUniqueInput!]
-  deleteMany: [ProjectTokenScalarWhereInput!]
-  updateMany: [ProjectTokenUpdateManyWithWhereNestedInput!]
-}
-
 input ProjectTokenUpdateManyMutationInput {
   privilege: Privilege
   revoked: Boolean
   secret: String
+}
+
+input ProjectTokenUpdateManyWithoutProjectInput {
+  create: [ProjectTokenCreateWithoutProjectInput!]
+  delete: [ProjectTokenWhereUniqueInput!]
+  connect: [ProjectTokenWhereUniqueInput!]
+  set: [ProjectTokenWhereUniqueInput!]
+  disconnect: [ProjectTokenWhereUniqueInput!]
+  update: [ProjectTokenUpdateWithWhereUniqueWithoutProjectInput!]
+  upsert: [ProjectTokenUpsertWithWhereUniqueWithoutProjectInput!]
+  deleteMany: [ProjectTokenScalarWhereInput!]
+  updateMany: [ProjectTokenUpdateManyWithWhereNestedInput!]
 }
 
 input ProjectTokenUpdateManyWithWhereNestedInput {
@@ -2000,11 +2018,19 @@ input ProjectTokenUpdateWithoutParticipantsDataInput {
   privilege: Privilege
   revoked: Boolean
   secret: String
+  project: ProjectUpdateOneRequiredWithoutTokensInput
 }
 
-input ProjectTokenUpdateWithWhereUniqueNestedInput {
+input ProjectTokenUpdateWithoutProjectDataInput {
+  privilege: Privilege
+  revoked: Boolean
+  secret: String
+  participants: ProjectParticipantUpdateManyWithoutTokenInput
+}
+
+input ProjectTokenUpdateWithWhereUniqueWithoutProjectInput {
   where: ProjectTokenWhereUniqueInput!
-  data: ProjectTokenUpdateDataInput!
+  data: ProjectTokenUpdateWithoutProjectDataInput!
 }
 
 input ProjectTokenUpsertWithoutParticipantsInput {
@@ -2012,10 +2038,10 @@ input ProjectTokenUpsertWithoutParticipantsInput {
   create: ProjectTokenCreateWithoutParticipantsInput!
 }
 
-input ProjectTokenUpsertWithWhereUniqueNestedInput {
+input ProjectTokenUpsertWithWhereUniqueWithoutProjectInput {
   where: ProjectTokenWhereUniqueInput!
-  update: ProjectTokenUpdateDataInput!
-  create: ProjectTokenCreateInput!
+  update: ProjectTokenUpdateWithoutProjectDataInput!
+  create: ProjectTokenCreateWithoutProjectInput!
 }
 
 input ProjectTokenWhereInput {
@@ -2053,6 +2079,7 @@ input ProjectTokenWhereInput {
   secret_not_starts_with: String
   secret_ends_with: String
   secret_not_ends_with: String
+  project: ProjectWhereInput
   participants_every: ProjectParticipantWhereInput
   participants_some: ProjectParticipantWhereInput
   participants_none: ProjectParticipantWhereInput
@@ -2070,7 +2097,7 @@ input ProjectUpdateInput {
   workspaces: WorkspaceUpdateManyWithoutProjectInput
   template: WorkspaceUpdateOneInput
   participants: ProjectParticipantUpdateManyWithoutProjectInput
-  tokens: ProjectTokenUpdateManyInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateManyMutationInput {
@@ -2081,6 +2108,13 @@ input ProjectUpdateOneRequiredWithoutParticipantsInput {
   create: ProjectCreateWithoutParticipantsInput
   update: ProjectUpdateWithoutParticipantsDataInput
   upsert: ProjectUpsertWithoutParticipantsInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectUpdateOneRequiredWithoutTokensInput {
+  create: ProjectCreateWithoutTokensInput
+  update: ProjectUpdateWithoutTokensDataInput
+  upsert: ProjectUpsertWithoutTokensInput
   connect: ProjectWhereUniqueInput
 }
 
@@ -2097,19 +2131,31 @@ input ProjectUpdateWithoutParticipantsDataInput {
   name: String
   workspaces: WorkspaceUpdateManyWithoutProjectInput
   template: WorkspaceUpdateOneInput
-  tokens: ProjectTokenUpdateManyInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutTokensDataInput {
+  name: String
+  workspaces: WorkspaceUpdateManyWithoutProjectInput
+  template: WorkspaceUpdateOneInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
 }
 
 input ProjectUpdateWithoutWorkspacesDataInput {
   name: String
   template: WorkspaceUpdateOneInput
   participants: ProjectParticipantUpdateManyWithoutProjectInput
-  tokens: ProjectTokenUpdateManyInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
 }
 
 input ProjectUpsertWithoutParticipantsInput {
   update: ProjectUpdateWithoutParticipantsDataInput!
   create: ProjectCreateWithoutParticipantsInput!
+}
+
+input ProjectUpsertWithoutTokensInput {
+  update: ProjectUpdateWithoutTokensDataInput!
+  create: ProjectCreateWithoutTokensInput!
 }
 
 input ProjectUpsertWithoutWorkspacesInput {
@@ -2931,7 +2977,7 @@ input WorkspaceCreateInput {
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateManyWithoutProjectInput {
@@ -2969,6 +3015,11 @@ input WorkspaceCreateOneWithoutParticipantsInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceCreateOneWithoutTokensInput {
+  create: WorkspaceCreateWithoutTokensInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceCreateWithoutConceptLinksInput {
   id: ID
   name: String!
@@ -2979,7 +3030,7 @@ input WorkspaceCreateWithoutConceptLinksInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateWithoutConceptsInput {
@@ -2992,7 +3043,7 @@ input WorkspaceCreateWithoutConceptsInput {
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateWithoutCourseLinksInput {
@@ -3005,7 +3056,7 @@ input WorkspaceCreateWithoutCourseLinksInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateWithoutCoursesInput {
@@ -3018,7 +3069,7 @@ input WorkspaceCreateWithoutCoursesInput {
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateWithoutParticipantsInput {
@@ -3031,7 +3082,7 @@ input WorkspaceCreateWithoutParticipantsInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateWithoutProjectInput {
@@ -3044,7 +3095,20 @@ input WorkspaceCreateWithoutProjectInput {
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+}
+
+input WorkspaceCreateWithoutTokensInput {
+  id: ID
+  name: String!
+  project: ProjectCreateOneWithoutWorkspacesInput
+  public: Boolean
+  defaultCourse: CourseCreateOneInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
 }
 
 type WorkspaceEdge {
@@ -3381,6 +3445,7 @@ type WorkspaceToken {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  workspace: Workspace!
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
 }
 
@@ -3395,11 +3460,12 @@ input WorkspaceTokenCreateInput {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  workspace: WorkspaceCreateOneWithoutTokensInput!
   participants: WorkspaceParticipantCreateManyWithoutTokenInput
 }
 
-input WorkspaceTokenCreateManyInput {
-  create: [WorkspaceTokenCreateInput!]
+input WorkspaceTokenCreateManyWithoutWorkspaceInput {
+  create: [WorkspaceTokenCreateWithoutWorkspaceInput!]
   connect: [WorkspaceTokenWhereUniqueInput!]
 }
 
@@ -3413,6 +3479,15 @@ input WorkspaceTokenCreateWithoutParticipantsInput {
   privilege: Privilege!
   revoked: Boolean!
   secret: String!
+  workspace: WorkspaceCreateOneWithoutTokensInput!
+}
+
+input WorkspaceTokenCreateWithoutWorkspaceInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  secret: String!
+  participants: WorkspaceParticipantCreateManyWithoutTokenInput
 }
 
 type WorkspaceTokenEdge {
@@ -3496,17 +3571,11 @@ input WorkspaceTokenSubscriptionWhereInput {
   NOT: [WorkspaceTokenSubscriptionWhereInput!]
 }
 
-input WorkspaceTokenUpdateDataInput {
-  privilege: Privilege
-  revoked: Boolean
-  secret: String
-  participants: WorkspaceParticipantUpdateManyWithoutTokenInput
-}
-
 input WorkspaceTokenUpdateInput {
   privilege: Privilege
   revoked: Boolean
   secret: String
+  workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
   participants: WorkspaceParticipantUpdateManyWithoutTokenInput
 }
 
@@ -3516,22 +3585,22 @@ input WorkspaceTokenUpdateManyDataInput {
   secret: String
 }
 
-input WorkspaceTokenUpdateManyInput {
-  create: [WorkspaceTokenCreateInput!]
-  update: [WorkspaceTokenUpdateWithWhereUniqueNestedInput!]
-  upsert: [WorkspaceTokenUpsertWithWhereUniqueNestedInput!]
-  delete: [WorkspaceTokenWhereUniqueInput!]
-  connect: [WorkspaceTokenWhereUniqueInput!]
-  set: [WorkspaceTokenWhereUniqueInput!]
-  disconnect: [WorkspaceTokenWhereUniqueInput!]
-  deleteMany: [WorkspaceTokenScalarWhereInput!]
-  updateMany: [WorkspaceTokenUpdateManyWithWhereNestedInput!]
-}
-
 input WorkspaceTokenUpdateManyMutationInput {
   privilege: Privilege
   revoked: Boolean
   secret: String
+}
+
+input WorkspaceTokenUpdateManyWithoutWorkspaceInput {
+  create: [WorkspaceTokenCreateWithoutWorkspaceInput!]
+  delete: [WorkspaceTokenWhereUniqueInput!]
+  connect: [WorkspaceTokenWhereUniqueInput!]
+  set: [WorkspaceTokenWhereUniqueInput!]
+  disconnect: [WorkspaceTokenWhereUniqueInput!]
+  update: [WorkspaceTokenUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [WorkspaceTokenUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [WorkspaceTokenScalarWhereInput!]
+  updateMany: [WorkspaceTokenUpdateManyWithWhereNestedInput!]
 }
 
 input WorkspaceTokenUpdateManyWithWhereNestedInput {
@@ -3552,11 +3621,19 @@ input WorkspaceTokenUpdateWithoutParticipantsDataInput {
   privilege: Privilege
   revoked: Boolean
   secret: String
+  workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
 }
 
-input WorkspaceTokenUpdateWithWhereUniqueNestedInput {
+input WorkspaceTokenUpdateWithoutWorkspaceDataInput {
+  privilege: Privilege
+  revoked: Boolean
+  secret: String
+  participants: WorkspaceParticipantUpdateManyWithoutTokenInput
+}
+
+input WorkspaceTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: WorkspaceTokenWhereUniqueInput!
-  data: WorkspaceTokenUpdateDataInput!
+  data: WorkspaceTokenUpdateWithoutWorkspaceDataInput!
 }
 
 input WorkspaceTokenUpsertWithoutParticipantsInput {
@@ -3564,10 +3641,10 @@ input WorkspaceTokenUpsertWithoutParticipantsInput {
   create: WorkspaceTokenCreateWithoutParticipantsInput!
 }
 
-input WorkspaceTokenUpsertWithWhereUniqueNestedInput {
+input WorkspaceTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
   where: WorkspaceTokenWhereUniqueInput!
-  update: WorkspaceTokenUpdateDataInput!
-  create: WorkspaceTokenCreateInput!
+  update: WorkspaceTokenUpdateWithoutWorkspaceDataInput!
+  create: WorkspaceTokenCreateWithoutWorkspaceInput!
 }
 
 input WorkspaceTokenWhereInput {
@@ -3605,6 +3682,7 @@ input WorkspaceTokenWhereInput {
   secret_not_starts_with: String
   secret_ends_with: String
   secret_not_ends_with: String
+  workspace: WorkspaceWhereInput
   participants_every: WorkspaceParticipantWhereInput
   participants_some: WorkspaceParticipantWhereInput
   participants_none: WorkspaceParticipantWhereInput
@@ -3627,7 +3705,7 @@ input WorkspaceUpdateDataInput {
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateInput {
@@ -3640,7 +3718,7 @@ input WorkspaceUpdateInput {
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateManyDataInput {
@@ -3714,6 +3792,13 @@ input WorkspaceUpdateOneRequiredWithoutParticipantsInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceUpdateOneRequiredWithoutTokensInput {
+  create: WorkspaceCreateWithoutTokensInput
+  update: WorkspaceUpdateWithoutTokensDataInput
+  upsert: WorkspaceUpsertWithoutTokensInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceUpdateWithoutConceptLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
@@ -3723,7 +3808,7 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithoutConceptsDataInput {
@@ -3735,7 +3820,7 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithoutCourseLinksDataInput {
@@ -3747,7 +3832,7 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithoutCoursesDataInput {
@@ -3759,7 +3844,7 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithoutParticipantsDataInput {
@@ -3771,7 +3856,7 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithoutProjectDataInput {
@@ -3783,7 +3868,19 @@ input WorkspaceUpdateWithoutProjectDataInput {
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+}
+
+input WorkspaceUpdateWithoutTokensDataInput {
+  name: String
+  project: ProjectUpdateOneWithoutWorkspacesInput
+  public: Boolean
+  defaultCourse: CourseUpdateOneInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithWhereUniqueWithoutProjectInput {
@@ -3819,6 +3916,11 @@ input WorkspaceUpsertWithoutCoursesInput {
 input WorkspaceUpsertWithoutParticipantsInput {
   update: WorkspaceUpdateWithoutParticipantsDataInput!
   create: WorkspaceCreateWithoutParticipantsInput!
+}
+
+input WorkspaceUpsertWithoutTokensInput {
+  update: WorkspaceUpdateWithoutTokensDataInput!
+  create: WorkspaceCreateWithoutTokensInput!
 }
 
 input WorkspaceUpsertWithWhereUniqueWithoutProjectInput {
