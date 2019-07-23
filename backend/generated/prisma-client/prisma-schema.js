@@ -1812,7 +1812,6 @@ type ProjectToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: Project!
   participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
 }
@@ -1827,7 +1826,6 @@ input ProjectTokenCreateInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: ProjectCreateOneWithoutTokensInput!
   participants: ProjectParticipantCreateManyWithoutTokenInput
 }
@@ -1846,7 +1844,6 @@ input ProjectTokenCreateWithoutParticipantsInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: ProjectCreateOneWithoutTokensInput!
 }
 
@@ -1854,7 +1851,6 @@ input ProjectTokenCreateWithoutProjectInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   participants: ProjectParticipantCreateManyWithoutTokenInput
 }
 
@@ -1870,15 +1866,12 @@ enum ProjectTokenOrderByInput {
   privilege_DESC
   revoked_ASC
   revoked_DESC
-  secret_ASC
-  secret_DESC
 }
 
 type ProjectTokenPreviousValues {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
 }
 
 input ProjectTokenScalarWhereInput {
@@ -1902,20 +1895,6 @@ input ProjectTokenScalarWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   AND: [ProjectTokenScalarWhereInput!]
   OR: [ProjectTokenScalarWhereInput!]
   NOT: [ProjectTokenScalarWhereInput!]
@@ -1942,7 +1921,6 @@ input ProjectTokenSubscriptionWhereInput {
 input ProjectTokenUpdateInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   project: ProjectUpdateOneRequiredWithoutTokensInput
   participants: ProjectParticipantUpdateManyWithoutTokenInput
 }
@@ -1950,13 +1928,11 @@ input ProjectTokenUpdateInput {
 input ProjectTokenUpdateManyDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input ProjectTokenUpdateManyMutationInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input ProjectTokenUpdateManyWithoutProjectInput {
@@ -1988,14 +1964,12 @@ input ProjectTokenUpdateOneWithoutParticipantsInput {
 input ProjectTokenUpdateWithoutParticipantsDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   project: ProjectUpdateOneRequiredWithoutTokensInput
 }
 
 input ProjectTokenUpdateWithoutProjectDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   participants: ProjectParticipantUpdateManyWithoutTokenInput
 }
 
@@ -2036,20 +2010,6 @@ input ProjectTokenWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   project: ProjectWhereInput
   participants_every: ProjectParticipantWhereInput
   participants_some: ProjectParticipantWhereInput
@@ -3392,7 +3352,6 @@ type WorkspaceToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: Workspace!
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
 }
@@ -3407,7 +3366,6 @@ input WorkspaceTokenCreateInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: WorkspaceCreateOneWithoutTokensInput!
   participants: WorkspaceParticipantCreateManyWithoutTokenInput
 }
@@ -3426,7 +3384,6 @@ input WorkspaceTokenCreateWithoutParticipantsInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: WorkspaceCreateOneWithoutTokensInput!
 }
 
@@ -3434,7 +3391,6 @@ input WorkspaceTokenCreateWithoutWorkspaceInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   participants: WorkspaceParticipantCreateManyWithoutTokenInput
 }
 
@@ -3450,15 +3406,12 @@ enum WorkspaceTokenOrderByInput {
   privilege_DESC
   revoked_ASC
   revoked_DESC
-  secret_ASC
-  secret_DESC
 }
 
 type WorkspaceTokenPreviousValues {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
 }
 
 input WorkspaceTokenScalarWhereInput {
@@ -3482,20 +3435,6 @@ input WorkspaceTokenScalarWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   AND: [WorkspaceTokenScalarWhereInput!]
   OR: [WorkspaceTokenScalarWhereInput!]
   NOT: [WorkspaceTokenScalarWhereInput!]
@@ -3522,7 +3461,6 @@ input WorkspaceTokenSubscriptionWhereInput {
 input WorkspaceTokenUpdateInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
   participants: WorkspaceParticipantUpdateManyWithoutTokenInput
 }
@@ -3530,13 +3468,11 @@ input WorkspaceTokenUpdateInput {
 input WorkspaceTokenUpdateManyDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input WorkspaceTokenUpdateManyMutationInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input WorkspaceTokenUpdateManyWithoutWorkspaceInput {
@@ -3568,14 +3504,12 @@ input WorkspaceTokenUpdateOneWithoutParticipantsInput {
 input WorkspaceTokenUpdateWithoutParticipantsDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
 }
 
 input WorkspaceTokenUpdateWithoutWorkspaceDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   participants: WorkspaceParticipantUpdateManyWithoutTokenInput
 }
 
@@ -3616,20 +3550,6 @@ input WorkspaceTokenWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   workspace: WorkspaceWhereInput
   participants_every: WorkspaceParticipantWhereInput
   participants_some: WorkspaceParticipantWhereInput

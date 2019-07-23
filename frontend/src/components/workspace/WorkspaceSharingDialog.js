@@ -4,11 +4,30 @@ import {
   Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField
 } from '@material-ui/core'
 
-const WorkspaceSharingDialog = ({ open, workspace, handleClose  }) => {
+import { useErrorStateValue } from '../../store'
+
+const WorkspaceSharingDialog = ({ open, workspace, handleClose, createShareLink }) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
+  const errorDispatch = useErrorStateValue()[1]
 
   const handleRegenerate = () => {
     setSubmitDisabled(true)
+    createShareLink({
+      variables: {
+        workspaceId: workspace.id,
+        privilege: 'EDIT'
+      }
+    }).catch(() => errorDispatch({
+      type: 'setError',
+      data: 'Access denied'
+    })).then(() => setSubmitDisabled(false))
+  }
+
+  let url = 'No share links created'
+  if (workspace && workspace.tokens.length > 0) {
+    const realURL = new URL(window.location)
+    realURL.pathname = `/join/w${workspace.tokens[0].id}`
+    url = <a href={realURL}>{realURL.host}{realURL.pathname}</a>
   }
 
   return (
@@ -22,17 +41,9 @@ const WorkspaceSharingDialog = ({ open, workspace, handleClose  }) => {
         <DialogContentText>
           Let other users view and edit your workspace
         </DialogContentText>
-        <TextField
-          autoFocus
-          disabled
-          margin='dense'
-          id='link'
-          label='Link'
-          type='text'
-          value={workspace && workspace.tokens.length ?
-            workspace.tokens[0].id : 'No share links created'}
-          fullWidth
-        />
+        <DialogContentText>
+          {url}
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button

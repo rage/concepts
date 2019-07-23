@@ -635,9 +635,7 @@ export type ProjectTokenOrderByInput =
   | "privilege_ASC"
   | "privilege_DESC"
   | "revoked_ASC"
-  | "revoked_DESC"
-  | "secret_ASC"
-  | "secret_DESC";
+  | "revoked_DESC";
 
 export type CourseOrderByInput =
   | "id_ASC"
@@ -673,9 +671,7 @@ export type WorkspaceTokenOrderByInput =
   | "privilege_ASC"
   | "privilege_DESC"
   | "revoked_ASC"
-  | "revoked_DESC"
-  | "secret_ASC"
-  | "secret_DESC";
+  | "revoked_DESC";
 
 export type ResourceOrderByInput =
   | "id_ASC"
@@ -891,20 +887,6 @@ export interface ProjectTokenWhereInput {
   privilege_not_in?: Maybe<Privilege[] | Privilege>;
   revoked?: Maybe<Boolean>;
   revoked_not?: Maybe<Boolean>;
-  secret?: Maybe<String>;
-  secret_not?: Maybe<String>;
-  secret_in?: Maybe<String[] | String>;
-  secret_not_in?: Maybe<String[] | String>;
-  secret_lt?: Maybe<String>;
-  secret_lte?: Maybe<String>;
-  secret_gt?: Maybe<String>;
-  secret_gte?: Maybe<String>;
-  secret_contains?: Maybe<String>;
-  secret_not_contains?: Maybe<String>;
-  secret_starts_with?: Maybe<String>;
-  secret_not_starts_with?: Maybe<String>;
-  secret_ends_with?: Maybe<String>;
-  secret_not_ends_with?: Maybe<String>;
   project?: Maybe<ProjectWhereInput>;
   participants_every?: Maybe<ProjectParticipantWhereInput>;
   participants_some?: Maybe<ProjectParticipantWhereInput>;
@@ -1237,20 +1219,6 @@ export interface WorkspaceTokenWhereInput {
   privilege_not_in?: Maybe<Privilege[] | Privilege>;
   revoked?: Maybe<Boolean>;
   revoked_not?: Maybe<Boolean>;
-  secret?: Maybe<String>;
-  secret_not?: Maybe<String>;
-  secret_in?: Maybe<String[] | String>;
-  secret_not_in?: Maybe<String[] | String>;
-  secret_lt?: Maybe<String>;
-  secret_lte?: Maybe<String>;
-  secret_gt?: Maybe<String>;
-  secret_gte?: Maybe<String>;
-  secret_contains?: Maybe<String>;
-  secret_not_contains?: Maybe<String>;
-  secret_starts_with?: Maybe<String>;
-  secret_not_starts_with?: Maybe<String>;
-  secret_ends_with?: Maybe<String>;
-  secret_not_ends_with?: Maybe<String>;
   workspace?: Maybe<WorkspaceWhereInput>;
   participants_every?: Maybe<WorkspaceParticipantWhereInput>;
   participants_some?: Maybe<WorkspaceParticipantWhereInput>;
@@ -1711,7 +1679,6 @@ export interface WorkspaceTokenCreateWithoutParticipantsInput {
   id?: Maybe<ID_Input>;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
   workspace: WorkspaceCreateOneWithoutTokensInput;
 }
 
@@ -1806,7 +1773,6 @@ export interface WorkspaceTokenCreateWithoutWorkspaceInput {
   id?: Maybe<ID_Input>;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutTokenInput>;
 }
 
@@ -1842,7 +1808,6 @@ export interface ProjectTokenCreateWithoutProjectInput {
   id?: Maybe<ID_Input>;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
   participants?: Maybe<ProjectParticipantCreateManyWithoutTokenInput>;
 }
 
@@ -1887,7 +1852,6 @@ export interface ProjectTokenCreateWithoutParticipantsInput {
   id?: Maybe<ID_Input>;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
   project: ProjectCreateOneWithoutTokensInput;
 }
 
@@ -2873,7 +2837,6 @@ export interface WorkspaceTokenUpdateOneWithoutParticipantsInput {
 export interface WorkspaceTokenUpdateWithoutParticipantsDataInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutTokensInput>;
 }
 
@@ -3057,7 +3020,6 @@ export interface WorkspaceTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
 export interface WorkspaceTokenUpdateWithoutWorkspaceDataInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutTokenInput>;
 }
 
@@ -3186,20 +3148,6 @@ export interface WorkspaceTokenScalarWhereInput {
   privilege_not_in?: Maybe<Privilege[] | Privilege>;
   revoked?: Maybe<Boolean>;
   revoked_not?: Maybe<Boolean>;
-  secret?: Maybe<String>;
-  secret_not?: Maybe<String>;
-  secret_in?: Maybe<String[] | String>;
-  secret_not_in?: Maybe<String[] | String>;
-  secret_lt?: Maybe<String>;
-  secret_lte?: Maybe<String>;
-  secret_gt?: Maybe<String>;
-  secret_gte?: Maybe<String>;
-  secret_contains?: Maybe<String>;
-  secret_not_contains?: Maybe<String>;
-  secret_starts_with?: Maybe<String>;
-  secret_not_starts_with?: Maybe<String>;
-  secret_ends_with?: Maybe<String>;
-  secret_not_ends_with?: Maybe<String>;
   AND?: Maybe<
     WorkspaceTokenScalarWhereInput[] | WorkspaceTokenScalarWhereInput
   >;
@@ -3217,7 +3165,6 @@ export interface WorkspaceTokenUpdateManyWithWhereNestedInput {
 export interface WorkspaceTokenUpdateManyDataInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
 }
 
 export interface WorkspaceUpsertWithWhereUniqueWithoutProjectInput {
@@ -3307,7 +3254,6 @@ export interface ProjectTokenUpdateWithWhereUniqueWithoutProjectInput {
 export interface ProjectTokenUpdateWithoutProjectDataInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutTokenInput>;
 }
 
@@ -3449,20 +3395,6 @@ export interface ProjectTokenScalarWhereInput {
   privilege_not_in?: Maybe<Privilege[] | Privilege>;
   revoked?: Maybe<Boolean>;
   revoked_not?: Maybe<Boolean>;
-  secret?: Maybe<String>;
-  secret_not?: Maybe<String>;
-  secret_in?: Maybe<String[] | String>;
-  secret_not_in?: Maybe<String[] | String>;
-  secret_lt?: Maybe<String>;
-  secret_lte?: Maybe<String>;
-  secret_gt?: Maybe<String>;
-  secret_gte?: Maybe<String>;
-  secret_contains?: Maybe<String>;
-  secret_not_contains?: Maybe<String>;
-  secret_starts_with?: Maybe<String>;
-  secret_not_starts_with?: Maybe<String>;
-  secret_ends_with?: Maybe<String>;
-  secret_not_ends_with?: Maybe<String>;
   AND?: Maybe<ProjectTokenScalarWhereInput[] | ProjectTokenScalarWhereInput>;
   OR?: Maybe<ProjectTokenScalarWhereInput[] | ProjectTokenScalarWhereInput>;
   NOT?: Maybe<ProjectTokenScalarWhereInput[] | ProjectTokenScalarWhereInput>;
@@ -3476,7 +3408,6 @@ export interface ProjectTokenUpdateManyWithWhereNestedInput {
 export interface ProjectTokenUpdateManyDataInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
 }
 
 export interface ProjectUpsertWithoutParticipantsInput {
@@ -3496,7 +3427,6 @@ export interface ProjectTokenUpdateOneWithoutParticipantsInput {
 export interface ProjectTokenUpdateWithoutParticipantsDataInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
   project?: Maybe<ProjectUpdateOneRequiredWithoutTokensInput>;
 }
 
@@ -3959,7 +3889,6 @@ export interface ProjectTokenCreateInput {
   id?: Maybe<ID_Input>;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
   project: ProjectCreateOneWithoutTokensInput;
   participants?: Maybe<ProjectParticipantCreateManyWithoutTokenInput>;
 }
@@ -3967,7 +3896,6 @@ export interface ProjectTokenCreateInput {
 export interface ProjectTokenUpdateInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
   project?: Maybe<ProjectUpdateOneRequiredWithoutTokensInput>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutTokenInput>;
 }
@@ -3975,7 +3903,6 @@ export interface ProjectTokenUpdateInput {
 export interface ProjectTokenUpdateManyMutationInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
 }
 
 export interface ResourceCreateInput {
@@ -4137,7 +4064,6 @@ export interface WorkspaceTokenCreateInput {
   id?: Maybe<ID_Input>;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
   workspace: WorkspaceCreateOneWithoutTokensInput;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutTokenInput>;
 }
@@ -4145,7 +4071,6 @@ export interface WorkspaceTokenCreateInput {
 export interface WorkspaceTokenUpdateInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutTokensInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutTokenInput>;
 }
@@ -4153,7 +4078,6 @@ export interface WorkspaceTokenUpdateInput {
 export interface WorkspaceTokenUpdateManyMutationInput {
   privilege?: Maybe<Privilege>;
   revoked?: Maybe<Boolean>;
-  secret?: Maybe<String>;
 }
 
 export interface ConceptSubscriptionWhereInput {
@@ -4979,7 +4903,6 @@ export interface ProjectToken {
   id: ID_Output;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
 }
 
 export interface ProjectTokenPromise
@@ -4988,7 +4911,6 @@ export interface ProjectTokenPromise
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
   revoked: () => Promise<Boolean>;
-  secret: () => Promise<String>;
   project: <T = ProjectPromise>() => T;
   participants: <T = FragmentableArray<ProjectParticipant>>(args?: {
     where?: ProjectParticipantWhereInput;
@@ -5007,7 +4929,6 @@ export interface ProjectTokenSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   privilege: () => Promise<AsyncIterator<Privilege>>;
   revoked: () => Promise<AsyncIterator<Boolean>>;
-  secret: () => Promise<AsyncIterator<String>>;
   project: <T = ProjectSubscription>() => T;
   participants: <
     T = Promise<AsyncIterator<ProjectParticipantSubscription>>
@@ -5028,7 +4949,6 @@ export interface ProjectTokenNullablePromise
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
   revoked: () => Promise<Boolean>;
-  secret: () => Promise<String>;
   project: <T = ProjectPromise>() => T;
   participants: <T = FragmentableArray<ProjectParticipant>>(args?: {
     where?: ProjectParticipantWhereInput;
@@ -5228,7 +5148,6 @@ export interface WorkspaceToken {
   id: ID_Output;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
 }
 
 export interface WorkspaceTokenPromise
@@ -5237,7 +5156,6 @@ export interface WorkspaceTokenPromise
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
   revoked: () => Promise<Boolean>;
-  secret: () => Promise<String>;
   workspace: <T = WorkspacePromise>() => T;
   participants: <T = FragmentableArray<WorkspaceParticipant>>(args?: {
     where?: WorkspaceParticipantWhereInput;
@@ -5256,7 +5174,6 @@ export interface WorkspaceTokenSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   privilege: () => Promise<AsyncIterator<Privilege>>;
   revoked: () => Promise<AsyncIterator<Boolean>>;
-  secret: () => Promise<AsyncIterator<String>>;
   workspace: <T = WorkspaceSubscription>() => T;
   participants: <
     T = Promise<AsyncIterator<WorkspaceParticipantSubscription>>
@@ -5277,7 +5194,6 @@ export interface WorkspaceTokenNullablePromise
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
   revoked: () => Promise<Boolean>;
-  secret: () => Promise<String>;
   workspace: <T = WorkspacePromise>() => T;
   participants: <T = FragmentableArray<WorkspaceParticipant>>(args?: {
     where?: WorkspaceParticipantWhereInput;
@@ -6433,7 +6349,6 @@ export interface ProjectTokenPreviousValues {
   id: ID_Output;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
 }
 
 export interface ProjectTokenPreviousValuesPromise
@@ -6442,7 +6357,6 @@ export interface ProjectTokenPreviousValuesPromise
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
   revoked: () => Promise<Boolean>;
-  secret: () => Promise<String>;
 }
 
 export interface ProjectTokenPreviousValuesSubscription
@@ -6451,7 +6365,6 @@ export interface ProjectTokenPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   privilege: () => Promise<AsyncIterator<Privilege>>;
   revoked: () => Promise<AsyncIterator<Boolean>>;
-  secret: () => Promise<AsyncIterator<String>>;
 }
 
 export interface ResourceSubscriptionPayload {
@@ -6715,7 +6628,6 @@ export interface WorkspaceTokenPreviousValues {
   id: ID_Output;
   privilege: Privilege;
   revoked: Boolean;
-  secret: String;
 }
 
 export interface WorkspaceTokenPreviousValuesPromise
@@ -6724,7 +6636,6 @@ export interface WorkspaceTokenPreviousValuesPromise
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
   revoked: () => Promise<Boolean>;
-  secret: () => Promise<String>;
 }
 
 export interface WorkspaceTokenPreviousValuesSubscription
@@ -6733,7 +6644,6 @@ export interface WorkspaceTokenPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   privilege: () => Promise<AsyncIterator<Privilege>>;
   revoked: () => Promise<AsyncIterator<Boolean>>;
-  secret: () => Promise<AsyncIterator<String>>;
 }
 
 /*

@@ -64,7 +64,6 @@ type WorkspaceToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: Workspace! @relation(name: "WorkspaceAccessToken")
   participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken", onDelete: CASCADE)
 }
@@ -73,7 +72,6 @@ type ProjectToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: Project! @relation(name: "ProjectAccessToken")
   participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken", onDelete: CASCADE)
 }

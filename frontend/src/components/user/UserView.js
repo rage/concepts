@@ -10,13 +10,13 @@ const UserView = () => {
   if (loggedIn) {
     switch (user.role) {
     case 'STUDENT':
-      return <UserContent userId={user.id} />
+      return <UserContent />
     case 'STAFF':
-      return <StaffContent userId={user.id} />
+      return <StaffContent />
     case 'ADMIN':
       return <Redirect to={'/admin'} />
     case 'GUEST':
-      return <UserContent userId={user.id} />
+      return <UserContent />
     default:
       return <Redirect to={'/'} />
     }

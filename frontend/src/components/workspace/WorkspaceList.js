@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const WorkspaceList = ({
-  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace
+  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace, createShareLink
 }) => {
   const classes = useStyles()
   const [stateCreate, setStateCreate] = useState({ open: false })
@@ -251,12 +251,13 @@ const WorkspaceList = ({
       </Card>
 
       <WorkspaceCreationDialog
-        state={stateCreate} handleClose={handleCreateClose}createWorkspace={createWorkspace} />
+        state={stateCreate} handleClose={handleCreateClose} createWorkspace={createWorkspace} />
       <WorkspaceEditingDialog
         state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
         defaultName={stateEdit.name} />
       <WorkspaceSharingDialog
-        open={stateShare.open} workspace={stateShare.workspace} handleClose={handleShareClose} />
+        open={stateShare.open} workspace={stateShare.workspace} handleClose={handleShareClose}
+        createShareLink={createShareLink} />
     </>
   )
 }
