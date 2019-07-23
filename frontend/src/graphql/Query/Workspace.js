@@ -32,7 +32,7 @@ query workspaceById($id: ID!) {
   workspaceById(id: $id) {
     id
     name
-    defaultCourse {
+    courses {
       id
     }
     participants {

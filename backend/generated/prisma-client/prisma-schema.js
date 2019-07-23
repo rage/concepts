@@ -798,11 +798,6 @@ input CourseCreateManyWithoutWorkspaceInput {
   connect: [CourseWhereUniqueInput!]
 }
 
-input CourseCreateOneInput {
-  create: CourseCreateInput
-  connect: CourseWhereUniqueInput
-}
-
 input CourseCreateOneWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   connect: CourseWhereUniqueInput
@@ -1179,15 +1174,6 @@ input CourseSubscriptionWhereInput {
   NOT: [CourseSubscriptionWhereInput!]
 }
 
-input CourseUpdateDataInput {
-  name: String
-  createdBy: UserUpdateOneRequiredInput
-  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
-  linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
-  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
-}
-
 input CourseUpdateInput {
   name: String
   createdBy: UserUpdateOneRequiredInput
@@ -1232,15 +1218,6 @@ input CourseUpdateManyWithoutWorkspaceInput {
 input CourseUpdateManyWithWhereNestedInput {
   where: CourseScalarWhereInput!
   data: CourseUpdateManyDataInput!
-}
-
-input CourseUpdateOneInput {
-  create: CourseCreateInput
-  update: CourseUpdateDataInput
-  upsert: CourseUpsertNestedInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: CourseWhereUniqueInput
 }
 
 input CourseUpdateOneRequiredWithoutLinksFromCourseInput {
@@ -1297,11 +1274,6 @@ input CourseUpdateWithWhereUniqueWithoutConceptsInput {
 input CourseUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: CourseWhereUniqueInput!
   data: CourseUpdateWithoutWorkspaceDataInput!
-}
-
-input CourseUpsertNestedInput {
-  update: CourseUpdateDataInput!
-  create: CourseCreateInput!
 }
 
 input CourseUpsertWithoutLinksFromCourseInput {
@@ -2951,7 +2923,6 @@ type Workspace {
   name: String!
   project: Project
   public: Boolean!
-  defaultCourse: Course
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
@@ -2971,7 +2942,6 @@ input WorkspaceCreateInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3025,7 +2995,6 @@ input WorkspaceCreateWithoutConceptLinksInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3038,7 +3007,6 @@ input WorkspaceCreateWithoutConceptsInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3051,7 +3019,6 @@ input WorkspaceCreateWithoutCourseLinksInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3064,7 +3031,6 @@ input WorkspaceCreateWithoutCoursesInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3077,7 +3043,6 @@ input WorkspaceCreateWithoutParticipantsInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3089,7 +3054,6 @@ input WorkspaceCreateWithoutProjectInput {
   id: ID
   name: String!
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3103,7 +3067,6 @@ input WorkspaceCreateWithoutTokensInput {
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseCreateOneInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3699,7 +3662,6 @@ input WorkspaceUpdateDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3712,7 +3674,6 @@ input WorkspaceUpdateInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3803,7 +3764,6 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3815,7 +3775,6 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3827,7 +3786,6 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3839,7 +3797,6 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3851,7 +3808,6 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3862,7 +3818,6 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
 input WorkspaceUpdateWithoutProjectDataInput {
   name: String
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3875,7 +3830,6 @@ input WorkspaceUpdateWithoutTokensDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
   public: Boolean
-  defaultCourse: CourseUpdateOneInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3961,7 +3915,6 @@ input WorkspaceWhereInput {
   project: ProjectWhereInput
   public: Boolean
   public_not: Boolean
-  defaultCourse: CourseWhereInput
   courses_every: CourseWhereInput
   courses_some: CourseWhereInput
   courses_none: CourseWhereInput

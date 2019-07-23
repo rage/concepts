@@ -14,9 +14,6 @@ const PortQueries = {
       }) {
         id
         name
-        defaultCourse {
-          name
-        }
         courses {
           name
           concepts {
@@ -55,11 +52,6 @@ const PortQueries = {
       'workspace': workspace.name,
       'courses': []
     }
-
-    if (workspace.defaultCourse) {
-      jsonData['defaultCourse'] = workspace.defaultCourse.name
-    }
-
 
     for (const course of workspace['courses']) {
       const courseData = {

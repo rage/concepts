@@ -48,7 +48,6 @@ const useStyles = makeStyles(theme => ({
 
 const PLACEHOLDER = `{
   "workspace | workspaceId": "id",
-  "defaultCourse": "Name of the default course",
   "courses": [
     {
       "name": "Example",
@@ -75,7 +74,6 @@ const PLACEHOLDER = `{
 
 const TEMPLATE = `{
   "workspace": "",
-  "defaultCourse":"",
   "courses": [
     {
       "name": "",

@@ -15,9 +15,9 @@ const WorkspaceView = ({ workspaceId, location }) => {
   return <>
     {
       workspaceQuery.data.workspaceById ?
-        workspaceQuery.data.workspaceById.defaultCourse ?
+        workspaceQuery.data.workspaceById.courses.length > 0 ?
           <Redirect to={{
-            pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.defaultCourse.id}`,
+            pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.courses[0].id}`,
             state: { from: location }
           }} />
           : <WorkspaceDefaultCourseForm workspaceId={workspaceId} />
