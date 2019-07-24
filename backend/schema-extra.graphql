@@ -71,6 +71,11 @@ type Mutation {
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String!): Workspace
 
+  # Template workspace mutations
+  createTemplateWorkspace(projectId: ID!): Workspace
+  deleteTemplateWorkspace(id: ID!): Workspace
+  updateTemplateWorkspace(id: ID!, name: String, active: Boolean): Workspace
+
   # Porting mutations
   importData(data: String!): Workspace
 

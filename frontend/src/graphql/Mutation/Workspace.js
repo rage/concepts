@@ -31,7 +31,6 @@ mutation createTemplateWorkspace($projectId: ID!) {
   createTemplateWorkspace(projectId: $projectId) {
     id
     name
-    active
     courses {
       id
     }
@@ -53,7 +52,6 @@ mutation updateTemplateWorkspace($id: ID!, $name: String, $active: Boolean) {
   updateTemplateWorkspace(id: $id, name: $name, active: $active) {
     id
     name
-    active
   }
 }
 `
