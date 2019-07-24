@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     gridTemplate: `"activeCourse contentHeader contentHeader" 64px
                    "activeCourse courses       courses"       1fr
-                   / 25% auto 25%`,
+                   / 25%         auto          25%`,
     '&.courseTrayOpen': {
       gridTemplateAreas:
         `"activeCourse contentHeader courseTray"

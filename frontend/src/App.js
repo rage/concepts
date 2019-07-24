@@ -20,6 +20,7 @@ import CourseHeatmap from './components/course/CourseHeatmap'
 import { useMessageStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 import GraphView from './components/graph/GraphView'
+import ProjectView from './components/project/ProjectView'
 
 const styles = theme => ({
   root: {
@@ -123,6 +124,12 @@ const App = ({ classes }) => {
           exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn}
           render={({ match }) => {
             return <MatrixView course_id={match.params.id} />
+          }}
+        />
+        <PrivateRoute
+          exact path='/projects/:id' redirectPath='auth' condition={loggedIn}
+          render={({ match: { params: { id } } }) => {
+            return <ProjectView projectId={id} />
           }}
         />
       </div>
