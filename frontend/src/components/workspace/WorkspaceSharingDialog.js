@@ -42,17 +42,19 @@ const WorkspaceSharingDialog = ({
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(url.props.href.href).then(() => {
-      messageDispatch({
-        type: 'setNotification',
-        data: 'Copied to clipboard!'
+    if (existingToken) {
+      navigator.clipboard.writeText(`${window.location}/join/w${existingToken}`).then(() => {
+        messageDispatch({
+          type: 'setNotification',
+          data: 'Copied to clipboard!'
+        })
+      }, (err) => {
+        messageDispatch({
+          type: 'setError',
+          data: err.message
+        })
       })
-    }, (err) => {
-      messageDispatch({
-        type: 'setError',
-        data: err.message
-      })
-    })
+    }
   }
 
   return (
