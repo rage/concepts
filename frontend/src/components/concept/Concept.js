@@ -24,7 +24,7 @@ import {
 } from '../../apollo/update'
 
 // Error dispatcher
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(() => ({
   conceptName: {
@@ -63,7 +63,7 @@ const Concept = ({
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
 
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
@@ -83,7 +83,7 @@ const Concept = ({
           from: concept.id,
           workspaceId
         }
-      }).catch(() => errorDispatch({
+      }).catch(() => messageDispatch({
         type: 'setError',
         data: 'Access denied'
       }))
@@ -110,7 +110,7 @@ const Concept = ({
       try {
         await deleteConcept({ variables: { id } })
       } catch (err) {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })

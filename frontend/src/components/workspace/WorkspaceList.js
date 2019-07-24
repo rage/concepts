@@ -8,15 +8,17 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon,
-  ShowChart as ShowChartIcon, MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon
+  ShowChart as ShowChartIcon, MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon,
+  Share as ShareIcon
 } from '@material-ui/icons'
 
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
+import WorkspaceSharingDialog from './WorkspaceSharingDialog'
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
 
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,15 +39,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const WorkspaceList = ({
-  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace
+  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace,
+  createShareLink, deleteShareLink
 }) => {
   const classes = useStyles()
   const [stateCreate, setStateCreate] = useState({ open: false })
   const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
+  const [stateShare, setStateShare] = useState({ open: false, workspace: null })
   const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
 
   const handleMenuOpen = (workspace, event) => {
     setMenu({
@@ -59,10 +63,11 @@ const WorkspaceList = ({
   }
 
   const handleWorkspaceExport = async () => {
+    handleMenuClose()
     try {
       await exportWorkspace(menu.workspace.id, menu.workspace.name)
     } catch (err) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: err.message
       })
@@ -70,8 +75,9 @@ const WorkspaceList = ({
   }
 
   const handleCreateOpen = () => {
+    handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -87,7 +93,7 @@ const WorkspaceList = ({
   const handleEditOpen = () => {
     handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -100,10 +106,26 @@ const WorkspaceList = ({
     setStateEdit({ open: false, id: '', name: '' })
   }
 
+  const handleShareOpen = () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    setStateShare({ open: true, id: menu.workspace.id })
+  }
+
+  const handleShareClose = () => {
+    setStateShare({ open: false, id: null })
+  }
+
   const handleDelete = async () => {
     handleMenuClose()
     if (!loggedIn) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
@@ -117,7 +139,7 @@ const WorkspaceList = ({
           variables: { id: menu.workspace.id }
         })
       } catch (err) {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })
@@ -208,6 +230,12 @@ const WorkspaceList = ({
             </ListItemIcon>
             Export
           </MenuItem>
+          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+            <ListItemIcon>
+              <ShareIcon />
+            </ListItemIcon>
+            Share link
+          </MenuItem>
           <MenuItem aria-label='Delete' onClick={handleDelete}>
             <ListItemIcon>
               <DeleteIcon />
@@ -224,10 +252,14 @@ const WorkspaceList = ({
       </Card>
 
       <WorkspaceCreationDialog
-        state={stateCreate} handleClose={handleCreateClose}createWorkspace={createWorkspace} />
+        state={stateCreate} handleClose={handleCreateClose} createWorkspace={createWorkspace} />
       <WorkspaceEditingDialog
         state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
         defaultName={stateEdit.name} />
+      <WorkspaceSharingDialog
+        open={stateShare.open} workspace={workspaces.find(ws => ws.id === stateShare.id)}
+        handleClose={handleShareClose} createShareLink={createShareLink}
+        deleteShareLink={deleteShareLink} />
     </>
   )
 }

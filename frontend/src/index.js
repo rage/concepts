@@ -6,7 +6,7 @@ import './index.css'
 import client from './apollo/apolloClient'
 import { ApolloProvider } from 'react-apollo-hooks'
 import { isSignedIn } from './lib/authentication'
-import { LoginStateProvider, ErrorStateProvider } from './store'
+import { LoginStateProvider, MessagingStateProvider } from './store'
 import FocusOverlay from './components/common/FocusOverlay'
 import InfoBox from './components/common/InfoBox'
 
@@ -39,7 +39,7 @@ const loginReducer = (state, action) => {
   }
 }
 
-const errorReducer = (state, action) => {
+const messageReducer = (state, action) => {
   switch (action.type) {
   case 'setError':
     return {
@@ -50,6 +50,16 @@ const errorReducer = (state, action) => {
     return {
       ...state,
       error: ''
+    }
+  case 'setNotification':
+    return {
+      ...state,
+      notification: action.data
+    }
+  case 'clearNotification':
+    return {
+      ...state,
+      notification: ''
     }
   default:
     return state
@@ -69,7 +79,7 @@ const getLoggedInUser = () => {
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <ErrorStateProvider initialState={{ error: '' }} reducer={errorReducer}>
+      <MessagingStateProvider initialState={{ error: '', notification: '' }} reducer={messageReducer}>
         <LoginStateProvider
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}
@@ -80,7 +90,7 @@ ReactDOM.render(
             </InfoBox>
           </FocusOverlay>
         </LoginStateProvider>
-      </ErrorStateProvider>
+      </MessagingStateProvider>
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root')

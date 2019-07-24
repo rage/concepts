@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
 // Error dispatcher
-import { useErrorStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 const ConceptEditingDialog = ({
   state,
@@ -24,7 +24,7 @@ const ConceptEditingDialog = ({
   const [description, setDescription] = useState('')
   const [submitDisabled, setSubmitDisabled] = useState(false)
 
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
 
   useEffect(() => {
     if (state.open) {
@@ -56,7 +56,7 @@ const ConceptEditingDialog = ({
         variables
       })
         .catch(() => {
-          errorDispatch({
+          messageDispatch({
             type: 'setError',
             data: 'Access denied'
           })

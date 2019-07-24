@@ -1452,7 +1452,6 @@ type PageInfo {
 enum Privilege {
   VIEW
   EDIT
-  INVITE
   OWNER
 }
 
@@ -1813,7 +1812,6 @@ type ProjectToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: Project!
   participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
 }
@@ -1828,7 +1826,6 @@ input ProjectTokenCreateInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: ProjectCreateOneWithoutTokensInput!
   participants: ProjectParticipantCreateManyWithoutTokenInput
 }
@@ -1847,7 +1844,6 @@ input ProjectTokenCreateWithoutParticipantsInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: ProjectCreateOneWithoutTokensInput!
 }
 
@@ -1855,7 +1851,6 @@ input ProjectTokenCreateWithoutProjectInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   participants: ProjectParticipantCreateManyWithoutTokenInput
 }
 
@@ -1871,15 +1866,12 @@ enum ProjectTokenOrderByInput {
   privilege_DESC
   revoked_ASC
   revoked_DESC
-  secret_ASC
-  secret_DESC
 }
 
 type ProjectTokenPreviousValues {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
 }
 
 input ProjectTokenScalarWhereInput {
@@ -1903,20 +1895,6 @@ input ProjectTokenScalarWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   AND: [ProjectTokenScalarWhereInput!]
   OR: [ProjectTokenScalarWhereInput!]
   NOT: [ProjectTokenScalarWhereInput!]
@@ -1943,7 +1921,6 @@ input ProjectTokenSubscriptionWhereInput {
 input ProjectTokenUpdateInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   project: ProjectUpdateOneRequiredWithoutTokensInput
   participants: ProjectParticipantUpdateManyWithoutTokenInput
 }
@@ -1951,13 +1928,11 @@ input ProjectTokenUpdateInput {
 input ProjectTokenUpdateManyDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input ProjectTokenUpdateManyMutationInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input ProjectTokenUpdateManyWithoutProjectInput {
@@ -1989,14 +1964,12 @@ input ProjectTokenUpdateOneWithoutParticipantsInput {
 input ProjectTokenUpdateWithoutParticipantsDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   project: ProjectUpdateOneRequiredWithoutTokensInput
 }
 
 input ProjectTokenUpdateWithoutProjectDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   participants: ProjectParticipantUpdateManyWithoutTokenInput
 }
 
@@ -2037,20 +2010,6 @@ input ProjectTokenWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   project: ProjectWhereInput
   participants_every: ProjectParticipantWhereInput
   participants_some: ProjectParticipantWhereInput
@@ -2942,7 +2901,6 @@ type Workspace {
   id: ID!
   name: String!
   project: Project
-  public: Boolean!
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
@@ -2961,7 +2919,6 @@ input WorkspaceCreateInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3014,7 +2971,6 @@ input WorkspaceCreateWithoutConceptLinksInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3026,7 +2982,6 @@ input WorkspaceCreateWithoutConceptsInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3038,7 +2993,6 @@ input WorkspaceCreateWithoutCourseLinksInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3050,7 +3004,6 @@ input WorkspaceCreateWithoutCoursesInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3062,7 +3015,6 @@ input WorkspaceCreateWithoutParticipantsInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3073,7 +3025,6 @@ input WorkspaceCreateWithoutParticipantsInput {
 input WorkspaceCreateWithoutProjectInput {
   id: ID
   name: String!
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3086,7 +3037,6 @@ input WorkspaceCreateWithoutTokensInput {
   id: ID
   name: String!
   project: ProjectCreateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3104,8 +3054,6 @@ enum WorkspaceOrderByInput {
   id_DESC
   name_ASC
   name_DESC
-  public_ASC
-  public_DESC
 }
 
 type WorkspaceParticipant {
@@ -3366,7 +3314,6 @@ input WorkspaceParticipantWhereUniqueInput {
 type WorkspacePreviousValues {
   id: ID!
   name: String!
-  public: Boolean!
 }
 
 input WorkspaceScalarWhereInput {
@@ -3398,8 +3345,6 @@ input WorkspaceScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  public: Boolean
-  public_not: Boolean
   AND: [WorkspaceScalarWhereInput!]
   OR: [WorkspaceScalarWhereInput!]
   NOT: [WorkspaceScalarWhereInput!]
@@ -3427,7 +3372,6 @@ type WorkspaceToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: Workspace!
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
 }
@@ -3442,7 +3386,6 @@ input WorkspaceTokenCreateInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: WorkspaceCreateOneWithoutTokensInput!
   participants: WorkspaceParticipantCreateManyWithoutTokenInput
 }
@@ -3461,7 +3404,6 @@ input WorkspaceTokenCreateWithoutParticipantsInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: WorkspaceCreateOneWithoutTokensInput!
 }
 
@@ -3469,7 +3411,6 @@ input WorkspaceTokenCreateWithoutWorkspaceInput {
   id: ID
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   participants: WorkspaceParticipantCreateManyWithoutTokenInput
 }
 
@@ -3485,15 +3426,12 @@ enum WorkspaceTokenOrderByInput {
   privilege_DESC
   revoked_ASC
   revoked_DESC
-  secret_ASC
-  secret_DESC
 }
 
 type WorkspaceTokenPreviousValues {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
 }
 
 input WorkspaceTokenScalarWhereInput {
@@ -3517,20 +3455,6 @@ input WorkspaceTokenScalarWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   AND: [WorkspaceTokenScalarWhereInput!]
   OR: [WorkspaceTokenScalarWhereInput!]
   NOT: [WorkspaceTokenScalarWhereInput!]
@@ -3557,7 +3481,6 @@ input WorkspaceTokenSubscriptionWhereInput {
 input WorkspaceTokenUpdateInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
   participants: WorkspaceParticipantUpdateManyWithoutTokenInput
 }
@@ -3565,13 +3488,11 @@ input WorkspaceTokenUpdateInput {
 input WorkspaceTokenUpdateManyDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input WorkspaceTokenUpdateManyMutationInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
 }
 
 input WorkspaceTokenUpdateManyWithoutWorkspaceInput {
@@ -3603,14 +3524,12 @@ input WorkspaceTokenUpdateOneWithoutParticipantsInput {
 input WorkspaceTokenUpdateWithoutParticipantsDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
 }
 
 input WorkspaceTokenUpdateWithoutWorkspaceDataInput {
   privilege: Privilege
   revoked: Boolean
-  secret: String
   participants: WorkspaceParticipantUpdateManyWithoutTokenInput
 }
 
@@ -3651,20 +3570,6 @@ input WorkspaceTokenWhereInput {
   privilege_not_in: [Privilege!]
   revoked: Boolean
   revoked_not: Boolean
-  secret: String
-  secret_not: String
-  secret_in: [String!]
-  secret_not_in: [String!]
-  secret_lt: String
-  secret_lte: String
-  secret_gt: String
-  secret_gte: String
-  secret_contains: String
-  secret_not_contains: String
-  secret_starts_with: String
-  secret_not_starts_with: String
-  secret_ends_with: String
-  secret_not_ends_with: String
   workspace: WorkspaceWhereInput
   participants_every: WorkspaceParticipantWhereInput
   participants_some: WorkspaceParticipantWhereInput
@@ -3681,7 +3586,6 @@ input WorkspaceTokenWhereUniqueInput {
 input WorkspaceUpdateDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3693,7 +3597,6 @@ input WorkspaceUpdateDataInput {
 input WorkspaceUpdateInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3704,12 +3607,10 @@ input WorkspaceUpdateInput {
 
 input WorkspaceUpdateManyDataInput {
   name: String
-  public: Boolean
 }
 
 input WorkspaceUpdateManyMutationInput {
   name: String
-  public: Boolean
 }
 
 input WorkspaceUpdateManyWithoutProjectInput {
@@ -3783,7 +3684,6 @@ input WorkspaceUpdateOneRequiredWithoutTokensInput {
 input WorkspaceUpdateWithoutConceptLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3794,7 +3694,6 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
 input WorkspaceUpdateWithoutConceptsDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3805,7 +3704,6 @@ input WorkspaceUpdateWithoutConceptsDataInput {
 input WorkspaceUpdateWithoutCourseLinksDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3816,7 +3714,6 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
 input WorkspaceUpdateWithoutCoursesDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3827,7 +3724,6 @@ input WorkspaceUpdateWithoutCoursesDataInput {
 input WorkspaceUpdateWithoutParticipantsDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3837,7 +3733,6 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
 
 input WorkspaceUpdateWithoutProjectDataInput {
   name: String
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3849,7 +3744,6 @@ input WorkspaceUpdateWithoutProjectDataInput {
 input WorkspaceUpdateWithoutTokensDataInput {
   name: String
   project: ProjectUpdateOneWithoutWorkspacesInput
-  public: Boolean
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3933,8 +3827,6 @@ input WorkspaceWhereInput {
   name_ends_with: String
   name_not_ends_with: String
   project: ProjectWhereInput
-  public: Boolean
-  public_not: Boolean
   courses_every: CourseWhereInput
   courses_some: CourseWhereInput
   courses_none: CourseWhereInput

@@ -5,7 +5,6 @@ const WorkspaceMutations = {
     await checkAccess(context, { minimumRole: Role.GUEST })
     return await context.prisma.createWorkspace({
       name: args.name,
-      public: context.role === 'GUEST',
       project: args.projectId !== undefined ? {
         connect: { id: args.projectId }
       } : null,

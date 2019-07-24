@@ -12,7 +12,7 @@ import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
 
 import useCreateCourseDialog from './useCreateCourseDialog'
 
-import { useErrorStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 import { useInfoBox } from '../common/InfoBox'
 
@@ -57,7 +57,7 @@ const PrerequisiteCourse = ({
   createCourseLink,
   deleteCourseLink
 }) => {
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
 
   const onClick = async () => {
@@ -73,7 +73,7 @@ const PrerequisiteCourse = ({
         })
       }
     } catch (err) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })

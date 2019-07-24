@@ -21,7 +21,6 @@ enum Role {
 enum Privilege {
   VIEW,
   EDIT,
-  INVITE,
   OWNER
 }
 
@@ -38,7 +37,6 @@ type Workspace {
   id: ID! @id
   name: String!
   project: Project @relation(name: "UserWorkspaces")
-  public: Boolean! @default(value: false)
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
@@ -67,7 +65,6 @@ type WorkspaceToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: Workspace! @relation(name: "WorkspaceAccessToken")
   participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken", onDelete: CASCADE)
 }
@@ -76,7 +73,6 @@ type ProjectToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: Project! @relation(name: "ProjectAccessToken")
   participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken", onDelete: CASCADE)
 }

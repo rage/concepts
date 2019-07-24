@@ -6,23 +6,27 @@ const WorkspaceQueries = {
     return await context.prisma.workspaces()
   },
   async workspaceById(root, args, context) {
-    const workspace = await context.prisma.workspace({
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.READ,
+      workspaceId: args.id
+    })
+    return await context.prisma.workspace({
       id: args.id
     })
-    if (!workspace.public) {
-      await checkAccess(context, {
-        minimumRole: Role.GUEST,
-        minimumPrivilege: Privilege.READ,
-        workspaceId: args.id
-      })
-    }
-    return workspace
   },
   async workspacesForUser(root, args, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
     return await context.prisma.user({
       id: context.user.id
     }).workspaceParticipations()
+  },
+  async peekWorkspace(root, { tokenId }, context) {
+    await checkAccess(context, { minimumRole: Role.GUEST })
+    // TODO check if token is valid
+    return await context.prisma.workspaceToken({
+      id: tokenId
+    }).workspace()
   }
 }
 

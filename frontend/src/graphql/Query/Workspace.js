@@ -22,6 +22,9 @@ query workspacesForUser {
     workspace {
       id
       name
+      tokens {
+        id
+      }
     }
   }
 }
@@ -33,6 +36,9 @@ query workspaceById($id: ID!) {
     id
     name
     courses {
+      id
+    }
+    tokens {
       id
     }
     participants {

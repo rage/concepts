@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom'
 
 import { withStyles } from '@material-ui/core/styles'
 import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
-import { Error as ErrorIcon, Close as CloseIcon } from '@material-ui/icons'
+import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
 
 import GuidedCourseView from './components/course/GuidedCourseView'
 import MatrixView from './components/course/MatrixView'
@@ -14,9 +14,10 @@ import PrivateRoute from './components/common/PrivateRoute'
 import UserView from './components/user/UserView'
 import LandingView from './components/common/LandingView'
 import WorkspaceView from './components/workspace/WorkspaceView'
+import JoinView from './components/common/JoinView'
 import CourseHeatmap from './components/course/CourseHeatmap'
 
-import { useErrorStateValue, useLoginStateValue } from './store'
+import { useMessageStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 import GraphView from './components/graph/GraphView'
 
@@ -33,6 +34,9 @@ const styles = theme => ({
   },
   error: {
     backgroundColor: theme.palette.error.dark
+  },
+  notification: {
+    backgroundColor: theme.palette.primary.dark
   },
   icon: {
     fontSize: 20
@@ -53,12 +57,17 @@ const App = ({ classes }) => {
   const { loggedIn } = useLoginStateValue()[0]
 
   // Error handling
-  const { error } = useErrorStateValue()[0]
-  const dispatchError = useErrorStateValue()[1]
+  const [{ error, notification }, dispatchMessage] = useMessageStateValue()
 
   const handleCloseErrorMessage = () => {
-    dispatchError({
+    dispatchMessage({
       type: 'clearError'
+    })
+  }
+
+  const handleCloseNotificationMessage = () => {
+    dispatchMessage({
+      type: 'clearNotification'
     })
   }
 
@@ -74,6 +83,10 @@ const App = ({ classes }) => {
           render={() => <PortView />} />
         <Route exact path='/auth' render={() => <AuthenticationForm />} />
         <Route exact path='/user' render={() => <UserView />} />
+
+        <PrivateRoute
+          exact path='/join/:token' redirectPath='/auth' condition={loggedIn}
+          render={({ match: { params: { token } } }) => <JoinView token={token} />} />
 
         <Route exact path='/workspaces/:wid/heatmap' render={({ match }) => (
           <CourseHeatmap workspaceId={match.params.wid} />
@@ -134,9 +147,37 @@ const App = ({ classes }) => {
             </IconButton>
           ]}
           message={
-            <span className={classes.message} id='message-id'>
+            <span className={classes.message} id='error-message-id'>
               <ErrorIcon className={classes.errorIcon} />
               {error}
+            </span>}
+        />
+      </Snackbar>
+
+      <Snackbar open={notification !== ''}
+        onClose={handleCloseNotificationMessage}
+        ClickAwayListenerProps={{ onClickAway: () => null }}
+        autoHideDuration={4000}
+        className={classes.snackbar}
+        ContentProps={{
+          'aria-describedby': 'message-id'
+        }}
+      >
+        <SnackbarContent className={classes.notification}
+          action={[
+            <IconButton
+              key='close'
+              aria-label='Close'
+              color='inherit'
+              onClick={handleCloseNotificationMessage}
+            >
+              <CloseIcon className={classes.icon} />
+            </IconButton>
+          ]}
+          message={
+            <span className={classes.message} id='notification-message-id'>
+              <InfoIcon className={classes.errorIcon} />
+              {notification}
             </span>}
         />
       </Snackbar>

@@ -35,6 +35,8 @@ type Query {
 
   # Porting queries
   exportData(workspaceId: ID!): String!
+
+  peekWorkspace(tokenId: ID!): Workspace
 }
 
 type Mutation {
@@ -75,8 +77,20 @@ type Mutation {
   # User mutations
   updateUser(id: ID!, guideProgress: Int!): User
 
-  ## Resource mutation
-  # createResourceForConcept(conceptId: ID!, name: String!, desc: String, urls: [String!]!): Resource
+  # Sharing
+  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
+  deleteWorkspaceToken(id: ID!): WorkspaceToken
+  createWorkspaceParticipant(workspaceId: ID!, privilege: Privilege!, userId: ID!): WorkspaceParticipant
+  updateWorkspaceParticipant(id: ID!, privilege: Privilege!): WorkspaceParticipant
+  deleteWorkspaceParticipant(id: ID!): WorkspaceParticipant
+  joinWorkspace(tokenId: ID!): WorkspaceParticipant
+
+  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
+  deleteProjectToken(id: ID!): ProjectToken
+  createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
+  updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
+  deleteProjectParticipant(id: ID!): ProjectParticipant
+  joinProject(tokenId: ID!): ProjectParticipant
 }
 
 type AuthPayload {
@@ -106,7 +120,6 @@ enum Role {
 enum Privilege {
   VIEW,
   EDIT,
-  INVITE,
   OWNER
 }
 
@@ -123,7 +136,6 @@ type Workspace {
   id: ID!
   name: String!
   project: Project
-  public: Boolean!
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
@@ -152,7 +164,6 @@ type WorkspaceToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   workspace: Workspace!
   participants: [WorkspaceParticipant!]!
 }
@@ -161,7 +172,6 @@ type ProjectToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
-  secret: String!
   project: Project!
   participants: [ProjectParticipant!]!
 }

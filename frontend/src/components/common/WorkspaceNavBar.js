@@ -7,7 +7,7 @@ import {
 import {
   Shuffle as ShuffleIcon, ShowChart as ShowCartIcon, GridOn as GridOnIcon,
   DeviceHub as DeviceHubIcon, CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,
-  Edit as EditIcon, MoreVert as MoreVertIcon
+  Edit as EditIcon, MoreVert as MoreVertIcon, Share as ShareIcon
 } from '@material-ui/icons'
 
 import client from '../../apollo/apolloClient'
@@ -18,7 +18,7 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
 
-import { useErrorStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles({
   root: {
@@ -61,7 +61,7 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
 const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   const classes = useStyles()
   const { user } = useLoginStateValue()[0]
-  const errorDispatch = useErrorStateValue()[1]
+  const messageDispatch = useMessageStateValue()[1]
   const [menuAnchor, setMenuAnchor] = useState(null)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -80,23 +80,24 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   } = useEditWorkspaceDialog(workspaceId, user.id)
 
   const handleEditOpen = () => {
+    setMenuAnchor(null)
     openEditWorkspaceDialog(workspaceId, workspaceQuery.data.workspaceById.name)
   }
 
   const handleDelete = () => {
-
+    setMenuAnchor(null)
     deleteWorkspace({
       variables: {
         id: workspaceId
       }
     })
       .catch(() => {
-        errorDispatch({
+        messageDispatch({
           type: 'setError',
           data: 'Failed to delete workspace'
         })
         setTimeout(() =>
-          errorDispatch({ type: 'clearError' })
+          messageDispatch({ type: 'clearError' })
         , 2000)
       })
       .finally(() => {
@@ -110,11 +111,15 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
     try {
       await exportWorkspace(workspaceId, workspaceId)
     } catch (err) {
-      errorDispatch({
+      messageDispatch({
         type: 'setError',
         data: err.message
       })
     }
+  }
+
+  const handleShareOpen = async () => {
+    setMenuAnchor(null)
   }
 
   const onChange = (event, newPage) => {
@@ -155,6 +160,12 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
                 <CloudDownloadIcon />
               </ListItemIcon>
               Export
+            </MenuItem>
+            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              Share link
             </MenuItem>
             <MenuItem aria-label='Delete' onClick={handleDelete}>
               <ListItemIcon>

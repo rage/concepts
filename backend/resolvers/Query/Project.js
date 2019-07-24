@@ -7,12 +7,9 @@ const ProjectQueries = {
   },
   async projectById(root, args, context) {
     await checkAccess(context, {
-      allowStaff: true,
-      checkPrivilege: {
-        minimumRole: Role.STAFF,
-        minimumPrivilege: Privilege.READ,
-        projectId: args.id
-      }
+      minimumRole: Role.STAFF,
+      minimumPrivilege: Privilege.READ,
+      projectId: args.id
     })
     return context.prisma.project({
       id: args.id

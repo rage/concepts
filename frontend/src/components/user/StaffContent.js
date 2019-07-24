@@ -7,6 +7,8 @@ import {
   CREATE_WORKSPACE,
   DELETE_WORKSPACE,
   UPDATE_WORKSPACE,
+  CREATE_SHARE_LINK,
+  DELETE_SHARE_LINK,
   CREATE_PROJECT,
   DELETE_PROJECT,
   UPDATE_PROJECT
@@ -29,7 +31,7 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const StaffView = ({ userId }) => {
+const StaffView = () => {
   const workspaceQuery = useQuery(WORKSPACES_FOR_USER)
 
   const projectQuery = useQuery(PROJECTS_FOR_USER)
@@ -47,6 +49,18 @@ const StaffView = ({ userId }) => {
   })
 
   const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
+    refetchQueries: [{
+      query: WORKSPACES_FOR_USER
+    }]
+  })
+
+  const createShareLink = useMutation(CREATE_SHARE_LINK, {
+    refetchQueries: [{
+      query: WORKSPACES_FOR_USER
+    }]
+  })
+
+  const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
     refetchQueries: [{
       query: WORKSPACES_FOR_USER
     }]
@@ -80,6 +94,8 @@ const StaffView = ({ userId }) => {
           updateWorkspace={updateWorkspace}
           createWorkspace={createWorkspace}
           deleteWorkspace={deleteWorkspace}
+          createShareLink={createShareLink}
+          deleteShareLink={deleteShareLink}
         />
         <ProjectList
           projects={projectQuery.data.projectsForUser.map(p => p.project)}
