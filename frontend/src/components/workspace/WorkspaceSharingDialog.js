@@ -35,15 +35,16 @@ const WorkspaceSharingDialog = ({
   }
 
   let url = 'No share links created'
+  let realURL = null
   if (existingToken) {
-    const realURL = new URL(window.location)
+    realURL = new URL(window.location)
     realURL.pathname = `/join/w${existingToken}`
     url = <a href={realURL}>{realURL.host}{realURL.pathname}</a>
   }
 
   const copyToClipboard = () => {
     if (existingToken) {
-      navigator.clipboard.writeText(`${window.location}/join/w${existingToken}`).then(() => {
+      navigator.clipboard.writeText(realURL.toString()).then(() => {
         messageDispatch({
           type: 'setNotification',
           data: 'Copied to clipboard!'
@@ -73,12 +74,12 @@ const WorkspaceSharingDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button
+        {realURL && <Button
           onClick={copyToClipboard}
           color='secondary'
         >
           Copy to clipboard
-        </Button>
+        </Button>}
 
         <Button
           onClick={handleRegenerate}
