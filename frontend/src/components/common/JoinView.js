@@ -15,7 +15,7 @@ const JoinView = ({ history, token }) => {
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
-  const fuckingReactRulesJustUseShareLink = useMutation(USE_SHARE_LINK, {
+  const joinWorkspace = useMutation(USE_SHARE_LINK, {
     refetchQueries: [{
       query: WORKSPACES_FOR_USER
     }]
@@ -32,7 +32,7 @@ const JoinView = ({ history, token }) => {
 
   const handleCreate = () => {
     setLoading(true)
-    fuckingReactRulesJustUseShareLink({
+    joinWorkspace({
       variables: { token }
     }).then(resp => {
       history.push(`/workspaces/${resp.data.joinWorkspace.workspace.id}/mapper`)
