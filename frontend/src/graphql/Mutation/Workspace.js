@@ -31,6 +31,7 @@ mutation createTemplateWorkspace($projectId: ID!) {
   createTemplateWorkspace(projectId: $projectId) {
     id
     name
+    active
     courses {
       id
     }
@@ -48,22 +49,11 @@ mutation createTemplateWorkspace($projectId: ID!) {
 `
 
 const UPDATE_TEMPLATE_WORKSPACE = gql`
-mutation updateTemplateWorkspace($id: ID!) {
-  updateTemplateWorkspace(id: $id) {
+mutation updateTemplateWorkspace($id: ID!, $name: String, $active: Boolean) {
+  updateTemplateWorkspace(id: $id, name: $name, active: $active) {
     id
     name
-    courses {
-      id
-    }
-    concepts {
-      id
-    }
-    courseLinks {
-      id
-    }
-    conceptLinks {
-      id
-    }
+    active
   }
 }
 `

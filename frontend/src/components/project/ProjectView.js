@@ -1,8 +1,10 @@
 import React from 'react'
-import { useQuery } from 'react-apollo-hooks'
-import { PROJECT_BY_ID, PROJECT_AND_DATA } from '../../graphql/Query/Project'
-import { makeStyles } from '@material-ui/core/styles'
 
+import { useQuery, useMutation } from 'react-apollo-hooks'
+import { PROJECT_AND_DATA } from '../../graphql/Query'
+import { CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
+
+import { makeStyles } from '@material-ui/core/styles'
 
 import TemplateList from './TemplateList'
 
@@ -30,14 +32,30 @@ const ProjectView = ({ projectId }) => {
     variables: { id: projectId }
   })
 
-  const deleteTemplate = () => null
+  const createShareLink = useMutation(CREATE_SHARE_LINK, {
+    refetchQueries: [{
+      query: PROJECT_AND_DATA
+    }]
+  })
+
+  const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
+    refetchQueries: [{
+      query: PROJECT_AND_DATA
+    }]
+  })
+
+  const deleteTemplateWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
+    refetchQueries: [{
+      query: PROJECT_AND_DATA
+    }]
+  })
 
   const classes = useStyles()
 
   return (
     <>
       {
-        projectQuery.data.projectAndData ?
+        projectQuery.data.projectById ?
           <div id={'projectView'} className={classes.root}>
             <div id={'projectHeader'}
               style={{ gridArea: 'projectHeader', backgroundColor: 'cyan' }}
@@ -52,18 +70,15 @@ const ProjectView = ({ projectId }) => {
               <div id={'participantManager'}></div>
             </div>
             <div id={'templates'}
-              style={{ backgroundColor: 'red', gridArea: 'templates' }}
+              style={{ margin: '0px 14px 0px 14px', gridArea: 'templates' }}
             >
-              {/* <div id={'templateHeader'}>
-                <h3>TEMPLATES</h3>
-                <div id={'createTemplateButton'}></div>
-              </div>
-              <div id={'templateList'}>
-                LIST HERE
-              </div> */}
               <TemplateList
                 projectId={projectId}
-                templateWorkspaces={[projectQuery.data.projectAndData.template]}
+                templateWorkspaces={projectQuery.data.projectById.template ?
+                  [projectQuery.data.projectById.template] : []}
+                createShareLink={createShareLink}
+                deleteShareLink={deleteShareLink}
+                deleteTemplateWorkspace={deleteTemplateWorkspace}
               />
             </div>
             <div id={'userWorkspaces'}

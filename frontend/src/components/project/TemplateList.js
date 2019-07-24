@@ -22,6 +22,8 @@ import WorkspaceSharingDialog from '../workspace/WorkspaceSharingDialog'
 import { exportWorkspace } from '../common/WorkspaceNavBar'
 
 import { useMessageStateValue, useLoginStateValue } from '../../store'
+import useEditTemplateDialog from './useEditTemplateDialog'
+import useCreateTemplateDialog from './useCreateTemplateDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,17 +40,25 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const TemplateList = ({
-  history, templateWorkspaces, deleteTemplate, createTemplate, updateTemplate,
+  history, templateWorkspaces, deleteTemplateWorkspace,
   createShareLink, deleteShareLink, projectId
 }) => {
   const classes = useStyles()
-  const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
   const [stateShare, setStateShare] = useState({ open: false, workspace: null })
   const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
+
+  const {
+    openEditTemplateDialog,
+    TemplateEditDialog
+  } = useEditTemplateDialog(projectId)
+
+  const {
+    openCreateTemplateDialog,
+    TemplateCreateDialog
+  } = useCreateTemplateDialog(projectId)
 
   const handleMenuOpen = (workspace, event) => {
     setMenu({
@@ -82,12 +92,8 @@ const TemplateList = ({
       })
       return
     }
-    setStateCreate({ open: true })
+    openCreateTemplateDialog()
   }
-
-  // const handleCreateClose = () => {
-  //   setStateCreate({ open: false })
-  // }
 
   const handleEditOpen = () => {
     handleMenuClose()
@@ -98,12 +104,8 @@ const TemplateList = ({
       })
       return
     }
-    setStateEdit({ open: true, id: menu.workspace.id, name: menu.workspace.name })
+    openEditTemplateDialog(menu.workspace.id, menu.workspace.name)
   }
-
-  // const handleEditClose = () => {
-  //   setStateEdit({ open: false, id: '', name: '' })
-  // }
 
   const handleShareOpen = () => {
     handleMenuClose()
@@ -134,7 +136,7 @@ const TemplateList = ({
     const willDelete = window.confirm('Are you sure you want to delete this template?')
     if (willDelete) {
       try {
-        await deleteTemplate({
+        await deleteTemplateWorkspace({
           variables: { id: menu.workspace.id }
         })
       } catch (err) {
@@ -171,7 +173,7 @@ const TemplateList = ({
           }
           title={
             <Typography variant='h5' component='h3'>
-              Workspaces
+              {'Template workspaces'}
             </Typography>
           }
         />
@@ -254,7 +256,10 @@ const TemplateList = ({
       <WorkspaceSharingDialog
         open={stateShare.open} workspace={templateWorkspaces.find(ws => ws.id === stateShare.id)}
         handleClose={handleShareClose} createShareLink={createShareLink}
-        deleteShareLink={deleteShareLink} />
+        deleteShareLink={deleteShareLink}
+      />
+      {TemplateCreateDialog}
+      {TemplateEditDialog}
     </>
   )
 }
