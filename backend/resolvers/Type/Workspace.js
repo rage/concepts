@@ -18,10 +18,15 @@ module.exports = {
         id: root.id
       }).participants()
     },
-    project(root, args, context) {
+    sourceProject(root, args, context) {
       return context.prisma.workspace({
         id: root.id
-      }).project()
+      }).sourceProject()
+    },
+    asTemplate(root, args, context) {
+      return context.prisma.workspace({
+        id: root.id
+      }).asTemplate()
     },
     courses(root, args, context) {
       return context.prisma.workspace({

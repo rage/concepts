@@ -71,6 +71,11 @@ type Mutation {
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String!): Workspace
 
+  # Template workspace mutations
+  createTemplateWorkspace(projectId: ID!): Workspace
+  deleteTemplateWorkspace(id: ID!): Workspace
+  updateTemplateWorkspace(id: ID!, name: String, active: Boolean): Workspace
+
   # Porting mutations
   importData(data: String!): Workspace
 
@@ -127,7 +132,8 @@ type Project {
   id: ID!
   name: String!
   workspaces: [Workspace!]!
-  template: Workspace
+  activeTemplate: Workspace
+  templates: [Workspace!]!
   participants: [ProjectParticipant!]!
   tokens: [ProjectToken!]!
 }
@@ -135,7 +141,8 @@ type Project {
 type Workspace {
   id: ID!
   name: String!
-  project: Project
+  sourceProject: Project
+  asTemplate: Project
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!

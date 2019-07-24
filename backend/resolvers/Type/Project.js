@@ -12,10 +12,15 @@ module.exports = {
         id: root.id
       }).workspaces()
     },
-    template(root, args, context) {
+    templates(root, args, context) {
       return context.prisma.project({
         id: root.id
-      }).template()
+      }).templates()
+    },
+    activeTemplate(root, args, context) {
+      return context.prisma.project({
+        id: root.id
+      }).activeTemplate()
     },
     async tokens(root, args, context) {
       if (!(await checkPrivilege(context, {

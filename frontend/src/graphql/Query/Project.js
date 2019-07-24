@@ -36,9 +36,12 @@ query projectAndData($id: ID!) {
       id
       name
     }
-    template {
+    templates {
       id
       name
+    }
+    activeTemplate {
+      id
     }
     participants {
       privilege
