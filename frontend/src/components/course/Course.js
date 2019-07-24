@@ -1,22 +1,11 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-
-// Card
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-
-// List
-import List from '@material-ui/core/List'
-
-// Icons
-import IconButton from '@material-ui/core/IconButton'
-import EditIcon from '@material-ui/icons/Edit'
-
 import { withRouter } from 'react-router-dom'
-import Concept from '../concept/Concept'
+import { makeStyles } from '@material-ui/core/styles'
 
+import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
+import { Edit as EditIcon } from '@material-ui/icons'
+
+import Concept from '../concept/Concept'
 import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -80,16 +69,18 @@ const Course = ({
 
   return (
     <Card elevation={0} className={classes.root}>
-      <CardHeader className={classes.cardHeader} title={
-        <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
-      } action={
-        loggedIn ?
-          <IconButton onClick={openCourseDialog(course.id, course.name)}>
-            <EditIcon />
-          </IconButton>
-          : null
-
-      }>
+      <CardHeader
+        className={classes.cardHeader}
+        title={
+          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
+        }
+        action={
+          loggedIn ?
+            <IconButton onClick={openCourseDialog(course.id, course.name)}>
+              <EditIcon />
+            </IconButton>
+            : null
+        }>
       </CardHeader>
 
       <CardContent>

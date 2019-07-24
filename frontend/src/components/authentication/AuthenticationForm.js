@@ -1,28 +1,20 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/core/styles'
-
-import Container from '@material-ui/core/Container'
-import CssBaseline from '@material-ui/core/CssBaseline'
-
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import CircularProgress from '@material-ui/core/CircularProgress'
-
-import { signIn, isSignedIn } from '../../lib/authentication'
 import { withRouter } from 'react-router-dom'
-
 import { useMutation } from 'react-apollo-hooks'
+import { makeStyles } from '@material-ui/core/styles'
+
+import {
+  Container, CssBaseline, Button, TextField, Typography, FormHelperText, CircularProgress
+} from '@material-ui/core'
 
 import {
   CREATE_GUEST_ACCOUNT
 } from '../../graphql/Mutation'
 
-
+import { signIn, isSignedIn } from '../../lib/authentication'
 import { useLoginStateValue } from '../../store'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -45,9 +37,10 @@ const styles = theme => ({
     marginTop: -12,
     marginLeft: -12
   }
-})
+}))
 
-const AuthenticationForm = ({ history, location, classes }) => {
+const AuthenticationForm = ({ history, location }) => {
+  const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -191,4 +184,4 @@ const AuthenticationForm = ({ history, location, classes }) => {
 }
 
 
-export default withRouter(withStyles(styles)(AuthenticationForm))
+export default withRouter(AuthenticationForm)
