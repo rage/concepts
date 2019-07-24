@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
+
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
@@ -13,8 +15,6 @@ import {
 import client from '../../apollo/apolloClient'
 import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { DELETE_WORKSPACE } from '../../graphql/Mutation'
-
-import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
 
@@ -39,6 +39,15 @@ const useStyles = makeStyles({
   }
 })
 
+const downloadFile = (data, fileName) => {
+  const element = document.createElement('a')
+  element.href = URL.createObjectURL(new Blob([data], { 'type': 'application/json' }))
+  element.download = fileName
+  document.body.appendChild(element)
+  element.click()
+  document.body.removeChild(element)
+}
+
 export const exportWorkspace = async (workspaceId, workspaceName) => {
   const queryResponse = await client.query({
     query: EXPORT_QUERY,
@@ -47,15 +56,7 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
     }
   })
 
-  const jsonData = queryResponse['data']['exportData']
-
-  // Download JSON file
-  const element = document.createElement('a')
-  element.href = URL.createObjectURL(new Blob([jsonData], { 'type': 'application/json' }))
-  element.download = `${workspaceName}.json`
-  document.body.appendChild(element)
-  element.click()
-  document.body.removeChild(element)
+  downloadFile(queryResponse['data']['exportData'], `${workspaceName}.json`)
 }
 
 const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
@@ -130,8 +131,9 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   return (
     <>
       <Paper className={classes.root} square>
-        {/* Placeholder so flex would align navbar at center*/}
-        {user.role === 'STAFF' && <div className={classes.leftPlaceholder} />}
+        { /* Placeholder so flex would align navbar at center*/
+          user.role === 'STAFF' && <div className={classes.leftPlaceholder} />
+        }
         <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
           <BottomNavigationAction value='matrix' label='Concept Matrix' icon={<ShowCartIcon />} />

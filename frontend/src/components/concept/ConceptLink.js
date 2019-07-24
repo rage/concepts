@@ -1,5 +1,4 @@
 import React, { Component, PureComponent } from 'react'
-
 import { withStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
