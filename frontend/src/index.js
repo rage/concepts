@@ -39,7 +39,7 @@ const loginReducer = (state, action) => {
   }
 }
 
-const errorReducer = (state, action) => {
+const messageReducer = (state, action) => {
   switch (action.type) {
   case 'setError':
     return {
@@ -79,7 +79,7 @@ const getLoggedInUser = () => {
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <MessagingStateProvider initialState={{ error: '', notification: '' }} reducer={errorReducer}>
+      <MessagingStateProvider initialState={{ error: '', notification: '' }} reducer={messageReducer}>
         <LoginStateProvider
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}
