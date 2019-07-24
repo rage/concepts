@@ -85,8 +85,7 @@ const App = ({ classes }) => {
         <Route exact path='/user' render={() => <UserView />} />
 
         <PrivateRoute
-          exact condition={loggedIn} path='/join/:token'
-          redirectPathFunc={({ token }) => `/auth/?then=/join/${token}`}
+          exact path='/join/:token' redirectPath='/auth' condition={loggedIn}
           render={({ match: { params: { token } } }) => <JoinView token={token} />} />
 
         <Route exact path='/workspaces/:wid/heatmap' render={({ match }) => (

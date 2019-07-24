@@ -56,9 +56,8 @@ const AuthenticationForm = ({ history, location, classes }) => {
   const [loadingGuest, setLoadingGuest] = useState(false)
 
   const dispatch = useLoginStateValue()[1]
-  const params = new URLSearchParams(location.search)
-  const showGuestButton = params.get('then')
-  const nextPath = params.get('then') || '/user'
+  const showGuestButton = Boolean(location.state)
+  const nextPath = location.state ? location.state.from.pathname : '/user'
 
   const authenticate = (event) => {
     event.preventDefault()
