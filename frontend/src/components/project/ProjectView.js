@@ -1,7 +1,10 @@
 import React from 'react'
 import { useQuery } from 'react-apollo-hooks'
-import { PROJECT_BY_ID } from '../../graphql/Query/Project'
+import { PROJECT_BY_ID, PROJECT_AND_DATA } from '../../graphql/Query/Project'
 import { makeStyles } from '@material-ui/core/styles'
+
+
+import TemplateList from './TemplateList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -23,16 +26,18 @@ const useStyles = makeStyles(() => ({
 }))
 
 const ProjectView = ({ projectId }) => {
-  const projectQuery = useQuery(PROJECT_BY_ID, {
+  const projectQuery = useQuery(PROJECT_AND_DATA, {
     variables: { id: projectId }
   })
+
+  const deleteTemplate = () => null
 
   const classes = useStyles()
 
   return (
     <>
       {
-        projectQuery.data.projectById ?
+        projectQuery.data.projectAndData ?
           <div id={'projectView'} className={classes.root}>
             <div id={'projectHeader'}
               style={{ gridArea: 'projectHeader', backgroundColor: 'cyan' }}
@@ -49,13 +54,17 @@ const ProjectView = ({ projectId }) => {
             <div id={'templates'}
               style={{ backgroundColor: 'red', gridArea: 'templates' }}
             >
-              <div id={'templateHeader'}>
+              {/* <div id={'templateHeader'}>
                 <h3>TEMPLATES</h3>
                 <div id={'createTemplateButton'}></div>
               </div>
               <div id={'templateList'}>
                 LIST HERE
-              </div>
+              </div> */}
+              <TemplateList
+                projectId={projectId}
+                templateWorkspaces={[projectQuery.data.projectAndData.template]}
+              />
             </div>
             <div id={'userWorkspaces'}
               style={{ backgroundColor: 'green', gridArea: 'userWorkspaces' }}

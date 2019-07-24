@@ -26,8 +26,61 @@ mutation deleteWorkspace($id: ID!) {
 }
 `
 
+const CREATE_TEMPLATE_WORKSPACE = gql`
+mutation createTemplateWorkspace($projectId: ID!) {
+  createTemplateWorkspace(projectId: $projectId) {
+    id
+    name
+    courses {
+      id
+    }
+    concepts {
+      id
+    }
+    courseLinks {
+      id
+    }
+    conceptLinks {
+      id
+    }
+  }
+}
+`
+
+const UPDATE_TEMPLATE_WORKSPACE = gql`
+mutation updateTemplateWorkspace($id: ID!) {
+  updateTemplateWorkspace(id: $id) {
+    id
+    name
+    courses {
+      id
+    }
+    concepts {
+      id
+    }
+    courseLinks {
+      id
+    }
+    conceptLinks {
+      id
+    }
+  }
+}
+`
+
+const DELETE_TEMPLATE_WORKSPACE = gql`
+mutation deleteTemplateWorkspace($id: ID!) {
+  deleteTemplateWorkspace(id: $id) {
+    id
+  }
+}
+`
+
 export {
   CREATE_WORKSPACE,
   UPDATE_WORKSPACE,
-  DELETE_WORKSPACE
+  DELETE_WORKSPACE,
+  CREATE_TEMPLATE_WORKSPACE,
+  UPDATE_TEMPLATE_WORKSPACE,
+  DELETE_TEMPLATE_WORKSPACE
 }
