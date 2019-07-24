@@ -8,6 +8,7 @@ type User {
   projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser")
   createdAt: DateTime! @createdAt
   guideProgress: Int! @default(value: 0)
+  lastActivity: DateTime
 }
 
 enum Role {

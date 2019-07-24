@@ -709,7 +709,9 @@ export type UserOrderByInput =
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "guideProgress_ASC"
-  | "guideProgress_DESC";
+  | "guideProgress_DESC"
+  | "lastActivity_ASC"
+  | "lastActivity_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -967,6 +969,14 @@ export interface UserWhereInput {
   guideProgress_lte?: Maybe<Int>;
   guideProgress_gt?: Maybe<Int>;
   guideProgress_gte?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
+  lastActivity_not?: Maybe<DateTimeInput>;
+  lastActivity_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  lastActivity_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  lastActivity_lt?: Maybe<DateTimeInput>;
+  lastActivity_lte?: Maybe<DateTimeInput>;
+  lastActivity_gt?: Maybe<DateTimeInput>;
+  lastActivity_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<UserWhereInput[] | UserWhereInput>;
   OR?: Maybe<UserWhereInput[] | UserWhereInput>;
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
@@ -1340,6 +1350,7 @@ export interface UserCreateInput {
   >;
   projectParticipations?: Maybe<ProjectParticipantCreateManyWithoutUserInput>;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface WorkspaceParticipantCreateManyWithoutUserInput {
@@ -1751,6 +1762,7 @@ export interface UserCreateWithoutWorkspaceParticipationsInput {
   role: Role;
   projectParticipations?: Maybe<ProjectParticipantCreateManyWithoutUserInput>;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface ProjectParticipantCreateManyWithoutUserInput {
@@ -1886,6 +1898,7 @@ export interface UserCreateWithoutProjectParticipationsInput {
     WorkspaceParticipantCreateManyWithoutUserInput
   >;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface ProjectTokenCreateOneWithoutParticipantsInput {
@@ -1992,6 +2005,7 @@ export interface UserUpdateDataInput {
   >;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface WorkspaceParticipantUpdateManyWithoutUserInput {
@@ -2933,6 +2947,7 @@ export interface UserUpdateWithoutWorkspaceParticipationsDataInput {
   role?: Maybe<Role>;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface ProjectParticipantUpdateManyWithoutUserInput {
@@ -3391,6 +3406,7 @@ export interface UserUpdateWithoutProjectParticipationsDataInput {
     WorkspaceParticipantUpdateManyWithoutUserInput
   >;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface UserUpsertWithoutProjectParticipationsInput {
@@ -4114,12 +4130,14 @@ export interface UserUpdateInput {
   >;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface UserUpdateManyMutationInput {
   tmcId?: Maybe<Int>;
   role?: Maybe<Role>;
   guideProgress?: Maybe<Int>;
+  lastActivity?: Maybe<DateTimeInput>;
 }
 
 export interface WorkspaceUpdateInput {
@@ -4537,6 +4555,7 @@ export interface User {
   role: Role;
   createdAt: DateTimeOutput;
   guideProgress: Int;
+  lastActivity?: DateTimeOutput;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -4565,6 +4584,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   guideProgress: () => Promise<Int>;
+  lastActivity: () => Promise<DateTimeOutput>;
 }
 
 export interface UserSubscription
@@ -4597,6 +4617,7 @@ export interface UserSubscription
   }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   guideProgress: () => Promise<AsyncIterator<Int>>;
+  lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserNullablePromise
@@ -4627,6 +4648,7 @@ export interface UserNullablePromise
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   guideProgress: () => Promise<Int>;
+  lastActivity: () => Promise<DateTimeOutput>;
 }
 
 export interface WorkspaceParticipant {
@@ -6605,6 +6627,7 @@ export interface UserPreviousValues {
   role: Role;
   createdAt: DateTimeOutput;
   guideProgress: Int;
+  lastActivity?: DateTimeOutput;
 }
 
 export interface UserPreviousValuesPromise
@@ -6615,6 +6638,7 @@ export interface UserPreviousValuesPromise
   role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   guideProgress: () => Promise<Int>;
+  lastActivity: () => Promise<DateTimeOutput>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -6625,6 +6649,7 @@ export interface UserPreviousValuesSubscription
   role: () => Promise<AsyncIterator<Role>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   guideProgress: () => Promise<AsyncIterator<Int>>;
+  lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface WorkspaceSubscriptionPayload {

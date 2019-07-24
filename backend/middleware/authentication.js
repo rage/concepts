@@ -60,6 +60,17 @@ const getUser = async (token, context, prisma) => {
       context.role = Role.GUEST
     }
   }
+
+  // Update last activity of the user
+  await prisma.updateUser({
+    where: {
+      id: context.user.id
+    },
+    data: {
+      lastActivity: new Date().toISOString()
+    }
+  })
+
 }
 
 module.exports = { authenticate }

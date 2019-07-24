@@ -2695,6 +2695,7 @@ type User {
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   createdAt: DateTime!
   guideProgress: Int!
+  lastActivity: DateTime
 }
 
 type UserConnection {
@@ -2710,6 +2711,7 @@ input UserCreateInput {
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserCreateOneInput {
@@ -2733,6 +2735,7 @@ input UserCreateWithoutProjectParticipationsInput {
   role: Role!
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserCreateWithoutWorkspaceParticipationsInput {
@@ -2741,6 +2744,7 @@ input UserCreateWithoutWorkspaceParticipationsInput {
   role: Role!
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 type UserEdge {
@@ -2759,6 +2763,8 @@ enum UserOrderByInput {
   createdAt_DESC
   guideProgress_ASC
   guideProgress_DESC
+  lastActivity_ASC
+  lastActivity_DESC
 }
 
 type UserPreviousValues {
@@ -2767,6 +2773,7 @@ type UserPreviousValues {
   role: Role!
   createdAt: DateTime!
   guideProgress: Int!
+  lastActivity: DateTime
 }
 
 type UserSubscriptionPayload {
@@ -2793,6 +2800,7 @@ input UserUpdateDataInput {
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserUpdateInput {
@@ -2801,12 +2809,14 @@ input UserUpdateInput {
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserUpdateManyMutationInput {
   tmcId: Int
   role: Role
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserUpdateOneRequiredInput {
@@ -2835,6 +2845,7 @@ input UserUpdateWithoutProjectParticipationsDataInput {
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserUpdateWithoutWorkspaceParticipationsDataInput {
@@ -2842,6 +2853,7 @@ input UserUpdateWithoutWorkspaceParticipationsDataInput {
   role: Role
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   guideProgress: Int
+  lastActivity: DateTime
 }
 
 input UserUpsertNestedInput {
@@ -2908,6 +2920,14 @@ input UserWhereInput {
   guideProgress_lte: Int
   guideProgress_gt: Int
   guideProgress_gte: Int
+  lastActivity: DateTime
+  lastActivity_not: DateTime
+  lastActivity_in: [DateTime!]
+  lastActivity_not_in: [DateTime!]
+  lastActivity_lt: DateTime
+  lastActivity_lte: DateTime
+  lastActivity_gt: DateTime
+  lastActivity_gte: DateTime
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
