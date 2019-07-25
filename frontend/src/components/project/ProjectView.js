@@ -6,7 +6,7 @@ import { Typography, CircularProgress } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import {
-  CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE
+  CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE
 } from '../../graphql/Mutation'
 
 import UserWorkspaceList from './UserWorkspaceList'
@@ -83,6 +83,13 @@ const ProjectView = ({ projectId }) => {
     }]
   })
 
+  const setActiveTemplate = useMutation(SET_ACTIVE_TEMPLATE, {
+    refetchQueries: [{
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
+    }]
+  })
+
   const classes = useStyles()
 
   return projectQuery.data.projectById ?
@@ -96,10 +103,12 @@ const ProjectView = ({ projectId }) => {
       <div className={classes.templates}>
         <TemplateList
           projectId={projectId}
-          templateWorkspaces={projectQuery.data.projectById.templates || []}
+          activeTemplate={projectQuery.data.projectById.activeTemplate}
+          templateWorkspaces={projectQuery.data.projectById.templates}
           createShareLink={createShareLink}
           deleteShareLink={deleteShareLink}
           deleteTemplateWorkspace={deleteTemplateWorkspace}
+          setActiveTemplate={setActiveTemplate}
         />
       </div>
       <div className={classes.userWorkspaces}>

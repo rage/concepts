@@ -14,7 +14,9 @@ import {
   GridOn as GridOnIcon,
   MoreVert as MoreVertIcon,
   ShowChart as ShowChartIcon,
-  CloudDownload as CloudDownloadIcon
+  CloudDownload as CloudDownloadIcon,
+  RadioButtonChecked,
+  RadioButtonUnchecked
 } from '@material-ui/icons'
 
 import WorkspaceSharingDialog from '../workspace/WorkspaceSharingDialog'
@@ -41,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 const TemplateList = ({
   history, templateWorkspaces, deleteTemplateWorkspace,
-  createShareLink, deleteShareLink, projectId
+  createShareLink, deleteShareLink, projectId, activeTemplate, setActiveTemplate
 }) => {
   const classes = useStyles()
   const [stateShare, setStateShare] = useState({ open: false, workspace: null })
@@ -132,7 +134,6 @@ const TemplateList = ({
       })
       return
     }
-
     const willDelete = window.confirm('Are you sure you want to delete this template?')
     if (willDelete) {
       try {
@@ -148,6 +149,47 @@ const TemplateList = ({
     }
   }
 
+  const handleSetActive = async () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    if (activeTemplate) {
+      if (menu.workspace.id === activeTemplate.id) {
+        console.log('UNSET')
+        try {
+          await setActiveTemplate({
+            variables: { projectId }
+          })
+        } catch (err) {
+          messageDispatch({
+            type: 'setError',
+            data: err.message
+          })
+        }
+        return
+      } else {
+        const change = window.confirm('Are you sure that you want to switch the active template? This will change which template is cloned by users.')
+        if (!change) return
+      }
+    }
+    console.log('SET')
+    try {
+      await setActiveTemplate({
+        variables: { projectId, workspaceId: menu.workspace.id }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
+  }
+
   const handleNavigateMapper = (workspaceId) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
   }
@@ -160,6 +202,7 @@ const TemplateList = ({
     history.push(`/workspaces/${menu.workspace.id}/heatmap`)
   }
 
+  const isActiveTemplate = (menu && activeTemplate) && menu.workspace.id === activeTemplate.id
 
   return (
     <>
@@ -237,17 +280,28 @@ const TemplateList = ({
             </ListItemIcon>
             Share link
           </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <MenuItem aria-label='Set as active' onClick={handleSetActive}>
             <ListItemIcon>
-              <DeleteIcon />
+              {
+                isActiveTemplate ?
+                  <RadioButtonChecked />
+                  :
+                  <RadioButtonUnchecked />
+              }
             </ListItemIcon>
-            Delete
+            {!isActiveTemplate ? 'Set' : 'Unset'} as active
           </MenuItem>
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>
             Edit
+          </MenuItem>
+          <MenuItem aria-label='Delete' onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            Delete
           </MenuItem>
         </Menu>
       </Card>

@@ -13,7 +13,7 @@ query projectsForUser {
 `
 
 const PROJECT_BY_ID = gql`
-query projectAndData($id: ID!) {
+query projectById($id: ID!) {
   projectById(id: $id) {
     id
     name
