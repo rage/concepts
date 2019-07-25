@@ -1,11 +1,15 @@
 import React from 'react'
-
-import { useQuery, useMutation } from 'react-apollo-hooks'
-import { PROJECT_AND_DATA } from '../../graphql/Query'
-import { CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
-import UserWorkspaceList from './UserWorkspaceList'
 import { makeStyles } from '@material-ui/core/styles'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 
+import { Typography, CircularProgress } from '@material-ui/core'
+
+import { PROJECT_AND_DATA } from '../../graphql/Query'
+import {
+  CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE
+} from '../../graphql/Mutation'
+
+import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
 
 const useStyles = makeStyles(() => ({
@@ -17,13 +21,28 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"projectHeader projectHeader"  64px
-                   "toolbar       toolbar"        48px
-                   "templates     userWorkspaces" 1fr
-                   / 1fr 1fr`
-    // '@media screen and (max-width: 1000px)': {
-    //   gridTemplateColumns: '32% auto 32'
-    // }
+    gridTemplate: `"header     header"         64px
+                   "toolbar    toolbar"        48px
+                   "templates  userWorkspaces" 1fr
+                  / 1fr        1fr`,
+    '@media screen and (max-width: 1312px)': {
+      width: 'calc(100% - 32px)'
+    }
+  },
+  header: {
+    gridArea: 'header',
+    backgroundColor: 'cyan'
+  },
+  toolbar: {
+    gridArea: 'toolbar',
+    backgroundColor: 'blue'
+  },
+  templates: {
+    gridArea: 'templates'
+  },
+  userWorkspaces: {
+    gridArea: 'userWorkspaces',
+    backgroundColor: 'green'
   }
 }))
 
@@ -52,49 +71,37 @@ const ProjectView = ({ projectId }) => {
 
   const classes = useStyles()
 
-  return (
-    <>
-      {
-        projectQuery.data.projectById ?
-          <div id={'projectView'} className={classes.root}>
-            <div id={'projectHeader'}
-              style={{ gridArea: 'projectHeader', backgroundColor: 'cyan' }}
-            >
-              <h1>
-                {`Project: ${projectQuery.data.projectById.name}`}
-              </h1>
-            </div>
-            <div id={'toolbar'}
-              style={{ gridArea: 'toolbar', backgroundColor: 'blue' }}
-            >
-              <div id={'participantManager'}></div>
-            </div>
-            <div id={'templates'}
-              style={{ margin: '0px 14px 0px 14px', gridArea: 'templates' }}
-            >
-              <TemplateList
-                projectId={projectId}
-                templateWorkspaces={projectQuery.data.projectById.templates ?
-                  projectQuery.data.projectById.templates : []}
-                createShareLink={createShareLink}
-                deleteShareLink={deleteShareLink}
-                deleteTemplateWorkspace={deleteTemplateWorkspace}
-              />
-            </div>
-            <div id={'userWorkspaces'}
-              style={{ backgroundColor: 'green', gridArea: 'userWorkspaces' }}
-            >
-              <UserWorkspaceList
-                userWorkspaces={projectQuery.data.projectById.workspaces ?
-                  projectQuery.data.projectById.workspaces : []}
-              />
-            </div>
-          </div>
-          :
-          null
-      }
-    </>
-  )
+  return projectQuery.data.projectById ?
+    <div className={classes.root}>
+      <div className={classes.header}>
+        <Typography variant='h4'>Project: {projectQuery.data.projectById.name}</Typography>
+      </div>
+      <div className={classes.toolbar} id={'toolbar'}>
+        <div className={classes.participantManager}>
+          {/* TODO */}
+        </div>
+      </div>
+      <div className={classes.templates}>
+        <TemplateList
+          projectId={projectId}
+          templateWorkspaces={projectQuery.data.projectById.templates ?
+            projectQuery.data.projectById.templates : []}
+          createShareLink={createShareLink}
+          deleteShareLink={deleteShareLink}
+          deleteTemplateWorkspace={deleteTemplateWorkspace}
+        />
+      </div>
+      <div className={classes.userWorkspaces}>
+        <UserWorkspaceList
+          userWorkspaces={projectQuery.data.projectById.workspaces ?
+            projectQuery.data.projectById.workspaces : []}
+        />
+      </div>
+    </div>
+    :
+    <div style={{ textAlign: 'center' }}>
+      <CircularProgress />
+    </div>
 }
 
 export default ProjectView
