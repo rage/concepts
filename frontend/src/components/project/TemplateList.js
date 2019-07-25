@@ -38,6 +38,11 @@ const useStyles = makeStyles(theme => ({
   },
   progress: {
     margin: theme.spacing(2)
+  },
+  listItem: {
+    borderLeftStyle: 'solid',
+    borderLeftColor: theme.palette.primary.dark,
+    borderLeftWidth: 'medium'
   }
 }))
 
@@ -160,7 +165,6 @@ const TemplateList = ({
     }
     if (activeTemplate) {
       if (menu.workspace.id === activeTemplate.id) {
-        console.log('UNSET')
         try {
           await setActiveTemplate({
             variables: { projectId }
@@ -173,11 +177,12 @@ const TemplateList = ({
         }
         return
       } else {
-        const change = window.confirm('Are you sure that you want to switch the active template? This will change which template is cloned by users.')
+        const change = window.confirm(
+          `Are you sure that you want to switch the active template? 
+This will change which template is cloned by users.`)
         if (!change) return
       }
     }
-    console.log('SET')
     try {
       await setActiveTemplate({
         variables: { projectId, workspaceId: menu.workspace.id }
@@ -225,7 +230,12 @@ const TemplateList = ({
             templateWorkspaces ?
               templateWorkspaces.map(workspace => (
                 <ListItem
-                  button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+                  className={(activeTemplate) && workspace.id === activeTemplate.id ? 
+                    classes.listItem
+                    : null} 
+                  button
+                  key={workspace.id}
+                  onClick={() => handleNavigateMapper(workspace.id)}
                 >
                   <ListItemText
                     primary={
