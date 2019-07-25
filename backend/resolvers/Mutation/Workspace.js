@@ -5,7 +5,7 @@ const WorkspaceMutations = {
     await checkAccess(context, { minimumRole: Role.GUEST })
     return await context.prisma.createWorkspace({
       name: args.name,
-      project: args.projectId !== undefined ? {
+      asTemplate: args.projectId !== undefined ? {
         connect: { id: args.projectId }
       } : null,
       participants: {
@@ -21,7 +21,7 @@ const WorkspaceMutations = {
   async deleteWorkspace(root, { id }, context) {
     const asTemplate = await context.prisma.workspace({ id })
     if (asTemplate) {
-      return null
+      throw new Error("Cannot remove a template")
     }
     await checkAccess(context, {
       minimumRole: Role.GUEST,
