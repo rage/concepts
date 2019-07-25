@@ -68,7 +68,7 @@ const StaffView = () => {
 
   const createProject = useMutation(CREATE_PROJECT, {
     refetchQueries: [{
-      query: WORKSPACES_FOR_USER
+      query: PROJECTS_FOR_USER
     }]
   })
 
