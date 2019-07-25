@@ -19,7 +19,7 @@ const WorkspaceMutations = {
     })
   },
   async deleteWorkspace(root, { id }, context) {
-    const asTemplate = await context.prisma.workspace({ id })
+    const asTemplate = await context.prisma.workspace({ id }).asTemplate()
     if (asTemplate) {
       throw new Error("Cannot remove a template")
     }
