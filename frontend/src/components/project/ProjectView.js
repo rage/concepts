@@ -3,7 +3,7 @@ import React from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { PROJECT_AND_DATA } from '../../graphql/Query'
 import { CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
-
+import UserWorkspaceList from './UserWorkspaceList'
 import { makeStyles } from '@material-ui/core/styles'
 
 import TemplateList from './TemplateList'
@@ -84,13 +84,10 @@ const ProjectView = ({ projectId }) => {
             <div id={'userWorkspaces'}
               style={{ backgroundColor: 'green', gridArea: 'userWorkspaces' }}
             >
-              <div id={'userWorkspaceHeader'}>
-                <h3>USER WORKSPACES</h3>
-                <div id={'userWorkspaceFilters'}></div>
-              </div>
-              <div id={'userWorkspaceList'}>
-                LIST HERE
-              </div>
+              <UserWorkspaceList
+                userWorkspaces={projectQuery.data.projectById.workspaces ?
+                  projectQuery.data.projectById.workspaces : []}
+              />
             </div>
           </div>
           :
