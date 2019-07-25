@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     '& > div': {
       height: '100%',
-      overflow: 'scroll'
+      overflow: 'auto'
     }
   },
   userWorkspaces: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     '& > div': {
       height: '100%',
-      overflow: 'scroll'
+      overflow: 'auto'
     }
   }
 }))
