@@ -25,7 +25,7 @@ const useEditTemplateDialog = (projectId) => {
     <WorkspaceEditingDialog
       state={stateEdit}
       handleClose={handleEditClose}
-      updateTemplateWorkspace={updateTemplateWorkspace}
+      updateWorkspace={updateTemplateWorkspace}
       defaultName={stateEdit.name}
     />
   )
