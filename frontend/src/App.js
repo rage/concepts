@@ -6,7 +6,6 @@ import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
 
 import GuidedCourseView from './components/course/GuidedCourseView'
-import MatrixView from './components/course/MatrixView'
 import PortView from './components/porting/PortView'
 import NavBar from './components/common/NavBar'
 import WorkspaceNavBar from './components/common/WorkspaceNavBar'
@@ -93,9 +92,9 @@ const App = ({ classes }) => {
         )} />
 
         <Route
-          exact path='/workspaces/:id/(mapper|matrix)'
+          exact path='/workspaces/:wid/mapper'
           render={({ match, location }) =>
-            <WorkspaceView workspaceId={match.params.id} location={location} />}
+            <WorkspaceView workspaceId={match.params.wid} location={location} />}
         />
         <Route exact path='/workspaces/:wid/mapper/:cid' render={({ match }) => (
           <GuidedCourseView
@@ -104,26 +103,14 @@ const App = ({ classes }) => {
           />
         )}
         />
-        <Route exact path='/workspaces/:wid/matrix/:cid' render={({ match }) => (
-          <MatrixView
-            courseId={match.params.cid}
-            workspaceId={match.params.wid}
-          />
-        )} />
         <Route exact path='/workspaces/:wid/graph' render={({ match: { params: { wid } } }) =>
           <GraphView workspaceId={wid} />} />
         <Route exact path='/workspaces/:id/courses' render={() =>
           <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
         <Route
-          exact path='/workspaces/:wid/:page(mapper|matrix|graph|heatmap)/:cid?'
+          exact path='/workspaces/:wid/:page(mapper|graph|heatmap)/:cid?'
           render={({ match: { params: { wid, cid, page } } }) =>
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />}
-        />
-        <PrivateRoute
-          exact path='/courses/:id/matrix' redirectPath='/auth' condition={loggedIn}
-          render={({ match }) => {
-            return <MatrixView course_id={match.params.id} />
-          }}
         />
       </div>
       <Snackbar open={error !== ''}

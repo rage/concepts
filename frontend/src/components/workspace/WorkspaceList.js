@@ -151,10 +151,6 @@ const WorkspaceList = ({
     history.push(`/workspaces/${workspaceId}/mapper`)
   }
 
-  const handleNavigateMatrix = () => {
-    history.push(`/workspaces/${menu.workspace.id}/matrix`)
-  }
-
   const handleNavigateHeatmap = () => {
     history.push(`/workspaces/${menu.workspace.id}/heatmap`)
   }
@@ -217,12 +213,6 @@ const WorkspaceList = ({
               <GridOnIcon />
             </ListItemIcon>
             Heatmap
-          </MenuItem>
-          <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
-            <ListItemIcon>
-              <ShowChartIcon />
-            </ListItemIcon>
-            Matrix
           </MenuItem>
           <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
             <ListItemIcon>
