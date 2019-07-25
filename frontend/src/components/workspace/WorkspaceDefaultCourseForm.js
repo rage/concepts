@@ -13,7 +13,9 @@ import Typography from '@material-ui/core/Typography'
 import FormHelperText from '@material-ui/core/FormHelperText'
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
+import { WORKSPACE_BY_ID } from '../../graphql/Query'
 
+import client from '../../apollo/apolloClient'
 import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
@@ -45,7 +47,26 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
 
   const { user } = useLoginStateValue()[0]
 
-  const createCourse = useMutation(CREATE_COURSE)
+  const createCourse = useMutation(CREATE_COURSE, {
+    update: (store, response) => {
+      try {
+        const workspace = store.readQuery({
+          query: WORKSPACE_BY_ID,
+          variables: {
+            id: workspaceId
+          }
+        })
+        const createdCourse = response.data.createCourse
+        workspace.workspaceById.courses.push(createdCourse)
+        client.writeQuery({
+          query: WORKSPACE_BY_ID,
+          data: workspace
+        })
+      } catch (ex) {
+        return
+      }
+    }
+  })
 
   const createDefaultCourse = async (e) => {
     e.preventDefault()

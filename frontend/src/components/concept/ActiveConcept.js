@@ -1,20 +1,13 @@
 import React, { useState } from 'react'
+import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
+import {
+  ListItem, ListItemText, ListItemSecondaryAction, Menu, MenuItem, IconButton
+} from '@material-ui/core'
+import { MoreVert as MoreVertIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons'
 
-import IconButton from '@material-ui/core/IconButton'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-
-import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-
-// Error dispatcher
 import { useMessageStateValue, useLoginStateValue } from '../../store'
-import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
 import { createConceptLinkUpdate } from '../../apollo/update'
 
@@ -135,7 +128,7 @@ const ActiveConcept = ({
     || (!addingLink && activeConceptIds.includes(concept.id)))
     ? 'secondary' : undefined
 
-  return <>
+  return (
     <ListItem
       ref={activeConceptRef}
       button divider id={'concept-' + concept.id}
@@ -190,7 +183,7 @@ const ActiveConcept = ({
         </IconButton>
       </ListItemSecondaryAction>
     </ListItem>
-  </>
+  )
 }
 
 export default ActiveConcept

@@ -37,11 +37,7 @@ const UserView = () => {
     }]
   })
 
-  const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
-    refetchQueries: [{
-      query: WORKSPACES_FOR_USER
-    }]
-  })
+  const deleteShareLink = useMutation(DELETE_SHARE_LINK)
 
   return (
     workspaceQuery.data.workspacesForUser ?

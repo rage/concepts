@@ -1,29 +1,20 @@
 import React, { useState } from 'react'
+import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useMutation } from 'react-apollo-hooks'
+import {
+  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton
+} from '@material-ui/core'
+import { MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon } from '@material-ui/icons'
+
 import {
   DELETE_CONCEPT,
   CREATE_CONCEPT_LINK
 } from '../../graphql/Mutation'
-
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-
-import IconButton from '@material-ui/core/IconButton'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import ArrowLeftIcon from '@material-ui/icons/ArrowLeft'
-
 import {
   createConceptLinkUpdate,
   deleteConceptUpdate
 } from '../../apollo/update'
-
-// Error dispatcher
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(() => ({

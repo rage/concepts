@@ -4,7 +4,7 @@ import { UPDATE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, WORKSPACE_BY_ID } from '../../graphql/Query'
 import WorkspaceEditingDialog from '../workspace/WorkspaceEditingDialog'
 
-const useEditWorkspaceDialog = (workspaceId, userId) => {
+const useEditWorkspaceDialog = (workspaceId) => {
   const [workspaceEditState, setWorkspaceEditState] = useState({
     open: false,
     id: '',
