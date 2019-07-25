@@ -21,28 +21,39 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"header     header"         64px
-                   "toolbar    toolbar"        48px
-                   "templates  userWorkspaces" 1fr
-                  / 1fr        1fr`,
+    gridTemplate: `"header    header  header"         64px
+                   "______    ______  ______"        8px
+                   "toolbar   toolbar toolbar"        48px
+                   "_______   _______ _______"        8px
+                   "templates  ____   userWorkspaces" 1fr
+                  / 1fr        16px   1fr`,
     '@media screen and (max-width: 1312px)': {
       width: 'calc(100% - 32px)'
     }
   },
   header: {
     gridArea: 'header',
-    backgroundColor: 'cyan'
+    margin: '16px'
   },
   toolbar: {
     gridArea: 'toolbar',
-    backgroundColor: 'blue'
+    backgroundColor: 'white'
   },
   templates: {
-    gridArea: 'templates'
+    gridArea: 'templates',
+    overflow: 'hidden',
+    '& > div': {
+      height: '100%',
+      overflow: 'scroll'
+    }
   },
   userWorkspaces: {
     gridArea: 'userWorkspaces',
-    backgroundColor: 'green'
+    overflow: 'hidden',
+    '& > div': {
+      height: '100%',
+      overflow: 'scroll'
+    }
   }
 }))
 
@@ -73,29 +84,23 @@ const ProjectView = ({ projectId }) => {
 
   return projectQuery.data.projectById ?
     <div className={classes.root}>
-      <div className={classes.header}>
-        <Typography variant='h4'>Project: {projectQuery.data.projectById.name}</Typography>
-      </div>
-      <div className={classes.toolbar} id={'toolbar'}>
-        <div className={classes.participantManager}>
-          {/* TODO */}
-        </div>
+      <Typography className={classes.header} variant='h4'>
+        Project: {projectQuery.data.projectById.name}
+      </Typography>
+      <div className={classes.toolbar}>
+        <Typography variant='h6'>TODO: Toolbar</Typography>
       </div>
       <div className={classes.templates}>
         <TemplateList
           projectId={projectId}
-          templateWorkspaces={projectQuery.data.projectById.templates ?
-            projectQuery.data.projectById.templates : []}
+          templateWorkspaces={projectQuery.data.projectById.templates || []}
           createShareLink={createShareLink}
           deleteShareLink={deleteShareLink}
           deleteTemplateWorkspace={deleteTemplateWorkspace}
         />
       </div>
       <div className={classes.userWorkspaces}>
-        <UserWorkspaceList
-          userWorkspaces={projectQuery.data.projectById.workspaces ?
-            projectQuery.data.projectById.workspaces : []}
-        />
+        <UserWorkspaceList userWorkspaces={projectQuery.data.projectById.workspaces || []} />
       </div>
     </div>
     :
