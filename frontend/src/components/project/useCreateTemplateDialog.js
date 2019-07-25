@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { CREATE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
-import { PROJECT_AND_DATA } from '../../graphql/Query'
+import { PROJECT_BY_ID } from '../../graphql/Query'
 import TemplateCreationDialog from './TemplateCreationDialog'
 
 const useCreateTemplateDialog = (projectId) => {
@@ -9,7 +9,7 @@ const useCreateTemplateDialog = (projectId) => {
 
   const createTemplateWorkspace = useMutation(CREATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [
-      { query: PROJECT_AND_DATA, variables: { id: projectId } }
+      { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]
   })
 

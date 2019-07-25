@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { UPDATE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
-import { PROJECT_AND_DATA } from '../../graphql/Query'
+import { PROJECT_BY_ID } from '../../graphql/Query'
 import WorkspaceEditingDialog from '../workspace/WorkspaceEditingDialog'
 
 const useEditTemplateDialog = (projectId) => {
@@ -9,7 +9,7 @@ const useEditTemplateDialog = (projectId) => {
 
   const updateTemplateWorkspace = useMutation(UPDATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [
-      { query: PROJECT_AND_DATA, variables: { id: projectId } }
+      { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]
   })
 

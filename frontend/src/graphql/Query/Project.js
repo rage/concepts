@@ -13,21 +13,6 @@ query projectsForUser {
 `
 
 const PROJECT_BY_ID = gql`
-query projectById($id: ID!) {
-  projectById(id: $id) {
-    id
-    name
-    participants {
-      privilege
-      user {
-        id
-      }
-    }
-  }
-}
-`
-
-const PROJECT_AND_DATA = gql`
 query projectAndData($id: ID!) {
   projectById(id: $id) {
     id
@@ -55,6 +40,5 @@ query projectAndData($id: ID!) {
 
 export {
   PROJECTS_FOR_USER,
-  PROJECT_BY_ID,
-  PROJECT_AND_DATA
+  PROJECT_BY_ID
 }

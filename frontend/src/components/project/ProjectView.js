@@ -4,7 +4,7 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { Typography, CircularProgress } from '@material-ui/core'
 
-import { PROJECT_AND_DATA } from '../../graphql/Query'
+import { PROJECT_BY_ID } from '../../graphql/Query'
 import {
   CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE
 } from '../../graphql/Mutation'
@@ -58,25 +58,28 @@ const useStyles = makeStyles(() => ({
 }))
 
 const ProjectView = ({ projectId }) => {
-  const projectQuery = useQuery(PROJECT_AND_DATA, {
+  const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
   })
 
   const createShareLink = useMutation(CREATE_SHARE_LINK, {
     refetchQueries: [{
-      query: PROJECT_AND_DATA
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
     }]
   })
 
   const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
     refetchQueries: [{
-      query: PROJECT_AND_DATA
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
     }]
   })
 
   const deleteTemplateWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
     refetchQueries: [{
-      query: PROJECT_AND_DATA
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
     }]
   })
 
