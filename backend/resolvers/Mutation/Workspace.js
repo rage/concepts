@@ -60,11 +60,11 @@ const WorkspaceMutations = {
     })
   },
   async deleteTemplateWorkspace(root, { id }, context) {
-    const activeTemplate = await context.prisma.project({
-      where: { activeTemplate: { id } }
-    })
-    if (activeTemplate) {
-      return null
+    const activeTemplate = await context.prisma.workspace({
+      id
+    }).asTemplate().activeTemplate()
+    if (activeTemplate && activeTemplate.id === id) {
+      throw new Error("Active template cannot be removed.")
     }
     await checkAccess(context, {
       minimumRole: Role.STAFF,
@@ -73,12 +73,27 @@ const WorkspaceMutations = {
     })
     return context.prisma.deleteWorkspace({ id })
   },
-  async updateTemplateWorkspace(root, { id, name }, context) {
+  async updateTemplateWorkspace(root, { id, name, active }, context) {
     await checkAccess(context, {
       minimumRole: Role.STAFF,
       minimumPrivilege: Privilege.EDIT,
       workspaceId: id
     })
+    const project = await context.prisma.workspace({
+      id
+    }).asTemplate()
+    if (active) {
+      await context.prisma.updateProject({
+        where: { id: project.id },
+        data: {
+          activeTemplate: {
+            connect: {
+              id
+            }
+          }
+        }
+      })
+    }
     return context.prisma.updateWorkspace({
       where: { id },
       data: { name }
