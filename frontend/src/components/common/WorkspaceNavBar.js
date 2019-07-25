@@ -19,6 +19,7 @@ import { DELETE_WORKSPACE } from '../../graphql/Mutation'
 import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
 
 import { useMessageStateValue, useLoginStateValue } from '../../store'
+import useShareWorkspaceDialog from '../workspace/useShareWorkspaceDialog'
 
 const useStyles = makeStyles({
   root: {
@@ -78,11 +79,21 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
   const {
     openEditWorkspaceDialog,
     WorkspaceEditDialog
-  } = useEditWorkspaceDialog(workspaceId, user.id)
+  } = useEditWorkspaceDialog(workspaceId)
+
+  const {
+    openShareWorkspaceDialog,
+    WorkspaceShareDialog
+  } = useShareWorkspaceDialog()
 
   const handleEditOpen = () => {
     setMenuAnchor(null)
     openEditWorkspaceDialog(workspaceId, workspaceQuery.data.workspaceById.name)
+  }
+
+  const handleShareOpen = () => {
+    setMenuAnchor(null)
+    openShareWorkspaceDialog(workspaceId)
   }
 
   const handleDelete = () => {
@@ -117,10 +128,6 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
         data: err.message
       })
     }
-  }
-
-  const handleShareOpen = async () => {
-    setMenuAnchor(null)
   }
 
   const onChange = (event, newPage) => {
@@ -185,6 +192,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
         </>}
       </Paper>
       {WorkspaceEditDialog}
+      {WorkspaceShareDialog}
     </>
   )
 }
