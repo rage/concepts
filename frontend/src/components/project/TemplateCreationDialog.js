@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 // Error dispatcher
 import { useMessageStateValue } from '../../store'
 
-const WorkspaceCreationDialog = ({ state, handleClose, createTemplateWorkspace, projectId }) => {
+const TemplateCreationDialog = ({ state, handleClose, createTemplateWorkspace, projectId }) => {
   const messageDispatch = useMessageStateValue()[1]
   const [name, setName] = useState('')
   const [submitDisabled, setSubmitDisabled] = useState(false)
@@ -91,4 +91,4 @@ const WorkspaceCreationDialog = ({ state, handleClose, createTemplateWorkspace, 
   )
 }
 
-export default WorkspaceCreationDialog
+export default TemplateCreationDialog

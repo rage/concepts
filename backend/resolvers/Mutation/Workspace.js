@@ -41,14 +41,13 @@ const WorkspaceMutations = {
       data: { name }
     })
   },
-  async createTemplateWorkspace(root, args, context) {
+  async createTemplateWorkspace(root, {name, projectId}, context) {
     await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.createWorkspace({
-      name: args.name,
-      asTemplate: { connect: { id: args.projectId } },
-      project: args.projectId !== undefined ? {
-        connect: { id: args.projectId }
-      } : null,
+      name,
+      asTemplate: { 
+        connect: { id: projectId } 
+      },
       participants: {
         // Add all the participants of the project as a participant of the workspace
         create: [{

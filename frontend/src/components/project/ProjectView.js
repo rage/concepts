@@ -74,8 +74,8 @@ const ProjectView = ({ projectId }) => {
             >
               <TemplateList
                 projectId={projectId}
-                templateWorkspaces={projectQuery.data.projectById.template ?
-                  [projectQuery.data.projectById.template] : []}
+                templateWorkspaces={projectQuery.data.projectById.templates ?
+                  projectQuery.data.projectById.templates : []}
                 createShareLink={createShareLink}
                 deleteShareLink={deleteShareLink}
                 deleteTemplateWorkspace={deleteTemplateWorkspace}

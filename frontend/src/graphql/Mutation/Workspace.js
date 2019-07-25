@@ -27,8 +27,8 @@ mutation deleteWorkspace($id: ID!) {
 `
 
 const CREATE_TEMPLATE_WORKSPACE = gql`
-mutation createTemplateWorkspace($projectId: ID!) {
-  createTemplateWorkspace(projectId: $projectId) {
+mutation createTemplateWorkspace($projectId: ID!, $name: String!) {
+  createTemplateWorkspace(projectId: $projectId, name: $name) {
     id
     name
     courses {
