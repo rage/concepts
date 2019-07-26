@@ -18,7 +18,7 @@ const ProjectSharingDialog = ({
     setSubmitDisabled(true)
     const del = () => createProjectShareLink({
       variables: {
-        proId: project.id,
+        projectId: project.id,
         privilege: 'EDIT'
       }
     })

@@ -27,7 +27,7 @@ const WorkspaceQueries = {
     let privilege
     if (id[0] === 'w') {
       privilege = await context.prisma.workspaceToken({ id }).privilege()
-    } else if (id[1] === 'p') {
+    } else if (id[0] === 'p') {
       privilege = await context.prisma.projectToken({ id }).privilege()
     } else {
       throw Error('invalid share token')
@@ -35,9 +35,11 @@ const WorkspaceQueries = {
     if (privilegeToInt(privilege) < privilegeToInt(Privilege.CLONE)) {
       throw ForbiddenError('Token does not allow reading')
     }
-    return await (id[0] === 'w' ? context.prisma.workspaceToken : context.prisma.projectToken)({
-      id
-    }).workspace()
+
+    if (id[0] === 'w') {
+      return await context.prisma.workspaceToken({ id }).workspace()
+    }
+    return await context.prisma.projectToken({ id }).project()
   }
 }
 

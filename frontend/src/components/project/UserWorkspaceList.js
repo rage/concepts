@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserWorkspaceList = ({
-  history, userWorkspaces
+  history, userWorkspaces, createProjectShareLink, deleteProjectShareLink
 }) => {
 
   const [menu, setMenu] = useState(null)
@@ -100,7 +100,7 @@ const UserWorkspaceList = ({
         <CardHeader
           action={
             loggedIn ?
-              <IconButton aria-label='Add' onClick={() => {}}>
+              <IconButton aria-label='Add' onClick={() => { }}>
                 <ShareIcon />
               </IconButton> : null
           }
@@ -170,7 +170,7 @@ const UserWorkspaceList = ({
             </ListItemIcon>
             Delete
           </MenuItem>
-          <MenuItem aria-label='Edit' onClick={() => {}}>
+          <MenuItem aria-label='Edit' onClick={() => { }}>
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>

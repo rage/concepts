@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
-import { Typography, CircularProgress } from '@material-ui/core'
+import { Typography, CircularProgress, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import {
-  CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE
+  CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE,
+  SET_ACTIVE_TEMPLATE, CREATE_PROJECT_SHARE_LINK
 } from '../../graphql/Mutation'
 
 import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
+
+import ProjectSharingDialog from './ProjectSharingDialog'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -33,11 +36,10 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     gridArea: 'header',
-    margin: '16px'
+    margin: '16px 0'
   },
   toolbar: {
-    gridArea: 'toolbar',
-    backgroundColor: 'white'
+    gridArea: 'toolbar'
   },
   templates: {
     gridArea: 'templates',
@@ -58,11 +60,13 @@ const useStyles = makeStyles(() => ({
 }))
 
 const ProjectView = ({ projectId }) => {
+  const [open, setOpen] = useState(false)
+
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
   })
 
-  const createShareLink = useMutation(CREATE_SHARE_LINK, {
+  const createWorkspaceShareLink = useMutation(CREATE_SHARE_LINK, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }
@@ -70,6 +74,13 @@ const ProjectView = ({ projectId }) => {
   })
 
   const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
+    refetchQueries: [{
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
+    }]
+  })
+
+  const createProjectShareLink = useMutation(CREATE_PROJECT_SHARE_LINK, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }
@@ -90,35 +101,60 @@ const ProjectView = ({ projectId }) => {
     }]
   })
 
+  const openProjectShareDialog = () => {
+    setOpen(true)
+  }
+
+  const closeProjectDialog = () => {
+    setOpen(false)
+  }
+
   const classes = useStyles()
 
-  return projectQuery.data.projectById ?
-    <div className={classes.root}>
-      <Typography className={classes.header} variant='h4'>
-        Project: {projectQuery.data.projectById.name}
-      </Typography>
-      <div className={classes.toolbar}>
-        <Typography variant='h6'>TODO: Toolbar</Typography>
+  return (
+    projectQuery.data.projectById ?
+          <>
+            <div className={classes.root}>
+              <Typography className={classes.header} variant='h4'>
+                Project: {projectQuery.data.projectById.name}
+              </Typography>
+              <span className={classes.toolbar}>
+                <Button color='primary' variant='contained' onClick={openProjectShareDialog}>
+                  Share project
+                </Button>
+              </span>
+              <div className={classes.templates}>
+                <TemplateList
+                  projectId={projectId}
+                  activeTemplate={projectQuery.data.projectById.activeTemplate}
+                  templateWorkspaces={projectQuery.data.projectById.templates}
+                  createShareLink={createWorkspaceShareLink}
+                  deleteShareLink={deleteShareLink}
+                  deleteTemplateWorkspace={deleteTemplateWorkspace}
+                  setActiveTemplate={setActiveTemplate}
+                />
+              </div>
+              <div className={classes.userWorkspaces}>
+                <UserWorkspaceList
+                  userWorkspaces={projectQuery.data.projectById.workspaces}
+                  createProjectShareLink={createProjectShareLink}
+                  deleteShareLink={deleteShareLink}
+                />
+              </div>
+            </div>
+            <ProjectSharingDialog
+              open={open}
+              project={projectQuery.data.projectById}
+              handleClose={closeProjectDialog}
+              createProjectShareLink={createProjectShareLink}
+              deleteProjectShareLink={deleteShareLink}
+            />
+          </>
+      :
+      <div style={{ textAlign: 'center' }}>
+        <CircularProgress />
       </div>
-      <div className={classes.templates}>
-        <TemplateList
-          projectId={projectId}
-          activeTemplate={projectQuery.data.projectById.activeTemplate}
-          templateWorkspaces={projectQuery.data.projectById.templates}
-          createShareLink={createShareLink}
-          deleteShareLink={deleteShareLink}
-          deleteTemplateWorkspace={deleteTemplateWorkspace}
-          setActiveTemplate={setActiveTemplate}
-        />
-      </div>
-      <div className={classes.userWorkspaces}>
-        <UserWorkspaceList userWorkspaces={projectQuery.data.projectById.workspaces || []} />
-      </div>
-    </div>
-    :
-    <div style={{ textAlign: 'center' }}>
-      <CircularProgress />
-    </div>
+  )
 }
 
 export default ProjectView
