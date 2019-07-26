@@ -17,6 +17,23 @@ query projectById($id: ID!) {
   projectById(id: $id) {
     id
     name
+    tokens {
+      id
+    }
+    workspaces {
+      id
+      name
+    }
+    templates {
+      id
+      name
+      tokens {
+        id
+      }
+    }
+    activeTemplate {
+      id
+    }
     participants {
       privilege
       user {

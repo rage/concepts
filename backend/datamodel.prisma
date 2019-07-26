@@ -19,6 +19,7 @@ enum Role {
 }
 
 enum Privilege {
+  CLONE,
   VIEW,
   EDIT,
   OWNER
@@ -28,7 +29,8 @@ type Project {
   id: ID! @id
   name: String!
   workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
-  template: Workspace @relation(link: INLINE, name:"Template")
+  activeTemplate: Workspace @relation(link: INLINE, name:"Template")
+  templates: [Workspace!]! @relation(name:"Templates")
   participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject", onDelete: CASCADE)
   tokens: [ProjectToken!]! @relation(name: "ProjectAccessToken", onDelete: CASCADE)
 }
@@ -36,7 +38,8 @@ type Project {
 type Workspace {
   id: ID! @id
   name: String!
-  project: Project @relation(name: "UserWorkspaces")
+  sourceProject: Project @relation(name: "UserWorkspaces")
+  asTemplate: Project @relation(name:"Templates")
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)

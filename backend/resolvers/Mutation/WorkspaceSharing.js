@@ -1,5 +1,9 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 
+const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const makeSecret = () => Array.from({ length: 24 },
+  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+
 const WorkspaceSharingMutations = {
   async createWorkspaceToken(root, { workspaceId, privilege }, context) {
     await checkAccess(context, {
@@ -8,6 +12,7 @@ const WorkspaceSharingMutations = {
       workspaceId
     })
     return await context.prisma.createWorkspaceToken({
+      id: `w${makeSecret()}`,
       privilege,
       workspace: {
         connect: { id: workspaceId }
@@ -15,66 +20,70 @@ const WorkspaceSharingMutations = {
       revoked: false
     })
   },
-  async deleteWorkspaceToken(root, { id }, context) {
-    // TODO revoke instead of deleting
-    const { id: workspaceId } = await context.prisma.workspaceToken({ id }).workspace()
+  async createProjectToken(root, { projectId, privilege }, context) {
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.OWNER,
-      workspaceId
+      projectId
     })
-    return await context.prisma.deleteWorkspaceToken({
-      id
-    })
-  },
-  async createWorkspaceParticipant(root, { workspaceId, privilege, userId }, context) {
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.OWNER,
-      workspaceId
-    })
-    return await context.prisma.createWorkspaceParticipant({
+    return await context.prisma.createProjectToken({
+      id: `p${makeSecret()}`,
       privilege,
-      workspace: { connect: { id: workspaceId } },
-      user: {      connect: { id: userId } }
+      project: {
+        connect: { id: projectId }
+      },
+      revoked: false
     })
   },
-  async updateWorkspaceParticipant(root, { id, privilege }, context) {
-    const { id: workspaceId } = await context.prisma.workspaceParticipant({ id }).workspace()
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.OWNER,
-      workspaceId
-    })
-    return await context.prisma.updateWorkspaceParticipant({
-      where: { id },
-      data: { privilege }
-    })
+  async deleteToken(root, { id }, context) {
+    // TODO revoke instead of deleting
+    if (id[0] === 'w') {
+      const { id: workspaceId } = await context.prisma.workspaceToken({ id }).workspace()
+      await checkAccess(context, {
+        minimumRole: Role.GUEST,
+        minimumPrivilege: Privilege.OWNER,
+        workspaceId
+      })
+      return await context.prisma.deleteWorkspaceToken({
+        id
+      })
+    } else if (id[0] === 'p') {
+      const { id: projectId } = await context.prisma.projectToken({ id }).project()
+      await checkAccess(context, {
+        minimumRole: Role.GUEST,
+        minimumPrivilege: Privilege.OWNER,
+        projectId
+      })
+      return await context.prisma.deleteProjectToken({
+        id
+      })
+    }
   },
-  async deleteWorkspaceParticipant(root, { id }, context) {
-    const { id: workspaceId } = await context.prisma.workspaceParticipant({ id }).workspace()
-    const { id: userId } = await context.prisma.workspaceParticipant({ id }).user()
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: userId === context.user.id ? Privilege.READ : Privilege.OWNER,
-      workspaceId
-    })
-    return await context.prisma.deleteWorkspaceParticipant({
-      id
-    })
-  },
-  async joinWorkspace(root, { tokenId }, context) {
+  async useToken(root, { id }, context) {
     await checkAccess(context, {
       minimumRole: Role.GUEST
     })
-    const privilege = await context.prisma.workspaceToken({ id: tokenId }).privilege()
-    const workspace = await context.prisma.workspaceToken({ id: tokenId }).workspace()
-    return await context.prisma.createWorkspaceParticipant({
-      privilege,
-      workspace: { connect: { id: workspace.id    } },
-      user:      { connect: { id: context.user.id } },
-      token:     { connect: { id: tokenId    } }
-    })
+    if (id[0] === 'w') {
+      const privilege = await context.prisma.workspaceToken({ id }).privilege()
+      const workspace = await context.prisma.workspaceToken({ id }).workspace()
+      return await context.prisma.createWorkspaceParticipant({
+        privilege,
+        workspace: { connect: { id: workspace.id } },
+        user: { connect: { id: context.user.id } },
+        token: { connect: { id } }
+      })
+    } else if (id[0] === 'p') {
+      const privilege = await context.prisma.projectToken({ id }).privilege()
+      const project = await context.prisma.projectToken({ id }).project()
+      return await context.prisma.createProjectParticipant({
+        privilege,
+        project: { connect: { id: project.id } },
+        user: { connect: { id: context.user.id } },
+        token: { connect: { id } }
+      })
+    } else {
+      throw Error('invalid share token')
+    }
   }
 }
 

@@ -35,6 +35,21 @@ const ProjectMutations = {
       where: { id: args.id },
       data: { name: args.name }
     })
+  },
+  async setActiveTemplate(root, args, context) {
+    await checkAccess(context, {
+      minimumRole: Role.STAFF,
+      minimumPrivilege: Privilege.EDIT,
+      projectId: args.projectId
+    })
+    return await context.prisma.updateProject({
+      where: { id: args.projectId },
+      data: {
+        activeTemplate:
+          args.workspaceId ? { connect: { id: args.workspaceId } }
+            : { disconnect: true }
+      }
+    })
   }
 }
 

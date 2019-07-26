@@ -41,6 +41,18 @@ query($id: ID!, $userId: ID!) {
 }
 `
 
+const projectPrivilegeQuery = `
+query($id: ID!, $userId: ID!) {
+  workspace(where: { id: $id} ) {
+    asTemplate {
+      participants(where: { user: { id: $userId } }) {
+        privilege
+      }
+    }
+  }
+}
+`
+
 const privilegeQueryTyped = {
   workspace: privilegeQuery.replace('%s', 'workspace'),
   project: privilegeQuery.replace('%s', 'project')
@@ -50,16 +62,19 @@ const Privilege = {
   OWNER: 'OWNER',
   EDIT: 'EDIT',
   READ: 'READ',
+  CLONE: 'CLONE',
   NONE: null
 }
 
 const privilegeToInt = privilege => {
   switch (privilege) {
   case 'OWNER':
-    return 3
+    return 4
   case 'EDIT':
-    return 2
+    return 3
   case 'READ':
+    return 2
+  case 'CLONE':
     return 1
   default:
     return 0
@@ -68,19 +83,31 @@ const privilegeToInt = privilege => {
 
 const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
-    throw Error('Invalid checkPrivilege call')
+    throw Error('Invalid checkPrivilege call (missing workspace or project)')
   }
   const type = workspaceId ? 'workspace' : 'project'
   const resp = await ctx.prisma.$graphql(privilegeQueryTyped[type], {
     id: workspaceId || projectId,
     userId: ctx.user.id
   })
-  if (!resp[type].participants[0]) {
+  if (!resp[type]) {
+    throw Error('Invalid checkPrivilege call (workspace or project is null)')
+  }
+  const privilege = resp[type].participants[0] && resp[type].participants[0].privilege
+
+  if (privilege && privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)) {
+    return true
+  } else if (type === 'workspace') {
+    const proRes = await ctx.prisma.$graphql(projectPrivilegeQuery, {
+      id: workspaceId,
+      userId: ctx.user.id
+    })
+    const projectPrivilege = proRes.workspace.asTemplate.participants[0] &&
+      proRes.workspace.asTemplate.participants[0].privilege
+    return privilegeToInt(projectPrivilege) >= privilegeToInt(minimumPrivilege)
+  } else {
     return false
   }
-  const privilege = resp[type].participants[0].privilege
-
-  return privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)
 }
 
 const checkAccess = async (ctx, {
@@ -99,4 +126,7 @@ const checkAccess = async (ctx, {
   return true
 }
 
-module.exports = { Role, Privilege, checkAccess, checkUser, checkPrivilege: checkPrivilegeInt }
+module.exports = {
+  Role, Privilege, checkAccess, checkUser, privilegeToInt, roleToInt,
+  checkPrivilege: checkPrivilegeInt
+}

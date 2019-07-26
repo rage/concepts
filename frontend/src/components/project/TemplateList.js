@@ -7,49 +7,62 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon,
-  MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon,
-  Share as ShareIcon
+  Add as AddIcon,
+  Edit as EditIcon,
+  Share as ShareIcon,
+  Delete as DeleteIcon,
+  GridOn as GridOnIcon,
+  MoreVert as MoreVertIcon,
+  CloudDownload as CloudDownloadIcon,
+  RadioButtonChecked,
+  RadioButtonUnchecked
 } from '@material-ui/icons'
 
-import WorkspaceCreationDialog from './WorkspaceCreationDialog'
-import WorkspaceEditingDialog from './WorkspaceEditingDialog'
-import WorkspaceSharingDialog from './WorkspaceSharingDialog'
+import WorkspaceSharingDialog from '../workspace/WorkspaceSharingDialog'
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
 
 import { useMessageStateValue, useLoginStateValue } from '../../store'
+import useEditTemplateDialog from './useEditTemplateDialog'
+import useCreateTemplateDialog from './useCreateTemplateDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
-    maxWidth: '720px',
     width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible',
-    '@media screen and (max-width: 752px)': {
-      width: 'calc(100% - 32px)'
-    }
+    overflow: 'visible'
   },
   progress: {
     margin: theme.spacing(2)
+  },
+  listItemActive: {
+    boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
   }
 }))
 
-const WorkspaceList = ({
-  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace,
-  createShareLink, deleteShareLink
+const TemplateList = ({
+  history, templateWorkspaces, deleteTemplateWorkspace,
+  createShareLink, deleteShareLink, projectId, activeTemplate, setActiveTemplate
 }) => {
   const classes = useStyles()
-  const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
   const [stateShare, setStateShare] = useState({ open: false, workspace: null })
   const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
+
+  const {
+    openEditTemplateDialog,
+    TemplateEditDialog
+  } = useEditTemplateDialog(projectId)
+
+  const {
+    openCreateTemplateDialog,
+    TemplateCreateDialog
+  } = useCreateTemplateDialog(projectId)
 
   const handleMenuOpen = (workspace, event) => {
     setMenu({
@@ -83,11 +96,7 @@ const WorkspaceList = ({
       })
       return
     }
-    setStateCreate({ open: true })
-  }
-
-  const handleCreateClose = () => {
-    setStateCreate({ open: false })
+    openCreateTemplateDialog()
   }
 
   const handleEditOpen = () => {
@@ -99,11 +108,7 @@ const WorkspaceList = ({
       })
       return
     }
-    setStateEdit({ open: true, id: menu.workspace.id, name: menu.workspace.name })
-  }
-
-  const handleEditClose = () => {
-    setStateEdit({ open: false, id: '', name: '' })
+    openEditTemplateDialog(menu.workspace.id, menu.workspace.name)
   }
 
   const handleShareOpen = () => {
@@ -131,11 +136,10 @@ const WorkspaceList = ({
       })
       return
     }
-
-    const willDelete = window.confirm('Are you sure you want to delete this workspace?')
+    const willDelete = window.confirm('Are you sure you want to delete this template?')
     if (willDelete) {
       try {
-        await deleteWorkspace({
+        await deleteTemplateWorkspace({
           variables: { id: menu.workspace.id }
         })
       } catch (err) {
@@ -147,6 +151,47 @@ const WorkspaceList = ({
     }
   }
 
+  const handleSetActive = async () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    if (activeTemplate) {
+      if (menu.workspace.id === activeTemplate.id) {
+        try {
+          await setActiveTemplate({
+            variables: { projectId }
+          })
+        } catch (err) {
+          messageDispatch({
+            type: 'setError',
+            data: err.message
+          })
+        }
+        return
+      } else {
+        const change = window.confirm(
+          `Are you sure that you want to switch the active template? 
+This will change which template is cloned by users.`)
+        if (!change) return
+      }
+    }
+    try {
+      await setActiveTemplate({
+        variables: { projectId, workspaceId: menu.workspace.id }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
+  }
+
   const handleNavigateMapper = (workspaceId) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
   }
@@ -155,6 +200,7 @@ const WorkspaceList = ({
     history.push(`/workspaces/${menu.workspace.id}/heatmap`)
   }
 
+  const isActiveTemplate = (menu && activeTemplate) && menu.workspace.id === activeTemplate.id
 
   return (
     <>
@@ -168,16 +214,21 @@ const WorkspaceList = ({
           }
           title={
             <Typography variant='h5' component='h3'>
-              Workspaces
+              {'Template workspaces'}
             </Typography>
           }
         />
         <List dense={false}>
           {
-            workspaces ?
-              workspaces.map(workspace => (
+            templateWorkspaces ?
+              templateWorkspaces.map(workspace => (
                 <ListItem
-                  button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+                  className={(activeTemplate) && workspace.id === activeTemplate.id ?
+                    classes.listItemActive
+                    : null}
+                  button
+                  key={workspace.id}
+                  onClick={() => handleNavigateMapper(workspace.id)}
                 >
                   <ListItemText
                     primary={
@@ -190,7 +241,7 @@ const WorkspaceList = ({
                     loggedIn ?
                       <ListItemSecondaryAction>
                         <IconButton
-                          aria-owns={menu ? 'workspace-list-menu' : undefined}
+                          aria-owns={menu ? 'template-list-menu' : undefined}
                           onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
                           <MoreVertIcon />
                         </IconButton>
@@ -205,7 +256,7 @@ const WorkspaceList = ({
           }
         </List>
         <Menu
-          id='workspace-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+          id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
           onClose={handleMenuClose}
         >
           <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
@@ -226,11 +277,16 @@ const WorkspaceList = ({
             </ListItemIcon>
             Share link
           </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <MenuItem aria-label='Set as active' onClick={handleSetActive}>
             <ListItemIcon>
-              <DeleteIcon />
+              {
+                isActiveTemplate ?
+                  <RadioButtonChecked />
+                  :
+                  <RadioButtonUnchecked />
+              }
             </ListItemIcon>
-            Delete
+            {!isActiveTemplate ? 'Set' : 'Unset'} as active
           </MenuItem>
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
@@ -238,20 +294,25 @@ const WorkspaceList = ({
             </ListItemIcon>
             Edit
           </MenuItem>
+          <MenuItem aria-label='Delete' onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            Delete
+          </MenuItem>
         </Menu>
       </Card>
 
-      <WorkspaceCreationDialog
-        state={stateCreate} handleClose={handleCreateClose} createWorkspace={createWorkspace} />
-      <WorkspaceEditingDialog
-        state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
-        defaultName={stateEdit.name} />
+
       <WorkspaceSharingDialog
-        open={stateShare.open} workspace={workspaces.find(ws => ws.id === stateShare.id)}
+        open={stateShare.open} workspace={templateWorkspaces.find(ws => ws.id === stateShare.id)}
         handleClose={handleShareClose} createShareLink={createShareLink}
-        deleteShareLink={deleteShareLink} />
+        deleteShareLink={deleteShareLink}
+      />
+      {TemplateCreateDialog}
+      {TemplateEditDialog}
     </>
   )
 }
 
-export default withRouter(WorkspaceList)
+export default withRouter(TemplateList)

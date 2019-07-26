@@ -26,8 +26,20 @@ mutation deleteProject($id: ID!) {
 }
 `
 
+const SET_ACTIVE_TEMPLATE = gql`
+mutation setActiveTemplate($projectId: ID!, $workspaceId: ID) {
+  setActiveTemplate(projectId: $projectId, workspaceId: $workspaceId) {
+    id
+    activeTemplate {
+      id
+    }
+  }
+}
+`
+
 export {
   CREATE_PROJECT,
   UPDATE_PROJECT,
-  DELETE_PROJECT
+  DELETE_PROJECT,
+  SET_ACTIVE_TEMPLATE
 }

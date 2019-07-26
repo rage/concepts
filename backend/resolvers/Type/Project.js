@@ -1,5 +1,24 @@
 const { checkPrivilege, Privilege } = require('../../accessControl')
 
+const checkID = (info, suffix = '') => {
+  if (info.variableValues.id) {
+    if (info.variableValues.id[0] === 'w') {
+      return 'Workspace' + suffix
+    } else if (info.variableValues.id[0] === 'p') {
+      return 'Project' + suffix
+    }
+  }
+
+  if (info.variableValues.token) {
+    if (info.variableValues.token[0] === 'w') {
+      return 'Workspace' + suffix
+    } else if (info.variableValues.token[0] === 'p') {
+      return 'Project' + suffix
+    }
+  }
+  return null
+}
+
 module.exports = {
   Project: {
     participants(root, args, context) {
@@ -12,15 +31,20 @@ module.exports = {
         id: root.id
       }).workspaces()
     },
-    template(root, args, context) {
+    templates(root, args, context) {
       return context.prisma.project({
         id: root.id
-      }).template()
+      }).templates()
+    },
+    activeTemplate(root, args, context) {
+      return context.prisma.project({
+        id: root.id
+      }).activeTemplate()
     },
     async tokens(root, args, context) {
       if (!(await checkPrivilege(context, {
         minimumPrivilege: Privilege.OWNER,
-        workspaceId: root.id
+        projectId: root.id
       }))) {
         return []
       }
@@ -28,5 +52,14 @@ module.exports = {
         id: root.id
       }).tokens()
     }
+  },
+  ProjectOrWorkspace: {
+    __resolveType: (obj, context, info) => checkID(info)
+  },
+  ProjectOrWorkspaceParticipant: {
+    __resolveType: (obj, context, info) => checkID(info, 'Participant')
+  },
+  ProjectOrWorkspaceToken: {
+    __resolveType: (obj, context, info) => checkID(info, 'Token')
   }
 }

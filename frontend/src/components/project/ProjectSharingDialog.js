@@ -6,24 +6,24 @@ import {
 
 import { useMessageStateValue } from '../../store'
 
-const WorkspaceSharingDialog = ({
-  open, workspace, handleClose, createShareLink, deleteShareLink
+const ProjectSharingDialog = ({
+  open, project, handleClose, createProjectShareLink, deleteProjectShareLink
 }) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const messageDispatch = useMessageStateValue()[1]
 
-  const existingToken = workspace && workspace.tokens.length > 0 ? workspace.tokens[0].id : null
+  const existingToken = project && project.tokens.length > 0 ? project.tokens[0].id : null
 
   const handleRegenerate = () => {
     setSubmitDisabled(true)
-    const del = () => createShareLink({
+    const del = () => createProjectShareLink({
       variables: {
-        workspaceId: workspace.id,
+        projectId: project.id,
         privilege: 'EDIT'
       }
     })
 
-    const promise = existingToken ? deleteShareLink({
+    const promise = existingToken ? deleteProjectShareLink({
       variables: {
         id: existingToken
       }
@@ -64,10 +64,10 @@ const WorkspaceSharingDialog = ({
       onClose={handleClose}
       aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id='form-dialog-title'>Share workspace</DialogTitle>
+      <DialogTitle id='form-dialog-title'>Share project</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Let other users view and edit your workspace
+          Let other users view and edit your project
         </DialogContentText>
         <DialogContentText>
           {url}
@@ -99,4 +99,4 @@ const WorkspaceSharingDialog = ({
   )
 }
 
-export default WorkspaceSharingDialog
+export default ProjectSharingDialog
