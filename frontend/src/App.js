@@ -113,6 +113,12 @@ const App = ({ classes }) => {
           render={({ match: { params: { wid, cid, page } } }) =>
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />}
         />
+        <PrivateRoute
+          exact path='/projects/:id' redirectPath='auth' condition={loggedIn}
+          render={({ match: { params: { id } } }) => {
+            return <ProjectView projectId={id} />
+          }}
+        />
       </div>
       <Snackbar open={error !== ''}
         onClose={handleCloseErrorMessage}
