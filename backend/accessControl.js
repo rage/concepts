@@ -108,9 +108,6 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
   } else {
     return false
   }
-
-
-
 }
 
 const checkAccess = async (ctx, {

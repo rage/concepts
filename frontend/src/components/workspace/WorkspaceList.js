@@ -8,7 +8,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon,
-  ShowChart as ShowChartIcon, MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon,
+  MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon,
   Share as ShareIcon
 } from '@material-ui/icons'
 

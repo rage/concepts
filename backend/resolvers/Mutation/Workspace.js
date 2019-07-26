@@ -5,7 +5,7 @@ const WorkspaceMutations = {
     await checkAccess(context, { minimumRole: Role.GUEST })
     return await context.prisma.createWorkspace({
       name: args.name,
-      asTemplate: args.projectId !== undefined ? {
+      sourceProject: args.projectId !== undefined ? {
         connect: { id: args.projectId }
       } : null,
       participants: {
@@ -21,7 +21,7 @@ const WorkspaceMutations = {
   async deleteWorkspace(root, { id }, context) {
     const asTemplate = await context.prisma.workspace({ id }).asTemplate()
     if (asTemplate) {
-      throw new Error("Cannot remove a template")
+      throw new Error('Cannot remove a template')
     }
     await checkAccess(context, {
       minimumRole: Role.GUEST,
@@ -41,7 +41,7 @@ const WorkspaceMutations = {
       data: { name }
     })
   },
-  async createTemplateWorkspace(root, {name, projectId}, context) {
+  async createTemplateWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.createWorkspace({
       name,
@@ -49,7 +49,6 @@ const WorkspaceMutations = {
         connect: { id: projectId }
       },
       participants: {
-        // Add all the participants of the project as a participant of the workspace
         create: [{
           privilege: 'OWNER',
           user: {
@@ -64,11 +63,11 @@ const WorkspaceMutations = {
       id
     }).asTemplate().activeTemplate()
     if (activeTemplate && activeTemplate.id === id) {
-      throw new Error("Active template cannot be removed.")
+      throw new Error('Active template cannot be removed.')
     }
     await checkAccess(context, {
       minimumRole: Role.STAFF,
-      minimumPrivilege: Privilege.EDIT,
+      minimumPrivilege: Privilege.OWNER,
       workspaceId: id
     })
     return context.prisma.deleteWorkspace({ id })
@@ -109,7 +108,7 @@ const WorkspaceMutations = {
     return await context.prisma.createWorkspaceParticipant({
       privilege,
       workspace: { connect: { id: workspaceId } },
-      user: {      connect: { id: userId } }
+      user: { connect: { id: userId } }
     })
   },
   async updateWorkspaceParticipant(root, { id, privilege }, context) {
@@ -135,7 +134,7 @@ const WorkspaceMutations = {
     return await context.prisma.deleteWorkspaceParticipant({
       id
     })
-  },
+  }
 }
 
 module.exports = WorkspaceMutations

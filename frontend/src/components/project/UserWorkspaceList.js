@@ -9,13 +9,9 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
   GridOn as GridOnIcon,
   Share as ShareIcon,
   MoreVert as MoreVertIcon,
-  ShowChart as ShowChartIcon,
   CloudDownload as CloudDownloadIcon
 } from '@material-ui/icons'
 
@@ -39,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserWorkspaceList = ({
-  history, userWorkspaces, createProjectShareLink, deleteProjectShareLink
+  history, userWorkspaces
 }) => {
 
   const [menu, setMenu] = useState(null)
@@ -50,10 +46,6 @@ const UserWorkspaceList = ({
 
   const handleNavigateMapper = (workspaceId) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
-  }
-
-  const handleNavigateMatrix = () => {
-    history.push(`/workspaces/${menu.workspace.id}/matrix`)
   }
 
   const handleNavigateHeatmap = () => {
@@ -80,17 +72,6 @@ const UserWorkspaceList = ({
         type: 'setError',
         data: err.message
       })
-    }
-  }
-
-  const handleDelete = async () => {
-    handleMenuClose()
-    if (!loggedIn) {
-      messageDispatch({
-        type: 'setError',
-        data: 'Access denied'
-      })
-      return
     }
   }
 
@@ -152,29 +133,11 @@ const UserWorkspaceList = ({
             </ListItemIcon>
             Heatmap
           </MenuItem>
-          <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
-            <ListItemIcon>
-              <ShowChartIcon />
-            </ListItemIcon>
-            Matrix
-          </MenuItem>
           <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
             <ListItemIcon>
               <CloudDownloadIcon />
             </ListItemIcon>
             Export
-          </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-          <MenuItem aria-label='Edit' onClick={() => { }}>
-            <ListItemIcon>
-              <EditIcon />
-            </ListItemIcon>
-            Edit
           </MenuItem>
         </Menu>
       </Card>
