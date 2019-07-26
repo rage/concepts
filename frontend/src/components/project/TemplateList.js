@@ -13,7 +13,6 @@ import {
   Delete as DeleteIcon,
   GridOn as GridOnIcon,
   MoreVert as MoreVertIcon,
-  ShowChart as ShowChartIcon,
   CloudDownload as CloudDownloadIcon,
   RadioButtonChecked,
   RadioButtonUnchecked
@@ -197,10 +196,6 @@ This will change which template is cloned by users.`)
     history.push(`/workspaces/${workspaceId}/mapper`)
   }
 
-  const handleNavigateMatrix = () => {
-    history.push(`/workspaces/${menu.workspace.id}/matrix`)
-  }
-
   const handleNavigateHeatmap = () => {
     history.push(`/workspaces/${menu.workspace.id}/heatmap`)
   }
@@ -269,12 +264,6 @@ This will change which template is cloned by users.`)
               <GridOnIcon />
             </ListItemIcon>
             Heatmap
-          </MenuItem>
-          <MenuItem aria-label='Matrix' onClick={handleNavigateMatrix}>
-            <ListItemIcon>
-              <ShowChartIcon />
-            </ListItemIcon>
-            Matrix
           </MenuItem>
           <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
             <ListItemIcon>
