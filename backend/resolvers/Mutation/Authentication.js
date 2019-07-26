@@ -26,16 +26,18 @@ const AuthenticationMutations = {
     } catch (e) {
       return new AuthenticationError('Invalid tmc-token')
     }
-
     const tmcId = userDetails.id
     const user = await context.prisma.user({ tmcId })
 
     // New user
     if (!user) {
-      const createdUser = await context.prisma.createUser({
-        tmcId: tmcId,
-        role: 'STAFF'
-      })
+      const userData = { tmcId }
+      if (userDetails && userDetails.administrator) {
+        userData.role = 'ADMIN'
+      } else {
+        userData.role = 'STAFF'
+      }
+      const createdUser = await context.prisma.createUser(userData)
       const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
       return {
         token,
