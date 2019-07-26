@@ -44,7 +44,7 @@ module.exports = {
     async tokens(root, args, context) {
       if (!(await checkPrivilege(context, {
         minimumPrivilege: Privilege.OWNER,
-        workspaceId: root.id
+        projectId: root.id
       }))) {
         return []
       }

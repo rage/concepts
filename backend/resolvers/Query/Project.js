@@ -11,7 +11,7 @@ const ProjectQueries = {
       minimumPrivilege: Privilege.READ,
       projectId: args.id
     })
-    return context.prisma.project({
+    return await context.prisma.project({
       id: args.id
     })
   },

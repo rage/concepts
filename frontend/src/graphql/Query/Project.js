@@ -17,6 +17,9 @@ query projectById($id: ID!) {
   projectById(id: $id) {
     id
     name
+    tokens {
+      id
+    }
     workspaces {
       id
       name
@@ -24,6 +27,9 @@ query projectById($id: ID!) {
     templates {
       id
       name
+      tokens {
+        id
+      }
     }
     activeTemplate {
       id
