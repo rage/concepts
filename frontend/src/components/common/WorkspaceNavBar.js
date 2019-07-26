@@ -143,7 +143,6 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
         }
         <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
-          <BottomNavigationAction value='matrix' label='Concept Matrix' icon={<ShowCartIcon />} />
           <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
           <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
         </BottomNavigation>

@@ -13,8 +13,11 @@
 
 ## Previews
 
-### Main concept view
-![preview-concepts.png](preview-concepts.png)
+### Concept mapper
+![preview-mapper.png](preview-mapper.png)
 
-### Concept matrix
-![preview-matrix.png](preview-matrix.png)
+### Concept graph
+![preview-graph-hq.png](preview-graph-hq.png)
+
+### Workspace heatmap
+![preview-heatmap.png](preview-heatmap.png)
