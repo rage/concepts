@@ -76,7 +76,7 @@ const JoinView = ({ history, token }) => {
         </DialogActions>
       </> : (
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText style={{ textAlign: 'center' }}>
             <CircularProgress />
           </DialogContentText>
         </DialogContent>
