@@ -36,7 +36,7 @@ type Query {
   # Porting queries
   exportData(workspaceId: ID!): String!
 
-  peekWorkspace(tokenId: ID!): Workspace
+  peekToken(id: ID!): ProjectOrWorkspace
 }
 
 type Mutation {
@@ -84,20 +84,23 @@ type Mutation {
   updateUser(id: ID!, guideProgress: Int!): User
 
   # Sharing
-  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
-  deleteWorkspaceToken(id: ID!): WorkspaceToken
   createWorkspaceParticipant(workspaceId: ID!, privilege: Privilege!, userId: ID!): WorkspaceParticipant
   updateWorkspaceParticipant(id: ID!, privilege: Privilege!): WorkspaceParticipant
   deleteWorkspaceParticipant(id: ID!): WorkspaceParticipant
-  joinWorkspace(tokenId: ID!): WorkspaceParticipant
 
-  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
-  deleteProjectToken(id: ID!): ProjectToken
   createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
   updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
   deleteProjectParticipant(id: ID!): ProjectParticipant
-  joinProject(tokenId: ID!): ProjectParticipant
+
+  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
+  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
+  deleteToken(id: ID!): ProjectOrWorkspaceToken
+  useToken(id: ID!): ProjectOrWorkspaceParticipant
 }
+
+union ProjectOrWorkspace = Workspace | Project
+union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
+union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
 
 type AuthPayload {
   token: String!

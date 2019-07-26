@@ -7,7 +7,7 @@ import {
 
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { USE_SHARE_LINK } from '../../graphql/Mutation'
-import { WORKSPACES_FOR_USER, PEEK_SHARE_LINK } from '../../graphql/Query'
+import { WORKSPACES_FOR_USER, PEEK_SHARE_LINK, PROJECTS_FOR_USER } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const JoinView = ({ history, token }) => {
@@ -15,14 +15,15 @@ const JoinView = ({ history, token }) => {
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
-  const joinWorkspace = useMutation(USE_SHARE_LINK, {
+  const joinShareLink = useMutation(USE_SHARE_LINK, {
     refetchQueries: [{
+      query: PROJECTS_FOR_USER
+    }, {
       query: WORKSPACES_FOR_USER
     }]
   })
 
   const type = token[0] === 'w' ? 'workspace' : 'project'
-  token = token.substr(1)
 
   const peek = useQuery(PEEK_SHARE_LINK, {
     variables: { token }
@@ -32,10 +33,12 @@ const JoinView = ({ history, token }) => {
 
   const handleCreate = () => {
     setLoading(true)
-    joinWorkspace({
+    joinShareLink({
       variables: { token }
     }).then(resp => {
-      history.push(`/workspaces/${resp.data.joinWorkspace.workspace.id}/mapper`)
+      history.push(type === 'workspace'
+        ? `/workspaces/${resp.data.useToken.workspace.id}/mapper`
+        : `/projects/${resp.data.useToken.project.id}`)
     }).catch(() => {
       messageDispatch({
         type: 'setError',
@@ -45,20 +48,22 @@ const JoinView = ({ history, token }) => {
     })
   }
 
-  if (peek.data.peekWorkspace) {
-    const participant = peek.data.peekWorkspace.participants.find(pcp => pcp.user.id === user.id)
+  if (peek.data.peekToken) {
+    const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
     if (participant) {
-      return <Redirect to={`/workspaces/${peek.data.peekWorkspace.id}/mapper`} />
+      return <Redirect to={type === 'workspace'
+        ? `/workspaces/${peek.data.peekToken.id}/mapper`
+        : `/projects/${peek.data.peekToken.id}`} />
     }
   }
 
   return (
     <Dialog open onClose={handleClose}>
       <DialogTitle>Join {type}</DialogTitle>
-      {peek.data.peekWorkspace ? <>
+      {peek.data.peekToken ? <>
         <DialogContent>
           <DialogContentText>
-            You have been invited to the {type} {peek.data.peekWorkspace.name}.
+            You have been invited to the {type} {peek.data.peekToken.name}.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

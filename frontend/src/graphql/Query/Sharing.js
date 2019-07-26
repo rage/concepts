@@ -2,19 +2,25 @@ import { gql } from 'apollo-boost'
 
 const PEEK_SHARE_LINK = gql`
   query peekShareLink($token: ID!) {
-    peekWorkspace(tokenId: $token) {
-      id
-      name
-      courses {
+    peekToken(id: $token) {
+      ... on Project {
         id
+        name
+        participants {
+          privilege
+          user {
+            id
+          }
+        }
       }
-      tokens {
+      ... on Workspace {
         id
-      }
-      participants {
-        privilege
-        user {
-          id
+        name
+        participants {
+          privilege
+          user {
+            id
+          }
         }
       }
     }

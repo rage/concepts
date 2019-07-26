@@ -45,8 +45,8 @@ const WorkspaceMutations = {
     await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.createWorkspace({
       name,
-      asTemplate: { 
-        connect: { id: projectId } 
+      asTemplate: {
+        connect: { id: projectId }
       },
       participants: {
         // Add all the participants of the project as a participant of the workspace
@@ -98,7 +98,44 @@ const WorkspaceMutations = {
       where: { id },
       data: { name }
     })
-  }
+  },
+
+  async createWorkspaceParticipant(root, { workspaceId, privilege, userId }, context) {
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.OWNER,
+      workspaceId
+    })
+    return await context.prisma.createWorkspaceParticipant({
+      privilege,
+      workspace: { connect: { id: workspaceId } },
+      user: {      connect: { id: userId } }
+    })
+  },
+  async updateWorkspaceParticipant(root, { id, privilege }, context) {
+    const { id: workspaceId } = await context.prisma.workspaceParticipant({ id }).workspace()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.OWNER,
+      workspaceId
+    })
+    return await context.prisma.updateWorkspaceParticipant({
+      where: { id },
+      data: { privilege }
+    })
+  },
+  async deleteWorkspaceParticipant(root, { id }, context) {
+    const { id: workspaceId } = await context.prisma.workspaceParticipant({ id }).workspace()
+    const { id: userId } = await context.prisma.workspaceParticipant({ id }).user()
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: userId === context.user.id ? Privilege.READ : Privilege.OWNER,
+      workspaceId
+    })
+    return await context.prisma.deleteWorkspaceParticipant({
+      id
+    })
+  },
 }
 
 module.exports = WorkspaceMutations

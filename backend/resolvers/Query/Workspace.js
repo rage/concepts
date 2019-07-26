@@ -1,4 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
+const { ForbiddenError } = require('apollo-server-core')
 
 const WorkspaceQueries = {
   async allWorkspaces(root, args, context) {
@@ -21,11 +22,21 @@ const WorkspaceQueries = {
       id: context.user.id
     }).workspaceParticipations()
   },
-  async peekWorkspace(root, { tokenId }, context) {
+  async peekToken(root, { id }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
-    // TODO check if token is valid
-    return await context.prisma.workspaceToken({
-      id: tokenId
+    let privilege
+    if (id[0] === 'w') {
+      privilege = await context.prisma.workspaceToken({ id }).privilege()
+    } else if (id[1] === 'p') {
+      privilege = await context.prisma.projectToken({ id }).privilege()
+    } else {
+      throw Error('invalid share token')
+    }
+    if (privilegeToInt(privilege) < privilegeToInt(Privilege.CLONE)) {
+      throw ForbiddenError('Token does not allow reading')
+    }
+    return await (id[0] === 'w' ? context.prisma.workspaceToken : context.prisma.projectToken)({
+      id
     }).workspace()
   }
 }

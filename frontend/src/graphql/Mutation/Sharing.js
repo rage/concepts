@@ -4,6 +4,7 @@ const CREATE_SHARE_LINK = gql`
   mutation createShareLink($workspaceId: ID!, $privilege: Privilege!) {
     createWorkspaceToken(workspaceId: $workspaceId, privilege: $privilege) {
       id
+      id
       privilege
       revoked
       workspace {
@@ -15,29 +16,52 @@ const CREATE_SHARE_LINK = gql`
 
 const DELETE_SHARE_LINK = gql`
   mutation deleteShareLink($id: ID!) {
-    deleteWorkspaceToken(id: $id) {
-      id
+    deleteToken(id: $id) {
+      ... on ProjectToken {
+        id
+      }
+      ... on WorkspaceToken {
+        id
+      }
     }
   }
 `
 
 const USE_SHARE_LINK = gql`
   mutation useShareLink($token: ID!) {
-    joinWorkspace(tokenId: $token) {
-      privilege
-      workspace {
-        id
-        name
-        courses {
+    useToken(id: $token) {
+      ... on ProjectParticipant {
+        privilege
+        project {
           id
-        }
-        tokens {
-          id
-        }
-        participants {
-          privilege
-          user {
+          name
+          tokens {
             id
+          }
+          participants {
+            privilege
+            user {
+              id
+            }
+          }
+        }
+      }
+      ... on WorkspaceParticipant {
+        privilege
+        workspace {
+          id
+          name
+          courses {
+            id
+          }
+          tokens {
+            id
+          }
+          participants {
+            privilege
+            user {
+              id
+            }
           }
         }
       }

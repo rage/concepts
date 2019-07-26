@@ -50,16 +50,19 @@ const Privilege = {
   OWNER: 'OWNER',
   EDIT: 'EDIT',
   READ: 'READ',
+  CLONE: 'CLONE',
   NONE: null
 }
 
 const privilegeToInt = privilege => {
   switch (privilege) {
   case 'OWNER':
-    return 3
+    return 4
   case 'EDIT':
-    return 2
+    return 3
   case 'READ':
+    return 2
+  case 'CLONE':
     return 1
   default:
     return 0
@@ -68,14 +71,16 @@ const privilegeToInt = privilege => {
 
 const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
-    throw Error('Invalid checkPrivilege call')
+    throw Error('Invalid checkPrivilege call (missing workspace or project)')
   }
   const type = workspaceId ? 'workspace' : 'project'
   const resp = await ctx.prisma.$graphql(privilegeQueryTyped[type], {
     id: workspaceId || projectId,
     userId: ctx.user.id
   })
-  if (!resp[type].participants[0]) {
+  if (!resp[type]) {
+    throw Error('Invalid checkPrivilege call (workspace or project is null)')
+  } else if (!resp[type].participants[0]) {
     return false
   }
   const privilege = resp[type].participants[0].privilege
@@ -99,4 +104,7 @@ const checkAccess = async (ctx, {
   return true
 }
 
-module.exports = { Role, Privilege, checkAccess, checkUser, checkPrivilege: checkPrivilegeInt }
+module.exports = {
+  Role, Privilege, checkAccess, checkUser, privilegeToInt, roleToInt,
+  checkPrivilege: checkPrivilegeInt
+}

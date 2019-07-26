@@ -42,7 +42,6 @@ const ProjectMutations = {
       minimumPrivilege: Privilege.EDIT,
       projectId: args.projectId
     })
-    console.log(args)
     return await context.prisma.updateProject({
       where: { id: args.projectId },
       data: {

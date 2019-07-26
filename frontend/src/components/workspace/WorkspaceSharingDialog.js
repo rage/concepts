@@ -38,7 +38,7 @@ const WorkspaceSharingDialog = ({
   let realURL = null
   if (existingToken) {
     realURL = new URL(window.location)
-    realURL.pathname = `/join/w${existingToken}`
+    realURL.pathname = `/join/${existingToken}`
     url = <a href={realURL}>{realURL.host}{realURL.pathname}</a>
   }
 
