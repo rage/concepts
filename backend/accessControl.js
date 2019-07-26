@@ -41,6 +41,18 @@ query($id: ID!, $userId: ID!) {
 }
 `
 
+const projectPrivilegeQuery = `
+query($id: ID!, $userId: ID!) {
+  workspace(where: { id: $id} ) {
+    asTemplate {
+      participants(where: { user: { id: $userId } }) {
+        privilege
+      }
+    }
+  }
+}
+`
+
 const privilegeQueryTyped = {
   workspace: privilegeQuery.replace('%s', 'workspace'),
   project: privilegeQuery.replace('%s', 'project')
@@ -80,12 +92,25 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
   })
   if (!resp[type]) {
     throw Error('Invalid checkPrivilege call (workspace or project is null)')
-  } else if (!resp[type].participants[0]) {
+  }
+  const privilege = resp[type].participants[0] && resp[type].participants[0].privilege
+
+  if (privilege && privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)) {
+    return true
+  } else if (type === 'workspace') {
+    const proRes = await ctx.prisma.$graphql(projectPrivilegeQuery, {
+      id: workspaceId,
+      userId: ctx.user.id
+    })
+    const projectPrivilege = proRes.workspace.asTemplate.participants[0] &&
+      proRes.workspace.asTemplate.participants[0].privilege
+    return privilegeToInt(projectPrivilege) >= privilegeToInt(minimumPrivilege)
+  } else {
     return false
   }
-  const privilege = resp[type].participants[0].privilege
 
-  return privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)
+
+
 }
 
 const checkAccess = async (ctx, {
