@@ -17,4 +17,7 @@
 ![preview-mapper.png](preview-mapper.png)
 
 ### Concept graph
-![preview-graph.png](preview-graph-hq.png)
+![preview-graph-hq.png](preview-graph-hq.png)
+
+### Workspace heatmap
+![preview-heatmap.png](preview-heatmap.png)
