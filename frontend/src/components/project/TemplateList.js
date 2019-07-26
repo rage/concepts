@@ -39,10 +39,8 @@ const useStyles = makeStyles(theme => ({
   progress: {
     margin: theme.spacing(2)
   },
-  listItem: {
-    borderLeftStyle: 'solid',
-    borderLeftColor: theme.palette.primary.dark,
-    borderLeftWidth: 'medium'
+  listItemActive: {
+    boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
   }
 }))
 
@@ -230,9 +228,9 @@ This will change which template is cloned by users.`)
             templateWorkspaces ?
               templateWorkspaces.map(workspace => (
                 <ListItem
-                  className={(activeTemplate) && workspace.id === activeTemplate.id ? 
-                    classes.listItem
-                    : null} 
+                  className={(activeTemplate) && workspace.id === activeTemplate.id ?
+                    classes.listItemActive
+                    : null}
                   button
                   key={workspace.id}
                   onClick={() => handleNavigateMapper(workspace.id)}
