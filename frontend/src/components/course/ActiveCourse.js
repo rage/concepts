@@ -43,7 +43,6 @@ const useStyles = makeStyles(theme => ({
   titleEditWrapper: {
     flex: '0 0 auto',
     alignSelf: 'flex-start',
-    marginTop: '-8px',
     marginRight: '-8px'
   },
   list: {
