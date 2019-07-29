@@ -36,6 +36,10 @@ type Query {
   # Porting queries
   exportData(workspaceId: ID!): String!
 
+  # Project 
+  workspaceBySourceTemplate(workspaceId: ID!): Workspace
+
+  # Sharing
   peekToken(id: ID!): ProjectOrWorkspace
 }
 

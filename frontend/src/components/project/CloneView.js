@@ -34,9 +34,12 @@ const CloneView = ({ history, projectId }) => {
     variables: { id: projectId }
   })
 
-  const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    variables: {}
-  })
+  // const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
+  //   skip: peekTemplate.data.projectById ? !peekTemplate.data.projectById.project.activeTemplate.id : true,
+  //   variables: {
+  //     workspaceId: peekTemplate.data.projectById.project.activeTemplate.id
+  //   }
+  // })
 
   const handleNavigateMapper = (workspaceId) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
@@ -62,7 +65,7 @@ const CloneView = ({ history, projectId }) => {
           }
           title='Cloned workspace'
         />
-        {
+        {/* {
           workspace.data.something ?
             <List>
               <ListItem
@@ -79,7 +82,7 @@ const CloneView = ({ history, projectId }) => {
             </List>
             :
             null
-        }
+        } */}
       </Card>
       :
       null
