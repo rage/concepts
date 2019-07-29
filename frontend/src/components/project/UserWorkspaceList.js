@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   CircularProgress, Menu, MenuItem, ListItemIcon, Button
 } from '@material-ui/core'
-
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   GridOn as GridOnIcon,
   MoreVert as MoreVertIcon,
@@ -16,7 +13,6 @@ import {
 
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
-
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -80,7 +76,10 @@ const UserWorkspaceList = ({
         <CardHeader
           action={
             loggedIn ?
-              <Button variant='outlined' color='primary' aria-label='Invite students' onClick={openProjectCloneDialog}>
+              <Button
+                variant='outlined' color='primary' aria-label='Invite students'
+                onClick={openProjectCloneDialog}
+              >
                 Invite students
               </Button> : null
           }

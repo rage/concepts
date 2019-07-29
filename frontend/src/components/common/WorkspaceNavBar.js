@@ -2,22 +2,19 @@ import React, { useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import {
-  Shuffle as ShuffleIcon, ShowChart as ShowCartIcon, GridOn as GridOnIcon,
-  DeviceHub as DeviceHubIcon, CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,
-  Edit as EditIcon, MoreVert as MoreVertIcon, Share as ShareIcon
+  Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon,
+  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,  Edit as EditIcon,
+  MoreVert as MoreVertIcon, Share as ShareIcon
 } from '@material-ui/icons'
 
 import client from '../../apollo/apolloClient'
 import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { DELETE_WORKSPACE } from '../../graphql/Mutation'
-
 import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
-
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import useShareWorkspaceDialog from '../workspace/useShareWorkspaceDialog'
 

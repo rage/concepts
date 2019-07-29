@@ -52,6 +52,13 @@
     "import/namespace": "error",
     "import/default": "error",
     "import/export": "error",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": ["builtin", "external", ["internal", "sibling", "parent"], "index"]
+      }
+    ],
     "max-len": [
       "error",
       {

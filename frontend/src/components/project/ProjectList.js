@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   CircularProgress
@@ -10,8 +9,6 @@ import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@materia
 
 import ProjectCreationDialog from './ProjectCreationDialog'
 import ProjectEditingDialog from './ProjectEditingDialog'
-
-// Error dispatcher
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({

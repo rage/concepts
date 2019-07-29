@@ -1,14 +1,18 @@
 #!/usr/bin/env node
-const ColorContrastChecker = require('color-contrast-checker')
-const colorsRaw = require('@material-ui/core/colors')
+/* eslint-env node */
 const fs = require('fs')
 
-const includedColors = ['red', 'purple', 'indigo', 'lightBlue', 'green', 'lime', 'orange', 'brown', 'grey']
+const ColorContrastChecker = require('color-contrast-checker')
+const colorsRaw = require('@material-ui/core/colors')
+
+const includedColors = [
+  'red', 'purple', 'indigo', 'lightBlue', 'green', 'lime', 'orange', 'brown', 'grey'
+]
 
 const colorLists = []
 let foregroundColors
 for (const [name, color] of Object.entries(colorsRaw)) {
-  if (!color.hasOwnProperty('50')) {
+  if (!Object.hasOwnProperty.call(color, '50')) {
     foregroundColors = Object.values(color)
     continue
   } else if (!includedColors.includes(name)) {

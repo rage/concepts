@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import vis from 'vis'
 import { withStyles } from '@material-ui/core'
+
 import {
   WORKSPACE_DATA_FOR_GRAPH
 } from '../../graphql/Query'

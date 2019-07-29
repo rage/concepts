@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-
 import { Typography, CircularProgress, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
@@ -9,10 +8,8 @@ import {
   CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE,
   SET_ACTIVE_TEMPLATE, CREATE_PROJECT_SHARE_LINK
 } from '../../graphql/Mutation'
-
 import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
-
 import ProjectSharingDialog from './ProjectSharingDialog'
 
 const useStyles = makeStyles(() => ({

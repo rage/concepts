@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   Container, CssBaseline, Button, TextField, Typography, FormHelperText, CircularProgress
 } from '@material-ui/core'
@@ -10,7 +9,6 @@ import {
 import {
   CREATE_GUEST_ACCOUNT
 } from '../../graphql/Mutation'
-
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { useLoginStateValue } from '../../store'
 

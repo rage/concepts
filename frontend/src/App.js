@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
-
 import { withStyles } from '@material-ui/core/styles'
 import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
@@ -15,7 +14,6 @@ import LandingView from './components/common/LandingView'
 import WorkspaceView from './components/workspace/WorkspaceView'
 import JoinView from './components/common/JoinView'
 import CourseHeatmap from './components/course/CourseHeatmap'
-
 import { useMessageStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 import GraphView from './components/graph/GraphView'
