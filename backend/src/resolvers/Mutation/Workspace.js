@@ -134,6 +134,26 @@ const WorkspaceMutations = {
     return await context.prisma.deleteWorkspaceParticipant({
       id
     })
+  },
+  async cloneTemplateWorkspace(root, { name, projectId, sourceTemplateId }, context) {
+    await checkAccess(context, { minimumRole: Role.GUEST })
+    return await context.prisma.createWorkspace({
+      name,
+      sourceProject: {
+        connect: { id: projectId }
+      },
+      sourceTemplate: {
+        connect: { id: sourceTemplateId }
+      },
+      participants: {
+        create: [{
+          privilege: 'OWNER',
+          user: {
+            connect: { id: context.user.id }
+          }
+        }]
+      }
+    })
   }
 }
 

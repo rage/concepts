@@ -61,8 +61,6 @@ const WorkspaceQueries = {
     const res = await context.prisma.$graphql(workspaceBySourceTemplateQuery, {
       id: sourceId, userId: context.user.id
     })
-    console.log(res)
-
     const workspace = res.user.workspaceParticipations[0] &&
       res.user.workspaceParticipations[0].workspace
 

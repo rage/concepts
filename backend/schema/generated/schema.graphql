@@ -80,6 +80,7 @@ type Mutation {
   createTemplateWorkspace(projectId: ID!, name: String!): Workspace
   deleteTemplateWorkspace(id: ID!): Workspace
   updateTemplateWorkspace(id: ID!, name: String, active: Boolean): Workspace
+  cloneTemplateWorkspace(sourceTemplateId: ID!, projectId: ID!, name: String!): Workspace
 
   # Porting mutations
   importData(data: String!): Workspace

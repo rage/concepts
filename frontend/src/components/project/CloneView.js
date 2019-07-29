@@ -6,6 +6,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
+import { CLONE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
@@ -34,8 +35,6 @@ const CloneView = ({ history, projectId }) => {
     variables: { id: projectId }
   })
 
-  console.log(peekTemplate)
-
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
     skip: !(peekTemplate.data && peekTemplate.data.projectById &&
       peekTemplate.data.projectById.activeTemplate.id)
@@ -46,9 +45,14 @@ const CloneView = ({ history, projectId }) => {
     }
   })
 
-  console.log('WS', workspace)
-
-  // const cloneTemplate = useMutation()
+  const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
+    refetchQueries: [{
+      query: WORKSPACE_BY_SOURCE_TEMPLATE, variables: {
+        sourceId: (peekTemplate.data && peekTemplate.data.projectById) ?
+          peekTemplate.data.projectById.activeTemplate.id : undefined
+      }
+    }]
+  })
 
   const handleNavigateMapper = (workspaceId) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
@@ -56,9 +60,21 @@ const CloneView = ({ history, projectId }) => {
 
   const handleClose = () => history.push('/user')
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     setLoading(true)
-
+    cloneTemplate({
+      variables: {
+        sourceTemplateId: (peekTemplate.data && peekTemplate.data.projectById) ?
+          peekTemplate.data.projectById.activeTemplate.id : undefined,
+        projectId,
+        name: 'TEST'
+      }
+    }).catch(err => {
+      messageDispatch({
+        type: 'setError',
+        message: err.message
+      })
+    })
     setLoading(false)
   }
 
