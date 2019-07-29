@@ -54,9 +54,7 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
         },
         data: course
       })
-    } catch (err) {
-      return
-    }
+    } catch (err) {}
   }
 }
 
@@ -110,9 +108,7 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
         },
         data: course
       })
-    } catch (err) {
-      return
-    }
+    } catch (err) {}
   }
 }
 
