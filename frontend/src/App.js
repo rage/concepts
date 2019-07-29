@@ -113,13 +113,13 @@ const App = ({ classes }) => {
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />}
         />
         <PrivateRoute
-          exact path='/projects/:id' redirectPath='auth' condition={loggedIn}
+          exact path='/projects/:id' redirectPath='/auth' condition={loggedIn}
           render={({ match: { params: { id } } }) => {
             return <ProjectView projectId={id} />
           }}
         />
         <PrivateRoute
-          exact path='/projects/:id/clone' redirectPath='auth' condition={loggedIn}
+          exact path='/projects/:id/clone' redirectPath='/auth' condition={loggedIn}
           render={({ match: { params: { id } } }) => {
             return <CloneView projectId={id} />
           }}
