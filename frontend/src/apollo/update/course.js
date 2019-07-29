@@ -21,9 +21,7 @@ const createCourseUpdate = (workspaceId) => {
           data: dataInStore
         })
       }
-    } catch (e) {
-      return
-    }
+    } catch (e) {}
   }
 }
 
@@ -46,9 +44,7 @@ const updateCourseUpdate = (workspaceId) => {
           data: dataInStore
         })
       }
-    } catch (e) {
-      return
-    }
+    } catch (e) {}
   }
 }
 

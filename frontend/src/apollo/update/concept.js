@@ -34,9 +34,7 @@ const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
           data: dataInStoreCopy
         })
       }
-    } catch (e) {
-      return
-    }
+    } catch (e) {}
   }
 }
 
@@ -71,9 +69,7 @@ const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
           data: dataInStoreCopy
         })
       }
-    } catch (e) {
-      return
-    }
+    } catch (e) {}
   }
 }
 

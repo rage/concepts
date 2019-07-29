@@ -105,6 +105,12 @@
     "template-curly-spacing": [
       "error",
       "never"
+    ],
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
     ]
   }
 }
