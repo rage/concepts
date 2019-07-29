@@ -17,18 +17,6 @@ const ProjectQueries = {
     await checkAccess(context, { minimumRole: Role.STAFF })
     return await context.prisma.projects()
   },
-  async workspaceBySourceTemplate(root, { workspaceId }, context) {
-    await checkAccess(context, { minimumRole: Role.STUDENT})
-    const workspace = context.prisma.workspace({
-      sourceTemplate: { id: workspaceId }
-    }).participants({ user: {id: context.user.id } })
-
-    if (typeof workspace === 'undefined') {
-      return null;
-    }
-
-    return workspace
-  },
   async projectById(root, args, context) {
     if (context.role === Role.GUEST) {
       await checkAccess(context, {

@@ -34,12 +34,21 @@ const CloneView = ({ history, projectId }) => {
     variables: { id: projectId }
   })
 
-  // const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-  //   skip: peekTemplate.data.projectById ? !peekTemplate.data.projectById.project.activeTemplate.id : true,
-  //   variables: {
-  //     workspaceId: peekTemplate.data.projectById.project.activeTemplate.id
-  //   }
-  // })
+  console.log(peekTemplate)
+
+  const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
+    skip: !(peekTemplate.data && peekTemplate.data.projectById &&
+      peekTemplate.data.projectById.activeTemplate.id)
+    ,
+    variables: {
+      sourceId: (peekTemplate.data && peekTemplate.data.projectById) ?
+        peekTemplate.data.projectById.activeTemplate.id : undefined
+    }
+  })
+
+  console.log('WS', workspace)
+
+  // const cloneTemplate = useMutation()
 
   const handleNavigateMapper = (workspaceId) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
@@ -49,6 +58,7 @@ const CloneView = ({ history, projectId }) => {
 
   const handleCreate = () => {
     setLoading(true)
+
     setLoading(false)
   }
 
@@ -58,6 +68,7 @@ const CloneView = ({ history, projectId }) => {
         <CardHeader
           action={
             <Button variant='outlined' color='primary'
+              disabled={!peekTemplate.data.projectById.activeTemplate.id}
               aria-label='Invite students' onClick={handleCreate}
             >
               Create workspace
@@ -65,8 +76,8 @@ const CloneView = ({ history, projectId }) => {
           }
           title='Cloned workspace'
         />
-        {/* {
-          workspace.data.something ?
+        {
+          workspace.data.workspaceBySourceTemplate ?
             <List>
               <ListItem
                 button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
@@ -82,7 +93,7 @@ const CloneView = ({ history, projectId }) => {
             </List>
             :
             null
-        } */}
+        }
       </Card>
       :
       null

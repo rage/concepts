@@ -2,6 +2,20 @@ const { ForbiddenError } = require('apollo-server-core')
 
 const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
 
+const workspaceBySourceTemplateQuery = `
+query($id: ID!, $userId: ID!) {
+  user(where: { id: $userId}) {
+    workspaceParticipations(where: { workspace: { sourceTemplate: { id: $id }}}) {
+      id
+      workspace {
+        id
+        name
+      }
+    }
+  }
+}
+`
+
 const WorkspaceQueries = {
   async allWorkspaces(root, args, context) {
     await checkAccess(context, { minimumRole: Role.STAFF })
@@ -41,6 +55,18 @@ const WorkspaceQueries = {
       return await context.prisma.workspaceToken({ id }).workspace()
     }
     return await context.prisma.projectToken({ id }).project()
+  },
+  async workspaceBySourceTemplate(root, { sourceId }, context) {
+    await checkAccess(context, { minimumRole: Role.GUEST })
+    const res = await context.prisma.$graphql(workspaceBySourceTemplateQuery, {
+      id: sourceId, userId: context.user.id
+    })
+    console.log(res)
+
+    const workspace = res.user.workspaceParticipations[0] &&
+      res.user.workspaceParticipations[0].workspace
+
+    return workspace
   }
 }
 

@@ -13,7 +13,7 @@ import {
 
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,11 +30,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserWorkspaceList = ({
-  history, userWorkspaces, openProjectCloneDialog
+  history, userWorkspaces, openProjectCloneDialog, activeTemplate
 }) => {
 
   const [menu, setMenu] = useState(null)
-  const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
 
   const classes = useStyles()
@@ -75,13 +74,12 @@ const UserWorkspaceList = ({
       <Card elevation={0} className={classes.root}>
         <CardHeader
           action={
-            loggedIn ?
-              <Button
-                variant='outlined' color='primary' aria-label='Invite students'
-                onClick={openProjectCloneDialog}
-              >
-                Invite students
-              </Button> : null
+            <Button
+              variant='outlined' color='primary' aria-label='Invite students'
+              onClick={openProjectCloneDialog} disabled={!activeTemplate}
+            >
+              Invite students
+            </Button>
           }
           title='Workspaces by users'
         />
@@ -99,16 +97,15 @@ const UserWorkspaceList = ({
                       </Typography>
                     }
                   />
-                  {
-                    loggedIn ?
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          aria-owns={menu ? 'template-list-menu' : undefined}
-                          onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                          <MoreVertIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> : null
-                  }
+
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-owns={menu ? 'template-list-menu' : undefined}
+                      onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+
 
                 </ListItem>
               )) :

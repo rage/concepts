@@ -15,13 +15,16 @@ const JoinView = ({ history, token }) => {
   const [, messageDispatch] = useMessageStateValue()
 
   const type = token[0] === 'w' ? 'workspace' : 'project'
+  const privilege = token[1] === 'c' ? 'clone' : 'other'
+
+  const refetchQueries =
+    type === 'workspace' ?
+      [{ query: WORKSPACES_FOR_USER }]
+      :
+      (privilege !== 'clone' ? [{ query: PROJECTS_FOR_USER }] : [])
 
   const joinShareLink = useMutation(USE_SHARE_LINK, {
-    refetchQueries: type !== 'workspace' ? [{
-      query: PROJECTS_FOR_USER
-    }] : [{
-      query: WORKSPACES_FOR_USER
-    }]
+    refetchQueries
   })
 
   const peek = useQuery(PEEK_SHARE_LINK, {

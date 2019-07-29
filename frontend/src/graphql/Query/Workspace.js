@@ -103,8 +103,8 @@ workspaceById(id: $id) {
 `
 
 const WORKSPACE_BY_SOURCE_TEMPLATE = gql`
-query workspaceBySourceTemplate($id: ID!) {
-  workspaceBySourceTemplate(workspaceId: $id) {
+query workspaceBySourceTemplate($sourceId: ID!) {
+  workspaceBySourceTemplate(sourceId: $sourceId) {
     id
     name
   }

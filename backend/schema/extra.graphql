@@ -37,7 +37,7 @@ type Query {
   exportData(workspaceId: ID!): String!
 
   # Project 
-  workspaceBySourceTemplate(workspaceId: ID!): Workspace
+  workspaceBySourceTemplate(sourceId: ID!): Workspace
 
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace
