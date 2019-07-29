@@ -250,34 +250,39 @@ const CourseHeatmap = ({ workspaceId }) => {
         {
           workspaceCourseQuery.data.workspaceById ?
             <div className={classes.scrollSyncTable}>
-              <table>
-                <thead>
-                  <tr>
-                    <BlankHeaderCell />
-                    {workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                      <HeaderCell key={course.id} title={course.name} />
-                    ))}
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {
-                    workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
-                      <tr key={`${fromCourse.id}`}>
-                        <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
-                        {
-                          workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
-                            <TableCell
-                              workspaceId={workspaceId} maxGradVal={maxGradVal}
-                              key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
-                              toCourse={toCourse} />
-                          ))
-                        }
+              {
+                workspaceCourseQuery.data.workspaceById.courses.length > 0 ?
+                  <table>
+                    <thead>
+                      <tr>
+                        <BlankHeaderCell />
+                        {workspaceCourseQuery.data.workspaceById.courses.map(course => (
+                          <HeaderCell key={course.id} title={course.name} />
+                        ))}
                       </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
+                    </thead>
+
+                    <tbody>
+                      {
+                        workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
+                          <tr key={`${fromCourse.id}`}>
+                            <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
+                            {
+                              workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
+                                <TableCell
+                                  workspaceId={workspaceId} maxGradVal={maxGradVal}
+                                  key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
+                                  toCourse={toCourse} />
+                              ))
+                            }
+                          </tr>
+                        ))
+                      }
+                    </tbody>
+                  </table>
+                  :
+                  <Typography style={{ color: '#bbb', textAlign: 'center' }}>No courses available</Typography>
+              }
             </div>
             :
             <div style={{ textAlign: 'center' }}>
