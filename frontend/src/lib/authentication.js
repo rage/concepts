@@ -27,7 +27,7 @@ export const signIn = async ({
 }
 
 export const signOut = async () => {
-  await client.resetStore().then(() => {
+  await client.clearStore().then(() => {
     tmcClient.unauthenticate()
     window.localStorage.clear()
   })
