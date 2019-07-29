@@ -1,6 +1,7 @@
 const { AuthenticationError } = require('apollo-server-core')
-const { Role } = require('../accessControl')
 const jwt = require('jsonwebtoken')
+
+const { Role } = require('../accessControl')
 
 const authenticate = async (resolve, root, args, context, info) => {
   const prisma = context.prisma

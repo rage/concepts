@@ -2,19 +2,15 @@ import React, { useRef, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-
 import { Button, Paper, Select, MenuItem, InputBase, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
 import { DELETE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_BY_ID } from '../../graphql/Query'
-
 import ActiveConcept from '../concept/ActiveConcept'
-
 import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
-
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../common/InfoBox'
 

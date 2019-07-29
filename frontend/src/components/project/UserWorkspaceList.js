@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   CircularProgress, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
-
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   GridOn as GridOnIcon,
   Share as ShareIcon,
@@ -17,7 +14,6 @@ import {
 
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
-
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({

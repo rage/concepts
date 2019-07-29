@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
+
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import { updateConceptUpdate } from '../../apollo/update'
 import ConceptEditingDialog from '../concept/ConceptEditingDialog'

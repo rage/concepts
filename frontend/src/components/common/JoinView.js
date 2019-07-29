@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
-
 import {
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, CircularProgress
 } from '@material-ui/core'
-
 import { useQuery, useMutation } from 'react-apollo-hooks'
+
 import { USE_SHARE_LINK } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, PEEK_SHARE_LINK, PROJECTS_FOR_USER } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'

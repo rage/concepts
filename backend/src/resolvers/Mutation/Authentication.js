@@ -1,6 +1,7 @@
-const tmc = require('../../TMCAuthentication')
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server-core')
+
+const tmc = require('../../TMCAuthentication')
 
 
 const AuthenticationMutations = {

@@ -2,7 +2,6 @@ import React from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-
 import { Button, CssBaseline, Grid, Typography, Container } from '@material-ui/core'
 
 import { useLoginStateValue } from '../../store'

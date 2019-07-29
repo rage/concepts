@@ -1,19 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
   ListItemSecondaryAction
 } from '@material-ui/core'
+
 import { COURSE_PREREQUISITES } from '../../graphql/Query/Course'
-
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
-
 import useCreateCourseDialog from './useCreateCourseDialog'
-
 import { useMessageStateValue } from '../../store'
-
 import { useInfoBox } from '../common/InfoBox'
 
 const useStyles = makeStyles(theme => ({

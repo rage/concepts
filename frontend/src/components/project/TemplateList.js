@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   CircularProgress, Menu, MenuItem, ListItemIcon
@@ -19,9 +18,7 @@ import {
 } from '@material-ui/icons'
 
 import WorkspaceSharingDialog from '../workspace/WorkspaceSharingDialog'
-
 import { exportWorkspace } from '../common/WorkspaceNavBar'
-
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import useEditTemplateDialog from './useEditTemplateDialog'
 import useCreateTemplateDialog from './useCreateTemplateDialog'

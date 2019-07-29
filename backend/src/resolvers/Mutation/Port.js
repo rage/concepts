@@ -1,6 +1,7 @@
+const Ajv = require('ajv')
+
 const { checkAccess, checkPrivilege, Role, Privilege } = require('../../accessControl')
 const schema = require('./port.schema')
-const Ajv = require('ajv')
 
 const ajv = Ajv()
 const validateData = ajv.compile(schema)

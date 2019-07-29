@@ -1,22 +1,14 @@
 import React, { useState } from 'react'
-
 import { withRouter } from 'react-router-dom'
-import { withStyles } from '@material-ui/core/styles'
-import Container from '@material-ui/core/Container'
-import CssBaseline from '@material-ui/core/CssBaseline'
-
 import { useMutation } from 'react-apollo-hooks'
-
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import FormHelperText from '@material-ui/core/FormHelperText'
+import { withStyles } from '@material-ui/core/styles'
+import {
+  Container, CssBaseline, Button, TextField, Typography, FormHelperText
+} from '@material-ui/core'
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
-
 import client from '../../apollo/apolloClient'
-import { useLoginStateValue } from '../../store'
 
 const styles = theme => ({
   paper: {
@@ -39,13 +31,9 @@ const styles = theme => ({
   }
 })
 
-
 const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
-
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
-
-  const { user } = useLoginStateValue()[0]
 
   const createCourse = useMutation(CREATE_COURSE, {
     update: (store, response) => {

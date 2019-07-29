@@ -1,8 +1,8 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
-import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 
+import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
 
 const WorkspaceView = ({ workspaceId, location }) => {

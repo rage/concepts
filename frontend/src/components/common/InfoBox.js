@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Paper, Typography, IconButton, Popper } from '@material-ui/core'
 import { InfoOutlined as InfoIcon } from '@material-ui/icons'
+
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../../static/userGuide'
 import { setProgress, getUser } from '../../lib/userProgress'
