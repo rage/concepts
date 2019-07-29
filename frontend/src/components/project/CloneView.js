@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import {
   List, ListItem, ListItemText, Card, CardHeader, Typography, Button
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
