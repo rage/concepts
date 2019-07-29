@@ -3,14 +3,13 @@ import { withRouter } from 'react-router-dom'
 
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
-  CircularProgress, Menu, MenuItem, ListItemIcon
+  CircularProgress, Menu, MenuItem, ListItemIcon, Button
 } from '@material-ui/core'
 
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
   GridOn as GridOnIcon,
-  Share as ShareIcon,
   MoreVert as MoreVertIcon,
   CloudDownload as CloudDownloadIcon
 } from '@material-ui/icons'
@@ -35,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserWorkspaceList = ({
-  history, userWorkspaces
+  history, userWorkspaces, openProjectCloneDialog
 }) => {
 
   const [menu, setMenu] = useState(null)
@@ -81,15 +80,11 @@ const UserWorkspaceList = ({
         <CardHeader
           action={
             loggedIn ?
-              <IconButton aria-label='Add' onClick={() => { }}>
-                <ShareIcon />
-              </IconButton> : null
+              <Button variant='outlined' color='primary' aria-label='Invite students' onClick={openProjectCloneDialog}>
+                Invite students
+              </Button> : null
           }
-          title={
-            <Typography variant='h5' component='h3'>
-              {'Workspaces by users'}
-            </Typography>
-          }
+          title='Workspaces by users'
         />
         <List dense={false}>
           {

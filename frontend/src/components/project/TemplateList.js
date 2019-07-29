@@ -212,11 +212,8 @@ This will change which template is cloned by users.`)
                 <AddIcon />
               </IconButton> : null
           }
-          title={
-            <Typography variant='h5' component='h3'>
-              {'Template workspaces'}
-            </Typography>
-          }
+          title='Template workspaces'
+
         />
         <List dense={false}>
           {

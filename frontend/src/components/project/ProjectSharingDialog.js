@@ -7,25 +7,34 @@ import {
 import { useMessageStateValue } from '../../store'
 
 const ProjectSharingDialog = ({
-  open, project, handleClose, createProjectShareLink, deleteProjectShareLink
+  open, project, handleClose, createProjectShareLink, deleteProjectShareLink,
+  privilege, title, description
 }) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const messageDispatch = useMessageStateValue()[1]
 
-  const existingToken = project && project.tokens.length > 0 ? project.tokens[0].id : null
+  const existingToken = project && project.tokens.find(token => {
+    console.log(token, token.privilege)
+    console.log('Q: ', privilege)
+    return token.privilege === privilege
+  })
+
+  const existingTokenId = existingToken && existingToken.id
+
+  console.log(existingToken)
 
   const handleRegenerate = () => {
     setSubmitDisabled(true)
     const del = () => createProjectShareLink({
       variables: {
         projectId: project.id,
-        privilege: 'EDIT'
+        privilege
       }
     })
 
-    const promise = existingToken ? deleteProjectShareLink({
+    const promise = existingTokenId ? deleteProjectShareLink({
       variables: {
-        id: existingToken
+        id: existingTokenId
       }
     }).then(del) : del()
     promise.catch(() => messageDispatch({
@@ -36,14 +45,14 @@ const ProjectSharingDialog = ({
 
   let url = 'No share links created'
   let realURL = null
-  if (existingToken) {
+  if (existingTokenId) {
     realURL = new URL(window.location)
-    realURL.pathname = `/join/${existingToken}`
+    realURL.pathname = `/join/${existingTokenId}`
     url = <a href={realURL}>{realURL.host}{realURL.pathname}</a>
   }
 
   const copyToClipboard = () => {
-    if (existingToken) {
+    if (existingTokenId) {
       navigator.clipboard.writeText(realURL.toString()).then(() => {
         messageDispatch({
           type: 'setNotification',
@@ -64,10 +73,10 @@ const ProjectSharingDialog = ({
       onClose={handleClose}
       aria-labelledby='form-dialog-title'
     >
-      <DialogTitle id='form-dialog-title'>Share project</DialogTitle>
+      <DialogTitle id='form-dialog-title'>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Let other users view and edit your project
+          {description}
         </DialogContentText>
         <DialogContentText>
           {url}
@@ -86,7 +95,7 @@ const ProjectSharingDialog = ({
           disabled={submitDisabled}
           color='primary'
         >
-          {submitDisabled ? 'Generating...' : existingToken ? 'Regenerate link' : 'Generate link'}
+          {submitDisabled ? 'Generating...' : existingTokenId ? 'Regenerate link' : 'Generate link'}
         </Button>
         <Button
           onClick={handleClose}

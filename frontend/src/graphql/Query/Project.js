@@ -19,6 +19,7 @@ query projectById($id: ID!) {
     name
     tokens {
       id
+      privilege
     }
     workspaces {
       id
