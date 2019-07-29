@@ -68,16 +68,33 @@ const Privilege = {
 
 const privilegeToInt = privilege => {
   switch (privilege) {
-  case 'OWNER':
+  case Privilege.OWNER:
     return 4
-  case 'EDIT':
+  case Privilege.EDIT:
     return 3
-  case 'READ':
+  case Privilege.READ:
     return 2
-  case 'CLONE':
+  case Privilege.CLONE:
     return 1
+  case Privilege.NONE:
   default:
     return 0
+  }
+}
+
+const privilegeToChar = privilege => {
+  switch (privilege) {
+  case Privilege.OWNER:
+    return 'o'
+  case Privilege.EDIT:
+    return 'e'
+  case Privilege.READ:
+    return 'r'
+  case Privilege.CLONE:
+    return 'c'
+  case Privilege.NONE:
+  default:
+    return '0'
   }
 }
 
@@ -128,6 +145,6 @@ const checkAccess = async (ctx, {
 }
 
 module.exports = {
-  Role, Privilege, checkAccess, checkUser, privilegeToInt, roleToInt,
+  Role, Privilege, checkAccess, checkUser, privilegeToInt, privilegeToChar, roleToInt,
   checkPrivilege: checkPrivilegeInt
 }

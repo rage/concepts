@@ -1,7 +1,7 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege, privilegeToChar } = require('../../accessControl')
 
 const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const makeSecret = () => Array.from({ length: 24 },
+const makeSecret = length => Array.from({ length },
   () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
 
 const WorkspaceSharingMutations = {
@@ -12,7 +12,7 @@ const WorkspaceSharingMutations = {
       workspaceId
     })
     return await context.prisma.createWorkspaceToken({
-      id: `w${makeSecret()}`,
+      id: `w${privilegeToChar(privilege)}${makeSecret(23)}`,
       privilege,
       workspace: {
         connect: { id: workspaceId }
@@ -27,7 +27,7 @@ const WorkspaceSharingMutations = {
       projectId
     })
     return await context.prisma.createProjectToken({
-      id: `p${makeSecret()}`,
+      id: `p${privilegeToChar(privilege)}${makeSecret(23)}`,
       privilege,
       project: {
         connect: { id: projectId }
