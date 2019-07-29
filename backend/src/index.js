@@ -1,10 +1,10 @@
 const path = require('path')
 
 require('dotenv').config({
-  path: path.resolve(__dirname, `./config/${process.env.ENVIRONMENT}.env`)
+  path: path.resolve(__dirname, `../config/${process.env.ENVIRONMENT}.env`)
 })
 
-const { prisma } = require('./generated/prisma-client')
+const { prisma } = require('../generated/prisma-client/index')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
 
