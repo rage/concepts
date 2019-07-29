@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
-
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   CircularProgress, Menu, MenuItem, ListItemIcon
@@ -15,9 +14,7 @@ import {
 import WorkspaceCreationDialog from './WorkspaceCreationDialog'
 import WorkspaceEditingDialog from './WorkspaceEditingDialog'
 import WorkspaceSharingDialog from './WorkspaceSharingDialog'
-
 import { exportWorkspace } from '../common/WorkspaceNavBar'
-
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({

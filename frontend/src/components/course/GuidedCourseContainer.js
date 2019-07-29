@@ -1,13 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import Course from './Course'
 import Typography from '@material-ui/core/Typography'
 
+import Course from './Course'
 import Masonry from './Masonry'
-
 import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
-
 import { useInfoBox } from '../common/InfoBox'
 
 const GuidedCourseContainer = ({

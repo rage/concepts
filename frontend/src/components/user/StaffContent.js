@@ -1,8 +1,7 @@
 import React from 'react'
-
 import { CircularProgress, makeStyles } from '@material-ui/core'
-
 import { useQuery, useMutation } from 'react-apollo-hooks'
+
 import {
   CREATE_WORKSPACE,
   DELETE_WORKSPACE,
@@ -13,9 +12,7 @@ import {
   DELETE_PROJECT,
   UPDATE_PROJECT
 } from '../../graphql/Mutation'
-
 import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
-
 import WorkspaceList from '../workspace/WorkspaceList'
 import ProjectList from '../project/ProjectList'
 

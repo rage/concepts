@@ -1,14 +1,13 @@
 import React from 'react'
-
 import { useQuery, useMutation } from 'react-apollo-hooks'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 import {
   CREATE_WORKSPACE, DELETE_WORKSPACE, UPDATE_WORKSPACE, CREATE_SHARE_LINK, DELETE_SHARE_LINK
 } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER } from '../../graphql/Query/Workspace'
-
 import WorkspaceList from '../workspace/WorkspaceList'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
 
 const UserView = () => {
   const workspaceQuery = useQuery(WORKSPACES_FOR_USER)

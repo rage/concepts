@@ -1,32 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react'
-
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
-
 import { makeStyles } from '@material-ui/core/styles'
+import Fab from '@material-ui/core/Fab'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import MenuItem from '@material-ui/core/MenuItem'
+import Menu from '@material-ui/core/Menu'
 
 import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES, COURSES_BY_WORKSPACE
 } from '../../graphql/Query'
 import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
-
 import GuidedCourseContainer from './GuidedCourseContainer'
 import GuidedCourseTray from './GuidedCourseTray'
 import ActiveCourse from './ActiveCourse'
-
-import Fab from '@material-ui/core/Fab'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-
 import { useLoginStateValue } from '../../store'
 import {
   createCourseUpdate, deleteConceptLinkUpdate,
   updateCourseUpdate
 } from '../../apollo/update'
 import ConceptLink from '../concept/ConceptLink'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-
 import { useInfoBox } from '../common/InfoBox'
 
 const useStyles = makeStyles(() => ({

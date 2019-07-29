@@ -1,14 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
 import { BrowserRouter } from 'react-router-dom'
-import './index.css'
-import client from './apollo/apolloClient'
 import { ApolloProvider } from 'react-apollo-hooks'
+
+import App from './App'
+import client from './apollo/apolloClient'
 import { isSignedIn } from './lib/authentication'
 import { LoginStateProvider, MessagingStateProvider } from './store'
 import FocusOverlay from './components/common/FocusOverlay'
 import InfoBox from './components/common/InfoBox'
+
+import './index.css'
 
 const loginReducer = (state, action) => {
   switch (action.type) {
@@ -79,7 +81,10 @@ const getLoggedInUser = () => {
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <MessagingStateProvider initialState={{ error: '', notification: '' }} reducer={messageReducer}>
+      <MessagingStateProvider
+        initialState={{ error: '', notification: '' }}
+        reducer={messageReducer}
+      >
         <LoginStateProvider
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}

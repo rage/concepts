@@ -1,5 +1,6 @@
-const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
 const { ForbiddenError } = require('apollo-server-core')
+
+const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
 
 const WorkspaceQueries = {
   async allWorkspaces(root, args, context) {

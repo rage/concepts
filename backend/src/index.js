@@ -4,13 +4,12 @@ require('dotenv').config({
   path: path.resolve(__dirname, `../config/${process.env.ENVIRONMENT}.env`)
 })
 
-const { prisma } = require('../schema/generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
 
+const { prisma } = require('../schema/generated/prisma-client')
 const { authenticate } = require('./middleware/authentication')
 const { logError } = require('./errorLogger')
-
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 const types = require('./resolvers/Type')
