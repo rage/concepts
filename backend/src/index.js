@@ -1,10 +1,10 @@
 const path = require('path')
 
 require('dotenv').config({
-  path: path.resolve(__dirname, `./config/${process.env.ENVIRONMENT}.env`)
+  path: path.resolve(__dirname, `../config/${process.env.ENVIRONMENT}.env`)
 })
 
-const { prisma } = require('./generated/prisma-client')
+const { prisma } = require('../schema/generated/prisma-client')
 const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
 
@@ -33,7 +33,7 @@ const options = {
 }
 
 const server = new GraphQLServer({
-  typeDefs: './generated/schema.graphql',
+  typeDefs: './schema/generated/schema.graphql',
   resolvers,
   context: req => ({
     prisma,

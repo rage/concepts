@@ -4,7 +4,7 @@
   "author": "RAGE",
   "description": "Concept mapping platform for education - backend module",
   "private": true,
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
     "ajv": "^6.10.0",
     "apollo-server-core": "^2.6.2",
@@ -20,9 +20,9 @@
     "nodemon": "^1.19.0"
   },
   "scripts": {
-    "start-dev": "ENVIRONMENT=development node index.js",
-    "start": "ENVIRONMENT=production node index.js",
+    "start-dev": "ENVIRONMENT=development node src/index.js",
+    "start": "ENVIRONMENT=production node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "ENVIRONMENT=development nodemon index.js"
+    "watch": "ENVIRONMENT=development nodemon src/index.js"
   }
 }

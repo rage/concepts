@@ -6,8 +6,7 @@ const authenticate = async (resolve, root, args, context, info) => {
   const prisma = context.prisma
 
   if (context.user) {
-    const result = await resolve(root, args, context, info)
-    return result
+    return await resolve(root, args, context, info)
   }
 
   let rawToken = null
@@ -22,8 +21,7 @@ const authenticate = async (resolve, root, args, context, info) => {
     await getUser(token, context, prisma)
   }
 
-  const result = await resolve(root, args, context, info)
-  return result
+  return await resolve(root, args, context, info)
 }
 
 const getUser = async (token, context, prisma) => {
