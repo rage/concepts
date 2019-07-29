@@ -102,7 +102,8 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
       id: workspaceId,
       userId: ctx.user.id
     })
-    const projectPrivilege = proRes.workspace.asTemplate.participants[0] &&
+    const projectPrivilege = proRes.workspace.asTemplate &&
+      proRes.workspace.asTemplate.participants[0] &&
       proRes.workspace.asTemplate.participants[0].privilege
     return privilegeToInt(projectPrivilege) >= privilegeToInt(minimumPrivilege)
   } else {
