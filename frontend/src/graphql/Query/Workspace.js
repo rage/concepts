@@ -102,10 +102,20 @@ workspaceById(id: $id) {
 }
 `
 
+const WORKSPACE_BY_SOURCE_TEMPLATE = gql`
+query workspaceBySourceTemplate($id: ID!) {
+  workspaceBySourceTemplate(id: $id) {
+    id
+    name
+  }
+}
+`
+
 export {
   ALL_WORKSPACES,
   WORKSPACES_FOR_USER,
   WORKSPACE_BY_ID,
   WORKSPACE_COURSES_AND_CONCEPTS,
-  WORKSPACE_DATA_FOR_GRAPH
+  WORKSPACE_DATA_FOR_GRAPH,
+  WORKSPACE_BY_SOURCE_TEMPLATE
 }

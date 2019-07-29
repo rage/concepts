@@ -39,7 +39,9 @@ type Workspace {
   id: ID! @id
   name: String!
   sourceProject: Project @relation(name: "UserWorkspaces")
+  sourceTemplate: Workspace @relation(name: "TemplateClones")
   asTemplate: Project @relation(name:"Templates")
+  clones: [Workspace!]! @relation(name: "TemplateClones")
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)

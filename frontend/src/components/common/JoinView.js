@@ -25,7 +25,6 @@ const JoinView = ({ history, token }) => {
     }]
   })
 
-
   const peek = useQuery(PEEK_SHARE_LINK, {
     variables: { token }
   })
@@ -37,9 +36,13 @@ const JoinView = ({ history, token }) => {
     joinShareLink({
       variables: { token }
     }).then(resp => {
-      history.push(type === 'workspace'
-        ? `/workspaces/${resp.data.useToken.workspace.id}/mapper`
-        : `/projects/${resp.data.useToken.project.id}`)
+      if (resp.data.useToken.privilege === 'CLONE' && type === 'project') {
+        history.push(`/projects/${resp.data.useToken.project.id}/clone`)
+      } else {
+        history.push(type === 'workspace'
+          ? `/workspaces/${resp.data.useToken.workspace.id}/mapper`
+          : `/projects/${resp.data.useToken.project.id}`)
+      }
     }).catch(() => {
       messageDispatch({
         type: 'setError',

@@ -2950,7 +2950,9 @@ type Workspace {
   id: ID!
   name: String!
   sourceProject: Project
+  sourceTemplate: Workspace
   asTemplate: Project
+  clones(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
@@ -2969,7 +2971,9 @@ input WorkspaceCreateInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -2988,8 +2992,18 @@ input WorkspaceCreateManyWithoutSourceProjectInput {
   connect: [WorkspaceWhereUniqueInput!]
 }
 
+input WorkspaceCreateManyWithoutSourceTemplateInput {
+  create: [WorkspaceCreateWithoutSourceTemplateInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+}
+
 input WorkspaceCreateOneInput {
   create: WorkspaceCreateInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutClonesInput {
+  create: WorkspaceCreateWithoutClonesInput
   connect: WorkspaceWhereUniqueInput
 }
 
@@ -3027,6 +3041,22 @@ input WorkspaceCreateWithoutAsTemplateInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+}
+
+input WorkspaceCreateWithoutClonesInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3039,7 +3069,9 @@ input WorkspaceCreateWithoutConceptLinksInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3051,7 +3083,9 @@ input WorkspaceCreateWithoutConceptsInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3063,7 +3097,9 @@ input WorkspaceCreateWithoutCourseLinksInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3075,7 +3111,9 @@ input WorkspaceCreateWithoutCoursesInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -3087,7 +3125,9 @@ input WorkspaceCreateWithoutParticipantsInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3098,7 +3138,23 @@ input WorkspaceCreateWithoutParticipantsInput {
 input WorkspaceCreateWithoutSourceProjectInput {
   id: ID
   name: String!
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+}
+
+input WorkspaceCreateWithoutSourceTemplateInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3111,7 +3167,9 @@ input WorkspaceCreateWithoutTokensInput {
   id: ID
   name: String!
   sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
@@ -3661,7 +3719,9 @@ input WorkspaceTokenWhereUniqueInput {
 input WorkspaceUpdateDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3673,7 +3733,9 @@ input WorkspaceUpdateDataInput {
 input WorkspaceUpdateInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3710,6 +3772,18 @@ input WorkspaceUpdateManyWithoutSourceProjectInput {
   disconnect: [WorkspaceWhereUniqueInput!]
   update: [WorkspaceUpdateWithWhereUniqueWithoutSourceProjectInput!]
   upsert: [WorkspaceUpsertWithWhereUniqueWithoutSourceProjectInput!]
+  deleteMany: [WorkspaceScalarWhereInput!]
+  updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceUpdateManyWithoutSourceTemplateInput {
+  create: [WorkspaceCreateWithoutSourceTemplateInput!]
+  delete: [WorkspaceWhereUniqueInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+  set: [WorkspaceWhereUniqueInput!]
+  disconnect: [WorkspaceWhereUniqueInput!]
+  update: [WorkspaceUpdateWithWhereUniqueWithoutSourceTemplateInput!]
+  upsert: [WorkspaceUpsertWithWhereUniqueWithoutSourceTemplateInput!]
   deleteMany: [WorkspaceScalarWhereInput!]
   updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
 }
@@ -3770,9 +3844,33 @@ input WorkspaceUpdateOneRequiredWithoutTokensInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceUpdateOneWithoutClonesInput {
+  create: WorkspaceCreateWithoutClonesInput
+  update: WorkspaceUpdateWithoutClonesDataInput
+  upsert: WorkspaceUpsertWithoutClonesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceUpdateWithoutAsTemplateDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+}
+
+input WorkspaceUpdateWithoutClonesDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3784,7 +3882,9 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
 input WorkspaceUpdateWithoutConceptLinksDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3795,7 +3895,9 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
 input WorkspaceUpdateWithoutConceptsDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3806,7 +3908,9 @@ input WorkspaceUpdateWithoutConceptsDataInput {
 input WorkspaceUpdateWithoutCourseLinksDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3817,7 +3921,9 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
 input WorkspaceUpdateWithoutCoursesDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -3828,7 +3934,9 @@ input WorkspaceUpdateWithoutCoursesDataInput {
 input WorkspaceUpdateWithoutParticipantsDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3838,7 +3946,22 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
 
 input WorkspaceUpdateWithoutSourceProjectDataInput {
   name: String
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+}
+
+input WorkspaceUpdateWithoutSourceTemplateDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3850,7 +3973,9 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
 input WorkspaceUpdateWithoutTokensDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
@@ -3868,9 +3993,19 @@ input WorkspaceUpdateWithWhereUniqueWithoutSourceProjectInput {
   data: WorkspaceUpdateWithoutSourceProjectDataInput!
 }
 
+input WorkspaceUpdateWithWhereUniqueWithoutSourceTemplateInput {
+  where: WorkspaceWhereUniqueInput!
+  data: WorkspaceUpdateWithoutSourceTemplateDataInput!
+}
+
 input WorkspaceUpsertNestedInput {
   update: WorkspaceUpdateDataInput!
   create: WorkspaceCreateInput!
+}
+
+input WorkspaceUpsertWithoutClonesInput {
+  update: WorkspaceUpdateWithoutClonesDataInput!
+  create: WorkspaceCreateWithoutClonesInput!
 }
 
 input WorkspaceUpsertWithoutConceptLinksInput {
@@ -3915,6 +4050,12 @@ input WorkspaceUpsertWithWhereUniqueWithoutSourceProjectInput {
   create: WorkspaceCreateWithoutSourceProjectInput!
 }
 
+input WorkspaceUpsertWithWhereUniqueWithoutSourceTemplateInput {
+  where: WorkspaceWhereUniqueInput!
+  update: WorkspaceUpdateWithoutSourceTemplateDataInput!
+  create: WorkspaceCreateWithoutSourceTemplateInput!
+}
+
 input WorkspaceWhereInput {
   id: ID
   id_not: ID
@@ -3945,7 +4086,11 @@ input WorkspaceWhereInput {
   name_ends_with: String
   name_not_ends_with: String
   sourceProject: ProjectWhereInput
+  sourceTemplate: WorkspaceWhereInput
   asTemplate: ProjectWhereInput
+  clones_every: WorkspaceWhereInput
+  clones_some: WorkspaceWhereInput
+  clones_none: WorkspaceWhereInput
   courses_every: CourseWhereInput
   courses_some: CourseWhereInput
   courses_none: CourseWhereInput

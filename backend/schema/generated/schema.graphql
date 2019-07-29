@@ -147,7 +147,9 @@ type Workspace {
   id: ID!
   name: String!
   sourceProject: Project
+  sourceTemplate: Workspace
   asTemplate: Project
+  clones: [Workspace!]!
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
