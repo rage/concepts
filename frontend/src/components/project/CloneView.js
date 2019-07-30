@@ -119,10 +119,9 @@ const CloneView = ({ history, projectId }) => {
             margin='normal'
             required
             fullWidth
-            id='email'
+            id='name'
             label='Workspace name'
             name='name'
-            autoComplete='email'
             onChange={(e) => setName(e.target.value)}
             value={name}
             autoFocus
