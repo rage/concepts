@@ -15,15 +15,17 @@ const JoinView = ({ history, token }) => {
   const [, messageDispatch] = useMessageStateValue()
 
   const type = token[0] === 'w' ? 'workspace' : 'project'
+  const privilege = token[1] === 'c' ? 'clone' : 'other'
+
+  const refetchQueries = type === 'workspace'
+    ? [{ query: WORKSPACES_FOR_USER }]
+    : (privilege !== 'clone'
+      ? [{ query: PROJECTS_FOR_USER }]
+      : [])
 
   const joinShareLink = useMutation(USE_SHARE_LINK, {
-    refetchQueries: type !== 'workspace' ? [{
-      query: PROJECTS_FOR_USER
-    }] : [{
-      query: WORKSPACES_FOR_USER
-    }]
+    refetchQueries
   })
-
 
   const peek = useQuery(PEEK_SHARE_LINK, {
     variables: { token }
@@ -36,9 +38,13 @@ const JoinView = ({ history, token }) => {
     joinShareLink({
       variables: { token }
     }).then(resp => {
-      history.push(type === 'workspace'
-        ? `/workspaces/${resp.data.useToken.workspace.id}/mapper`
-        : `/projects/${resp.data.useToken.project.id}`)
+      if (resp.data.useToken.privilege === 'CLONE' && type === 'project') {
+        history.push(`/projects/${resp.data.useToken.project.id}/clone`)
+      } else {
+        history.push(type === 'workspace'
+          ? `/workspaces/${resp.data.useToken.workspace.id}/mapper`
+          : `/projects/${resp.data.useToken.project.id}`)
+      }
     }).catch(() => {
       messageDispatch({
         type: 'setError',
@@ -51,9 +57,12 @@ const JoinView = ({ history, token }) => {
   if (peek.data.peekToken) {
     const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
     if (participant) {
-      return <Redirect to={type === 'workspace'
+      const path = type === 'workspace'
         ? `/workspaces/${peek.data.peekToken.id}/mapper`
-        : `/projects/${peek.data.peekToken.id}`} />
+        : (privilege === 'clone'
+          ? `/projects/${peek.data.peekToken.id}/clone`
+          : `/projects/${peek.data.peekToken.id}`)
+      return <Redirect to={path} />
     }
   }
 
@@ -75,10 +84,8 @@ const JoinView = ({ history, token }) => {
           </Button>
         </DialogActions>
       </> : (
-        <DialogContent>
-          <DialogContentText style={{ textAlign: 'center' }}>
-            <CircularProgress />
-          </DialogContentText>
+        <DialogContent style={{ textAlign: 'center' }}>
+          <CircularProgress />
         </DialogContent>
       )}
     </Dialog>

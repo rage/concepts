@@ -1,5 +1,57 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 
+const workspaceAllDataQuery = `
+    query($id : ID!) {
+      project(where: {id: $id}) {
+        activeTemplate {
+          id
+          name
+          conceptLinks {
+            createdBy {
+              id
+            }
+            from {
+              id
+            }
+            to {
+              id
+            }
+          }
+          courseLinks {
+            createdBy {
+              id
+            }
+            from {
+              id
+            }
+            to {
+              id
+            }
+          }
+          courses {
+            id
+            name
+            createdBy {
+              id
+            }
+          concepts {
+            id
+            name
+            description
+            createdBy {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+  `
+
+const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const makeSecret = length => Array.from({ length },
+  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
@@ -134,6 +186,68 @@ const WorkspaceMutations = {
     return await context.prisma.deleteWorkspaceParticipant({
       id
     })
+  },
+  async cloneTemplateWorkspace(root, { name, projectId }, context) {
+    await checkAccess(context, { minimumRole: Role.GUEST })
+
+    const result = await context.prisma.$graphql(workspaceAllDataQuery, {
+      id: projectId
+    })
+
+    const workspaceId = makeSecret(25)
+    const templateWorkspace = result.project.activeTemplate
+    const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
+
+    const createdWorkspace = await context.prisma.createWorkspace({
+      id: workspaceId,
+      name,
+      sourceProject: {
+        connect: { id: projectId }
+      },
+      sourceTemplate: {
+        connect: { id: templateWorkspace.id }
+      },
+      participants: {
+        create: [{
+          privilege: 'OWNER',
+          user: {
+            connect: { id: context.user.id }
+          }
+        }]
+      },
+      courses: {
+        create: templateWorkspace.courses.map(course => ({
+          id: makeNewId(course.id),
+          name: course.name,
+          createdBy: { connect: { id: course.createdBy.id } },
+          concepts: {
+            create: course.concepts.map(concept => ({
+              id: makeNewId(concept.id),
+              name: concept.name,
+              description: concept.description,
+              createdBy: { connect: { id: concept.createdBy.id } },
+              workspace: { connect: { id: workspaceId } }
+            }))
+          }
+        }))
+      },
+      conceptLinks: {
+        create: templateWorkspace.conceptLinks.map(link => ({
+          createdBy: { connect: { id: link.createdBy.id } },
+          from: { connect: { id: makeNewId(link.from.id) } },
+          to: { connect: { id: makeNewId(link.to.id) } }
+        }))
+      },
+      courseLinks: {
+        create: templateWorkspace.courseLinks.map(link => ({
+          createdBy: { connect: { id: link.createdBy.id } },
+          from: { connect: { id: makeNewId(link.from.id) } },
+          to: { connect: { id: makeNewId(link.to.id) } }
+        }))
+      }
+    })
+
+    return createdWorkspace
   }
 }
 

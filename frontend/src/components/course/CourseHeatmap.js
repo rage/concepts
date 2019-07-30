@@ -280,7 +280,9 @@ const CourseHeatmap = ({ workspaceId }) => {
                     </tbody>
                   </table>
                   :
-                  <Typography style={{ color: '#bbb', textAlign: 'center' }}>No courses available</Typography>
+                  <Typography style={{ color: '#bbb', textAlign: 'center' }}>
+                    No courses available
+                  </Typography>
               }
             </div>
             :

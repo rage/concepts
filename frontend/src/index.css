@@ -23,3 +23,7 @@ button {
   background-color: transparent;
   cursor: pointer;
 }
+
+.MuiCardHeader-action {
+  margin-top: initial !important;
+}

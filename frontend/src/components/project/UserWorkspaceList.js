@@ -2,19 +2,18 @@ import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
-  CircularProgress, Menu, MenuItem, ListItemIcon
+  CircularProgress, Menu, MenuItem, ListItemIcon, Button
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   GridOn as GridOnIcon,
-  Share as ShareIcon,
   MoreVert as MoreVertIcon,
   CloudDownload as CloudDownloadIcon
 } from '@material-ui/icons'
 
 
 import { exportWorkspace } from '../common/WorkspaceNavBar'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,11 +30,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserWorkspaceList = ({
-  history, userWorkspaces
+  history, userWorkspaces, openProjectCloneDialog, activeTemplate
 }) => {
 
   const [menu, setMenu] = useState(null)
-  const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
 
   const classes = useStyles()
@@ -76,16 +74,14 @@ const UserWorkspaceList = ({
       <Card elevation={0} className={classes.root}>
         <CardHeader
           action={
-            loggedIn ?
-              <IconButton aria-label='Add' onClick={() => { }}>
-                <ShareIcon />
-              </IconButton> : null
+            <Button
+              variant='outlined' color='primary' aria-label='Invite students'
+              onClick={openProjectCloneDialog} disabled={!activeTemplate}
+            >
+              Invite students
+            </Button>
           }
-          title={
-            <Typography variant='h5' component='h3'>
-              {'Workspaces by users'}
-            </Typography>
-          }
+          title='Workspaces by users'
         />
         <List dense={false}>
           {
@@ -95,22 +91,18 @@ const UserWorkspaceList = ({
                   button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
                 >
                   <ListItemText
-                    primary={
-                      <Typography variant='h6'>
-                        {workspace.name}
-                      </Typography>
-                    }
+                    primary={workspace.name}
+                    secondary={workspace.participants.find(p => p.privilege === 'OWNER').user.id}
                   />
-                  {
-                    loggedIn ?
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          aria-owns={menu ? 'template-list-menu' : undefined}
-                          onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                          <MoreVertIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> : null
-                  }
+
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-owns={menu ? 'template-list-menu' : undefined}
+                      onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+
 
                 </ListItem>
               )) :

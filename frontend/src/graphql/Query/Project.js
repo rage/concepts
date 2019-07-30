@@ -19,10 +19,17 @@ query projectById($id: ID!) {
     name
     tokens {
       id
+      privilege
     }
     workspaces {
       id
       name
+      participants {
+        privilege
+        user {
+          id
+        }
+      }
     }
     templates {
       id
@@ -44,7 +51,18 @@ query projectById($id: ID!) {
 }
 `
 
+const PEEK_ACTIVE_TEMPLATE = gql`
+query limitedProjectById($id: ID!) {
+  limitedProjectById(id: $id) {
+    id
+    name
+    activeTemplateId
+  }
+}
+`
+
 export {
   PROJECTS_FOR_USER,
-  PROJECT_BY_ID
+  PROJECT_BY_ID,
+  PEEK_ACTIVE_TEMPLATE
 }

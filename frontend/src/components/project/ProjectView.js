@@ -56,8 +56,17 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
+const projectShareTitle = 'Share project'
+const projectShareDescription = 'Let other users view and edit your project'
+const projectCloneTitle = 'Invite students'
+const projectCloneDescription = `
+Let students clone the active template to 
+contribute towards the mapping.
+`
+
 const ProjectView = ({ projectId }) => {
-  const [open, setOpen] = useState(false)
+  const [shareState, setShareState] = useState({ open: false })
+  const [cloneState, setCloneState] = useState({ open: false })
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
@@ -98,55 +107,85 @@ const ProjectView = ({ projectId }) => {
     }]
   })
 
+
+
   const openProjectShareDialog = () => {
-    setOpen(true)
+    setShareState({
+      open: true
+    })
   }
 
-  const closeProjectDialog = () => {
-    setOpen(false)
+  const openProjectCloneDialog = () => {
+    setCloneState({
+      open: true
+    })
+  }
+
+  const closeProjectShareDialog = () => {
+    setShareState({
+      open: false
+    })
+  }
+  const closeProjectCloneDialog = () => {
+    setCloneState({
+      open: false
+    })
   }
 
   const classes = useStyles()
 
   return (
     projectQuery.data.projectById ?
-          <>
-            <div className={classes.root}>
-              <Typography className={classes.header} variant='h4'>
-                Project: {projectQuery.data.projectById.name}
-              </Typography>
-              <span className={classes.toolbar}>
-                <Button color='primary' variant='contained' onClick={openProjectShareDialog}>
-                  Share project
-                </Button>
-              </span>
-              <div className={classes.templates}>
-                <TemplateList
-                  projectId={projectId}
-                  activeTemplate={projectQuery.data.projectById.activeTemplate}
-                  templateWorkspaces={projectQuery.data.projectById.templates}
-                  createShareLink={createWorkspaceShareLink}
-                  deleteShareLink={deleteShareLink}
-                  deleteTemplateWorkspace={deleteTemplateWorkspace}
-                  setActiveTemplate={setActiveTemplate}
-                />
-              </div>
-              <div className={classes.userWorkspaces}>
-                <UserWorkspaceList
-                  userWorkspaces={projectQuery.data.projectById.workspaces}
-                  createProjectShareLink={createProjectShareLink}
-                  deleteShareLink={deleteShareLink}
-                />
-              </div>
-            </div>
-            <ProjectSharingDialog
-              open={open}
-              project={projectQuery.data.projectById}
-              handleClose={closeProjectDialog}
-              createProjectShareLink={createProjectShareLink}
-              deleteProjectShareLink={deleteShareLink}
+      <>
+        <div className={classes.root}>
+          <Typography className={classes.header} variant='h4'>
+            Project: {projectQuery.data.projectById.name}
+          </Typography>
+          <span className={classes.toolbar}>
+            <Button color='primary' variant='contained' onClick={openProjectShareDialog}>
+              Share project
+            </Button>
+          </span>
+          <div className={classes.templates}>
+            <TemplateList
+              projectId={projectId}
+              activeTemplate={projectQuery.data.projectById.activeTemplate}
+              templateWorkspaces={projectQuery.data.projectById.templates}
+              createShareLink={createWorkspaceShareLink}
+              deleteShareLink={deleteShareLink}
+              deleteTemplateWorkspace={deleteTemplateWorkspace}
+              setActiveTemplate={setActiveTemplate}
             />
-          </>
+          </div>
+          <div className={classes.userWorkspaces}>
+            <UserWorkspaceList
+              openProjectCloneDialog={openProjectCloneDialog}
+              userWorkspaces={projectQuery.data.projectById.workspaces}
+              activeTemplate={projectQuery.data.projectById.activeTemplate}
+            />
+          </div>
+        </div>
+        <ProjectSharingDialog
+          open={shareState.open}
+          privilege='EDIT'
+          title={projectShareTitle}
+          description={projectShareDescription}
+          project={projectQuery.data.projectById}
+          handleClose={closeProjectShareDialog}
+          createProjectShareLink={createProjectShareLink}
+          deleteProjectShareLink={deleteShareLink}
+        />
+        <ProjectSharingDialog
+          open={cloneState.open}
+          privilege='CLONE'
+          title={projectCloneTitle}
+          description={projectCloneDescription}
+          project={projectQuery.data.projectById}
+          handleClose={closeProjectCloneDialog}
+          createProjectShareLink={createProjectShareLink}
+          deleteProjectShareLink={deleteShareLink}
+        />
+      </>
       :
       <div style={{ textAlign: 'center' }}>
         <CircularProgress />

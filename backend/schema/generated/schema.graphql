@@ -11,6 +11,7 @@ type Query {
   # Project queries
   allProjects: [Project!]!
   projectById(id: ID!): Project
+  limitedProjectById(id: ID!): LimitedProject
   projectsForUser: [ProjectParticipant!]!
 
   # Course queries
@@ -36,6 +37,10 @@ type Query {
   # Porting queries
   exportData(workspaceId: ID!): String!
 
+  # Project
+  workspaceBySourceTemplate(sourceId: ID!): Workspace
+
+  # Sharing
   peekToken(id: ID!): ProjectOrWorkspace
 }
 
@@ -76,6 +81,7 @@ type Mutation {
   createTemplateWorkspace(projectId: ID!, name: String!): Workspace
   deleteTemplateWorkspace(id: ID!): Workspace
   updateTemplateWorkspace(id: ID!, name: String, active: Boolean): Workspace
+  cloneTemplateWorkspace(projectId: ID!, name: String!): Workspace
 
   # Porting mutations
   importData(data: String!): Workspace
@@ -98,9 +104,16 @@ type Mutation {
   useToken(id: ID!): ProjectOrWorkspaceParticipant
 }
 
-union ProjectOrWorkspace = Workspace | Project
+union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
+
+type LimitedProject {
+  id: ID!
+  name: String!
+  activeTemplateId: ID!
+  participants: [ProjectParticipant!]!
+}
 
 type AuthPayload {
   token: String!
@@ -147,7 +160,9 @@ type Workspace {
   id: ID!
   name: String!
   sourceProject: Project
+  sourceTemplate: Workspace
   asTemplate: Project
+  clones: [Workspace!]!
   courses: [Course!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!

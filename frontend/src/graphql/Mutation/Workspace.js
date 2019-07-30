@@ -64,11 +64,21 @@ mutation deleteTemplateWorkspace($id: ID!) {
 }
 `
 
+const CLONE_TEMPLATE_WORKSPACE = gql`
+mutation cloneTemplateWorkspace($name: String!, $projectId: ID!) {
+  cloneTemplateWorkspace(name: $name, projectId: $projectId) {
+    id
+    name
+  }
+}
+`
+
 export {
   CREATE_WORKSPACE,
   UPDATE_WORKSPACE,
   DELETE_WORKSPACE,
   CREATE_TEMPLATE_WORKSPACE,
   UPDATE_TEMPLATE_WORKSPACE,
-  DELETE_TEMPLATE_WORKSPACE
+  DELETE_TEMPLATE_WORKSPACE,
+  CLONE_TEMPLATE_WORKSPACE
 }

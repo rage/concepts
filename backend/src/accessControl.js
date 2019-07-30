@@ -49,6 +49,11 @@ query($id: ID!, $userId: ID!) {
         privilege
       }
     }
+    sourceProject {
+      participants(where: { user: { id: $userId } }) {
+        privilege
+      }
+    }
   }
 }
 `
@@ -68,18 +73,37 @@ const Privilege = {
 
 const privilegeToInt = privilege => {
   switch (privilege) {
-  case 'OWNER':
+  case Privilege.OWNER:
     return 4
-  case 'EDIT':
+  case Privilege.EDIT:
     return 3
-  case 'READ':
+  case Privilege.READ:
     return 2
-  case 'CLONE':
+  case Privilege.CLONE:
     return 1
+  case Privilege.NONE:
   default:
     return 0
   }
 }
+
+const privilegeToChar = privilege => {
+  switch (privilege) {
+  case Privilege.OWNER:
+    return 'o'
+  case Privilege.EDIT:
+    return 'e'
+  case Privilege.READ:
+    return 'r'
+  case Privilege.CLONE:
+    return 'c'
+  case Privilege.NONE:
+  default:
+    return '0'
+  }
+}
+
+const readPrivilege = ws => privilegeToInt(ws && ws.participants[0] && ws.participants[0].privilege)
 
 const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
@@ -93,19 +117,17 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
   if (!resp[type]) {
     throw Error('Invalid checkPrivilege call (workspace or project is null)')
   }
-  const privilege = resp[type].participants[0] && resp[type].participants[0].privilege
 
-  if (privilege && privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)) {
+  if (readPrivilege(resp[type]) >= privilegeToInt(minimumPrivilege)) {
     return true
   } else if (type === 'workspace') {
     const proRes = await ctx.prisma.$graphql(projectPrivilegeQuery, {
       id: workspaceId,
       userId: ctx.user.id
     })
-    const projectPrivilege = proRes.workspace.asTemplate &&
-      proRes.workspace.asTemplate.participants[0] &&
-      proRes.workspace.asTemplate.participants[0].privilege
-    return privilegeToInt(projectPrivilege) >= privilegeToInt(minimumPrivilege)
+
+    return readPrivilege(proRes.workspace.sourceProject) >= privilegeToInt(minimumPrivilege)
+      || readPrivilege(proRes.workspace.asTemplate) >= privilegeToInt(minimumPrivilege)
   } else {
     return false
   }
@@ -128,6 +150,6 @@ const checkAccess = async (ctx, {
 }
 
 module.exports = {
-  Role, Privilege, checkAccess, checkUser, privilegeToInt, roleToInt,
+  Role, Privilege, checkAccess, checkUser, privilegeToInt, privilegeToChar, roleToInt,
   checkPrivilege: checkPrivilegeInt
 }

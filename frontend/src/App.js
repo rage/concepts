@@ -18,6 +18,7 @@ import { useMessageStateValue, useLoginStateValue } from './store'
 import AuthenticationForm from './components/authentication/AuthenticationForm'
 import GraphView from './components/graph/GraphView'
 import ProjectView from './components/project/ProjectView'
+import CloneView from './components/project/CloneView'
 
 const styles = theme => ({
   root: {
@@ -112,9 +113,15 @@ const App = ({ classes }) => {
             <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />}
         />
         <PrivateRoute
-          exact path='/projects/:id' redirectPath='auth' condition={loggedIn}
+          exact path='/projects/:id' redirectPath='/auth' condition={loggedIn}
           render={({ match: { params: { id } } }) => {
             return <ProjectView projectId={id} />
+          }}
+        />
+        <PrivateRoute
+          exact path='/projects/:id/clone' redirectPath='/auth' condition={loggedIn}
+          render={({ match: { params: { id } } }) => {
+            return <CloneView projectId={id} />
           }}
         />
       </div>
