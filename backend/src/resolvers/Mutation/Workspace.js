@@ -1,5 +1,50 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 
+const workspaceAllDataQuery = `
+    query($id : ID!) {
+      workspace(where: {
+        id: $id
+      }) {
+        name
+        courses {
+          id
+          name
+          createdBy {
+            id
+          }
+          concepts {
+            id
+            name
+            description
+            createdBy {
+              id
+            }
+            linksToConcept {
+              createdBy {
+                id
+              }
+              from {
+                id
+              }
+            }
+          }
+          linksToCourse {
+            createdBy {
+              id
+            }
+            from {
+              id
+            }
+          }
+        }
+      }
+    }
+    `
+
+const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const makeSecret = length => Array.from({ length },
+  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
@@ -137,7 +182,20 @@ const WorkspaceMutations = {
   },
   async cloneTemplateWorkspace(root, { name, projectId, sourceTemplateId }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
+
+    const result = await context.prisma.$graphql(workspaceAllDataQuery, {
+      id: sourceTemplateId
+    })
+
+    const workspaceId = makeSecret(25)
+    const workspace = result['workspace']
+
+    const makeNewId = (id) => {
+      return workspaceId.substring(0, 13) + id.substring(13, 25)
+    }
+
     return await context.prisma.createWorkspace({
+      id: workspaceId,
       name,
       sourceProject: {
         connect: { id: projectId }
@@ -152,6 +210,44 @@ const WorkspaceMutations = {
             connect: { id: context.user.id }
           }
         }]
+      },
+      courses: {
+        create: workspace.courses.map(course => {
+          return {
+            id: makeNewId(course.id),
+            name: course.name,
+            createdBy: { connect: { id: course.createdBy.id } },
+            concepts: {
+              create: course.concepts.map(concept => {
+                return {
+                  id: makeNewId(concept.id),
+                  name: concept.name,
+                  description: concept.description,
+                  createdBy: { connect: { id: concept.createdBy.id } },
+                  workspace: { connect: { id: workspaceId } }
+                  // linksToConcept: {
+                  //   create: concept.linksToConcept.map(link => {
+                  //     return {
+                  //       createdBy: { connect: { id: link.createdBy.id } },
+                  //       workspace: { connect: { id: workspaceId } },
+                  //       from: { connect: { id: makeNewId(link.from.id) } }
+                  //     }
+                  //   })
+                  // }
+                }
+              })
+            }
+            // linksToCourse: {
+            //   create: course.linksToCourse.map(link => {
+            //     return {
+            //       createdBy: { connect: { id: link.createdBy.id } },
+            //       workspace: { connect: { id: workspaceId } },
+            //       from: { connect: { id: makeNewId(link.from.id) } }
+            //     }
+            //   })
+            // }
+          }
+        })
       }
     })
   }
