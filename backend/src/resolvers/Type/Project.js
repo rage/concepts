@@ -1,8 +1,8 @@
 const { checkPrivilege, Privilege } = require('../../accessControl')
 
-const checkID = (info, suffix = '') => {
-  if (info.__typename) {
-    return info.__typename
+const checkID = (obj, info, suffix = '') => {
+  if (obj.__typename) {
+    return obj.__typename
   }
   if (info.variableValues.id) {
     if (info.variableValues.id[0] === 'w') {
