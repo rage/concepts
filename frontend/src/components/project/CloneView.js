@@ -93,8 +93,22 @@ const CloneView = ({ history, projectId }) => {
       })
     }).finally(() => {
       setLoading(false)
+      setName('')
     })
   }
+
+  const handleKey = (e) => {
+    if (e.key === 'Enter') {
+      handleCreate(e)
+    }
+  }
+
+  const inputDisabled = (peekTemplate.data.limitedProjectById &&
+    !peekTemplate.data.limitedProjectById.activeTemplateId) ||
+    loading ||
+    (workspace.data && workspace.data.workspaceBySourceTemplate &&
+      workspace.data.workspaceBySourceTemplate.id)
+
 
   return (
     peekTemplate.data.limitedProjectById ?
@@ -102,6 +116,7 @@ const CloneView = ({ history, projectId }) => {
         <div>
           <CssBaseline />
           <TextField
+            disabled={inputDisabled}
             variant='outlined'
             margin='normal'
             required
@@ -113,6 +128,7 @@ const CloneView = ({ history, projectId }) => {
             onChange={(e) => setName(e.target.value)}
             value={name}
             autoFocus
+            onKeyPress={handleKey}
           />
           <Button
             fullWidth
