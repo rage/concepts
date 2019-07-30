@@ -49,6 +49,11 @@ query($id: ID!, $userId: ID!) {
         privilege
       }
     }
+    sourceProject {
+      participants(where: { user: { id: $userId } }) {
+        privilege
+      }
+    }
   }
 }
 `
@@ -98,6 +103,8 @@ const privilegeToChar = privilege => {
   }
 }
 
+const readPrivilege = ws => privilegeToInt(ws && ws.participants[0] && ws.participants[0].privilege)
+
 const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
     throw Error('Invalid checkPrivilege call (missing workspace or project)')
@@ -110,19 +117,17 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
   if (!resp[type]) {
     throw Error('Invalid checkPrivilege call (workspace or project is null)')
   }
-  const privilege = resp[type].participants[0] && resp[type].participants[0].privilege
 
-  if (privilege && privilegeToInt(privilege) >= privilegeToInt(minimumPrivilege)) {
+  if (readPrivilege(resp[type]) >= privilegeToInt(minimumPrivilege)) {
     return true
   } else if (type === 'workspace') {
     const proRes = await ctx.prisma.$graphql(projectPrivilegeQuery, {
       id: workspaceId,
       userId: ctx.user.id
     })
-    const projectPrivilege = proRes.workspace.asTemplate &&
-      proRes.workspace.asTemplate.participants[0] &&
-      proRes.workspace.asTemplate.participants[0].privilege
-    return privilegeToInt(projectPrivilege) >= privilegeToInt(minimumPrivilege)
+
+    return readPrivilege(proRes.workspace.sourceProject) >= privilegeToInt(minimumPrivilege)
+      || readPrivilege(proRes.workspace.asTemplate) >= privilegeToInt(minimumPrivilege)
   } else {
     return false
   }
