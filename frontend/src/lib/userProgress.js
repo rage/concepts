@@ -11,9 +11,7 @@ export const setProgress = async (index, userId) => {
     newUser.guideProgress = response.data.updateUser.guideProgress
     localStorage.setItem('current_user', JSON.stringify(currentUser))
     return response.data.updateUser
-  } catch (error) {
-    return
-  }
+  } catch (error) {}
 }
 
 export const getUser = () => {

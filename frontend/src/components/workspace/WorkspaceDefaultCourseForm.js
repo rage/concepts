@@ -50,9 +50,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
           query: WORKSPACE_BY_ID,
           data: workspace
         })
-      } catch (ex) {
-        return
-      }
+      } catch (ex) {}
     }
   })
 

@@ -55,9 +55,7 @@ const jsonPortUpdate = () => {
         },
         data: courses
       })
-    } catch (e) {
-      return
-    }
+    } catch (e) {}
   }
 }
 
