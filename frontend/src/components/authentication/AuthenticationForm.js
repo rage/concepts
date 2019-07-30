@@ -3,7 +3,8 @@ import { withRouter } from 'react-router-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Container, CssBaseline, Button, TextField, Typography, FormHelperText, CircularProgress
+  Container, CssBaseline, Button, TextField, Typography,
+  FormHelperText, CircularProgress, Divider
 } from '@material-ui/core'
 
 import {
@@ -21,11 +22,17 @@ const useStyles = makeStyles(theme => ({
   },
   wrapper: {
     position: 'relative',
-    margin: theme.spacing(1)
+    margin: theme.spacing(1, 0)
   },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1)
+  },
+  signInButton: {
+    marginBottom: theme.spacing(0.5)
+  },
+  guestButton: {
+    marginTop: theme.spacing(0.5)
   },
   buttonProgress: {
     color: 'white',
@@ -103,7 +110,7 @@ const AuthenticationForm = ({ history, location }) => {
 
         <form
           className={classes.form}
-          onSubmit={!loading && !loadingGuest ? authenticate : () => {}}
+          onSubmit={!loading && !loadingGuest ? authenticate : () => { }}
           noValidate
         >
           <TextField
@@ -146,6 +153,7 @@ const AuthenticationForm = ({ history, location }) => {
           </FormHelperText>
           <div className={classes.wrapper}>
             <Button
+              className={classes.signInButton}
               type='submit'
               fullWidth
               variant='contained'
@@ -160,14 +168,15 @@ const AuthenticationForm = ({ history, location }) => {
         </form>
       </div>
       {showGuestButton && <>
-        <hr />
+        <Divider />
         <div className={classes.wrapper}>
           <Button
+            className={classes.guestButton}
             type='button'
             fullWidth
             variant='contained'
             color='primary'
-            onClick={!loading && !loadingGuest ? continueAsGuest : () => {}}
+            onClick={!loading && !loadingGuest ? continueAsGuest : () => { }}
           >
             {!loadingGuest ? 'Continue as guest' : '\u00A0'}
           </Button>

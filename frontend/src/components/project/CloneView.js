@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, Typography, Button, CssBaseline, Container, Paper
+  List, ListItem, ListItemText, Typography, Button, CssBaseline, Container, Paper, TextField, Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { CLONE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,10 +25,11 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1)
   },
   button: {
-    margin: theme.spacing(1, 0)
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   },
   paper: {
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(2, 0)
   },
   listRoot: {
     padding: 0
@@ -40,6 +41,7 @@ const useStyles = makeStyles(theme => ({
 
 const CloneView = ({ history, projectId }) => {
   const [loading, setLoading] = useState(false)
+  const [name, setName] = useState('')
   const [, messageDispatch] = useMessageStateValue()
 
   const classes = useStyles()
@@ -72,13 +74,17 @@ const CloneView = ({ history, projectId }) => {
   }
 
   const handleCreate = async () => {
+    if (name.trim() === '') {
+      alert('Workspaces need a name!')
+      return
+    }
     setLoading(true)
     cloneTemplate({
       variables: {
         sourceTemplateId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
           peekTemplate.data.limitedProjectById.activeTemplateId : undefined,
         projectId,
-        name: 'TEST'
+        name
       }
     }).catch(err => {
       messageDispatch({
@@ -95,6 +101,19 @@ const CloneView = ({ history, projectId }) => {
       <Container component='main' maxWidth='xs' cl>
         <div>
           <CssBaseline />
+          <TextField
+            variant='outlined'
+            margin='normal'
+            required
+            fullWidth
+            id='email'
+            label='Workspace name'
+            name='name'
+            autoComplete='email'
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            autoFocus
+          />
           <Button
             fullWidth
             className={classes.button}
@@ -108,6 +127,7 @@ const CloneView = ({ history, projectId }) => {
           >
             Create workspace
           </Button>
+          <Divider />
           {
             workspace.data.workspaceBySourceTemplate ?
               <Paper className={classes.paper}>
