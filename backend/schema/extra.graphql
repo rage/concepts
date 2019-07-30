@@ -11,6 +11,7 @@ type Query {
   # Project queries
   allProjects: [Project!]!
   projectById(id: ID!): Project
+  limitedProjectById(id: ID!): LimitedProject
   projectsForUser: [ProjectParticipant!]!
 
   # Course queries
@@ -36,7 +37,7 @@ type Query {
   # Porting queries
   exportData(workspaceId: ID!): String!
 
-  # Project 
+  # Project
   workspaceBySourceTemplate(sourceId: ID!): Workspace
 
   # Sharing
@@ -103,9 +104,16 @@ type Mutation {
   useToken(id: ID!): ProjectOrWorkspaceParticipant
 }
 
-union ProjectOrWorkspace = Workspace | Project
+union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
+
+type LimitedProject {
+  id: ID!
+  name: String!
+  activeTemplateId: ID!
+  participants: [ProjectParticipant!]!
+}
 
 type AuthPayload {
   token: String!

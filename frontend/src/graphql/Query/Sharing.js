@@ -13,6 +13,16 @@ const PEEK_SHARE_LINK = gql`
           }
         }
       }
+      ... on LimitedProject {
+        id
+        name
+        participants {
+          privilege
+          user {
+            id
+          }
+        }
+      }
       ... on Workspace {
         id
         name

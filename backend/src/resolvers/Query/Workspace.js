@@ -2,6 +2,27 @@ const { ForbiddenError } = require('apollo-server-core')
 
 const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
 
+const cloneTokenProjectQuery = `
+query($id: ID!, $userId: ID!) {
+  projectToken(where: { id: $id }) {
+    project {
+      id
+      name
+      activeTemplate {
+        id
+      }
+      participants(where: { user: { id: $userId }}) {
+        id
+        user {
+          id
+        }
+        privilege
+      }
+    }
+  }
+}
+`
+
 const workspaceBySourceTemplateQuery = `
 query($id: ID!, $userId: ID!) {
   user(where: { id: $userId}) {
@@ -47,8 +68,21 @@ const WorkspaceQueries = {
     } else {
       throw Error('invalid share token')
     }
-    if (privilegeToInt(privilege) < privilegeToInt(Privilege.CLONE)) {
-      throw ForbiddenError('Token does not allow reading')
+    if (privilege === Privilege.CLONE && id[0] === 'p') {
+      const data = await context.prisma.$graphql(cloneTokenProjectQuery, {
+        id,
+        userId: context.user.id
+      })
+      return {
+        __typename: 'LimitedProject',
+        id: data.projectToken.project.id,
+        name: data.projectToken.project.name,
+        activeTemplateId: data.projectToken.project.activeTemplate.id,
+        participants: data.projectToken.project.participants
+      }
+    }
+    if (privilegeToInt(privilege) < privilegeToInt(Privilege.READ)) {
+      throw new ForbiddenError('Token does not allow reading')
     }
 
     if (id[0] === 'w') {
@@ -61,10 +95,8 @@ const WorkspaceQueries = {
     const res = await context.prisma.$graphql(workspaceBySourceTemplateQuery, {
       id: sourceId, userId: context.user.id
     })
-    const workspace = res.user.workspaceParticipations[0] &&
+    return res.user.workspaceParticipations[0] &&
       res.user.workspaceParticipations[0].workspace
-
-    return workspace
   }
 }
 

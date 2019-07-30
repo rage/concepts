@@ -46,13 +46,11 @@ query projectById($id: ID!) {
 `
 
 const PEEK_ACTIVE_TEMPLATE = gql`
-query projectById($id: ID!) {
-  projectById(id: $id) {
+query limitedProjectById($id: ID!) {
+  limitedProjectById(id: $id) {
     id
     name
-    activeTemplate {
-      id
-    }
+    activeTemplateId
   }
 }
 `

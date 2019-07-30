@@ -36,20 +36,20 @@ const CloneView = ({ history, projectId }) => {
   })
 
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: !(peekTemplate.data && peekTemplate.data.projectById &&
-      peekTemplate.data.projectById.activeTemplate.id)
+    skip: !(peekTemplate.data && peekTemplate.data.limitedProjectById &&
+      peekTemplate.data.limitedProjectById.activeTemplateId)
     ,
     variables: {
-      sourceId: (peekTemplate.data && peekTemplate.data.projectById) ?
-        peekTemplate.data.projectById.activeTemplate.id : undefined
+      sourceId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
+        peekTemplate.data.limitedProjectById.activeTemplateId : undefined
     }
   })
 
   const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
     refetchQueries: [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE, variables: {
-        sourceId: (peekTemplate.data && peekTemplate.data.projectById) ?
-          peekTemplate.data.projectById.activeTemplate.id : undefined
+        sourceId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
+          peekTemplate.data.limitedProjectById.activeTemplateId : undefined
       }
     }]
   })
@@ -64,8 +64,8 @@ const CloneView = ({ history, projectId }) => {
     setLoading(true)
     cloneTemplate({
       variables: {
-        sourceTemplateId: (peekTemplate.data && peekTemplate.data.projectById) ?
-          peekTemplate.data.projectById.activeTemplate.id : undefined,
+        sourceTemplateId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
+          peekTemplate.data.limitedProjectById.activeTemplateId : undefined,
         projectId,
         name: 'TEST'
       }
@@ -79,12 +79,12 @@ const CloneView = ({ history, projectId }) => {
   }
 
   return (
-    peekTemplate.data.projectById ?
+    peekTemplate.data.limitedProjectById ?
       <Card elevation={0} className={classes.root}>
         <CardHeader
           action={
             <Button variant='outlined' color='primary'
-              disabled={!peekTemplate.data.projectById.activeTemplate.id}
+              disabled={!peekTemplate.data.limitedProjectById.activeTemplateId}
               aria-label='Invite students' onClick={handleCreate}
             >
               Create workspace

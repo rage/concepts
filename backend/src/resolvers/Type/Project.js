@@ -1,6 +1,9 @@
 const { checkPrivilege, Privilege } = require('../../accessControl')
 
 const checkID = (info, suffix = '') => {
+  if (info.__typename) {
+    return info.__typename
+  }
   if (info.variableValues.id) {
     if (info.variableValues.id[0] === 'w') {
       return 'Workspace' + suffix
@@ -54,12 +57,12 @@ module.exports = {
     }
   },
   ProjectOrWorkspace: {
-    __resolveType: (obj, context, info) => checkID(info)
+    __resolveType: (obj, context, info) => checkID(obj, info)
   },
   ProjectOrWorkspaceParticipant: {
-    __resolveType: (obj, context, info) => checkID(info, 'Participant')
+    __resolveType: (obj, context, info) => checkID(obj, info, 'Participant')
   },
   ProjectOrWorkspaceToken: {
-    __resolveType: (obj, context, info) => checkID(info, 'Token')
+    __resolveType: (obj, context, info) => checkID(obj, info, 'Token')
   }
 }
