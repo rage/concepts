@@ -91,11 +91,8 @@ const UserWorkspaceList = ({
                   button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
                 >
                   <ListItemText
-                    primary={
-                      <Typography variant='h6'>
-                        {workspace.name}
-                      </Typography>
-                    }
+                    primary={workspace.name}
+                    secondary={workspace.participants.find(p => p.privilege === 'OWNER').user.id}
                   />
 
                   <ListItemSecondaryAction>
