@@ -42,10 +42,11 @@ const server = new GraphQLServer({
 })
 
 if (process.env.ENVIRONMENT === 'production') {
-  server.express.use(express.static('../frontend/build'))
+  const BUILD_PATH = path.join(__dirname, '../../frontend/build')
+  server.express.use(express.static(BUILD_PATH))
 
   server.express.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/../frontend/build/index.html'))
+    res.sendFile(path.join(BUILD_PATH, 'index.html'))
   })
 }
 
