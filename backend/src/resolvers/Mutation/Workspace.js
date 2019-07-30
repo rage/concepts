@@ -6,6 +6,28 @@ const workspaceAllDataQuery = `
         id: $id
       }) {
         name
+        conceptLinks {
+          createdBy {
+            id
+          }
+          from {
+            id
+          }
+          to {
+            id
+          }
+        }
+        courseLinks {
+          createdBy {
+            id
+          }
+          from {
+            id
+          }
+          to {
+            id
+          }
+        }
         courses {
           id
           name
@@ -17,22 +39,6 @@ const workspaceAllDataQuery = `
             name
             description
             createdBy {
-              id
-            }
-            linksToConcept {
-              createdBy {
-                id
-              }
-              from {
-                id
-              }
-            }
-          }
-          linksToCourse {
-            createdBy {
-              id
-            }
-            from {
               id
             }
           }
@@ -189,12 +195,9 @@ const WorkspaceMutations = {
 
     const workspaceId = makeSecret(25)
     const workspace = result['workspace']
+    const makeNewId = (id) => workspaceId.substring(0, 13) + id.substring(13, 25)
 
-    const makeNewId = (id) => {
-      return workspaceId.substring(0, 13) + id.substring(13, 25)
-    }
-
-    return await context.prisma.createWorkspace({
+    const createdWorkspace = await context.prisma.createWorkspace({
       id: workspaceId,
       name,
       sourceProject: {
@@ -212,44 +215,46 @@ const WorkspaceMutations = {
         }]
       },
       courses: {
-        create: workspace.courses.map(course => {
-          return {
-            id: makeNewId(course.id),
-            name: course.name,
-            createdBy: { connect: { id: course.createdBy.id } },
-            concepts: {
-              create: course.concepts.map(concept => {
-                return {
-                  id: makeNewId(concept.id),
-                  name: concept.name,
-                  description: concept.description,
-                  createdBy: { connect: { id: concept.createdBy.id } },
-                  workspace: { connect: { id: workspaceId } }
-                  // linksToConcept: {
-                  //   create: concept.linksToConcept.map(link => {
-                  //     return {
-                  //       createdBy: { connect: { id: link.createdBy.id } },
-                  //       workspace: { connect: { id: workspaceId } },
-                  //       from: { connect: { id: makeNewId(link.from.id) } }
-                  //     }
-                  //   })
-                  // }
-                }
-              })
-            }
-            // linksToCourse: {
-            //   create: course.linksToCourse.map(link => {
-            //     return {
-            //       createdBy: { connect: { id: link.createdBy.id } },
-            //       workspace: { connect: { id: workspaceId } },
-            //       from: { connect: { id: makeNewId(link.from.id) } }
-            //     }
-            //   })
-            // }
+        create: workspace.courses.map(course => ({
+          id: makeNewId(course.id),
+          name: course.name,
+          createdBy: { connect: { id: course.createdBy.id } },
+          concepts: {
+            create: course.concepts.map(concept => ({
+              id: makeNewId(concept.id),
+              name: concept.name,
+              description: concept.description,
+              createdBy: { connect: { id: concept.createdBy.id } },
+              workspace: { connect: { id: workspaceId } }
+            }))
           }
-        })
+        }))
       }
     })
+
+    await context.prisma.updateWorkspace({
+      data: {
+        conceptLinks: {
+          create: workspace.conceptLinks.map(link => ({
+            createdBy: { connect: { id: link.createdBy.id } },
+            from: { connect: { id: makeNewId(link.from.id) } },
+            to: { connect: { id: makeNewId(link.to.id) } }
+          }))
+        },
+        courseLinks: {
+          create: workspace.courseLinks.map(link => ({
+            createdBy: { connect: { id: link.createdBy.id } },
+            from: { connect: { id: makeNewId(link.from.id) } },
+            to: { connect: { id: makeNewId(link.to.id) } }
+          }))
+        }
+      },
+      where: {
+        id: workspaceId
+      }
+    })
+
+    return createdWorkspace
   }
 }
 
