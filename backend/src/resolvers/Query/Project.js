@@ -26,7 +26,6 @@ const ProjectQueries = {
     const res = await context.prisma.$graphql(studentQuery, {
       id: args.id
     })
-    console.log('projectById', res)
     return {
       id: res.project.id,
       name: res.project.name,
