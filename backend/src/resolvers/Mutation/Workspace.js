@@ -195,7 +195,7 @@ const WorkspaceMutations = {
 
     const workspaceId = makeSecret(25)
     const workspace = result['workspace']
-    const makeNewId = (id) => workspaceId.substring(0, 13) + id.substring(13, 25)
+    const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
 
     const createdWorkspace = await context.prisma.createWorkspace({
       id: workspaceId,
