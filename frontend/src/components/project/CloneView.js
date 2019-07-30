@@ -81,8 +81,6 @@ const CloneView = ({ history, projectId }) => {
     setLoading(true)
     cloneTemplate({
       variables: {
-        sourceTemplateId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
-          peekTemplate.data.limitedProjectById.activeTemplateId : undefined,
         projectId,
         name
       }

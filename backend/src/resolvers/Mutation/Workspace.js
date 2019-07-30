@@ -2,38 +2,38 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const workspaceAllDataQuery = `
     query($id : ID!) {
-      workspace(where: {
-        id: $id
-      }) {
-        name
-        conceptLinks {
-          createdBy {
-            id
-          }
-          from {
-            id
-          }
-          to {
-            id
-          }
-        }
-        courseLinks {
-          createdBy {
-            id
-          }
-          from {
-            id
-          }
-          to {
-            id
-          }
-        }
-        courses {
+      project(where: {id: $id}) {
+        activeTemplate {
           id
           name
-          createdBy {
-            id
+          conceptLinks {
+            createdBy {
+              id
+            }
+            from {
+              id
+            }
+            to {
+              id
+            }
           }
+          courseLinks {
+            createdBy {
+              id
+            }
+            from {
+              id
+            }
+            to {
+              id
+            }
+          }
+          courses {
+            id
+            name
+            createdBy {
+              id
+            }
           concepts {
             id
             name
@@ -45,7 +45,8 @@ const workspaceAllDataQuery = `
         }
       }
     }
-    `
+  }
+  `
 
 const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 const makeSecret = length => Array.from({ length },
@@ -186,15 +187,15 @@ const WorkspaceMutations = {
       id
     })
   },
-  async cloneTemplateWorkspace(root, { name, projectId, sourceTemplateId }, context) {
+  async cloneTemplateWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
 
     const result = await context.prisma.$graphql(workspaceAllDataQuery, {
-      id: sourceTemplateId
+      id: projectId
     })
 
     const workspaceId = makeSecret(25)
-    const workspace = result['workspace']
+    const templateWorkspace = result.project.activeTemplate
     const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
 
     const createdWorkspace = await context.prisma.createWorkspace({
@@ -204,7 +205,7 @@ const WorkspaceMutations = {
         connect: { id: projectId }
       },
       sourceTemplate: {
-        connect: { id: sourceTemplateId }
+        connect: { id: templateWorkspace.id }
       },
       participants: {
         create: [{
@@ -215,7 +216,7 @@ const WorkspaceMutations = {
         }]
       },
       courses: {
-        create: workspace.courses.map(course => ({
+        create: templateWorkspace.courses.map(course => ({
           id: makeNewId(course.id),
           name: course.name,
           createdBy: { connect: { id: course.createdBy.id } },
@@ -229,28 +230,20 @@ const WorkspaceMutations = {
             }))
           }
         }))
-      }
-    })
-
-    await context.prisma.updateWorkspace({
-      data: {
-        conceptLinks: {
-          create: workspace.conceptLinks.map(link => ({
-            createdBy: { connect: { id: link.createdBy.id } },
-            from: { connect: { id: makeNewId(link.from.id) } },
-            to: { connect: { id: makeNewId(link.to.id) } }
-          }))
-        },
-        courseLinks: {
-          create: workspace.courseLinks.map(link => ({
-            createdBy: { connect: { id: link.createdBy.id } },
-            from: { connect: { id: makeNewId(link.from.id) } },
-            to: { connect: { id: makeNewId(link.to.id) } }
-          }))
-        }
       },
-      where: {
-        id: workspaceId
+      conceptLinks: {
+        create: templateWorkspace.conceptLinks.map(link => ({
+          createdBy: { connect: { id: link.createdBy.id } },
+          from: { connect: { id: makeNewId(link.from.id) } },
+          to: { connect: { id: makeNewId(link.to.id) } }
+        }))
+      },
+      courseLinks: {
+        create: templateWorkspace.courseLinks.map(link => ({
+          createdBy: { connect: { id: link.createdBy.id } },
+          from: { connect: { id: makeNewId(link.from.id) } },
+          to: { connect: { id: makeNewId(link.to.id) } }
+        }))
       }
     })
 
