@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, Card, CardHeader, Typography, Button
+  List, ListItem, ListItemText, Typography, Button, CssBaseline, Container, Paper
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -12,12 +12,26 @@ import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters(),
-    width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    boxSizing: 'border-box',
-    overflow: 'visible'
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  placeholder: {
+    margin: theme.spacing(1, 0),
+    textAlign: 'center'
+  },
+  wrapper: {
+    position: 'relative',
+    margin: theme.spacing(1)
+  },
+  button: {
+    margin: theme.spacing(1, 0)
+  },
+  paper: {
+    margin: theme.spacing(1, 0)
+  },
+  listRoot: {
+    padding: 0
   },
   progress: {
     margin: theme.spacing(2)
@@ -26,7 +40,6 @@ const useStyles = makeStyles(theme => ({
 
 const CloneView = ({ history, projectId }) => {
   const [loading, setLoading] = useState(false)
-  const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
   const classes = useStyles()
@@ -58,8 +71,6 @@ const CloneView = ({ history, projectId }) => {
     history.push(`/workspaces/${workspaceId}/mapper`)
   }
 
-  const handleClose = () => history.push('/user')
-
   const handleCreate = async () => {
     setLoading(true)
     cloneTemplate({
@@ -74,43 +85,58 @@ const CloneView = ({ history, projectId }) => {
         type: 'setError',
         message: err.message
       })
+    }).finally(() => {
+      setLoading(false)
     })
-    setLoading(false)
   }
 
   return (
     peekTemplate.data.limitedProjectById ?
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          action={
-            <Button variant='outlined' color='primary'
-              disabled={!peekTemplate.data.limitedProjectById.activeTemplateId}
-              aria-label='Invite students' onClick={handleCreate}
-            >
-              Create workspace
-            </Button>
+      <Container component='main' maxWidth='xs' cl>
+        <div>
+          <CssBaseline />
+          <Button
+            fullWidth
+            className={classes.button}
+            variant='outlined'
+            color='primary'
+            onClick={handleCreate}
+            disabled={!peekTemplate.data.limitedProjectById.activeTemplateId ||
+              loading ||
+              (workspace.data.workspaceBySourceTemplate &&
+                workspace.data.workspaceBySourceTemplate.id)}
+          >
+            Create workspace
+          </Button>
+          {
+            workspace.data.workspaceBySourceTemplate ?
+              <Paper className={classes.paper}>
+                <List className={classes.listRoot}>
+                  <ListItem
+                    button key={workspace.data.workspaceBySourceTemplate.id}
+                    onClick={() => {
+                      return handleNavigateMapper(workspace.data.workspaceBySourceTemplate.id)
+                    }}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant='h6'>
+                          {workspace.data.workspaceBySourceTemplate.name}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </Paper>
+              :
+              <div className={classes.placeholder}>
+                <Typography variant='body1'>
+                  {'The clone of the project template will appear here.'}
+                </Typography>
+              </div>
           }
-          title='Cloned workspace'
-        />
-        {
-          workspace.data.workspaceBySourceTemplate ?
-            <List>
-              <ListItem
-                button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
-              >
-                <ListItemText
-                  primary={
-                    <Typography variant='h6'>
-                      {workspace.name}
-                    </Typography>
-                  }
-                />
-              </ListItem>
-            </List>
-            :
-            null
-        }
-      </Card>
+        </div>
+      </Container>
       :
       null
   )

@@ -57,9 +57,12 @@ const JoinView = ({ history, token }) => {
   if (peek.data.peekToken) {
     const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
     if (participant) {
-      return <Redirect to={type === 'workspace'
+      const path = type === 'workspace'
         ? `/workspaces/${peek.data.peekToken.id}/mapper`
-        : `/projects/${peek.data.peekToken.id}`} />
+        : (privilege === 'clone'
+          ? `/projects/${peek.data.peekToken.id}/clone`
+          : `/projects/${peek.data.peekToken.id}`)
+      return <Redirect to={path} />
     }
   }
 
