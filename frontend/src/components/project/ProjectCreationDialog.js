@@ -19,7 +19,7 @@ const ProjectCreationDialog = ({ state, handleClose, createProject }) => {
 
   const handleCreate = async () => {
     if (submitDisabled) return
-    if (name === '') {
+    if (name.trim() === '') {
       window.alert('Project needs a name!')
       return
     }

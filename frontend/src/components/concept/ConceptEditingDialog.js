@@ -28,7 +28,7 @@ const ConceptEditingDialog = ({
 
   const handleConceptUpdate = () => {
     if (submitDisabled) return
-    if (name === '') {
+    if (name.trim() === '') {
       window.alert('Concept needs a name!')
       return
     }

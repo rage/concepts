@@ -20,7 +20,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateWorkspace, defaultNa
 
   const handleEdit = async () => {
     if (submitDisabled) return
-    if (name === '') {
+    if (name.trim() === '') {
       window.alert('Workspace needs a name!')
       return
     }

@@ -20,7 +20,7 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
 
   const handleEdit = () => {
     if (submitDisabled) return
-    if (name === '') {
+    if (name.trim() === '') {
       window.alert('Course needs a name!')
       return
     }

@@ -20,7 +20,7 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
 
   const handleEdit = async () => {
     if (submitDisabled) return
-    if (name === '') {
+    if (name.trim() === '') {
       window.alert('Project needs a name!')
       return
     }

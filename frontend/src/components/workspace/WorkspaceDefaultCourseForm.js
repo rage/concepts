@@ -56,7 +56,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
 
   const createDefaultCourse = async (e) => {
     e.preventDefault()
-    if (name === '') {
+    if (name.trim() === '') {
       window.alert('Course needs a name!')
       return
     }
