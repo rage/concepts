@@ -18,10 +18,17 @@ const useStyles = makeStyles(() => ({
   breadcrumbs: {
     flexGrow: 1,
     color: 'inherit'
+  },
+  savingIndicator: {
+    fontSize: '.6em',
+    color: 'rgba(255, 255, 255, 0.6)',
+    '&:not(.logged-in)': {
+      display: 'none'
+    }
   }
 }))
 
-const parseWorkspacePath = (workspaceId, path, meta) => {
+const parseWorkspacePath = (workspaceId, path) => {
   if (path.length === 0) {
     return []
   }
@@ -140,6 +147,9 @@ const NavBar = ({ location }) => {
               )
             })}
           </Breadcrumbs>
+          <div
+            id='saving-indicator'
+            className={`${classes.savingIndicator} ${loggedIn ? 'logged-in' : ''}`} />
           <AuthenticationIcon />
         </Toolbar>
       </AppBar>
