@@ -19,7 +19,8 @@ const WorkspaceCreationDialog = ({ state, handleClose, createWorkspace }) => {
 
   const handleCreate = () => {
     if (submitDisabled) return
-    if (name.trim() === '') {
+    setName(name.trim())
+    if (name === '') {
       window.alert('Workspaces need a name!')
       return
     }

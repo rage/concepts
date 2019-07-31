@@ -74,7 +74,8 @@ const CloneView = ({ history, projectId }) => {
   }
 
   const handleCreate = async () => {
-    if (name.trim() === '') {
+    setName(name.trim())
+    if (name === '') {
       alert('Workspaces need a name!')
       return
     }

@@ -19,7 +19,8 @@ const TemplateCreationDialog = ({ state, handleClose, createTemplateWorkspace, p
 
   const handleCreate = () => {
     if (submitDisabled) return
-    if (name.trim() === '') {
+    setName(name.trim())
+    if (name === '') {
       window.alert('Workspace needs a name!')
       return
     }

@@ -22,7 +22,9 @@ const ConceptAdditionDialog = ({ state, handleClose, createConcept, workspaceId 
 
   const handleConceptAdding = () => {
     if (submitDisabled) return
-    if (name.trim() === '') {
+    setName(name.trim())
+    setDescription(description.trim())
+    if (name === '') {
       window.alert('Concept needs a name!')
       return
     }

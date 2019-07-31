@@ -19,7 +19,8 @@ const CourseCreationDialog = ({ state, handleClose, createCourse, workspaceId })
 
   const handleCreate = () => {
     if (submitDisabled) return
-    if (name.trim() === '') {
+    setName(name.trim())
+    if (name === '') {
       window.alert('Course needs a name!')
       return
     }

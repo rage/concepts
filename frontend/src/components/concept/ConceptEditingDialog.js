@@ -28,7 +28,8 @@ const ConceptEditingDialog = ({
 
   const handleConceptUpdate = () => {
     if (submitDisabled) return
-    if (name.trim() === '') {
+    setName(name.trim())
+    if (name === '') {
       window.alert('Concept needs a name!')
       return
     }
@@ -36,11 +37,11 @@ const ConceptEditingDialog = ({
     const variables = { id: state.conceptId }
     let shouldUpdate = false
     if (defaultName !== name) {
-      variables.name = name
+      variables.name = name.trim()
       shouldUpdate = true
     }
     if (defaultDescription !== description) {
-      variables.description = description
+      variables.description = description.trim()
       shouldUpdate = true
     }
     if (shouldUpdate) {
