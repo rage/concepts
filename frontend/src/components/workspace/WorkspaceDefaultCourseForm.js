@@ -56,8 +56,8 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
 
   const createDefaultCourse = async (e) => {
     e.preventDefault()
-    setName(name.trim())
-    if (name === '') {
+    const courseName = name.trim()
+    if (courseName === '') {
       window.alert('Course needs a name!')
       return
     }
@@ -66,7 +66,10 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
     let courseRes
     try {
       courseRes = await createCourse({
-        variables: { name, workspaceId }
+        variables: {
+          name: courseName,
+          workspaceId
+        }
       })
     } catch (e) {
       setError(true)
