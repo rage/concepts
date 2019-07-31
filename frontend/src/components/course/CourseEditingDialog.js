@@ -20,7 +20,8 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
 
   const handleEdit = () => {
     if (submitDisabled) return
-    if (name === '') {
+    const courseName = name.trim()
+    if (courseName === '') {
       window.alert('Course needs a name!')
       return
     }
@@ -28,7 +29,10 @@ const CourseEditingDialog = ({ state, handleClose, updateCourse, defaultName }) 
     const shouldUpdate = defaultName !== name
     if (shouldUpdate) {
       updateCourse({
-        variables: { id: state.id, name }
+        variables: {
+          id: state.id,
+          name: courseName
+        }
       })
         .catch(() => {
           messageDispatch({

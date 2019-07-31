@@ -20,17 +20,18 @@ const WorkspaceEditingDialog = ({ state, handleClose, updateProject, defaultName
 
   const handleEdit = async () => {
     if (submitDisabled) return
-    if (name === '') {
+    const projectName = name.trim()
+    if (projectName === '') {
       window.alert('Project needs a name!')
       return
     }
     setSubmitDisabled(true)
     try {
-      if (defaultName !== name) {
+      if (defaultName !== projectName) {
         await updateProject({
           variables: {
             id: state.id,
-            name
+            name: projectName
           }
         })
       }

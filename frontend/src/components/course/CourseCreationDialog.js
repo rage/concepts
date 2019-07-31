@@ -19,13 +19,17 @@ const CourseCreationDialog = ({ state, handleClose, createCourse, workspaceId })
 
   const handleCreate = () => {
     if (submitDisabled) return
-    if (name === '') {
+    const courseName = name.trim()
+    if (courseName === '') {
       window.alert('Course needs a name!')
       return
     }
     setSubmitDisabled(true)
     createCourse({
-      variables: { name, workspaceId }
+      variables: {
+        name: courseName,
+        workspaceId
+      }
     })
       .catch(() => {
         messageDispatch({
