@@ -22,6 +22,9 @@ query workspacesForUser {
     workspace {
       id
       name
+      asTemplate {
+        id
+      }
       tokens {
         id
       }

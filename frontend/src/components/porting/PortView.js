@@ -12,6 +12,7 @@ import schema from './port.schema'
 import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
+import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { jsonPortUpdate } from '../../apollo/update'
 
@@ -140,6 +141,15 @@ const PortView = () => {
   }, [])
   // End select properties
 
+  const projectsQuery = useQuery(PROJECTS_FOR_USER)
+  const templatesQuery = useQuery(PROJECT_BY_ID_TEMPLATES, {
+    skip: selectState.projectId === '',
+    variables: {
+      id: selectState.projectId
+    }
+  })
+  const workspacesQuery = useQuery(WORKSPACES_FOR_USER)
+
   const addTemplate = () => {
     if (data.length === 0) {
       setData(TEMPLATE)
@@ -248,6 +258,17 @@ const PortView = () => {
     })
   }
 
+  const workspaceOptions = () => {
+    if (selectState.projectId)
+      return templatesQuery.data.projectById &&
+        templatesQuery.data.projectById.templates
+    else
+      return workspacesQuery.data.workspacesForUser &&
+        workspacesQuery.data.workspacesForUser
+          .filter(w => !w.workspace.asTemplate)
+          .map(w => w.workspace)
+  }
+
   return (
     <Container>
       <Card>
@@ -287,8 +308,14 @@ const PortView = () => {
                 <MenuItem value={''}>
                   <em>None</em>
                 </MenuItem>
-                <MenuItem key={'Gibberish'} value={'Gibberish'}>HAHA</MenuItem>
-                <MenuItem key={'Limmerish'} value={'Limmerish'}>FAFA</MenuItem>
+                {
+                  projectsQuery.data.projectsForUser &&
+                  projectsQuery.data.projectsForUser.map(p => {
+                    return <MenuItem key={p.project.id} value={p.project.id}>
+                      {p.project.name}
+                    </MenuItem>
+                  })
+                }
               </Select>
             </FormControl>
             {
@@ -311,8 +338,14 @@ const PortView = () => {
                     <MenuItem value={''}>
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem key={'Gibberish'} value={'Gibberish'}>HAHAHHA</MenuItem>
-                    <MenuItem key={'Limmerish'} value={'Limmerish'}>FAFA</MenuItem>
+                    {
+                      workspaceOptions() && workspaceOptions().map(w =>
+                        <MenuItem key={w.id} value={w.id}>
+                          {w.name}
+                        </MenuItem>
+                      )
+
+                    }
                   </Select>
                 </FormControl>
                 : null
