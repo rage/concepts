@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
@@ -71,6 +71,8 @@ const App = ({ classes }) => {
   }
 
   const workspaceRouter = (prefix) => <>
+    <Route exact path={`${prefix}/:wid`} render={({ match }) =>
+      <Redirect to={`${prefix}/${match.params.wid}/mapper`} />} />
     <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
       <CourseHeatmap workspaceId={match.params.wid} />
     )} />
