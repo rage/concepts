@@ -78,7 +78,8 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
     // Add course as default for the workspace
     try {
       const course = courseRes.data.createCourse
-      history.replace(`/workspaces/${workspaceId}/mapper/${course.id}`)
+      // TODO make sure this works
+      history.replace(course.id)
     } catch (e) {
       setError(true)
       setTimeout(() => {

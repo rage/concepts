@@ -74,7 +74,7 @@ const App = ({ classes }) => {
     <Route exact path={`${prefix}/:wid`} render={({ match }) =>
       <Redirect to={`${prefix}/${match.params.wid}/mapper`} />} />
     <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
-      <CourseHeatmap workspaceId={match.params.wid} />
+      <CourseHeatmap urlPrefix={prefix} workspaceId={match.params.wid} />
     )} />
     <Route
       exact path={`${prefix}/:wid/mapper`}
@@ -85,7 +85,8 @@ const App = ({ classes }) => {
     <Route
       exact path={`${prefix}/:wid/mapper/:cid`}
       render={({ match }) =>
-        <GuidedCourseView courseId={match.params.cid} workspaceId={match.params.wid} />
+        <GuidedCourseView
+          urlPrefix={prefix} courseId={match.params.cid} workspaceId={match.params.wid} />
       }
     />
     <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
@@ -93,7 +94,7 @@ const App = ({ classes }) => {
     <Route
       exact path={`${prefix}/:wid/:page(mapper|graph|heatmap)/:cid?`}
       render={({ match: { params: { wid, cid, page } } }) =>
-        <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />
+        <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
       }
     />
   </>

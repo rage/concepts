@@ -1,10 +1,13 @@
 import React  from 'react'
+import { useQuery } from 'react-apollo-hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { AppBar, Toolbar, Typography, Breadcrumbs, Link as MaterialLink } from '@material-ui/core'
 import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
 import AuthenticationIcon from './AuthIcon'
+import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
+import { useLoginStateValue } from '../../store'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />
 
@@ -18,7 +21,7 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const parseWorkspacePath = (workspaceId, path) => {
+const parseWorkspacePath = (workspaceId, path, meta) => {
   if (path.length === 0) {
     return []
   }
@@ -33,7 +36,7 @@ const parseWorkspacePath = (workspaceId, path) => {
   return []
 }
 
-const parseProjectPath = (projectId, path) => {
+const parseProjectPath = (projectId, path, meta) => {
   if (path.length === 0) {
     return []
   }
@@ -41,19 +44,21 @@ const parseProjectPath = (projectId, path) => {
   case 'clone':
     return [{ name: 'Clone' }]
   case 'workspaces':
-    return [
-      { name: 'Workspace', id: path[1],link: `/projects/${projectId}/workspaces/${path[1]}` }
-    ].concat(parseWorkspacePath(path[1], path.slice(2)))
+    return [{
+      name: (meta.workspaces[path[1]] || {}).name || 'Workspace',
+      id: path[1],
+      link: `/projects/${projectId}/workspaces/${path[1]}`
+    }].concat(parseWorkspacePath(path[1], path.slice(2), meta))
   }
 }
 
-const parsePath = path => {
+const parsePath = (path, meta) => {
   if (path.length === 0) {
     return []
   }
   switch (path[0]) {
   case '':
-    return parsePath(path.slice(1))
+    return parsePath(path.slice(1), meta)
   case 'porting':
     return [{ name: 'Import data' }]
   case 'auth':
@@ -63,13 +68,21 @@ const parsePath = path => {
   case 'projects':
     return [
       { name: 'User', link: '/user' },
-      { name: 'Project', id: path[1], link: `/projects/${path[1]}` }
-    ].concat(parseProjectPath(path[1], path.slice(2)))
+      {
+        name: (meta.projects[path[1]] || {}).name || 'Project',
+        id: path[1],
+        link: `/projects/${path[1]}`
+      }
+    ].concat(parseProjectPath(path[1], path.slice(2), meta))
   case 'workspaces':
     return [
       { name: 'User', link: '/user' },
-      { name: 'Workspace', id: path[1], link: `/workspaces/${path[1]}` }
-    ].concat(parseWorkspacePath(path[1], path.slice(2)))
+      {
+        name: (meta.workspaces[path[1]] || {}).name || 'Workspace',
+        id: path[1],
+        link: `/workspaces/${path[1]}`
+      }
+    ].concat(parseWorkspacePath(path[1], path.slice(2), meta))
 
   case 'join': {
     const token = path[1]
@@ -81,6 +94,23 @@ const parsePath = path => {
 }
 
 const NavBar = ({ location }) => {
+  const [{ loggedIn, user }] = useLoginStateValue()
+
+  const workspaceQuery = useQuery(WORKSPACES_FOR_USER, {
+    skip: !loggedIn
+  })
+  const workspaces = workspaceQuery.data && workspaceQuery.data.workspacesForUser
+    ? Object.fromEntries(workspaceQuery.data.workspacesForUser
+      .map(ws => [ws.workspace.id, ws.workspace]))
+    : {}
+  const projectQuery = useQuery(PROJECTS_FOR_USER, {
+    skip: !loggedIn || user.role !== 'STAFF'
+  })
+  const projects = projectQuery.data && projectQuery.data.projectsForUser
+    ? Object.fromEntries(projectQuery.data.projectsForUser.map(p => [p.project.id, p.project]))
+    : {}
+  const meta = { workspaces, projects }
+
   const path = location.pathname.split('/')
   const classes = useStyles()
   return (
@@ -96,7 +126,7 @@ const NavBar = ({ location }) => {
                 Home
               </Link>
             </Typography>
-            {parsePath(path).map(item => {
+            {parsePath(path, meta).map(item => {
               let content = item.name
               if (item.link) {
                 content = (

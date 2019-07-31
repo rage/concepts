@@ -57,7 +57,7 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
   downloadFile(queryResponse['data']['exportData'], `${workspaceName}.json`)
 }
 
-const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
+const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const { user } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
@@ -129,7 +129,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId }) => {
 
   const onChange = (event, newPage) => {
     const cid = courseId && newPage !== 'heatmap' && newPage !== 'graph' ? `/${courseId}` : ''
-    history.push(`/workspaces/${workspaceId}/${newPage}${cid}`)
+    history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
   return (

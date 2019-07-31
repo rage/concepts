@@ -58,12 +58,13 @@ const Course = ({
   openConceptEditDialog,
   activeConceptIds,
   history,
-  workspaceId
+  workspaceId,
+  urlPrefix
 }) => {
   const { loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
   const onHeaderClickHandle = () => {
-    history.push(`/workspaces/${workspaceId}/mapper/${course.id}`)
+    history.push(`${urlPrefix}/${workspaceId}/mapper/${course.id}`)
   }
 
   return (

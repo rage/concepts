@@ -190,11 +190,11 @@ This will change which template is cloned by users.`)
   }
 
   const handleNavigateMapper = (workspaceId) => {
-    history.push(`/workspaces/${workspaceId}/mapper`)
+    history.push(`/projects/${projectId}/workspaces/${workspaceId}/mapper`)
   }
 
   const handleNavigateHeatmap = () => {
-    history.push(`/workspaces/${menu.workspace.id}/heatmap`)
+    history.push(`/projects/${projectId}/workspaces/${menu.workspace.id}/heatmap`)
   }
 
   const isActiveTemplate = (menu && activeTemplate) && menu.workspace.id === activeTemplate.id

@@ -7,6 +7,7 @@ import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
 import { useInfoBox } from '../common/InfoBox'
+import ActiveCourse from './ActiveCourse'
 
 const GuidedCourseContainer = ({
   courseTrayOpen,
@@ -17,7 +18,8 @@ const GuidedCourseContainer = ({
   addingLink,
   setAddingLink,
   workspaceId,
-  courseId
+  courseId,
+  urlPrefix
 }) => {
 
   const infoBox = useInfoBox()
@@ -70,6 +72,7 @@ const GuidedCourseContainer = ({
                 openConceptEditDialog={openEditConceptDialog}
                 activeCourseId={courseId}
                 workspaceId={workspaceId}
+                urlPrefix={urlPrefix}
               />
             )}
           </Masonry>}
