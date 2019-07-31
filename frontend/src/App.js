@@ -79,7 +79,7 @@ const App = ({ classes }) => {
     <Route
       exact path={`${prefix}/:wid/mapper`}
       render={({ match, location }) =>
-        <WorkspaceView workspaceId={match.params.wid} location={location} />
+        <WorkspaceView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
       }
     />
     <Route
