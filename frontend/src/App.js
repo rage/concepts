@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
-import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
+import { Snackbar, SnackbarContent, IconButton, Typography } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
 
 import GuidedCourseView from './components/course/GuidedCourseView'
@@ -100,8 +100,10 @@ const App = ({ classes }) => {
   </>
 
   const NotFound = () => (
-    <div>
-      Not found
+    <div style={{ gridArea: 'content' }}>
+      <Typography component='h1' variant='h2' align='center' color='textPrimary'>
+        Not found
+      </Typography>
     </div>
   )
 
