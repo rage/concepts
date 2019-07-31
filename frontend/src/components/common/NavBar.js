@@ -1,114 +1,115 @@
-import React, { useState } from 'react'
-import { Link , withRouter } from 'react-router-dom'
+import React  from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Toolbar, Typography, IconButton, Button, MenuItem, Menu } from '@material-ui/core'
-import { Menu as MenuIcon, AccountCircle } from '@material-ui/icons'
+import { AppBar, Toolbar, Typography, Breadcrumbs, Link as MaterialLink } from '@material-ui/core'
+import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
-import { signOut } from '../../lib/authentication'
-import { useLoginStateValue } from '../../store'
+import AuthenticationIcon from './AuthIcon'
+
+const Link = props => <MaterialLink {...props} component={RouterLink} />
 
 const useStyles = makeStyles(() => ({
   root: {
     gridArea: 'navbar'
   },
-  menuButton: {
-    marginLeft: -18,
-    marginRight: 10
-  },
-  title: {
-    flexGrow: 1
+  breadcrumbs: {
+    flexGrow: 1,
+    color: 'inherit'
   }
 }))
 
-const AuthenticationIcon = withRouter(({ history }) => {
-  const [{ loggedIn }, dispatch] = useLoginStateValue()
-  const [anchorElement, setAnchorElement] = useState(null)
-  const anchorElementOpen = Boolean(anchorElement)
-
-  const handleMenu = (event) => {
-    setAnchorElement(event.currentTarget)
+const parseWorkspacePath = (workspaceId, path) => {
+  if (path.length === 0) {
+    return []
   }
-
-  const handleAnchorClose = () => {
-    setAnchorElement(null)
+  switch (path[0]) {
+  case 'mapper':
+    return [{ name: 'Mapper', id: path[1] }]
+  case 'heatmap':
+    return [{ name: 'Heatmap' }]
+  case 'graph':
+    return [{ name: 'Graph' }]
   }
+  return []
+}
 
-  const navigateToLogin = () => {
-    history.push('/auth')
+const parseProjectPath = (projectId, path) => {
+  if (path.length === 0) {
+    return []
   }
-
-  const navigateToAccount = () => {
-    history.push('/user')
-    handleAnchorClose()
+  switch (path[0]) {
+  case 'clone':
+    return [{ name: 'Clone' }]
+  case 'workspaces':
+    return [
+      { name: 'Workspace', id: path[1],link: `/projects/${projectId}/workspaces/${path[1]}` }
+    ].concat(parseWorkspacePath(path[1], path.slice(2)))
   }
+}
 
-  const navigateToPorting = () => {
-    history.push('/porting')
-    handleAnchorClose()
+const parsePath = path => {
+  if (path.length === 0) {
+    return []
   }
+  switch (path[0]) {
+  case '':
+    return parsePath(path.slice(1))
+  case 'porting':
+    return [{ name: 'Import data' }]
+  case 'auth':
+    return [{ name: 'Log in' }]
+  case 'user':
+    return [{ name: 'User' }]
+  case 'projects':
+    return [
+      { name: 'User', link: '/user' },
+      { name: 'Project', id: path[1], link: `/projects/${path[1]}` }
+    ].concat(parseProjectPath(path[1], path.slice(2)))
+  case 'workspaces':
+    return [
+      { name: 'User', link: '/user' },
+      { name: 'Workspace', id: path[1], link: `/workspaces/${path[1]}` }
+    ].concat(parseWorkspacePath(path[1], path.slice(2)))
 
-  const logout = async () => {
-    await signOut()
-    dispatch({
-      type: 'logout'
-    })
-    history.push('/')
-    handleAnchorClose()
+  case 'join': {
+    const token = path[1]
+    const type = token[0] === 'w' ? 'workspace' : 'project'
+    return [{ name: `Join ${type}`, link: `/join/${token}` }]
   }
+  }
+  return []
+}
 
-  return loggedIn ? (
-    <div>
-      <IconButton
-        aria-label='Account of current user'
-        aria-controls='login-menu'
-        aria-haspopup='true'
-        onClick={handleMenu}
-        color='inherit'
-      >
-        <AccountCircle />
-      </IconButton>
-      <Menu
-        id='login-menu'
-        anchorEl={anchorElement}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        open={anchorElementOpen}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        onClose={handleAnchorClose}
-      >
-        <MenuItem onClick={navigateToAccount}>Workspaces</MenuItem>
-        {
-          loggedIn && JSON.parse(localStorage.current_user).user.role !== 'GUEST' &&
-            <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
-        }
-        <MenuItem onClick={logout}>Logout</MenuItem>
-      </Menu>
-    </div>
-  ) : (
-    <Button onClick={navigateToLogin} color='inherit'>
-      Login
-    </Button>
-  )
-})
-
-const NavBar = () => {
+const NavBar = ({ location }) => {
+  const path = location.pathname.split('/')
   const classes = useStyles()
   return (
     <div className={classes.root}>
       <AppBar elevation={0} position='static'>
         <Toolbar variant='dense'>
-          <IconButton className={classes.menuButton} color='inherit' aria-label='Menu'>
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title} variant='h6' color='inherit'>
-            <Link style={{ textDecoration: 'none', color: 'inherit' }} to='/'>Home</Link>
-          </Typography>
+          <Breadcrumbs
+            separator={<NavigateNextIcon />}
+            className={classes.breadcrumbs}
+          >
+            <Typography variant='h6' color='inherit'>
+              <Link style={{ textDecoration: 'none', color: 'inherit' }} to='/'>
+                Home
+              </Link>
+            </Typography>
+            {parsePath(path).map(item => {
+              let content = item.name
+              if (item.link) {
+                content = (
+                  <Link style={{ textDecoration: 'none', color: 'inherit' }} to={item.link}>
+                    {content}
+                  </Link>
+                )
+              }
+              return (
+                <Typography key={item.name} variant='h6' color='inherit'>{content}</Typography>
+              )
+            })}
+          </Breadcrumbs>
           <AuthenticationIcon />
         </Toolbar>
       </AppBar>
