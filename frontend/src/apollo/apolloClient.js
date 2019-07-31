@@ -1,28 +1,53 @@
-import ApolloClient from 'apollo-boost'
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import ApolloClient, { InMemoryCache } from 'apollo-boost'
 
-const uri = '/graphql'
+let requestsInFlight = 0
 
 const client = new ApolloClient({
-  uri,
+  uri: '/graphql',
   cache: new InMemoryCache(),
-  request: async (operation) => {
-    const rawData = await window.localStorage.getItem('current_user')
+  request: (operation) => {
+    const isMutation = Boolean(operation.query.definitions
+      .find(def => def.operation === 'mutation'))
+
+    operation.setContext({
+      headers: {
+        'X-Concepts-IsMutation': isMutation.toString()
+      }
+    })
+    const rawData = window.localStorage.getItem('current_user')
     if (rawData) {
       let data
       try {
         data = JSON.parse(rawData)
       } catch (e) {
         window.localStorage.clear()
-        console.log(e)
+        console.error(e)
       }
       if (data.token) {
         operation.setContext({
           headers: {
-            authorization: `Bearer ${data.token}`
+            authorization: `Bearer ${data.token}`,
+            'X-Concepts-IsMutation': isMutation.toString()
           }
         })
       }
+    }
+  },
+  fetch: async (resource, init) => {
+    const isMutation = init.headers['X-Concepts-IsMutation'] === 'true'
+    if (isMutation) {
+      if (requestsInFlight === 0) {
+        document.getElementById('saving-indicator').innerText = 'Saving...'
+      }
+      requestsInFlight++
+      const result = await fetch(resource, init)
+      requestsInFlight--
+      if (requestsInFlight === 0) {
+        document.getElementById('saving-indicator').innerText = 'All changes saved.'
+      }
+      return result
+    } else {
+      return fetch(resource, init)
     }
   }
 })
