@@ -153,9 +153,7 @@ const GuidedCourseTray = ({
       const dataInStoreCopy = { ...dataInStore }
       const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
       if (includedIn(courseLinks, removedCourseLink)) {
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => {
-          return course.id !== removedCourseLink.id
-        })
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => course.id !== removedCourseLink.id)
         client.writeQuery({
           query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
@@ -169,13 +167,9 @@ const GuidedCourseTray = ({
     setFilterKeyword(e.target.value)
   }
 
-  const isPrerequisite = (course) => {
-    return (courseLinks.find(link => link.from.id === course.id) !== undefined)
-  }
+  const isPrerequisite = (course) => (courseLinks.find(link => link.from.id === course.id) !== undefined)
 
-  const getLinkToDelete = (course) => {
-    return courseLinks.find(link => link.from.id === course.id)
-  }
+  const getLinkToDelete = (course) => courseLinks.find(link => link.from.id === course.id)
 
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 

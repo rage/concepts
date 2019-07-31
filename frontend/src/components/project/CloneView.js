@@ -148,9 +148,7 @@ const CloneView = ({ history, projectId }) => {
                 <List className={classes.listRoot}>
                   <ListItem
                     button key={workspace.data.workspaceBySourceTemplate.id}
-                    onClick={() => {
-                      return handleNavigateMapper(workspace.data.workspaceBySourceTemplate.id)
-                    }}
+                    onClick={() => handleNavigateMapper(workspace.data.workspaceBySourceTemplate.id)}
                   >
                     <ListItemText
                       primary={

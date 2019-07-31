@@ -54,13 +54,11 @@ const ResourceForm = ({ createResource, conceptId }) => {
           {urls.length > 0 &&
             <table>
               <tbody>
-                {urls.map((address, index) => {
-                  return (
-                    <tr key={index}>
-                      <td><a href={address}>{address}</a></td>
-                    </tr>
-                  )
-                })}
+                {urls.map((address, index) => (
+                  <tr key={index}>
+                    <td><a href={address}>{address}</a></td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           }

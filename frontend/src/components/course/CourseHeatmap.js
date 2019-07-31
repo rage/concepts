@@ -171,18 +171,10 @@ const TableCell = withRouter(({
 }) => {
   const classes = useStyles()
 
-  const conceptsLinked = toCourse.concepts.map(concept => {
-    return concept.linksToConcept.filter(conceptLink => {
-      return conceptLink.from.courses.find(course => course.id === fromCourse.id)
-    }).length
-  }).reduce((a, b) => a + b, 0)
+  const conceptsLinked = toCourse.concepts.map(concept => concept.linksToConcept.filter(conceptLink => conceptLink.from.courses.find(course => course.id === fromCourse.id)).length).reduce((a, b) => a + b, 0)
 
   const onlyUnique = (v, i, a) => a.indexOf(v) === i
-  const concepts = toCourse.concepts.map(concept => {
-    return concept.linksToConcept.filter(conceptLink => {
-      return conceptLink.from.courses.find(course => course.id === fromCourse.id)
-    })
-  }).reduce((first, second) => { return first.concat(second) }, [])
+  const concepts = toCourse.concepts.map(concept => concept.linksToConcept.filter(conceptLink => conceptLink.from.courses.find(course => course.id === fromCourse.id))).reduce((first, second) => first.concat(second), [])
     .map(concept => concept.from.name)
     .filter(onlyUnique)
 
@@ -230,15 +222,7 @@ const CourseHeatmap = ({ workspaceId, urlPrefix }) => {
   })
 
   const maxGradVal = workspaceCourseQuery.data.workspaceById ?
-    workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => {
-      return workspaceCourseQuery.data.workspaceById.courses.map(toCourse => {
-        return toCourse.concepts.map(concept => {
-          return concept.linksToConcept.filter(conceptLink => {
-            return conceptLink.from.courses.find(course => course.id === fromCourse.id)
-          }).length
-        }).reduce(sum, 0)
-      }).reduce(maxVal, 0)
-    }).reduce(maxVal, 0)
+    workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => workspaceCourseQuery.data.workspaceById.courses.map(toCourse => toCourse.concepts.map(concept => concept.linksToConcept.filter(conceptLink => conceptLink.from.courses.find(course => course.id === fromCourse.id)).length).reduce(sum, 0)).reduce(maxVal, 0)).reduce(maxVal, 0)
     : null
 
 
