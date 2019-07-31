@@ -31,7 +31,7 @@ const styles = theme => ({
   }
 })
 
-const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
+const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
 
@@ -82,7 +82,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history }) => {
     // Add course as default for the workspace
     try {
       const course = courseRes.data.createCourse
-      history.replace(`/workspaces/${workspaceId}/mapper/${course.id}`)
+      history.replace(`${urlPrefix}/${workspaceId}/mapper/${course.id}`)
     } catch (e) {
       setError(true)
       setTimeout(() => {

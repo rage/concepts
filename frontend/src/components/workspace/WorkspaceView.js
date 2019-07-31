@@ -5,7 +5,7 @@ import { useQuery } from 'react-apollo-hooks'
 import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
 
-const WorkspaceView = ({ workspaceId, location }) => {
+const WorkspaceView = ({ workspaceId, location, urlPrefix }) => {
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: {
       id: workspaceId
@@ -20,7 +20,7 @@ const WorkspaceView = ({ workspaceId, location }) => {
             pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.courses[0].id}`,
             state: { from: location }
           }} />
-          : <WorkspaceDefaultCourseForm workspaceId={workspaceId} />
+          : <WorkspaceDefaultCourseForm urlPrefix={urlPrefix} workspaceId={workspaceId} />
         : null
     }
   </>

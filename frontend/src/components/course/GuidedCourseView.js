@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const GuidedCourseView = ({ courseId, workspaceId }) => {
+const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
   const classes = useStyles()
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
@@ -161,6 +161,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
               courseTrayOpen={courseTrayOpen}
               courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               workspaceId={workspaceQuery.data.workspaceById.id}
+              urlPrefix={urlPrefix}
             />
             <GuidedCourseContainer
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
@@ -173,6 +174,7 @@ const GuidedCourseView = ({ courseId, workspaceId }) => {
               activeCourse={courseQuery.data.courseById}
               setCourseTrayOpen={setCourseTrayOpen}
               workspaceId={workspaceQuery.data.workspaceById.id}
+              urlPrefix={urlPrefix}
             />
             <GuidedCourseTray
               activeCourseId={courseQuery.data.courseById.id}

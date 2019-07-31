@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserWorkspaceList = ({
-  history, userWorkspaces, openProjectCloneDialog, activeTemplate
+  history, userWorkspaces, openProjectCloneDialog, activeTemplate, projectId
 }) => {
 
   const [menu, setMenu] = useState(null)
@@ -39,11 +39,11 @@ const UserWorkspaceList = ({
   const classes = useStyles()
 
   const handleNavigateMapper = (workspaceId) => {
-    history.push(`/workspaces/${workspaceId}/mapper`)
+    history.push(`/projects/${projectId}/workspaces/${workspaceId}/mapper`)
   }
 
   const handleNavigateHeatmap = () => {
-    history.push(`/workspaces/${menu.workspace.id}/heatmap`)
+    history.push(`/projects/${projectId}/workspaces/${menu.workspace.id}/heatmap`)
   }
 
   const handleMenuOpen = (workspace, event) => {

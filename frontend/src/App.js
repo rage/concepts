@@ -1,7 +1,7 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
-import { Snackbar, SnackbarContent, IconButton } from '@material-ui/core'
+import { Snackbar, SnackbarContent, IconButton, Typography } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
 
 import GuidedCourseView from './components/course/GuidedCourseView'
@@ -70,60 +70,78 @@ const App = ({ classes }) => {
     })
   }
 
+  const workspaceRouter = (prefix) => <>
+    <Route exact path={`${prefix}/:wid`} render={({ match }) =>
+      <Redirect to={`${prefix}/${match.params.wid}/mapper`} />} />
+    <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
+      <CourseHeatmap urlPrefix={prefix} workspaceId={match.params.wid} />
+    )} />
+    <Route
+      exact path={`${prefix}/:wid/mapper`}
+      render={({ match, location }) =>
+        <WorkspaceView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
+      }
+    />
+    <Route
+      exact path={`${prefix}/:wid/mapper/:cid`}
+      render={({ match }) =>
+        <GuidedCourseView
+          urlPrefix={prefix} courseId={match.params.cid} workspaceId={match.params.wid} />
+      }
+    />
+    <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
+      <GraphView workspaceId={wid} />} />
+    <Route
+      exact path={`${prefix}/:wid/:page(mapper|graph|heatmap)/:cid?`}
+      render={({ match: { params: { wid, cid, page } } }) =>
+        <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
+      }
+    />
+  </>
+
+  const NotFound = () => (
+    <div style={{ gridArea: 'content' }}>
+      <Typography component='h1' variant='h2' align='center' color='textPrimary'>
+        Not found
+      </Typography>
+    </div>
+  )
+
   return (
     <>
       <div className={classes.root}>
-        <NavBar />
+        <Route render={({ location }) => <NavBar location={location} />} />
 
-        <Route exact path='/' render={() => <LandingView />} />
+        <Switch>
+          <Route exact path='/' render={() => <LandingView />} />
 
-        <PrivateRoute
-          exact path='/porting' redirectPath='/auth' condition={loggedIn}
-          render={() => <PortView />} />
-        <Route exact path='/auth' render={() => <AuthenticationForm />} />
-        <Route exact path='/user' render={() => <UserView />} />
+          <Route exact path='/auth' render={() => <AuthenticationForm />} />
+          <Route exact path='/user' render={() => <UserView />} />
+          <PrivateRoute
+            exact path='/porting' redirectPath='/auth' condition={loggedIn}
+            render={() => <PortView />} />
+          <PrivateRoute
+            exact path='/join/:token' redirectPath='/auth' condition={loggedIn}
+            render={({ match: { params: { token } } }) => <JoinView token={token} />} />
 
-        <PrivateRoute
-          exact path='/join/:token' redirectPath='/auth' condition={loggedIn}
-          render={({ match: { params: { token } } }) => <JoinView token={token} />} />
-
-        <Route exact path='/workspaces/:wid/heatmap' render={({ match }) => (
-          <CourseHeatmap workspaceId={match.params.wid} />
-        )} />
-
-        <Route
-          exact path='/workspaces/:wid/mapper'
-          render={({ match, location }) =>
-            <WorkspaceView workspaceId={match.params.wid} location={location} />}
-        />
-        <Route exact path='/workspaces/:wid/mapper/:cid' render={({ match }) => (
-          <GuidedCourseView
-            courseId={match.params.cid}
-            workspaceId={match.params.wid}
+          <Route path='/workspaces' render={() => workspaceRouter('/workspaces')} />
+          <Route
+            path='/projects/:id/workspaces'
+            render={({ match: { url } }) => workspaceRouter(url)} />
+          <PrivateRoute
+            exact path='/projects/:id' redirectPath='/auth' condition={loggedIn}
+            render={({ match: { params: { id } } }) =>
+              <ProjectView projectId={id} />
+            }
           />
-        )}
-        />
-        <Route exact path='/workspaces/:wid/graph' render={({ match: { params: { wid } } }) =>
-          <GraphView workspaceId={wid} />} />
-        <Route exact path='/workspaces/:id/courses' render={() =>
-          <div>VIEW FOR ADDING AND MODIFYING COURSES</div>} />
-        <Route
-          exact path='/workspaces/:wid/:page(mapper|graph|heatmap)/:cid?'
-          render={({ match: { params: { wid, cid, page } } }) =>
-            <WorkspaceNavBar workspaceId={wid} courseId={cid} page={page} />}
-        />
-        <PrivateRoute
-          exact path='/projects/:id' redirectPath='/auth' condition={loggedIn}
-          render={({ match: { params: { id } } }) => {
-            return <ProjectView projectId={id} />
-          }}
-        />
-        <PrivateRoute
-          exact path='/projects/:id/clone' redirectPath='/auth' condition={loggedIn}
-          render={({ match: { params: { id } } }) => {
-            return <CloneView projectId={id} />
-          }}
-        />
+          <PrivateRoute
+            exact path='/projects/:id/clone' redirectPath='/auth' condition={loggedIn}
+            render={({ match: { params: { id } } }) =>
+              <CloneView projectId={id} />
+            }
+          />
+          <Route render={() => <NotFound />} />
+        </Switch>
       </div>
       <Snackbar open={error !== ''}
         onClose={handleCloseErrorMessage}

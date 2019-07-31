@@ -70,7 +70,7 @@ const CloneView = ({ history, projectId }) => {
   })
 
   const handleNavigateMapper = (workspaceId) => {
-    history.push(`/workspaces/${workspaceId}/mapper`)
+    history.push(`/projects/${projectId}/workspaces/${workspaceId}/mapper`)
   }
 
   const handleCreate = async () => {

@@ -167,7 +167,7 @@ const HeaderCell = ({ title }) => {
 }
 
 const TableCell = withRouter(({
-  toCourse, fromCourse, maxGradVal, workspaceId, history
+  toCourse, fromCourse, maxGradVal, workspaceId, history, urlPrefix
 }) => {
   const classes = useStyles()
 
@@ -193,7 +193,7 @@ const TableCell = withRouter(({
   }
 
   const navigateToMapper = (courseId) => () => {
-    history.push(`/workspaces/${workspaceId}/mapper/${courseId}`)
+    history.push(`${urlPrefix}/${workspaceId}/mapper/${courseId}`)
   }
 
   return (
@@ -222,7 +222,7 @@ const TableCell = withRouter(({
 const maxVal = (a, b) => a > b ? a : b
 const sum = (a, b) => a + b
 
-const CourseHeatmap = ({ workspaceId }) => {
+const CourseHeatmap = ({ workspaceId, urlPrefix }) => {
   const classes = useStyles()
 
   const workspaceCourseQuery = useQuery(WORKSPACE_COURSES_AND_CONCEPTS, {
@@ -271,7 +271,7 @@ const CourseHeatmap = ({ workspaceId }) => {
                                 <TableCell
                                   workspaceId={workspaceId} maxGradVal={maxGradVal}
                                   key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
-                                  toCourse={toCourse} />
+                                  toCourse={toCourse} urlPrefix={urlPrefix} />
                               ))
                             }
                           </tr>

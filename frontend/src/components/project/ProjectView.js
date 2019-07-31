@@ -159,6 +159,7 @@ const ProjectView = ({ projectId }) => {
           </div>
           <div className={classes.userWorkspaces}>
             <UserWorkspaceList
+              projectId={projectId}
               openProjectCloneDialog={openProjectCloneDialog}
               userWorkspaces={projectQuery.data.projectById.workspaces}
               activeTemplate={projectQuery.data.projectById.activeTemplate}

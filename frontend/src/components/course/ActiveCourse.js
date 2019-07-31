@@ -72,7 +72,8 @@ const ActiveCourse = ({
   addingLink,
   setAddingLink,
   toggleConcept,
-  courseLinks
+  courseLinks,
+  urlPrefix
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -148,7 +149,7 @@ const ActiveCourse = ({
           value={course.id}
           classes={{ root: classes.titleSelect }}
           input={<InputBase classes={{ root: classes.title }} />}
-          onChange={evt => history.push(`/workspaces/${workspaceId}/mapper/${evt.target.value}`)}
+          onChange={evt => history.push(`${urlPrefix}/${workspaceId}/mapper/${evt.target.value}`)}
         >
           {courses ? courses.map(course => (
             <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
