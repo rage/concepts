@@ -4,8 +4,8 @@ import { COURSES_BY_WORKSPACE } from '../../graphql/Query'
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
-const createCourseUpdate = (workspaceId) => {
-  return (store, response) => {
+const createCourseUpdate = (workspaceId) =>
+  (store, response) => {
     try {
       const dataInStore = store.readQuery({
         query: COURSES_BY_WORKSPACE,
@@ -23,10 +23,9 @@ const createCourseUpdate = (workspaceId) => {
       }
     } catch (e) {}
   }
-}
 
-const updateCourseUpdate = (workspaceId) => {
-  return (store, response) => {
+const updateCourseUpdate = (workspaceId) =>
+  (store, response) => {
     try {
       const dataInStore = store.readQuery({
         query: COURSES_BY_WORKSPACE,
@@ -35,9 +34,8 @@ const updateCourseUpdate = (workspaceId) => {
       const updatedCourse = response.data.updateCourse
 
       if (includedIn(dataInStore.coursesByWorkspace, updatedCourse)) {
-        dataInStore.coursesByWorkspace = dataInStore.coursesByWorkspace.map(course => {
-          return course.id === updatedCourse.id ? updatedCourse : course
-        })
+        dataInStore.coursesByWorkspace = dataInStore.coursesByWorkspace
+          .map(course => course.id === updatedCourse.id ? updatedCourse : course)
         client.writeQuery({
           query: COURSES_BY_WORKSPACE,
           variables: { workspaceId },
@@ -46,7 +44,6 @@ const updateCourseUpdate = (workspaceId) => {
       }
     } catch (e) {}
   }
-}
 
 export {
   createCourseUpdate,

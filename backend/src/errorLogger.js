@@ -6,17 +6,13 @@ const mutations = require('./resolvers/Mutation')
  * @param {string} path Path variable in string format
  */
 const getPathType = (path) => {
-  const query = Object.keys(queries).find(fnc => {
-    return fnc === path
-  })
+  const query = Object.keys(queries).find(fnc => fnc === path)
 
   if (typeof query !== 'undefined') {
     return 'Query'
   }
 
-  const mutation = Object.keys(mutations).find(fnc => {
-    return fnc === path
-  })
+  const mutation = Object.keys(mutations).find(fnc => fnc === path)
 
   if (typeof mutation !== 'undefined') {
     return 'Mutation'

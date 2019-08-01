@@ -4,8 +4,8 @@ import {
   COURSE_BY_ID
 } from '../../graphql/Query'
 
-const createConceptLinkUpdate = (courseId, workspaceId) => {
-  return (store, response) => {
+const createConceptLinkUpdate = (courseId, workspaceId) =>
+  (store, response) => {
     try {
       const prereq = store.readQuery({
         query: COURSE_PREREQUISITES,
@@ -17,9 +17,8 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
       const createdConceptLink = response.data.createConceptLink
 
       prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-        const concept = courseLink.from.concepts.find(concept => {
-          return concept.id === createdConceptLink.from.id
-        })
+        const concept = courseLink.from.concepts
+          .find(concept => concept.id === createdConceptLink.from.id)
         if (concept) {
           concept.linksFromConcept.push(createdConceptLink)
         }
@@ -40,9 +39,8 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
         }
       })
 
-      const concept = course.courseById.concepts.find(concept => {
-        return concept.id === createdConceptLink.to.id
-      })
+      const concept = course.courseById.concepts
+        .find(concept => concept.id === createdConceptLink.to.id)
       if (concept) {
         concept.linksToConcept.push(createdConceptLink)
       }
@@ -56,10 +54,9 @@ const createConceptLinkUpdate = (courseId, workspaceId) => {
       })
     } catch (err) {}
   }
-}
 
-const deleteConceptLinkUpdate = (courseId, workspaceId) => {
-  return (store, response) => {
+const deleteConceptLinkUpdate = (courseId, workspaceId) =>
+  (store, response) => {
     try {
       const prereq = store.readQuery({
         query: COURSE_PREREQUISITES,
@@ -73,9 +70,8 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
 
       prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
         courseLink.from.concepts.forEach(concept => {
-          concept.linksFromConcept = concept.linksFromConcept.filter(conceptLink => {
-            return conceptLink.id !== deletedConceptLink.id
-          })
+          concept.linksFromConcept = concept.linksFromConcept
+            .filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
         })
       })
 
@@ -96,9 +92,8 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
       })
 
       course.courseById.concepts.forEach(concept => {
-        concept.linksToConcept = concept.linksToConcept.filter(conceptLink => {
-          return conceptLink.id !== deletedConceptLink.id
-        })
+        concept.linksToConcept = concept.linksToConcept
+          .filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
       })
 
       client.writeQuery({
@@ -110,7 +105,6 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) => {
       })
     } catch (err) {}
   }
-}
 
 export {
   createConceptLinkUpdate,

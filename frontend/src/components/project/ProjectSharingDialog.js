@@ -12,9 +12,7 @@ const ProjectSharingDialog = ({
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const messageDispatch = useMessageStateValue()[1]
 
-  const existingToken = project && project.tokens.find(token => {
-    return token.privilege === privilege
-  })
+  const existingToken = project && project.tokens.find(token => token.privilege === privilege)
 
   const existingTokenId = existingToken && existingToken.id
 

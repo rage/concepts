@@ -84,10 +84,8 @@ const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
     const conceptsExist = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.length === 1
     const activeConceptHasLinks = courseQuery.data.courseById
-      && courseQuery.data.courseById.concepts.find(concept => {
-        return concept.linksToConcept.length > 0
-          && activeConceptIds.includes(concept.id)
-      })
+      && courseQuery.data.courseById.concepts.find(concept => concept.linksToConcept.length > 0
+          && activeConceptIds.includes(concept.id))
     if (!courseTrayOpen && conceptsExist) {
       infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
@@ -97,9 +95,7 @@ const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
   }, [courseTrayOpen, activeConceptIds, courseQuery])
 
   // Closes infoBox when leaving the page
-  useEffect(() => {
-    return infoBox.close
-  }, [])
+  useEffect(() => infoBox.close, [])
 
   const handleMenuOpen = (event, link) => {
     event.preventDefault()

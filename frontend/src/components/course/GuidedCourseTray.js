@@ -80,7 +80,7 @@ const PrerequisiteCourse = ({
       <ListItem ref={checkboxRef} divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
-          <Checkbox checked={isPrerequisite} onClick={onClick} color='primary'></Checkbox>
+          <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
         </ListItemSecondaryAction>
       </ListItem>
     </Tooltip>
@@ -153,9 +153,8 @@ const GuidedCourseTray = ({
       const dataInStoreCopy = { ...dataInStore }
       const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
       if (includedIn(courseLinks, removedCourseLink)) {
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.filter(course => {
-          return course.id !== removedCourseLink.id
-        })
+        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks
+          .filter(course => course.id !== removedCourseLink.id)
         client.writeQuery({
           query: COURSE_PREREQUISITES,
           variables: { courseId, workspaceId },
@@ -169,13 +168,8 @@ const GuidedCourseTray = ({
     setFilterKeyword(e.target.value)
   }
 
-  const isPrerequisite = (course) => {
-    return (courseLinks.find(link => link.from.id === course.id) !== undefined)
-  }
-
-  const getLinkToDelete = (course) => {
-    return courseLinks.find(link => link.from.id === course.id)
-  }
+  const getLinkToDelete = course => courseLinks.find(link => link.from.id === course.id)
+  const isPrerequisite = course => getLinkToDelete(course) !== undefined
 
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 

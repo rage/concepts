@@ -7,8 +7,8 @@ import {
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
-const jsonPortUpdate = () => {
-  return (store, response) => {
+const jsonPortUpdate = () =>
+  (store, response) => {
     try {
       const data = store.readQuery({
         query: WORKSPACES_FOR_USER
@@ -57,7 +57,6 @@ const jsonPortUpdate = () => {
       })
     } catch (e) {}
   }
-}
 
 export {
   jsonPortUpdate

@@ -111,6 +111,10 @@
       {
         "allowEmptyCatch": true
       }
+    ],
+    "arrow-body-style": [
+      "error",
+      "as-needed"
     ]
   }
 }

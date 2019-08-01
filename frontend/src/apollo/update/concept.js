@@ -6,8 +6,8 @@ import {
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
-const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
-  return (store, response) => {
+const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
+  (store, response) => {
     try {
       const dataInStore = store.readQuery({
         query: COURSE_PREREQUISITES,
@@ -36,10 +36,9 @@ const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
       }
     } catch (e) {}
   }
-}
 
-const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
-  return (store, response) => {
+const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
+  (store, response) => {
     try {
       const dataInStore = store.readQuery({
         query: COURSE_PREREQUISITES,
@@ -56,10 +55,8 @@ const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
         .find(link => link.from.id === prerequisiteCourseId)
       const prereqCourse = courseLink.from
       if (includedIn(prereqCourse.concepts, updatedConcept)) {
-        prereqCourse.concepts = prereqCourse.concepts.map(c => {
-          return c.id === updatedConcept.id ? updatedConcept : c
-        }
-        )
+        prereqCourse.concepts = prereqCourse.concepts
+          .map(c => c.id === updatedConcept.id ? updatedConcept : c)
         client.writeQuery({
           query: COURSE_PREREQUISITES,
           variables: {
@@ -71,7 +68,6 @@ const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => {
       }
     } catch (e) {}
   }
-}
 
 export {
   deleteConceptUpdate,

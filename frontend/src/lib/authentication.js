@@ -10,9 +10,7 @@ const tmcClient = new TmcClient(clientId, tmcSecret)
 
 export const getUser = () => tmcClient.getUser()
 
-export const isSignedIn = () => {
-  return window.localStorage.getItem('current_user') !== null
-}
+export const isSignedIn = () => window.localStorage.getItem('current_user') !== null
 
 export const isAdmin = () => {
 }

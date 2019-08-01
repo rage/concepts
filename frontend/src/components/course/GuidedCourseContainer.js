@@ -7,7 +7,6 @@ import useCreateConceptDialog from './useCreateConceptDialog'
 import useEditConceptDialog from './useEditConceptDialog'
 import useEditCourseDialog from './useEditCourseDialog'
 import { useInfoBox } from '../common/InfoBox'
-import ActiveCourse from './ActiveCourse'
 
 const GuidedCourseContainer = ({
   courseTrayOpen,
