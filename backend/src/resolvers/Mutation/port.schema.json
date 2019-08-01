@@ -20,7 +20,8 @@
       "pattern": "[0-9a-z]{25}",
       "examples": [
         "cjxk1l6uf001707606jgv7f9z"
-      ]
+      ],
+      "minLength": 1
     },
     "workspaceId": {
       "type": "string",
@@ -28,14 +29,16 @@
       "pattern": "[0-9a-z]{25}",
       "examples": [
         "cjxk1l6uf001707606jgv7f9z"
-      ]
+      ],
+      "minLength": 1
     },
     "workspace": {
       "type": "string",
       "description": "Name to set for new workspace",
       "examples": [
         "Tietojenkäsittelytieteen kandiohjelma"
-      ]
+      ],
+      "minLength": 1
     },
     "defaultCourse": {
       "type": "string",
@@ -60,14 +63,16 @@
             "description": "Name of course",
             "examples": [
               "Ohjelmoinnin perusteet"
-            ]
+            ],
+            "minLength": 1
           },
           "prerequisites": {
             "type": "array",
             "description": "List of prerequisite courses for this course",
             "items": {
               "type": "string",
-              "description": "Course prerequisite name"
+              "description": "Course prerequisite name",
+              "minLength": 1
             }
           },
           "concepts": {
@@ -87,7 +92,8 @@
                   "description": "Name of concept",
                   "examples": [
                     "Toistolause", "Ehtolause"
-                  ]
+                  ],
+                  "minLength": 1
                 },
                 "description": {
                   "type": "string",
@@ -109,7 +115,8 @@
                         "description": "The name of the prerequisite concept",
                         "examples": [
                           "Ehtolause"
-                        ]
+                        ],
+                        "minLength": 1
                       },
                       "course": {
                         "type": "string",

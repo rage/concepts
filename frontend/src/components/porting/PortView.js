@@ -169,7 +169,12 @@ const PortView = () => {
       } else if (error.keyword === 'type') {
         errorMessage = `${error.dataPath.replace('.', '')} ${error.message}`
       } else if (error.keyword === 'oneOf') {
-        errorMessage = 'should have either workspace or workspaceId'
+        errorMessage = 'must have either workspace or workspaceId'
+      } else if (error.keyword === 'minLength' && error.params.limit === 1) {
+        errorMessage = `${error.dataPath.replace('.', '')} must not be empty if set`
+      } else {
+        console.log('Unknown validation error', error)
+        errorMessage = `Unknown error: ${error['message']}`
       }
 
       messageDispatch({
