@@ -1,6 +1,6 @@
 const Ajv = require('ajv')
 
-const { checkAccess, checkPrivilege, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 const schema = require('./port.schema')
 
 const ajv = Ajv()
@@ -25,10 +25,33 @@ const PortMutations = {
       return null
     }
 
+    // Check if project exists
+    let project
+    if (json['projectId']) {
+      await checkAccess(context, {
+        minimumPrivilege: Privilege.EDIT,
+        projectId: json['projectId']
+      })
+      if (json['workspaceId']) {
+        const templates = await context.prisma.project({
+          id: json['projectId']
+        }).templates()
+        if (!templates.find(template => template.id === json['workspaceId'])) return null
+      } else if (json['workspace']) {
+        project = await context.prisma.project({
+          id: json['projectId']
+        })
+        // No such project
+        if (!project) {
+          return null
+        }
+      }
+    }
+
     // Create or find workspace
     let workspace
-    if (typeof json['workspaceId'] === 'string') {
-      await checkPrivilege(context, {
+    if (json['workspaceId']) {
+      await checkAccess(context, {
         minimumPrivilege: Privilege.EDIT,
         workspaceId: json['workspaceId']
       })
@@ -38,7 +61,7 @@ const PortMutations = {
       if (workspace === null) {
         throw Error('No such workspace')
       }
-    } else if (typeof json['workspace'] === 'string') {
+    } else if (json['workspace']) {
       workspace = await context.prisma.createWorkspace({
         name: json['workspace'],
         participants: {
@@ -136,6 +159,22 @@ const PortMutations = {
         }
       }
     }))
+
+    // Connect workspace as template
+    if (json['projectId'] && json['workspace']) {
+      await context.prisma.updateWorkspace({
+        where: {
+          id: workspace.id
+        },
+        data: {
+          asTemplate: {
+            connect: {
+              id: project.id
+            }
+          }
+        }
+      })
+    }
 
     return workspace
   }

@@ -51,6 +51,19 @@ query projectById($id: ID!) {
 }
 `
 
+const PROJECT_BY_ID_TEMPLATES = gql`
+query projectById($id: ID!) {
+  projectById(id: $id) {
+    id
+    name
+    templates {
+      id
+      name
+    }
+  }
+}
+`
+
 const PEEK_ACTIVE_TEMPLATE = gql`
 query limitedProjectById($id: ID!) {
   limitedProjectById(id: $id) {
@@ -64,5 +77,6 @@ query limitedProjectById($id: ID!) {
 export {
   PROJECTS_FOR_USER,
   PROJECT_BY_ID,
+  PROJECT_BY_ID_TEMPLATES,
   PEEK_ACTIVE_TEMPLATE
 }

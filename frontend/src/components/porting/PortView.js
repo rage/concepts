@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import React, { useState, useRef, useEffect } from 'react'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Container, TextField, CircularProgress, Card, CardHeader, CardContent, Button
+  Container, TextField, CircularProgress, Card, CardHeader, CardContent,
+  Button, FormControl, InputLabel, Select, OutlinedInput, MenuItem
 } from '@material-ui/core'
 import green from '@material-ui/core/colors/green'
 import Ajv from 'ajv'
@@ -11,6 +12,7 @@ import schema from './port.schema'
 import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
+import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { jsonPortUpdate } from '../../apollo/update'
 
@@ -40,6 +42,19 @@ const useStyles = makeStyles(theme => ({
   },
   rowButton: {
     marginLeft: '4px'
+  },
+  projectSelect: {
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    minWidth: 120
+  },
+  workspaceSelect: {
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
+    minWidth: 140
+  },
+  workspaceName: {
+    marginTop: theme.spacing(2)
   }
 }))
 
@@ -110,6 +125,31 @@ const PortView = () => {
     update: jsonPortUpdate(user.id)
   })
 
+  // Select properties
+  const [selectState, setSelectState] = useState({
+    projectId: '',
+    workspaceId: '',
+    workspaceName: ''
+  })
+  const projectInputLabel = useRef(null)
+  const workspaceInputLabel = useRef(null)
+  const [projectLabelWidth, setProjectLabelWidth] = useState(0)
+  const [workspaceLabelWidth, setWorkspaceLabelWidth] = useState(0)
+  useEffect(() => {
+    setProjectLabelWidth(projectInputLabel.current.offsetWidth)
+    setWorkspaceLabelWidth(workspaceInputLabel.current.offsetWidth)
+  }, [])
+  // End select properties
+
+  const projectsQuery = useQuery(PROJECTS_FOR_USER)
+  const templatesQuery = useQuery(PROJECT_BY_ID_TEMPLATES, {
+    skip: selectState.projectId === '',
+    variables: {
+      id: selectState.projectId
+    }
+  })
+  const workspacesQuery = useQuery(WORKSPACES_FOR_USER)
+
   const addTemplate = () => {
     if (data.length === 0) {
       setData(TEMPLATE)
@@ -168,6 +208,22 @@ const PortView = () => {
     fileReader.readAsText(event.target.files[0])
   }
 
+  const addStateDataToJSON = (jsonData) => {
+    if (selectState.workspaceId !== '') {
+      jsonData['workspaceId'] = selectState.workspaceId
+      if (selectState.projectId !== '') {
+        jsonData['projectId'] = selectState.projectId
+      }
+      if (jsonData['workspace']) delete jsonData['workspace']
+    } else if (selectState.workspaceName !== '') {
+      jsonData['workspace'] = selectState.workspaceName
+      if (selectState.projectId !== '') {
+        jsonData['projectId'] = selectState.projectId
+      }
+      if (jsonData['workspaceId']) delete jsonData['workspaceId']
+    }
+  }
+
   const sendData = async (data) => {
     if (loading || success) return
 
@@ -182,6 +238,7 @@ const PortView = () => {
       return
     }
 
+    addStateDataToJSON(jsonData)
     if (!validateJSON(jsonData)) {
       return
     }
@@ -191,7 +248,7 @@ const PortView = () => {
     try {
       await dataPortingMutation({
         variables: {
-          data: data
+          data: JSON.stringify(jsonData)
         }
       })
 
@@ -211,21 +268,119 @@ const PortView = () => {
     setLoading(false)
   }
 
+  const handleChange = (event) => {
+    setSelectState({
+      ...selectState,
+      [event.target.name]: event.target.value
+    })
+  }
+
+  const workspaceOptions = () => {
+    if (selectState.projectId)
+      return templatesQuery.data.projectById &&
+        templatesQuery.data.projectById.templates
+    else
+      return workspacesQuery.data.workspacesForUser &&
+        workspacesQuery.data.workspacesForUser
+          .filter(w => !w.workspace.asTemplate)
+          .map(w => w.workspace)
+  }
+
   return (
     <Container>
       <Card>
         <CardHeader title='Import data' />
 
         <CardContent>
-          <Button variant='contained' color='secondary' onClick={addTemplate}>Add template</Button>
-          <Button className={classes.rowButton}
-            variant='contained'
-            color='secondary'
-            component='label'
-            label='Open...'>
-            Open...
-            <input type='file' onChange={openFile} allow='text/*' hidden />
-          </Button>
+          <div>
+            <Button variant='contained' color='secondary' onClick={addTemplate}>
+              Add template
+            </Button>
+            <Button className={classes.rowButton}
+              variant='contained'
+              color='secondary'
+              component='label'
+              label='Open...'>
+              Open...
+              <input type='file' onChange={openFile} allow='text/*' hidden />
+            </Button>
+          </div>
+
+          <div>
+            <FormControl variant='outlined' className={classes.projectSelect}>
+              <InputLabel ref={projectInputLabel} htmlFor='outlined-simple'>
+                Project
+              </InputLabel>
+              <Select
+                value={selectState.projectId}
+                onChange={handleChange}
+                input={
+                  <OutlinedInput
+                    labelWidth={projectLabelWidth}
+                    name='projectId'
+                    id='outlined-simple'
+                  />
+                }
+              >
+                <MenuItem value={''}>
+                  <em>None</em>
+                </MenuItem>
+                {
+                  projectsQuery.data.projectsForUser &&
+                  projectsQuery.data.projectsForUser.map(p => {
+                    return <MenuItem key={p.project.id} value={p.project.id}>
+                      {p.project.name}
+                    </MenuItem>
+                  })
+                }
+              </Select>
+            </FormControl>
+            {
+              selectState.workspaceName === ''
+                ? <FormControl variant='outlined' className={classes.workspaceSelect}>
+                  <InputLabel ref={workspaceInputLabel} htmlFor='outlined-simple'>
+                    {selectState.projectId === '' ? 'Workspace' : 'Template'}
+                  </InputLabel>
+                  <Select
+                    value={selectState.workspaceId}
+                    onChange={handleChange}
+                    input={
+                      <OutlinedInput
+                        labelWidth={workspaceLabelWidth}
+                        name='workspaceId'
+                        id='outlined-simple'
+                      />
+                    }
+                  >
+                    <MenuItem value={''}>
+                      <em>None</em>
+                    </MenuItem>
+                    {
+                      workspaceOptions() && workspaceOptions().map(w =>
+                        <MenuItem key={w.id} value={w.id}>
+                          {w.name}
+                        </MenuItem>
+                      )
+
+                    }
+                  </Select>
+                </FormControl>
+                : null
+            }
+            {
+              selectState.workspaceId === ''
+                ? <TextField
+                  id='workspaceName'
+                  name='workspaceName'
+                  label={selectState.projectId === '' ? 'Workspace name' : 'Template name'}
+                  className={classes.workspaceName}
+                  value={selectState.workspaceName}
+                  onChange={handleChange}
+                  variant='outlined'
+                />
+                : null
+            }
+          </div>
 
           <TextField
             id='json-input'
