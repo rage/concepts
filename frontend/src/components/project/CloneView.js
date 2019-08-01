@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, Typography, Button, CssBaseline, Container, Paper, TextField, Divider
+  List, ListItem, ListItemText, Typography, Button, CssBaseline, Container, Paper, TextField,
+  Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -148,7 +149,8 @@ const CloneView = ({ history, projectId }) => {
                 <List className={classes.listRoot}>
                   <ListItem
                     button key={workspace.data.workspaceBySourceTemplate.id}
-                    onClick={() => handleNavigateMapper(workspace.data.workspaceBySourceTemplate.id)}
+                    onClick={() => handleNavigateMapper(
+                      workspace.data.workspaceBySourceTemplate.id)}
                   >
                     <ListItemText
                       primary={

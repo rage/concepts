@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
+  List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, IconButton,
   CircularProgress, Menu, MenuItem, ListItemIcon, Button
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'

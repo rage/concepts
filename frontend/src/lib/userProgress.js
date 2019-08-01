@@ -19,6 +19,6 @@ export const getUser = () => {
   return local && local.user
 }
 
-const updateUser = async ({ variables }) => await client.mutate({
+const updateUser = ({ variables }) => client.mutate({
   mutation: UPDATE_USER, variables
 })

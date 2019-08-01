@@ -6,66 +6,68 @@ import {
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
-const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => (store, response) => {
-  try {
-    const dataInStore = store.readQuery({
-      query: COURSE_PREREQUISITES,
-      variables: {
-        courseId,
-        workspaceId
-      }
-    })
-
-    const deletedConcept = response.data.deleteConcept
-    const dataInStoreCopy = { ...dataInStore }
-    const courseLink = dataInStoreCopy.courseAndPrerequisites
-      .linksToCourse
-      .find(link => link.from.id === prerequisiteCourseId)
-    const prereqCourse = courseLink.from
-    if (includedIn(prereqCourse.concepts, deletedConcept)) {
-      prereqCourse.concepts = prereqCourse.concepts.filter(c => c.id !== deletedConcept.id)
-      client.writeQuery({
+const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
+  (store, response) => {
+    try {
+      const dataInStore = store.readQuery({
         query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId
-        },
-        data: dataInStoreCopy
+        }
       })
-    }
-  } catch (e) {}
-}
 
-const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) => (store, response) => {
-  try {
-    const dataInStore = store.readQuery({
-      query: COURSE_PREREQUISITES,
-      variables: {
-        courseId,
-        workspaceId
+      const deletedConcept = response.data.deleteConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const courseLink = dataInStoreCopy.courseAndPrerequisites
+        .linksToCourse
+        .find(link => link.from.id === prerequisiteCourseId)
+      const prereqCourse = courseLink.from
+      if (includedIn(prereqCourse.concepts, deletedConcept)) {
+        prereqCourse.concepts = prereqCourse.concepts.filter(c => c.id !== deletedConcept.id)
+        client.writeQuery({
+          query: COURSE_PREREQUISITES,
+          variables: {
+            courseId,
+            workspaceId
+          },
+          data: dataInStoreCopy
+        })
       }
-    })
+    } catch (e) {}
+  }
 
-    const updatedConcept = response.data.updateConcept
-    const dataInStoreCopy = { ...dataInStore }
-    const courseLink = dataInStoreCopy.courseAndPrerequisites
-      .linksToCourse
-      .find(link => link.from.id === prerequisiteCourseId)
-    const prereqCourse = courseLink.from
-    if (includedIn(prereqCourse.concepts, updatedConcept)) {
-      prereqCourse.concepts = prereqCourse.concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c
-      )
-      client.writeQuery({
+const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
+  (store, response) => {
+    try {
+      const dataInStore = store.readQuery({
         query: COURSE_PREREQUISITES,
         variables: {
           courseId,
           workspaceId
-        },
-        data: dataInStoreCopy
+        }
       })
-    }
-  } catch (e) {}
-}
+
+      const updatedConcept = response.data.updateConcept
+      const dataInStoreCopy = { ...dataInStore }
+      const courseLink = dataInStoreCopy.courseAndPrerequisites
+        .linksToCourse
+        .find(link => link.from.id === prerequisiteCourseId)
+      const prereqCourse = courseLink.from
+      if (includedIn(prereqCourse.concepts, updatedConcept)) {
+        prereqCourse.concepts = prereqCourse.concepts
+          .map(c => c.id === updatedConcept.id ? updatedConcept : c)
+        client.writeQuery({
+          query: COURSE_PREREQUISITES,
+          variables: {
+            courseId,
+            workspaceId
+          },
+          data: dataInStoreCopy
+        })
+      }
+    } catch (e) {}
+  }
 
 export {
   deleteConceptUpdate,
