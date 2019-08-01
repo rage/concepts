@@ -15,20 +15,13 @@ const CourseQueries = {
       ]
     })
     if (linkExists) return null
-    return official !== undefined
-      ? await context.prisma.createCourseLink({
-        to: { connect: { id: to } },
-        from: { connect: { id: from } },
-        official: official,
-        createdBy: { connect: { id: context.user.id } },
-        workspace: { connect: { id: workspaceId } }
-      })
-      : await context.prisma.createCourseLink({
-        to: { connect: { id: to } },
-        from: { connect: { id: from } },
-        createdBy: { connect: { id: context.user.id } },
-        workspace: { connect: { id: workspaceId } }
-      })
+    return await context.prisma.createCourseLink({
+      to: { connect: { id: to } },
+      from: { connect: { id: from } },
+      official: Boolean(official),
+      createdBy: { connect: { id: context.user.id } },
+      workspace: { connect: { id: workspaceId } }
+    })
   },
 
   async deleteCourseLink(root, { id }, context) {

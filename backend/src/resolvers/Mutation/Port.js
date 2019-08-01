@@ -3,8 +3,7 @@ const Ajv = require('ajv')
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const schema = require('./port.schema')
 
-const ajv = Ajv()
-const validateData = ajv.compile(schema)
+const validateData = Ajv().compile(schema)
 
 const PortMutations = {
   async importData(root, { data }, context) {
@@ -20,8 +19,6 @@ const PortMutations = {
       for (const error of validateData.errors) {
         console.log(error)
       }
-      //console.log(validateData.errors.map(error => error.message).join('\n'))
-      // TODO maybe show error to client (or just add client-side validation for displaying errors)
       return null
     }
 
@@ -67,9 +64,7 @@ const PortMutations = {
         participants: {
           create: [{
             privilege: 'OWNER',
-            user: {
-              connect: { id: context.user.id }
-            }
+            user: { connect: { id: context.user.id } }
           }]
         }
       })
@@ -85,17 +80,16 @@ const PortMutations = {
         workspace: { connect: { id: workspace.id } }
       })
 
-      const concepts = await Promise.all(course['concepts'].map(async concept => {
-        const conceptData = {
+      const concepts = await Promise.all(course['concepts'].map(async concept =>
+        context.prisma.createConcept({
           name: concept['name'],
           description: concept['description'],
           createdBy: { connect: { id: context.user.id } },
           workspace: { connect: { id: workspace.id } },
-          courses: { connect: [{ id: courseObj.id }] }
-        }
-        if (concept['official'] === true) conceptData['official'] = concept['official']
-        return await context.prisma.createConcept(conceptData)
-      }))
+          courses: { connect: [{ id: courseObj.id }] },
+          official: Boolean(concept['official'])
+        })
+      ))
 
       return { ...courseObj, concepts }
     }))
@@ -113,49 +107,38 @@ const PortMutations = {
 
     await Promise.all(courses.map(async (course, idx) => {
       // Link course prerequisites
-      if (Array.isArray(course['prerequisites'])) {
-        await Promise.all(course['prerequisites'].map(async prerequisiteCourse => {
-          const prerequisteCourseId = courseDictionary[prerequisiteCourse].id
-          const courseLinkData = {
-            to: { connect: { id: courseData[idx].id } },
-            from: { connect: { id: prerequisteCourseId } },
-            workspace: { connect: { id: workspace.id } },
-            createdBy: { connect: { id: context.user.id } }
-          }
-          if (typeof prerequisiteCourse['official'] === 'boolean') {
-            courseLinkData.official = prerequisiteCourse['official']
-          }
-          await context.prisma.createCourseLink(courseLinkData)
-        }))
-      }
+      await Promise.all((course['prerequisites'] || []).map(async prerequisiteCourse =>
+        context.prisma.createCourseLink({
+          to: { connect: { id: courseData[idx].id } },
+          from: { connect: { id: courseDictionary[prerequisiteCourse].id } },
+          workspace: { connect: { id: workspace.id } },
+          createdBy: { connect: { id: context.user.id } },
+          official: Boolean(prerequisiteCourse['official'])
+        })
+      ))
       // Link concept prerequisite
       for (const concept of course['concepts']) {
-        if (Array.isArray(concept['prerequisites'])) {
-          for (const prerequisiteConcept of concept['prerequisites']) {
-            const toConceptId = courseDictionary[course['name']].concepts[concept['name']]
-            let fromConceptIds
-            if (prerequisiteConcept['course']) {
-              fromConceptIds = [courseDictionary[prerequisiteConcept['course']]]
-                .concepts[prerequisiteConcept['name']]
-            } else {
-              fromConceptIds = Object.values(courseDictionary)
-                .filter(course => Object.prototype.hasOwnProperty.call(
-                  course.concepts, prerequisiteConcept['name']))
-                .map(course => course.concepts[prerequisiteConcept['name']])
-            }
-            await Promise.all(fromConceptIds.map(async (fromConceptId) => {
-              const conceptLinkData = {
-                to: { connect: { id: toConceptId } },
-                from: { connect: { id: fromConceptId } },
-                createdBy: { connect: { id: context.user.id } },
-                workspace: { connect: { id: workspace.id } }
-              }
-              if (typeof prerequisiteConcept['official'] === 'boolean') {
-                conceptLinkData.official = prerequisiteConcept['official']
-              }
-              await context.prisma.createConceptLink(conceptLinkData)
-            }))
+        for (const prerequisiteConcept of concept['prerequisites'] || []) {
+          const toConceptId = courseDictionary[course['name']].concepts[concept['name']]
+          let fromConceptIds
+          if (prerequisiteConcept['course']) {
+            fromConceptIds = [courseDictionary[prerequisiteConcept['course']]]
+              .concepts[prerequisiteConcept['name']]
+          } else {
+            fromConceptIds = Object.values(courseDictionary)
+              .filter(course => Object.prototype.hasOwnProperty.call(
+                course.concepts, prerequisiteConcept['name']))
+              .map(course => course.concepts[prerequisiteConcept['name']])
           }
+          await Promise.all(fromConceptIds.map(fromConceptId =>
+            context.prisma.createConceptLink({
+              to: { connect: { id: toConceptId } },
+              from: { connect: { id: fromConceptId } },
+              createdBy: { connect: { id: context.user.id } },
+              workspace: { connect: { id: workspace.id } },
+              official: Boolean(prerequisiteConcept['official'])
+            })
+          ))
         }
       }
     }))
@@ -163,15 +146,9 @@ const PortMutations = {
     // Connect workspace as template
     if (json['projectId'] && json['workspace']) {
       await context.prisma.updateWorkspace({
-        where: {
-          id: workspace.id
-        },
+        where: { id: workspace.id },
         data: {
-          asTemplate: {
-            connect: {
-              id: project.id
-            }
-          }
+          asTemplate: { connect: { id: project.id } }
         }
       })
     }

@@ -8,9 +8,7 @@ const ProjectMutations = {
       participants: {
         create: [{
           privilege: 'OWNER',
-          user: {
-            connect: { id: context.user.id }
-          }
+          user: { connect: { id: context.user.id } }
         }]
       }
     })
@@ -45,9 +43,9 @@ const ProjectMutations = {
     return await context.prisma.updateProject({
       where: { id: args.projectId },
       data: {
-        activeTemplate:
-          args.workspaceId ? { connect: { id: args.workspaceId } }
-            : { disconnect: true }
+        activeTemplate: args.workspaceId
+          ? { connect: { id: args.workspaceId } }
+          : { disconnect: true }
       }
     })
   }

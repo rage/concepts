@@ -7,16 +7,15 @@ const ConceptMutations = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const data = {
+
+    return await context.prisma.createConcept({
       name,
       createdBy: { connect: { id: context.user.id } },
-      workspace: { connect: { id: workspaceId } }
-    }
-    if (description !== undefined) data.description = description
-    if (official !== undefined) data.official = official
-    if (courseId !== undefined) data.courses = { connect: [{ id: courseId }] }
-
-    return await context.prisma.createConcept(data)
+      workspace: { connect: { id: workspaceId } },
+      description: description,
+      official: Boolean(official),
+      courses: courseId ? { connect: [{ id: courseId }] } : undefined
+    })
   },
 
   async updateConcept(root, { id, name, description }, context) {

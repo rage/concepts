@@ -15,15 +15,13 @@ const ConceptLink = {
       ]
     })
     if (linkExists) return null
-    const data = {
+    return await context.prisma.createConceptLink({
       to:        { connect: { id: to } },
       from:      { connect: { id: from } },
       createdBy: { connect: { id: context.user.id } },
-      workspace: { connect: { id: workspaceId } }
-    }
-    if (official !== undefined) data.official = official
-
-    return await context.prisma.createConceptLink(data)
+      workspace: { connect: { id: workspaceId } },
+      official: Boolean(official)
+    })
   },
   async deleteConceptLink(root, args, context) {
     const { id: workspaceId } = await context.prisma.conceptLink({ id: args.id }).workspace()
