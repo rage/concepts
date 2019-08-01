@@ -33,6 +33,18 @@ const PortMutations = {
       if (!templates.find(template => template.id === json['workspaceId'])) return null
     }
 
+    // Check if project exists
+    let project 
+    if (typeof json['projectId'] !== 'undefined' && typeof json['workspace'] !== 'undefined') {
+      project = await context.prisma.project({
+        id: json.projectId
+      })
+      // No such project
+      if (!project) {
+        return null 
+      }
+    }
+
     // Create or find workspace
     let workspace
     if (typeof json['workspaceId'] === 'string') {
@@ -144,6 +156,22 @@ const PortMutations = {
         }
       }
     }))
+
+    // Connect workspace as template
+    if (typeof json['projectId'] !== 'undefined' && typeof json['workspace']) {
+      await context.prisma.updateWorkspace({
+        where: {
+          id: workspace.id
+        },
+        data: {
+          asTemplate: {
+            connect: {
+              id: project.id
+            }
+          }
+        }
+      })
+    }
 
     return workspace
   }

@@ -215,6 +215,12 @@ const PortView = () => {
         jsonData['projectId'] = selectState.projectId
       }
       if (jsonData['workspace']) delete jsonData['workspace']
+    } else if (selectState.workspaceName !== '') {
+      jsonData['workspace'] = selectState.workspaceName
+      if (selectState.projectId !== '') {
+        jsonData['projectId'] = selectState.projectId
+      }
+      if (jsonData['workspaceId']) delete jsonData['workspaceId']
     }
   }
 
