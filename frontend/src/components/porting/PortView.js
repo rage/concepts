@@ -169,10 +169,11 @@ const PortView = () => {
       } else if (error.keyword === 'oneOf') {
         errorMessage = 'should have either workspace or workspaceId'
       }
+      console.log(error)
 
       messageDispatch({
         type: 'setError',
-        data: errorMessage
+        data: 'Error validating JSON: ' + error
       })
 
       return false
@@ -208,6 +209,16 @@ const PortView = () => {
     fileReader.readAsText(event.target.files[0])
   }
 
+  const addStateDataToJSON = (jsonData) => {
+    if (selectState.workspaceId !== '') {
+      jsonData['workspaceId'] = selectState.workspaceId
+      if (selectState.projectId !== '') {
+        jsonData['projectId'] = selectState.projectId
+      }
+      if (jsonData['workspace']) delete jsonData['workspace']
+    }
+  }
+
   const sendData = async (data) => {
     if (loading || success) return
 
@@ -222,6 +233,7 @@ const PortView = () => {
       return
     }
 
+    addStateDataToJSON(jsonData)
     if (!validateJSON(jsonData)) {
       return
     }
@@ -231,7 +243,7 @@ const PortView = () => {
     try {
       await dataPortingMutation({
         variables: {
-          data: data
+          data: JSON.stringify(jsonData)
         }
       })
 
