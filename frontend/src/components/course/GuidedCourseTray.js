@@ -3,8 +3,12 @@ import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
-  ListItemSecondaryAction
+  ListItemSecondaryAction, IconButton, Menu, MenuItem
 } from '@material-ui/core'
+import {
+  MoreVert as MoreVertIcon
+} from '@material-ui/icons'
+
 
 import { COURSE_PREREQUISITES } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
@@ -55,6 +59,15 @@ const PrerequisiteCourse = ({
 }) => {
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
 
   const onClick = async () => {
     try {
@@ -81,6 +94,22 @@ const PrerequisiteCourse = ({
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
+          <IconButton
+            aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
+            aria-haspopup='true'
+            onClick={handleMenuOpen}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id='prerequisite-course-menu'
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={() => {}}>Rename</MenuItem>
+            <MenuItem onClick={() => {}}>Delete</MenuItem>
+          </Menu>
         </ListItemSecondaryAction>
       </ListItem>
     </Tooltip>
