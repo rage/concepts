@@ -169,11 +169,10 @@ const PortView = () => {
       } else if (error.keyword === 'oneOf') {
         errorMessage = 'should have either workspace or workspaceId'
       }
-      console.log(error)
 
       messageDispatch({
         type: 'setError',
-        data: 'Error validating JSON: ' + error
+        data: errorMessage
       })
 
       return false

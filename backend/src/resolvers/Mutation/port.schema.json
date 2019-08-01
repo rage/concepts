@@ -14,6 +14,14 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "projectId": {
+      "type": "string",
+      "description": "ID of a project",
+      "pattern": "[0-9a-z]{25}",
+      "examples": [
+        "cjxk1l6uf001707606jgv7f9z"
+      ]
+    },
     "workspaceId": {
       "type": "string",
       "description": "Existing workspace ID to use",

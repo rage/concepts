@@ -27,7 +27,6 @@ const PortMutations = {
 
     // Check if the workspace is a template in workspace
     if (typeof json['projectId'] !== 'undefined' && typeof json['workspaceId'] !== 'undefined') {
-      console.log(`Checking project id ${json.projectId}`)
       const templates = await context.prisma.project({
         id: json['projectId']
       }).templates()
