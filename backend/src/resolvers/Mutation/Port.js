@@ -158,7 +158,7 @@ const PortMutations = {
     }))
 
     // Connect workspace as template
-    if (typeof json['projectId'] !== 'undefined' && typeof json['workspace']) {
+    if (typeof json['projectId'] !== 'undefined' && typeof json['workspace'] !== 'undefined') {
       await context.prisma.updateWorkspace({
         where: {
           id: workspace.id
