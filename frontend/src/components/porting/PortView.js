@@ -12,7 +12,9 @@ import schema from './port.schema'
 import {
   IMPORT_DATA
 } from '../../graphql/Mutation'
-import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES } from '../../graphql/Query'
+import {
+  PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES
+} from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { jsonPortUpdate } from '../../apollo/update'
 
@@ -326,12 +328,12 @@ const PortView = () => {
                   <em>None</em>
                 </MenuItem>
                 {
-                  projectsQuery.data.projectsForUser &&
-                  projectsQuery.data.projectsForUser.map(p => {
-                    return <MenuItem key={p.project.id} value={p.project.id}>
-                      {p.project.name}
-                    </MenuItem>
-                  })
+                  projectsQuery.data.projectsForUser && projectsQuery.data.projectsForUser
+                    .map(p => (
+                      <MenuItem key={p.project.id} value={p.project.id}>
+                        {p.project.name}
+                      </MenuItem>)
+                    )
                 }
               </Select>
             </FormControl>
