@@ -25,6 +25,14 @@ const PortMutations = {
       return null
     }
 
+    // Check if the workspace is a template in workspace
+    if (json['projectId'] !== '' && json['workspaceId'] !== '') {
+      const templates = await context.prisma.project({
+        id: json['projectId']
+      }).templates()
+      if (!templates.find(template => template.id === json['workspaceId'])) return null
+    }
+
     // Create or find workspace
     let workspace
     if (typeof json['workspaceId'] === 'string') {
