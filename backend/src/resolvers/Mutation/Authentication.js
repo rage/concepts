@@ -1,8 +1,61 @@
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server-core')
 
+const mockWorkspace = require('./mockWorkspace')
 const tmc = require('../../TMCAuthentication')
 
+const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const makeSecret = length => Array.from({ length },
+  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+
+const makeMockWorkspaceForUser = async (context, userId) => {
+  const workspaceId = makeSecret(25)
+  const templateWorkspace = mockWorkspace.data.workspace
+  const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
+
+  await context.prisma.createWorkspace({
+    id: workspaceId,
+    name: templateWorkspace.name,
+    participants: {
+      create: [{
+        privilege: 'OWNER',
+        user: {
+          connect: { id: userId }
+        }
+      }]
+    },
+    courses: {
+      create: templateWorkspace.courses.map(course => ({
+        id: makeNewId(course.id),
+        name: course.name,
+        createdBy: { connect: { id: userId } },
+        concepts: {
+          create: course.concepts.map(concept => ({
+            id: makeNewId(concept.id),
+            name: concept.name,
+            description: concept.description,
+            createdBy: { connect: { id: userId } },
+            workspace: { connect: { id: workspaceId } }
+          }))
+        }
+      }))
+    },
+    conceptLinks: {
+      create: templateWorkspace.conceptLinks.map(link => ({
+        createdBy: { connect: { id: userId } },
+        from: { connect: { id: makeNewId(link.from.id) } },
+        to: { connect: { id: makeNewId(link.to.id) } }
+      }))
+    },
+    courseLinks: {
+      create: templateWorkspace.courseLinks.map(link => ({
+        createdBy: { connect: { id: userId } },
+        from: { connect: { id: makeNewId(link.from.id) } },
+        to: { connect: { id: makeNewId(link.to.id) } }
+      }))
+    }
+  })
+}
 
 const AuthenticationMutations = {
   async createGuest(root, args, context) {
@@ -11,9 +64,10 @@ const AuthenticationMutations = {
     })
     const token = jwt.sign({
       role: guest.role,
-      id: guest.id },
+      id: guest.id
+    },
     process.env.SECRET)
-
+    await makeMockWorkspaceForUser(context, guest.id)
     return {
       token,
       user: guest
@@ -40,6 +94,7 @@ const AuthenticationMutations = {
       }
       const createdUser = await context.prisma.createUser(userData)
       const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
+      await makeMockWorkspaceForUser(context, createdUser.id)
       return {
         token,
         user: createdUser

@@ -1,0 +1,195 @@
+{
+  "data": {
+    "workspace": {
+      "name": "Mock template",
+      "conceptLinks": [
+        {
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "from": {
+            "id": "cjysiozwy3gv10712q3tmuq4h"
+          },
+          "to": {
+            "id": "cjysiozwx3gux07129zn500cz"
+          }
+        },
+        {
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "from": {
+            "id": "cjysiozwy3gv2071218rqaz3b"
+          },
+          "to": {
+            "id": "cjysiozwx3gux07129zn500cz"
+          }
+        },
+        {
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "from": {
+            "id": "cjysiozwx3guy07121qoyypy3"
+          },
+          "to": {
+            "id": "cjysiozwx3gux07129zn500cz"
+          }
+        }
+      ],
+      "courseLinks": [
+        {
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "from": {
+            "id": "cjysiozw13gt80712zx27kuco"
+          },
+          "to": {
+            "id": "cjysiozw13gt60712n5wrbypk"
+          }
+        },
+        {
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "from": {
+            "id": "cjysiozw13gt90712fs5aoz3f"
+          },
+          "to": {
+            "id": "cjysiozw13gt60712n5wrbypk"
+          }
+        },
+        {
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "from": {
+            "id": "cjysiozw13gt60712n5wrbypk"
+          },
+          "to": {
+            "id": "cjysiozw13gt60712n5wrbypk"
+          }
+        }
+      ],
+      "courses": [
+        {
+          "id": "cjysiozw13gt60712n5wrbypk",
+          "name": "We are editing this course test",
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "concepts": [
+            {
+              "id": "cjysiozwx3gut07129awdbovv",
+              "name": "This is a concept",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwx3guu0712zn01bn9y",
+              "name": "This is also a concept",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwx3guv0712s9zzzji0",
+              "name": "A concept can be a topic, learning objective, an abstract idea, etc.",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwx3guw0712ere1n8c1",
+              "name": "Concepts represent things learned during a course",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwx3gux07129zn500cz",
+              "name": "Concept 1",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwx3guy07121qoyypy3",
+              "name": "Concept 0.5 (A course can have internal links as well)",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            }
+          ]
+        },
+        {
+          "id": "cjysiozw13gt707120hc60l4w",
+          "name": "This is another course",
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "concepts": []
+        },
+        {
+          "id": "cjysiozw13gt80712zx27kuco",
+          "name": "Courses can be prerequisites",
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "concepts": [
+            {
+              "id": "cjysiozwx3guz0712p97f64lv",
+              "name": "This is a concept of another course",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            }
+          ]
+        },
+        {
+          "id": "cjysiozw13gt90712fs5aoz3f",
+          "name": "This is another prerequisite course",
+          "createdBy": {
+            "id": "cjxelvrtp0j9r0751fdxnx6aq"
+          },
+          "concepts": [
+            {
+              "id": "cjysiozwy3gv00712rsixwda8",
+              "name": "This concept has a description",
+              "description": "This is a description, which contains further information on the concept. \n\nEverything about a concept should not be placed in the name. \n\nA description can help keep the concept name concise by placing extra information in it instead of including it in the name.",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwy3gv10712q3tmuq4h",
+              "name": "This concept is a prerequisite to \"Concept 1\"",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            },
+            {
+              "id": "cjysiozwy3gv2071218rqaz3b",
+              "name": "This is another prerequisite to \"Concept 1\"",
+              "description": "",
+              "createdBy": {
+                "id": "cjxelvrtp0j9r0751fdxnx6aq"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "cjysiozvi3gsl0712yu3lrq09"
+    }
+  }
+}
