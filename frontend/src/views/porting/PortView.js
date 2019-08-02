@@ -62,6 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 const PLACEHOLDER = `{
   "workspace | workspaceId": "id",
+  "projectId": "id", // Optional field
   "courses": [
     {
       "name": "Example",
