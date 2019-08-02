@@ -9,12 +9,12 @@ import { MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon } from '@material-
 import {
   DELETE_CONCEPT,
   CREATE_CONCEPT_LINK
-} from '../../graphql/Mutation'
+} from '../../../graphql/Mutation'
 import {
   createConceptLinkUpdate,
   deleteConceptUpdate
-} from '../../apollo/update'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+} from '../../../apollo/update'
+import { useMessageStateValue, useLoginStateValue } from '../../../store'
 
 const useStyles = makeStyles(() => ({
   conceptName: {

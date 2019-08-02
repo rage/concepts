@@ -7,7 +7,7 @@ import { Edit as EditIcon } from '@material-ui/icons'
 
 import { DELETE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_BY_ID } from '../../graphql/Query'
-import ActiveConcept from '../concept/ActiveConcept'
+import ActiveConcept from './concept/ActiveConcept'
 import useCreateConceptDialog from '../../dialogs/concept/useCreateConceptDialog'
 import useEditConceptDialog from '../../dialogs/concept/useEditConceptDialog'
 import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'

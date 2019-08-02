@@ -6,9 +6,9 @@ import {
 } from '@material-ui/core'
 import { MoreVert as MoreVertIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons'
 
-import { useMessageStateValue, useLoginStateValue } from '../../store'
-import { CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
-import { createConceptLinkUpdate } from '../../apollo/update'
+import { useMessageStateValue, useLoginStateValue } from '../../../store'
+import { CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
+import { createConceptLinkUpdate } from '../../../apollo/update'
 
 const useStyles = makeStyles(() => ({
   conceptName: {

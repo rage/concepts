@@ -20,7 +20,7 @@ import {
   createCourseUpdate, deleteConceptLinkUpdate,
   updateCourseUpdate
 } from '../../apollo/update'
-import ConceptLink from '../concept/ConceptLink'
+import ConceptLink from './concept/ConceptLink'
 import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(() => ({
