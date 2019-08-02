@@ -6,44 +6,39 @@ const mutations = require('./resolvers/Mutation')
  * @param {string} path Path variable in string format
  */
 const getPathType = (path) => {
-  const query = Object.keys(queries).find(fnc => fnc === path)
-
-  if (typeof query !== 'undefined') {
+  if (Object.keys(queries).includes(path)) {
     return 'Query'
-  }
-
-  const mutation = Object.keys(mutations).find(fnc => fnc === path)
-
-  if (typeof mutation !== 'undefined') {
+  } else if (Object.keys(mutations).includes(path)) {
     return 'Mutation'
   }
-
   return 'Unknown'
 }
 
 const logError = error => {
   const errorData = {
-    'message': error['message'],
-    'now': new Date(Date.now()).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    message: error.message,
+    now: new Date(Date.now()).toISOString()
+      .replace(/T/, ' ')
+      .replace(/\..+/, '')
   }
 
   // Convert path array into a string
-  if (typeof error['path'] !== 'undefined') {
-    errorData['path'] = error['path'].reduce((first, second) => first + '/' + second)
-    errorData['type'] = getPathType(errorData['path'])
+  if (error.path) {
+    errorData.path = error.path.reduce((first, second) => first + '/' + second)
+    errorData.type = getPathType(errorData.path)
   }
 
-  let errorMessage = errorData['now'] + ' --- '
-  if (typeof error['path'] === 'undefined') {
-    errorMessage += 'Error: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
-  } else if (typeof error['extensions'] !== 'undefined') {
-    errorData.code = error['extensions']['code']
-    errorMessage += 'Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, '
-    errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
-    errorMessage += '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
-  } else if (typeof error['locations'] !== 'undefined') {
-    errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
-    errorMessage += '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
+  let errorMessage = errorData.now + ' --- '
+  if (!error.path) {
+    errorMessage += 'Error: \x1b[31m"' + errorData.message + '"\x1b[0m'
+  } else if (error.extensions) {
+    errorData.code = error.extensions.code
+    errorMessage += 'Code: \x1b[31m"' + errorData.code + '"\x1b[0m, '
+    errorMessage += errorData.type + ': \x1b[32m' + errorData.path
+    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.path + '"\x1b[0m'
+  } else if (error.locations) {
+    errorMessage += errorData.type + ': \x1b[32m' + errorData.path
+    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.path + '"\x1b[0m'
   }
   console.error(errorMessage)
 
