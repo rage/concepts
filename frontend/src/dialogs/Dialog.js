@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField
+  Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField
 } from '@material-ui/core'
 
 import { useMessageStateValue } from '../store'
 
-const ConceptAdditionDialog = ({
+const Dialog = ({
   open, onClose, mutation, requiredVariables,
   actionText, fields, title, content, CustomActions
 }) => {
@@ -15,10 +15,10 @@ const ConceptAdditionDialog = ({
   const messageDispatch = useMessageStateValue()[1]
 
   useEffect(() => {
-    if (open) {
-      setState(Object.fromEntries(fields.map(key => [key.name, ''])))
-      setSubmitDisabled(false)
-    }
+    // if (open) {
+    //   setState(Object.fromEntries(fields.map(key => [key.name, ''])))
+    //   setSubmitDisabled(false)
+    // }
   }, [open])
 
   const handleSubmit = () => {
@@ -42,7 +42,7 @@ const ConceptAdditionDialog = ({
   }
 
   return (
-    <Dialog
+    <MuiDialog
       open={open}
       onClose={onClose}
       aria-labelledby='form-dialog-title'
@@ -69,7 +69,7 @@ const ConceptAdditionDialog = ({
               variant='outlined'
               margin='dense'
               id={key}
-              label={key.toUpperCase()}
+              label={key[0].toUpperCase() + key.substr(1)}
               type='text'
               value={state[key.name]}
               onChange={(e) => setState({ ...state, [key.name]: e.target.value })}
@@ -80,24 +80,22 @@ const ConceptAdditionDialog = ({
         }
       </DialogContent>
       {
-        CustomActions ?
-          <DialogActions id='form-dialog-default-actions'>
-            <Button onClick={onClose} color='primary'>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={submitDisabled}
-              color='primary'
-            >
-              {actionText}
-            </Button>
-          </DialogActions>
-          :
-          { CustomActions }
+        CustomActions ||
+        <DialogActions id='form-dialog-default-actions'>
+          <Button onClick={onClose} color='primary'>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={submitDisabled}
+            color='primary'
+          >
+            {actionText}
+          </Button>
+        </DialogActions>
       }
-    </Dialog>
+    </MuiDialog>
   )
 }
 
-export default ConceptAdditionDialog
+export default Dialog

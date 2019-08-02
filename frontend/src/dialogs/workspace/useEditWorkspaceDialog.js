@@ -3,7 +3,7 @@ import { useMutation } from 'react-apollo-hooks'
 
 import { UPDATE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, WORKSPACE_BY_ID } from '../../graphql/Query'
-import WorkspaceEditingDialog from './WorkspaceEditingDialog'
+import Dialog from '../Dialog'
 
 const useEditWorkspaceDialog = (workspaceId) => {
   const [workspaceEditState, setWorkspaceEditState] = useState({
@@ -28,11 +28,18 @@ const useEditWorkspaceDialog = (workspaceId) => {
   }
 
   const dialog = (
-    <WorkspaceEditingDialog
-      state={workspaceEditState}
-      handleClose={handleEditClose}
-      updateWorkspace={updateWorkspace}
-      defaultName={workspaceEditState.name} />
+    <Dialog
+      open={workspaceEditState.open}
+      onClose={handleEditClose}
+      mutation={updateWorkspace}
+      requiredVariables={{ id: workspaceId }}
+      actionText='Save'
+      fields={['name']}
+      title='Edit workspace'
+      content={[
+        'Workspaces work as a sandbox for you to create and connect concepts with each other.'
+      ]}
+    />
   )
 
   return {
