@@ -10,11 +10,12 @@ import {
 } from '@material-ui/icons'
 
 
-import { COURSE_PREREQUISITES } from '../../graphql/Query/Course'
-import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
+import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/Course'
+import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import useCreateCourseDialog from './useCreateCourseDialog'
 import { useMessageStateValue } from '../../store'
 import { useInfoBox } from '../common/InfoBox'
+import useEditCourseDialog from './useEditCourseDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +56,8 @@ const PrerequisiteCourse = ({
   activeCourseId,
   workspaceId,
   createCourseLink,
-  deleteCourseLink
+  deleteCourseLink,
+  openEditCourseDialog
 }) => {
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
@@ -67,6 +69,33 @@ const PrerequisiteCourse = ({
 
   const handleMenuClose = () => {
     setAnchorEl(null)
+  }
+
+  const deleteCourseMutation = useMutation(DELETE_COURSE, {
+    refetchQueries: [{
+      query: COURSES_BY_WORKSPACE,
+      variables: {
+        workspaceId
+      }
+    },
+    {
+      query: COURSE_PREREQUISITES,
+      variables: {
+        workspaceId,
+        courseId: activeCourseId
+      }
+    }]
+  })
+
+
+  const deleteCourse = () => {
+    try {
+      deleteCourseMutation({
+        variables: {
+          id: course.id
+        }
+      })
+    } catch (ex) {}
   }
 
   const onClick = async () => {
@@ -107,8 +136,11 @@ const PrerequisiteCourse = ({
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={() => {}}>Rename</MenuItem>
-            <MenuItem onClick={() => {}}>Delete</MenuItem>
+            <MenuItem onClick={() => {
+              handleMenuClose()
+              openEditCourseDialog(course.id, course.name)()
+            }}>Edit</MenuItem>
+            <MenuItem onClick={deleteCourse}>Delete</MenuItem>
           </Menu>
         </ListItemSecondaryAction>
       </ListItem>
@@ -130,7 +162,9 @@ const GuidedCourseTray = ({
   const infoBox = useInfoBox()
   const createButtonRef = useRef()
   const checkboxRef = useRef()
-
+  const {
+    openEditCourseDialog, CourseEditDialog
+  } = useEditCourseDialog(workspaceId)
   const {
     openCreateCourseDialog,
     CourseCreateDialog
@@ -240,6 +274,7 @@ const GuidedCourseTray = ({
                 isPrerequisite={isPrerequisite(course)}
                 getLinkToDelete={getLinkToDelete}
                 workspaceId={workspaceId}
+                openEditCourseDialog={openEditCourseDialog}
               />
             )
           }
@@ -258,6 +293,7 @@ const GuidedCourseTray = ({
     </Paper>
 
     {CourseCreateDialog}
+    {CourseEditDialog}
   </>
 }
 
