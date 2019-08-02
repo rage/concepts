@@ -68,7 +68,7 @@ const LandingView = (props) => {
               <Grid item>
                 <Button
                   variant='contained' color='primary'
-                  onClick={loggedIn ? redirectTo('/user') : redirectTo('/auth')}
+                  onClick={loggedIn ? redirectTo('/user') : redirectTo('/login')}
                 >
                   {loggedIn ? 'Choose workspace' : 'Login and choose workspace'}
                 </Button>

@@ -15,7 +15,7 @@ import WorkspaceView from './views/workspace/WorkspaceView'
 import JoinView from './views/join/JoinView'
 import HeatmapView from './views/heatmap/HeatmapView'
 import { useMessageStateValue, useLoginStateValue } from './store'
-import AuthenticationForm from './views/login/LoginView'
+import LoginView from './views/login/LoginView'
 import GraphView from './views/graph/GraphView'
 import ProjectView from './views/project/ProjectView'
 import CloneView from './views/project/CloneView'
@@ -115,13 +115,13 @@ const App = ({ classes }) => {
         <Switch>
           <Route exact path='/' render={() => <LandingView />} />
 
-          <Route exact path='/auth' render={() => <AuthenticationForm />} />
+          <Route exact path='/login' render={() => <LoginView />} />
           <Route exact path='/user' render={() => <UserView />} />
           <PrivateRoute
-            exact path='/porting' redirectPath='/auth' condition={loggedIn}
+            exact path='/porting' redirectPath='/login' condition={loggedIn}
             render={() => <PortView />} />
           <PrivateRoute
-            exact path='/join/:token' redirectPath='/auth' condition={loggedIn}
+            exact path='/join/:token' redirectPath='/login' condition={loggedIn}
             render={({ match: { params: { token } } }) => <JoinView token={token} />} />
 
           <Route path='/workspaces' render={() => workspaceRouter('/workspaces')} />
@@ -129,13 +129,13 @@ const App = ({ classes }) => {
             path='/projects/:id/workspaces'
             render={({ match: { url } }) => workspaceRouter(url)} />
           <PrivateRoute
-            exact path='/projects/:id' redirectPath='/auth' condition={loggedIn}
+            exact path='/projects/:id' redirectPath='/login' condition={loggedIn}
             render={({ match: { params: { id } } }) =>
               <ProjectView projectId={id} />
             }
           />
           <PrivateRoute
-            exact path='/projects/:id/clone' redirectPath='/auth' condition={loggedIn}
+            exact path='/projects/:id/clone' redirectPath='/login' condition={loggedIn}
             render={({ match: { params: { id } } }) =>
               <CloneView projectId={id} />
             }

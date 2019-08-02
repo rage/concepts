@@ -68,7 +68,7 @@ const parsePath = (path, meta) => {
     return parsePath(path.slice(1), meta)
   case 'porting':
     return [{ name: 'Import data' }]
-  case 'auth':
+  case 'login':
     return [{ name: 'Log in' }]
   case 'user':
     return [{ name: 'User' }]

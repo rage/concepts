@@ -20,7 +20,7 @@ const AuthenticationIcon = withRouter(({ history }) => {
   }
 
   const navigateToLogin = () => {
-    history.push('/auth')
+    history.push('/login')
   }
 
   const navigateToPorting = () => {
