@@ -10,11 +10,7 @@ const authenticate = async (resolve, root, args, context, info) => {
     return await resolve(root, args, context, info)
   }
 
-  let rawToken = null
-  if (context.request) {
-    rawToken = context.request.get('Authorization')
-  }
-
+  const rawToken = context.request.header('Authorization')
   if (!rawToken) {
     context.role = Role.VISITOR
   } else {

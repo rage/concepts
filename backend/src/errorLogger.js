@@ -1,49 +1,50 @@
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 
+const ERROR_COLOR = '\x1b[31m'
+const STRING_COLOR = '\x1b[32m'
+const RESET_COLOR = '\x1b[0m'
+
 /**
  * returns the type of path: 'mutation' or 'query'
  * @param {string} path Path variable in string format
  */
 const getPathType = (path) => {
-  const query = Object.keys(queries).find(fnc => fnc === path)
-
-  if (typeof query !== 'undefined') {
+  if (Object.keys(queries).includes(path)) {
     return 'Query'
-  }
-
-  const mutation = Object.keys(mutations).find(fnc => fnc === path)
-
-  if (typeof mutation !== 'undefined') {
+  } else if (Object.keys(mutations).includes(path)) {
     return 'Mutation'
   }
-
-  return 'Unknown'
+  return 'Type'
 }
 
 const logError = error => {
   const errorData = {
-    'message': error['message'],
-    'now': new Date(Date.now()).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    message: error.message,
+    now: new Date(Date.now()).toISOString()
+      .replace(/T/, ' ')
+      .replace(/\..+/, '')
   }
 
   // Convert path array into a string
-  if (typeof error['path'] !== 'undefined') {
-    errorData['path'] = error['path'].reduce((first, second) => first + '/' + second)
-    errorData['type'] = getPathType(errorData['path'])
+  if (error.path) {
+    errorData.path = error.path.reduce((first, second) => first + '/' + second)
+    errorData.type = getPathType(errorData.path)
   }
 
-  let errorMessage = errorData['now'] + ' --- '
-  if (typeof error['path'] === 'undefined') {
-    errorMessage += 'Error: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
-  } else if (typeof error['extensions'] !== 'undefined') {
-    errorData.code = error['extensions']['code']
-    errorMessage += 'Code:\x1b[31m\'' + errorData['code'] + '\'\x1b[0m, '
-    errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
-    errorMessage += '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
-  } else if (typeof error['locations'] !== 'undefined') {
-    errorMessage += errorData['type'] + ': \x1b[32m' + errorData['path']
-    errorMessage += '\x1b[0m, Message: \x1b[31m\'' + errorData['message'] + '\'\x1b[0m'
+  let errorMessage = errorData.now + ' --- '
+  if (!error.path) {
+    errorMessage += `Error: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
+  } else if (error.extensions) {
+    errorData.code = error.extensions.code
+    errorMessage +=
+`Code: ${ERROR_COLOR}'${errorData.code}'${RESET_COLOR},
+ ${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},
+ Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
+  } else if (error.locations) {
+    errorMessage +=
+`${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},
+ Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   }
   console.error(errorMessage)
 

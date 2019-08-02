@@ -13,6 +13,7 @@
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.18.0",
     "graphql-yoga": "^1.17.4",
+    "jsonwebtoken": "^8.5.1",
     "prisma-client-lib": "^1.30.4",
     "tmc-client-js": "^0.0.9"
   },

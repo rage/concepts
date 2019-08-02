@@ -1,52 +1,52 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const workspaceAllDataQuery = `
-    query($id : ID!) {
-      project(where: {id: $id}) {
-        activeTemplate {
+query($id : ID!) {
+  project(where: {id: $id}) {
+    activeTemplate {
+      id
+      name
+      conceptLinks {
+        createdBy {
+          id
+        }
+        from {
+          id
+        }
+        to {
+          id
+        }
+      }
+      courseLinks {
+        createdBy {
+          id
+        }
+        from {
+          id
+        }
+        to {
+          id
+        }
+      }
+      courses {
+        id
+        name
+        createdBy {
+          id
+        }
+        concepts {
           id
           name
-          conceptLinks {
-            createdBy {
-              id
-            }
-            from {
-              id
-            }
-            to {
-              id
-            }
-          }
-          courseLinks {
-            createdBy {
-              id
-            }
-            from {
-              id
-            }
-            to {
-              id
-            }
-          }
-          courses {
+          description
+          createdBy {
             id
-            name
-            createdBy {
-              id
-            }
-          concepts {
-            id
-            name
-            description
-            createdBy {
-              id
-            }
           }
         }
       }
     }
   }
-  `
+}
+`
 
 const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 const makeSecret = length => Array.from({ length },

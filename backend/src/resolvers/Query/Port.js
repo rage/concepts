@@ -1,5 +1,34 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 
+const exportQuery = `
+query($id : ID!) {
+  workspace(where: {
+    id: $id
+  }) {
+    id
+    name
+    courses {
+      name
+      concepts {
+        name
+        description
+        prerequisites: linksToConcept {
+          from {
+            name
+            official
+          }
+        }
+      }
+      prerequisites: linksToCourse {
+        from {
+          name
+        }
+      }
+    }
+  }
+}
+`
+
 const PortQueries = {
   async exportData(root, { workspaceId }, context) {
     await checkAccess(context, {
@@ -7,36 +36,8 @@ const PortQueries = {
       minimumPrivilege: Privilege.READ,
       workspaceId
     })
-    const query = `
-    query($id : ID!) {
-      workspace(where: {
-        id: $id
-      }) {
-        id
-        name
-        courses {
-          name
-          concepts {
-            name
-            description
-            prerequisites: linksToConcept {
-              from {
-                name
-                official
-              }
-            }
-          }
-          prerequisites: linksToCourse {
-            from {
-              name
-            }
-          }
-        }
-      }
-    }
-    `
 
-    const result = await context.prisma.$graphql(query, {
+    const result = await context.prisma.$graphql(exportQuery, {
       id: workspaceId
     })
 
