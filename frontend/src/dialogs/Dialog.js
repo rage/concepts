@@ -7,7 +7,7 @@ import { useMessageStateValue } from '../store'
 
 const ConceptAdditionDialog = ({
   open, onClose, mutation, requiredVariables,
-  type, fields, title, content, customActions
+  actionText, fields, title, content, CustomActions
 }) => {
   const [submitDisabled, setSubmitDisabled] = useState(false)
   const [state, setState] = useState(Object.fromEntries(fields.map(key => [key.name, ''])))
@@ -19,7 +19,7 @@ const ConceptAdditionDialog = ({
       setState(Object.fromEntries(fields.map(key => [key.name, ''])))
       setSubmitDisabled(false)
     }
-  }, [state])
+  }, [open])
 
   const handleSubmit = () => {
     if (submitDisabled) return
@@ -50,7 +50,7 @@ const ConceptAdditionDialog = ({
       <DialogTitle id='form-dialog-title'>
         {title}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent id='form-dialog-content'>
         {
           content && content !== ''
             ?
@@ -79,18 +79,23 @@ const ConceptAdditionDialog = ({
           )
         }
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color='primary'>
-          Cancel
-        </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={submitDisabled}
-          color='primary'
-        >
-          Add concept
-        </Button>
-      </DialogActions>
+      {
+        CustomActions ?
+          <DialogActions id='form-dialog-default-actions'>
+            <Button onClick={onClose} color='primary'>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={submitDisabled}
+              color='primary'
+            >
+              {actionText}
+            </Button>
+          </DialogActions>
+          :
+          { CustomActions }
+      }
     </Dialog>
   )
 }
