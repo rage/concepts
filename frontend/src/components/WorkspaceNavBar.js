@@ -110,7 +110,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
         , 2000)
       })
       .finally(() => {
-        history.push('/user')
+        history.push('/')
       })
   }
 

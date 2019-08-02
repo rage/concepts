@@ -8,6 +8,7 @@ import { useLoginStateValue } from '../../store'
 import {
   CREATE_GUEST_ACCOUNT
 } from '../../graphql/Mutation'
+import UserViewContent from './UserViewContent'
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -22,9 +23,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const LandingView = (props) => {
-  const { loggedIn } = useLoginStateValue()[0]
-  const dispatch = useLoginStateValue()[1]
+const HomeView = (props) => {
+  const [{ loggedIn, user }, dispatch] = useLoginStateValue()
 
   const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
@@ -47,7 +47,10 @@ const LandingView = (props) => {
     if (!loggedIn) {
       await createGuestAccount()
     }
-    props.history.push('/user')
+  }
+
+  if (loggedIn) {
+    return <UserViewContent user={user} />
   }
 
   return (
@@ -66,21 +69,15 @@ const LandingView = (props) => {
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify='center'>
               <Grid item>
-                <Button
-                  variant='contained' color='primary'
-                  onClick={loggedIn ? redirectTo('/user') : redirectTo('/login')}
-                >
-                  {loggedIn ? 'Choose workspace' : 'Login and choose workspace'}
+                <Button variant='contained' color='primary' onClick={redirectTo('/login')}>
+                  Login and choose workspace
                 </Button>
               </Grid>
-              {
-                !loggedIn &&
-                <Grid item>
-                  <Button variant='outlined' color='primary' onClick={navigateToGuestWorkspace}>
-                  Continue as guest
-                  </Button>
-                </Grid>
-              }
+              <Grid item>
+                <Button variant='outlined' color='primary' onClick={navigateToGuestWorkspace}>
+                Continue as guest
+                </Button>
+              </Grid>
             </Grid>
           </div>
         </Container>
@@ -89,4 +86,4 @@ const LandingView = (props) => {
   )
 }
 
-export default withRouter(LandingView)
+export default withRouter(HomeView)

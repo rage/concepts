@@ -55,7 +55,7 @@ const LoginView = ({ history, location }) => {
 
   const dispatch = useLoginStateValue()[1]
   const showGuestButton = Boolean(location.state)
-  const nextPath = location.state ? location.state.from.pathname : '/user'
+  const nextPath = location.state ? location.state.from.pathname : '/'
 
   const authenticate = (event) => {
     event.preventDefault()

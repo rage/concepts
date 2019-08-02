@@ -9,8 +9,7 @@ import PortView from './views/porting/PortView'
 import NavBar from './components/NavBar'
 import WorkspaceNavBar from './components/WorkspaceNavBar'
 import PrivateRoute from './components/PrivateRoute'
-import UserView from './views/user/UserView'
-import LandingView from './views/landing/LandingView'
+import HomeView from './views/home/HomeView'
 import WorkspaceView from './views/workspace/WorkspaceView'
 import JoinView from './views/join/JoinView'
 import HeatmapView from './views/heatmap/HeatmapView'
@@ -113,10 +112,9 @@ const App = ({ classes }) => {
         <Route render={({ location }) => <NavBar location={location} />} />
 
         <Switch>
-          <Route exact path='/' render={() => <LandingView />} />
+          <Route exact path='/' render={() => <HomeView />} />
 
           <Route exact path='/login' render={() => <LoginView />} />
-          <Route exact path='/user' render={() => <UserView />} />
           <PrivateRoute
             exact path='/porting' redirectPath='/login' condition={loggedIn}
             render={() => <PortView />} />

@@ -31,7 +31,7 @@ const JoinView = ({ history, token }) => {
     variables: { token }
   })
 
-  const handleClose = () => history.push('/user')
+  const handleClose = () => history.push('/')
 
   const handleCreate = () => {
     setLoading(true)

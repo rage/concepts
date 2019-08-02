@@ -73,23 +73,17 @@ const parsePath = (path, meta) => {
   case 'user':
     return [{ name: 'User' }]
   case 'projects':
-    return [
-      { name: 'User', link: '/user' },
-      {
-        name: (meta.projects[path[1]] || {}).name || 'Project',
-        id: path[1],
-        link: `/projects/${path[1]}`
-      }
-    ].concat(parseProjectPath(path[1], path.slice(2), meta))
+    return [{
+      name: (meta.projects[path[1]] || {}).name || 'Project',
+      id: path[1],
+      link: `/projects/${path[1]}`
+    }].concat(parseProjectPath(path[1], path.slice(2), meta))
   case 'workspaces':
-    return [
-      { name: 'User', link: '/user' },
-      {
-        name: (meta.workspaces[path[1]] || {}).name || 'Workspace',
-        id: path[1],
-        link: `/workspaces/${path[1]}`
-      }
-    ].concat(parseWorkspacePath(path[1], path.slice(2), meta))
+    return [{
+      name: (meta.workspaces[path[1]] || {}).name || 'Workspace',
+      id: path[1],
+      link: `/workspaces/${path[1]}`
+    }].concat(parseWorkspacePath(path[1], path.slice(2), meta))
 
   case 'join': {
     const token = path[1]
