@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core'
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
-import ProjectCreationDialog from './ProjectCreationDialog'
-import ProjectEditingDialog from './ProjectEditingDialog'
+import ProjectCreationDialog from '../../dialogs/project/ProjectCreationDialog'
+import ProjectEditingDialog from '../../dialogs/project/ProjectEditingDialog'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({

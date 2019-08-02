@@ -4,7 +4,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
-import ConceptAdditionDialog from '../concept/ConceptAdditionDialog'
+import ConceptAdditionDialog from './ConceptAdditionDialog'
 
 const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false) => {
 

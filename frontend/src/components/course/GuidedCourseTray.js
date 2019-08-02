@@ -12,10 +12,10 @@ import {
 
 import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
-import useCreateCourseDialog from './useCreateCourseDialog'
+import useCreateCourseDialog from '../../dialogs/course/useCreateCourseDialog'
 import { useMessageStateValue } from '../../store'
 import { useInfoBox } from '../common/InfoBox'
-import useEditCourseDialog from './useEditCourseDialog'
+import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -3,9 +3,9 @@ import Typography from '@material-ui/core/Typography'
 
 import Course from './Course'
 import Masonry from './Masonry'
-import useCreateConceptDialog from './useCreateConceptDialog'
-import useEditConceptDialog from './useEditConceptDialog'
-import useEditCourseDialog from './useEditCourseDialog'
+import useCreateConceptDialog from '../../dialogs/concept/useCreateConceptDialog'
+import useEditConceptDialog from '../../dialogs/concept/useEditConceptDialog'
+import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 import { useInfoBox } from '../common/InfoBox'
 
 const GuidedCourseContainer = ({

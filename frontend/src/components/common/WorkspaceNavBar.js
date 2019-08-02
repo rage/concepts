@@ -14,9 +14,9 @@ import {
 import client from '../../apollo/apolloClient'
 import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { DELETE_WORKSPACE } from '../../graphql/Mutation'
-import useEditWorkspaceDialog from '../workspace/useEditWorkspaceDialog'
+import useEditWorkspaceDialog from '../../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
-import useShareWorkspaceDialog from '../workspace/useShareWorkspaceDialog'
+import useShareWorkspaceDialog from '../../dialogs/workspace/useShareWorkspaceDialog'
 
 const useStyles = makeStyles({
   root: {

@@ -10,7 +10,7 @@ import {
 } from '../../graphql/Mutation'
 import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
-import ProjectSharingDialog from './ProjectSharingDialog'
+import ProjectSharingDialog from '../../dialogs/project/ProjectSharingDialog'
 
 const useStyles = makeStyles(() => ({
   root: {

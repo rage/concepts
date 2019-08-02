@@ -17,11 +17,11 @@ import {
   RadioButtonUnchecked
 } from '@material-ui/icons'
 
-import WorkspaceSharingDialog from '../workspace/WorkspaceSharingDialog'
+import WorkspaceSharingDialog from '../../dialogs/workspace/WorkspaceSharingDialog'
 import { exportWorkspace } from '../common/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
-import useEditTemplateDialog from './useEditTemplateDialog'
-import useCreateTemplateDialog from './useCreateTemplateDialog'
+import useEditTemplateDialog from '../../dialogs/project/useEditTemplateDialog'
+import useCreateTemplateDialog from '../../dialogs/project/useCreateTemplateDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
