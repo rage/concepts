@@ -12,8 +12,8 @@ import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES, COURSES_BY_WORKSPACE
 } from '../../graphql/Query'
 import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
-import GuidedCourseContainer from './GuidedCourseContainer'
-import GuidedCourseTray from './GuidedCourseTray'
+import CourseContainer from './CourseContainer'
+import CourseTray from './CourseTray'
 import ActiveCourse from './ActiveCourse'
 import { useLoginStateValue } from '../../store'
 import {
@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
+const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const classes = useStyles()
   const [activeConceptIds, setActiveConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
@@ -159,7 +159,7 @@ const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
               workspaceId={workspaceQuery.data.workspaceById.id}
               urlPrefix={urlPrefix}
             />
-            <GuidedCourseContainer
+            <CourseContainer
               courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
               courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
               courseId={courseQuery.data.courseById.id}
@@ -172,7 +172,7 @@ const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
               workspaceId={workspaceQuery.data.workspaceById.id}
               urlPrefix={urlPrefix}
             />
-            <GuidedCourseTray
+            <CourseTray
               activeCourseId={courseQuery.data.courseById.id}
               courseId={courseQuery.data.courseById.id}
               courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
@@ -250,4 +250,4 @@ const GuidedCourseView = ({ courseId, workspaceId, urlPrefix }) => {
   )
 }
 
-export default GuidedCourseView
+export default CourseMapperView

@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { Snackbar, SnackbarContent, IconButton, Typography } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
 
-import GuidedCourseView from './views/mapper/GuidedCourseView'
+import CourseMapperView from './views/mapper/CourseMapperView'
 import PortView from './views/porting/PortView'
 import NavBar from './components/NavBar'
 import WorkspaceNavBar from './components/WorkspaceNavBar'
@@ -85,7 +85,7 @@ const App = ({ classes }) => {
     <Route
       exact path={`${prefix}/:wid/mapper/:cid`}
       render={({ match }) =>
-        <GuidedCourseView
+        <CourseMapperView
           urlPrefix={prefix} courseId={match.params.cid} workspaceId={match.params.wid} />
       }
     />

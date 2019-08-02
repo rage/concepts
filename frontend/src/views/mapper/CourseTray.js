@@ -161,7 +161,7 @@ const PrerequisiteCourse = ({
   )
 }
 
-const GuidedCourseTray = ({
+const CourseTray = ({
   courseTrayOpen,
   activeCourseId,
   courseId,
@@ -311,4 +311,4 @@ const GuidedCourseTray = ({
   </>
 }
 
-export default GuidedCourseTray
+export default CourseTray

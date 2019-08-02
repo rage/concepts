@@ -8,7 +8,7 @@ import useEditConceptDialog from '../../dialogs/concept/useEditConceptDialog'
 import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 import { useInfoBox } from '../../components/InfoBox'
 
-const GuidedCourseContainer = ({
+const CourseContainer = ({
   courseTrayOpen,
   activeCourse,
   courseLinks,
@@ -88,4 +88,4 @@ const GuidedCourseContainer = ({
   </>
 }
 
-export default GuidedCourseContainer
+export default CourseContainer
