@@ -13,7 +13,7 @@ import {
   UPDATE_PROJECT
 } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
-import WorkspaceList from './WorkspaceList'
+import WorkspaceList from './UserWorkspaceList'
 import ProjectList from '../project/ProjectList'
 
 const useStyles = makeStyles(() => ({
