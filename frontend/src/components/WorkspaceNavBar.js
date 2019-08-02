@@ -73,10 +73,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
     ]
   })
 
-  const {
-    openEditWorkspaceDialog,
-    WorkspaceEditDialog
-  } = useEditWorkspaceDialog(workspaceId)
+  const openEditWorkspaceDialog = useEditWorkspaceDialog(workspaceId)
 
   const {
     openShareWorkspaceDialog,
@@ -85,7 +82,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
 
   const handleEditOpen = () => {
     setMenuAnchor(null)
-    openEditWorkspaceDialog(workspaceId, workspaceQuery.data.workspaceById.name)
+    openEditWorkspaceDialog(workspaceQuery.data.workspaceById.name)
   }
 
   const handleShareOpen = () => {
@@ -187,7 +184,6 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
           </Menu>
         </>}
       </Paper>
-      {WorkspaceEditDialog}
       {WorkspaceShareDialog}
     </>
   )

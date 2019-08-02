@@ -11,6 +11,7 @@ import { LoginStateProvider, MessagingStateProvider } from './store'
 import FocusOverlay from './components/FocusOverlay'
 import InfoBox from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
+import Dialog from './dialogs/Dialog'
 
 import './index.css'
 
@@ -95,7 +96,9 @@ ReactDOM.render(
           <InfoSnackbar />
           <FocusOverlay>
             <InfoBox>
-              <App />
+              <Dialog>
+                <App />
+              </Dialog>
             </InfoBox>
           </FocusOverlay>
         </LoginStateProvider>
