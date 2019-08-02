@@ -8,7 +8,7 @@ import {
 import green from '@material-ui/core/colors/green'
 import Ajv from 'ajv'
 
-import schema from './port.schema'
+import schema from '../../static/port.schema'
 import {
   IMPORT_DATA
 } from '../../graphql/Mutation'

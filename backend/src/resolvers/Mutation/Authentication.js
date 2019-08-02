@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server-core')
 
-const mockWorkspace = require('./mockWorkspace')
+const mockWorkspace = require('../../static/mockWorkspace')
 const tmc = require('../../TMCAuthentication')
 
 const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
