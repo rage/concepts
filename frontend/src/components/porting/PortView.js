@@ -173,7 +173,6 @@ const PortView = () => {
       } else if (error.keyword === 'minLength' && error.params.limit === 1) {
         errorMessage = `${error.dataPath.replace('.', '')} must not be empty if set`
       } else {
-        console.log('Unknown validation error', error)
         errorMessage = `Unknown error: ${error['message']}`
       }
 

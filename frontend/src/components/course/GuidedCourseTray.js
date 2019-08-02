@@ -52,6 +52,7 @@ const PrerequisiteCourse = ({
   isPrerequisite,
   getLinkToDelete,
   course,
+  coursesAmount,
   checkboxRef,
   activeCourseId,
   workspaceId,
@@ -90,11 +91,22 @@ const PrerequisiteCourse = ({
 
   const deleteCourse = () => {
     try {
-      deleteCourseMutation({
-        variables: {
-          id: course.id
+      if (coursesAmount > 1) {
+        const willDelete = window.confirm('Are you sure you want to delete this course?')
+        if (willDelete) {
+          deleteCourseMutation({
+            variables: {
+              id: course.id
+            }
+          })
         }
-      })
+      } else {
+        messageDispatch({
+          type: 'setError',
+          data: 'The last course cannot be deleted'
+        })
+      }
+
     } catch (ex) {}
   }
 
@@ -275,6 +287,7 @@ const GuidedCourseTray = ({
                 getLinkToDelete={getLinkToDelete}
                 workspaceId={workspaceId}
                 openEditCourseDialog={openEditCourseDialog}
+                coursesAmount={coursesQuery.data.coursesByWorkspace.length}
               />
             )
           }
