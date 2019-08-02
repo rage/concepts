@@ -15,10 +15,10 @@ const Dialog = ({
   const messageDispatch = useMessageStateValue()[1]
 
   useEffect(() => {
-    // if (open) {
-    //   setState(Object.fromEntries(fields.map(key => [key.name, ''])))
-    //   setSubmitDisabled(false)
-    // }
+    if (open) {
+      setState(Object.fromEntries(fields.map(key => [key.name, ''])))
+      setSubmitDisabled(false)
+    }
   }, [open])
 
   const handleSubmit = () => {
