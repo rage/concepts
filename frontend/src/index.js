@@ -10,9 +10,9 @@ import { isSignedIn } from './lib/authentication'
 import { LoginStateProvider, MessagingStateProvider } from './store'
 import FocusOverlay from './components/FocusOverlay'
 import InfoBox from './components/InfoBox'
+import InfoSnackbar from './components/InfoSnackbar'
 
 import './index.css'
-import InfoSnackbar from './components/InfoSnackbar'
 
 const loginReducer = (state, action) => {
   switch (action.type) {
