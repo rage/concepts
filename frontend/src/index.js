@@ -12,6 +12,7 @@ import FocusOverlay from './components/FocusOverlay'
 import InfoBox from './components/InfoBox'
 
 import './index.css'
+import InfoSnackbar from './components/InfoSnackbar'
 
 const loginReducer = (state, action) => {
   switch (action.type) {
@@ -91,6 +92,7 @@ ReactDOM.render(
           reducer={loginReducer}
         >
           <CssBaseline />
+          <InfoSnackbar />
           <FocusOverlay>
             <InfoBox>
               <App />
