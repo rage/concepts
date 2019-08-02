@@ -1,6 +1,10 @@
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 
+const ERROR_COLOR = '\x1b[31m'
+const STRING_COLOR = '\x1b[32m'
+const RESET_COLOR = '\x1b[0m'
+
 /**
  * returns the type of path: 'mutation' or 'query'
  * @param {string} path Path variable in string format
@@ -30,15 +34,17 @@ const logError = error => {
 
   let errorMessage = errorData.now + ' --- '
   if (!error.path) {
-    errorMessage += 'Error: \x1b[31m"' + errorData.message + '"\x1b[0m'
+    errorMessage += `Error: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   } else if (error.extensions) {
     errorData.code = error.extensions.code
-    errorMessage += 'Code: \x1b[31m"' + errorData.code + '"\x1b[0m, '
-    errorMessage += errorData.type + ': \x1b[32m' + errorData.path
-    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.message + '"\x1b[0m'
+    errorMessage +=
+`Code: ${ERROR_COLOR}'${errorData.code}'${RESET_COLOR},
+ ${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},
+ Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   } else if (error.locations) {
-    errorMessage += errorData.type + ': \x1b[32m' + errorData.path
-    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.message + '"\x1b[0m'
+    errorMessage +=
+`${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},
+ Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   }
   console.error(errorMessage)
 
