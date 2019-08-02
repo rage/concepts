@@ -1,4 +1,5 @@
-const { checkPrivilege, Privilege } = require('../../accessControl')
+const { Privilege } = require('../../accessControl')
+const { makeTypeResolvers } = require('./typeutil')
 
 const checkID = (obj, info, suffix = '') => {
   if (obj.__typename) {
@@ -23,39 +24,20 @@ const checkID = (obj, info, suffix = '') => {
 }
 
 module.exports = {
-  Project: {
-    participants(root, args, context) {
-      return context.prisma.project({
-        id: root.id
-      }).participants()
-    },
-    workspaces(root, args, context) {
-      return context.prisma.project({
-        id: root.id
-      }).workspaces()
-    },
-    templates(root, args, context) {
-      return context.prisma.project({
-        id: root.id
-      }).templates()
-    },
-    activeTemplate(root, args, context) {
-      return context.prisma.project({
-        id: root.id
-      }).activeTemplate()
-    },
-    async tokens(root, args, context) {
-      if (!(await checkPrivilege(context, {
+  Project: makeTypeResolvers('project', [
+    'participants',
+    'workspaces',
+    'templates',
+    'activeTemplate',
+    {
+      name: 'tokens',
+      checkPrivilegeArgs: root => ({
         minimumPrivilege: Privilege.OWNER,
         projectId: root.id
-      }))) {
-        return []
-      }
-      return await context.prisma.project({
-        id: root.id
-      }).tokens()
+      }),
+      insufficientPrivilegeValue: () => []
     }
-  },
+  ]),
   ProjectOrWorkspace: {
     __resolveType: (obj, context, info) => checkID(obj, info)
   },

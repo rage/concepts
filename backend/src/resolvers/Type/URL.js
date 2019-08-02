@@ -1,9 +1,7 @@
+const { makeTypeResolvers } = require('./typeutil')
+
 module.exports = {
-  URL: {
-    resource(root, args, context) {
-      return context.prisma.uRL({
-        id: root.id
-      }).resource()
-    }
-  }
+  URL: makeTypeResolvers('uRL', [
+    'resource'
+  ])
 }
