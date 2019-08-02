@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo-hooks'
+import { CssBaseline } from '@material-ui/core'
 
 import App from './App'
 import client from './apollo/apolloClient'
@@ -89,6 +90,7 @@ ReactDOM.render(
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}
         >
+          <CssBaseline />
           <FocusOverlay>
             <InfoBox>
               <App />

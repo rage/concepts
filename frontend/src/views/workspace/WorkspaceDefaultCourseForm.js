@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { withStyles } from '@material-ui/core/styles'
 import {
-  Container, CssBaseline, Button, TextField, Typography, FormHelperText
+  Container, Button, TextField, Typography, FormHelperText
 } from '@material-ui/core'
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
@@ -93,7 +93,6 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history, urlPrefix }
 
   return (
     <Container component='main' maxWidth='xs'>
-      <CssBaseline />
       <div className={classes.paper}>
         <Typography component='h1' variant='h5'>
           Create course
@@ -135,7 +134,6 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history, urlPrefix }
           </Button>
         </div>
       </div>
-
     </Container>
   )
 }

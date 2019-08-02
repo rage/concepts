@@ -2,7 +2,7 @@ import React from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, CssBaseline, Grid, Typography, Container } from '@material-ui/core'
+import { Button, Grid, Typography, Container } from '@material-ui/core'
 
 import { useLoginStateValue } from '../../store'
 import {
@@ -54,35 +54,32 @@ const HomeView = (props) => {
   }
 
   return (
-    <>
-      <CssBaseline />
-      <div className={classes.heroContent}>
-        <Container maxWidth='sm'>
-          <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
-            Curriculum mapper
-          </Typography>
-          <Typography variant='h5' align='center' color='textSecondary' paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation.
-          </Typography>
-          <div className={classes.heroButtons}>
-            <Grid container spacing={2} justify='center'>
-              <Grid item>
-                <Button variant='contained' color='primary' onClick={redirectTo('/login')}>
-                  Login and choose workspace
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant='outlined' color='primary' onClick={navigateToGuestWorkspace}>
-                Continue as guest
-                </Button>
-              </Grid>
+    <div className={classes.heroContent}>
+      <Container maxWidth='sm'>
+        <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
+          Curriculum mapper
+        </Typography>
+        <Typography variant='h5' align='center' color='textSecondary' paragraph>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+          incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+          exercitation.
+        </Typography>
+        <div className={classes.heroButtons}>
+          <Grid container spacing={2} justify='center'>
+            <Grid item>
+              <Button variant='contained' color='primary' onClick={redirectTo('/login')}>
+                Login and choose workspace
+              </Button>
             </Grid>
-          </div>
-        </Container>
-      </div>
-    </>
+            <Grid item>
+              <Button variant='outlined' color='primary' onClick={navigateToGuestWorkspace}>
+              Continue as guest
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
+      </Container>
+    </div>
   )
 }
 

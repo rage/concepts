@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, Typography, Button, CssBaseline, Container, Paper, TextField,
+  List, ListItem, ListItemText, Typography, Button, Container, Paper, TextField,
   Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
@@ -113,63 +113,60 @@ const CloneView = ({ history, projectId }) => {
   return (
     peekTemplate.data.limitedProjectById ?
       <Container component='main' maxWidth='xs' cl>
-        <div>
-          <CssBaseline />
-          <TextField
-            disabled={inputDisabled}
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='name'
-            label='Workspace name'
-            name='name'
-            onChange={(e) => setName(e.target.value)}
-            value={name}
-            autoFocus
-            onKeyPress={handleKey}
-          />
-          <Button
-            fullWidth
-            className={classes.button}
-            variant='outlined'
-            color='primary'
-            onClick={handleCreate}
-            disabled={!peekTemplate.data.limitedProjectById.activeTemplateId ||
-              loading ||
-              (workspace.data.workspaceBySourceTemplate &&
-                workspace.data.workspaceBySourceTemplate.id)}
-          >
-            Create workspace
-          </Button>
-          <Divider />
-          {
-            workspace.data.workspaceBySourceTemplate ?
-              <Paper className={classes.paper}>
-                <List className={classes.listRoot}>
-                  <ListItem
-                    button key={workspace.data.workspaceBySourceTemplate.id}
-                    onClick={() => handleNavigateMapper(
-                      workspace.data.workspaceBySourceTemplate.id)}
-                  >
-                    <ListItemText
-                      primary={
-                        <Typography variant='h6'>
-                          {workspace.data.workspaceBySourceTemplate.name}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                </List>
-              </Paper>
-              :
-              <div className={classes.placeholder}>
-                <Typography variant='body1'>
-                  {'The clone of the project template will appear here.'}
-                </Typography>
-              </div>
-          }
-        </div>
+        <TextField
+          disabled={inputDisabled}
+          variant='outlined'
+          margin='normal'
+          required
+          fullWidth
+          id='name'
+          label='Workspace name'
+          name='name'
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          autoFocus
+          onKeyPress={handleKey}
+        />
+        <Button
+          fullWidth
+          className={classes.button}
+          variant='outlined'
+          color='primary'
+          onClick={handleCreate}
+          disabled={!peekTemplate.data.limitedProjectById.activeTemplateId ||
+            loading ||
+            (workspace.data.workspaceBySourceTemplate &&
+              workspace.data.workspaceBySourceTemplate.id)}
+        >
+          Create workspace
+        </Button>
+        <Divider />
+        {
+          workspace.data.workspaceBySourceTemplate ?
+            <Paper className={classes.paper}>
+              <List className={classes.listRoot}>
+                <ListItem
+                  button key={workspace.data.workspaceBySourceTemplate.id}
+                  onClick={() => handleNavigateMapper(
+                    workspace.data.workspaceBySourceTemplate.id)}
+                >
+                  <ListItemText
+                    primary={
+                      <Typography variant='h6'>
+                        {workspace.data.workspaceBySourceTemplate.name}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </List>
+            </Paper>
+            :
+            <div className={classes.placeholder}>
+              <Typography variant='body1'>
+                {'The clone of the project template will appear here.'}
+              </Typography>
+            </div>
+        }
       </Container>
       :
       null
