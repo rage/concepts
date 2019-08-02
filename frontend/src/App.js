@@ -4,21 +4,21 @@ import { withStyles } from '@material-ui/core/styles'
 import { Snackbar, SnackbarContent, IconButton, Typography } from '@material-ui/core'
 import { Error as ErrorIcon, Close as CloseIcon, Info as InfoIcon } from '@material-ui/icons'
 
-import GuidedCourseView from './components/course/GuidedCourseView'
-import PortView from './components/porting/PortView'
-import NavBar from './components/common/NavBar'
-import WorkspaceNavBar from './components/common/WorkspaceNavBar'
-import PrivateRoute from './components/common/PrivateRoute'
-import UserView from './components/user/UserView'
-import LandingView from './components/common/LandingView'
-import WorkspaceView from './components/workspace/WorkspaceView'
-import JoinView from './components/common/JoinView'
-import CourseHeatmap from './components/course/CourseHeatmap'
+import GuidedCourseView from './views/mapper/GuidedCourseView'
+import PortView from './views/porting/PortView'
+import NavBar from './components/NavBar'
+import WorkspaceNavBar from './components/WorkspaceNavBar'
+import PrivateRoute from './components/PrivateRoute'
+import UserView from './views/user/UserView'
+import LandingView from './views/landing/LandingView'
+import WorkspaceView from './views/workspace/WorkspaceView'
+import JoinView from './views/join/JoinView'
+import HeatmapView from './views/heatmap/HeatmapView'
 import { useMessageStateValue, useLoginStateValue } from './store'
-import AuthenticationForm from './components/authentication/AuthenticationForm'
-import GraphView from './components/graph/GraphView'
-import ProjectView from './components/project/ProjectView'
-import CloneView from './components/project/CloneView'
+import AuthenticationForm from './views/login/LoginView'
+import GraphView from './views/graph/GraphView'
+import ProjectView from './views/project/ProjectView'
+import CloneView from './views/project/CloneView'
 
 const styles = theme => ({
   root: {
@@ -74,7 +74,7 @@ const App = ({ classes }) => {
     <Route exact path={`${prefix}/:wid`} render={({ match }) =>
       <Redirect to={`${prefix}/${match.params.wid}/mapper`} />} />
     <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
-      <CourseHeatmap urlPrefix={prefix} workspaceId={match.params.wid} />
+      <HeatmapView urlPrefix={prefix} workspaceId={match.params.wid} />
     )} />
     <Route
       exact path={`${prefix}/:wid/mapper`}

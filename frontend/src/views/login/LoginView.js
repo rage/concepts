@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const AuthenticationForm = ({ history, location }) => {
+const LoginView = ({ history, location }) => {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -191,4 +191,4 @@ const AuthenticationForm = ({ history, location }) => {
 }
 
 
-export default withRouter(AuthenticationForm)
+export default withRouter(LoginView)

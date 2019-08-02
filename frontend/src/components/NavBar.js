@@ -6,8 +6,8 @@ import { AppBar, Toolbar, Typography, Breadcrumbs, Link as MaterialLink } from '
 import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
 import AuthenticationIcon from './AuthIcon'
-import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
-import { useLoginStateValue } from '../../store'
+import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../graphql/Query'
+import { useLoginStateValue } from '../store'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />
 

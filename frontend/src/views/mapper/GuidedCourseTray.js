@@ -14,7 +14,7 @@ import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import useCreateCourseDialog from '../../dialogs/course/useCreateCourseDialog'
 import { useMessageStateValue } from '../../store'
-import { useInfoBox } from '../common/InfoBox'
+import { useInfoBox } from '../../components/InfoBox'
 import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 
 const useStyles = makeStyles(theme => ({

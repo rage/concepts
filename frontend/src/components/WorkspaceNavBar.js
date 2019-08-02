@@ -11,12 +11,12 @@ import {
   MoreVert as MoreVertIcon, Share as ShareIcon
 } from '@material-ui/icons'
 
-import client from '../../apollo/apolloClient'
-import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
-import { DELETE_WORKSPACE } from '../../graphql/Mutation'
-import useEditWorkspaceDialog from '../../dialogs/workspace/useEditWorkspaceDialog'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
-import useShareWorkspaceDialog from '../../dialogs/workspace/useShareWorkspaceDialog'
+import client from '../apollo/apolloClient'
+import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
+import { DELETE_WORKSPACE } from '../graphql/Mutation'
+import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
+import { useMessageStateValue, useLoginStateValue } from '../store'
+import useShareWorkspaceDialog from '../dialogs/workspace/useShareWorkspaceDialog'
 
 const useStyles = makeStyles({
   root: {

@@ -28,10 +28,12 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const StaffView = () => {
+const UserViewContent = ({ user }) => {
   const workspaceQuery = useQuery(WORKSPACES_FOR_USER)
 
-  const projectQuery = useQuery(PROJECTS_FOR_USER)
+  const projectQuery = useQuery(PROJECTS_FOR_USER, {
+    skip: user.role !== 'STAFF'
+  })
 
   const createWorkspace = useMutation(CREATE_WORKSPACE, {
     refetchQueries: [{
@@ -79,8 +81,11 @@ const StaffView = () => {
 
   const classes = useStyles()
 
+  const dataFetched = workspaceQuery.data.workspacesForUser &&
+    (user.role !== 'STAFF' || projectQuery.data.projectsForUser)
+
   return (
-    workspaceQuery.data.workspacesForUser && projectQuery.data.projectsForUser ?
+    dataFetched ?
       <div className={classes.root}>
         <WorkspaceList
           workspaces={workspaceQuery.data.workspacesForUser.map(ws => ws.workspace)}
@@ -90,12 +95,12 @@ const StaffView = () => {
           createShareLink={createShareLink}
           deleteShareLink={deleteShareLink}
         />
-        <ProjectList
+        {user.role === 'STAFF' && <ProjectList
           projects={projectQuery.data.projectsForUser.map(p => p.project)}
           updateProject={updateProject}
           createProject={createProject}
           deleteProject={deleteProject}
-        />
+        />}
       </div>
       :
       <div style={{ textAlign: 'center' }}>
@@ -104,4 +109,4 @@ const StaffView = () => {
   )
 }
 
-export default StaffView
+export default UserViewContent

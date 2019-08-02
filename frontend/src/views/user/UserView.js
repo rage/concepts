@@ -2,8 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 import { useLoginStateValue } from '../../store'
-import UserContent from './UserContent'
-import StaffContent from './StaffContent'
+import UserViewContent from './UserViewContent'
 
 const UserView = () => {
   const { loggedIn, user } = useLoginStateValue()[0]
@@ -11,18 +10,16 @@ const UserView = () => {
   if (loggedIn) {
     switch (user.role) {
     case 'STUDENT':
-      return <UserContent />
     case 'STAFF':
-      return <StaffContent />
-    case 'ADMIN':
-      return <Redirect to={'/admin'} />
     case 'GUEST':
-      return <UserContent />
+      return <UserViewContent user={user} />
+    case 'ADMIN':
+      return <Redirect to='/admin' />
     default:
-      return <Redirect to={'/'} />
+      return <Redirect to='/' />
     }
   } else {
-    return <Redirect to={'/'} />
+    return <Redirect to='/' />
   }
 }
 

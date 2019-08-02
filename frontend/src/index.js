@@ -7,8 +7,8 @@ import App from './App'
 import client from './apollo/apolloClient'
 import { isSignedIn } from './lib/authentication'
 import { LoginStateProvider, MessagingStateProvider } from './store'
-import FocusOverlay from './components/common/FocusOverlay'
-import InfoBox from './components/common/InfoBox'
+import FocusOverlay from './components/FocusOverlay'
+import InfoBox from './components/InfoBox'
 
 import './index.css'
 

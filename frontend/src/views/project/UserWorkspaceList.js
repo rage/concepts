@@ -12,7 +12,7 @@ import {
 } from '@material-ui/icons'
 
 
-import { exportWorkspace } from '../common/WorkspaceNavBar'
+import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({

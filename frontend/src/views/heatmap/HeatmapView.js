@@ -223,7 +223,7 @@ const TableCell = withRouter(({
 const maxVal = (a, b) => a > b ? a : b
 const sum = (a, b) => a + b
 
-const CourseHeatmap = ({ workspaceId, urlPrefix }) => {
+const HeatmapView = ({ workspaceId, urlPrefix }) => {
   const classes = useStyles()
 
   const workspaceCourseQuery = useQuery(WORKSPACE_COURSES_AND_CONCEPTS, {
@@ -297,4 +297,4 @@ const CourseHeatmap = ({ workspaceId, urlPrefix }) => {
   )
 }
 
-export default CourseHeatmap
+export default HeatmapView

@@ -12,7 +12,7 @@ import useCreateConceptDialog from '../../dialogs/concept/useCreateConceptDialog
 import useEditConceptDialog from '../../dialogs/concept/useEditConceptDialog'
 import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 import { useLoginStateValue } from '../../store'
-import { useInfoBox } from '../common/InfoBox'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {

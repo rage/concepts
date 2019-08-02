@@ -3,8 +3,8 @@ import { withRouter } from 'react-router-dom'
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 
-import { signOut } from '../../lib/authentication'
-import { useLoginStateValue } from '../../store'
+import { signOut } from '../lib/authentication'
+import { useLoginStateValue } from '../store'
 
 const AuthenticationIcon = withRouter(({ history }) => {
   const [{ loggedIn }, dispatch] = useLoginStateValue()
