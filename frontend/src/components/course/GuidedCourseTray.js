@@ -40,7 +40,8 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto'
   },
   courseName: {
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    maxWidth: 'calc(100% - 58px)'
   },
   button: {
     marginTop: '16px',
