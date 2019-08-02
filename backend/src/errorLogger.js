@@ -11,7 +11,7 @@ const getPathType = (path) => {
   } else if (Object.keys(mutations).includes(path)) {
     return 'Mutation'
   }
-  return 'Unknown'
+  return 'Type'
 }
 
 const logError = error => {
@@ -35,10 +35,10 @@ const logError = error => {
     errorData.code = error.extensions.code
     errorMessage += 'Code: \x1b[31m"' + errorData.code + '"\x1b[0m, '
     errorMessage += errorData.type + ': \x1b[32m' + errorData.path
-    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.path + '"\x1b[0m'
+    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.message + '"\x1b[0m'
   } else if (error.locations) {
     errorMessage += errorData.type + ': \x1b[32m' + errorData.path
-    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.path + '"\x1b[0m'
+    errorMessage += '\x1b[0m, Message: \x1b[31m"' + errorData.message + '"\x1b[0m'
   }
   console.error(errorMessage)
 
