@@ -3,14 +3,19 @@ import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
-  ListItemSecondaryAction
+  ListItemSecondaryAction, IconButton, Menu, MenuItem
 } from '@material-ui/core'
+import {
+  MoreVert as MoreVertIcon
+} from '@material-ui/icons'
 
-import { COURSE_PREREQUISITES } from '../../graphql/Query/Course'
-import { CREATE_COURSE_LINK, DELETE_COURSE_LINK } from '../../graphql/Mutation'
+
+import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/Course'
+import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import useCreateCourseDialog from './useCreateCourseDialog'
 import { useMessageStateValue } from '../../store'
 import { useInfoBox } from '../common/InfoBox'
+import useEditCourseDialog from './useEditCourseDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,7 +40,8 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto'
   },
   courseName: {
-    overflowWrap: 'break-word'
+    overflowWrap: 'break-word',
+    maxWidth: 'calc(100% - 58px)'
   },
   button: {
     marginTop: '16px',
@@ -47,14 +53,63 @@ const PrerequisiteCourse = ({
   isPrerequisite,
   getLinkToDelete,
   course,
+  coursesAmount,
   checkboxRef,
   activeCourseId,
   workspaceId,
   createCourseLink,
-  deleteCourseLink
+  deleteCourseLink,
+  openEditCourseDialog
 }) => {
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState(null)
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const deleteCourseMutation = useMutation(DELETE_COURSE, {
+    refetchQueries: [{
+      query: COURSES_BY_WORKSPACE,
+      variables: {
+        workspaceId
+      }
+    },
+    {
+      query: COURSE_PREREQUISITES,
+      variables: {
+        workspaceId,
+        courseId: activeCourseId
+      }
+    }]
+  })
+
+
+  const deleteCourse = () => {
+    try {
+      if (coursesAmount > 1) {
+        const willDelete = window.confirm('Are you sure you want to delete this course?')
+        if (willDelete) {
+          deleteCourseMutation({
+            variables: {
+              id: course.id
+            }
+          })
+        }
+      } else {
+        messageDispatch({
+          type: 'setError',
+          data: 'The last course cannot be deleted'
+        })
+      }
+
+    } catch (ex) {}
+  }
 
   const onClick = async () => {
     try {
@@ -81,6 +136,25 @@ const PrerequisiteCourse = ({
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
+          <IconButton
+            aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
+            aria-haspopup='true'
+            onClick={handleMenuOpen}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            id='prerequisite-course-menu'
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={() => {
+              handleMenuClose()
+              openEditCourseDialog(course.id, course.name)()
+            }}>Edit</MenuItem>
+            <MenuItem onClick={deleteCourse}>Delete</MenuItem>
+          </Menu>
         </ListItemSecondaryAction>
       </ListItem>
     </Tooltip>
@@ -101,7 +175,9 @@ const GuidedCourseTray = ({
   const infoBox = useInfoBox()
   const createButtonRef = useRef()
   const checkboxRef = useRef()
-
+  const {
+    openEditCourseDialog, CourseEditDialog
+  } = useEditCourseDialog(workspaceId)
   const {
     openCreateCourseDialog,
     CourseCreateDialog
@@ -211,6 +287,8 @@ const GuidedCourseTray = ({
                 isPrerequisite={isPrerequisite(course)}
                 getLinkToDelete={getLinkToDelete}
                 workspaceId={workspaceId}
+                openEditCourseDialog={openEditCourseDialog}
+                coursesAmount={coursesQuery.data.coursesByWorkspace.length}
               />
             )
           }
@@ -229,6 +307,7 @@ const GuidedCourseTray = ({
     </Paper>
 
     {CourseCreateDialog}
+    {CourseEditDialog}
   </>
 }
 

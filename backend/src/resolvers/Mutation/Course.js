@@ -15,7 +15,7 @@ const CourseQueries = {
   },
 
   async deleteCourse(root, { id }, context) {
-    const { id: workspaceId } = await context.prisma.courseLink({ id }).workspace()
+    const { id: workspaceId } = await context.prisma.course({ id }).workspace()
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
