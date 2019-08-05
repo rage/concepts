@@ -37,7 +37,7 @@ const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
     } catch (e) {}
   }
 
-const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
+const updateConceptUpdate = (courseId, workspaceId) =>
   (store, response) => {
     try {
       const dataInStore = store.readQuery({
@@ -52,7 +52,7 @@ const updateConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
       const dataInStoreCopy = { ...dataInStore }
       const courseLink = dataInStoreCopy.courseAndPrerequisites
         .linksToCourse
-        .find(link => link.from.id === prerequisiteCourseId)
+        .find(link => link.from.id === updatedConcept.courses[0].id)
       const prereqCourse = courseLink.from
       if (includedIn(prereqCourse.concepts, updatedConcept)) {
         prereqCourse.concepts = prereqCourse.concepts

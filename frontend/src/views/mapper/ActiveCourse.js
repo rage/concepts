@@ -9,7 +9,6 @@ import { DELETE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_BY_ID } from '../../graphql/Query'
 import ActiveConcept from './concept/ActiveConcept'
 import useCreateConceptDialog from '../../dialogs/concept/useCreateConceptDialog'
-import useEditConceptDialog from '../../dialogs/concept/useEditConceptDialog'
 import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
@@ -97,11 +96,6 @@ const ActiveCourse = ({
 
   const openCreateConceptDialog = useCreateConceptDialog(course.id, workspaceId, false)
 
-  const {
-    openEditConceptDialog,
-    ConceptEditDialog
-  } = useEditConceptDialog(course, workspaceId)
-
   const { openEditCourseDialog,
     CourseEditDialog
   } = useEditCourseDialog(workspaceId)
@@ -170,8 +164,8 @@ const ActiveCourse = ({
             addingLink={addingLink}
             setAddingLink={setAddingLink}
             deleteConcept={deleteConcept}
-            openConceptEditDialog={openEditConceptDialog}
             toggleConcept={toggleConcept}
+            activeCourseId={course.id}
             workspaceId={workspaceId}
           />
         )}
@@ -193,7 +187,6 @@ const ActiveCourse = ({
     {/* Dialogs */}
 
     {CourseEditDialog}
-    {ConceptEditDialog}
   </>
 }
 

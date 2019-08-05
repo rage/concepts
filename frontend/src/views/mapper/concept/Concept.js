@@ -15,6 +15,7 @@ import {
   deleteConceptUpdate
 } from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
+import useEditConceptDialog from '../../../dialogs/concept/useEditConceptDialog'
 
 const useStyles = makeStyles(() => ({
   conceptName: {
@@ -46,7 +47,6 @@ const Concept = ({
   activeConceptIds,
   addingLink,
   setAddingLink,
-  openConceptEditDialog,
   workspaceId,
   connectionRef
 }) => {
@@ -55,6 +55,8 @@ const Concept = ({
 
   const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
+
+  const openEditConceptDialog = useEditConceptDialog(activeCourseId, workspaceId)
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: createConceptLinkUpdate(activeCourseId, workspaceId)
@@ -94,11 +96,11 @@ const Concept = ({
     setState({ anchorEl: null })
   }
 
-  const handleDeleteConcept = (id) => async () => {
+  const handleDeleteConcept = async () => {
     const willDelete = window.confirm('Are you sure about this?')
     if (willDelete) {
       try {
-        await deleteConcept({ variables: { id } })
+        await deleteConcept({ variables: { id: concept.id } })
       } catch (err) {
         messageDispatch({
           type: 'setError',
@@ -109,9 +111,9 @@ const Concept = ({
     handleMenuClose()
   }
 
-  const handleEditConcept = (id, name, description, courseId) => () => {
+  const handleEditConcept = () => {
     handleMenuClose()
-    openConceptEditDialog(id, name, description, courseId)()
+    openEditConceptDialog(concept.id, concept.name, concept.description)
   }
 
   const hasLinkToAddingLink = addingLink &&
@@ -158,9 +160,8 @@ const Concept = ({
               open={Boolean(state.anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleEditConcept(concept.id, concept.name, concept.description,
-                course.id)}>Edit</MenuItem>
-              <MenuItem onClick={handleDeleteConcept(concept.id)}>Delete</MenuItem>
+              <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
+              <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
             </Menu>
           </React.Fragment>
           : null
