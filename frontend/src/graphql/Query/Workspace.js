@@ -27,6 +27,7 @@ query workspacesForUser {
       }
       tokens {
         id
+        privilege
       }
     }
   }
@@ -43,6 +44,7 @@ query workspaceById($id: ID!) {
     }
     tokens {
       id
+      privilege
     }
     participants {
       privilege

@@ -49,6 +49,7 @@ const USE_SHARE_LINK = gql`
           name
           tokens {
             id
+            privilege
           }
           participants {
             privilege
@@ -68,6 +69,7 @@ const USE_SHARE_LINK = gql`
           }
           tokens {
             id
+            privilege
           }
           participants {
             privilege
