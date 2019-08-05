@@ -140,118 +140,116 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     (courseQuery.data.courseById && courseQuery.data.courseById.concepts.length !== 0) ||
     (coursesQuery.data.coursesByWorkspace && coursesQuery.data.coursesByWorkspace.length > 1)
 
-  return (
-    <>
-      {
-        courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-          && workspaceQuery.data.workspaceById ?
-          <div
-            id='course-view'
-            className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
-          >
-            <ActiveCourse
-              onClick={() => setAddingLink(null)}
-              course={courseQuery.data.courseById}
-              courses={coursesQuery.data.coursesByWorkspace}
-              updateCourse={updateCourse}
-              activeConceptIds={activeConceptIds}
-              addingLink={addingLink}
-              setAddingLink={setAddingLink}
-              toggleConcept={toggleConcept}
-              courseTrayOpen={courseTrayOpen}
-              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-              workspaceId={workspaceQuery.data.workspaceById.id}
-              urlPrefix={urlPrefix}
-            />
-            <CourseContainer
-              courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
-              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-              courseId={courseQuery.data.courseById.id}
-              activeConceptIds={activeConceptIds}
-              addingLink={addingLink}
-              setAddingLink={setAddingLink}
-              courseTrayOpen={courseTrayOpen}
-              activeCourse={courseQuery.data.courseById}
-              setCourseTrayOpen={setCourseTrayOpen}
-              workspaceId={workspaceQuery.data.workspaceById.id}
-              urlPrefix={urlPrefix}
-            />
-            <CourseTray
-              activeCourseId={courseQuery.data.courseById.id}
-              courseId={courseQuery.data.courseById.id}
-              courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-              setCourseTrayOpen={setCourseTrayOpen}
-              courseTrayOpen={courseTrayOpen}
-              createCourse={createCourse}
-              coursesQuery={coursesQuery}
-              workspaceId={workspaceQuery.data.workspaceById.id}
-            />
-            {
-              showFab && loggedIn ?
-                <Fab
-                  ref={trayFabRef}
-                  style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
-                  onClick={handleTrayToggle}
-                >
-                  {
-                    courseTrayOpen ?
-                      <ChevronRightIcon />
-                      :
-                      <ChevronLeftIcon />
-                  }
-                </Fab>
-                : null
-            }
-          </div>
-          :
-          <div style={{ textAlign: 'center' }}>
-            <CircularProgress />
-          </div>
-      }
-      {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-        && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
-          prereqQuery.data.courseAndPrerequisites.linksToCourse
-            .filter(link => link.from.id === concept.courses[0].id)
-            ? concept.linksToConcept.map((link, lIdx) => (
-              <ConceptLink
-                linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
-                key={`concept-link-${link.id}`} delay={1}
-                active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
-                from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-                fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
-                posOffsets={{ x0: -5, x1: +6 }} />
-            )) : null
-        ))}
-      <div ref={conceptLinkMenuRef} style={{
-        position: 'absolute',
-        width: '1px',
-        height: '1px',
-        top: `${conceptLinkMenu ? conceptLinkMenu.y : -1}px`,
-        left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
-      }} />
-      <Menu
-        id='concept-link-menu'
-        anchorEl={conceptLinkMenuRef.current}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left'
-        }}
-        open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={deleteLink}>Delete link</MenuItem>
-      </Menu>
-      {addingLink && <ConceptLink
-        key='concept-link-creating' active={true}
-        from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-        followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
-      />}
-    </>
-  )
+  return <>
+    {
+      courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
+        && workspaceQuery.data.workspaceById ?
+        <div
+          id='course-view'
+          className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
+        >
+          <ActiveCourse
+            onClick={() => setAddingLink(null)}
+            course={courseQuery.data.courseById}
+            courses={coursesQuery.data.coursesByWorkspace}
+            updateCourse={updateCourse}
+            activeConceptIds={activeConceptIds}
+            addingLink={addingLink}
+            setAddingLink={setAddingLink}
+            toggleConcept={toggleConcept}
+            courseTrayOpen={courseTrayOpen}
+            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
+            workspaceId={workspaceQuery.data.workspaceById.id}
+            urlPrefix={urlPrefix}
+          />
+          <CourseContainer
+            courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
+            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
+            courseId={courseQuery.data.courseById.id}
+            activeConceptIds={activeConceptIds}
+            addingLink={addingLink}
+            setAddingLink={setAddingLink}
+            courseTrayOpen={courseTrayOpen}
+            activeCourse={courseQuery.data.courseById}
+            setCourseTrayOpen={setCourseTrayOpen}
+            workspaceId={workspaceQuery.data.workspaceById.id}
+            urlPrefix={urlPrefix}
+          />
+          <CourseTray
+            activeCourseId={courseQuery.data.courseById.id}
+            courseId={courseQuery.data.courseById.id}
+            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
+            setCourseTrayOpen={setCourseTrayOpen}
+            courseTrayOpen={courseTrayOpen}
+            createCourse={createCourse}
+            coursesQuery={coursesQuery}
+            workspaceId={workspaceQuery.data.workspaceById.id}
+          />
+          {
+            showFab && loggedIn ?
+              <Fab
+                ref={trayFabRef}
+                style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
+                onClick={handleTrayToggle}
+              >
+                {
+                  courseTrayOpen ?
+                    <ChevronRightIcon />
+                    :
+                    <ChevronLeftIcon />
+                }
+              </Fab>
+              : null
+          }
+        </div>
+        :
+        <div style={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </div>
+    }
+    {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
+      && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
+        prereqQuery.data.courseAndPrerequisites.linksToCourse
+          .filter(link => link.from.id === concept.courses[0].id)
+          ? concept.linksToConcept.map((link, lIdx) => (
+            <ConceptLink
+              linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
+              key={`concept-link-${link.id}`} delay={1}
+              active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
+              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
+              fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
+              posOffsets={{ x0: -5, x1: +6 }} />
+          )) : null
+      ))}
+    <div ref={conceptLinkMenuRef} style={{
+      position: 'absolute',
+      width: '1px',
+      height: '1px',
+      top: `${conceptLinkMenu ? conceptLinkMenu.y : -1}px`,
+      left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
+    }} />
+    <Menu
+      id='concept-link-menu'
+      anchorEl={conceptLinkMenuRef.current}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={deleteLink}>Delete link</MenuItem>
+    </Menu>
+    {addingLink && <ConceptLink
+      key='concept-link-creating' active={true}
+      from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
+      followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
+    />}
+  </>
 }
 
 export default CourseMapperView

@@ -131,7 +131,7 @@ const ActiveCourse = ({
     }
   })
 
-  return <>
+  return (
     <Paper onClick={onClick} elevation={0} className={classes.root}>
       <div className={classes.header}>
         <Select
@@ -181,7 +181,7 @@ const ActiveCourse = ({
         </Button> : null
       }
     </Paper>
-  </>
+  )
 }
 
 export default withRouter(ActiveCourse)

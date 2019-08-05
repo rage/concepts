@@ -248,7 +248,7 @@ const CourseTray = ({
     return null
   }
 
-  return <>
+  return (
     <Paper elevation={0} className={classes.root}>
       <Typography className={classes.title} variant='h4'>
         Courses in workspace
@@ -299,7 +299,7 @@ const CourseTray = ({
         New course
       </Button>
     </Paper>
-  </>
+  )
 }
 
 export default CourseTray

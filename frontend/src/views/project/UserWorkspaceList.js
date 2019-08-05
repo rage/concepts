@@ -14,6 +14,7 @@ import {
 
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue } from '../../store'
+import { useShareDialog } from '../../dialogs/sharing'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,9 +30,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const UserWorkspaceList = ({
-  history, userWorkspaces, openProjectCloneDialog, activeTemplate, projectId
-}) => {
+const UserWorkspaceList = ({ history, userWorkspaces, activeTemplate, projectId }) => {
+  const openShareCloneLinkDialog = useShareDialog(
+    'project',
+    'Invite students',
+    'Let students clone the active template to contribute towards the mapping.')
 
   const [menu, setMenu] = useState(null)
   const messageDispatch = useMessageStateValue()[1]
@@ -76,7 +79,8 @@ const UserWorkspaceList = ({
           action={
             <Button
               variant='outlined' color='primary' aria-label='Invite students'
-              onClick={openProjectCloneDialog} disabled={!activeTemplate}
+              onClick={() => openShareCloneLinkDialog(projectId, 'CLONE')}
+              disabled={!activeTemplate}
             >
               Invite students
             </Button>

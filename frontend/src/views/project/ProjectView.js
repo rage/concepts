@@ -1,13 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography, CircularProgress, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
-import {
-  CREATE_SHARE_LINK, DELETE_SHARE_LINK, DELETE_TEMPLATE_WORKSPACE,
-  SET_ACTIVE_TEMPLATE, CREATE_PROJECT_SHARE_LINK
-} from '../../graphql/Mutation'
+import { DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE } from '../../graphql/Mutation'
 import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
 import { useShareDialog } from '../../dialogs/sharing'
@@ -56,37 +53,12 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const projectCloneTitle = 'Invite students'
-const projectCloneDescription = `
-Let students clone the active template to 
-contribute towards the mapping.
-`
-
 const ProjectView = ({ projectId }) => {
+  const classes = useStyles()
+  const openShareProjectDialog = useShareDialog('project')
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
-  })
-
-  const createWorkspaceShareLink = useMutation(CREATE_SHARE_LINK, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
-  })
-
-  const deleteShareLink = useMutation(DELETE_SHARE_LINK, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
-  })
-
-  const createProjectShareLink = useMutation(CREATE_PROJECT_SHARE_LINK, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
   })
 
   const deleteTemplateWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
@@ -103,23 +75,6 @@ const ProjectView = ({ projectId }) => {
     }]
   })
 
-  const openShareProjectLinkDialog = useShareDialog('project')
-  const openShareCloneLinkDialog = useShareDialog(
-    'project',
-    projectCloneTitle,
-    projectCloneDescription)
-
-  const classes = useStyles()
-
-  const openProjectShareDialog = () => {
-    openShareProjectLinkDialog(projectQuery.data.projectById.id, 'EDIT')
-  }
-
-  const openProjectCloneDialog = () => {
-    openShareCloneLinkDialog(projectQuery.data.projectById.id, 'CLONE')
-  }
-
-
   return (
     projectQuery.data.projectById ?
       <>
@@ -128,7 +83,10 @@ const ProjectView = ({ projectId }) => {
             Project: {projectQuery.data.projectById.name}
           </Typography>
           <span className={classes.toolbar}>
-            <Button color='primary' variant='contained' onClick={openProjectShareDialog}>
+            <Button
+              color='primary' variant='contained'
+              onClick={() => openShareProjectDialog(projectId, 'EDIT')}
+            >
               Share project
             </Button>
           </span>
@@ -137,8 +95,6 @@ const ProjectView = ({ projectId }) => {
               projectId={projectId}
               activeTemplate={projectQuery.data.projectById.activeTemplate}
               templateWorkspaces={projectQuery.data.projectById.templates}
-              createShareLink={createWorkspaceShareLink}
-              deleteShareLink={deleteShareLink}
               deleteTemplateWorkspace={deleteTemplateWorkspace}
               setActiveTemplate={setActiveTemplate}
             />
@@ -146,7 +102,6 @@ const ProjectView = ({ projectId }) => {
           <div className={classes.userWorkspaces}>
             <UserWorkspaceList
               projectId={projectId}
-              openProjectCloneDialog={openProjectCloneDialog}
               userWorkspaces={projectQuery.data.projectById.workspaces}
               activeTemplate={projectQuery.data.projectById.activeTemplate}
             />
