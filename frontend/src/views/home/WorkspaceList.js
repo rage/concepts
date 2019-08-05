@@ -13,9 +13,8 @@ import {
 
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
-import useCreateWorkspaceDialog from '../../dialogs/workspace/useCreateWorkspaceDialog'
-import useEditWorkspaceDialog from '../../dialogs/workspace/useEditWorkspaceDialog'
-import useShareDialog from '../../dialogs/sharing'
+import { useCreateWorkspaceDialog, useEditWorkspaceDialog } from '../../dialogs/workspace'
+import { useShareDialog } from '../../dialogs/sharing'
 
 const useStyles = makeStyles(theme => ({
   root: {

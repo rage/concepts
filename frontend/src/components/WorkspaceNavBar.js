@@ -16,7 +16,7 @@ import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Q
 import { DELETE_WORKSPACE } from '../graphql/Mutation'
 import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../store'
-import useShareDialog from '../dialogs/sharing'
+import { useShareDialog } from '../dialogs/sharing'
 
 const useStyles = makeStyles({
   root: {
