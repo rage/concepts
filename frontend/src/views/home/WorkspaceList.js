@@ -16,6 +16,9 @@ import WorkspaceEditingDialog from '../../dialogs/workspace/WorkspaceEditingDial
 import WorkspaceSharingDialog from '../../dialogs/workspace/WorkspaceSharingDialog'
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
+import useCreateWorkspaceDialog from '../../dialogs/workspace/useCreateWorkspaceDialog'
+import useEditWorkspaceDialog from '../../dialogs/workspace/useEditWorkspaceDialog'
+import useShareWorkspaceDialog from '../../dialogs/workspace/useShareWorkspaceDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,14 +39,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const WorkspaceList = ({
-  history, workspaces, deleteWorkspace, createWorkspace, updateWorkspace,
-  createShareLink, deleteShareLink
+  history, workspaces, deleteWorkspace
 }) => {
   const classes = useStyles()
-  const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
-  const [stateShare, setStateShare] = useState({ open: false, workspace: null })
   const [menu, setMenu] = useState(null)
+
+  const openCreateWorkspaceDialog = useCreateWorkspaceDialog()
+  const openEditWorkspaceDialog = useEditWorkspaceDialog()
+  const openShareWorkspaceDialog = useShareWorkspaceDialog()
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
@@ -80,11 +83,7 @@ const WorkspaceList = ({
       })
       return
     }
-    setStateCreate({ open: true })
-  }
-
-  const handleCreateClose = () => {
-    setStateCreate({ open: false })
+    openCreateWorkspaceDialog()
   }
 
   const handleEditOpen = () => {
@@ -96,11 +95,7 @@ const WorkspaceList = ({
       })
       return
     }
-    setStateEdit({ open: true, id: menu.workspace.id, name: menu.workspace.name })
-  }
-
-  const handleEditClose = () => {
-    setStateEdit({ open: false, id: '', name: '' })
+    openEditWorkspaceDialog(menu.workspace.name, menu.workspace.id)
   }
 
   const handleShareOpen = () => {
@@ -112,11 +107,7 @@ const WorkspaceList = ({
       })
       return
     }
-    setStateShare({ open: true, id: menu.workspace.id })
-  }
-
-  const handleShareClose = () => {
-    setStateShare({ open: false, id: null })
+    openShareWorkspaceDialog(menu.workspace.id, 'EDIT')
   }
 
   const handleDelete = async () => {
@@ -237,16 +228,6 @@ const WorkspaceList = ({
           </MenuItem>
         </Menu>
       </Card>
-
-      <WorkspaceCreationDialog
-        state={stateCreate} handleClose={handleCreateClose} createWorkspace={createWorkspace} />
-      <WorkspaceEditingDialog
-        state={stateEdit} handleClose={handleEditClose} updateWorkspace={updateWorkspace}
-        defaultName={stateEdit.name} />
-      <WorkspaceSharingDialog
-        open={stateShare.open} workspace={workspaces.find(ws => ws.id === stateShare.id)}
-        handleClose={handleShareClose} createShareLink={createShareLink}
-        deleteShareLink={deleteShareLink} />
     </>
   )
 }

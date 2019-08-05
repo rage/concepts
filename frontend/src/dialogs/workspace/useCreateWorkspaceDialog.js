@@ -12,13 +12,13 @@ const useCreateWorkspaceDialog = projectId => {
     ]
   })
 
-  return openDialog({
+  return name => openDialog({
     mutation: createWorkspace,
     requiredVariables: { projectId },
     actionText: 'Create',
     fields: [{
       name: 'name',
-      defaultValue: ''
+      defaultValue: name
     }],
     title: 'Create workspace',
     content: [

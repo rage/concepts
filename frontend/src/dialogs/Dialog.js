@@ -113,6 +113,7 @@ const Dialog = ({ contextRef }) => {
               id={key.name}
               label={key.name[0].toUpperCase() + key.name.substr(1)}
               type='text'
+              rows={2}
               value={inputState[key.name]}
               onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
               fullWidth

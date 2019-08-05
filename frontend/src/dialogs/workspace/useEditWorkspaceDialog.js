@@ -7,15 +7,14 @@ import { useDialog } from '../DialogProvider'
 const useEditWorkspaceDialog = workspaceId => {
   const { openDialog } = useDialog()
   const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
-    refetchQueries: [
-      { query: WORKSPACES_FOR_USER },
-      { query: WORKSPACE_BY_ID, variables: { id: workspaceId } }
-    ]
+    refetchQueries: workspaceId
+      ? [{ query: WORKSPACE_BY_ID, variables: { id: workspaceId } }]
+      : [{ query: WORKSPACES_FOR_USER }]
   })
 
-  return name => openDialog({
+  return (name, providedWorkspaceId) => openDialog({
     mutation: updateWorkspace,
-    requiredVariables: { id: workspaceId },
+    requiredVariables: { id: (workspaceId || providedWorkspaceId) },
     actionText: 'Save',
     fields: [{
       name: 'name',

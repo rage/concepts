@@ -32,7 +32,7 @@ const useCreateConceptDialog = (activeCourseId, workspaceId, prerequisite = fals
             data: dataInStoreCopy
           })
         }
-      } catch (error) {}
+      } catch (error) { }
     }
       :
       (store, response) => {
@@ -71,7 +71,8 @@ const useCreateConceptDialog = (activeCourseId, workspaceId, prerequisite = fals
       name: 'name',
       required: true
     }, {
-      name: 'description'
+      name: 'description',
+      multiline: true
     }]
   })
 }
