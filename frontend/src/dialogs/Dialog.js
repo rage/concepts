@@ -92,6 +92,7 @@ const Dialog = ({ contextRef }) => {
     })
   }
 
+  const { CustomActions } = state
   return (
     <MuiDialog open={state.open} onClose={closeDialog}>
       <DialogTitle>{state.title}</DialogTitle>
@@ -125,8 +126,8 @@ const Dialog = ({ contextRef }) => {
       </DialogContent>
       <DialogActions>
         {
-          state.CustomActions ?
-            <state.CustomActions
+          CustomActions ?
+            <CustomActions
               closeDialog={closeDialog} handleSubmit={handleSubmit}
               submitDisabled={state.submitDisabled} {...state.customActionsProps}
             />

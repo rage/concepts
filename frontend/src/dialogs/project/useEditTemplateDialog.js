@@ -5,7 +5,6 @@ import { PROJECT_BY_ID } from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
 
 const useEditTemplateDialog = projectId => {
-
   const { openDialog } = useDialog()
   const updateTemplateWorkspace = useMutation(UPDATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [

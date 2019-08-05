@@ -56,7 +56,7 @@ const ProjectList = ({ history, projects, deleteProject }) => {
       })
       return
     }
-    openEditProjectDialog(name, id)
+    openEditProjectDialog(id, name)
   }
 
   const handleDelete = async (id) => {

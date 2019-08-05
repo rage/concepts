@@ -85,7 +85,7 @@ const TemplateList = ({
       })
       return
     }
-    openCreateTemplateDialog('')
+    openCreateTemplateDialog()
   }
 
   const handleEditOpen = () => {

@@ -12,7 +12,7 @@ const useEditProjectDialog = () => {
     ]
   })
 
-  return (name, projectId) => openDialog({
+  return (projectId, name) => openDialog({
     mutation: updateProject,
     requiredVariables: { id: projectId },
     actionText: 'Save',

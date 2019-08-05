@@ -12,13 +12,12 @@ const useCreateProjectDialog = () => {
     ]
   })
 
-  return name => openDialog({
+  return () => openDialog({
     mutation: createProject,
     requiredVariables: {},
     actionText: 'Create',
     fields: [{
-      name: 'name',
-      defaultValue: name
+      name: 'name'
     }],
     title: 'Create project',
     content: [

@@ -91,7 +91,7 @@ const WorkspaceList = ({
       })
       return
     }
-    openEditWorkspaceDialog(menu.workspace.name, menu.workspace.id)
+    openEditWorkspaceDialog(menu.workspace.id, menu.workspace.name)
   }
 
   const handleShareOpen = () => {

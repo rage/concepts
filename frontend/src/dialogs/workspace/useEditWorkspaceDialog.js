@@ -4,17 +4,17 @@ import { UPDATE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, WORKSPACE_BY_ID } from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
 
-const useEditWorkspaceDialog = workspaceId => {
+const useEditWorkspaceDialog = refetchWorkspaceId => {
   const { openDialog } = useDialog()
   const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
-    refetchQueries: workspaceId
-      ? [{ query: WORKSPACE_BY_ID, variables: { id: workspaceId } }]
+    refetchQueries: refetchWorkspaceId
+      ? [{ query: WORKSPACE_BY_ID, variables: { id: refetchWorkspaceId } }]
       : [{ query: WORKSPACES_FOR_USER }]
   })
 
-  return (name, providedWorkspaceId) => openDialog({
+  return (id, name) => openDialog({
     mutation: updateWorkspace,
-    requiredVariables: { id: (workspaceId || providedWorkspaceId) },
+    requiredVariables: { id },
     actionText: 'Save',
     fields: [{
       name: 'name',
