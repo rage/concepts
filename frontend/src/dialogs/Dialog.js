@@ -1,13 +1,10 @@
-import React, { useState, useContext, createContext, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
   TextField
 } from '@material-ui/core'
 
 import { useMessageStateValue } from '../store'
-
-export const DialogContext = createContext({})
-export const useDialog = () => useContext(DialogContext)
 
 const blankState = () => ({
   open: false,
@@ -18,16 +15,18 @@ const blankState = () => ({
   fields: [],
   title: '',
   content: [],
-  customActions: null
+  CustomActions: null
 })
 
-const Dialog = ({ children }) => {
+const Dialog = ({ contextRef }) => {
   const stateChange = useRef(-1)
   const [state, setState] = useState(blankState())
   const [inputState, setInputState] = useState(null)
-  const messageDispatch = useMessageStateValue()[1]
+  const [, messageDispatch] = useMessageStateValue()
 
-  const handleClose = () => {
+  const setSubmitDisabled = submitDisabled => setState({ ...state, submitDisabled })
+
+  const closeDialog = () => {
     clearTimeout(stateChange.current)
     setState({ ...state, open: false })
     stateChange.current = setTimeout(() => {
@@ -36,7 +35,7 @@ const Dialog = ({ children }) => {
     }, 250)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (close) => {
     if (state.submitDisabled) return
     const variables = Object.fromEntries(state.fields
       .map(key => [key.name, inputState[key.name].trim()]))
@@ -46,7 +45,7 @@ const Dialog = ({ children }) => {
         return
       }
     }
-    setState({ ...state, submitDisabled: false })
+    setSubmitDisabled(true)
     state.mutation({ variables: { ...state.requiredVariables, ...variables } })
       .catch(() => {
         messageDispatch({
@@ -54,33 +53,47 @@ const Dialog = ({ children }) => {
           data: 'Access denied'
         })
       })
-      .finally(handleClose)
+      .finally(close
+        ? closeDialog
+        : () => setSubmitDisabled(false))
   }
 
-  const openDialog = (
-    { mutation, requiredVariables, actionText, fields, title, content, customActions }
-  ) => {
+  contextRef.current.setSubmitDisabled = setSubmitDisabled
+  contextRef.current.closeDialog = closeDialog
+
+  contextRef.current.openDialog = ({
+    mutation, requiredVariables, actionText, fields, title, content, CustomActions,
+    customActionsProps
+  }) => {
     clearTimeout(stateChange.current)
-    setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue])))
+    if (fields) {
+      setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue])))
+    }
     setState({
       open: true,
       submitDisabled: false,
       mutation,
       requiredVariables,
       actionText,
-      fields: fields.map(field => typeof field === 'string' ? { name: field } : field),
+      fields: fields
+        ? fields.map(field => typeof field === 'string' ? { name: field } : field)
+        : [],
       title,
       content,
-      customActions
+      CustomActions,
+      customActionsProps
     })
   }
 
-  return <>
-    <DialogContext.Provider value={{ openDialog }}>
-      {children}
-    </DialogContext.Provider>
+  contextRef.current.updateDialog = ({ ...data }) => {
+    setState({
+      ...state,
+      ...data
+    })
+  }
 
-    <MuiDialog open={state.open} onClose={handleClose}>
+  return (
+    <MuiDialog open={state.open} onClose={closeDialog}>
       <DialogTitle>{state.title}</DialogTitle>
       <DialogContent>
         {
@@ -110,22 +123,28 @@ const Dialog = ({ children }) => {
       </DialogContent>
       <DialogActions>
         {
-          state.customActions || <>
-            <Button onClick={handleClose} color='primary'>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSubmit}
-              disabled={state.submitDisabled}
-              color='primary'
-            >
-              {state.actionText}
-            </Button>
-          </>
+          state.CustomActions ?
+            <state.CustomActions
+              closeDialog={closeDialog} handleSubmit={handleSubmit}
+              submitDisabled={state.submitDisabled} {...state.customActionsProps}
+            />
+            :
+            <>
+              <Button onClick={closeDialog} color='primary'>
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={state.submitDisabled}
+                color='primary'
+              >
+                {state.actionText}
+              </Button>
+            </>
         }
       </DialogActions>
     </MuiDialog>
-  </>
+  )
 }
 
 export default Dialog

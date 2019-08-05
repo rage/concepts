@@ -2,7 +2,7 @@ import { useMutation } from 'react-apollo-hooks'
 
 import { UPDATE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, WORKSPACE_BY_ID } from '../../graphql/Query'
-import { useDialog } from '../Dialog'
+import { useDialog } from '../DialogProvider'
 
 const useEditWorkspaceDialog = workspaceId => {
   const { openDialog } = useDialog()
