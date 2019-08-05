@@ -60,7 +60,6 @@ query courseById($id: ID!) {
 }
 `
 
-
 const COURSE_PREREQUISITE_COURSES = gql`
 query courseById($id: ID!) {
   courseById(id: $id) {
@@ -83,7 +82,6 @@ query courseById($id: ID!) {
   }
 }
 `
-
 
 const CREATE_COURSE = gql`
 mutation createCourse($name: String!) {

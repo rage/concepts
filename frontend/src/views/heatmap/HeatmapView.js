@@ -243,7 +243,6 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       ).reduce(maxVal, 0)
     : null
 
-
   return (
     <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
       <Paper className={classes.paper}>

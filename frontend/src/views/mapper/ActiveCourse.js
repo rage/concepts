@@ -103,7 +103,6 @@ const ActiveCourse = ({
   const conceptLinkRef = useRef()
   const activeConceptRef = useRef()
 
-
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
 

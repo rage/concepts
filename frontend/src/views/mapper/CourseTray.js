@@ -9,13 +9,11 @@ import {
   MoreVert as MoreVertIcon
 } from '@material-ui/icons'
 
-
 import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
 import { useMessageStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -88,7 +86,6 @@ const PrerequisiteCourse = ({
       }
     }]
   })
-
 
   const deleteCourse = () => {
     try {

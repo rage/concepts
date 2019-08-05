@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 
-import { CREATE_SHARE_LINK, DELETE_SHARE_LINK, CREATE_PROJECT_SHARE_LINK } from '../../graphql/Mutation'
+import {
+  CREATE_SHARE_LINK, DELETE_SHARE_LINK, CREATE_PROJECT_SHARE_LINK
+} from '../../graphql/Mutation'
 import {
   PROJECT_BY_ID,
   PROJECTS_FOR_USER,

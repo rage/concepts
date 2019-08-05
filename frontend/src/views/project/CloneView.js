@@ -109,7 +109,6 @@ const CloneView = ({ history, projectId }) => {
     (workspace.data && workspace.data.workspaceBySourceTemplate &&
       workspace.data.workspaceBySourceTemplate.id)
 
-
   return (
     peekTemplate.data.limitedProjectById ?
       <Container component='main' maxWidth='xs' cl>

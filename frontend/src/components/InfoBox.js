@@ -128,7 +128,6 @@ const InfoBox = ({ children }) => {
     overlay.close()
   }
 
-
   const POPPER_MODIFIERS = {
     offset: {
       offset: offset ? `${offset.alignment}, ${offset.separation}` : '0px, 0px'

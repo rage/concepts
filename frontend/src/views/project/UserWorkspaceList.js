@@ -11,7 +11,6 @@ import {
   CloudDownload as CloudDownloadIcon
 } from '@material-ui/icons'
 
-
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue } from '../../store'
 import { useShareDialog } from '../../dialogs/sharing'
@@ -105,7 +104,6 @@ const UserWorkspaceList = ({ history, userWorkspaces, activeTemplate, projectId 
                     <MoreVertIcon />
                   </IconButton>
                 </ListItemSecondaryAction>
-
 
               </ListItem>
             )) :

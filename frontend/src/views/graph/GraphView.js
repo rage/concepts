@@ -179,5 +179,4 @@ const GraphView = ({ classes, workspaceId }) => {
   return <div className={classes.graph} id='graph' />
 }
 
-
 export default withStyles(styles)(GraphView)

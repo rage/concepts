@@ -12,30 +12,30 @@ const useCreateConceptDialog = (activeCourseId, workspaceId, prerequisite = fals
     set.map(p => p.id).includes(object.id)
 
   const createConcept = useMutation(CREATE_CONCEPT, {
-    update: prerequisite ? (store, response) => {
-      try {
-        const dataInStore = store.readQuery({
-          query: COURSE_PREREQUISITES,
-          variables: { courseId: activeCourseId, workspaceId }
-        })
-        const addedConcept = response.data.createConcept
-        const dataInStoreCopy = { ...dataInStore }
-        const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link =>
-          link.from.id === addedConcept.courses[0].id //  conceptCreateState.id
-        )
-        const course = courseLink.from
-        if (!includedIn(course.concepts, addedConcept)) {
-          course.concepts.push(addedConcept)
-          client.writeQuery({
+    update: prerequisite
+      ? (store, response) => {
+        try {
+          const dataInStore = store.readQuery({
             query: COURSE_PREREQUISITES,
-            variables: { courseId: activeCourseId, workspaceId },
-            data: dataInStoreCopy
+            variables: { courseId: activeCourseId, workspaceId }
           })
-        }
-      } catch (error) { }
-    }
-      :
-      (store, response) => {
+          const addedConcept = response.data.createConcept
+          const dataInStoreCopy = { ...dataInStore }
+          const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link =>
+            link.from.id === addedConcept.courses[0].id //  conceptCreateState.id
+          )
+          const course = courseLink.from
+          if (!includedIn(course.concepts, addedConcept)) {
+            course.concepts.push(addedConcept)
+            client.writeQuery({
+              query: COURSE_PREREQUISITES,
+              variables: { courseId: activeCourseId, workspaceId },
+              data: dataInStoreCopy
+            })
+          }
+        } catch (error) { }
+      }
+      : (store, response) => {
         const dataInStore = store.readQuery({
           query: COURSE_BY_ID,
           variables: {

@@ -27,6 +27,4 @@ const useCreateProjectDialog = () => {
   })
 }
 
-
-
 export default useCreateProjectDialog

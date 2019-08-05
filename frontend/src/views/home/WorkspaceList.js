@@ -139,7 +139,6 @@ const WorkspaceList = ({
     history.push(`/workspaces/${menu.workspace.id}/heatmap`)
   }
 
-
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader

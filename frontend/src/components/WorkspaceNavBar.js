@@ -108,7 +108,6 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
       })
   }
 
-
   const handleWorkspaceExport = async () => {
     setMenuAnchor(null)
     try {
