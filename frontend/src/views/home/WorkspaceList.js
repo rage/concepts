@@ -15,7 +15,7 @@ import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import useCreateWorkspaceDialog from '../../dialogs/workspace/useCreateWorkspaceDialog'
 import useEditWorkspaceDialog from '../../dialogs/workspace/useEditWorkspaceDialog'
-import useShareWorkspaceDialog from '../../dialogs/workspace/useShareWorkspaceDialog'
+import useShareDialog from '../../dialogs/sharing'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,7 +43,7 @@ const WorkspaceList = ({
 
   const openCreateWorkspaceDialog = useCreateWorkspaceDialog()
   const openEditWorkspaceDialog = useEditWorkspaceDialog()
-  const openShareWorkspaceDialog = useShareWorkspaceDialog()
+  const openShareWorkspaceDialog = useShareDialog('workspace')
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]

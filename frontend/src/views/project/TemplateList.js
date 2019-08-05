@@ -21,7 +21,7 @@ import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import useEditTemplateDialog from '../../dialogs/project/useEditTemplateDialog'
 import useCreateTemplateDialog from '../../dialogs/project/useCreateTemplateDialog'
-import useShareWorkspaceDialog from '../../dialogs/workspace/useShareWorkspaceDialog'
+import useShareDialog from '../../dialogs/sharing'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,7 +52,7 @@ const TemplateList = ({
 
   const openEditTemplateDialog = useEditTemplateDialog(projectId)
   const openCreateTemplateDialog = useCreateTemplateDialog(projectId)
-  const openShareWorkspaceDialog = useShareWorkspaceDialog()
+  const openShareWorkspaceDialog = useShareDialog('workspace')
 
   const handleMenuOpen = (workspace, event) => {
     setMenu({

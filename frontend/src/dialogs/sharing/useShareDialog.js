@@ -2,31 +2,43 @@ import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 
 import { CREATE_SHARE_LINK, DELETE_SHARE_LINK } from '../../graphql/Mutation'
-import { WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
+import {
+  PROJECT_BY_ID,
+  PROJECTS_FOR_USER,
+  WORKSPACE_BY_ID,
+  WORKSPACES_FOR_USER
+} from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
-import LinkSharingActions from '../LinkSharingActions'
+import LinkSharingActions from './LinkSharingActions'
 
-const useShareWorkspaceDialog = () => {
+const useShareDialog = (type, text) => {
+  if (type !== 'workspace' && type !== 'project') {
+    throw new Error(`Invalid type '${type}' in useShareDialog()`)
+  }
+
   const { openDialog, updateDialog } = useDialog()
-  const [workspaceShareState, setWorkspaceShareState] = useState({
+  const [shareState, setShareState] = useState({
     id: null,
     privilege: null
   })
 
-  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
-    skip: !workspaceShareState.id,
+  const targetQueryType = type === 'workspace' ? WORKSPACE_BY_ID : PROJECT_BY_ID
+  const targetsForUser = type === 'workspace' ? WORKSPACES_FOR_USER : PROJECTS_FOR_USER
+
+  const targetQuery = useQuery(targetQueryType, {
+    skip: !shareState.id,
     variables: {
-      id: workspaceShareState.id
+      id: shareState.id
     }
   })
 
   const createShareLink = useMutation(CREATE_SHARE_LINK, {
     refetchQueries: [
-      { query: WORKSPACES_FOR_USER },
+      { query: targetsForUser },
       {
-        query: WORKSPACE_BY_ID,
+        query: targetQueryType,
         variables: {
-          id: workspaceShareState.id
+          id: shareState.id
         }
       }
     ]
@@ -34,10 +46,14 @@ const useShareWorkspaceDialog = () => {
 
   const deleteShareLink = useMutation(DELETE_SHARE_LINK)
 
-  const workspace = workspaceQuery.data ? workspaceQuery.data.workspaceById : null
-  const existingToken = workspace && workspace.tokens
-    .find(token => token.privilege === workspaceShareState.privilege)
+  const target = targetQuery.data ? targetQuery.data[`${type}ById`] : null
+  const existingToken = target && target.tokens
+    .find(token => token.privilege === shareState.privilege)
   const existingTokenId = existingToken && existingToken.id
+
+  if (!text) {
+    text = `Let other users view and edit your ${type}`
+  }
 
   let url = 'No share links created'
   let realURL = null
@@ -57,19 +73,16 @@ const useShareWorkspaceDialog = () => {
     }
     await createShareLink({
       variables: {
-        workspaceId: workspaceShareState.id,
-        privilege: workspaceShareState.privilege
+        [`${type}Id`]: shareState.id,
+        privilege: shareState.privilege
       }
     })
   }
 
   useEffect(() => {
-    if (workspace !== null) {
+    if (target !== null) {
       updateDialog({
-        content: [
-          'Let other users view and edit your workspace',
-          url
-        ],
+        content: [text, url],
         mutation: handleRegenerate,
         customActionsProps: {
           url: realURL
@@ -79,21 +92,18 @@ const useShareWorkspaceDialog = () => {
   }, [existingTokenId])
 
   return (id, privilege) => {
-    setWorkspaceShareState({ id, privilege })
+    setShareState({ id, privilege })
     openDialog({
       title: 'Share workspace',
-      content: [
-        'Let other users view and edit your workspace',
-        url
-      ],
+      content: [text, url],
       mutation: handleRegenerate,
       CustomActions: LinkSharingActions,
       customActionsProps: {
-        target: workspace,
+        target,
         url: realURL
       }
     })
   }
 }
 
-export default useShareWorkspaceDialog
+export default useShareDialog

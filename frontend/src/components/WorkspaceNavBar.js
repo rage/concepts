@@ -16,7 +16,7 @@ import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Q
 import { DELETE_WORKSPACE } from '../graphql/Mutation'
 import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../store'
-import useShareWorkspaceDialog from '../dialogs/workspace/useShareWorkspaceDialog'
+import useShareDialog from '../dialogs/sharing'
 
 const useStyles = makeStyles({
   root: {
@@ -75,7 +75,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
 
   const openEditWorkspaceDialog = useEditWorkspaceDialog(workspaceId)
 
-  const openShareWorkspaceDialog = useShareWorkspaceDialog()
+  const openShareWorkspaceDialog = useShareDialog('workspace')
 
   const handleEditOpen = () => {
     setMenuAnchor(null)

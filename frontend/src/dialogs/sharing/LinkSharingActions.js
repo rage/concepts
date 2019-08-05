@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 
-import { useMessageStateValue } from '../store'
+import { useMessageStateValue } from '../../store'
 
 const LinkSharingActions = ({ closeDialog, handleSubmit, submitDisabled, url }) => {
   const [, messageDispatch] = useMessageStateValue()
