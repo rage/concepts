@@ -2,13 +2,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo-hooks'
+import { CssBaseline } from '@material-ui/core'
 
 import App from './App'
 import client from './apollo/apolloClient'
 import { isSignedIn } from './lib/authentication'
 import { LoginStateProvider, MessagingStateProvider } from './store'
-import FocusOverlay from './components/common/FocusOverlay'
-import InfoBox from './components/common/InfoBox'
+import FocusOverlay from './components/FocusOverlay'
+import InfoBox from './components/InfoBox'
+import InfoSnackbar from './components/InfoSnackbar'
+import { DialogProvider } from './dialogs'
 
 import './index.css'
 
@@ -89,11 +92,15 @@ ReactDOM.render(
           initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
           reducer={loginReducer}
         >
-          <FocusOverlay>
-            <InfoBox>
-              <App />
-            </InfoBox>
-          </FocusOverlay>
+          <CssBaseline />
+          <InfoSnackbar />
+          <DialogProvider>
+            <FocusOverlay>
+              <InfoBox>
+                <App />
+              </InfoBox>
+            </FocusOverlay>
+          </DialogProvider>
         </LoginStateProvider>
       </MessagingStateProvider>
     </ApolloProvider>

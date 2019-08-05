@@ -37,14 +37,12 @@ const logError = error => {
     errorMessage += `Error: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   } else if (error.extensions) {
     errorData.code = error.extensions.code
-    errorMessage +=
-`Code: ${ERROR_COLOR}'${errorData.code}'${RESET_COLOR},
- ${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},
- Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
+    errorMessage += `Code: ${ERROR_COLOR}'${errorData.code}'${RESET_COLOR},`
+    errorMessage += `${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},`
+    errorMessage += ` Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   } else if (error.locations) {
-    errorMessage +=
-`${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},
- Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
+    errorMessage += `${errorData.type}: ${STRING_COLOR}'${errorData.path}'${RESET_COLOR},`
+    errorMessage += ` Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   }
   console.error(errorMessage)
 
