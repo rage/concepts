@@ -10,7 +10,7 @@ import {
 } from '../../graphql/Mutation'
 import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
-import { ProjectSharingDialog } from '../../dialogs/project'
+import { useShareDialog } from '../../dialogs/sharing'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -56,8 +56,6 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const projectShareTitle = 'Share project'
-const projectShareDescription = 'Let other users view and edit your project'
 const projectCloneTitle = 'Invite students'
 const projectCloneDescription = `
 Let students clone the active template to 
@@ -65,8 +63,6 @@ contribute towards the mapping.
 `
 
 const ProjectView = ({ projectId }) => {
-  const [shareState, setShareState] = useState({ open: false })
-  const [cloneState, setCloneState] = useState({ open: false })
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
@@ -107,32 +103,22 @@ const ProjectView = ({ projectId }) => {
     }]
   })
 
+  const openShareProjectLinkDialog = useShareDialog('project')
+  const openShareCloneLinkDialog = useShareDialog(
+    'project',
+    projectCloneTitle,
+    projectCloneDescription)
 
+  const classes = useStyles()
 
   const openProjectShareDialog = () => {
-    setShareState({
-      open: true
-    })
+    openShareProjectLinkDialog(projectQuery.data.projectById.id, 'EDIT')
   }
 
   const openProjectCloneDialog = () => {
-    setCloneState({
-      open: true
-    })
+    openShareCloneLinkDialog(projectQuery.data.projectById.id, 'CLONE')
   }
 
-  const closeProjectShareDialog = () => {
-    setShareState({
-      open: false
-    })
-  }
-  const closeProjectCloneDialog = () => {
-    setCloneState({
-      open: false
-    })
-  }
-
-  const classes = useStyles()
 
   return (
     projectQuery.data.projectById ?
@@ -166,26 +152,6 @@ const ProjectView = ({ projectId }) => {
             />
           </div>
         </div>
-        <ProjectSharingDialog
-          open={shareState.open}
-          privilege='EDIT'
-          title={projectShareTitle}
-          description={projectShareDescription}
-          project={projectQuery.data.projectById}
-          handleClose={closeProjectShareDialog}
-          createProjectShareLink={createProjectShareLink}
-          deleteProjectShareLink={deleteShareLink}
-        />
-        <ProjectSharingDialog
-          open={cloneState.open}
-          privilege='CLONE'
-          title={projectCloneTitle}
-          description={projectCloneDescription}
-          project={projectQuery.data.projectById}
-          handleClose={closeProjectCloneDialog}
-          createProjectShareLink={createProjectShareLink}
-          deleteProjectShareLink={deleteShareLink}
-        />
       </>
       :
       <div style={{ textAlign: 'center' }}>

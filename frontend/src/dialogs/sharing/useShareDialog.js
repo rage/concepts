@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 
-import { CREATE_SHARE_LINK, DELETE_SHARE_LINK } from '../../graphql/Mutation'
+import { CREATE_SHARE_LINK, DELETE_SHARE_LINK, CREATE_PROJECT_SHARE_LINK } from '../../graphql/Mutation'
 import {
   PROJECT_BY_ID,
   PROJECTS_FOR_USER,
@@ -11,7 +11,7 @@ import {
 import { useDialog } from '../DialogProvider'
 import LinkSharingActions from './LinkSharingActions'
 
-const useShareDialog = (type, text) => {
+const useShareDialog = (type, title, text) => {
   if (type !== 'workspace' && type !== 'project') {
     throw new Error(`Invalid type '${type}' in useShareDialog()`)
   }
@@ -24,6 +24,7 @@ const useShareDialog = (type, text) => {
 
   const targetQueryType = type === 'workspace' ? WORKSPACE_BY_ID : PROJECT_BY_ID
   const targetsForUser = type === 'workspace' ? WORKSPACES_FOR_USER : PROJECTS_FOR_USER
+  const mutationForType = type === 'workspace' ? CREATE_SHARE_LINK : CREATE_PROJECT_SHARE_LINK
 
   const targetQuery = useQuery(targetQueryType, {
     skip: !shareState.id,
@@ -32,7 +33,7 @@ const useShareDialog = (type, text) => {
     }
   })
 
-  const createShareLink = useMutation(CREATE_SHARE_LINK, {
+  const createShareLink = useMutation(mutationForType, {
     refetchQueries: [
       { query: targetsForUser },
       {
@@ -52,7 +53,11 @@ const useShareDialog = (type, text) => {
   const existingTokenId = existingToken && existingToken.id
 
   if (!text) {
-    text = `Let other users view and edit your ${type}`
+    text = `Let other users view and edit your ${type}.`
+  }
+
+  if (!title) {
+    title = `Share ${type}`
   }
 
   let url = 'No share links created'
@@ -94,7 +99,7 @@ const useShareDialog = (type, text) => {
   return (id, privilege) => {
     setShareState({ id, privilege })
     openDialog({
-      title: 'Share workspace',
+      title,
       content: [text, url],
       mutation: handleRegenerate,
       CustomActions: LinkSharingActions,
