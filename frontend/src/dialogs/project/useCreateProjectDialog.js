@@ -18,7 +18,8 @@ const useCreateProjectDialog = () => {
     requiredVariables: {},
     actionText: 'Create',
     fields: [{
-      name: 'name'
+      name: 'name',
+      required: true
     }],
     title: 'Create project',
     content: [

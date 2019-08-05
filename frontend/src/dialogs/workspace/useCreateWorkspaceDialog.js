@@ -18,7 +18,8 @@ const useCreateWorkspaceDialog = projectId => {
     requiredVariables: { projectId },
     actionText: 'Create',
     fields: [{
-      name: 'name'
+      name: 'name',
+      required: true
     }],
     title: 'Create workspace',
     content: [

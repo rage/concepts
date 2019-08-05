@@ -18,7 +18,8 @@ const useCreateTemplateDialog = projectId => {
     requiredVariables: { projectId },
     actionText: 'Create',
     fields: [{
-      name: 'name'
+      name: 'name',
+      required: true
     }],
     title: 'Create template workspace',
     content: [
