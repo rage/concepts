@@ -17,11 +17,11 @@ import {
   RadioButtonUnchecked
 } from '@material-ui/icons'
 
-import WorkspaceSharingDialog from '../../dialogs/workspace/WorkspaceSharingDialog'
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import useEditTemplateDialog from '../../dialogs/project/useEditTemplateDialog'
 import useCreateTemplateDialog from '../../dialogs/project/useCreateTemplateDialog'
+import useShareWorkspaceDialog from '../../dialogs/workspace/useShareWorkspaceDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,24 +42,17 @@ const useStyles = makeStyles(theme => ({
 
 const TemplateList = ({
   history, templateWorkspaces, deleteTemplateWorkspace,
-  createShareLink, deleteShareLink, projectId, activeTemplate, setActiveTemplate
+  projectId, activeTemplate, setActiveTemplate
 }) => {
   const classes = useStyles()
-  const [stateShare, setStateShare] = useState({ open: false, workspace: null })
   const [menu, setMenu] = useState(null)
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
 
-  const {
-    openEditTemplateDialog,
-    TemplateEditDialog
-  } = useEditTemplateDialog(projectId)
-
-  const {
-    openCreateTemplateDialog,
-    TemplateCreateDialog
-  } = useCreateTemplateDialog(projectId)
+  const openEditTemplateDialog = useEditTemplateDialog(projectId)
+  const openCreateTemplateDialog = useCreateTemplateDialog(projectId)
+  const openShareWorkspaceDialog = useShareWorkspaceDialog()
 
   const handleMenuOpen = (workspace, event) => {
     setMenu({
@@ -93,7 +86,7 @@ const TemplateList = ({
       })
       return
     }
-    openCreateTemplateDialog()
+    openCreateTemplateDialog('')
   }
 
   const handleEditOpen = () => {
@@ -117,11 +110,7 @@ const TemplateList = ({
       })
       return
     }
-    setStateShare({ open: true, id: menu.workspace.id })
-  }
-
-  const handleShareClose = () => {
-    setStateShare({ open: false, id: null })
+    openShareWorkspaceDialog(menu.workspace.id, 'EDIT')
   }
 
   const handleDelete = async () => {
@@ -296,15 +285,6 @@ This will change which template is cloned by users.`)
           </MenuItem>
         </Menu>
       </Card>
-
-
-      <WorkspaceSharingDialog
-        open={stateShare.open} workspace={templateWorkspaces.find(ws => ws.id === stateShare.id)}
-        handleClose={handleShareClose} createShareLink={createShareLink}
-        deleteShareLink={deleteShareLink}
-      />
-      {TemplateCreateDialog}
-      {TemplateEditDialog}
     </>
   )
 }
