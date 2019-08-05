@@ -151,7 +151,7 @@ const PrerequisiteCourse = ({
           >
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name)()
+              openEditCourseDialog(course.id, course.name)
             }}>Edit</MenuItem>
             <MenuItem onClick={deleteCourse}>Delete</MenuItem>
           </Menu>
@@ -175,14 +175,9 @@ const CourseTray = ({
   const infoBox = useInfoBox()
   const createButtonRef = useRef()
   const checkboxRef = useRef()
-  const {
-    openEditCourseDialog, CourseEditDialog
-  } = useEditCourseDialog(workspaceId)
-  const {
-    openCreateCourseDialog,
-    CourseCreateDialog
-  } = useCreateCourseDialog(workspaceId)
 
+  const openEditCourseDialog = useEditCourseDialog(workspaceId)
+  const openCreateCourseDialog = useCreateCourseDialog(workspaceId)
   const client = useApolloClient()
 
   useEffect(() => {
@@ -294,7 +289,6 @@ const CourseTray = ({
           }
         </List>
       }
-
       <Button
         ref={createButtonRef}
         onClick={openCreateCourseDialog}
@@ -305,9 +299,6 @@ const CourseTray = ({
         New course
       </Button>
     </Paper>
-
-    {CourseCreateDialog}
-    {CourseEditDialog}
   </>
 }
 

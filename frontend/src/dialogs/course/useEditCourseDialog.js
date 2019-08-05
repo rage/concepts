@@ -1,42 +1,33 @@
-import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { UPDATE_COURSE } from '../../graphql/Mutation'
 import { updateCourseUpdate } from '../../apollo/update'
-import CourseEditingDialog from './CourseEditingDialog'
+import { useDialog } from '../DialogProvider'
 
 const useEditCourseDialog = (workspaceId) => {
-  const [courseEditState, setCourseEditState] = useState({
-    open: false,
-    id: '',
-    name: ''
-  })
+  const { openDialog } = useDialog()
 
   const updateCourse = useMutation(UPDATE_COURSE, {
     update: updateCourseUpdate(workspaceId)
   })
 
-  const handleCourseClose = () => {
-    setCourseEditState({ open: false, id: '', name: '' })
-  }
-
-  const handleCourseOpen = (id, name) => () => {
-    setCourseEditState({ open: true, id, name })
-  }
-
-  const dialog = (
-    <CourseEditingDialog
-      state={courseEditState}
-      handleClose={handleCourseClose}
-      updateCourse={updateCourse}
-      defaultName={courseEditState.name}
-    />
-  )
-
-  return {
-    openEditCourseDialog: handleCourseOpen,
-    CourseEditDialog: dialog
-  }
+  return (name, courseId) => openDialog({
+    mutation: updateCourse,
+    requiredVariables: {
+      id: courseId,
+      official: false
+    },
+    actionText: 'Save',
+    title: 'Edit course',
+    content: [
+      'Courses can be connected to other courses as prerequisites.'
+    ],
+    fields: [{
+      name: 'name',
+      defaultValue: name,
+      required: true
+    }]
+  })
 }
 
 export default useEditCourseDialog

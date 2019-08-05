@@ -96,9 +96,7 @@ const ActiveCourse = ({
 
   const openCreateConceptDialog = useCreateConceptDialog(course.id, workspaceId, false)
 
-  const { openEditCourseDialog,
-    CourseEditDialog
-  } = useEditCourseDialog(workspaceId)
+  const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
   const client = useApolloClient()
 
@@ -147,7 +145,7 @@ const ActiveCourse = ({
           )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
         </Select>
         <div className={classes.titleEditWrapper}>
-          <IconButton onClick={openEditCourseDialog(course.id, course.name)}>
+          <IconButton onClick={() => openEditCourseDialog(course.id, course.name)}>
             <EditIcon />
           </IconButton>
         </div>
@@ -183,10 +181,6 @@ const ActiveCourse = ({
         </Button> : null
       }
     </Paper>
-
-    {/* Dialogs */}
-
-    {CourseEditDialog}
   </>
 }
 

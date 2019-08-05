@@ -65,7 +65,7 @@ const useCreateConceptDialog = (activeCourseId, workspaceId, prerequisite = fals
       courseId,
       official: false
     },
-    actionText: 'Add concept',
+    actionText: 'Create',
     title: 'Add concept',
     fields: [{
       name: 'name',

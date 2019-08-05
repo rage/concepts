@@ -54,7 +54,7 @@ const Course = ({
   activeCourseId,
   addingLink,
   setAddingLink,
-  openCourseDialog,
+  openEditCourseDialog,
   activeConceptIds,
   history,
   workspaceId,
@@ -77,7 +77,7 @@ const Course = ({
         }
         action={
           loggedIn ?
-            <IconButton onClick={openCourseDialog(course.id, course.name)}>
+            <IconButton onClick={() => openEditCourseDialog(course.id, course.name)}>
               <EditIcon />
             </IconButton>
             : null

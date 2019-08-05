@@ -31,9 +31,7 @@ const CourseContainer = ({
     }
   }, [addingLink, courseLinks])
 
-  const { openEditCourseDialog,
-    CourseEditDialog
-  } = useEditCourseDialog(workspaceId)
+  const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
   return <>
     <Typography style={{ gridArea: 'contentHeader', margin: '16px' }} variant='h4'>
@@ -53,7 +51,7 @@ const CourseContainer = ({
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
-                openCourseDialog={openEditCourseDialog}
+                openEditCourseDialog={openEditCourseDialog}
                 activeCourseId={courseId}
                 workspaceId={workspaceId}
                 urlPrefix={urlPrefix}
@@ -64,10 +62,6 @@ const CourseContainer = ({
         :
         null
     }
-
-    {/* Dialogs */}
-
-    {CourseEditDialog}
   </>
 }
 
