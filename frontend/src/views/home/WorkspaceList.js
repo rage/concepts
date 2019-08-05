@@ -11,9 +11,6 @@ import {
   Share as ShareIcon
 } from '@material-ui/icons'
 
-import WorkspaceCreationDialog from '../../dialogs/workspace/WorkspaceCreationDialog'
-import WorkspaceEditingDialog from '../../dialogs/workspace/WorkspaceEditingDialog'
-import WorkspaceSharingDialog from '../../dialogs/workspace/WorkspaceSharingDialog'
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import useCreateWorkspaceDialog from '../../dialogs/workspace/useCreateWorkspaceDialog'
