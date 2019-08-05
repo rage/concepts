@@ -19,7 +19,8 @@ const useEditProjectDialog = () => {
     actionText: 'Save',
     fields: [{
       name: 'name',
-      defaultValue: name
+      defaultValue: name,
+      required: true
     }],
     title: 'Edit project',
     content: [

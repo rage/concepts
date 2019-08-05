@@ -19,7 +19,8 @@ const useEditTemplateDialog = projectId => {
     actionText: 'Save',
     fields: [{
       name: 'name',
-      defaultValue: name
+      defaultValue: name,
+      required: true
     }],
     title: 'Edit template workspace',
     content: [
