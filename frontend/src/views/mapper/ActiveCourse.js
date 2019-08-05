@@ -95,10 +95,7 @@ const ActiveCourse = ({
     }
   }, [course.concepts, addingLink, courseLinks])
 
-  const {
-    openCreateConceptDialog,
-    ConceptCreateDialog
-  } = useCreateConceptDialog(course, workspaceId, false)
+  const openCreateConceptDialog = useCreateConceptDialog(course, workspaceId, false)
 
   const {
     openEditConceptDialog,
@@ -183,7 +180,7 @@ const ActiveCourse = ({
       {loggedIn ?
         <Button
           className={classes.button}
-          onClick={openCreateConceptDialog(course.id)}
+          onClick={() => openCreateConceptDialog(course.id)}
           variant='contained'
           color='secondary'
           ref={createButtonRef}
@@ -196,7 +193,6 @@ const ActiveCourse = ({
     {/* Dialogs */}
 
     {CourseEditDialog}
-    {ConceptCreateDialog}
     {ConceptEditDialog}
   </>
 }

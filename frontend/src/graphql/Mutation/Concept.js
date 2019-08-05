@@ -38,8 +38,8 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     description
     official
     courses {
-          id
-      }
+      id
+    }
     linksFromConcept {
       id
       official

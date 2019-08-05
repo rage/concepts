@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography'
 
 import Course from './Course'
 import Masonry from './Masonry'
-import useCreateConceptDialog from '../../dialogs/concept/useCreateConceptDialog'
 import useEditConceptDialog from '../../dialogs/concept/useEditConceptDialog'
 import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
 import { useInfoBox } from '../../components/InfoBox'
@@ -35,11 +34,6 @@ const CourseContainer = ({
   }, [addingLink, courseLinks])
 
   const {
-    openCreateConceptDialog,
-    ConceptCreateDialog
-  } = useCreateConceptDialog(activeCourse, workspaceId, true)
-
-  const {
     openEditConceptDialog,
     ConceptEditDialog
   } = useEditConceptDialog(activeCourse, workspaceId)
@@ -67,7 +61,6 @@ const CourseContainer = ({
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
                 openCourseDialog={openEditCourseDialog}
-                openConceptDialog={openCreateConceptDialog}
                 openConceptEditDialog={openEditConceptDialog}
                 activeCourseId={courseId}
                 workspaceId={workspaceId}
@@ -83,7 +76,6 @@ const CourseContainer = ({
     {/* Dialogs */}
 
     {CourseEditDialog}
-    {ConceptCreateDialog}
     {ConceptEditDialog}
   </>
 }

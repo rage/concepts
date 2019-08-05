@@ -67,7 +67,7 @@ const Dialog = ({ contextRef }) => {
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
-      setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue])))
+      setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue || ''])))
     }
     setState({
       open: true,
@@ -79,7 +79,7 @@ const Dialog = ({ contextRef }) => {
         ? fields.map(field => typeof field === 'string' ? { name: field } : field)
         : [],
       title,
-      content,
+      content: content || [],
       CustomActions,
       customActionsProps
     })

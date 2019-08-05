@@ -1,17 +1,12 @@
-import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { COURSE_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
-import ConceptAdditionDialog from './ConceptAdditionDialog'
+import { useDialog } from '../DialogProvider'
 
 const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false) => {
-
-  const [conceptCreateState, setConceptCreateState] = useState({
-    open: false,
-    id: ''
-  })
+  const { openDialog } = useDialog()
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -26,7 +21,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false)
         const addedConcept = response.data.createConcept
         const dataInStoreCopy = { ...dataInStore }
         const courseLink = dataInStoreCopy.courseAndPrerequisites.linksToCourse.find(link =>
-          link.from.id === conceptCreateState.id
+          link.from.id === addedConcept.courses[0].id //  conceptCreateState.id
         )
         const course = courseLink.from
         if (!includedIn(course.concepts, addedConcept)) {
@@ -63,27 +58,22 @@ const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false)
       }
   })
 
-  const handleConceptClose = () => {
-    setConceptCreateState({ ...conceptCreateState, open: false, id: '' })
-  }
-
-  const handleConceptOpen = (courseId) => () => {
-    setConceptCreateState({ open: true, id: courseId })
-  }
-
-  const dialog = (
-    <ConceptAdditionDialog
-      state={conceptCreateState}
-      handleClose={handleConceptClose}
-      createConcept={createConcept}
-      workspaceId={workspaceId}
-    />
-  )
-
-  return {
-    openCreateConceptDialog: handleConceptOpen,
-    ConceptCreateDialog: dialog
-  }
+  return courseId => openDialog({
+    mutation: createConcept,
+    requiredVariables: {
+      workspaceId,
+      courseId,
+      official: false
+    },
+    actionText: 'Add concept',
+    title: 'Add concept',
+    fields: [{
+      name: 'name',
+      required: true
+    }, {
+      name: 'description'
+    }]
+  })
 }
 
 export default useCreateConceptDialog
