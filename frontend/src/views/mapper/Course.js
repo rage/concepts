@@ -63,7 +63,7 @@ const Course = ({
 }) => {
   const { loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
-  const openCreateConceptDialog = useCreateConceptDialog(course, workspaceId, true)
+  const openCreateConceptDialog = useCreateConceptDialog(activeCourseId, workspaceId, true)
 
   const onHeaderClickHandle = () => {
     history.push(`${urlPrefix}/${workspaceId}/mapper/${course.id}`)

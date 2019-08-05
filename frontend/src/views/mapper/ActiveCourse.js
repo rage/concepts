@@ -95,7 +95,7 @@ const ActiveCourse = ({
     }
   }, [course.concepts, addingLink, courseLinks])
 
-  const openCreateConceptDialog = useCreateConceptDialog(course, workspaceId, false)
+  const openCreateConceptDialog = useCreateConceptDialog(course.id, workspaceId, false)
 
   const {
     openEditConceptDialog,

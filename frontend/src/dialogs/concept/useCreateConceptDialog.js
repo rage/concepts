@@ -5,7 +5,7 @@ import { COURSE_PREREQUISITES, COURSE_BY_ID } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 import { useDialog } from '../DialogProvider'
 
-const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false) => {
+const useCreateConceptDialog = (activeCourseId, workspaceId, prerequisite = false) => {
   const { openDialog } = useDialog()
 
   const includedIn = (set, object) =>
@@ -16,7 +16,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false)
       try {
         const dataInStore = store.readQuery({
           query: COURSE_PREREQUISITES,
-          variables: { courseId: activeCourse.id, workspaceId }
+          variables: { courseId: activeCourseId, workspaceId }
         })
         const addedConcept = response.data.createConcept
         const dataInStoreCopy = { ...dataInStore }
@@ -28,7 +28,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false)
           course.concepts.push(addedConcept)
           client.writeQuery({
             query: COURSE_PREREQUISITES,
-            variables: { courseId: activeCourse.id, workspaceId },
+            variables: { courseId: activeCourseId, workspaceId },
             data: dataInStoreCopy
           })
         }
@@ -39,7 +39,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false)
         const dataInStore = store.readQuery({
           query: COURSE_BY_ID,
           variables: {
-            id: activeCourse.id
+            id: activeCourseId
           }
         })
         const addedConcept = response.data.createConcept
@@ -50,7 +50,7 @@ const useCreateConceptDialog = (activeCourse, workspaceId, prerequisite = false)
           client.writeQuery({
             query: COURSE_BY_ID,
             variables: {
-              id: activeCourse.id
+              id: activeCourseId
             },
             data: dataInStoreCopy
           })
