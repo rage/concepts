@@ -6,7 +6,7 @@ import { Edit as EditIcon } from '@material-ui/icons'
 
 import Concept from './concept/Concept'
 import { useLoginStateValue } from '../../store'
-import useCreateConceptDialog from '../../dialogs/concept/useCreateConceptDialog'
+import { useCreateConceptDialog } from '../../dialogs/concept'
 
 const useStyles = makeStyles(theme => ({
   root: {

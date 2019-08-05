@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -7,9 +7,8 @@ import {
 } from '@material-ui/core'
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
-import ProjectCreationDialog from '../../dialogs/project/ProjectCreationDialog'
-import ProjectEditingDialog from '../../dialogs/project/ProjectEditingDialog'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/project'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,13 +28,14 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ProjectList = ({ history, projects, deleteProject, createProject, updateProject }) => {
+const ProjectList = ({ history, projects, deleteProject }) => {
   const classes = useStyles()
-  const [stateCreate, setStateCreate] = useState({ open: false })
-  const [stateEdit, setStateEdit] = useState({ open: false, id: '', name: '' })
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
+
+  const openCreateProjectDialog = useCreateProjectDialog()
+  const openEditProjectDialog = useEditProjectDialog()
 
   const handleClickOpen = () => {
     if (!loggedIn) {
@@ -45,11 +45,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
       })
       return
     }
-    setStateCreate({ open: true })
-  }
-
-  const handleClose = () => {
-    setStateCreate({ open: false })
+    openCreateProjectDialog()
   }
 
   const handleEditOpen = (id, name) => {
@@ -60,11 +56,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
       })
       return
     }
-    setStateEdit({ open: true, id, name })
-  }
-
-  const handleEditClose = () => {
-    setStateEdit({ open: false, id: '', name: '' })
+    openEditProjectDialog(name, id)
   }
 
   const handleDelete = async (id) => {
@@ -107,7 +99,7 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
           }
           title={
             <Typography variant='h5' component='h3'>
-                Projects
+              Projects
             </Typography>
           }
         />
@@ -145,12 +137,6 @@ const ProjectList = ({ history, projects, deleteProject, createProject, updatePr
           }
         </List>
       </Card>
-
-      <ProjectCreationDialog
-        state={stateCreate} handleClose={handleClose} createProject={createProject} />
-      <ProjectEditingDialog
-        state={stateEdit} handleClose={handleEditClose} updateProject={updateProject}
-        defaultName={stateEdit.name} />
     </>
   )
 }

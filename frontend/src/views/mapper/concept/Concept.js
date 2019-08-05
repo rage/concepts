@@ -15,7 +15,7 @@ import {
   deleteConceptUpdate
 } from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
-import useEditConceptDialog from '../../../dialogs/concept/useEditConceptDialog'
+import { useEditConceptDialog } from '../../../dialogs/concept'
 
 const useStyles = makeStyles(() => ({
   conceptName: {

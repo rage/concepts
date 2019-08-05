@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 
 import Course from './Course'
 import Masonry from './Masonry'
-import useEditCourseDialog from '../../dialogs/course/useEditCourseDialog'
+import { useEditCourseDialog } from '../../dialogs/course'
 import { useInfoBox } from '../../components/InfoBox'
 
 const CourseContainer = ({
