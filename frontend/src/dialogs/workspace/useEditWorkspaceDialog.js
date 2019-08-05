@@ -14,6 +14,7 @@ const useEditWorkspaceDialog = refetchWorkspaceId => {
 
   return (id, name) => openDialog({
     mutation: updateWorkspace,
+    type: 'Workspace',
     requiredVariables: { id },
     actionText: 'Save',
     fields: [{

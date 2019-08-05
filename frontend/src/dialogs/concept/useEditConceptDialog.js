@@ -13,6 +13,7 @@ const useEditConceptDialog = (activeCourseId, workspaceId) => {
 
   return (conceptId, name, description) => openDialog({
     mutation: updateConcept,
+    type: 'Concept',
     requiredVariables: {
       id: conceptId,
       official: false

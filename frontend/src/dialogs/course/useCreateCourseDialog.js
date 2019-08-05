@@ -13,6 +13,7 @@ const useCreateCourseDialog = workspaceId => {
 
   return () => openDialog({
     mutation: createCourse,
+    type: 'Course',
     requiredVariables: {
       workspaceId,
       official: false

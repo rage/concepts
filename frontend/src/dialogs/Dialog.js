@@ -15,7 +15,9 @@ const blankState = () => ({
   fields: [],
   title: '',
   content: [],
-  CustomActions: null
+  CustomActions: null,
+  customActionsProps: null,
+  type: ''
 })
 
 const Dialog = ({ contextRef }) => {
@@ -41,7 +43,7 @@ const Dialog = ({ contextRef }) => {
       .map(key => [key.name, inputState[key.name].trim()]))
     for (const key of state.fields) {
       if (variables[key.name] === '' && key.required) {
-        window.alert('Concept needs a name!')
+        window.alert(`${state.type} needs a ${key.name}!`)
         return
       }
     }
@@ -63,7 +65,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
-    customActionsProps
+    customActionsProps, type
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
@@ -81,7 +83,8 @@ const Dialog = ({ contextRef }) => {
       title,
       content: content || [],
       CustomActions,
-      customActionsProps
+      customActionsProps,
+      type
     })
   }
 

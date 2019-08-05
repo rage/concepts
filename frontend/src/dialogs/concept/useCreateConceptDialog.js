@@ -60,6 +60,7 @@ const useCreateConceptDialog = (activeCourseId, workspaceId, prerequisite = fals
 
   return courseId => openDialog({
     mutation: createConcept,
+    type: 'Concept',
     requiredVariables: {
       workspaceId,
       courseId,

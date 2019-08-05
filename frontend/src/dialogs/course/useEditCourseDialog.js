@@ -13,6 +13,7 @@ const useEditCourseDialog = (workspaceId) => {
 
   return (courseId, name) => openDialog({
     mutation: updateCourse,
+    type: 'Course',
     requiredVariables: {
       id: courseId,
       official: false

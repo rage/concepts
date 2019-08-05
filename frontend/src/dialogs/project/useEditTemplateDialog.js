@@ -14,6 +14,7 @@ const useEditTemplateDialog = projectId => {
 
   return (workspaceId, name) => openDialog({
     mutation: updateTemplateWorkspace,
+    type: 'Template',
     requiredVariables: { id: workspaceId },
     actionText: 'Save',
     fields: [{

@@ -14,6 +14,7 @@ const useCreateProjectDialog = () => {
 
   return () => openDialog({
     mutation: createProject,
+    type: 'Project',
     requiredVariables: {},
     actionText: 'Create',
     fields: [{
