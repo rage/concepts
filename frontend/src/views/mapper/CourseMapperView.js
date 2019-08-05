@@ -136,6 +136,10 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     setCourseTrayOpen(!courseTrayOpen)
   }
 
+  const showFab =
+    (courseQuery.data.courseById && courseQuery.data.courseById.concepts.length !== 0) ||
+    (coursesQuery.data.coursesByWorkspace && coursesQuery.data.coursesByWorkspace.length > 1)
+
   return (
     <>
       {
@@ -183,7 +187,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
               workspaceId={workspaceQuery.data.workspaceById.id}
             />
             {
-              courseQuery.data.courseById.concepts.length !== 0 && loggedIn ?
+              showFab && loggedIn ?
                 <Fab
                   ref={trayFabRef}
                   style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
