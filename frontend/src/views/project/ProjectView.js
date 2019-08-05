@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
     // objects in the parent-level grid.
     overflow: 'hidden',
     gridTemplate: `"header    header  header"         64px
-                   "______    ______  ______"        8px
+                   "______    ______  ______"         8px
                    "toolbar   toolbar toolbar"        48px
                    "_______   _______ _______"        8px
                    "templates  ____   userWorkspaces" 1fr

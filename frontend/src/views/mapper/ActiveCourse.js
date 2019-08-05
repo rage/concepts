@@ -95,7 +95,6 @@ const ActiveCourse = ({
   }, [course.concepts, addingLink, courseLinks])
 
   const openCreateConceptDialog = useCreateConceptDialog(course.id, workspaceId, false)
-
   const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
   const client = useApolloClient()

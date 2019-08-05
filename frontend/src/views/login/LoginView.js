@@ -24,7 +24,6 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1, 0)
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
   signInButton: {
@@ -105,7 +104,6 @@ const LoginView = ({ history, location }) => {
           Sign in with TMC account
         </Typography>
 
-
         <form
           className={classes.form}
           onSubmit={!loading && !loadingGuest ? authenticate : () => { }}
@@ -185,8 +183,6 @@ const LoginView = ({ history, location }) => {
       </>}
     </Container>
   )
-
 }
-
 
 export default withRouter(LoginView)

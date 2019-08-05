@@ -88,56 +88,54 @@ const ProjectList = ({ history, projects, deleteProject }) => {
   }
 
   return (
-    <>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          action={
-            loggedIn ?
-              <IconButton aria-label='Add' onClick={handleClickOpen}>
-                <AddIcon />
-              </IconButton> : null
-          }
-          title={
-            <Typography variant='h5' component='h3'>
-              Projects
-            </Typography>
-          }
-        />
-        <List dense={false}>
-          {
-            projects ?
-              projects.map(project => (
-                <ListItem button key={project.id} onClick={handleNavigateProject(project.id)}>
-                  <ListItemText
-                    primary={
-                      <Typography variant='h6'>
-                        {project.name}
-                      </Typography>
-                    }
-                  />
-                  {
-                    loggedIn ?
-                      <ListItemSecondaryAction>
-                        <IconButton aria-label='Delete' onClick={() => handleDelete(project.id)}>
-                          <DeleteIcon />
-                        </IconButton>
-                        <IconButton
-                          aria-label='Edit' onClick={() => handleEditOpen(project.id, project.name)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> : null
+    <Card elevation={0} className={classes.root}>
+      <CardHeader
+        action={
+          loggedIn ?
+            <IconButton aria-label='Add' onClick={handleClickOpen}>
+              <AddIcon />
+            </IconButton> : null
+        }
+        title={
+          <Typography variant='h5' component='h3'>
+            Projects
+          </Typography>
+        }
+      />
+      <List dense={false}>
+        {
+          projects ?
+            projects.map(project => (
+              <ListItem button key={project.id} onClick={handleNavigateProject(project.id)}>
+                <ListItemText
+                  primary={
+                    <Typography variant='h6'>
+                      {project.name}
+                    </Typography>
                   }
+                />
+                {
+                  loggedIn ?
+                    <ListItemSecondaryAction>
+                      <IconButton aria-label='Delete' onClick={() => handleDelete(project.id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                      <IconButton
+                        aria-label='Edit' onClick={() => handleEditOpen(project.id, project.name)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction> : null
+                }
 
-                </ListItem>
-              )) :
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress className={classes.progress} />
-              </div>
-          }
-        </List>
-      </Card>
-    </>
+              </ListItem>
+            )) :
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress className={classes.progress} />
+            </div>
+        }
+      </List>
+    </Card>
   )
 }
 

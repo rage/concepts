@@ -7,6 +7,7 @@ import { Edit as EditIcon } from '@material-ui/icons'
 import Concept from './concept/Concept'
 import { useLoginStateValue } from '../../store'
 import { useCreateConceptDialog } from '../../dialogs/concept'
+import { useEditCourseDialog } from '../../dialogs/course'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,7 +55,6 @@ const Course = ({
   activeCourseId,
   addingLink,
   setAddingLink,
-  openEditCourseDialog,
   activeConceptIds,
   history,
   workspaceId,
@@ -63,6 +63,7 @@ const Course = ({
   const { loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
   const openCreateConceptDialog = useCreateConceptDialog(activeCourseId, workspaceId, true)
+  const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
   const onHeaderClickHandle = () => {
     history.push(`${urlPrefix}/${workspaceId}/mapper/${course.id}`)

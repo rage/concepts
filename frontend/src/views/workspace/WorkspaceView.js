@@ -12,16 +12,16 @@ const WorkspaceView = ({ workspaceId, location, urlPrefix }) => {
     }
   })
 
-  return (
-    workspaceQuery.data.workspaceById ?
-      workspaceQuery.data.workspaceById.courses.length > 0 ?
-        <Redirect to={{
-          pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.courses[0].id}`,
-          state: { from: location }
-        }} />
-        : <WorkspaceDefaultCourseForm urlPrefix={urlPrefix} workspaceId={workspaceId} />
-      : null
-  )
+  if (!workspaceQuery.data.workspaceById) {
+    return null
+  }
+
+  return workspaceQuery.data.workspaceById.courses.length > 0
+    ? <Redirect to={{
+      pathname: `${location.pathname}/${workspaceQuery.data.workspaceById.courses[0].id}`,
+      state: { from: location }
+    }} />
+    : <WorkspaceDefaultCourseForm urlPrefix={urlPrefix} workspaceId={workspaceId} />
 }
 
 export default WorkspaceView

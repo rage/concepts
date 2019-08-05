@@ -73,69 +73,66 @@ const UserWorkspaceList = ({ history, userWorkspaces, activeTemplate, projectId 
   }
 
   return (
-    <>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          action={
-            <Button
-              variant='outlined' color='primary' aria-label='Invite students'
-              onClick={() => openShareCloneLinkDialog(projectId, 'CLONE')}
-              disabled={!activeTemplate}
-            >
-              Invite students
-            </Button>
-          }
-          title='Workspaces by users'
-        />
-        <List dense={false}>
-          {
-            userWorkspaces ?
-              userWorkspaces.map(workspace => (
-                <ListItem
-                  button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
-                >
-                  <ListItemText
-                    primary={workspace.name}
-                    secondary={workspace.participants.find(p => p.privilege === 'OWNER').user.id}
-                  />
+    <Card elevation={0} className={classes.root}>
+      <CardHeader
+        action={
+          <Button
+            variant='outlined' color='primary' aria-label='Invite students'
+            onClick={() => openShareCloneLinkDialog(projectId, 'CLONE')}
+            disabled={!activeTemplate}
+          >
+            Invite students
+          </Button>
+        }
+        title='Workspaces by users'
+      />
+      <List dense={false}>
+        {
+          userWorkspaces ?
+            userWorkspaces.map(workspace => (
+              <ListItem
+                button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+              >
+                <ListItemText
+                  primary={workspace.name}
+                  secondary={workspace.participants.find(p => p.privilege === 'OWNER').user.id}
+                />
 
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      aria-owns={menu ? 'template-list-menu' : undefined}
-                      onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                      <MoreVertIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
+                <ListItemSecondaryAction>
+                  <IconButton
+                    aria-owns={menu ? 'template-list-menu' : undefined}
+                    onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                    <MoreVertIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
 
 
-                </ListItem>
-              )) :
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress className={classes.progress} />
-              </div>
-          }
-        </List>
-        <Menu
-          id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
-            <ListItemIcon>
-              <GridOnIcon />
-            </ListItemIcon>
-            Heatmap
-          </MenuItem>
-          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-            <ListItemIcon>
-              <CloudDownloadIcon />
-            </ListItemIcon>
-            Export
-          </MenuItem>
-        </Menu>
-      </Card>
-    </>
+              </ListItem>
+            )) :
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress className={classes.progress} />
+            </div>
+        }
+      </List>
+      <Menu
+        id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
+          <ListItemIcon>
+            <GridOnIcon />
+          </ListItemIcon>
+          Heatmap
+        </MenuItem>
+        <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+          <ListItemIcon>
+            <CloudDownloadIcon />
+          </ListItemIcon>
+          Export
+        </MenuItem>
+      </Menu>
+    </Card>
   )
-
 }
 
 export default withRouter(UserWorkspaceList)

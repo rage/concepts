@@ -188,103 +188,101 @@ This will change which template is cloned by users.`)
   const isActiveTemplate = (menu && activeTemplate) && menu.workspace.id === activeTemplate.id
 
   return (
-    <>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          action={
-            loggedIn ?
-              <IconButton aria-label='Add' onClick={handleCreateOpen}>
-                <AddIcon />
-              </IconButton> : null
-          }
-          title='Template workspaces'
+    <Card elevation={0} className={classes.root}>
+      <CardHeader
+        action={
+          loggedIn ?
+            <IconButton aria-label='Add' onClick={handleCreateOpen}>
+              <AddIcon />
+            </IconButton> : null
+        }
+        title='Template workspaces'
 
-        />
-        <List dense={false}>
-          {
-            templateWorkspaces ?
-              templateWorkspaces.map(workspace => (
-                <ListItem
-                  className={(activeTemplate) && workspace.id === activeTemplate.id ?
-                    classes.listItemActive
-                    : null}
-                  button
-                  key={workspace.id}
-                  onClick={() => handleNavigateMapper(workspace.id)}
-                >
-                  <ListItemText
-                    primary={
-                      <Typography variant='h6'>
-                        {workspace.name}
-                      </Typography>
-                    }
-                  />
-                  {
-                    loggedIn ?
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          aria-owns={menu ? 'template-list-menu' : undefined}
-                          onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                          <MoreVertIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> : null
+      />
+      <List dense={false}>
+        {
+          templateWorkspaces ?
+            templateWorkspaces.map(workspace => (
+              <ListItem
+                className={(activeTemplate) && workspace.id === activeTemplate.id ?
+                  classes.listItemActive
+                  : null}
+                button
+                key={workspace.id}
+                onClick={() => handleNavigateMapper(workspace.id)}
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant='h6'>
+                      {workspace.name}
+                    </Typography>
                   }
+                />
+                {
+                  loggedIn ?
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        aria-owns={menu ? 'template-list-menu' : undefined}
+                        onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                        <MoreVertIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction> : null
+                }
 
-                </ListItem>
-              )) :
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress className={classes.progress} />
-              </div>
-          }
-        </List>
-        <Menu
-          id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
-            <ListItemIcon>
-              <GridOnIcon />
-            </ListItemIcon>
-            Heatmap
-          </MenuItem>
-          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-            <ListItemIcon>
-              <CloudDownloadIcon />
-            </ListItemIcon>
-            Export
-          </MenuItem>
-          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-            <ListItemIcon>
-              <ShareIcon />
-            </ListItemIcon>
-            Share link
-          </MenuItem>
-          <MenuItem aria-label='Set as active' onClick={handleSetActive}>
-            <ListItemIcon>
-              {
-                isActiveTemplate ?
-                  <RadioButtonChecked />
-                  :
-                  <RadioButtonUnchecked />
-              }
-            </ListItemIcon>
-            {!isActiveTemplate ? 'Set' : 'Unset'} as active
-          </MenuItem>
-          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-            <ListItemIcon>
-              <EditIcon />
-            </ListItemIcon>
-            Edit
-          </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-        </Menu>
-      </Card>
-    </>
+              </ListItem>
+            )) :
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress className={classes.progress} />
+            </div>
+        }
+      </List>
+      <Menu
+        id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
+          <ListItemIcon>
+            <GridOnIcon />
+          </ListItemIcon>
+          Heatmap
+        </MenuItem>
+        <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+          <ListItemIcon>
+            <CloudDownloadIcon />
+          </ListItemIcon>
+          Export
+        </MenuItem>
+        <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+          <ListItemIcon>
+            <ShareIcon />
+          </ListItemIcon>
+          Share link
+        </MenuItem>
+        <MenuItem aria-label='Set as active' onClick={handleSetActive}>
+          <ListItemIcon>
+            {
+              isActiveTemplate ?
+                <RadioButtonChecked />
+                :
+                <RadioButtonUnchecked />
+            }
+          </ListItemIcon>
+          {!isActiveTemplate ? 'Set' : 'Unset'} as active
+        </MenuItem>
+        <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          Edit
+        </MenuItem>
+        <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon />
+          </ListItemIcon>
+          Delete
+        </MenuItem>
+      </Menu>
+    </Card>
   )
 }
 

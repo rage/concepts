@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography'
 
 import Course from './Course'
 import Masonry from './Masonry'
-import { useEditCourseDialog } from '../../dialogs/course'
 import { useInfoBox } from '../../components/InfoBox'
 
 const CourseContainer = ({
@@ -17,9 +16,7 @@ const CourseContainer = ({
   courseId,
   urlPrefix
 }) => {
-
   const infoBox = useInfoBox()
-
   const connectionRef = useRef()
   const createConceptRef = useRef()
 
@@ -30,8 +27,6 @@ const CourseContainer = ({
       infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_END', 0, 20)
     }
   }, [addingLink, courseLinks])
-
-  const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
   return <>
     <Typography style={{ gridArea: 'contentHeader', margin: '16px' }} variant='h4'>
@@ -51,7 +46,6 @@ const CourseContainer = ({
                 activeConceptIds={activeConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
-                openEditCourseDialog={openEditCourseDialog}
                 activeCourseId={courseId}
                 workspaceId={workspaceId}
                 urlPrefix={urlPrefix}

@@ -141,90 +141,88 @@ const WorkspaceList = ({
 
 
   return (
-    <>
-      <Card elevation={0} className={classes.root}>
-        <CardHeader
-          action={
-            loggedIn ?
-              <IconButton aria-label='Add' onClick={handleCreateOpen}>
-                <AddIcon />
-              </IconButton> : null
-          }
-          title={
-            <Typography variant='h5' component='h3'>
-              Workspaces
-            </Typography>
-          }
-        />
-        <List dense={false}>
-          {
-            workspaces ?
-              workspaces.map(workspace => (
-                <ListItem
-                  button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
-                >
-                  <ListItemText
-                    primary={
-                      <Typography variant='h6'>
-                        {workspace.name}
-                      </Typography>
-                    }
-                  />
-                  {
-                    loggedIn ?
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          aria-owns={menu ? 'workspace-list-menu' : undefined}
-                          onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                          <MoreVertIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> : null
+    <Card elevation={0} className={classes.root}>
+      <CardHeader
+        action={
+          loggedIn ?
+            <IconButton aria-label='Add' onClick={handleCreateOpen}>
+              <AddIcon />
+            </IconButton> : null
+        }
+        title={
+          <Typography variant='h5' component='h3'>
+            Workspaces
+          </Typography>
+        }
+      />
+      <List dense={false}>
+        {
+          workspaces ?
+            workspaces.map(workspace => (
+              <ListItem
+                button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant='h6'>
+                      {workspace.name}
+                    </Typography>
                   }
+                />
+                {
+                  loggedIn ?
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        aria-owns={menu ? 'workspace-list-menu' : undefined}
+                        onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                        <MoreVertIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction> : null
+                }
 
-                </ListItem>
-              )) :
-              <div style={{ textAlign: 'center' }}>
-                <CircularProgress className={classes.progress} />
-              </div>
-          }
-        </List>
-        <Menu
-          id='workspace-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
-          onClose={handleMenuClose}
-        >
-          <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
-            <ListItemIcon>
-              <GridOnIcon />
-            </ListItemIcon>
-            Heatmap
-          </MenuItem>
-          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-            <ListItemIcon>
-              <CloudDownloadIcon />
-            </ListItemIcon>
-            Export
-          </MenuItem>
-          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-            <ListItemIcon>
-              <ShareIcon />
-            </ListItemIcon>
-            Share link
-          </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-            <ListItemIcon>
-              <EditIcon />
-            </ListItemIcon>
-            Edit
-          </MenuItem>
-        </Menu>
-      </Card>
-    </>
+              </ListItem>
+            )) :
+            <div style={{ textAlign: 'center' }}>
+              <CircularProgress className={classes.progress} />
+            </div>
+        }
+      </List>
+      <Menu
+        id='workspace-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
+          <ListItemIcon>
+            <GridOnIcon />
+          </ListItemIcon>
+          Heatmap
+        </MenuItem>
+        <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+          <ListItemIcon>
+            <CloudDownloadIcon />
+          </ListItemIcon>
+          Export
+        </MenuItem>
+        <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+          <ListItemIcon>
+            <ShareIcon />
+          </ListItemIcon>
+          Share link
+        </MenuItem>
+        <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon />
+          </ListItemIcon>
+          Delete
+        </MenuItem>
+        <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          Edit
+        </MenuItem>
+      </Menu>
+    </Card>
   )
 }
 
