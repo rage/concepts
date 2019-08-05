@@ -11,7 +11,7 @@ const useEditCourseDialog = (workspaceId) => {
     update: updateCourseUpdate(workspaceId)
   })
 
-  return (name, courseId) => openDialog({
+  return (courseId, name) => openDialog({
     mutation: updateCourse,
     requiredVariables: {
       id: courseId,
