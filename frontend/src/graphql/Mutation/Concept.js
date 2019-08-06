@@ -33,6 +33,7 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
                        $courseId:ID) {
   createConcept(name:$name, description:$description, official:$official, workspaceId: $workspaceId,
                 courseId:$courseId) {
+    __typename
     id
     name
     description

@@ -1,6 +1,12 @@
-import ApolloClient, { InMemoryCache } from 'apollo-boost'
+import ApolloClient, { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-boost'
+
+import introspectionSchema from '../static/introspectionSchema'
 
 let requestsInFlight = 0
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionSchema
+})
 
 const client = new ApolloClient({
   uri: '/graphql',
