@@ -97,7 +97,8 @@ const visOptions = {
     hierarchicalRepulsion: {
       centralGravity: 1,
       springConstant: 0.1,
-      nodeDistance: 140
+      nodeDistance: 140,
+      damping: 1.2
     },
     solver: 'hierarchicalRepulsion'
   },
