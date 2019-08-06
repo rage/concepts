@@ -16,10 +16,7 @@ import CourseContainer from './CourseContainer'
 import CourseTray from './CourseTray'
 import ActiveCourse from './ActiveCourse'
 import { useLoginStateValue } from '../../store'
-import {
-  createCourseUpdate, deleteConceptLinkUpdate,
-  updateCourseUpdate
-} from '../../apollo/update'
+import cache from '../../apollo/update'
 import ConceptLink from './concept/ConceptLink'
 import { useInfoBox } from '../../components/InfoBox'
 
@@ -73,11 +70,11 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   })
 
   const createCourse = useMutation(CREATE_COURSE, {
-    update: createCourseUpdate(workspaceId)
+    update: cache.createCourseUpdate(workspaceId)
   })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
-    update: updateCourseUpdate(workspaceId)
+    update: cache.updateCourseUpdate(workspaceId)
   })
 
   useEffect(() => {
@@ -107,7 +104,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   }
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: deleteConceptLinkUpdate(courseId, workspaceId)
+    update: cache.deleteConceptLinkUpdate(courseId, workspaceId)
   })
 
   const handleMenuClose = () => {

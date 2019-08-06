@@ -1,16 +1,12 @@
-import ApolloClient, { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-boost'
-
-import introspectionSchema from '../static/introspectionSchema'
+import ApolloClient, { InMemoryCache } from 'apollo-boost'
 
 let requestsInFlight = 0
 
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionSchema
-})
-
 const client = new ApolloClient({
   uri: '/graphql',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    dataIdFromObject: o => o.id
+  }),
   request: (operation) => {
     const isMutation = Boolean(operation.query.definitions
       .find(def => def.operation === 'mutation'))

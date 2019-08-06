@@ -1,14 +1,14 @@
 import { useMutation } from 'react-apollo-hooks'
 
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
-import { updateConceptUpdate } from '../../apollo/update'
+import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 
 const useEditConceptDialog = (activeCourseId, workspaceId) => {
   const { openDialog } = useDialog()
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: updateConceptUpdate(activeCourseId, workspaceId)
+    update: cache.updateConceptUpdate(activeCourseId, workspaceId)
   })
 
   return (conceptId, name, description) => openDialog({

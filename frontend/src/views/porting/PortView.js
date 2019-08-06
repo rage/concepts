@@ -16,7 +16,7 @@ import {
   PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES
 } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
-import { jsonPortUpdate } from '../../apollo/update'
+import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
   jsonField: {
@@ -124,7 +124,7 @@ const PortView = () => {
   const messageDispatch = useMessageStateValue()[1]
 
   const dataPortingMutation = useMutation(IMPORT_DATA, {
-    update: jsonPortUpdate(user.id)
+    update: cache.jsonPortUpdate(user.id)
   })
 
   // Select properties

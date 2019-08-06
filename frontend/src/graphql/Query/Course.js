@@ -47,6 +47,7 @@ query courseById($id: ID!) {
 
 const COURSE_PREREQ_FRAGMENT = gql`
 fragment courseAndConcepts on Course {
+    __typename
     id
     name
     concepts {
@@ -83,6 +84,8 @@ query courseAndPrerequisites($courseId: ID!) {
     linksToCourse {
       id
       from {
+        id
+        __typename
         ...courseAndConcepts
       }
     }

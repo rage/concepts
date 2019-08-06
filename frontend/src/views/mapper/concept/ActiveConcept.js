@@ -8,7 +8,7 @@ import { MoreVert as MoreVertIcon, ArrowRight as ArrowRightIcon } from '@materia
 
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
-import { createConceptLinkUpdate } from '../../../apollo/update'
+import cache from '../../../apollo/update'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
 const useStyles = makeStyles(() => ({
@@ -96,7 +96,7 @@ const ActiveConcept = ({
   }
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: createConceptLinkUpdate(concept.courses[0].id, workspaceId)
+    update: cache.createConceptLinkUpdate(concept.courses[0].id, workspaceId)
   })
 
   const onClick = evt => {

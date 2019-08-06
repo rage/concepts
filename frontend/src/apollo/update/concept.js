@@ -1,10 +1,28 @@
 import client from '../apolloClient'
 import {
-  COURSE_PREREQUISITES
+  COURSE_PREREQUISITES, COURSE_PREREQ_FRAGMENT
 } from '../../graphql/Query'
 
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
+
+const createConcept = (store, response) => {
+  try {
+    const addedConcept = response.data.createConcept
+    const course = store.readFragment({
+      id: addedConcept.courses[0].id,
+      fragment: COURSE_PREREQ_FRAGMENT
+    })
+    store.writeFragment({
+      id: addedConcept.courses[0].id,
+      fragment: COURSE_PREREQ_FRAGMENT,
+      data: {
+        ...course,
+        concepts: [...course.concepts, addedConcept]
+      }
+    })
+  } catch (error) { }
+}
 
 const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
   (store, response) => {
@@ -34,7 +52,7 @@ const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
           data: dataInStoreCopy
         })
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
 const updateConceptUpdate = (courseId, workspaceId) =>
@@ -66,10 +84,11 @@ const updateConceptUpdate = (courseId, workspaceId) =>
           data: dataInStoreCopy
         })
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
 export {
   deleteConceptUpdate,
-  updateConceptUpdate
+  updateConceptUpdate,
+  createConcept
 }
