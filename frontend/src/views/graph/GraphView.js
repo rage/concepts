@@ -113,6 +113,9 @@ const visOptions = {
       damping: 0.09
     },
     solver: 'barnesHut'
+  },
+  interaction: {
+    tooltipDelay: 100
   }
 }
 
@@ -129,14 +132,14 @@ const GraphView = ({ classes, workspaceId }) => {
     const edges = []
 
     let colorIndex = 0
-
     for (const course of response.data.workspaceById.courses) {
       course.color = colors[colorIndex++]
       for (const concept of course.concepts) {
         nodes.push({
           ...conceptNodeStyle(course.color),
           id: concept.id,
-          label: concept.name
+          label: concept.name,
+          title: !concept.description ? 'No description available' : concept.description.replace('\n', '</br>')
         })
         edges.push({
           ...conceptToCourseEdgeStyle,

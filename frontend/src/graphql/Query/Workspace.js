@@ -71,6 +71,7 @@ workspaceById(id: $id) {
     concepts {
       id
       name
+      description
       linksToConcept {
         from {
           id
