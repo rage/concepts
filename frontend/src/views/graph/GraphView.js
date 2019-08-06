@@ -161,11 +161,8 @@ const GraphView = ({ classes, workspaceId }) => {
     }
 
     // Remove all nodes that don't have links
-    for (const node of nodes) {
-      if (!edges.find(edge => edge.from == node.id || edge.to == node.id)) {
-        nodes = nodes.filter(n => n.id != node.id)
-      }
-    }
+    nodes = nodes.filter(node => edges.find(edge => edge.from == node.id || edge.to == node.id))
+
 
     new vis.Network(document.getElementById('graph'), {
       nodes,
