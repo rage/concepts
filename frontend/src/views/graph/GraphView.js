@@ -115,8 +115,11 @@ const GraphView = ({ classes, workspaceId }) => {
       }
     })
 
-    const nodes = []
+    let nodes = []
     const edges = []
+
+    const courseNodes = []
+    const courseEdges = []
 
     let colorIndex = 0
     for (const course of response.data.workspaceById.courses) {
@@ -128,36 +131,40 @@ const GraphView = ({ classes, workspaceId }) => {
           label: concept.name,
           title: !concept.description ? 'No description available' : concept.description.replace('\n', '</br>')
         })
-        // edges.push({
-        //   ...conceptToCourseEdgeStyle,
-        //   from: course.id,
-        //   to: concept.id
-        // })
 
         for (const conceptLink of concept.linksToConcept) {
           edges.push({
             ...conceptEdgeStyle,
-            to: conceptLink.from.id,
-            from: concept.id
+            from: conceptLink.from.id,
+            to: concept.id
           })
         }
       }
+
+      // Get course nodes
       for (const courseLink of course.linksToCourse) {
         if (courseLink.from.id === course.id) {
           continue
         }
-        // edges.push({
-        //   ...courseEdgeStyle,
-        //   from: courseLink.from.id,
-        //   to: course.id
-        // })
+        courseEdges.push({
+          ...courseEdgeStyle,
+          from: courseLink.from.id,
+          to: course.id
+        })
       }
-      // nodes.push({
-      //   ...courseNodeStyle(course.color),
-      //   shape: 'dot',
-      //   id: course.id,
-      //   label: course.name
-      // })
+      courseNodes.push({
+        ...courseNodeStyle(course.color),
+        shape: 'dot',
+        id: course.id,
+        label: course.name
+      })
+    }
+
+    // Remove all nodes that don't have links
+    for (const node of nodes) {
+      if (!edges.find(edge => edge.from == node.id || edge.to == node.id)) {
+        nodes = nodes.filter(n => n.id != node.id)
+      }
     }
 
     new vis.Network(document.getElementById('graph'), {
