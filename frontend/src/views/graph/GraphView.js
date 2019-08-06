@@ -33,11 +33,6 @@ const conceptEdgeStyle = {
   shadow: {
     enabled: false
   },
-  smooth: {
-    enabled: true,
-    type: 'straightCross',
-    roundness: 0.4
-  },
   physics: false
 }
 
@@ -85,34 +80,26 @@ const courseNodeStyle = (color) => ({
 // Global vis.js options
 const visOptions = {
   layout: {
-    randomSeed: 1,
-    improvedLayout: true
+    hierarchical: {
+      sortMethod: 'directed',
+      direction: 'UD',
+      levelSeparation: 100
+    }
   },
   nodes: {
     shape: 'box',
     shadow: true
   },
   edges: {
-    width: 2,
     shadow: true
   },
   physics: {
-    barnesHut: {
-      gravitationalConstant: -2000,
-      centralGravity: 0.5,
-      springLength: 95,
-      springConstant: 0.02,
-      damping: 0.4,
-      avoidOverlap: 0.015
+    hierarchicalRepulsion: {
+      centralGravity: 1,
+      springConstant: 0.1,
+      nodeDistance: 140
     },
-    repulsion: {
-      centralGravity: 0.1,
-      springLength: 200,
-      springConstant: 0.05,
-      nodeDistance: 200,
-      damping: 0.09
-    },
-    solver: 'barnesHut'
+    solver: 'hierarchicalRepulsion'
   },
   interaction: {
     tooltipDelay: 100
@@ -141,17 +128,17 @@ const GraphView = ({ classes, workspaceId }) => {
           label: concept.name,
           title: !concept.description ? 'No description available' : concept.description.replace('\n', '</br>')
         })
-        edges.push({
-          ...conceptToCourseEdgeStyle,
-          from: course.id,
-          to: concept.id
-        })
+        // edges.push({
+        //   ...conceptToCourseEdgeStyle,
+        //   from: course.id,
+        //   to: concept.id
+        // })
 
         for (const conceptLink of concept.linksToConcept) {
           edges.push({
             ...conceptEdgeStyle,
-            from: conceptLink.from.id,
-            to: concept.id
+            to: conceptLink.from.id,
+            from: concept.id
           })
         }
       }
@@ -159,18 +146,18 @@ const GraphView = ({ classes, workspaceId }) => {
         if (courseLink.from.id === course.id) {
           continue
         }
-        edges.push({
-          ...courseEdgeStyle,
-          from: courseLink.from.id,
-          to: course.id
-        })
+        // edges.push({
+        //   ...courseEdgeStyle,
+        //   from: courseLink.from.id,
+        //   to: course.id
+        // })
       }
-      nodes.push({
-        ...courseNodeStyle(course.color),
-        shape: 'dot',
-        id: course.id,
-        label: course.name
-      })
+      // nodes.push({
+      //   ...courseNodeStyle(course.color),
+      //   shape: 'dot',
+      //   id: course.id,
+      //   label: course.name
+      // })
     }
 
     new vis.Network(document.getElementById('graph'), {
