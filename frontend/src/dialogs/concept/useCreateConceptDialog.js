@@ -1,15 +1,11 @@
 import { useMutation } from 'react-apollo-hooks'
-import { gql } from 'apollo-boost'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
-import { COURSE_PREREQUISITES, COURSE_BY_ID, COURSE_PREREQ_FRAGMENT } from '../../graphql/Query'
-import client from '../../apollo/apolloClient'
+import { COURSE_PREREQ_FRAGMENT } from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
 
-const useCreateConceptDialog = (workspaceId) => {
+const useCreateConceptDialog = workspaceId => {
   const { openDialog } = useDialog()
-
-  console.log(workspaceId)
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: (store, response) => {
