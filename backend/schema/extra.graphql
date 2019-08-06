@@ -18,7 +18,7 @@ type Query {
   allCourses: [Course!]!
   courseById(id: ID!): Course
   coursesByWorkspace(workspaceId: ID!): [Course!]!
-  courseAndPrerequisites(courseId: ID!, workspaceId: ID!): Course
+  courseAndPrerequisites(courseId: ID!): Course
 
   # Course link queries
   allCourseLinks: [CourseLink!]!

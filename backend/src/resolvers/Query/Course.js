@@ -14,27 +14,19 @@ const CourseQueries = {
     })
     return await context.prisma.course({ id: id })
   },
-  async courseAndPrerequisites(root, { courseId, workspaceId }, context) {
+  async courseAndPrerequisites(root, { courseId }, context) {
     await checkAccess(context, {
-      minimumRole: Role.GUEST,
+      minimumRole: Role.GUEST
+    })
+    const { id: workspaceId } = await context.prisma.course({ id: courseId }).workspace()
+    await checkAccess(context, {
       minimumPrivilege: Privilege.READ,
       workspaceId
     })
-    // Check if the course is related to the workspace
-    const courses = await context.prisma
-      .workspace({ id: workspaceId })
-      .courses({
-        where: {
-          id: courseId
-        }
-      })
 
-    if (courses.length > 0) {
-      return await context.prisma.course({
-        id: courseId
-      })
-    }
-    return null
+    return await context.prisma.course({
+      id: courseId
+    })
   },
   async coursesByWorkspace(root, { workspaceId }, context) {
     await checkAccess(context, {

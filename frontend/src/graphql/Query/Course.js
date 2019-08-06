@@ -1,18 +1,5 @@
 import { gql } from 'apollo-boost'
 
-const ALL_COURSES = gql`
-{
-  allCourses {
-    id
-    name
-    concepts {
-      id
-      name
-    }
-  }
-}
-`
-
 const COURSES_BY_WORKSPACE = gql`
 query coursesByWorkspace($workspaceId: ID!) {
   coursesByWorkspace(workspaceId: $workspaceId) {
@@ -21,62 +8,6 @@ query coursesByWorkspace($workspaceId: ID!) {
     concepts {
       id
       name
-    }
-  }
-}
-`
-
-const FETCH_COURSE_AND_PREREQUISITES = gql`
-query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
-  courseAndPrerequisites(courseId: $courseId, workspaceId: $workspaceId) {
-    id
-    name
-    concepts {
-      id
-      name
-      description
-      official
-      linksFromConcept {
-        id
-        official
-        to {
-          id
-        }
-      }
-      linksToConcept {
-        id
-        official
-        from {
-          id
-        }
-      }
-    }
-    linksToCourse {
-      id
-      from {
-        id
-        name
-        concepts {
-          id
-          name
-          description
-          official
-          linksFromConcept {
-            id
-            official
-            to {
-              id
-            }
-          }
-          linksToConcept {
-            id
-            official
-            from {
-              id
-            }
-          }
-        }
-      }
     }
   }
 }
@@ -115,8 +46,8 @@ query courseById($id: ID!) {
 `
 
 const COURSE_PREREQUISITES = gql`
-query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
-  courseAndPrerequisites(courseId: $courseId, workspaceId: $workspaceId) {
+query courseAndPrerequisites($courseId: ID!) {
+  courseAndPrerequisites(courseId: $courseId) {
     id
     name
     linksToCourse {
@@ -151,8 +82,6 @@ query courseAndPrerequisites($courseId: ID!, $workspaceId: ID!) {
 `
 
 export {
-  ALL_COURSES,
-  FETCH_COURSE_AND_PREREQUISITES,
   COURSES_BY_WORKSPACE,
   COURSE_BY_ID,
   COURSE_PREREQUISITES
