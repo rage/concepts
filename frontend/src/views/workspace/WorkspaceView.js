@@ -1,10 +1,10 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
+import { CircularProgress } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
-import { CircularProgress } from '@material-ui/core'
 
 const WorkspaceView = ({ workspaceId, location, urlPrefix }) => {
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
