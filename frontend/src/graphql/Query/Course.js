@@ -5,13 +5,6 @@ query coursesByWorkspace($workspaceId: ID!) {
   coursesByWorkspace(workspaceId: $workspaceId) {
     id
     name
-    concepts {
-      id
-      name
-      courses {
-        id
-      }
-    }
   }
 }
 `

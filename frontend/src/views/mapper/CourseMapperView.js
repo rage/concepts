@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 
 import {
-  WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES, COURSES_BY_WORKSPACE
+  WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES
 } from '../../graphql/Query'
 import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 import CourseContainer from './CourseContainer'
@@ -65,10 +65,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     variables: { id: courseId }
   })
 
-  const coursesQuery = useQuery(COURSES_BY_WORKSPACE, {
-    variables: { workspaceId }
-  })
-
   const createCourse = useMutation(CREATE_COURSE, {
     update: cache.createCourseUpdate(workspaceId)
   })
@@ -77,12 +73,14 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
+  console.log(workspaceQuery.data)
+
   useEffect(() => {
     const conceptsExist = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.length === 1
     const activeConceptHasLinks = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.find(concept => concept.linksToConcept.length > 0
-          && activeConceptIds.includes(concept.id))
+        && activeConceptIds.includes(concept.id))
     if (!courseTrayOpen && conceptsExist) {
       infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
@@ -135,7 +133,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   const showFab =
     (courseQuery.data.courseById && courseQuery.data.courseById.concepts.length !== 0) ||
-    (coursesQuery.data.coursesByWorkspace && coursesQuery.data.coursesByWorkspace.length > 1)
+    (workspaceQuery.data.workspaceById && workspaceQuery.data.workspaceById.courses.length > 1)
 
   return <>
     {
@@ -148,7 +146,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           <ActiveCourse
             onClick={() => setAddingLink(null)}
             course={courseQuery.data.courseById}
-            courses={coursesQuery.data.coursesByWorkspace}
+            courses={workspaceQuery.data.workspaceById.courses}
             updateCourse={updateCourse}
             activeConceptIds={activeConceptIds}
             addingLink={addingLink}
@@ -179,7 +177,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             setCourseTrayOpen={setCourseTrayOpen}
             courseTrayOpen={courseTrayOpen}
             createCourse={createCourse}
-            coursesQuery={coursesQuery}
+            courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
           />
           {

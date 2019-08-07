@@ -9,6 +9,7 @@ import {
   MoreVert as MoreVertIcon
 } from '@material-ui/icons'
 
+import cache from '../../apollo/update'
 import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
@@ -72,19 +73,20 @@ const PrerequisiteCourse = ({
   }
 
   const deleteCourseMutation = useMutation(DELETE_COURSE, {
-    refetchQueries: [{
-      query: COURSES_BY_WORKSPACE,
-      variables: {
-        workspaceId
-      }
-    },
-    {
-      query: COURSE_PREREQUISITES,
-      variables: {
-        workspaceId,
-        courseId: activeCourseId
-      }
-    }]
+    // refetchQueries: [{
+    //   query: COURSES_BY_WORKSPACE,
+    //   variables: {
+    //     workspaceId
+    //   }
+    // },
+    // {
+    //   query: COURSE_PREREQUISITES,
+    //   variables: {
+    //     workspaceId,
+    //     courseId: activeCourseId
+    //   }
+    // }],
+    update: cache.deleteCourseUpdate(workspaceId, activeCourseId)
   })
 
   const deleteCourse = () => {
@@ -164,7 +166,7 @@ const CourseTray = ({
   courseId,
   workspaceId,
   courseLinks,
-  coursesQuery
+  courses
 }) => {
   const [filterKeyword, setFilterKeyword] = useState('')
 
@@ -178,15 +180,13 @@ const CourseTray = ({
   const client = useApolloClient()
 
   useEffect(() => {
-    const courses = coursesQuery.data.coursesByWorkspace
-      && coursesQuery.data.coursesByWorkspace
     const enoughCourses = courses && courses.length === 1
     if (courseTrayOpen && enoughCourses) {
       infoBox.open(createButtonRef.current, 'left-start', 'CREATE_COURSE', 0, 50)
     } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
       infoBox.open(checkboxRef.current, 'left-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
     }
-  }, [courseTrayOpen, coursesQuery, courseLinks])
+  }, [courseTrayOpen, courses, courseLinks])
 
   const includedIn = (set, object) =>
     set.map(p => p.id).includes(object.id)
@@ -264,9 +264,9 @@ const CourseTray = ({
         onChange={handleKeywordInput}
       />
 
-      {coursesQuery.data.coursesByWorkspace &&
+      {courses &&
         <List disablePadding className={classes.list}>
-          {coursesQuery.data.coursesByWorkspace
+          {courses
             .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
             .map((course, index) =>
               <PrerequisiteCourse
@@ -280,7 +280,7 @@ const CourseTray = ({
                 getLinkToDelete={getLinkToDelete}
                 workspaceId={workspaceId}
                 openEditCourseDialog={openEditCourseDialog}
-                coursesAmount={coursesQuery.data.coursesByWorkspace.length}
+                coursesAmount={courses.length}
               />
             )
           }
