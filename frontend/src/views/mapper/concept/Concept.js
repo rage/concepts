@@ -53,14 +53,14 @@ const Concept = ({
   const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
-  const openEditConceptDialog = useEditConceptDialog(activeCourseId, workspaceId)
+  const openEditConceptDialog = useEditConceptDialog()
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: cache.deleteConceptUpdate(activeCourseId, workspaceId, course.id)
+    update: cache.deleteConceptUpdate
   })
 
   const onClick = evt => {
@@ -95,6 +95,7 @@ const Concept = ({
 
   const handleDeleteConcept = async () => {
     const willDelete = window.confirm('Are you sure about this?')
+    handleMenuClose()
     if (willDelete) {
       try {
         await deleteConcept({ variables: { id: concept.id } })
@@ -105,7 +106,6 @@ const Concept = ({
         })
       }
     }
-    handleMenuClose()
   }
 
   const handleEditConcept = () => {

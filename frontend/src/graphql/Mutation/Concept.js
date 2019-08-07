@@ -63,6 +63,7 @@ const DELETE_CONCEPT = gql`
 mutation deleteConcept($id: ID!) {
   deleteConcept(id: $id) {
     id
+    courseId
   }
 }
 `

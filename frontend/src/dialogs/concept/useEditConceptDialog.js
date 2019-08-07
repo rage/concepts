@@ -4,11 +4,11 @@ import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 
-const useEditConceptDialog = (activeCourseId, workspaceId) => {
+const useEditConceptDialog = () => {
   const { openDialog } = useDialog()
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: cache.updateConceptUpdate(activeCourseId, workspaceId)
+    update: cache.updateConceptUpdate
   })
 
   return (conceptId, name, description) => openDialog({
@@ -18,8 +18,8 @@ const useEditConceptDialog = (activeCourseId, workspaceId) => {
       id: conceptId,
       official: false
     },
-    actionText: 'Add concept',
-    title: 'Add concept',
+    actionText: 'Save',
+    title: 'Edit concept',
     fields: [{
       name: 'name',
       required: true,

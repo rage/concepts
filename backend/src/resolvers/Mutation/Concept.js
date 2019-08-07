@@ -42,7 +42,19 @@ const ConceptMutations = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    return await context.prisma.deleteConcept({ id })
+    const toDelete = await context.prisma.concept({ id }).$fragment(`
+      fragment ConceptWithCourse on Concept {
+        id
+        courses {
+          id
+        }
+      }
+    `)
+    await context.prisma.deleteConcept({ id })
+    return {
+      id: toDelete.id,
+      courseId: toDelete.courses[0].id
+    }
   }
 }
 

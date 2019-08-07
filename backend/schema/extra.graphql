@@ -55,7 +55,7 @@ type Mutation {
 
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean): Concept
-  deleteConcept(id: ID!): Concept
+  deleteConcept(id: ID!): DeletedConcept
   updateConcept(id: ID!, name:String, description: String, official: Boolean): Concept
 
   # Course link mutations
@@ -113,6 +113,11 @@ type LimitedProject {
   name: String!
   activeTemplateId: ID!
   participants: [ProjectParticipant!]!
+}
+
+type DeletedConcept {
+  id: ID!
+  courseId: ID!
 }
 
 type AuthPayload {

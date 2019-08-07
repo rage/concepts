@@ -63,7 +63,7 @@ const ActiveConcept = ({
   const classes = useStyles()
   const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
-  const openEditConceptDialog = useEditConceptDialog(activeCourseId, workspaceId)
+  const openEditConceptDialog = useEditConceptDialog()
 
   const handleMenuOpen = event => {
     setState({ anchorEl: event.currentTarget })
