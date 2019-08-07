@@ -14,7 +14,7 @@ const styles = () => ({
     overflow: 'hidden'
   },
   navigationButton: {
-    top: '70px',
+    top: '60px',
     left: '10px',
     zIndex: '10',
     position: 'absolute'
@@ -45,14 +45,6 @@ const conceptEdgeStyle = {
 // Style for edges between courses (course links)
 const courseEdgeStyle = {
   ...conceptEdgeStyle
-}
-
-// Style for edges linking concepts to their courses
-const conceptToCourseEdgeStyle = {
-  dashes: true,
-  shadow: {
-    enabled: false
-  }
 }
 
 const commonNodeStyle = {
@@ -140,7 +132,7 @@ const GraphView = ({ classes, workspaceId }) => {
     }
     nodes.clear()
     edges.clear()
-    if (state == 'concepts') {
+    if (state === 'concepts') {
       courseNodes.filter(node =>
         courseEdges.find(edge => edge.from === node.id || edge.to === node.id))
         .forEach(courseNode => nodes.add(courseNode))
@@ -174,7 +166,8 @@ const GraphView = ({ classes, workspaceId }) => {
           ...conceptNodeStyle(course.color),
           id: concept.id,
           label: concept.name,
-          title: !concept.description ? 'No description available' : concept.description.replace('\n', '</br>')
+          title: !concept.description ? 'No description available'
+            : concept.description.replace('\n', '</br>')
         })
 
         for (const conceptLink of concept.linksToConcept) {
@@ -243,18 +236,16 @@ const GraphView = ({ classes, workspaceId }) => {
     drawConceptGraph(response.data)
   })()}, [])
 
-  return (
-    <>
+  return <>
     <div className={classes.graph} id='graph' />
-      <Button className={classes.navigationButton}
-        variant='contained'
-        color='secondary'
-        onClick={changeGraph}
-      >
-        {`Switch to ${state === 'concepts' ? 'courses' : 'concepts'}`}
-      </Button>
-    </>
-  )
+    <Button className={classes.navigationButton}
+      variant='contained'
+      color='secondary'
+      onClick={changeGraph}
+    >
+      Switch to {state === 'concepts' ? 'courses' : 'concepts'}
+    </Button>
+  </>
 }
 
 export default withStyles(styles)(GraphView)
