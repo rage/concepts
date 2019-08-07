@@ -13,6 +13,7 @@ import InfoBox from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
 
+import 'vis/dist/vis-network.min.css'
 import './index.css'
 
 const loginReducer = (state, action) => {
