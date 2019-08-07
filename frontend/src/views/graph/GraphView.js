@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import vis from 'vis'
+import React, { useEffect, useState, useRef } from 'react'
 import { withStyles, Button } from '@material-ui/core'
+import vis from 'vis'
 
 import {
   WORKSPACE_DATA_FOR_GRAPH
@@ -106,63 +106,50 @@ const visOptions = {
 }
 
 const GraphView = ({ classes, workspaceId }) => {
+  const [mode, redraw] = useState('concepts')
+  const state = useRef({
+    network: null,
+    nodes: null,
+    edges: null,
+    conceptEdges: null,
+    courseEdges: null,
+    conceptNodes: null,
+    courseNodes: null,
+    mode: 'concepts'
+  })
 
-  // Network data
-  const [network, setNetwork] = useState(null)
-
-  // Global data
-  const [nodes, setNodes] = useState(null)
-  const [edges, setEdges] = useState(null)
-
-  // State
-  const [state, setState] = useState('concepts')
-
-  // Concept data
-  const [conceptNodes, setConceptNodes] = useState([])
-  const [conceptEdges, setConceptEdges] = useState([])
-
-  // Course data
-  const [courseNodes, setCourseNodes] = useState([])
-  const [courseEdges, setCourseEdges] = useState([])
-
-  const changeGraph = () => {
-    if (!network) {
+  const toggleMode = () => {
+    const cur = state.current
+    if (!cur.network) {
       alert('Network is not defined.')
       return
     }
-    nodes.clear()
-    edges.clear()
-    if (state === 'concepts') {
-      courseNodes.filter(node =>
-        courseEdges.find(edge => edge.from === node.id || edge.to === node.id))
-        .forEach(courseNode => nodes.add(courseNode))
-      for (const courseEdge of courseEdges) {
-        edges.add(courseEdge)
-      }
-      setState('courses')
+    cur.edges.getDataSet().clear()
+    cur.nodes.getDataSet().clear()
+    if (cur.mode === 'concepts') {
+      cur.mode = 'courses'
+      cur.nodes.getDataSet().add(cur.courseNodes)
+      cur.edges.getDataSet().add(cur.courseEdges)
     } else {
-      conceptNodes.filter(node =>
-        conceptEdges.find(edge => edge.from === node.id || edge.to === node.id))
-        .forEach(conceptNode => nodes.add(conceptNode))
-      for (const conceptEdge of conceptEdges) {
-        edges.add(conceptEdge)
-      }
-      setState('concepts')
+      cur.mode = 'concepts'
+      cur.nodes.getDataSet().add(cur.conceptNodes)
+      cur.edges.getDataSet().add(cur.conceptEdges)
     }
+    redraw(cur.mode)
   }
 
-  const drawConceptGraph = (data) => {
-    const nodes = []
-    const edges = []
-
-    const courseNodes = []
-    const courseEdges = []
+  const drawConceptGraph = data => {
+    const cur = state.current
+    cur.conceptNodes = []
+    cur.conceptEdges = []
+    cur.courseNodes = []
+    cur.courseEdges = []
 
     let colorIndex = 0
     for (const course of data.workspaceById.courses) {
       course.color = colors[colorIndex++]
       for (const concept of course.concepts) {
-        nodes.push({
+        cur.conceptNodes.push({
           ...conceptNodeStyle(course.color),
           id: concept.id,
           label: concept.name,
@@ -171,7 +158,7 @@ const GraphView = ({ classes, workspaceId }) => {
         })
 
         for (const conceptLink of concept.linksToConcept) {
-          edges.push({
+          cur.conceptEdges.push({
             ...conceptEdgeStyle,
             from: conceptLink.from.id,
             to: concept.id
@@ -179,51 +166,36 @@ const GraphView = ({ classes, workspaceId }) => {
         }
       }
 
-      // Get course nodes
-      for (const courseLink of course.linksToCourse) {
-        if (courseLink.from.id === course.id) {
-          continue
-        }
-        courseEdges.push({
-          ...courseEdgeStyle,
-          from: courseLink.from.id,
-          to: course.id
-        })
-      }
-      courseNodes.push({
+      cur.courseNodes.push({
         ...courseNodeStyle(course.color),
         shape: 'dot',
         id: course.id,
         label: course.name
       })
+
+      // Get course nodes
+      for (const courseLink of course.linksToCourse) {
+        if (courseLink.from.id === course.id) {
+          continue
+        }
+        cur.courseEdges.push({
+          ...courseEdgeStyle,
+          from: courseLink.from.id,
+          to: course.id
+        })
+      }
     }
 
-    // Create edges and nodes
-    const filteredConceptNodes = nodes.filter(node =>
-      edges.find(edge => edge.from === node.id || edge.to === node.id))
-    const nodeData = new vis.DataSet(filteredConceptNodes)
-    const edgeData = new vis.DataSet(edges)
+    cur.nodes = new vis.DataView(new vis.DataSet(cur.conceptNodes), {
+      filter: node => (cur.mode === 'concepts' ? cur.conceptEdges : cur.courseEdges)
+        .find(edge => edge.from === node.id || edge.to === node.id)
+    })
+    cur.edges = new vis.DataSet(cur.conceptEdges)
 
-    const network = new vis.Network(document.getElementById('graph'), {
-      nodes: nodeData,
-      edges: edgeData
+    cur.network = new vis.Network(document.getElementById('graph'), {
+      nodes: cur.nodes,
+      edges: cur.edges
     }, visOptions)
-
-    // Set network
-    setNetwork(network)
-
-    // Global
-    setNodes(nodeData)
-    setEdges(edgeData)
-
-    // Concepts
-    setConceptNodes(nodes)
-    setConceptEdges(edges)
-
-    // Courses
-    setCourseNodes(courseNodes)
-    setCourseEdges(courseEdges)
-
   }
 
   useEffect(() => {(async () => {
@@ -241,9 +213,9 @@ const GraphView = ({ classes, workspaceId }) => {
     <Button className={classes.navigationButton}
       variant='contained'
       color='secondary'
-      onClick={changeGraph}
+      onClick={toggleMode}
     >
-      Switch to {state === 'concepts' ? 'courses' : 'concepts'}
+      Switch to {mode}
     </Button>
   </>
 }
