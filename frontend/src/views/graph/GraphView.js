@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import vis from 'vis'
-import { withStyles } from '@material-ui/core'
+import { withStyles, Button } from '@material-ui/core'
 
 import {
   WORKSPACE_DATA_FOR_GRAPH
@@ -12,6 +12,12 @@ const styles = () => ({
   graph: {
     gridArea: 'content',
     overflow: 'hidden'
+  },
+  navigationButton: {
+    top: '70px',
+    left: '10px',
+    zIndex: '10',
+    position: 'absolute'
   }
 })
 
@@ -68,7 +74,7 @@ const courseNodeStyle = (color) => ({
     color: 'rgba(52, 52, 52, 0.5)'
   },
   color: {
-    background: colorToString(color.bg, 0.25),
+    background: colorToString(color.bg, 1),
     border: colorToString(color.bg, 0.5),
     foreground: colorToString(color.fg, 1),
     highlight: colorToString(color.bg, 0.5)
@@ -108,14 +114,52 @@ const visOptions = {
 }
 
 const GraphView = ({ classes, workspaceId }) => {
-  useEffect(() => {(async () => {
-    const response = await client.query({
-      query: WORKSPACE_DATA_FOR_GRAPH,
-      variables: {
-        id: workspaceId
-      }
-    })
 
+  // Network data
+  const [network, setNetwork] = useState(null)
+
+  // Global data
+  const [nodes, setNodes] = useState(null)
+  const [edges, setEdges] = useState(null)
+
+  // State
+  const [state, setState] = useState('concepts')
+
+  // Concept data
+  const [conceptNodes, setConceptNodes] = useState([])
+  const [conceptEdges, setConceptEdges] = useState([])
+
+  // Course data
+  const [courseNodes, setCourseNodes] = useState([])
+  const [courseEdges, setCourseEdges] = useState([])
+
+  const changeGraph = () => {
+    if (!network) {
+      alert('Network is not defined.')
+      return
+    }
+    nodes.clear()
+    edges.clear()
+    if (state == 'concepts') {
+      for (const courseNode of courseNodes) {
+        nodes.add(courseNode)
+      }
+      for (const courseEdge of courseEdges) {
+        edges.add(courseEdge)
+      }
+      setState('courses')
+    } else {
+      for (const conceptNode of conceptNodes) {
+        nodes.add(conceptNode)
+      }
+      for (const conceptEdge of conceptEdges) {
+        edges.add(conceptEdge)
+      }
+      setState('concepts')
+    }
+  }
+
+  const drawConceptGraph = (data) => {
     let nodes = []
     const edges = []
 
@@ -123,7 +167,7 @@ const GraphView = ({ classes, workspaceId }) => {
     const courseEdges = []
 
     let colorIndex = 0
-    for (const course of response.data.workspaceById.courses) {
+    for (const course of data.workspaceById.courses) {
       course.color = colors[colorIndex++]
       for (const concept of course.concepts) {
         nodes.push({
@@ -164,13 +208,54 @@ const GraphView = ({ classes, workspaceId }) => {
     // Remove all nodes that don't have links
     nodes = nodes.filter(node => edges.find(edge => edge.from === node.id || edge.to === node.id))
 
-    new vis.Network(document.getElementById('graph'), {
-      nodes,
-      edges
+    // Create edges and nodes
+    const nodeData = new vis.DataSet(nodes)
+    const edgeData = new vis.DataSet(edges)
+
+    const network = new vis.Network(document.getElementById('graph'), {
+      nodes: nodeData,
+      edges: edgeData
     }, visOptions)
+
+    // Set network
+    setNetwork(network)
+
+    // Global
+    setNodes(nodeData)
+    setEdges(edgeData)
+
+    // Concepts
+    setConceptNodes(nodes)
+    setConceptEdges(edges)
+
+    // Courses
+    setCourseNodes(courseNodes)
+    setCourseEdges(courseEdges)
+
+  }
+
+  useEffect(() => {(async () => {
+    const response = await client.query({
+      query: WORKSPACE_DATA_FOR_GRAPH,
+      variables: {
+        id: workspaceId
+      }
+    })
+    drawConceptGraph(response.data)
   })()}, [])
 
-  return <div className={classes.graph} id='graph' />
+  return (
+    <>
+    <div className={classes.graph} id='graph' />
+      <Button className={classes.navigationButton}
+        variant='contained'
+        color='secondary'
+        onClick={changeGraph}
+      >
+        {`Switch to ${state === 'concepts' ? 'courses' : 'concepts'}`}
+      </Button>
+    </>
+  )
 }
 
 export default withStyles(styles)(GraphView)
