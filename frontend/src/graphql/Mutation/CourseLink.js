@@ -13,6 +13,9 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
         name
         description
         official
+        courses {
+          id
+        }
         linksToConcept {
             official
             id

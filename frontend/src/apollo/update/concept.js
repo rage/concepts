@@ -1,75 +1,63 @@
-import client from '../apolloClient'
 import {
-  COURSE_PREREQUISITES
+  COURSE_PREREQ_FRAGMENT
 } from '../../graphql/Query'
 
-const includedIn = (set, object) =>
-  set.map(p => p.id).includes(object.id)
-
-const deleteConceptUpdate = (courseId, workspaceId, prerequisiteCourseId) =>
-  (store, response) => {
-    try {
-      const dataInStore = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        }
-      })
-
-      const deletedConcept = response.data.deleteConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const courseLink = dataInStoreCopy.courseAndPrerequisites
-        .linksToCourse
-        .find(link => link.from.id === prerequisiteCourseId)
-      const prereqCourse = courseLink.from
-      if (includedIn(prereqCourse.concepts, deletedConcept)) {
-        prereqCourse.concepts = prereqCourse.concepts.filter(c => c.id !== deletedConcept.id)
-        client.writeQuery({
-          query: COURSE_PREREQUISITES,
-          variables: {
-            courseId,
-            workspaceId
-          },
-          data: dataInStoreCopy
-        })
+const createConcept = (store, response) => {
+  try {
+    const addedConcept = response.data.createConcept
+    const course = store.readFragment({
+      id: addedConcept.courses[0].id,
+      fragment: COURSE_PREREQ_FRAGMENT
+    })
+    store.writeFragment({
+      id: addedConcept.courses[0].id,
+      fragment: COURSE_PREREQ_FRAGMENT,
+      data: {
+        ...course,
+        concepts: [...course.concepts, addedConcept]
       }
-    } catch (e) {}
-  }
+    })
+  } catch (error) { }
+}
 
-const updateConceptUpdate = (courseId, workspaceId) =>
-  (store, response) => {
-    try {
-      const dataInStore = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        }
-      })
-
-      const updatedConcept = response.data.updateConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const courseLink = dataInStoreCopy.courseAndPrerequisites
-        .linksToCourse
-        .find(link => link.from.id === updatedConcept.courses[0].id)
-      const prereqCourse = courseLink.from
-      if (includedIn(prereqCourse.concepts, updatedConcept)) {
-        prereqCourse.concepts = prereqCourse.concepts
-          .map(c => c.id === updatedConcept.id ? updatedConcept : c)
-        client.writeQuery({
-          query: COURSE_PREREQUISITES,
-          variables: {
-            courseId,
-            workspaceId
-          },
-          data: dataInStoreCopy
-        })
+const deleteConceptUpdate = (store, response) => {
+  try {
+    const deletedConcept = response.data.deleteConcept
+    const course = store.readFragment({
+      id: deletedConcept.courseId,
+      fragment: COURSE_PREREQ_FRAGMENT
+    })
+    store.writeFragment({
+      id: deletedConcept.courseId,
+      fragment: COURSE_PREREQ_FRAGMENT,
+      data: {
+        ...course,
+        concepts: course.concepts.filter(c => c.id !== deletedConcept.id)
       }
-    } catch (e) {}
-  }
+    })
+  } catch (error) { }
+}
+
+const updateConceptUpdate = (store, response) => {
+  try {
+    const updatedConcept = response.data.updateConcept
+    const course = store.readFragment({
+      id: updatedConcept.courses[0].id,
+      fragment: COURSE_PREREQ_FRAGMENT
+    })
+    store.writeFragment({
+      id: updatedConcept.courses[0].id,
+      fragment: COURSE_PREREQ_FRAGMENT,
+      data: {
+        ...course,
+        concepts: course.concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c)
+      }
+    })
+  } catch (error) { }
+}
 
 export {
   deleteConceptUpdate,
-  updateConceptUpdate
+  updateConceptUpdate,
+  createConcept
 }

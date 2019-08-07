@@ -8,7 +8,7 @@ import {
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
-import client from '../../apollo/apolloClient'
+import cache from '../../apollo/update'
 
 const styles = theme => ({
   paper: {
@@ -36,22 +36,7 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history, urlPrefix }
   const [error, setError] = useState(false)
 
   const createCourse = useMutation(CREATE_COURSE, {
-    update: (store, response) => {
-      try {
-        const workspace = store.readQuery({
-          query: WORKSPACE_BY_ID,
-          variables: {
-            id: workspaceId
-          }
-        })
-        const createdCourse = response.data.createCourse
-        workspace.workspaceById.courses.push(createdCourse)
-        client.writeQuery({
-          query: WORKSPACE_BY_ID,
-          data: workspace
-        })
-      } catch (ex) {}
-    }
+    update: cache.createCourseUpdate(workspaceId)
   })
 
   const createDefaultCourse = async (e) => {

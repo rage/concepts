@@ -7,8 +7,8 @@ import {
 import { MoreVert as MoreVertIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons'
 
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
-import { CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
-import { createConceptLinkUpdate } from '../../../apollo/update'
+import { CREATE_CONCEPT_LINK, DELETE_CONCEPT } from '../../../graphql/Mutation'
+import cache from '../../../apollo/update'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
 const useStyles = makeStyles(() => ({
@@ -55,15 +55,17 @@ const ActiveConcept = ({
   activeConceptIds,
   addingLink,
   setAddingLink,
-  deleteConcept,
-  activeCourseId,
   workspaceId
 }) => {
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
   const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
-  const openEditConceptDialog = useEditConceptDialog(activeCourseId, workspaceId)
+  const openEditConceptDialog = useEditConceptDialog()
+
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: cache.deleteConceptUpdate
+  })
 
   const handleMenuOpen = event => {
     setState({ anchorEl: event.currentTarget })
@@ -96,7 +98,7 @@ const ActiveConcept = ({
   }
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: createConceptLinkUpdate(concept.courses[0].id, workspaceId)
+    update: cache.createConceptLinkUpdate(concept.courses[0].id, workspaceId)
   })
 
   const onClick = evt => {

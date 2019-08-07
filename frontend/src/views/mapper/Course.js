@@ -62,7 +62,7 @@ const Course = ({
 }) => {
   const { loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
-  const openCreateConceptDialog = useCreateConceptDialog(activeCourseId, workspaceId, true)
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId)
   const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
   const onHeaderClickHandle = () => {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
+import { CircularProgress } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
@@ -13,7 +14,11 @@ const WorkspaceView = ({ workspaceId, location, urlPrefix }) => {
   })
 
   if (!workspaceQuery.data.workspaceById) {
-    return null
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </div>
+    )
   }
 
   return workspaceQuery.data.workspaceById.courses.length > 0

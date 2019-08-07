@@ -33,6 +33,7 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
                        $courseId:ID) {
   createConcept(name:$name, description:$description, official:$official, workspaceId: $workspaceId,
                 courseId:$courseId) {
+    __typename
     id
     name
     description
@@ -62,6 +63,7 @@ const DELETE_CONCEPT = gql`
 mutation deleteConcept($id: ID!) {
   deleteConcept(id: $id) {
     id
+    courseId
   }
 }
 `

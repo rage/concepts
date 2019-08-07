@@ -5,9 +5,26 @@ mutation createCourse($name: String!, $workspaceId: ID!) {
   createCourse(name: $name, workspaceId: $workspaceId) {
     id
     name
+    linksToCourse {
+      from {
+        id
+      }
+    }
     concepts {
       id
       name
+      courses {
+        id
+      }
+      linksToConcept {
+        from {
+          id
+          name
+          courses {
+            id
+          }
+        }
+      }
     }
   }
 }
@@ -18,9 +35,27 @@ mutation updateCourse($id: ID!, $name: String!) {
   updateCourse(id: $id, name: $name) {
     id
     name
+    linksToCourse {
+      from {
+        id
+      }
+    }
+    
     concepts {
       id
       name
+      courses {
+        id
+      }
+      linksToConcept {
+        from {
+          id
+          name
+          courses {
+            id
+          }
+        }
+      }
     }
   }
 }

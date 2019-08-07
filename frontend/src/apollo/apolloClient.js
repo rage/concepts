@@ -4,7 +4,9 @@ let requestsInFlight = 0
 
 const client = new ApolloClient({
   uri: '/graphql',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    dataIdFromObject: o => o.id
+  }),
   request: (operation) => {
     const isMutation = Boolean(operation.query.definitions
       .find(def => def.operation === 'mutation'))

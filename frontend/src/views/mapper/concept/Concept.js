@@ -10,10 +10,7 @@ import {
   DELETE_CONCEPT,
   CREATE_CONCEPT_LINK
 } from '../../../graphql/Mutation'
-import {
-  createConceptLinkUpdate,
-  deleteConceptUpdate
-} from '../../../apollo/update'
+import cache from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
@@ -41,7 +38,6 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Concept = ({
-  course,
   activeCourseId,
   concept,
   activeConceptIds,
@@ -56,14 +52,14 @@ const Concept = ({
   const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
 
-  const openEditConceptDialog = useEditConceptDialog(activeCourseId, workspaceId)
+  const openEditConceptDialog = useEditConceptDialog()
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: createConceptLinkUpdate(activeCourseId, workspaceId)
+    update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: deleteConceptUpdate(activeCourseId, workspaceId, course.id)
+    update: cache.deleteConceptUpdate
   })
 
   const onClick = evt => {
@@ -98,6 +94,7 @@ const Concept = ({
 
   const handleDeleteConcept = async () => {
     const willDelete = window.confirm('Are you sure about this?')
+    handleMenuClose()
     if (willDelete) {
       try {
         await deleteConcept({ variables: { id: concept.id } })
@@ -108,7 +105,6 @@ const Concept = ({
         })
       }
     }
-    handleMenuClose()
   }
 
   const handleEditConcept = () => {

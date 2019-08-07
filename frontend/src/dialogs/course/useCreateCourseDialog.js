@@ -1,14 +1,14 @@
 import { useMutation } from 'react-apollo-hooks'
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
-import { createCourseUpdate } from '../../apollo/update'
+import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 
 const useCreateCourseDialog = workspaceId => {
   const { openDialog } = useDialog()
 
   const createCourse = useMutation(CREATE_COURSE, {
-    update: createCourseUpdate(workspaceId)
+    update: cache.createCourseUpdate(workspaceId)
   })
 
   return () => openDialog({
