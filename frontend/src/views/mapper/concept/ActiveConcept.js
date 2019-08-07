@@ -7,7 +7,7 @@ import {
 import { MoreVert as MoreVertIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons'
 
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
-import { CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
+import { CREATE_CONCEPT_LINK, DELETE_CONCEPT } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
@@ -55,8 +55,6 @@ const ActiveConcept = ({
   activeConceptIds,
   addingLink,
   setAddingLink,
-  deleteConcept,
-  activeCourseId,
   workspaceId
 }) => {
   const [state, setState] = useState({ anchorEl: null })
@@ -64,6 +62,10 @@ const ActiveConcept = ({
   const messageDispatch = useMessageStateValue()[1]
   const { loggedIn } = useLoginStateValue()[0]
   const openEditConceptDialog = useEditConceptDialog()
+
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: cache.deleteConceptUpdate
+  })
 
   const handleMenuOpen = event => {
     setState({ anchorEl: event.currentTarget })

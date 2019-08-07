@@ -38,7 +38,6 @@ const useStyles = makeStyles(() => ({
 }))
 
 const Concept = ({
-  course,
   activeCourseId,
   concept,
   activeConceptIds,

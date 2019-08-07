@@ -1,17 +1,15 @@
 import React, { useRef, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Paper, Select, MenuItem, InputBase, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
-import { DELETE_CONCEPT } from '../../graphql/Mutation'
-import { COURSE_BY_ID } from '../../graphql/Query'
 import ActiveConcept from './concept/ActiveConcept'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
+import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -97,37 +95,9 @@ const ActiveCourse = ({
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId)
   const openEditCourseDialog = useEditCourseDialog(workspaceId)
 
-  const client = useApolloClient()
-
   const createButtonRef = useRef()
   const conceptLinkRef = useRef()
   const activeConceptRef = useRef()
-
-  const includedIn = (set, object) =>
-    set.map(p => p.id).includes(object.id)
-
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: course.id
-        }
-      })
-
-      const deletedConcept = response.data.deleteConcept
-      const dataInStoreCopy = { ...dataInStore }
-      const concepts = dataInStoreCopy.courseById.concepts
-      if (includedIn(concepts, deletedConcept)) {
-        dataInStoreCopy.courseById.concepts = concepts.filter(c => c.id !== deletedConcept.id)
-        client.writeQuery({
-          query: COURSE_BY_ID,
-          variables: { id: course.id },
-          data: dataInStoreCopy
-        })
-      }
-    }
-  })
 
   return (
     <Paper onClick={onClick} elevation={0} className={classes.root}>
@@ -159,7 +129,6 @@ const ActiveCourse = ({
             activeConceptIds={activeConceptIds}
             addingLink={addingLink}
             setAddingLink={setAddingLink}
-            deleteConcept={deleteConcept}
             toggleConcept={toggleConcept}
             activeCourseId={course.id}
             workspaceId={workspaceId}
