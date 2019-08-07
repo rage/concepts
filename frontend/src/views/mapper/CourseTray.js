@@ -10,7 +10,6 @@ import {
 } from '@material-ui/icons'
 
 import cache from '../../apollo/update'
-import { COURSE_PREREQUISITES, COURSES_BY_WORKSPACE } from '../../graphql/Query/Course'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
 import { useMessageStateValue } from '../../store'
@@ -73,19 +72,6 @@ const PrerequisiteCourse = ({
   }
 
   const deleteCourseMutation = useMutation(DELETE_COURSE, {
-    // refetchQueries: [{
-    //   query: COURSES_BY_WORKSPACE,
-    //   variables: {
-    //     workspaceId
-    //   }
-    // },
-    // {
-    //   query: COURSE_PREREQUISITES,
-    //   variables: {
-    //     workspaceId,
-    //     courseId: activeCourseId
-    //   }
-    // }],
     update: cache.deleteCourseUpdate(workspaceId, activeCourseId)
   })
 
@@ -163,7 +149,6 @@ const PrerequisiteCourse = ({
 const CourseTray = ({
   courseTrayOpen,
   activeCourseId,
-  courseId,
   workspaceId,
   courseLinks,
   courses
@@ -177,7 +162,6 @@ const CourseTray = ({
 
   const openEditCourseDialog = useEditCourseDialog(workspaceId)
   const openCreateCourseDialog = useCreateCourseDialog(workspaceId)
-  const client = useApolloClient()
 
   useEffect(() => {
     const enoughCourses = courses && courses.length === 1
@@ -188,48 +172,12 @@ const CourseTray = ({
     }
   }, [courseTrayOpen, courses, courseLinks])
 
-  const includedIn = (set, object) =>
-    set.map(p => p.id).includes(object.id)
-
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: { courseId, workspaceId }
-      })
-      const addedCourseLink = response.data.createCourseLink
-      const dataInStoreCopy = { ...dataInStore }
-      const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
-      if (!includedIn(courseLinks, addedCourseLink)) {
-        courseLinks.push(addedCourseLink)
-        client.writeQuery({
-          query: COURSE_PREREQUISITES,
-          variables: { courseId, workspaceId },
-          data: dataInStoreCopy
-        })
-      }
-    }
+    update: cache.createCourseLinkUpdate(workspaceId, activeCourseId)
   })
 
   const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
-    update: (store, response) => {
-      const dataInStore = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: { courseId, workspaceId }
-      })
-      const removedCourseLink = response.data.deleteCourseLink
-      const dataInStoreCopy = { ...dataInStore }
-      const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
-      if (includedIn(courseLinks, removedCourseLink)) {
-        dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks
-          .filter(course => course.id !== removedCourseLink.id)
-        client.writeQuery({
-          query: COURSE_PREREQUISITES,
-          variables: { courseId, workspaceId },
-          data: dataInStoreCopy
-        })
-      }
-    }
+    update: cache.deleteCourseLinkUpdate(workspaceId, activeCourseId)
   })
 
   const handleKeywordInput = (e) => {
