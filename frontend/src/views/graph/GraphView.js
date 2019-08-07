@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { withStyles, Button } from '@material-ui/core'
+import { makeStyles, Button } from '@material-ui/core'
 import vis from 'vis'
 
 import {
@@ -8,7 +8,7 @@ import {
 import client from '../../apollo/apolloClient'
 import colors from './colors'
 
-const styles = () => ({
+const useStyles = makeStyles({
   graph: {
     gridArea: 'content',
     overflow: 'hidden'
@@ -105,7 +105,8 @@ const visOptions = {
   }
 }
 
-const GraphView = ({ classes, workspaceId }) => {
+const GraphView = ({ workspaceId }) => {
+  const classes = useStyles()
   const [mode, redraw] = useState('concepts')
   const state = useRef({
     network: null,
@@ -220,4 +221,4 @@ const GraphView = ({ classes, workspaceId }) => {
   </>
 }
 
-export default withStyles(styles)(GraphView)
+export default GraphView
