@@ -141,17 +141,17 @@ const GraphView = ({ classes, workspaceId }) => {
     nodes.clear()
     edges.clear()
     if (state == 'concepts') {
-      for (const courseNode of courseNodes) {
-        nodes.add(courseNode)
-      }
+      courseNodes.filter(node =>
+        courseEdges.find(edge => edge.from === node.id || edge.to === node.id))
+        .forEach(courseNode => nodes.add(courseNode))
       for (const courseEdge of courseEdges) {
         edges.add(courseEdge)
       }
       setState('courses')
     } else {
-      for (const conceptNode of conceptNodes) {
-        nodes.add(conceptNode)
-      }
+      conceptNodes.filter(node =>
+        conceptEdges.find(edge => edge.from === node.id || edge.to === node.id))
+        .forEach(conceptNode => nodes.add(conceptNode))
       for (const conceptEdge of conceptEdges) {
         edges.add(conceptEdge)
       }
@@ -160,7 +160,7 @@ const GraphView = ({ classes, workspaceId }) => {
   }
 
   const drawConceptGraph = (data) => {
-    let nodes = []
+    const nodes = []
     const edges = []
 
     const courseNodes = []
@@ -205,11 +205,10 @@ const GraphView = ({ classes, workspaceId }) => {
       })
     }
 
-    // Remove all nodes that don't have links
-    nodes = nodes.filter(node => edges.find(edge => edge.from === node.id || edge.to === node.id))
-
     // Create edges and nodes
-    const nodeData = new vis.DataSet(nodes)
+    const filteredConceptNodes = nodes.filter(node =>
+      edges.find(edge => edge.from === node.id || edge.to === node.id))
+    const nodeData = new vis.DataSet(filteredConceptNodes)
     const edgeData = new vis.DataSet(edges)
 
     const network = new vis.Network(document.getElementById('graph'), {
