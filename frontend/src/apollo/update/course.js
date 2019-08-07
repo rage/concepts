@@ -1,6 +1,6 @@
 import client from '../apolloClient'
 import {
-  WORKSPACE_BY_ID, COURSES_FOR_WORKSPACE_FRAGMENT, COURSE_PREREQUISITES
+  WORKSPACE_BY_ID, COURSE_PREREQUISITES
 } from '../../graphql/Query'
 
 const includedIn = (set, object) =>
@@ -8,22 +8,6 @@ const includedIn = (set, object) =>
 
 const createCourseUpdate = (workspaceId) =>
   (store, response) => {
-    // Update other
-    try {
-      const addedCourse = response.data.createCourse
-      const workspace = store.readFragment({
-        id: workspaceId,
-        fragment: COURSES_FOR_WORKSPACE_FRAGMENT
-      })
-      store.writeFragment({
-        id: workspaceId,
-        fragment: COURSES_FOR_WORKSPACE_FRAGMENT,
-        data: {
-          ...workspace,
-          courses: [...workspace.courses, addedCourse]
-        }
-      })
-    } catch (error) { }
     // Update WORKSPACE_BY_ID
     try {
       const dataInStore = store.readQuery({
@@ -44,22 +28,6 @@ const createCourseUpdate = (workspaceId) =>
 
 const updateCourseUpdate = (workspaceId) =>
   (store, response) => {
-    // Update other
-    try {
-      const updatedCourse = response.data.updateCourse
-      const workspace = store.readFragment({
-        id: workspaceId,
-        fragment: COURSES_FOR_WORKSPACE_FRAGMENT
-      })
-      store.writeFragment({
-        id: workspaceId,
-        fragment: COURSES_FOR_WORKSPACE_FRAGMENT,
-        data: {
-          ...workspace,
-          courses: workspace.courses.map(c => c.id === updatedCourse.id ? updatedCourse : c)
-        }
-      })
-    } catch (error) { }
     // Update WORKSPACE_BY_ID
     try {
       const dataInStore = store.readQuery({
@@ -81,22 +49,6 @@ const updateCourseUpdate = (workspaceId) =>
 
 const deleteCourseUpdate = (workspaceId, activeCourseId) =>
   (store, response) => {
-    // Update other
-    try {
-      const deletedCourse = response.data.deleteCourse
-      const workspace = store.readFragment({
-        id: workspaceId,
-        fragment: COURSES_FOR_WORKSPACE_FRAGMENT
-      })
-      store.writeFragment({
-        id: workspaceId,
-        fragment: COURSES_FOR_WORKSPACE_FRAGMENT,
-        data: {
-          ...workspace,
-          courses: workspace.courses.filter(c => c.id !== deletedCourse.id)
-        }
-      })
-    } catch (error) { }
     // Update WORKSPACE_BY_ID
     try {
       const dataInStore = store.readQuery({

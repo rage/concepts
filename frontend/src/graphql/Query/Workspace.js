@@ -17,6 +17,7 @@ const ALL_WORKSPACES = gql`
 
 const COURSES_FOR_WORKSPACE_FRAGMENT = gql`
 fragment coursesForWorkspace on Workspace {
+  id
   courses {
     id
     name
@@ -91,52 +92,20 @@ const WORKSPACE_DATA_FOR_GRAPH = gql`
 query workspaceById($id: ID!) {
 workspaceById(id: $id) {
   id
-  courses {
-    id
-    name
-    linksToCourse {
-      from {
-        id
-      }
-    }
-    concepts {
-      id
-      name
-      description
-      linksToConcept {
-        from {
-          id
-        }
-      }
-    }
-  }
+  ...coursesForWorkspace
 }
 }
+${COURSES_FOR_WORKSPACE_FRAGMENT}
 `
 
 const WORKSPACE_COURSES_AND_CONCEPTS = gql`
 query workspaceById($id: ID!) {
 workspaceById(id: $id) {
   id
-  courses {
-    id
-    name
-    concepts {
-      id
-      name
-      linksToConcept {
-        from {
-          id
-          name
-          courses {
-            id
-          }
-        }
-      }
-    }
-  }
+  ...coursesForWorkspace
 }
 }
+${COURSES_FOR_WORKSPACE_FRAGMENT}
 `
 
 const WORKSPACE_BY_SOURCE_TEMPLATE = gql`
