@@ -66,10 +66,10 @@ const courseNodeStyle = (color) => ({
     color: 'rgba(52, 52, 52, 0.5)'
   },
   color: {
-    background: colorToString(color.bg, 1),
+    background: colorToString(color.bg, 0.8),
     border: colorToString(color.bg, 0.5),
     foreground: colorToString(color.fg, 1),
-    highlight: colorToString(color.bg, 0.5)
+    highlight: colorToString(color.bg, 1)
   },
   shape: 'ellipse',
   mass: 2
@@ -107,7 +107,7 @@ const visOptions = {
 
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
-  const [mode, redraw] = useState('concepts')
+  const [nextMode, redraw] = useState('courses')
   const state = useRef({
     network: null,
     nodes: null,
@@ -131,12 +131,13 @@ const GraphView = ({ workspaceId }) => {
       cur.mode = 'courses'
       cur.nodes.getDataSet().add(cur.courseNodes)
       cur.edges.getDataSet().add(cur.courseEdges)
+      redraw('concepts')
     } else {
       cur.mode = 'concepts'
       cur.nodes.getDataSet().add(cur.conceptNodes)
       cur.edges.getDataSet().add(cur.conceptEdges)
+      redraw('courses')
     }
-    redraw(cur.mode)
   }
 
   const drawConceptGraph = data => {
@@ -216,7 +217,7 @@ const GraphView = ({ workspaceId }) => {
       color='secondary'
       onClick={toggleMode}
     >
-      Switch to {mode}
+      Switch to {nextMode}
     </Button>
   </>
 }
