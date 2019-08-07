@@ -1,5 +1,5 @@
 import client from '../apolloClient'
-import { COURSES_BY_WORKSPACE } from '../../graphql/Query'
+import { COURSES_FOR_WORKSPACE_FRAGMENT, COURSES_BY_WORKSPACE } from '../../graphql/Query'
 
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
@@ -7,21 +7,38 @@ const includedIn = (set, object) =>
 const createCourseUpdate = (workspaceId) =>
   (store, response) => {
     try {
-      const dataInStore = store.readQuery({
-        query: COURSES_BY_WORKSPACE,
-        variables: { workspaceId }
-      })
       const addedCourse = response.data.createCourse
+      const workspace = store.readFragment({
+        id: workspaceId,
+        fragment: COURSES_FOR_WORKSPACE_FRAGMENT
+      })
+      store.writeFragment({
+        id: workspaceId,
+        fragment: COURSES_FOR_WORKSPACE_FRAGMENT,
+        data: {
+          ...workspace,
+          courses: [...workspace.courses, addedCourse]
+        }
+      })
+    } catch (error) {
 
-      if (!includedIn(dataInStore.coursesByWorkspace, addedCourse)) {
-        dataInStore.coursesByWorkspace.push(addedCourse)
-        client.writeQuery({
-          query: COURSES_BY_WORKSPACE,
-          variables: { workspaceId },
-          data: dataInStore
-        })
-      }
-    } catch (e) {}
+    }
+    // try {
+    //   const dataInStore = store.readQuery({
+    //     query: COURSES_BY_WORKSPACE,
+    //     variables: { workspaceId }
+    //   })
+    //   const addedCourse = response.data.createCourse
+
+    //   if (!includedIn(dataInStore.coursesByWorkspace, addedCourse)) {
+    //     dataInStore.coursesByWorkspace.push(addedCourse)
+    //     client.writeQuery({
+    //       query: COURSES_BY_WORKSPACE,
+    //       variables: { workspaceId },
+    //       data: dataInStore
+    //     })
+    //   }
+    // } catch (e) { }
   }
 
 const updateCourseUpdate = (workspaceId) =>
@@ -42,7 +59,7 @@ const updateCourseUpdate = (workspaceId) =>
           data: dataInStore
         })
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 
 export {

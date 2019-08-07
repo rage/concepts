@@ -15,6 +15,36 @@ const ALL_WORKSPACES = gql`
 }
 `
 
+const COURSES_FOR_WORKSPACE_FRAGMENT = gql`
+fragment coursesForWorkspace on Workspace {
+  courses {
+    id
+    name
+    linksToCourse {
+      from {
+        id
+      }
+    }
+    concepts {
+      id
+      name
+      courses {
+        id
+      }
+      linksToConcept {
+        from {
+          id
+          name
+          courses {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+`
+
 const WORKSPACES_FOR_USER = gql`
 query workspacesForUser {
   workspacesForUser {
@@ -41,6 +71,14 @@ query workspaceById($id: ID!) {
     name
     courses {
       id
+      name
+      concepts {
+        id
+        name
+        courses {
+          id
+        }
+      }
     }
     tokens {
       id
@@ -122,5 +160,6 @@ export {
   WORKSPACE_BY_ID,
   WORKSPACE_COURSES_AND_CONCEPTS,
   WORKSPACE_DATA_FOR_GRAPH,
-  WORKSPACE_BY_SOURCE_TEMPLATE
+  WORKSPACE_BY_SOURCE_TEMPLATE,
+  COURSES_FOR_WORKSPACE_FRAGMENT
 }

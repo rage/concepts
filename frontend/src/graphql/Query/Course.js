@@ -8,6 +8,9 @@ query coursesByWorkspace($workspaceId: ID!) {
     concepts {
       id
       name
+      courses {
+        id
+      }
     }
   }
 }
@@ -24,7 +27,7 @@ query courseById($id: ID!) {
       description
       official
       courses {
-          id
+        id
       }
       linksFromConcept {
         id
