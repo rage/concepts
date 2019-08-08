@@ -11,7 +11,7 @@ import { CREATE_CONCEPT_LINK, DELETE_CONCEPT } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   conceptName: {
     maxWidth: '70%',
     overflowWrap: 'break-word',
@@ -193,7 +193,7 @@ const ActiveConcept = ({
             buttonRef={conceptLinkRef}
             onClick={onClick}
             className={`${classes.conceptCircle}
-          ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
+                        ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
           >
             <ArrowRightIcon
               viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
