@@ -130,8 +130,9 @@ const GraphView = ({ workspaceId }) => {
 
     cur.nodes.getDataSet().clear()
     cur.edges.getDataSet().clear()
-    cur.nodes.getDataSet().add(cur[`${cur.mode}Nodes`])
-    cur.edges.getDataSet().add(cur[`${cur.mode}Edges`])
+    const singular = cur.mode.slice(0, -1)
+    cur.nodes.getDataSet().add(cur[`${singular}Nodes`])
+    cur.edges.getDataSet().add(cur[`${singular}Edges`])
 
     redraw(oldMode)
   }
