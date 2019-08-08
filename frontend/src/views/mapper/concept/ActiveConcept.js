@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  ListItem, ListItemText, ListItemSecondaryAction, Menu, MenuItem, IconButton
+  ListItem, ListItemText, ListItemSecondaryAction, Menu, MenuItem, IconButton, Tooltip, Fade
 } from '@material-ui/core'
 import { MoreVert as MoreVertIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons'
 
@@ -11,7 +11,7 @@ import { CREATE_CONCEPT_LINK, DELETE_CONCEPT } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   conceptName: {
     maxWidth: '70%',
     overflowWrap: 'break-word',
@@ -44,6 +44,16 @@ const useStyles = makeStyles(() => ({
   },
   otherNameActive: {
     color: 'grey'
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
+  },
+  popper: {
+    padding: '5px'
   }
 }))
 
@@ -132,58 +142,67 @@ const ActiveConcept = ({
     ? 'secondary' : undefined
 
   return (
-    <ListItem
-      ref={activeConceptRef}
-      button divider id={'concept-' + concept.id}
-      className={classes.listItem}
-      onClick={toggleConcept(concept.id)}
-    >
-      <ListItemText
-        id={'concept-name-' + concept.id}
-        className={classes.conceptName}
+    <Tooltip
+      placement='top'
+      classes={{
+        tooltip: classes.tooltip,
+        popper: classes.popper
+      }}
+      TransitionComponent={Fade}
+      title={concept.description === '' ? 'No description available' : concept.description}>
+      <ListItem
+        ref={activeConceptRef}
+        button divider id={'concept-' + concept.id}
+        className={classes.listItem}
+        onClick={toggleConcept(concept.id)}
       >
-        {concept.name}
-      </ListItemText>
-      <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-        {activeConceptIds.length === 0 ?
-          <React.Fragment>
-            {loggedIn ?
-              <IconButton
-                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                aria-haspopup='true'
-                onClick={handleMenuOpen}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              : null
-            }
-            <Menu
-              id='simple-menu'
-              anchorEl={state.anchorEl}
-              open={Boolean(state.anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleEditConcept}>
-                Edit
-              </MenuItem>
-              <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
-            </Menu>
-          </React.Fragment>
-          : null
-        }
-        <IconButton
-          buttonRef={conceptLinkRef}
-          onClick={onClick}
-          className={`${classes.conceptCircle}
-          ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
+        <ListItemText
+          id={'concept-name-' + concept.id}
+          className={classes.conceptName}
         >
-          <ArrowRightIcon
-            viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
-            color={linkButtonColor}
-          />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
+          {concept.name}
+        </ListItemText>
+        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+          {activeConceptIds.length === 0 ?
+            <>
+              {loggedIn ?
+                <IconButton
+                  aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                  aria-haspopup='true'
+                  onClick={handleMenuOpen}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                : null
+              }
+              <Menu
+                id='simple-menu'
+                anchorEl={state.anchorEl}
+                open={Boolean(state.anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleEditConcept}>
+                Edit
+                </MenuItem>
+                <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
+              </Menu>
+            </>
+            : null
+          }
+          <IconButton
+            buttonRef={conceptLinkRef}
+            onClick={onClick}
+            className={`${classes.conceptCircle}
+          ${activeConceptIds.includes(concept.id) ? 'conceptCircleActive' : ''}`}
+          >
+            <ArrowRightIcon
+              viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
+              color={linkButtonColor}
+            />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Tooltip>
   )
 }
 
