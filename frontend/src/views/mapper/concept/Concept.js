@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton
+  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Fade
 } from '@material-ui/core'
 import { MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon } from '@material-ui/icons'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import {
   DELETE_CONCEPT,
@@ -14,7 +15,7 @@ import cache from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   conceptName: {
     maxWidth: '60%',
     overflowWrap: 'break-word',
@@ -34,6 +35,16 @@ const useStyles = makeStyles(() => ({
     '&:focus': {
       backgroundColor: '#fff'
     }
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
+  },
+  popper: {
+    padding: '5px'
   }
 }))
 
@@ -120,50 +131,59 @@ const Concept = ({
     ? 'secondary' : undefined
 
   return (
-    <ListItem
-      divider
-      button={activeConceptIds.length !== 0}
-      onClick={onClick}
-      className={classes.inactive}
-      id={'concept-' + concept.id}
-    >
-      <ListItemIcon>
-        <IconButton buttonRef={connectionRef} onClick={onClick} style={{ padding: '4px' }}>
-          <ArrowLeftIcon
-            viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
-            color={linkButtonColor} />
-        </IconButton>
-      </ListItemIcon>
-      <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
-        {concept.name}
-      </ListItemText>
-      <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-        {activeConceptIds.length === 0 ?
-          <React.Fragment>
-            {
-              loggedIn ?
-                <IconButton
-                  aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                  aria-haspopup='true'
-                  onClick={handleMenuOpen}
-                >
-                  <MoreVertIcon />
-                </IconButton> : null
-            }
-            <Menu
-              id='simple-menu'
-              anchorEl={state.anchorEl}
-              open={Boolean(state.anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
-              <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
-            </Menu>
-          </React.Fragment>
-          : null
-        }
-      </ListItemSecondaryAction>
-    </ListItem>
+    <Tooltip
+      placement='top'
+      classes={{
+        tooltip: classes.tooltip,
+        popper: classes.popper
+      }}
+      TransitionComponent={Fade}
+      title={concept.description === '' ? 'No description available' : concept.description}>
+      <ListItem
+        divider
+        button={activeConceptIds.length !== 0}
+        onClick={onClick}
+        className={classes.inactive}
+        id={'concept-' + concept.id}
+      >
+        <ListItemIcon>
+          <IconButton buttonRef={connectionRef} onClick={onClick} style={{ padding: '4px' }}>
+            <ArrowLeftIcon
+              viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
+              color={linkButtonColor} />
+          </IconButton>
+        </ListItemIcon>
+        <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
+          {concept.name}
+        </ListItemText>
+        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+          {activeConceptIds.length === 0 ?
+            <>
+              {
+                loggedIn ?
+                  <IconButton
+                    aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                    aria-haspopup='true'
+                    onClick={handleMenuOpen}
+                  >
+                    <MoreVertIcon />
+                  </IconButton> : null
+              }
+              <Menu
+                id='simple-menu'
+                anchorEl={state.anchorEl}
+                open={Boolean(state.anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
+                <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
+              </Menu>
+            </>
+            : null
+          }
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Tooltip>
   )
 }
 
