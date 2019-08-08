@@ -185,11 +185,11 @@ const GraphView = ({ workspaceId }) => {
       }
     }
 
-    cur.nodes = new vis.DataView(new vis.DataSet(cur.conceptNodes), {
+    cur.nodes = new vis.DataView(new vis.DataSet(cur.courseNodes), {
       filter: node => (cur.mode === 'concepts' ? cur.conceptEdges : cur.courseEdges)
         .find(edge => edge.from === node.id || edge.to === node.id)
     })
-    cur.edges = new vis.DataSet(cur.conceptEdges)
+    cur.edges = new vis.DataSet(cur.courseEdges)
 
     cur.network = new vis.Network(document.getElementById('graph'), {
       nodes: cur.nodes,
