@@ -26,14 +26,13 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"activeCourse contentHeader contentHeader" 64px
-                   "activeCourse courses       courses"       1fr
-                   / 25%         auto          25%`,
+    gridTemplate: `"activeCourse contentHeader courseTray" 64px
+                   "activeCourse courses       courseTray" 1fr
+                   / 25%         auto          0`,
     '&.courseTrayOpen': {
-      gridTemplateAreas:
-        `"activeCourse contentHeader courseTray"
-         "activeCourse courses       courseTray"`
+      gridTemplateColumns: '25% auto 25%'
     },
+    transition: 'grid-template-columns .15s linear',
     '@media screen and (max-width: 1000px)': {
       gridTemplateColumns: '32% auto 32%'
     }
@@ -63,10 +62,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   const courseQuery = useQuery(COURSE_BY_ID, {
     variables: { id: courseId }
-  })
-
-  const createCourse = useMutation(CREATE_COURSE, {
-    update: cache.createCourseUpdate(workspaceId)
   })
 
   const updateCourse = useMutation(UPDATE_COURSE, {
@@ -166,17 +161,13 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             setAddingLink={setAddingLink}
             courseTrayOpen={courseTrayOpen}
             activeCourse={courseQuery.data.courseById}
-            setCourseTrayOpen={setCourseTrayOpen}
             workspaceId={workspaceQuery.data.workspaceById.id}
             urlPrefix={urlPrefix}
           />
           <CourseTray
             activeCourseId={courseQuery.data.courseById.id}
-            courseId={courseQuery.data.courseById.id}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-            setCourseTrayOpen={setCourseTrayOpen}
             courseTrayOpen={courseTrayOpen}
-            createCourse={createCourse}
             courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
           />

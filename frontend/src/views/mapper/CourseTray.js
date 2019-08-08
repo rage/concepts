@@ -192,10 +192,6 @@ const CourseTray = ({
 
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
-  if (!courseTrayOpen) {
-    return null
-  }
-
   return (
     <Paper elevation={0} className={classes.root}>
       <Typography className={classes.title} variant='h4'>
