@@ -8,6 +8,7 @@ import {
 import {
   MoreVert as MoreVertIcon
 } from '@material-ui/icons'
+import { withRouter } from 'react-router-dom'
 
 import cache from '../../apollo/update'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
@@ -47,17 +48,17 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const PrerequisiteCourse = ({
+const PrerequisiteCourse = withRouter(({
   isPrerequisite,
   getLinkToDelete,
   course,
-  coursesAmount,
   checkboxRef,
   activeCourseId,
   workspaceId,
   createCourseLink,
   deleteCourseLink,
-  openEditCourseDialog
+  openEditCourseDialog,
+  history
 }) => {
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
@@ -77,22 +78,18 @@ const PrerequisiteCourse = ({
 
   const deleteCourse = () => {
     try {
-      if (coursesAmount > 1) {
-        const willDelete = window.confirm('Are you sure you want to delete this course?')
-        if (willDelete) {
-          deleteCourseMutation({
-            variables: {
-              id: course.id
-            }
-          })
-        }
-      } else {
-        messageDispatch({
-          type: 'setError',
-          data: 'The last course cannot be deleted'
+      const willDelete = window.confirm('Are you sure you want to delete this course?')
+      if (willDelete) {
+        deleteCourseMutation({
+          variables: {
+            id: course.id
+          }
+        }).then(() => {
+          if (activeCourseId === course.id) {
+            history.push(`/workspaces/${workspaceId}/mapper`)
+          }
         })
       }
-
     } catch (ex) { }
   }
 
@@ -144,7 +141,7 @@ const PrerequisiteCourse = ({
       </ListItem>
     </Tooltip>
   )
-}
+})
 
 const CourseTray = ({
   courseTrayOpen,
@@ -228,7 +225,7 @@ const CourseTray = ({
                 getLinkToDelete={getLinkToDelete}
                 workspaceId={workspaceId}
                 openEditCourseDialog={openEditCourseDialog}
-                coursesAmount={courses.length}
+                workspaceId={workspaceId}
               />
             )
           }
