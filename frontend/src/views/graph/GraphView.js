@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button, DialogContent, CircularProgress } from '@material-ui/core'
+import { makeStyles, Button, CircularProgress } from '@material-ui/core'
 import vis from 'vis'
 
 import {
@@ -209,9 +209,9 @@ const GraphView = ({ workspaceId }) => {
 
   return <>
     <div className={classes.graph} id='graph'>
-      <DialogContent style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center' }}>
         <CircularProgress />
-      </DialogContent>
+      </div>
     </div>
     <Button className={classes.navigationButton}
       variant='contained'
