@@ -58,7 +58,8 @@ const PrerequisiteCourse = withRouter(({
   createCourseLink,
   deleteCourseLink,
   openEditCourseDialog,
-  history
+  history,
+  courses
 }) => {
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
@@ -86,7 +87,12 @@ const PrerequisiteCourse = withRouter(({
           }
         }).then(() => {
           if (activeCourseId === course.id) {
-            history.push(`/workspaces/${workspaceId}/mapper`)
+            if (courses.length > 1) {
+              const nextCourse = courses.find(c => c.id != course.id)
+              history.push(`/workspaces/${workspaceId}/mapper/${nextCourse.id}`)
+            } else {
+              history.push(`/workspaces/${workspaceId}/mapper`)
+            }
           }
         })
       }
@@ -226,6 +232,7 @@ const CourseTray = ({
                 workspaceId={workspaceId}
                 openEditCourseDialog={openEditCourseDialog}
                 workspaceId={workspaceId}
+                courses={courses}
               />
             )
           }
