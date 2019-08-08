@@ -28,13 +28,16 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     gridTemplate: `"activeCourse contentHeader courseTray" 64px
                    "activeCourse courses       courseTray" 1fr
-                   / 25%         auto          0`,
+                   / 25%         75%           25%`,
     '&.courseTrayOpen': {
-      gridTemplateColumns: '25% auto 25%'
+      gridTemplateColumns: '25% 50% 25%'
     },
     transition: 'grid-template-columns .15s linear',
     '@media screen and (max-width: 1000px)': {
-      gridTemplateColumns: '32% auto 32%'
+      gridTemplateColumns: '32% 36% 32%',
+      '&.courseTrayOpen': {
+        gridTemplateColumns: '32% 68% 32%'
+      },
     }
   }
 }))
