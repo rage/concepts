@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button } from '@material-ui/core'
+import { makeStyles, Button, DialogContent, CircularProgress } from '@material-ui/core'
 import vis from 'vis'
 
 import {
@@ -107,7 +107,7 @@ const visOptions = {
 
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
-  const [nextMode, redraw] = useState('courses')
+  const [nextMode, redraw] = useState('concepts')
   const state = useRef({
     network: null,
     nodes: null,
@@ -116,7 +116,7 @@ const GraphView = ({ workspaceId }) => {
     courseEdges: null,
     conceptNodes: null,
     courseNodes: null,
-    mode: 'concepts'
+    mode: 'courses'
   })
 
   const toggleMode = () => {
@@ -125,19 +125,15 @@ const GraphView = ({ workspaceId }) => {
       alert('Network is not defined.')
       return
     }
-    cur.edges.getDataSet().clear()
+    const oldMode = cur.mode
+    cur.mode = nextMode
+
     cur.nodes.getDataSet().clear()
-    if (cur.mode === 'concepts') {
-      cur.mode = 'courses'
-      cur.nodes.getDataSet().add(cur.courseNodes)
-      cur.edges.getDataSet().add(cur.courseEdges)
-      redraw('concepts')
-    } else {
-      cur.mode = 'concepts'
-      cur.nodes.getDataSet().add(cur.conceptNodes)
-      cur.edges.getDataSet().add(cur.conceptEdges)
-      redraw('courses')
-    }
+    cur.edges.getDataSet().clear()
+    cur.nodes.getDataSet().add(cur[`${cur.mode}Nodes`])
+    cur.edges.getDataSet().add(cur[`${cur.mode}Edges`])
+
+    redraw(oldMode)
   }
 
   const drawConceptGraph = data => {
@@ -211,7 +207,11 @@ const GraphView = ({ workspaceId }) => {
   })()}, [])
 
   return <>
-    <div className={classes.graph} id='graph' />
+    <div className={classes.graph} id='graph'>
+      <DialogContent style={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </DialogContent>
+    </div>
     <Button className={classes.navigationButton}
       variant='contained'
       color='secondary'
