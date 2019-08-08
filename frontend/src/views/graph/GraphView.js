@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button } from '@material-ui/core'
+import { makeStyles, Button, CircularProgress } from '@material-ui/core'
 import vis from 'vis'
 
 import {
@@ -107,7 +107,7 @@ const visOptions = {
 
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
-  const [nextMode, redraw] = useState('courses')
+  const [nextMode, redraw] = useState('concepts')
   const state = useRef({
     network: null,
     nodes: null,
@@ -116,7 +116,7 @@ const GraphView = ({ workspaceId }) => {
     courseEdges: null,
     conceptNodes: null,
     courseNodes: null,
-    mode: 'concepts'
+    mode: 'courses'
   })
 
   const toggleMode = () => {
@@ -125,19 +125,16 @@ const GraphView = ({ workspaceId }) => {
       alert('Network is not defined.')
       return
     }
-    cur.edges.getDataSet().clear()
+    const oldMode = cur.mode
+    cur.mode = nextMode
+
     cur.nodes.getDataSet().clear()
-    if (cur.mode === 'concepts') {
-      cur.mode = 'courses'
-      cur.nodes.getDataSet().add(cur.courseNodes)
-      cur.edges.getDataSet().add(cur.courseEdges)
-      redraw('concepts')
-    } else {
-      cur.mode = 'concepts'
-      cur.nodes.getDataSet().add(cur.conceptNodes)
-      cur.edges.getDataSet().add(cur.conceptEdges)
-      redraw('courses')
-    }
+    cur.edges.getDataSet().clear()
+    const singular = cur.mode.slice(0, -1)
+    cur.nodes.getDataSet().add(cur[`${singular}Nodes`])
+    cur.edges.getDataSet().add(cur[`${singular}Edges`])
+
+    redraw(oldMode)
   }
 
   const drawConceptGraph = data => {
@@ -188,11 +185,11 @@ const GraphView = ({ workspaceId }) => {
       }
     }
 
-    cur.nodes = new vis.DataView(new vis.DataSet(cur.conceptNodes), {
+    cur.nodes = new vis.DataView(new vis.DataSet(cur.courseNodes), {
       filter: node => (cur.mode === 'concepts' ? cur.conceptEdges : cur.courseEdges)
         .find(edge => edge.from === node.id || edge.to === node.id)
     })
-    cur.edges = new vis.DataSet(cur.conceptEdges)
+    cur.edges = new vis.DataSet(cur.courseEdges)
 
     cur.network = new vis.Network(document.getElementById('graph'), {
       nodes: cur.nodes,
@@ -211,7 +208,11 @@ const GraphView = ({ workspaceId }) => {
   })()}, [])
 
   return <>
-    <div className={classes.graph} id='graph' />
+    <div className={classes.graph} id='graph'>
+      <div style={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </div>
+    </div>
     <Button className={classes.navigationButton}
       variant='contained'
       color='secondary'
