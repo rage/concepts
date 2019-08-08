@@ -195,6 +195,7 @@ export class Line extends PureComponent {
       this.within.addEventListener('mousemove', this.handleMouse)
     }
     window.addEventListener('resize', this.handleResize)
+    window.addEventListener('redrawConceptLink', this.handleResize)
     window.addEventListener('scroll', this.handleResize, true)
   }
 
@@ -204,6 +205,7 @@ export class Line extends PureComponent {
       this.within.removeEventListener('mousemove', this.handleMouse)
     }
     window.removeEventListener('resize', this.handleResize)
+    window.removeEventListener('redrawConceptLink', this.handleResize)
     window.removeEventListener('scroll', this.handleResize)
   }
 

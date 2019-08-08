@@ -68,8 +68,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
-  console.log(workspaceQuery.data)
-
   useEffect(() => {
     const conceptsExist = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.length === 1
@@ -124,6 +122,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
+    setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 500)
   }
 
   const showFab =
