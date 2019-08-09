@@ -19,7 +19,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     padding: '16px',
     boxSizing: 'border-box',
-    margin: '0 8px'
+    margin: '0 8px',
+    overflow: 'hidden'
   },
   header: {
     display: 'flex',
