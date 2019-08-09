@@ -107,9 +107,6 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
     '&:hover': {
     }
-  },
-  progress: {
-    padding: theme.spacing(2)
   }
 }))
 
@@ -288,7 +285,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
             </div>
             :
             <div style={{ textAlign: 'center' }}>
-              <CircularProgress className={classes.progress} />
+              <CircularProgress />
             </div>
         }
       </Paper>
