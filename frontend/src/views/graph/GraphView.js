@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles, Button, CircularProgress } from '@material-ui/core'
-import vis from 'vis'
+import vis from 'vis-network'
 
 import {
   WORKSPACE_DATA_FOR_GRAPH
