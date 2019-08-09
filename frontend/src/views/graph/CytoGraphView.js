@@ -20,11 +20,29 @@ const useStyles = makeStyles({
     left: '10px',
     zIndex: '10',
     position: 'absolute'
+  },
+  fitButton: {
+    top: '60px',
+    left: '210px',
+    zIndex: '10',
+    position: 'absolute'
   }
 })
 
+function componentToHex(c) {
+  var hex = c.toString(16)
+  return hex.length == 1 ? '0' + hex : hex
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
+}
+
 // Function to converting rgbArray into CSS rgba() color
 const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
+
+// Function to converting rgbArray into CSS hex() color
+const colorToHexString = ([r, g, b]) => rgbToHex(r, g, b)
 
 // Style for edges between concepts (concept links)
 const conceptEdgeStyle = {
@@ -77,10 +95,11 @@ const courseNodeStyle = (color) => ({
   mass: 2
 })
 
+/* eslint-disable max-len, no-unused-vars */
 var options = {
-  nodeDimensionsIncludeLabels: false, // Boolean which changes whether label dimensions are included when calculating node dimensions
+  nodeDimensionsIncludeLabels: true, // Boolean which changes whether label dimensions are included when calculating node dimensions
   fit: true, // Whether to fit
-  padding: 20, // Padding on fit
+  padding: 100, // Padding on fit
   animate: false, // Whether to transition the node positions
   animateFilter: function (node, i) { return true }, // Whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
   animationDuration: 500, // Duration of animation in ms if enabled
@@ -91,19 +110,19 @@ var options = {
   klay: {
     // Following descriptions taken from http://layout.rtsys.informatik.uni-kiel.de:9444/Providedlayout.html?algorithm=de.cau.cs.kieler.klay.layered
     addUnnecessaryBendpoints: false, // Adds bend points even if an edge does not change direction.
-    aspectRatio: 1.6, // The aimed aspect ratio of the drawing, that is the quotient of width by height
+    aspectRatio: 1, // The aimed aspect ratio of the drawing, that is the quotient of width by height
     borderSpacing: 20, // Minimal amount of space to be left to the border
-    compactComponents: false, // Tries to further compact components (disconnected sub-graphs).
+    compactComponents: true, // Tries to further compact components (disconnected sub-graphs).
     crossingMinimization: 'LAYER_SWEEP', // Strategy for crossing minimization.
     /* LAYER_SWEEP The layer sweep algorithm iterates multiple times over the layers, trying to find node orderings that minimize the number of crossings. The algorithm uses randomization to increase the odds of finding a good result. To improve its results, consider increasing the Thoroughness option, which influences the number of iterations done. The Randomization seed also influences results.
     INTERACTIVE Orders the nodes of each layer by comparing their positions before the layout algorithm was started. The idea is that the relative order of nodes as it was before layout was applied is not changed. This of course requires valid positions for all nodes to have been set on the input graph before calling the layout algorithm. The interactive layer sweep algorithm uses the Interactive Reference Point option to determine which reference point of nodes are used to compare positions. */
     cycleBreaking: 'GREEDY', // Strategy for cycle breaking. Cycle breaking looks for cycles in the graph and determines which edges to reverse to break the cycles. Reversed edges will end up pointing to the opposite direction of regular edges (that is, reversed edges will point left if edges usually point right).
     /* GREEDY This algorithm reverses edges greedily. The algorithm tries to avoid edges that have the Priority property set.
     INTERACTIVE The interactive algorithm tries to reverse edges that already pointed leftwards in the input graph. This requires node and port coordinates to have been set to sensible values.*/
-    direction: 'UNDEFINED', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
+    direction: 'DOWN', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
     /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
-    edgeRouting: 'POLYLINE', // Defines how edges are routed (POLYLINE, ORTHOGONAL, SPLINES)
-    edgeSpacingFactor: 0.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
+    edgeRouting: 'ORTHOGONAL', // Defines how edges are routed (POLYLINE, ORTHOGONAL, SPLINES)
+    edgeSpacingFactor: 1.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
     feedbackEdges: false, // Whether feedback edges should be highlighted by routing around the nodes.
     fixedAlignment: 'NONE', // Tells the BK node placer to use a certain alignment instead of taking the optimal result.  This option should usually be left alone.
     /* NONE Chooses the smallest layout from the four possible candidates.
@@ -112,7 +131,7 @@ var options = {
     LEFTDOWN Chooses the left-down candidate from the four possible candidates.
     RIGHTDOWN Chooses the right-down candidate from the four possible candidates.
     BALANCED Creates a balanced layout from the four possible candidates. */
-    inLayerSpacingFactor: 1.0, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
+    inLayerSpacingFactor: 2.5, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
     layoutHierarchy: true, // Whether the selected layouter should consider the full hierarchy
     linearSegmentsDeflectionDampening: 0.3, // Dampens the movement of nodes to keep the diagram from getting too large.
     mergeEdges: false, // Edges that have no ports are merged so they touch the connected nodes at the same points.
@@ -129,15 +148,16 @@ var options = {
     randomizationSeed: 1, // Seed used for pseudo-random number generators to control the layout algorithm; 0 means a new seed is generated
     routeSelfLoopInside: false, // Whether a self-loop is routed around or inside its node.
     separateConnectedComponents: true, // Whether each connected component should be processed separately
-    spacing: 50, // Overall setting for the minimal amount of space to be left between objects
-    thoroughness: 25 // How much effort should be spent to produce a nice layout..
+    spacing: 40, // Overall setting for the minimal amount of space to be left between objects
+    thoroughness: 12 // How much effort should be spent to produce a nice layout..
   },
   priority: function (edge) { return null } // Edges with a non-nil value are skipped when geedy edge cycle breaking is enabled
 }
+/* eslint-enable max-len, no-unused-vars */
 
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
-  const [nextMode, redraw] = useState('concepts')
+  const [nextMode, redraw] = useState('courses')
   const state = useRef({
     network: null,
     nodes: null,
@@ -148,6 +168,24 @@ const GraphView = ({ workspaceId }) => {
     courseNodes: null,
     mode: 'concepts'
   })
+
+  const toggleMode = () => {
+    const cur = state.current
+    if (!cur.network) {
+      alert('Network is not defined.')
+      return
+    }
+    const oldMode = cur.mode
+    cur.mode = nextMode
+
+    cur.nodes.getDataSet().clear()
+    cur.edges.getDataSet().clear()
+    const singular = cur.mode.slice(0, -1)
+    cur.nodes.getDataSet().add(cur[`${singular}Nodes`])
+    cur.edges.getDataSet().add(cur[`${singular}Edges`])
+
+    redraw(oldMode)
+  }
 
   const drawConceptGraph = data => {
     const cur = state.current
@@ -166,7 +204,9 @@ const GraphView = ({ workspaceId }) => {
             id: concept.id,
             label: concept.name,
             title: !concept.description ? 'No description available'
-              : concept.description.replace('\n', '</br>')
+              : concept.description.replace('\n', '</br>'),
+            color: colorToHexString(course.color.bg, 1),
+            courseId: course.id
           }
         })
 
@@ -181,6 +221,29 @@ const GraphView = ({ workspaceId }) => {
           })
         }
       }
+
+      cur.courseNodes.push({
+        data: {
+          shape: 'ellipse',
+          id: course.id,
+          label: course.name,
+          color: colorToHexString(course.color.bg, 1)
+        }
+      })
+
+      // Get course nodes
+      for (const courseLink of course.linksToCourse) {
+        if (courseLink.from.id === course.id) {
+          continue
+        }
+        cur.courseEdges.push({
+          data: {
+            id: courseLink.from.id + course.id,
+            source: courseLink.from.id,
+            target: course.id
+          }
+        })
+      }
     }
 
     cur.conceptNodes = cur.conceptNodes.filter(node =>
@@ -188,31 +251,38 @@ const GraphView = ({ workspaceId }) => {
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
-    const cy = cytoscape({
+    cur.network = cytoscape({
       container: document.getElementById('graph'),
       elements: cur.conceptNodes.concat(cur.conceptEdges),
       style: [
         {
           selector: 'node',
           style: {
-            'background-color': '#666',
-            'label': 'data(label)'
+            'label': 'data(label)',
+            'shape': 'round-rectangle',
+            'width': 'label',
+            'height': 'label',
+            'background-color': 'data(color)',
+            'text-wrap': 'wrap',
+            'text-max-width': '250px',
+            'text-valign': 'center',
+            'padding': '10px'
           }
         },
 
         {
           selector: 'edge',
           style: {
-            'width': 3,
+            'width': 5,
             'line-color': '#ccc',
             'target-arrow-color': '#ccc',
-            'target-arrow-shape': 'triangle'
+            'mid-target-arrow-shape': 'triangle'
           }
         }
       ]
     })
 
-    cy.layout({ ...options, name: 'klay' }).run()
+    cur.network.layout({ ...options, name: 'klay' }).run()
   }
 
   useEffect(() => {
@@ -236,9 +306,16 @@ const GraphView = ({ workspaceId }) => {
     <Button className={classes.navigationButton}
       variant='contained'
       color='secondary'
-    // onClick={toggleMode}
+      onClick={toggleMode}
     >
       Switch to {nextMode}
+    </Button>
+    <Button className={classes.fitButton}
+      variant='contained'
+      color='secondary'
+      onClick={() => state.current.network.fit([], 100)}
+    >
+      Reset zoom
     </Button>
   </>
 }
