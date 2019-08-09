@@ -107,9 +107,6 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
     '&:hover': {
     }
-  },
-  progress: {
-    padding: theme.spacing(2)
   }
 }))
 
@@ -248,7 +245,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       <Paper className={classes.paper}>
         <Typography variant='h5' style={{ marginBottom: '32px' }}>Course overview</Typography>
         {
-          workspaceCourseQuery.data.workspaceById ?
+          workspaceCourseQuery.data.workspaceByIds === ':)' ?
             <div className={classes.scrollSyncTable}>
               {
                 workspaceCourseQuery.data.workspaceById.courses.length > 0 ?
@@ -288,7 +285,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
             </div>
             :
             <div style={{ textAlign: 'center' }}>
-              <CircularProgress className={classes.progress} />
+              <CircularProgress />
             </div>
         }
       </Paper>
