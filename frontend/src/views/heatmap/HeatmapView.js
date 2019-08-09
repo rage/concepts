@@ -245,7 +245,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       <Paper className={classes.paper}>
         <Typography variant='h5' style={{ marginBottom: '32px' }}>Course overview</Typography>
         {
-          workspaceCourseQuery.data.workspaceByIds ?
+          workspaceCourseQuery.data.workspaceById ?
             <div className={classes.scrollSyncTable}>
               {
                 workspaceCourseQuery.data.workspaceById.courses.length > 0 ?
