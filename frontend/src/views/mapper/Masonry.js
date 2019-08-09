@@ -3,9 +3,27 @@ import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   masonry: {
-    columnWidth: '296px',
     width: '100%',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    columnCount: 1,
+    '@media screen and (min-width: 800px)': {
+      columnCount: 2,
+      '&.courseTrayOpen': {
+        columnCount: 1
+      }
+    },
+    '@media screen and (min-width: 1300px)': {
+      columnCount: 3,
+      '&.courseTrayOpen': {
+        columnCount: 2
+      }
+    },
+    '@media screen and (min-width: 1800px)': {
+      columnCount: 4,
+      '&.courseTrayOpen': {
+        columnCount: 3
+      }
+    }
   },
   columnWrapper: {
     // These hacks could be replaced with display: inline-block, but then Chrome doesn't wrap the

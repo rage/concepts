@@ -11,12 +11,11 @@ import { useEditCourseDialog } from '../../dialogs/course'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '280px',
-    margin: '0px 8px 16px 8px'
+    margin: '0px 8px 16px 8px',
+    width: '100%'
   },
   list: {
     width: '100%',
-    maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
     paddingBottom: theme.spacing(2),
     position: 'relative'

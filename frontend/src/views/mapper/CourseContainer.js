@@ -29,7 +29,7 @@ const CourseContainer = ({
   }, [addingLink, courseLinks])
 
   return <>
-    <Typography style={{ gridArea: 'contentHeader', margin: '16px' }} variant='h4'>
+    <Typography style={{ gridArea: 'contentHeader', margin: '8px 16px 16px' }} variant='h4'>
       Prerequisites
     </Typography>
     {
