@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    marginLeft: '8px'
   },
   title: {
     paddingBottom: '0px',

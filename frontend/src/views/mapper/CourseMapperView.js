@@ -11,7 +11,7 @@ import Menu from '@material-ui/core/Menu'
 import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES
 } from '../../graphql/Query'
-import { CREATE_COURSE, DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
+import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 import CourseContainer from './CourseContainer'
 import CourseTray from './CourseTray'
 import ActiveCourse from './ActiveCourse'
@@ -26,18 +26,18 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"activeCourse contentHeader courseTray" 64px
+    gridTemplate: `"activeHeader contentHeader courseTray" 64px
                    "activeCourse courses       courseTray" 1fr
                    / 25%         75%           25%`,
     '&.courseTrayOpen': {
       gridTemplateColumns: '25% 50% 25%'
     },
     transition: 'grid-template-columns .15s linear',
-    '@media screen and (max-width: 1000px)': {
-      gridTemplateColumns: '32% 36% 32%',
+    '@media screen and (max-width: 1299px)': {
+      gridTemplateColumns: '34% 66% 33%',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '32% 68% 32%'
-      },
+        gridTemplateColumns: '34% 33% 33%'
+      }
     }
   }
 }))

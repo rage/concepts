@@ -1,7 +1,9 @@
 import React, { useRef, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Paper, Select, MenuItem, InputBase, List, IconButton } from '@material-ui/core'
+import {
+  Button, Paper, Select, MenuItem, InputBase, List, IconButton, Typography
+} from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
 import ActiveConcept from './concept/ActiveConcept'
@@ -9,7 +11,6 @@ import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
-import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,7 +18,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    margin: '0 8px',
+    overflow: 'hidden'
   },
   header: {
     display: 'flex',
@@ -99,7 +102,10 @@ const ActiveCourse = ({
   const conceptLinkRef = useRef()
   const activeConceptRef = useRef()
 
-  return (
+  return <>
+    <Typography style={{ gridArea: 'activeHeader', margin: '8px 16px 16px' }} variant='h4'>
+      Editing course
+    </Typography>
     <Paper onClick={onClick} elevation={0} className={classes.root}>
       <div className={classes.header}>
         <Select
@@ -148,7 +154,7 @@ const ActiveCourse = ({
         </Button> : null
       }
     </Paper>
-  )
+  </>
 }
 
 export default withRouter(ActiveCourse)
