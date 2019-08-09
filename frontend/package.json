@@ -22,7 +22,6 @@
     "react-scripts": "3.0.1",
     "react-window": "^1.8.1",
     "tmc-client-js": "^0.0.9",
-    "vis-data": "^6.1.1",
     "vis-network": "^5.2.1"
   },
   "scripts": {
