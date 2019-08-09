@@ -29,6 +29,7 @@ fragment coursesForWorkspace on Workspace {
     concepts {
       id
       name
+      description
       courses {
         id
       }
