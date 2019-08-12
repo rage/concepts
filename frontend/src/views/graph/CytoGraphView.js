@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button, CircularProgress } from '@material-ui/core'
+import { makeStyles, Button, CircularProgress, Slider } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 
@@ -16,9 +16,22 @@ const useStyles = makeStyles({
     overflow: 'hidden'
   },
   button: {
+    '&:not(:last-of-type)': {
+      marginRight: '10px'
+    }
+  },
+  buttonWrapper: {
     top: '60px',
-    zIndex: '10',
+    left: '10px',
+    zIndex: 10,
     position: 'absolute'
+  },
+  sliderWrapper: {
+    top: '110px',
+    left: '10px',
+    height: '300px',
+    position: 'absolute',
+    zIndex: 10
   }
 })
 
@@ -82,9 +95,21 @@ const options = {
 }
 /* eslint-enable max-len, no-unused-vars */
 
+const sliderMinLinear = 0
+const sliderMaxLinear = 100
+
+const sliderMinLog = Math.log(0.05)
+const sliderMaxLog = Math.log(5)
+
+const sliderScale = (sliderMaxLog-sliderMinLog) / (sliderMaxLinear-sliderMinLinear)
+
+const linearToLog = (position) => Math.exp(sliderMinLog + sliderScale*(position-sliderMinLinear))
+const logToLinear = (value) => (Math.log(value)-sliderMinLog) / sliderScale + sliderMinLinear
+
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
+  const [zoom, setZoom] = useState(20)
   const state = useRef({
     network: null,
     nodes: null,
@@ -99,6 +124,8 @@ const GraphView = ({ workspaceId }) => {
   })
 
   const loadingRef = useRef(null)
+  const controlsRef = useRef(null)
+  const graphRef = useRef(null)
 
   const toggleMode = () => {
     const cur = state.current
@@ -121,6 +148,7 @@ const GraphView = ({ workspaceId }) => {
   }
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
+  const resetZoom = () => state.current.network.fit([], 100)
 
   const drawConceptGraph = data => {
     const cur = state.current
@@ -200,7 +228,7 @@ const GraphView = ({ workspaceId }) => {
     )
 
     cur.network = cytoscape({
-      container: document.getElementById('graph'),
+      container: graphRef.current,
       elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
       minZoom: 0.05,
       maxZoom: 5,
@@ -231,6 +259,7 @@ const GraphView = ({ workspaceId }) => {
         }
       ]
     })
+    cur.network.on('zoom', evt => setZoom(logToLinear(evt.cy.zoom())))
 
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
     cur.courseLayout = cur.network.layout({
@@ -245,6 +274,7 @@ const GraphView = ({ workspaceId }) => {
       name: 'klay'
     })
     loadingRef.current.style.display = 'none'
+    controlsRef.current.style.display = 'block'
 
     cur.conceptLayout.run()
   }
@@ -262,40 +292,37 @@ const GraphView = ({ workspaceId }) => {
   }, [])
 
   return <>
-    <div className={classes.graph} id='graph'>
+    <div className={classes.graph} ref={graphRef}>
       {!state.current.network &&
         <div ref={loadingRef} style={{ textAlign: 'center' }}>
           <CircularProgress />
         </div>
       }
     </div>
-    <Button
-      className={classes.button}
-      style={{ left: '10px', width: '200px' }}
-      variant='contained'
-      color='secondary'
-      onClick={toggleMode}
-    >
-      Switch to {nextMode}
-    </Button>
-    <Button
-      className={classes.button}
-      style={{ left: '220px', width: '160px' }}
-      variant='contained'
-      color='secondary'
-      onClick={resetLayout}
-    >
-      Reset layout
-    </Button>
-    <Button
-      className={classes.button}
-      style={{ left: '390px', width: '140px' }}
-      variant='contained'
-      color='secondary'
-      onClick={() => state.current.network.fit([], 100)}
-    >
-      Reset zoom
-    </Button>
+    <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
+      <div className={classes.buttonWrapper}>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={toggleMode}>
+          Switch to {nextMode}
+        </Button>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={resetLayout}>
+          Reset layout
+        </Button>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={resetZoom}>
+          Reset zoom
+        </Button>
+      </div>
+      <div className={classes.sliderWrapper}>
+        <Slider
+          orientation='vertical' value={zoom}
+          onChange={(evt, newValue) => state.current.network.zoom({
+            level: linearToLog(newValue),
+            renderedPosition: {
+              x: state.current.network.width() / 2,
+              y: state.current.network.height() / 2
+            }
+          })} />
+      </div>
+    </div>
   </>
 }
 
