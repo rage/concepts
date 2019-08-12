@@ -16,8 +16,14 @@ const useStyles = makeStyles({
     overflow: 'hidden'
   },
   button: {
+    '&:not(:last-of-type)': {
+      marginRight: '10px'
+    }
+  },
+  buttonWrapper: {
     top: '60px',
-    zIndex: '10',
+    left: '10px',
+    zIndex: 10,
     position: 'absolute'
   }
 })
@@ -99,6 +105,8 @@ const GraphView = ({ workspaceId }) => {
   })
 
   const loadingRef = useRef(null)
+  const buttonsRef = useRef(null)
+  const graphRef = useRef(null)
 
   const toggleMode = () => {
     const cur = state.current
@@ -121,6 +129,7 @@ const GraphView = ({ workspaceId }) => {
   }
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
+  const resetZoom = () => state.current.network.fit([], 100)
 
   const drawConceptGraph = data => {
     const cur = state.current
@@ -200,7 +209,7 @@ const GraphView = ({ workspaceId }) => {
     )
 
     cur.network = cytoscape({
-      container: document.getElementById('graph'),
+      container: graphRef.current,
       elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
       minZoom: 0.05,
       maxZoom: 5,
@@ -245,6 +254,7 @@ const GraphView = ({ workspaceId }) => {
       name: 'klay'
     })
     loadingRef.current.style.display = 'none'
+    buttonsRef.current.style.display = 'block'
 
     cur.conceptLayout.run()
   }
@@ -262,40 +272,27 @@ const GraphView = ({ workspaceId }) => {
   }, [])
 
   return <>
-    <div className={classes.graph} id='graph'>
+    <div className={classes.graph} ref={graphRef}>
       {!state.current.network &&
         <div ref={loadingRef} style={{ textAlign: 'center' }}>
           <CircularProgress />
         </div>
       }
     </div>
-    <Button
-      className={classes.button}
-      style={{ left: '10px', width: '200px' }}
-      variant='contained'
-      color='secondary'
-      onClick={toggleMode}
+    <div
+      ref={buttonsRef} className={classes.buttonWrapper}
+      style={{ display: state.current.network ? 'block' : 'none' }}
     >
-      Switch to {nextMode}
-    </Button>
-    <Button
-      className={classes.button}
-      style={{ left: '220px', width: '160px' }}
-      variant='contained'
-      color='secondary'
-      onClick={resetLayout}
-    >
-      Reset layout
-    </Button>
-    <Button
-      className={classes.button}
-      style={{ left: '390px', width: '140px' }}
-      variant='contained'
-      color='secondary'
-      onClick={() => state.current.network.fit([], 100)}
-    >
-      Reset zoom
-    </Button>
+      <Button className={classes.button} variant='outlined' color='primary' onClick={toggleMode}>
+        Switch to {nextMode}
+      </Button>
+      <Button className={classes.button} variant='outlined' color='primary' onClick={resetLayout}>
+        Reset layout
+      </Button>
+      <Button className={classes.button} variant='outlined' color='primary' onClick={resetZoom}>
+        Reset zoom
+      </Button>
+    </div>
   </>
 }
 
