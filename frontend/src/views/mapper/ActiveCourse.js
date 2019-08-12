@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
-import ActiveConcept from './concept/ActiveConcept'
+import { Concept } from './concept'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
@@ -67,11 +67,11 @@ const ActiveCourse = ({
   courses,
   history,
   workspaceId,
-  activeConceptIds,
+  focusedConceptIds,
   onClick,
   addingLink,
   setAddingLink,
-  toggleConcept,
+  toggleFocus,
   courseLinks,
   urlPrefix
 }) => {
@@ -82,7 +82,7 @@ const ActiveCourse = ({
   useEffect(() => {
     const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
     const prereqConceptExists = courseLinks.find(link => link.from.concepts.length > 0)
-    if (hasLinks && activeConceptIds.length === 0) {
+    if (hasLinks && focusedConceptIds.length === 0) {
       infoBox.open(activeConceptRef.current, 'right-start', 'FOCUS_CONCEPT', 0, 50)
     }
     if (hasLinks) return
@@ -127,15 +127,16 @@ const ActiveCourse = ({
 
       <List className={classes.list}>
         {course.concepts.map((concept, index) =>
-          <ActiveConcept
+          <Concept
             conceptLinkRef={index === 0 ? conceptLinkRef : undefined}
             activeConceptRef={index === 0 ? activeConceptRef : undefined}
+            isActive={true}
             concept={concept}
             key={concept.id}
-            activeConceptIds={activeConceptIds}
+            focusedConceptIds={focusedConceptIds}
             addingLink={addingLink}
             setAddingLink={setAddingLink}
-            toggleConcept={toggleConcept}
+            toggleFocus={toggleFocus}
             activeCourseId={course.id}
             workspaceId={workspaceId}
           />

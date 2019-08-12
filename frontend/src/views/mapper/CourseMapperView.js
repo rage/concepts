@@ -17,7 +17,7 @@ import CourseTray from './CourseTray'
 import ActiveCourse from './ActiveCourse'
 import { useLoginStateValue } from '../../store'
 import cache from '../../apollo/update'
-import ConceptLink from './concept/ConceptLink'
+import { ConceptLink } from './concept'
 import { useInfoBox } from '../../components/InfoBox'
 import NotFoundView from '../error/NotFoundView'
 
@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
 
 const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const classes = useStyles()
-  const [activeConceptIds, setActiveConceptIds] = useState([])
+  const [focusedConceptIds, setFocusedConceptIds] = useState([])
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const [addingLink, setAddingLink] = useState(null)
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
@@ -77,14 +77,14 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       && courseQuery.data.courseById.concepts.length === 1
     const activeConceptHasLinks = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.find(concept => concept.linksToConcept.length > 0
-        && activeConceptIds.includes(concept.id))
+        && focusedConceptIds.includes(concept.id))
     if (!courseTrayOpen && conceptsExist) {
       infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
-    if (activeConceptHasLinks && activeConceptIds.length > 0) {
+    if (activeConceptHasLinks && focusedConceptIds.length > 0) {
       infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
     }
-  }, [courseTrayOpen, activeConceptIds, courseQuery])
+  }, [courseTrayOpen, focusedConceptIds, courseQuery])
 
   // Closes infoBox when leaving the page
   useEffect(() => infoBox.close, [])
@@ -116,11 +116,11 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     setConceptLinkMenu(null)
   }
 
-  const toggleConcept = id => {
-    const alreadyActive = activeConceptIds.find(i => i === id)
-    setActiveConceptIds(alreadyActive ?
-      activeConceptIds.filter(conceptId => conceptId !== id) :
-      activeConceptIds.concat(id)
+  const toggleFocus = id => {
+    const currentlyFocused = focusedConceptIds.includes(id)
+    setFocusedConceptIds(currentlyFocused ?
+      focusedConceptIds.filter(conceptId => conceptId !== id) :
+      focusedConceptIds.concat(id)
     )
   }
 
@@ -151,10 +151,10 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             course={courseQuery.data.courseById}
             courses={workspaceQuery.data.workspaceById.courses}
             updateCourse={updateCourse}
-            activeConceptIds={activeConceptIds}
+            focusedConceptIds={focusedConceptIds}
             addingLink={addingLink}
             setAddingLink={setAddingLink}
-            toggleConcept={toggleConcept}
+            toggleFocus={toggleFocus}
             courseTrayOpen={courseTrayOpen}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
             workspaceId={workspaceQuery.data.workspaceById.id}
@@ -164,9 +164,10 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
             courseId={courseQuery.data.courseById.id}
-            activeConceptIds={activeConceptIds}
+            focusedConceptIds={focusedConceptIds}
             addingLink={addingLink}
             setAddingLink={setAddingLink}
+            toggleFocus={toggleFocus}
             courseTrayOpen={courseTrayOpen}
             activeCourse={courseQuery.data.courseById}
             workspaceId={workspaceQuery.data.workspaceById.id}
@@ -209,7 +210,10 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             <ConceptLink
               linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
               key={`concept-link-${link.id}`} delay={1}
-              active={!addingLink && activeConceptIds.includes(concept.id)} linkId={link.id}
+              active={!addingLink && (
+                focusedConceptIds.includes(concept.id) || focusedConceptIds.includes(link.from.id)
+              )}
+              linkId={link.id}
               from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
               fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
               posOffsets={{ x0: -5, x1: +6 }} />

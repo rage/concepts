@@ -9,9 +9,10 @@ const CourseContainer = ({
   courseTrayOpen,
   courseLinks,
   courses,
-  activeConceptIds,
+  focusedConceptIds,
   addingLink,
   setAddingLink,
+  toggleFocus,
   workspaceId,
   courseId,
   urlPrefix
@@ -43,9 +44,10 @@ const CourseContainer = ({
                 connectionRef={index === 0 ? connectionRef : undefined}
                 createConceptRef={(index === 0 && course.concepts.length === 0)
                   ? createConceptRef : undefined}
-                activeConceptIds={activeConceptIds}
+                focusedConceptIds={focusedConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
+                toggleFocus={toggleFocus}
                 activeCourseId={courseId}
                 workspaceId={workspaceId}
                 urlPrefix={urlPrefix}
