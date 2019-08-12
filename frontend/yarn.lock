@@ -3297,6 +3297,13 @@ cytoscape-klay@^3.1.2:
   dependencies:
     klayjs "^0.4.1"
 
+cytoscape-popper@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/cytoscape-popper/-/cytoscape-popper-1.0.4.tgz#13388223d6d84f66f121643fb1213c26d1c693f8"
+  integrity sha512-rKzWiuhGDw0+1UwKK+2eXkZVSNR8TxAXp3k0QOOkH0GW1w55mnCDUVUKZuQyXqHtcZie+TnW1FJ5ml2Uc/lkOg==
+  dependencies:
+    popper.js "^1.0.0"
+
 cytoscape@^3.9.0:
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.9.0.tgz#7cc9f10c2e02a167ddf7aeb2e3fddcf704913776"
@@ -7481,7 +7488,7 @@ pnp-webpack-plugin@1.2.1:
   dependencies:
     ts-pnp "^1.0.0"
 
-popper.js@^1.14.1:
+popper.js@^1.0.0, popper.js@^1.14.1:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
