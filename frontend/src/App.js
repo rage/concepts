@@ -14,6 +14,7 @@ import JoinView from './views/join/JoinView'
 import HeatmapView from './views/heatmap/HeatmapView'
 import LoginView from './views/login/LoginView'
 import GraphView from './views/graph/GraphView'
+import CytoGraphView from './views/graph/CytoGraphView'
 import ProjectView from './views/project/ProjectView'
 import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
@@ -51,7 +52,7 @@ const workspaceRouter = (prefix) => <>
     }
   />
   <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
-    <GraphView workspaceId={wid} />} />
+    <CytoGraphView workspaceId={wid} />} />
   <Route
     exact path={`${prefix}/:wid/:page(mapper|graph|heatmap)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>

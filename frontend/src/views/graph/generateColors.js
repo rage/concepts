@@ -61,7 +61,19 @@ const finalColors = colors.map(bg => {
   }
   return null
 }).filter(color => color !== null)
+const finalColorsHex = colors.map(bg => {
+  for (const fg of foregroundColors) {
+    if (ccc.isLevelAA(fg, bg, fontSize)) {
+      return { bg, fg }
+    }
+  }
+  return null
+}).filter(color => color !== null)
 
 fs.writeFile('colors.json', JSON.stringify(finalColors), err => err
   ? console.error(err)
   : console.log(`Wrote ${finalColors.length} colors to colors.json`))
+
+fs.writeFile('hexcolors.json', JSON.stringify(finalColorsHex), err => err
+  ? console.error(err)
+  : console.log(`Wrote ${finalColors.length} colors to hexcolors.json`))
