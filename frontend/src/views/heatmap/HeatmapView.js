@@ -169,20 +169,21 @@ const TableCell = withRouter(({
 }) => {
   const classes = useStyles()
 
-  const conceptsLinked = toCourse.concepts
+  const conceptsLinked = fromCourse.concepts
     .map(concept => concept.linksToConcept
       .filter(conceptLink => conceptLink.from.courses
-        .find(course => course.id === fromCourse.id)
+        .find(course => course.id === toCourse.id)
       ).length
     ).reduce((a, b) => a + b, 0)
 
   const onlyUnique = (v, i, a) => a.indexOf(v) === i
-  const concepts = toCourse.concepts
+
+  const concepts = fromCourse.concepts
     .map(concept => concept.linksToConcept
       .filter(conceptLink => conceptLink.from.courses
-        .find(course => course.id === fromCourse.id))
+        .find(course => course.id === toCourse.id))
     ).reduce((first, second) => first.concat(second), [])
-    .map(concept => concept.from.name)
+    .map(conceptLink => conceptLink.from.name)
     .filter(onlyUnique)
 
   const mapToGrad = (amount) => {
