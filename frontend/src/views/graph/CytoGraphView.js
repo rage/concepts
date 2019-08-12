@@ -131,7 +131,7 @@ var options = {
     LEFTDOWN Chooses the left-down candidate from the four possible candidates.
     RIGHTDOWN Chooses the right-down candidate from the four possible candidates.
     BALANCED Creates a balanced layout from the four possible candidates. */
-    inLayerSpacingFactor: 2.5, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
+    inLayerSpacingFactor: 2, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
     layoutHierarchy: true, // Whether the selected layouter should consider the full hierarchy
     linearSegmentsDeflectionDampening: 0.3, // Dampens the movement of nodes to keep the diagram from getting too large.
     mergeEdges: false, // Edges that have no ports are merged so they touch the connected nodes at the same points.
@@ -148,7 +148,7 @@ var options = {
     randomizationSeed: 1, // Seed used for pseudo-random number generators to control the layout algorithm; 0 means a new seed is generated
     routeSelfLoopInside: false, // Whether a self-loop is routed around or inside its node.
     separateConnectedComponents: true, // Whether each connected component should be processed separately
-    spacing: 40, // Overall setting for the minimal amount of space to be left between objects
+    spacing: 35, // Overall setting for the minimal amount of space to be left between objects
     thoroughness: 12 // How much effort should be spent to produce a nice layout..
   },
   priority: function (edge) { return null } // Edges with a non-nil value are skipped when geedy edge cycle breaking is enabled
@@ -166,23 +166,44 @@ const GraphView = ({ workspaceId }) => {
     courseEdges: null,
     conceptNodes: null,
     courseNodes: null,
-    mode: 'concepts'
+    mode: 'concepts',
+    courseLayout: null,
+    conceptLayout: null
   })
 
-  const toggleMode = () => {
-    const cur = state.current
-    if (!cur.network) {
-      alert('Network is not defined.')
+  const toggleMode = async () => {
+    const current = state.current
+    if (!current.network) {
+      alert('Network is not defined')
       return
     }
-    const oldMode = cur.mode
-    cur.mode = nextMode
+    const oldMode = current.mode
+    current.mode = nextMode
 
-    cur.nodes.getDataSet().clear()
-    cur.edges.getDataSet().clear()
-    const singular = cur.mode.slice(0, -1)
-    cur.nodes.getDataSet().add(cur[`${singular}Nodes`])
-    cur.edges.getDataSet().add(cur[`${singular}Edges`])
+    await (() => {
+      current.network.startBatch()
+
+      const conceptVisibility = current.mode === 'concepts' ? 'element' : 'none'
+      const courseVisibility = current.mode === 'courses' ? 'element' : 'none'
+
+      current.network.elements('node[type=\'conceptNode\']').style('display', conceptVisibility)
+      current.network.elements('edge[type=\'conceptEdge\']').style('display', conceptVisibility)
+
+      current.network.elements('node[type=\'courseNode\']').style('display', courseVisibility)
+      current.network.elements('edge[type=\'courseEdge\']').style('display', courseVisibility)
+
+      current.network.endBatch()
+    })()
+
+    if (current.mode === 'courses') {
+      console.log('Running course layoyt')
+      await current.conceptLayout.stop()
+      current.courseLayout.run()
+    } else if (current.mode === 'concepts') {
+      console.log('Running concept layout')
+      await current.courseLayout.stop()
+      current.conceptLayout.run()
+    }
 
     redraw(oldMode)
   }
@@ -206,6 +227,8 @@ const GraphView = ({ workspaceId }) => {
             title: !concept.description ? 'No description available'
               : concept.description.replace('\n', '</br>'),
             color: colorToHexString(course.color.bg, 1),
+            type: 'conceptNode',
+            display: 'element',
             courseId: course.id
           }
         })
@@ -216,6 +239,8 @@ const GraphView = ({ workspaceId }) => {
             data: {
               id: conceptLink.from.id + concept.id,
               source: conceptLink.from.id,
+              type: 'conceptEdge',
+              display: 'element',
               target: concept.id
             }
           })
@@ -227,6 +252,8 @@ const GraphView = ({ workspaceId }) => {
           shape: 'ellipse',
           id: course.id,
           label: course.name,
+          type: 'courseNode',
+          display: 'none',
           color: colorToHexString(course.color.bg, 1)
         }
       })
@@ -240,6 +267,8 @@ const GraphView = ({ workspaceId }) => {
           data: {
             id: courseLink.from.id + course.id,
             source: courseLink.from.id,
+            type: 'courseEdge',
+            display: 'none',
             target: course.id
           }
         })
@@ -253,7 +282,7 @@ const GraphView = ({ workspaceId }) => {
 
     cur.network = cytoscape({
       container: document.getElementById('graph'),
-      elements: cur.conceptNodes.concat(cur.conceptEdges),
+      elements: cur.conceptNodes.concat(cur.conceptEdges).concat(cur.courseNodes).concat(cur.courseEdges),
       style: [
         {
           selector: 'node',
@@ -264,9 +293,10 @@ const GraphView = ({ workspaceId }) => {
             'height': 'label',
             'background-color': 'data(color)',
             'text-wrap': 'wrap',
-            'text-max-width': '250px',
+            'text-max-width': '200px',
             'text-valign': 'center',
-            'padding': '10px'
+            'padding': '10px',
+            'display': 'data(display)'
           }
         },
 
@@ -282,7 +312,19 @@ const GraphView = ({ workspaceId }) => {
       ]
     })
 
-    cur.network.layout({ ...options, name: 'klay' }).run()
+    cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
+    cur.courseLayout = cur.network.layout({
+      ...options,
+      klay: {
+        ...options.klay,
+        direction: 'RIGHT',
+        spacing: 50,
+        edgeSpacingFactor: 1
+      },
+      name: 'klay'
+    })
+
+    cur.conceptLayout.run()
   }
 
   useEffect(() => {
