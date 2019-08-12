@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button, CircularProgress } from '@material-ui/core'
+import { makeStyles, Button, CircularProgress, Slider } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 
@@ -25,6 +25,13 @@ const useStyles = makeStyles({
     left: '10px',
     zIndex: 10,
     position: 'absolute'
+  },
+  sliderWrapper: {
+    top: '110px',
+    left: '10px',
+    height: '300px',
+    position: 'absolute',
+    zIndex: 10
   }
 })
 
@@ -88,9 +95,21 @@ const options = {
 }
 /* eslint-enable max-len, no-unused-vars */
 
+const sliderMinLinear = 0
+const sliderMaxLinear = 100
+
+const sliderMinLog = Math.log(0.05)
+const sliderMaxLog = Math.log(5)
+
+const sliderScale = (sliderMaxLog-sliderMinLog) / (sliderMaxLinear-sliderMinLinear)
+
+const linearToLog = (position) => Math.exp(sliderMinLog + sliderScale*(position-sliderMinLinear))
+const logToLinear = (value) => (Math.log(value)-sliderMinLog) / sliderScale + sliderMinLinear
+
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
+  const [zoom, setZoom] = useState(20)
   const state = useRef({
     network: null,
     nodes: null,
@@ -105,7 +124,7 @@ const GraphView = ({ workspaceId }) => {
   })
 
   const loadingRef = useRef(null)
-  const buttonsRef = useRef(null)
+  const controlsRef = useRef(null)
   const graphRef = useRef(null)
 
   const toggleMode = () => {
@@ -240,6 +259,7 @@ const GraphView = ({ workspaceId }) => {
         }
       ]
     })
+    cur.network.on('zoom', evt => setZoom(logToLinear(evt.cy.zoom())))
 
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
     cur.courseLayout = cur.network.layout({
@@ -254,7 +274,7 @@ const GraphView = ({ workspaceId }) => {
       name: 'klay'
     })
     loadingRef.current.style.display = 'none'
-    buttonsRef.current.style.display = 'block'
+    controlsRef.current.style.display = 'block'
 
     cur.conceptLayout.run()
   }
@@ -279,19 +299,29 @@ const GraphView = ({ workspaceId }) => {
         </div>
       }
     </div>
-    <div
-      ref={buttonsRef} className={classes.buttonWrapper}
-      style={{ display: state.current.network ? 'block' : 'none' }}
-    >
-      <Button className={classes.button} variant='outlined' color='primary' onClick={toggleMode}>
-        Switch to {nextMode}
-      </Button>
-      <Button className={classes.button} variant='outlined' color='primary' onClick={resetLayout}>
-        Reset layout
-      </Button>
-      <Button className={classes.button} variant='outlined' color='primary' onClick={resetZoom}>
-        Reset zoom
-      </Button>
+    <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
+      <div className={classes.buttonWrapper}>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={toggleMode}>
+          Switch to {nextMode}
+        </Button>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={resetLayout}>
+          Reset layout
+        </Button>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={resetZoom}>
+          Reset zoom
+        </Button>
+      </div>
+      <div className={classes.sliderWrapper}>
+        <Slider
+          orientation='vertical' value={zoom}
+          onChange={(evt, newValue) => state.current.network.zoom({
+            level: linearToLog(newValue),
+            renderedPosition: {
+              x: state.current.network.width() / 2,
+              y: state.current.network.height() / 2
+            }
+          })} />
+      </div>
     </div>
   </>
 }
