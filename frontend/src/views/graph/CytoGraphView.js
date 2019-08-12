@@ -15,17 +15,8 @@ const useStyles = makeStyles({
     gridArea: 'content',
     overflow: 'hidden'
   },
-  navigationButton: {
+  button: {
     top: '60px',
-    left: '10px',
-    zIndex: '10',
-    position: 'absolute',
-    width: '200px'
-  },
-  fitButton: {
-    top: '60px',
-    left: '220px',
-    width: '140px',
     zIndex: '10',
     position: 'absolute'
   }
@@ -109,40 +100,27 @@ const GraphView = ({ workspaceId }) => {
 
   const loadingRef = useRef(null)
 
-  const toggleMode = async () => {
-    const current = state.current
-    if (!current.network) {
+  const toggleMode = () => {
+    const cur = state.current
+    if (!cur.network) {
       alert('Network is not defined')
       return
     }
-    const oldMode = current.mode
-    current.mode = nextMode
+    const oldMode = cur.mode
+    cur.mode = nextMode
 
-    await (() => {
-      current.network.startBatch()
+    cur.network.startBatch()
+    cur.network.elements('[type="concept"]').style('display',
+      cur.mode === 'concepts' ? 'element' : 'none')
+    cur.network.elements('[type="course"]').style('display',
+      cur.mode === 'courses' ? 'element' : 'none')
+    cur.network.endBatch()
 
-      const conceptVisibility = current.mode === 'concepts' ? 'element' : 'none'
-      const courseVisibility = current.mode === 'courses' ? 'element' : 'none'
-
-      current.network.elements('node[type="conceptNode"]').style('display', conceptVisibility)
-      current.network.elements('edge[type="conceptEdge"]').style('display', conceptVisibility)
-
-      current.network.elements('node[type="courseNode"]').style('display', courseVisibility)
-      current.network.elements('edge[type="courseEdge"]').style('display', courseVisibility)
-
-      current.network.endBatch()
-    })()
-
-    if (current.mode === 'courses') {
-      await current.conceptLayout.stop()
-      current.courseLayout.run()
-    } else if (current.mode === 'concepts') {
-      await current.courseLayout.stop()
-      current.conceptLayout.run()
-    }
-
+    resetLayout()
     redraw(oldMode)
   }
+
+  const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
 
   const drawConceptGraph = data => {
     const cur = state.current
@@ -163,7 +141,7 @@ const GraphView = ({ workspaceId }) => {
             title: !concept.description ? 'No description available'
               : concept.description.replace('\n', '</br>'),
             color: course.color.bg,
-            type: 'conceptNode',
+            type: 'concept',
             display: 'element',
             courseId: course.id
           }
@@ -175,7 +153,7 @@ const GraphView = ({ workspaceId }) => {
             data: {
               id: conceptLink.from.id + concept.id,
               source: conceptLink.from.id,
-              type: 'conceptEdge',
+              type: 'concept',
               display: 'element',
               target: concept.id
             }
@@ -188,7 +166,7 @@ const GraphView = ({ workspaceId }) => {
           shape: 'ellipse',
           id: course.id,
           label: course.name,
-          type: 'courseNode',
+          type: 'course',
           display: 'none',
           color: course.color.bg
         }
@@ -203,7 +181,7 @@ const GraphView = ({ workspaceId }) => {
           data: {
             id: courseLink.from.id + course.id,
             source: courseLink.from.id,
-            type: 'courseEdge',
+            type: 'course',
             display: 'none',
             target: course.id
           }
@@ -291,14 +269,27 @@ const GraphView = ({ workspaceId }) => {
         </div>
       }
     </div>
-    <Button className={classes.navigationButton}
+    <Button
+      className={classes.button}
+      style={{ left: '10px', width: '200px' }}
       variant='contained'
       color='secondary'
       onClick={toggleMode}
     >
       Switch to {nextMode}
     </Button>
-    <Button className={classes.fitButton}
+    <Button
+      className={classes.button}
+      style={{ left: '220px', width: '160px' }}
+      variant='contained'
+      color='secondary'
+      onClick={resetLayout}
+    >
+      Reset layout
+    </Button>
+    <Button
+      className={classes.button}
+      style={{ left: '390px', width: '140px' }}
       variant='contained'
       color='secondary'
       onClick={() => state.current.network.fit([], 100)}
