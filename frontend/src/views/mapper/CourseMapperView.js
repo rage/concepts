@@ -67,9 +67,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const courseQuery = useQuery(COURSE_BY_ID, {
     variables: { id: courseId }
   })
-  console.log(workspaceQuery)
-  console.log(prereqQuery)
-  console.log(courseQuery)
 
   const updateCourse = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
