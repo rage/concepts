@@ -149,6 +149,22 @@ const lineStyles = () => ({
   linetoWrapper: {
     '&:not(.linetoActive)': {
       pointerEvents: 'none'
+    },
+    '&.linetoActive:before': {
+      borderRightColor: 'red'
+    },
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      top: '50%',
+      right: '50%',
+      width: 0,
+      height: 0,
+
+      borderWidth: '7px',
+      borderStyle: 'solid',
+      borderColor: 'transparent #eaeaea transparent transparent',
+      marginTop: '-7px'
     }
   },
   linetoLine: {
