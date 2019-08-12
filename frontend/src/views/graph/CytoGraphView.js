@@ -120,12 +120,7 @@ const GraphView = ({ workspaceId }) => {
     redraw(oldMode)
   }
 
-  const resetLayout = () => {
-    const curMode = state.current.mode.slice(0, -1)
-    const layout = state.current[`${curMode}Layout`]
-    layout.stop()
-    layout.run()
-  }
+  const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
 
   const drawConceptGraph = data => {
     const cur = state.current
