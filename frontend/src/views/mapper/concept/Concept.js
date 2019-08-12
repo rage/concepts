@@ -4,7 +4,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Fade
 } from '@material-ui/core'
-import { MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon } from '@material-ui/icons'
+import {
+  MoreVert as MoreVertIcon,
+  ArrowLeft as ArrowLeftIcon,
+  ArrowRight as ArrowRightIcon
+} from '@material-ui/icons'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import {
@@ -21,6 +25,13 @@ const useStyles = makeStyles(theme => ({
     overflowWrap: 'break-word',
     hyphens: 'auto'
   },
+  conceptCircle: {
+    zIndex: 2,
+    padding: '4px'
+  },
+  activeConceptCircle: {
+    zIndex: 2
+  },
   active: {
     backgroundColor: '#9ecae1',
     '&:hover': {
@@ -31,6 +42,13 @@ const useStyles = makeStyles(theme => ({
     }
   },
   inactive: {
+    backgroundColor: '#fff',
+    '&:focus': {
+      backgroundColor: '#fff'
+    }
+  },
+  listItem: {
+    width: '100%',
     backgroundColor: '#fff',
     '&:focus': {
       backgroundColor: '#fff'
@@ -49,19 +67,23 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Concept = ({
+  workspaceId,
   activeCourseId,
+  isActive,
   concept,
-  activeConceptIds,
+  focusedConceptIds,
+  toggleFocus,
   addingLink,
   setAddingLink,
-  workspaceId,
-  connectionRef
+  connectionRef,
+  conceptLinkRef,
+  activeConceptRef
 }) => {
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
 
-  const messageDispatch = useMessageStateValue()[1]
-  const { loggedIn } = useLoginStateValue()[0]
+  const [,messageDispatch] = useMessageStateValue()
+  const [{ loggedIn }] = useLoginStateValue()
 
   const openEditConceptDialog = useEditConceptDialog()
 
@@ -73,13 +95,15 @@ const Concept = ({
     update: cache.deleteConceptUpdate
   })
 
+  const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
+
   const onClick = evt => {
     if (addingLink) {
       setAddingLink(null)
       createConceptLink({
         variables: {
-          to: addingLink.id,
-          from: concept.id,
+          to: isActive ? concept.id : addingLink.id,
+          from: isActive ? addingLink.id : concept.id,
           workspaceId
         }
       }).catch(() => messageDispatch({
@@ -89,7 +113,7 @@ const Concept = ({
     } else {
       setAddingLink({
         id: concept.id,
-        type: 'concept-circle'
+        type: ownType
       })
     }
     evt.stopPropagation()
@@ -108,7 +132,11 @@ const Concept = ({
     handleMenuClose()
     if (willDelete) {
       try {
-        await deleteConcept({ variables: { id: concept.id } })
+        await deleteConcept({
+          variables: {
+            id: concept.id
+          }
+        })
       } catch (err) {
         messageDispatch({
           type: 'setError',
@@ -123,11 +151,14 @@ const Concept = ({
     openEditConceptDialog(concept.id, concept.name, concept.description)
   }
 
-  const hasLinkToAddingLink = addingLink &&
-    concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined
-  const addingLinkIsOpposite = addingLink && addingLink.type !== 'concept-circle'
+  const hasLinkToAddingLink = addingLink && (isActive
+    ? concept.linksToConcept.find(link => link.from.id === addingLink.id) !== undefined
+    : concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined)
 
-  const linkButtonColor = (addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+  const addingLinkIsOpposite = addingLink && addingLink.type !== ownType
+
+  const linkButtonColor = ((addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    || (!addingLink && focusedConceptIds.includes(concept.id)))
     ? 'secondary' : undefined
 
   return (
@@ -141,46 +172,57 @@ const Concept = ({
       title={concept.description === '' ? 'No description available' : concept.description}>
       <ListItem
         divider
-        button={activeConceptIds.length !== 0}
-        onClick={onClick}
-        className={classes.inactive}
+        button
+        onClick={() => toggleFocus(concept.id)}
+        className={isActive ? classes.listItem : classes.inactive}
         id={'concept-' + concept.id}
+        ref={activeConceptRef}
       >
-        <ListItemIcon>
-          <IconButton buttonRef={connectionRef} onClick={onClick} style={{ padding: '4px' }}>
+        {!isActive && <ListItemIcon>
+          <IconButton
+            buttonRef={connectionRef} onClick={onClick}
+            className={`${classes.conceptCircle}
+                        ${focusedConceptIds.includes(concept.id) ? 'conceptCircleFocused' : ''}`}
+          >
             <ArrowLeftIcon
               viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
               color={linkButtonColor} />
           </IconButton>
-        </ListItemIcon>
+        </ListItemIcon>}
         <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
           {concept.name}
         </ListItemText>
         <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
-          {activeConceptIds.length === 0 ?
-            <>
-              {
-                loggedIn ?
-                  <IconButton
-                    aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                    aria-haspopup='true'
-                    onClick={handleMenuOpen}
-                  >
-                    <MoreVertIcon />
-                  </IconButton> : null
-              }
-              <Menu
-                id='simple-menu'
-                anchorEl={state.anchorEl}
-                open={Boolean(state.anchorEl)}
-                onClose={handleMenuClose}
+          {
+            loggedIn ?
+              <IconButton
+                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+                aria-haspopup='true'
+                onClick={handleMenuOpen}
               >
-                <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
-                <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
-              </Menu>
-            </>
-            : null
+                <MoreVertIcon />
+              </IconButton> : null
           }
+          <Menu
+            id='simple-menu'
+            anchorEl={state.anchorEl}
+            open={Boolean(state.anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
+            <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
+          </Menu>
+          {isActive && <IconButton
+            buttonRef={conceptLinkRef}
+            onClick={onClick}
+            className={`${classes.activeConceptCircle}
+                        ${focusedConceptIds.includes(concept.id) ? 'conceptCircleFocused' : ''}`}
+          >
+            <ArrowRightIcon
+              viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
+              color={linkButtonColor}
+            />
+          </IconButton>}
         </ListItemSecondaryAction>
       </ListItem>
     </Tooltip>

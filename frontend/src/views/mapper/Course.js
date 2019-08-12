@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
-import Concept from './concept/Concept'
+import { Concept } from './concept'
 import { useLoginStateValue } from '../../store'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
@@ -54,7 +54,8 @@ const Course = ({
   activeCourseId,
   addingLink,
   setAddingLink,
-  activeConceptIds,
+  toggleFocus,
+  focusedConceptIds,
   history,
   workspaceId,
   urlPrefix
@@ -91,9 +92,10 @@ const Course = ({
               key={concept.id}
               course={course}
               connectionRef={index === 0 ? connectionRef : undefined}
-              activeConceptIds={activeConceptIds}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
+              toggleFocus={toggleFocus}
+              focusedConceptIds={focusedConceptIds}
               activeCourseId={activeCourseId}
               workspaceId={workspaceId}
             />
