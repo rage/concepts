@@ -52,8 +52,6 @@ const workspaceRouter = (prefix) => <>
     }
   />
   <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
-    <GraphView workspaceId={wid} />} />
-  <Route exact path={`${prefix}/:wid/cgraph`} render={({ match: { params: { wid } } }) =>
     <CytoGraphView workspaceId={wid} />} />
   <Route
     exact path={`${prefix}/:wid/:page(mapper|graph|heatmap)/:cid?`}

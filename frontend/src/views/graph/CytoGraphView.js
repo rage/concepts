@@ -19,11 +19,13 @@ const useStyles = makeStyles({
     top: '60px',
     left: '10px',
     zIndex: '10',
-    position: 'absolute'
+    position: 'absolute',
+    width: '200px'
   },
   fitButton: {
     top: '60px',
-    left: '210px',
+    left: '220px',
+    width: '140px',
     zIndex: '10',
     position: 'absolute'
   }
@@ -110,7 +112,7 @@ var options = {
   klay: {
     // Following descriptions taken from http://layout.rtsys.informatik.uni-kiel.de:9444/Providedlayout.html?algorithm=de.cau.cs.kieler.klay.layered
     addUnnecessaryBendpoints: false, // Adds bend points even if an edge does not change direction.
-    aspectRatio: 1, // The aimed aspect ratio of the drawing, that is the quotient of width by height
+    aspectRatio: 1.6, // The aimed aspect ratio of the drawing, that is the quotient of width by height
     borderSpacing: 20, // Minimal amount of space to be left to the border
     compactComponents: true, // Tries to further compact components (disconnected sub-graphs).
     crossingMinimization: 'LAYER_SWEEP', // Strategy for crossing minimization.
@@ -122,7 +124,7 @@ var options = {
     direction: 'DOWN', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
     /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
     edgeRouting: 'ORTHOGONAL', // Defines how edges are routed (POLYLINE, ORTHOGONAL, SPLINES)
-    edgeSpacingFactor: 1.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
+    edgeSpacingFactor: 2.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
     feedbackEdges: false, // Whether feedback edges should be highlighted by routing around the nodes.
     fixedAlignment: 'NONE', // Tells the BK node placer to use a certain alignment instead of taking the optimal result.  This option should usually be left alone.
     /* NONE Chooses the smallest layout from the four possible candidates.
@@ -280,6 +282,11 @@ const GraphView = ({ workspaceId }) => {
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
+    cur.courseNodes = cur.courseNodes.filter(node =>
+      cur.courseEdges.find(edge =>
+        edge.data.source === node.data.id || edge.data.target === node.data.id)
+    )
+
     cur.network = cytoscape({
       container: document.getElementById('graph'),
       elements: cur.conceptNodes.concat(cur.conceptEdges).concat(cur.courseNodes).concat(cur.courseEdges),
@@ -319,7 +326,8 @@ const GraphView = ({ workspaceId }) => {
         ...options.klay,
         direction: 'RIGHT',
         spacing: 50,
-        edgeSpacingFactor: 1
+        edgeSpacingFactor: 1,
+        inLayerSpacingFactor: 0.8
       },
       name: 'klay'
     })
