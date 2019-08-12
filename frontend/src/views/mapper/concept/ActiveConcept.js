@@ -154,7 +154,7 @@ const ActiveConcept = ({
         ref={activeConceptRef}
         button divider id={'concept-' + concept.id}
         className={classes.listItem}
-        onClick={toggleConcept(concept.id)}
+        onClick={() => toggleConcept(concept.id)}
       >
         <ListItemText
           id={'concept-name-' + concept.id}

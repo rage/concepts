@@ -7,7 +7,6 @@ import {
 } from '@material-ui/core'
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
-import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import cache from '../../apollo/update'
 
 const styles = theme => ({

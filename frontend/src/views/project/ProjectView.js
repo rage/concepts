@@ -8,6 +8,7 @@ import { DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE } from '../../graphql/Mu
 import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
 import { useShareDialog } from '../../dialogs/sharing'
+import NotFoundView from '../error/NotFoundView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -75,43 +76,46 @@ const ProjectView = ({ projectId }) => {
     }]
   })
 
-  return (
-    projectQuery.data.projectById ?
-      <>
-        <div className={classes.root}>
-          <Typography className={classes.header} variant='h4'>
-            Project: {projectQuery.data.projectById.name}
-          </Typography>
-          <span className={classes.toolbar}>
-            <Button
-              color='primary' variant='contained'
-              onClick={() => openShareProjectDialog(projectId, 'EDIT')}
-            >
-              Share project
-            </Button>
-          </span>
-          <div className={classes.templates}>
-            <TemplateList
-              projectId={projectId}
-              activeTemplate={projectQuery.data.projectById.activeTemplate}
-              templateWorkspaces={projectQuery.data.projectById.templates}
-              deleteTemplateWorkspace={deleteTemplateWorkspace}
-              setActiveTemplate={setActiveTemplate}
-            />
-          </div>
-          <div className={classes.userWorkspaces}>
-            <UserWorkspaceList
-              projectId={projectId}
-              userWorkspaces={projectQuery.data.projectById.workspaces}
-              activeTemplate={projectQuery.data.projectById.activeTemplate}
-            />
-          </div>
-        </div>
-      </>
-      :
+  if (projectQuery.loading) {
+    return (
       <div style={{ textAlign: 'center' }}>
         <CircularProgress />
       </div>
+    )
+  } else if (projectQuery.error) {
+    return <NotFoundView message='Project not found' />
+  }
+
+  return (
+    <div className={classes.root}>
+      <Typography className={classes.header} variant='h4'>
+            Project: {projectQuery.data.projectById.name}
+      </Typography>
+      <span className={classes.toolbar}>
+        <Button
+          color='primary' variant='contained'
+          onClick={() => openShareProjectDialog(projectId, 'EDIT')}
+        >
+              Share project
+        </Button>
+      </span>
+      <div className={classes.templates}>
+        <TemplateList
+          projectId={projectId}
+          activeTemplate={projectQuery.data.projectById.activeTemplate}
+          templateWorkspaces={projectQuery.data.projectById.templates}
+          deleteTemplateWorkspace={deleteTemplateWorkspace}
+          setActiveTemplate={setActiveTemplate}
+        />
+      </div>
+      <div className={classes.userWorkspaces}>
+        <UserWorkspaceList
+          projectId={projectId}
+          userWorkspaces={projectQuery.data.projectById.workspaces}
+          activeTemplate={projectQuery.data.projectById.activeTemplate}
+        />
+      </div>
+    </div>
   )
 }
 

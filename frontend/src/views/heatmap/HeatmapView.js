@@ -8,6 +8,7 @@ import { Paper, Typography, CircularProgress } from '@material-ui/core'
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
 } from '../../graphql/Query'
+import NotFoundView from '../error/NotFoundView'
 
 const cellDimension = {
   width: 50,
@@ -226,6 +227,10 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
   const workspaceCourseQuery = useQuery(WORKSPACE_COURSES_AND_CONCEPTS, {
     variables: { id: workspaceId }
   })
+
+  if (workspaceCourseQuery.error) {
+    return <NotFoundView message='Workspace not found' />
+  }
 
   const maxGradVal = workspaceCourseQuery.data.workspaceById ?
     workspaceCourseQuery.data.workspaceById.courses

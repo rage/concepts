@@ -1,4 +1,5 @@
 const { checkAccess, Role, Privilege, privilegeToChar } = require('../../accessControl')
+const { nullWrap } = require('../../errors')
 
 const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 const makeSecret = length => Array.from({ length },
@@ -38,7 +39,7 @@ const WorkspaceSharingMutations = {
   async deleteToken(root, { id }, context) {
     // TODO revoke instead of deleting
     if (id[0] === 'w') {
-      const { id: workspaceId } = await context.prisma.workspaceToken({ id }).workspace()
+      const { id: workspaceId } = nullWrap(await context.prisma.workspaceToken({ id }).workspace())
       await checkAccess(context, {
         minimumRole: Role.GUEST,
         minimumPrivilege: Privilege.OWNER,
@@ -48,7 +49,7 @@ const WorkspaceSharingMutations = {
         id
       })
     } else if (id[0] === 'p') {
-      const { id: projectId } = await context.prisma.projectToken({ id }).project()
+      const { id: projectId } = nullWrap(await context.prisma.projectToken({ id }).project(), 'project')
       await checkAccess(context, {
         minimumRole: Role.GUEST,
         minimumPrivilege: Privilege.OWNER,

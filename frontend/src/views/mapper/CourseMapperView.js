@@ -19,6 +19,7 @@ import { useLoginStateValue } from '../../store'
 import cache from '../../apollo/update'
 import ConceptLink from './concept/ConceptLink'
 import { useInfoBox } from '../../components/InfoBox'
+import NotFoundView from '../error/NotFoundView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -66,6 +67,9 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const courseQuery = useQuery(COURSE_BY_ID, {
     variables: { id: courseId }
   })
+  console.log(workspaceQuery)
+  console.log(prereqQuery)
+  console.log(courseQuery)
 
   const updateCourse = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
@@ -115,7 +119,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     setConceptLinkMenu(null)
   }
 
-  const toggleConcept = (id) => () => {
+  const toggleConcept = id => {
     const alreadyActive = activeConceptIds.find(i => i === id)
     setActiveConceptIds(alreadyActive ?
       activeConceptIds.filter(conceptId => conceptId !== id) :
@@ -128,14 +132,19 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 500)
   }
 
+  if (workspaceQuery.error) {
+    return <NotFoundView message='Workspace not found' />
+  } else if (courseQuery.error) {
+    return <NotFoundView message='Course not found' />
+  }
+
   const showFab =
     (courseQuery.data.courseById && courseQuery.data.courseById.concepts.length !== 0) ||
     (workspaceQuery.data.workspaceById && workspaceQuery.data.workspaceById.courses.length > 1)
 
   return <>
     {
-      courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
-        && workspaceQuery.data.workspaceById ?
+      !courseQuery.loading && !prereqQuery.loading && !workspaceQuery.loading ?
         <div
           id='course-view'
           className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}

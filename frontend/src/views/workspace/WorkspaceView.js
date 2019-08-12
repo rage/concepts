@@ -5,6 +5,7 @@ import { CircularProgress } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query/Workspace'
 import WorkspaceDefaultCourseForm from './WorkspaceDefaultCourseForm'
+import NotFoundView from '../error/NotFoundView'
 
 const WorkspaceView = ({ workspaceId, location, urlPrefix }) => {
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -13,12 +14,14 @@ const WorkspaceView = ({ workspaceId, location, urlPrefix }) => {
     }
   })
 
-  if (!workspaceQuery.data.workspaceById) {
+  if (workspaceQuery.loading) {
     return (
       <div style={{ textAlign: 'center' }}>
         <CircularProgress />
       </div>
     )
+  } else if (workspaceQuery.error) {
+    return <NotFoundView message='Workspace not found' />
   }
 
   return workspaceQuery.data.workspaceById.courses.length > 0

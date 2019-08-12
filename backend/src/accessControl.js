@@ -1,5 +1,7 @@
 const { ForbiddenError } = require('apollo-server-core')
 
+const { NotFoundError } = require('./errors')
+
 const Role = {
   VISITOR: 'VISITOR',
   GUEST: 'GUEST',
@@ -115,7 +117,7 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
     userId: ctx.user.id
   })
   if (!resp[type]) {
-    throw Error('Invalid checkPrivilege call (workspace or project is null)')
+    throw new NotFoundError(type)
   }
 
   if (readPrivilege(resp[type]) >= privilegeToInt(minimumPrivilege)) {

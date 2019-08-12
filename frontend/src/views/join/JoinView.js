@@ -54,42 +54,55 @@ const JoinView = ({ history, token }) => {
     })
   }
 
-  if (peek.data.peekToken) {
-    const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
-    if (participant) {
-      const path = type === 'workspace'
-        ? `/workspaces/${peek.data.peekToken.id}/mapper`
-        : (privilege === 'clone'
-          ? `/projects/${peek.data.peekToken.id}/clone`
-          : `/projects/${peek.data.peekToken.id}`)
-      return <Redirect to={path} />
-    }
-  }
-
-  return (
+  const dialog = children => (
     <Dialog open onClose={handleClose}>
       <DialogTitle>Join {type}</DialogTitle>
-      {peek.data.peekToken ? <>
-        <DialogContent>
-          <DialogContentText>
-            You have been invited to the {type} {peek.data.peekToken.name}.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
-            Cancel
-          </Button>
-          <Button onClick={handleCreate} disabled={loading} color='primary'>
-            Join
-          </Button>
-        </DialogActions>
-      </> : (
-        <DialogContent style={{ textAlign: 'center' }}>
-          <CircularProgress />
-        </DialogContent>
-      )}
+      {children}
     </Dialog>
   )
+
+  if (peek.loading) {
+    return dialog(
+      <DialogContent style={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </DialogContent>
+    )
+  } else if (peek.error) {
+    return dialog(
+      <Dialog open onClose={handleClose}>
+        <DialogTitle>{type[0].toUpperCase()}{type.slice(1)} not found</DialogTitle>
+        <DialogContentText>
+          Please ask for a new share link.
+        </DialogContentText>
+      </Dialog>
+    )
+  }
+
+  const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
+  if (participant) {
+    const path = type === 'workspace'
+      ? `/workspaces/${peek.data.peekToken.id}/mapper`
+      : (privilege === 'clone'
+        ? `/projects/${peek.data.peekToken.id}/clone`
+        : `/projects/${peek.data.peekToken.id}`)
+    return <Redirect to={path} />
+  }
+
+  return dialog(<>
+    <DialogContent>
+      <DialogContentText>
+        You have been invited to the {type} {peek.data.peekToken.name}.
+      </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleClose} color='primary'>
+        Cancel
+      </Button>
+      <Button onClick={handleCreate} disabled={loading} color='primary'>
+        Join
+      </Button>
+    </DialogActions>
+  </>)
 }
 
 export default withRouter(JoinView)
