@@ -183,7 +183,7 @@ const TableCell = withRouter(({
       .filter(conceptLink => conceptLink.from.courses
         .find(course => course.id === toCourse.id))
     ).reduce((first, second) => first.concat(second), [])
-    .map(concept => concept.from.name)
+    .map(conceptLink => conceptLink.from.name)
     .filter(onlyUnique)
 
   const mapToGrad = (amount) => {
