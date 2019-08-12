@@ -107,6 +107,8 @@ const GraphView = ({ workspaceId }) => {
     conceptLayout: null
   })
 
+  const loadingRef = useRef(null)
+
   const toggleMode = async () => {
     const current = state.current
     if (!current.network) {
@@ -262,6 +264,7 @@ const GraphView = ({ workspaceId }) => {
       },
       name: 'klay'
     })
+    loadingRef.current.style.display = 'none'
 
     cur.conceptLayout.run()
   }
@@ -280,9 +283,11 @@ const GraphView = ({ workspaceId }) => {
 
   return <>
     <div className={classes.graph} id='graph'>
-      {/* <div style={{ textAlign: 'center' }}>
-        <CircularProgress />
-      </div> */}
+      {!state.current.network &&
+        <div ref={loadingRef} style={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </div>
+      }
     </div>
     <Button className={classes.navigationButton}
       variant='contained'
