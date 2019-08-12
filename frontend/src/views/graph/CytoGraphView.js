@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles, Button, CircularProgress, Slider } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
+import popper from 'cytoscape-popper'
 
 import {
   WORKSPACE_DATA_FOR_GRAPH
@@ -9,6 +10,7 @@ import {
 import client from '../../apollo/apolloClient'
 import colors from './hexcolors'
 cytoscape.use(klay)
+cytoscape.use(popper)
 
 const useStyles = makeStyles({
   graph: {
