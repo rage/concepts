@@ -7,7 +7,7 @@ import {
   WORKSPACE_DATA_FOR_GRAPH
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
-import colors from './colors'
+import colors from './hexcolors'
 cytoscape.use(klay)
 
 const useStyles = makeStyles({
@@ -31,82 +31,16 @@ const useStyles = makeStyles({
   }
 })
 
-function componentToHex(c) {
-  var hex = c.toString(16)
-  return hex.length == 1 ? '0' + hex : hex
-}
-
-function rgbToHex(r, g, b) {
-  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b)
-}
-
-// Function to converting rgbArray into CSS rgba() color
-const colorToString = ([r, g, b], a = 1) => `rgba(${r}, ${g}, ${b}, ${a})`
-
-// Function to converting rgbArray into CSS hex() color
-const colorToHexString = ([r, g, b]) => rgbToHex(r, g, b)
-
-// Style for edges between concepts (concept links)
-const conceptEdgeStyle = {
-  arrows: {
-    to: {
-      enabled: true,
-      scaleFactor: 0.4,
-      type: 'arrow'
-    }
-  },
-  color: {
-    inherit: 'both'
-  },
-  shadow: {
-    enabled: false
-  },
-  physics: false
-}
-
-// Style for edges between courses (course links)
-const courseEdgeStyle = {
-  ...conceptEdgeStyle
-}
-
-const commonNodeStyle = {
-  widthConstraint: {
-    maximum: 175
-  }
-}
-
-// Style for concept nodes
-const conceptNodeStyle = (color) => ({
-  ...commonNodeStyle,
-  color: colorToString(color.bg, 1)
-})
-
-// Style for course nodes
-const courseNodeStyle = (color) => ({
-  ...commonNodeStyle,
-  font: {
-    color: 'rgba(52, 52, 52, 0.5)'
-  },
-  color: {
-    background: colorToString(color.bg, 0.8),
-    border: colorToString(color.bg, 0.5),
-    foreground: colorToString(color.fg, 1),
-    highlight: colorToString(color.bg, 1)
-  },
-  shape: 'ellipse',
-  mass: 2
-})
-
 /* eslint-disable max-len, no-unused-vars */
-var options = {
+const options = {
   nodeDimensionsIncludeLabels: true, // Boolean which changes whether label dimensions are included when calculating node dimensions
   fit: true, // Whether to fit
   padding: 100, // Padding on fit
   animate: false, // Whether to transition the node positions
-  animateFilter: function (node, i) { return true }, // Whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
+  animateFilter: (node, i) => true, // Whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
   animationDuration: 500, // Duration of animation in ms if enabled
   animationEasing: undefined, // Easing of animation if enabled
-  transform: function (node, pos) { return pos }, // A function that applies a transform to the final node position
+  transform: (node, pos) => pos, // A function that applies a transform to the final node position
   ready: undefined, // Callback on layoutready
   stop: undefined, // Callback on layoutstop
   klay: {
@@ -153,7 +87,7 @@ var options = {
     spacing: 35, // Overall setting for the minimal amount of space to be left between objects
     thoroughness: 12 // How much effort should be spent to produce a nice layout..
   },
-  priority: function (edge) { return null } // Edges with a non-nil value are skipped when geedy edge cycle breaking is enabled
+  priority: edge => null // Edges with a non-nil value are skipped when geedy edge cycle breaking is enabled
 }
 /* eslint-enable max-len, no-unused-vars */
 
@@ -188,21 +122,19 @@ const GraphView = ({ workspaceId }) => {
       const conceptVisibility = current.mode === 'concepts' ? 'element' : 'none'
       const courseVisibility = current.mode === 'courses' ? 'element' : 'none'
 
-      current.network.elements('node[type=\'conceptNode\']').style('display', conceptVisibility)
-      current.network.elements('edge[type=\'conceptEdge\']').style('display', conceptVisibility)
+      current.network.elements('node[type="conceptNode"]').style('display', conceptVisibility)
+      current.network.elements('edge[type="conceptEdge"]').style('display', conceptVisibility)
 
-      current.network.elements('node[type=\'courseNode\']').style('display', courseVisibility)
-      current.network.elements('edge[type=\'courseEdge\']').style('display', courseVisibility)
+      current.network.elements('node[type="courseNode"]').style('display', courseVisibility)
+      current.network.elements('edge[type="courseEdge"]').style('display', courseVisibility)
 
       current.network.endBatch()
     })()
 
     if (current.mode === 'courses') {
-      console.log('Running course layoyt')
       await current.conceptLayout.stop()
       current.courseLayout.run()
     } else if (current.mode === 'concepts') {
-      console.log('Running concept layout')
       await current.courseLayout.stop()
       current.conceptLayout.run()
     }
@@ -228,7 +160,7 @@ const GraphView = ({ workspaceId }) => {
             label: concept.name,
             title: !concept.description ? 'No description available'
               : concept.description.replace('\n', '</br>'),
-            color: colorToHexString(course.color.bg, 1),
+            color: course.color.bg,
             type: 'conceptNode',
             display: 'element',
             courseId: course.id
@@ -256,7 +188,7 @@ const GraphView = ({ workspaceId }) => {
           label: course.name,
           type: 'courseNode',
           display: 'none',
-          color: colorToHexString(course.color.bg, 1)
+          color: course.color.bg
         }
       })
 
@@ -289,7 +221,7 @@ const GraphView = ({ workspaceId }) => {
 
     cur.network = cytoscape({
       container: document.getElementById('graph'),
-      elements: cur.conceptNodes.concat(cur.conceptEdges).concat(cur.courseNodes).concat(cur.courseEdges),
+      elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
       style: [
         {
           selector: 'node',
@@ -306,7 +238,6 @@ const GraphView = ({ workspaceId }) => {
             'display': 'data(display)'
           }
         },
-
         {
           selector: 'edge',
           style: {
