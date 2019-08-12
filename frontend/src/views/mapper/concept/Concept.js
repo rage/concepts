@@ -41,12 +41,6 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: '#9ecae1'
     }
   },
-  inactive: {
-    backgroundColor: '#fff',
-    '&:focus': {
-      backgroundColor: '#fff'
-    }
-  },
   listItem: {
     width: '100%',
     backgroundColor: '#fff',
@@ -169,13 +163,12 @@ const Concept = ({
         popper: classes.popper
       }}
       TransitionComponent={Fade}
-      title={concept.description === '' ? 'No description available' : concept.description}>
+      title={concept.description || 'No description available'}>
       <ListItem
         divider
         button
         onClick={() => toggleFocus(concept.id)}
-        className={isActive ? classes.listItem : classes.inactive}
-        id={'concept-' + concept.id}
+        className={classes.listItem}
         ref={activeConceptRef}
       >
         {!isActive && <ListItemIcon>
@@ -189,10 +182,10 @@ const Concept = ({
               color={linkButtonColor} />
           </IconButton>
         </ListItemIcon>}
-        <ListItemText className={classes.conceptName} id={'concept-name-' + concept.id}>
+        <ListItemText className={classes.conceptName}>
           {concept.name}
         </ListItemText>
-        <ListItemSecondaryAction id={'concept-secondary-' + concept.id}>
+        <ListItemSecondaryAction>
           {
             loggedIn ?
               <IconButton
@@ -204,7 +197,6 @@ const Concept = ({
               </IconButton> : null
           }
           <Menu
-            id='simple-menu'
             anchorEl={state.anchorEl}
             open={Boolean(state.anchorEl)}
             onClose={handleMenuClose}

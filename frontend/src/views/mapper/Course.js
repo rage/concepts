@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
       textDecoration: 'underline',
       cursor: 'pointer'
     }
-
   },
   listSection: {
     backgroundColor: 'inherit'
