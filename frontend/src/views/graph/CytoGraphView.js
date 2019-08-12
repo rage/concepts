@@ -264,7 +264,7 @@ const GraphView = ({ workspaceId }) => {
       },
       name: 'klay'
     })
-    loadingRef.current.parentNode.removeChild(loadingRef.current)
+    loadingRef.current.style.display = 'none'
 
     cur.conceptLayout.run()
   }
