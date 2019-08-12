@@ -224,6 +224,8 @@ const GraphView = ({ workspaceId }) => {
     cur.network = cytoscape({
       container: document.getElementById('graph'),
       elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
+      minZoom: 0.05,
+      maxZoom: 5,
       style: [
         {
           selector: 'node',
