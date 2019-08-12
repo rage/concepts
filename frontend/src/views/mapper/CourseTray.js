@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useMutation, useApolloClient } from 'react-apollo-hooks'
+import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
@@ -89,7 +89,7 @@ const PrerequisiteCourse = withRouter(({
         }).then(() => {
           if (activeCourseId === course.id) {
             if (courses.length > 1) {
-              const nextCourse = courses.find(c => c.id != course.id)
+              const nextCourse = courses.find(c => c.id !== course.id)
               history.push(`/workspaces/${workspaceId}/mapper/${nextCourse.id}`)
             } else {
               history.push(`/workspaces/${workspaceId}/mapper`)

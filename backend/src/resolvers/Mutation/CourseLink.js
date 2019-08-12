@@ -1,4 +1,5 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { nullWrap } = require('../../errors')
 
 const CourseQueries = {
   async createCourseLink(root, { workspaceId, official, from, to }, context) {
@@ -25,7 +26,7 @@ const CourseQueries = {
   },
 
   async deleteCourseLink(root, { id }, context) {
-    const { id: workspaceId } = await context.prisma.courseLink({ id }).workspace()
+    const { id: workspaceId } = nullWrap(await context.prisma.courseLink({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
