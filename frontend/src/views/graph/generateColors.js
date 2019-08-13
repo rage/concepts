@@ -39,28 +39,8 @@ for (let i = 1; i < 8; i += 2) {
   }
 }
 
-const hexRegex = /^#([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/
-
-function hexToRGB(hex) {
-  const result = hexRegex.exec(hex)
-  return result ? [parseInt(result[1], 16),
-    parseInt(result[2], 16),
-    parseInt(result[3], 16)] : null
-}
-
 const fontSize = 14
 const ccc = new ColorContrastChecker()
-const finalColors = colors.map(bg => {
-  for (const fg of foregroundColors) {
-    if (ccc.isLevelAA(fg, bg, fontSize)) {
-      return {
-        bg: hexToRGB(bg),
-        fg: hexToRGB(fg)
-      }
-    }
-  }
-  return null
-}).filter(color => color !== null)
 const finalColorsHex = colors.map(bg => {
   for (const fg of foregroundColors) {
     if (ccc.isLevelAA(fg, bg, fontSize)) {
@@ -70,10 +50,6 @@ const finalColorsHex = colors.map(bg => {
   return null
 }).filter(color => color !== null)
 
-fs.writeFile('colors.json', JSON.stringify(finalColors), err => err
-  ? console.error(err)
-  : console.log(`Wrote ${finalColors.length} colors to colors.json`))
-
 fs.writeFile('hexcolors.json', JSON.stringify(finalColorsHex), err => err
   ? console.error(err)
-  : console.log(`Wrote ${finalColors.length} colors to hexcolors.json`))
+  : console.log(`Wrote ${finalColorsHex.length} colors to hexcolors.json`))
