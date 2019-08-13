@@ -149,8 +149,14 @@ const GraphView = ({ workspaceId }) => {
     cur.mode = nextMode
 
     cur.network.startBatch()
-    cur.network.elements('[type="concept"]').style('display',
-      cur.mode === 'concepts' ? 'element' : 'none')
+    if (cur.mode === 'concepts') {
+      for (const course of legendFilter) {
+        cur.network.elements(`[type="concept"][courseId="${course}"]`).style('display', 'element')
+      }
+    } else {
+      cur.network.elements('[type="concept"]').style('display', 'none')
+    }
+
     cur.network.elements('[type="course"]').style('display',
       cur.mode === 'courses' ? 'element' : 'none')
     cur.network.endBatch()
@@ -366,6 +372,7 @@ const GraphView = ({ workspaceId }) => {
             <FormGroup>
               {state.current.courseLegend.map(course => (
                 <FormControlLabel
+                  key={course.id}
                   control={<Checkbox
                     onChange={toggleLegendFilter}
                     value={course.id}
