@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button, CircularProgress, Slider } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import {
+  Button, CircularProgress, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox
+} from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
@@ -10,13 +13,18 @@ import {
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 import colors from './hexcolors'
+
 cytoscape.use(klay)
 cytoscape.use(popper)
 
 const useStyles = makeStyles({
-  graph: {
+  root: {
     gridArea: 'content',
     overflow: 'hidden'
+  },
+  graph: {
+    width: '100%',
+    height: '100%'
   },
   button: {
     '&:not(:last-of-type)': {
@@ -26,13 +34,19 @@ const useStyles = makeStyles({
   buttonWrapper: {
     top: '60px',
     left: '10px',
-    zIndex: 10,
-    position: 'absolute'
+    position: 'absolute',
+    zIndex: 10
   },
   sliderWrapper: {
     top: '110px',
     left: '10px',
     height: '300px',
+    position: 'absolute',
+    zIndex: 10
+  },
+  legendWrapper: {
+    top: '60px',
+    right: '10px',
     position: 'absolute',
     zIndex: 10
   }
@@ -113,6 +127,7 @@ const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
   const [zoom, setZoom] = useState(20)
+  const [legendFilter, setLegendFilter] = useState([])
   const state = useRef({
     network: null,
     nodes: null,
@@ -121,6 +136,7 @@ const GraphView = ({ workspaceId }) => {
     courseEdges: null,
     conceptNodes: null,
     courseNodes: null,
+    courseLegend: null,
     mode: 'concepts',
     courseLayout: null,
     conceptLayout: null
@@ -132,22 +148,40 @@ const GraphView = ({ workspaceId }) => {
 
   const toggleMode = () => {
     const cur = state.current
-    if (!cur.network) {
-      alert('Network is not defined')
-      return
-    }
     const oldMode = cur.mode
     cur.mode = nextMode
 
     cur.network.startBatch()
-    cur.network.elements('[type="concept"]').style('display',
-      cur.mode === 'concepts' ? 'element' : 'none')
+    if (cur.mode === 'concepts') {
+      for (const course of legendFilter) {
+        cur.network.elements(`[type="concept"][courseId="${course}"]`).style('display', 'element')
+      }
+    } else {
+      cur.network.elements('[type="concept"]').style('display', 'none')
+    }
+
     cur.network.elements('[type="course"]').style('display',
       cur.mode === 'courses' ? 'element' : 'none')
     cur.network.endBatch()
 
     resetLayout()
     redraw(oldMode)
+  }
+
+  const adjust = fn => {
+    state.current.network.startBatch()
+    fn(state.current.network)
+    state.current.network.endBatch()
+  }
+
+  const toggleLegendFilter = evt => {
+    if (evt.target.checked) {
+      setLegendFilter(legendFilter.concat(evt.target.value))
+      adjust(cy => cy.elements(`[courseId="${evt.target.value}"]`).style('display', 'element'))
+    } else {
+      setLegendFilter(legendFilter.filter(val => val !== evt.target.value))
+      adjust(cy => cy.elements(`[courseId="${evt.target.value}"]`).style('display', 'none'))
+    }
   }
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
@@ -186,7 +220,8 @@ const GraphView = ({ workspaceId }) => {
               source: conceptLink.from.id,
               type: 'concept',
               display: 'element',
-              target: concept.id
+              target: concept.id,
+              courseId: course.id
             }
           })
         }
@@ -224,6 +259,14 @@ const GraphView = ({ workspaceId }) => {
       cur.conceptEdges.find(edge =>
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
+
+    const legendIncludedCourses = cur.conceptNodes
+      .map(node => node.data.courseId)
+      .filter((id, index, arr) => arr.indexOf(id) === index)
+    cur.courseLegend = cur.courseNodes
+      .filter(node => legendIncludedCourses.includes(node.data.id))
+      .map(node => node.data)
+    setLegendFilter(cur.courseLegend.map(course => course.id))
 
     cur.courseNodes = cur.courseNodes.filter(node =>
       cur.courseEdges.find(edge =>
@@ -326,7 +369,7 @@ const GraphView = ({ workspaceId }) => {
     })()
   }, [])
 
-  return <>
+  return <div className={classes.root}>
     <div className={classes.graph} ref={graphRef}>
       {!state.current.network &&
         <div ref={loadingRef} style={{ textAlign: 'center' }}>
@@ -357,8 +400,29 @@ const GraphView = ({ workspaceId }) => {
             }
           })} />
       </div>
+      {state.current.courseLegend && nextMode === 'courses' &&
+        <div className={classes.legendWrapper}>
+          <FormControl>
+            <FormLabel component='legend'>Courses</FormLabel>
+            <FormGroup>
+              {state.current.courseLegend.map(course => (
+                <FormControlLabel
+                  key={course.id}
+                  control={<Checkbox
+                    onChange={toggleLegendFilter}
+                    value={course.id}
+                    checked={legendFilter.includes(course.id)}
+                    style={{ color: course.color }}
+                  />}
+                  label={course.label}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
+        </div>
+      }
     </div>
-  </>
+  </div>
 }
 
 export default GraphView
