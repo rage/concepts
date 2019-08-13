@@ -1,33 +1,54 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { makeStyles, Button, CircularProgress } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import {
+  Button, CircularProgress, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox
+} from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
+import popper from 'cytoscape-popper'
+import Tippy from 'tippy.js'
 
 import {
   WORKSPACE_DATA_FOR_GRAPH
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 import colors from './hexcolors'
+
 cytoscape.use(klay)
+cytoscape.use(popper)
 
 const useStyles = makeStyles({
-  graph: {
+  root: {
     gridArea: 'content',
     overflow: 'hidden'
   },
-  navigationButton: {
+  graph: {
+    width: '100%',
+    height: '100%'
+  },
+  button: {
+    '&:not(:last-of-type)': {
+      marginRight: '10px'
+    }
+  },
+  buttonWrapper: {
     top: '60px',
     left: '10px',
-    zIndex: '10',
     position: 'absolute',
-    width: '200px'
+    zIndex: 10
   },
-  fitButton: {
+  sliderWrapper: {
+    top: '110px',
+    left: '10px',
+    height: '300px',
+    position: 'absolute',
+    zIndex: 10
+  },
+  legendWrapper: {
     top: '60px',
-    left: '220px',
-    width: '140px',
-    zIndex: '10',
-    position: 'absolute'
+    right: '10px',
+    position: 'absolute',
+    zIndex: 10
   }
 })
 
@@ -91,9 +112,22 @@ const options = {
 }
 /* eslint-enable max-len, no-unused-vars */
 
+const sliderMinLinear = 0
+const sliderMaxLinear = 100
+
+const sliderMinLog = Math.log(0.05)
+const sliderMaxLog = Math.log(5)
+
+const sliderScale = (sliderMaxLog-sliderMinLog) / (sliderMaxLinear-sliderMinLinear)
+
+const linearToLog = (position) => Math.exp(sliderMinLog + sliderScale*(position-sliderMinLinear))
+const logToLinear = (value) => (Math.log(value)-sliderMinLog) / sliderScale + sliderMinLinear
+
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
+  const [zoom, setZoom] = useState(20)
+  const [legendFilter, setLegendFilter] = useState([])
   const state = useRef({
     network: null,
     nodes: null,
@@ -102,47 +136,56 @@ const GraphView = ({ workspaceId }) => {
     courseEdges: null,
     conceptNodes: null,
     courseNodes: null,
+    courseLegend: null,
     mode: 'concepts',
     courseLayout: null,
     conceptLayout: null
   })
 
   const loadingRef = useRef(null)
+  const controlsRef = useRef(null)
+  const graphRef = useRef(null)
 
-  const toggleMode = async () => {
-    const current = state.current
-    if (!current.network) {
-      alert('Network is not defined')
-      return
-    }
-    const oldMode = current.mode
-    current.mode = nextMode
+  const toggleMode = () => {
+    const cur = state.current
+    const oldMode = cur.mode
+    cur.mode = nextMode
 
-    await (() => {
-      current.network.startBatch()
-
-      const conceptVisibility = current.mode === 'concepts' ? 'element' : 'none'
-      const courseVisibility = current.mode === 'courses' ? 'element' : 'none'
-
-      current.network.elements('node[type="conceptNode"]').style('display', conceptVisibility)
-      current.network.elements('edge[type="conceptEdge"]').style('display', conceptVisibility)
-
-      current.network.elements('node[type="courseNode"]').style('display', courseVisibility)
-      current.network.elements('edge[type="courseEdge"]').style('display', courseVisibility)
-
-      current.network.endBatch()
-    })()
-
-    if (current.mode === 'courses') {
-      await current.conceptLayout.stop()
-      current.courseLayout.run()
-    } else if (current.mode === 'concepts') {
-      await current.courseLayout.stop()
-      current.conceptLayout.run()
+    cur.network.startBatch()
+    if (cur.mode === 'concepts') {
+      for (const course of legendFilter) {
+        cur.network.elements(`[type="concept"][courseId="${course}"]`).style('display', 'element')
+      }
+    } else {
+      cur.network.elements('[type="concept"]').style('display', 'none')
     }
 
+    cur.network.elements('[type="course"]').style('display',
+      cur.mode === 'courses' ? 'element' : 'none')
+    cur.network.endBatch()
+
+    resetLayout()
     redraw(oldMode)
   }
+
+  const adjust = fn => {
+    state.current.network.startBatch()
+    fn(state.current.network)
+    state.current.network.endBatch()
+  }
+
+  const toggleLegendFilter = evt => {
+    if (evt.target.checked) {
+      setLegendFilter(legendFilter.concat(evt.target.value))
+      adjust(cy => cy.elements(`[courseId="${evt.target.value}"]`).style('display', 'element'))
+    } else {
+      setLegendFilter(legendFilter.filter(val => val !== evt.target.value))
+      adjust(cy => cy.elements(`[courseId="${evt.target.value}"]`).style('display', 'none'))
+    }
+  }
+
+  const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
+  const resetZoom = () => state.current.network.fit([], 100)
 
   const drawConceptGraph = data => {
     const cur = state.current
@@ -160,10 +203,10 @@ const GraphView = ({ workspaceId }) => {
           data: {
             id: concept.id,
             label: concept.name,
-            title: !concept.description ? 'No description available'
+            description: !concept.description ? 'No description available'
               : concept.description.replace('\n', '</br>'),
             color: course.color.bg,
-            type: 'conceptNode',
+            type: 'concept',
             display: 'element',
             courseId: course.id
           }
@@ -175,9 +218,10 @@ const GraphView = ({ workspaceId }) => {
             data: {
               id: conceptLink.from.id + concept.id,
               source: conceptLink.from.id,
-              type: 'conceptEdge',
+              type: 'concept',
               display: 'element',
-              target: concept.id
+              target: concept.id,
+              courseId: course.id
             }
           })
         }
@@ -188,7 +232,7 @@ const GraphView = ({ workspaceId }) => {
           shape: 'ellipse',
           id: course.id,
           label: course.name,
-          type: 'courseNode',
+          type: 'course',
           display: 'none',
           color: course.color.bg
         }
@@ -203,7 +247,7 @@ const GraphView = ({ workspaceId }) => {
           data: {
             id: courseLink.from.id + course.id,
             source: courseLink.from.id,
-            type: 'courseEdge',
+            type: 'course',
             display: 'none',
             target: course.id
           }
@@ -216,14 +260,24 @@ const GraphView = ({ workspaceId }) => {
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
+    const legendIncludedCourses = cur.conceptNodes
+      .map(node => node.data.courseId)
+      .filter((id, index, arr) => arr.indexOf(id) === index)
+    cur.courseLegend = cur.courseNodes
+      .filter(node => legendIncludedCourses.includes(node.data.id))
+      .map(node => node.data)
+    setLegendFilter(cur.courseLegend.map(course => course.id))
+
     cur.courseNodes = cur.courseNodes.filter(node =>
       cur.courseEdges.find(edge =>
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
     cur.network = cytoscape({
-      container: document.getElementById('graph'),
+      container: graphRef.current,
       elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
+      minZoom: 0.05,
+      maxZoom: 5,
       style: [
         {
           selector: 'node',
@@ -251,6 +305,39 @@ const GraphView = ({ workspaceId }) => {
         }
       ]
     })
+    cur.network.on('zoom', evt => setZoom(logToLinear(evt.cy.zoom())))
+
+    // Add tooltip to concept nodes
+    cur.network.nodes('node[type="concept"]').forEach(conceptNode => {
+      const description = conceptNode.data('description')
+      const nodeRef = conceptNode.popperRef()
+      const tippy = new Tippy(nodeRef, {
+        content: () => {
+          const content = document.createElement('div')
+          content.innerHTML = description
+          return content
+        },
+        trigger: 'manual'
+      })
+      conceptNode.on('mouseover', () => tippy.show())
+      conceptNode.on('mouseout', () => tippy.hide())
+    })
+
+    // Add tooltip to concept nodes
+    cur.network.nodes('node[type="conceptNode"]').forEach(conceptNode => {
+      const description = conceptNode.data('description')
+      const nodeRef = conceptNode.popperRef()
+      const tippy = new Tippy(nodeRef, {
+        content: () => {
+          const content = document.createElement('div')
+          content.innerHTML = description
+          return content
+        },
+        trigger: 'manual'
+      })
+      conceptNode.on('mouseover', () => tippy.show())
+      conceptNode.on('mouseout', () => tippy.hide())
+    })
 
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
     cur.courseLayout = cur.network.layout({
@@ -266,6 +353,7 @@ const GraphView = ({ workspaceId }) => {
       name: 'klay'
     })
     loadingRef.current.style.display = 'none'
+    controlsRef.current.style.display = 'block'
 
     cur.conceptLayout.run()
   }
@@ -282,29 +370,60 @@ const GraphView = ({ workspaceId }) => {
     })()
   }, [])
 
-  return <>
-    <div className={classes.graph} id='graph'>
+  return <div className={classes.root}>
+    <div className={classes.graph} ref={graphRef}>
       {!state.current.network &&
         <div ref={loadingRef} style={{ textAlign: 'center' }}>
           <CircularProgress />
         </div>
       }
     </div>
-    <Button className={classes.navigationButton}
-      variant='contained'
-      color='secondary'
-      onClick={toggleMode}
-    >
-      Switch to {nextMode}
-    </Button>
-    <Button className={classes.fitButton}
-      variant='contained'
-      color='secondary'
-      onClick={() => state.current.network.fit([], 100)}
-    >
-      Reset zoom
-    </Button>
-  </>
+    <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
+      <div className={classes.buttonWrapper}>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={toggleMode}>
+          Switch to {nextMode}
+        </Button>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={resetLayout}>
+          Reset layout
+        </Button>
+        <Button className={classes.button} variant='outlined' color='primary' onClick={resetZoom}>
+          Reset zoom
+        </Button>
+      </div>
+      <div className={classes.sliderWrapper}>
+        <Slider
+          orientation='vertical' value={zoom}
+          onChange={(evt, newValue) => state.current.network.zoom({
+            level: linearToLog(newValue),
+            renderedPosition: {
+              x: state.current.network.width() / 2,
+              y: state.current.network.height() / 2
+            }
+          })} />
+      </div>
+      {state.current.courseLegend && nextMode === 'courses' &&
+        <div className={classes.legendWrapper}>
+          <FormControl>
+            <FormLabel component='legend'>Courses</FormLabel>
+            <FormGroup>
+              {state.current.courseLegend.map(course => (
+                <FormControlLabel
+                  key={course.id}
+                  control={<Checkbox
+                    onChange={toggleLegendFilter}
+                    value={course.id}
+                    checked={legendFilter.includes(course.id)}
+                    style={{ color: course.color }}
+                  />}
+                  label={course.label}
+                />
+              ))}
+            </FormGroup>
+          </FormControl>
+        </div>
+      }
+    </div>
+  </div>
 }
 
 export default GraphView
