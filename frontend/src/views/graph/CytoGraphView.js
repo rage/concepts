@@ -101,10 +101,10 @@ const sliderMaxLinear = 100
 const sliderMinLog = Math.log(0.05)
 const sliderMaxLog = Math.log(5)
 
-const sliderScale = (sliderMaxLog-sliderMinLog) / (sliderMaxLinear-sliderMinLinear)
+const sliderScale = (sliderMaxLog - sliderMinLog) / (sliderMaxLinear - sliderMinLinear)
 
-const linearToLog = (position) => Math.exp(sliderMinLog + sliderScale*(position-sliderMinLinear))
-const logToLinear = (value) => (Math.log(value)-sliderMinLog) / sliderScale + sliderMinLinear
+const linearToLog = (position) => Math.exp(sliderMinLog + sliderScale * (position - sliderMinLinear))
+const logToLinear = (value) => (Math.log(value) - sliderMinLog) / sliderScale + sliderMinLinear
 
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
@@ -149,6 +149,18 @@ const GraphView = ({ workspaceId }) => {
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
   const resetZoom = () => state.current.network.fit([], 100)
+  const drawPath = evt => {
+    const cur = state.current
+    console.log(evt.target._private.data)
+    console.log(evt.type)
+    console.log(evt.cy)
+    cur.network.startBatch()
+
+    console.log(evt.target.predecessors())
+    console.log(evt.target.successors())
+
+    cur.network.endBatch()
+  }
 
   const drawConceptGraph = data => {
     const cur = state.current
@@ -178,12 +190,14 @@ const GraphView = ({ workspaceId }) => {
         for (const conceptLink of concept.linksToConcept) {
           cur.conceptEdges.push({
             group: 'edges',
+            classes: ['highlight'],
             data: {
               id: conceptLink.from.id + concept.id,
               source: conceptLink.from.id,
               type: 'concept',
               display: 'element',
-              target: concept.id
+              target: concept.id,
+              color: course.color.bg
             }
           })
         }
@@ -211,7 +225,8 @@ const GraphView = ({ workspaceId }) => {
             source: courseLink.from.id,
             type: 'course',
             display: 'none',
-            target: course.id
+            target: course.id,
+            color: course.color.bg
           }
         })
       }
@@ -256,10 +271,25 @@ const GraphView = ({ workspaceId }) => {
             'target-arrow-color': '#ccc',
             'mid-target-arrow-shape': 'triangle'
           }
+        },
+        {
+          selector: 'node.highlight',
+          style: {
+            'border-color': '#FFF',
+            'border-width': '2px'
+          }
+        },
+        {
+          selector: 'edge.highlight',
+          style: {
+            'mid-target-arrow-color': 'data(color)',
+            'line-color': 'data(color)'
+          }
         }
       ]
     })
     cur.network.on('zoom', evt => setZoom(logToLinear(evt.cy.zoom())))
+    cur.network.nodes().on('click', drawPath)
 
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
     cur.courseLayout = cur.network.layout({
