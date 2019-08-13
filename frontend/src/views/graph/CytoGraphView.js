@@ -52,7 +52,7 @@ const options = {
     addUnnecessaryBendpoints: false, // Adds bend points even if an edge does not change direction.
     aspectRatio: 1.6, // The aimed aspect ratio of the drawing, that is the quotient of width by height
     borderSpacing: 20, // Minimal amount of space to be left to the border
-    compactComponents: true, // Tries to further compact components (disconnected sub-graphs).
+    compactComponents: false, // Tries to further compact components (disconnected sub-graphs).
     crossingMinimization: 'LAYER_SWEEP', // Strategy for crossing minimization.
     /* LAYER_SWEEP The layer sweep algorithm iterates multiple times over the layers, trying to find node orderings that minimize the number of crossings. The algorithm uses randomization to increase the odds of finding a good result. To improve its results, consider increasing the Thoroughness option, which influences the number of iterations done. The Randomization seed also influences results.
     INTERACTIVE Orders the nodes of each layer by comparing their positions before the layout algorithm was started. The idea is that the relative order of nodes as it was before layout was applied is not changed. This of course requires valid positions for all nodes to have been set on the input graph before calling the layout algorithm. The interactive layer sweep algorithm uses the Interactive Reference Point option to determine which reference point of nodes are used to compare positions. */
@@ -71,7 +71,7 @@ const options = {
     LEFTDOWN Chooses the left-down candidate from the four possible candidates.
     RIGHTDOWN Chooses the right-down candidate from the four possible candidates.
     BALANCED Creates a balanced layout from the four possible candidates. */
-    inLayerSpacingFactor: 2, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
+    inLayerSpacingFactor: 2.5, // Factor by which the usual spacing is multiplied to determine the in-layer spacing between objects.
     layoutHierarchy: true, // Whether the selected layouter should consider the full hierarchy
     linearSegmentsDeflectionDampening: 0.3, // Dampens the movement of nodes to keep the diagram from getting too large.
     mergeEdges: false, // Edges that have no ports are merged so they touch the connected nodes at the same points.
@@ -149,17 +149,23 @@ const GraphView = ({ workspaceId }) => {
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
   const resetZoom = () => state.current.network.fit([], 100)
-  const drawPath = evt => {
+
+  const drawPaths = evt => {
     const cur = state.current
-    console.log(evt.target._private.data)
-    console.log(evt.type)
-    console.log(evt.cy)
     cur.network.startBatch()
-
-    console.log(evt.target.predecessors())
-    console.log(evt.target.successors())
-
+    const selectedNodes = evt.cy.nodes().filter(ele => ele.selected())
+    selectedNodes.addClass('highlight').predecessors().addClass('highlight')
+    selectedNodes.successors().addClass('highlight')
     cur.network.endBatch()
+  }
+
+  const clearPaths = evt => {
+    const cur = state.current
+    if (evt.target === cur.network) {
+      cur.network.startBatch()
+      evt.cy.elements().removeClass('highlight')
+      cur.network.endBatch()
+    }
   }
 
   const drawConceptGraph = data => {
@@ -190,7 +196,6 @@ const GraphView = ({ workspaceId }) => {
         for (const conceptLink of concept.linksToConcept) {
           cur.conceptEdges.push({
             group: 'edges',
-            classes: ['highlight'],
             data: {
               id: conceptLink.from.id + concept.id,
               source: conceptLink.from.id,
@@ -275,13 +280,14 @@ const GraphView = ({ workspaceId }) => {
         {
           selector: 'node.highlight',
           style: {
-            'border-color': '#FFF',
-            'border-width': '2px'
+            'border-color': 'data(color)',
+            'border-width': '4px'
           }
         },
         {
           selector: 'edge.highlight',
           style: {
+            'width': 8,
             'mid-target-arrow-color': 'data(color)',
             'line-color': 'data(color)'
           }
@@ -289,7 +295,9 @@ const GraphView = ({ workspaceId }) => {
       ]
     })
     cur.network.on('zoom', evt => setZoom(logToLinear(evt.cy.zoom())))
-    cur.network.nodes().on('click', drawPath)
+    cur.network.nodes().on('select', drawPaths)
+    cur.network.elements().on('click', evt => evt.target.select())
+    cur.network.on('click', clearPaths)
 
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
     cur.courseLayout = cur.network.layout({
