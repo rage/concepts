@@ -389,8 +389,9 @@ const GraphView = ({ workspaceId }) => {
         ...options.klay,
         direction: 'RIGHT',
         spacing: 50,
-        edgeSpacingFactor: 1,
-        inLayerSpacingFactor: 0.8
+        edgeSpacingFactor: 0.5,
+        inLayerSpacingFactor: 3.0,
+        edgeRouting: 'POLYLINE'
       },
       name: 'klay'
     })
