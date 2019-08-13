@@ -280,6 +280,22 @@ const GraphView = ({ workspaceId }) => {
       conceptNode.on('mouseout', () => tippy.hide())
     })
 
+    // Add tooltip to concept nodes
+    cur.network.nodes('node[type="conceptNode"]').forEach(conceptNode => {
+      const description = conceptNode.data('description')
+      const nodeRef = conceptNode.popperRef()
+      const tippy = new Tippy(nodeRef, {
+        content: () => {
+          const content = document.createElement('div')
+          content.innerHTML = description
+          return content
+        },
+        trigger: 'manual'
+      })
+      conceptNode.on('mouseover', () => tippy.show())
+      conceptNode.on('mouseout', () => tippy.hide())
+    })
+
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
     cur.courseLayout = cur.network.layout({
       ...options,
