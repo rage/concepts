@@ -211,9 +211,11 @@ const GraphView = ({ workspaceId }) => {
     cur.conceptEdges = []
     cur.courseNodes = []
     cur.courseEdges = []
+    const courseMap = {}
 
     let colorIndex = 0
     for (const course of data.workspaceById.courses) {
+      courseMap[course.id] = course
       course.color = colors[colorIndex++]
       for (const concept of course.concepts) {
         cur.conceptNodes.push({
@@ -240,7 +242,8 @@ const GraphView = ({ workspaceId }) => {
               display: 'element',
               target: concept.id,
               color: course.color.bg,
-              courseId: course.id
+              courseId: course.id,
+              gradient: `${courseMap[conceptLink.from.courses[0].id].color.bg} ${course.color.bg}`
             }
           })
         }
@@ -335,7 +338,8 @@ const GraphView = ({ workspaceId }) => {
           style: {
             'width': 8,
             'mid-target-arrow-color': 'data(color)',
-            'line-color': 'data(color)'
+            'line-fill': 'linear-gradient',
+            'line-gradient-stop-colors': 'data(gradient)'
           }
         }
       ]
