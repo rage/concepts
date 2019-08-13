@@ -362,7 +362,7 @@ const GraphView = ({ workspaceId }) => {
       {state.current.courseLegend && nextMode === 'courses' &&
         <div className={classes.legendWrapper}>
           <FormControl>
-            <FormLabel component='legend'>Legend</FormLabel>
+            <FormLabel component='legend'>Courses</FormLabel>
             <FormGroup>
               {state.current.courseLegend.map(course => (
                 <FormControlLabel
