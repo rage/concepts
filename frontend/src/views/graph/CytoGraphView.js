@@ -3,6 +3,7 @@ import { makeStyles, Button, CircularProgress } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
+import Tippy from 'tippy.js'
 
 import {
   WORKSPACE_DATA_FOR_GRAPH
@@ -162,7 +163,7 @@ const GraphView = ({ workspaceId }) => {
           data: {
             id: concept.id,
             label: concept.name,
-            title: !concept.description ? 'No description available'
+            description: !concept.description ? 'No description available'
               : concept.description.replace('\n', '</br>'),
             color: course.color.bg,
             type: 'conceptNode',
@@ -252,6 +253,22 @@ const GraphView = ({ workspaceId }) => {
           }
         }
       ]
+    })
+
+    // Add tooltip to concept nodes
+    cur.network.nodes('node[type="conceptNode"]').forEach(conceptNode => {
+      const description = conceptNode.data('description')
+      const nodeRef = conceptNode.popperRef()
+      const tippy = new Tippy(nodeRef, {
+        content: () => {
+          const content = document.createElement('div')
+          content.innerHTML = description
+          return content
+        },
+        trigger: 'manual'
+      })
+      conceptNode.on('mouseover', () => tippy.show())
+      conceptNode.on('mouseout', () => tippy.hide())
     })
 
     cur.conceptLayout = cur.network.layout({ ...options, name: 'klay' })
