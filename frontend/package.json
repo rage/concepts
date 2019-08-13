@@ -25,8 +25,7 @@
     "react-scripts": "3.0.1",
     "react-window": "^1.8.1",
     "tippy.js": "^4.3.5",
-    "tmc-client-js": "^0.0.9",
-    "vis-network": "^5.2.1"
+    "tmc-client-js": "^0.0.9"
   },
   "scripts": {
     "start": "react-scripts start",
