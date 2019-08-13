@@ -14,10 +14,10 @@
 ## Previews
 
 ### Concept mapper
-![preview-mapper.png](preview-mapper.png)
+![Concept mapper preview](preview-mapper.png)
 
 ### Concept graph
-![preview-graph-hq.png](preview-graph-hq.png)
+![Concept graph preview](preview-graph.png)
 
 ### Workspace heatmap
-![preview-heatmap.png](preview-heatmap.png)
+![Workspace heatmap preview](preview-heatmap.png)
