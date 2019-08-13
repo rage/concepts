@@ -387,7 +387,6 @@ const GraphView = ({ workspaceId }) => {
       ...options,
       klay: {
         ...options.klay,
-        nodePlacement: 'LINEAR_SEGMENTS',
         direction: 'RIGHT',
         spacing: 50,
         edgeSpacingFactor: 0.5,
