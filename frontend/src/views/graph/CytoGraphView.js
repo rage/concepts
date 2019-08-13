@@ -272,7 +272,8 @@ const GraphView = ({ workspaceId }) => {
             type: 'course',
             display: 'none',
             target: course.id,
-            color: course.color.bg
+            color: course.color.bg,
+            gradient: `${courseMap[courseLink.from.id].color.bg} ${course.color.bg}`
           }
         })
       }
