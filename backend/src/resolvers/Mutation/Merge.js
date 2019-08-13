@@ -12,7 +12,7 @@ query($id : ID!) {
         courses {
           id
           name
-          linksToCourse {
+          linksFromCourse {
             to {
               name
             }
@@ -21,7 +21,7 @@ query($id : ID!) {
             id
             name
             description
-            linksToConcept {
+            linksFromConcept {
               id
               to {
                 name
@@ -39,6 +39,13 @@ const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234
 const makeSecret = length => Array.from({ length },
   () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
 
+const getCourseId = (courseName) => {
+  return ''
+}
+
+const getConceptId = (conceptName) => {
+  return ''
+}
 
 const MergeMutations = {
   async mergeWorkspaces(root, { projectId }, context) {
@@ -74,6 +81,17 @@ const MergeMutations = {
         if (!(course.name in mergedWorkspaceData.courses)) {
           mergedWorkspaceData.courses[course.name] = []
         }
+        // Add links to courses
+        mergedWorkspaceData.courseLinks[course.name] = {}
+        course.linksFromCourse.forEach(courseLink => {
+          if (!mergedWorkspaceData.courseLinks[course.name][courseLink.to.name]) {
+            mergedWorkspaceData.courseLinks[course.name][courseLink.to.name] = 1
+          } else {
+            mergedWorkspaceData.courseLinks[course.name][courseLink.to.name]++
+          }
+        })
+
+        // Add concepts
         for (const concept of course.concepts) {
           if (!(concept.name in mergedWorkspaceData.concepts)) {
             mergedWorkspaceData.concepts[concept.name] = true
@@ -82,6 +100,15 @@ const MergeMutations = {
               description: concept.description
             })
           }
+
+          mergedWorkspaceData.conceptLinks[concept.name] = {}
+          concept.linkFromConcept.forEach(conceptLink => {
+            if (!mergedWorkspaceData.conceptLinks[concept.name][conceptLink.to.name]) {
+              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.to.name] = 1
+            } else {
+              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.to.name]++
+            }
+          })
         }
       }
     }
@@ -108,10 +135,12 @@ const MergeMutations = {
       },
       courses: {
         create: Object.keys(mergedWorkspaceData.courses).map(courseName => ({
+          id: getCourseId(courseName),
           name: courseName,
           createdBy: { connect: { id: context.user.id }},
           concepts: {
             create: mergedWorkspaceData.courses[courseName].map(concept => ({
+              id: getConceptId(concept.name),
               name: concept.name,
               description: concept.description,
               createdBy: { connect: { id: context.user.id } },
@@ -119,6 +148,26 @@ const MergeMutations = {
             }))
           }
         }))
+      },
+      courseLinks: {
+        create: Object.keys(mergedWorkspaceData.courseLinks).map(fromCourse => {
+          return Object.keys(mergedWorkspaceData.courseLinks[fromCourse]).map(toCourse => ({
+            createdBy: { id: context.user.id },
+            from: getCourseId(fromCourse),
+            to: getCourseId(toCourse)
+            // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
+          }))
+        }).reduce((a, b) => a.concat(b), [])
+      },
+      conceptLinks: {
+        create: Object.keys(mergedWorkspaceData.conceptLinks).map(fromConcept => {
+          return Object.keys(mergedWorkspaceData.conceptLinks[fromConcept]).map(toConcept => ({
+            createdBy: { id: context.user.id },
+            from: getConceptId(fromConcept),
+            to: getConceptId(toConcept)
+            // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
+          }))
+        }).reduce((a, b) => a.concat(b), [])
       }
     });
   }
