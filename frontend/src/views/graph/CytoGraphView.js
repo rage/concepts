@@ -265,7 +265,7 @@ const GraphView = ({ workspaceId }) => {
     cur.network.on('zoom', evt => setZoom(logToLinear(evt.cy.zoom())))
 
     // Add tooltip to concept nodes
-    cur.network.nodes('node[type="conceptNode"]').forEach(conceptNode => {
+    cur.network.nodes('node[type="concept"]').forEach(conceptNode => {
       const description = conceptNode.data('description')
       const nodeRef = conceptNode.popperRef()
       const tippy = new Tippy(nodeRef, {
