@@ -8,11 +8,11 @@ class NotFoundError extends ApolloError {
   }
 }
 
-const nullWrap = (value, type = 'workspace') => {
+const nullShield = (value, type = 'workspace') => {
   if (!value) {
     throw new NotFoundError(type)
   }
   return value
 }
 
-module.exports = { NotFoundError, nullWrap }
+module.exports = { NotFoundError, nullShield }
