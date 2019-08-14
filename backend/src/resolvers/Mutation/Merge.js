@@ -1,5 +1,7 @@
 const crypto = require('crypto')
- 
+
+const makeSecret = require('../../secret')
+
 const clonedWorkspacesQuery = `
 query($id : ID!) {
   project(where: {
@@ -35,22 +37,19 @@ query($id : ID!) {
 }
 `
 
-const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const makeSecret = length => Array.from({ length },
-  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+const sha1digest = (...vars) => {
+  const sha1 = crypto.createHash('sha1')
+  for (const item of vars) {
+    sha1.update(item)
+  }
+  return sha1.digest('base64')
+}
 
 const MergeMutations = {
   async mergeWorkspaces(root, { projectId }, context) {
-    const time = Date.now().toString()
-    
-    const getCourseId = (courseName) => {
-      return crypto.createHash('sha1').update(time).update(courseName).digest('base64').substr(0, 25)
-    }
-    
-    const getConceptId = (courseName, conceptName) => {
-      return crypto.createHash('sha1').update(time).update(courseName).update(conceptName).digest('base64').substr(0, 25)
-    }
-    
+    const seed = makeSecret(32)
+    const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
+
     // Check if project has an active template
     const activeTemplate = context.prisma.project({
       id: projectId
@@ -64,13 +63,15 @@ const MergeMutations = {
     const result = await context.prisma.$graphql(clonedWorkspacesQuery, {
       id: projectId
     })
-    
+
+    // TODO simplify everything after this point
+
     const activeTemplateId = result.project.activeTemplate.id
     const activeTemplateName = result.project.activeTemplate.name
     const clonedWorkspaces = result.project.activeTemplate.clones
-    
+
     const mergedWorkspaceData = {
-      name: activeTemplateName + " merge",
+      name: activeTemplateName + ' merge',
       courses: {}, // Merged courses, value is a list of concepts related to the course
       concepts: {}, // Merged concepts, to filter out duplicates
       courseLinks: {}, // Key: fromCourseId + toCourseId, Strength of connection
@@ -115,7 +116,7 @@ const MergeMutations = {
       }
     }
 
-    const workspaceId = makeSecret(25)
+    const workspaceId = hash()
     return await context.prisma.createWorkspace({
       id: workspaceId,
       name: mergedWorkspaceData.name,
@@ -137,12 +138,12 @@ const MergeMutations = {
       },
       courses: {
         create: Object.keys(mergedWorkspaceData.courses).map(courseName => ({
-          id: getCourseId(courseName),
+          id: hash(courseName),
           name: courseName,
-          createdBy: { connect: { id: context.user.id }},
+          createdBy: { connect: { id: context.user.id } },
           concepts: {
             create: mergedWorkspaceData.courses[courseName].map(concept => ({
-              id: getConceptId(courseName, concept.name),
+              id: hash(courseName, concept.name),
               name: concept.name,
               description: concept.description,
               createdBy: { connect: { id: context.user.id } },
@@ -152,26 +153,22 @@ const MergeMutations = {
         }))
       },
       courseLinks: {
-        create: Object.keys(mergedWorkspaceData.courseLinks).map(fromCourse => {
-          return Object.keys(mergedWorkspaceData.courseLinks[fromCourse]).map(toCourse => ({
-            createdBy: { id: context.user.id },
-            from: getCourseId(fromCourse),
-            to: getCourseId(toCourse)
-            // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
-          }))
-        }).reduce((a, b) => a.concat(b), [])
+        create: Object.keys(mergedWorkspaceData.courseLinks).map(fromCourse => Object.keys(mergedWorkspaceData.courseLinks[fromCourse]).map(toCourse => ({
+          createdBy: { id: context.user.id },
+          from: hash(fromCourse),
+          to: hash(toCourse)
+          // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
+        }))).reduce((a, b) => a.concat(b), [])
       },
       conceptLinks: {
-        create: Object.keys(mergedWorkspaceData.conceptLinks).map(fromConcept => {
-          return Object.keys(mergedWorkspaceData.conceptLinks[fromConcept]).map(toConcept => ({
-            createdBy: { id: context.user.id },
-            from: getConceptId( mergedWorkspaceData.concepts[fromConcept], fromConcept),
-            to: getConceptId(mergedWorkspaceData.concepts[toConcept], toConcept)
-            // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
-          }))
-        }).reduce((a, b) => a.concat(b), [])
+        create: Object.keys(mergedWorkspaceData.conceptLinks).map(fromConcept => Object.keys(mergedWorkspaceData.conceptLinks[fromConcept]).map(toConcept => ({
+          createdBy: { id: context.user.id },
+          from: hash(mergedWorkspaceData.concepts[fromConcept], fromConcept),
+          to: hash(mergedWorkspaceData.concepts[toConcept], toConcept)
+          // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
+        }))).reduce((a, b) => a.concat(b), [])
       }
-    });
+    })
   }
 }
 

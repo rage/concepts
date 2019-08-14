@@ -1,5 +1,6 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullWrap } = require('../../errors')
+const makeSecret = require('../../secret')
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
@@ -48,10 +49,6 @@ query($id : ID!) {
   }
 }
 `
-
-const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const makeSecret = length => Array.from({ length },
-  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
 
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
