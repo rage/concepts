@@ -15,6 +15,7 @@ query($id : ID!) {
           id
           name
           linksToCourse {
+            weight
             from {
               name
             }
@@ -25,6 +26,7 @@ query($id : ID!) {
             description
             linksToConcept {
               id
+              weight
               from {
                 name
                 courses {
@@ -77,7 +79,7 @@ const MergeMutations = {
         merged.setDefault(link.from.name, {
           course: link.from.courses ? link.from.courses[0].name : undefined,
           weight: 0
-        }).weight++
+        }).weight += link.weight
       }
     }
 
