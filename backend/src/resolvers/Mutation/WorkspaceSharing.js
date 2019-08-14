@@ -46,7 +46,8 @@ const WorkspaceSharingMutations = {
         id
       })
     } else if (id[0] === 'p') {
-      const { id: projectId } = nullWrap(await context.prisma.projectToken({ id }).project(), 'project')
+      const { id: projectId } = nullWrap(await context.prisma.projectToken({ id }).project(),
+        'project')
       await checkAccess(context, {
         minimumRole: Role.GUEST,
         minimumPrivilege: Privilege.OWNER,
