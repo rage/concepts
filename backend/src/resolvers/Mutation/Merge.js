@@ -14,8 +14,8 @@ query($id : ID!) {
         courses {
           id
           name
-          linksFromCourse {
-            to {
+          linksToCourse {
+            from {
               name
             }
           }
@@ -23,9 +23,9 @@ query($id : ID!) {
             id
             name
             description
-            linksFromConcept {
+            linksToConcept {
               id
-              to {
+              from {
                 name
               }
             }
@@ -86,11 +86,11 @@ const MergeMutations = {
         }
         // Add links to courses
         mergedWorkspaceData.courseLinks[course.name] = {}
-        course.linksFromCourse.forEach(courseLink => {
-          if (!mergedWorkspaceData.courseLinks[course.name][courseLink.to.name]) {
-            mergedWorkspaceData.courseLinks[course.name][courseLink.to.name] = 1
+        course.linksToCourse.forEach(courseLink => {
+          if (!mergedWorkspaceData.courseLinks[course.name][courseLink.from.name]) {
+            mergedWorkspaceData.courseLinks[course.name][courseLink.from.name] = 1
           } else {
-            mergedWorkspaceData.courseLinks[course.name][courseLink.to.name]++
+            mergedWorkspaceData.courseLinks[course.name][courseLink.from.name]++
           }
         })
 
@@ -105,11 +105,11 @@ const MergeMutations = {
           }
 
           mergedWorkspaceData.conceptLinks[concept.name] = {}
-          concept.linksFromConcept.forEach(conceptLink => {
-            if (!mergedWorkspaceData.conceptLinks[concept.name][conceptLink.to.name]) {
-              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.to.name] = 1
+          concept.linksToConcept.forEach(conceptLink => {
+            if (!mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name]) {
+              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name] = 1
             } else {
-              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.to.name]++
+              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name]++
             }
           })
         }
@@ -153,20 +153,26 @@ const MergeMutations = {
         }))
       },
       courseLinks: {
-        create: Object.keys(mergedWorkspaceData.courseLinks).map(fromCourse => Object.keys(mergedWorkspaceData.courseLinks[fromCourse]).map(toCourse => ({
-          createdBy: { id: context.user.id },
-          from: hash(fromCourse),
-          to: hash(toCourse)
-          // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
-        }))).reduce((a, b) => a.concat(b), [])
+        create: Object.keys(mergedWorkspaceData.courseLinks)
+          .map(fromCourse => Object.keys(mergedWorkspaceData.courseLinks[fromCourse])
+            .map(toCourse => ({
+              createdBy: { id: context.user.id },
+              from: hash(fromCourse),
+              to: hash(toCourse)
+              // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
+            }))
+          ).reduce((a, b) => a.concat(b), [])
       },
       conceptLinks: {
-        create: Object.keys(mergedWorkspaceData.conceptLinks).map(fromConcept => Object.keys(mergedWorkspaceData.conceptLinks[fromConcept]).map(toConcept => ({
-          createdBy: { id: context.user.id },
-          from: hash(mergedWorkspaceData.concepts[fromConcept], fromConcept),
-          to: hash(mergedWorkspaceData.concepts[toConcept], toConcept)
-          // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
-        }))).reduce((a, b) => a.concat(b), [])
+        create: Object.keys(mergedWorkspaceData.conceptLinks)
+          .map(fromConcept => Object.keys(mergedWorkspaceData.conceptLinks[fromConcept])
+            .map(toConcept => ({
+              createdBy: { id: context.user.id },
+              from: hash(mergedWorkspaceData.concepts[fromConcept], fromConcept),
+              to: hash(mergedWorkspaceData.concepts[toConcept], toConcept)
+              // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
+            }))
+          ).reduce((a, b) => a.concat(b), [])
       }
     })
   }
