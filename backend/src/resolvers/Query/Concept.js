@@ -1,5 +1,5 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullWrap } = require('../../errors')
+const { nullShield } = require('../../errors')
 
 const ConceptQueries = {
   async allConcepts(root, args, context) {
@@ -7,7 +7,7 @@ const ConceptQueries = {
     return await context.prisma.concepts()
   },
   async conceptById(root, { id }, context) {
-    const { id: workspaceId } = nullWrap(await context.prisma.concept({ id }).workspace())
+    const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.READ,

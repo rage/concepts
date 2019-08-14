@@ -1,5 +1,5 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullWrap } = require('../../errors')
+const { nullShield } = require('../../errors')
 
 const ConceptLink = {
   async createConceptLink(root, { official, to, from, workspaceId }, context) {
@@ -25,7 +25,7 @@ const ConceptLink = {
     })
   },
   async deleteConceptLink(root, args, context) {
-    const { id: workspaceId } = nullWrap(
+    const { id: workspaceId } = nullShield(
       await context.prisma.conceptLink({ id: args.id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,

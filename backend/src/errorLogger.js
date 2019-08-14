@@ -28,7 +28,7 @@ const logError = error => {
 
   // Convert path array into a string
   if (error.path) {
-    errorData.path = error.path.reduce((first, second) => first + '/' + second)
+    errorData.path = error.path.reduce((first, second) => `${first}/${second}`)
     errorData.type = getPathType(errorData.path)
   }
 

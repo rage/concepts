@@ -228,7 +228,6 @@ const CourseTray = ({
                 getLinkToDelete={getLinkToDelete}
                 workspaceId={workspaceId}
                 openEditCourseDialog={openEditCourseDialog}
-                workspaceId={workspaceId}
                 courses={courses}
               />
             )

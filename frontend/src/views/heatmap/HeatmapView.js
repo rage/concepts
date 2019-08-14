@@ -179,10 +179,10 @@ const TableCell = withRouter(({
   const onlyUnique = (v, i, a) => a.indexOf(v) === i
 
   const concepts = fromCourse.concepts
-    .map(concept => concept.linksToConcept
+    .flatMap(concept => concept.linksToConcept
       .filter(conceptLink => conceptLink.from.courses
         .find(course => course.id === toCourse.id))
-    ).reduce((first, second) => first.concat(second), [])
+    )
     .map(conceptLink => conceptLink.from.name)
     .filter(onlyUnique)
 

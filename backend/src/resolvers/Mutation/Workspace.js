@@ -1,5 +1,5 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullWrap } = require('../../errors')
+const { nullShield } = require('../../errors')
 const makeSecret = require('../../secret')
 
 const workspaceAllDataQuery = `
@@ -162,7 +162,8 @@ const WorkspaceMutations = {
     })
   },
   async updateWorkspaceParticipant(root, { id, privilege }, context) {
-    const { id: workspaceId } = nullWrap(await context.prisma.workspaceParticipant({ id }).workspace())
+    const { id: workspaceId } = nullShield(
+      await context.prisma.workspaceParticipant({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.OWNER,
@@ -174,9 +175,10 @@ const WorkspaceMutations = {
     })
   },
   async deleteWorkspaceParticipant(root, { id }, context) {
-    const { id: workspaceId } = nullWrap(
+    const { id: workspaceId } = nullShield(
       await context.prisma.workspaceParticipant({ id }).workspace())
-    const { id: userId } = nullWrap(await context.prisma.workspaceParticipant({ id }).user(), 'user')
+    const { id: userId } = nullShield(
+      await context.prisma.workspaceParticipant({ id }).user(), 'user')
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: userId === context.user.id ? Privilege.READ : Privilege.OWNER,

@@ -39,14 +39,12 @@ const parseWorkspacePath = (workspaceId, path) => {
     return [{ name: 'Heatmap' }]
   case 'graph':
     return [{ name: 'Graph' }]
+  default:
+    return []
   }
-  return []
 }
 
 const parseProjectPath = (projectId, path, meta) => {
-  if (path.length === 0) {
-    return []
-  }
   switch (path[0]) {
   case 'clone':
     return [{ name: 'Clone' }]
@@ -56,13 +54,12 @@ const parseProjectPath = (projectId, path, meta) => {
       id: path[1],
       link: `/projects/${projectId}/workspaces/${path[1]}`
     }].concat(parseWorkspacePath(path[1], path.slice(2), meta))
+  default:
+    return []
   }
 }
 
 const parsePath = (path, meta) => {
-  if (path.length === 0) {
-    return []
-  }
   switch (path[0]) {
   case '':
     return parsePath(path.slice(1), meta)
@@ -90,8 +87,9 @@ const parsePath = (path, meta) => {
     const type = token[0] === 'w' ? 'workspace' : 'project'
     return [{ name: `Join ${type}`, link: `/join/${token}` }]
   }
+  default:
+    return []
   }
-  return []
 }
 
 const NavBar = ({ location }) => {
