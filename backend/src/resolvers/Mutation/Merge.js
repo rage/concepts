@@ -57,9 +57,6 @@ const sha1digest = (...vars) => {
 
 const MergeMutations = {
   async mergeWorkspaces(root, { projectId }, context) {
-    const seed = makeSecret(32)
-    const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
-
     const activeTemplate = context.prisma.project({
       id: projectId
     }).activeTemplate()
@@ -71,6 +68,9 @@ const MergeMutations = {
     const result = await context.prisma.$graphql(clonedWorkspacesQuery, {
       id: projectId
     })
+
+    const seed = makeSecret(32)
+    const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
 
     const name = `${result.project.activeTemplate.name} merge`
     const templateId = result.project.activeTemplate.id
@@ -122,7 +122,7 @@ const MergeMutations = {
       },
       courses: {
         create: Object.entries(mergedCourses)
-          .map(([courseName, concepts]) => ({
+          .map(([courseName, { concepts }]) => ({
             id: hash(courseName),
             name: courseName,
             createdBy: { connect: { id: context.user.id } },
@@ -143,8 +143,7 @@ const MergeMutations = {
             .map(([fromCourse, { weight }]) => ({
               createdBy: { connect: { id: context.user.id } },
               from: { connect: { id: hash(fromCourse) } },
-              to: { connect: { id: hash(toCourse) } },
-              weight
+              to: { connect: { id: hash(toCourse) } }
             }))
           )
       },
@@ -152,11 +151,10 @@ const MergeMutations = {
         create: Object.entries(mergedCourses)
           .flatMap(([toCourse, { concepts }]) => Object.entries(concepts)
             .flatMap(([toConcept, { links }]) => Object.entries(links)
-              .map(([fromConcept, { fromCourse, weight }]) => ({
+              .map(([fromConcept, { course: fromCourse, weight }]) => ({
                 createdBy: { connect: { id: context.user.id } },
                 from: { connect: { id: hash(fromCourse, fromConcept) } },
-                to: { connect: { id: hash(toCourse, toConcept) } },
-                weight
+                to: { connect: { id: hash(toCourse, toConcept) } }
               }))
             )
           )
