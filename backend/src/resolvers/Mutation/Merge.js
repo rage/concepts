@@ -72,38 +72,38 @@ const MergeMutations = {
     const seed = makeSecret(32)
     const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
 
+    const mergeLinks = (links, merged) => {
+      for (const link of links) {
+        merged.setDefault(link.from.name, {
+          course: link.from.courses ? link.from.courses[0].name : undefined,
+          weight: 0
+        }).weight++
+      }
+    }
+
     const name = `${result.project.activeTemplate.name} merge`
     const templateId = result.project.activeTemplate.id
 
-    const mergedCourses = {}
+    const courses = {}
 
     for (const workspace of result.project.activeTemplate.clones) {
       for (const course of workspace.courses) {
-        const mergedCourse = mergedCourses.setDefault(course.name, {
+        const { links: courseLinks, concepts } = courses.setDefault(course.name, {
           links: {},
           concepts: {}
         })
 
-        const mergeLinks = (name, links, merged) => {
-          for (const link of links) {
-            merged.setDefault(link.from.name, {
-              course: link.from.courses ? link.from.courses[0].name : undefined,
-              weight: 0
-            }).weight++
-          }
-        }
-
-        mergeLinks(course.name, course.linksToCourse, mergedCourse.links)
+        mergeLinks(course.linksToCourse, courseLinks)
 
         for (const concept of course.concepts) {
           // TODO merge conflicting descriptions?
-          const mergedConcept = mergedCourse.concepts.setDefault(concept.name, {
+          const { links: conceptLinks } = concepts.setDefault(concept.name, {
             description: concept.description,
             course: course.name,
             links: {}
           })
 
-          mergeLinks(concept.name, concept.linksToConcept, mergedConcept.links)
+          mergeLinks(concept.linksToConcept, conceptLinks)
         }
       }
     }
@@ -121,7 +121,7 @@ const MergeMutations = {
         }]
       },
       courses: {
-        create: Object.entries(mergedCourses)
+        create: Object.entries(courses)
           .map(([courseName, { concepts }]) => ({
             id: hash(courseName),
             name: courseName,
@@ -138,23 +138,25 @@ const MergeMutations = {
           }))
       },
       courseLinks: {
-        create: Object.entries(mergedCourses)
+        create: Object.entries(courses)
           .flatMap(([toCourse, { links }]) => Object.entries(links)
             .map(([fromCourse, { weight }]) => ({
               createdBy: { connect: { id: context.user.id } },
               from: { connect: { id: hash(fromCourse) } },
-              to: { connect: { id: hash(toCourse) } }
+              to: { connect: { id: hash(toCourse) } },
+              weight
             }))
           )
       },
       conceptLinks: {
-        create: Object.entries(mergedCourses)
+        create: Object.entries(courses)
           .flatMap(([toCourse, { concepts }]) => Object.entries(concepts)
             .flatMap(([toConcept, { links }]) => Object.entries(links)
               .map(([fromConcept, { course: fromCourse, weight }]) => ({
                 createdBy: { connect: { id: context.user.id } },
                 from: { connect: { id: hash(fromCourse, fromConcept) } },
-                to: { connect: { id: hash(toCourse, toConcept) } }
+                to: { connect: { id: hash(toCourse, toConcept) } },
+                weight
               }))
             )
           )
