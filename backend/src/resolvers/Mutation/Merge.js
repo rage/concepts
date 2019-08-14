@@ -85,10 +85,12 @@ const MergeMutations = {
           mergedWorkspaceData.courses[course.name] = []
         }
         // Add links to courses
-        mergedWorkspaceData.courseLinks[course.name] = {}
+        if (mergedWorkspaceData.courseLinks[course.name] === undefined) {
+          mergedWorkspaceData.courseLinks[course.name] = {}
+        }
         course.linksToCourse.forEach(courseLink => {
           if (!mergedWorkspaceData.courseLinks[course.name][courseLink.from.name]) {
-            mergedWorkspaceData.courseLinks[course.name][courseLink.from.name] = 1
+            mergedWorkspaceData.courseLinks[course.name] = { [courseLink.from.name]: 1 }
           } else {
             mergedWorkspaceData.courseLinks[course.name][courseLink.from.name]++
           }
@@ -104,10 +106,12 @@ const MergeMutations = {
             })
           }
 
-          mergedWorkspaceData.conceptLinks[concept.name] = {}
+          if (mergedWorkspaceData.conceptLinks[concept.name] === undefined) {
+            mergedWorkspaceData.conceptLinks[concept.name] = {}
+          }
           concept.linksToConcept.forEach(conceptLink => {
             if (!mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name]) {
-              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name] = 1
+              mergedWorkspaceData.conceptLinks[concept.name] = { [conceptLink.from.name]: 1 }
             } else {
               mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name]++
             }
@@ -156,9 +160,15 @@ const MergeMutations = {
         create: Object.keys(mergedWorkspaceData.courseLinks)
           .map(fromCourse => Object.keys(mergedWorkspaceData.courseLinks[fromCourse])
             .map(toCourse => ({
-              createdBy: { id: context.user.id },
-              from: hash(fromCourse),
-              to: hash(toCourse)
+              createdBy: {
+                connect: { id: context.user.id }
+              },
+              from: {
+                connect: { id: hash(fromCourse) }
+              },
+              to: {
+                connect: { id: hash(toCourse) }
+              }
               // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
             }))
           ).reduce((a, b) => a.concat(b), [])
@@ -167,9 +177,15 @@ const MergeMutations = {
         create: Object.keys(mergedWorkspaceData.conceptLinks)
           .map(fromConcept => Object.keys(mergedWorkspaceData.conceptLinks[fromConcept])
             .map(toConcept => ({
-              createdBy: { id: context.user.id },
-              from: hash(mergedWorkspaceData.concepts[fromConcept], fromConcept),
-              to: hash(mergedWorkspaceData.concepts[toConcept], toConcept)
+              createdBy: {
+                connect: {id: context.user.id }
+              },
+              from: {
+                connect: { id: hash(mergedWorkspaceData.concepts[fromConcept], fromConcept) }
+              },
+              to: {
+                connect: { id: hash(mergedWorkspaceData.concepts[toConcept], toConcept) }
+              }
               // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
             }))
           ).reduce((a, b) => a.concat(b), [])
