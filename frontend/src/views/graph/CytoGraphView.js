@@ -211,12 +211,13 @@ const GraphView = ({ workspaceId }) => {
     cur.conceptEdges = []
     cur.courseNodes = []
     cur.courseEdges = []
-    const courseMap = {}
+    const courseMap = Object.fromEntries(data.workspaceById.courses
+      .map((course, index) => {
+        course.color = colors[index]
+        return [course.id, course]
+      }))
 
-    let colorIndex = 0
     for (const course of data.workspaceById.courses) {
-      courseMap[course.id] = course
-      course.color = colors[colorIndex++]
       for (const concept of course.concepts) {
         cur.conceptNodes.push({
           group: 'nodes',
