@@ -94,14 +94,19 @@ type Mutation {
   updateWorkspaceParticipant(id: ID!, privilege: Privilege!): WorkspaceParticipant
   deleteWorkspaceParticipant(id: ID!): WorkspaceParticipant
 
+  # Participant
   createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
   updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
   deleteProjectParticipant(id: ID!): ProjectParticipant
-
+  
+  # Token
   createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
   createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
   deleteToken(id: ID!): ProjectOrWorkspaceToken
   useToken(id: ID!): ProjectOrWorkspaceParticipant
+
+  # Merging
+  mergeWorkspaces(projectId: ID!): Workspace!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
@@ -215,6 +220,7 @@ type CourseLink {
   official: Boolean!
   createdBy: User!
   workspace: Workspace!
+  weight: Int!
 }
 
 type Course {
@@ -234,6 +240,7 @@ type ConceptLink {
   official: Boolean!
   workspace: Workspace!
   createdBy: User!
+  weight: Int!
 }
 
 type Concept {

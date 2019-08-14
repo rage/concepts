@@ -3,10 +3,7 @@ const { AuthenticationError } = require('apollo-server-core')
 
 const mockWorkspace = require('../../static/mockWorkspace')
 const tmc = require('../../TMCAuthentication')
-
-const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const makeSecret = length => Array.from({ length },
-  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+const makeSecret = require('../../secret')
 
 const makeMockWorkspaceForUser = async (context, userId) => {
   const workspaceId = makeSecret(25)

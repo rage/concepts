@@ -1,9 +1,6 @@
 const { checkAccess, Role, Privilege, privilegeToChar } = require('../../accessControl')
 const { nullWrap } = require('../../errors')
-
-const secretCharset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-const makeSecret = length => Array.from({ length },
-  () => secretCharset[Math.floor(Math.random() * secretCharset.length)]).join('')
+const makeSecret = require('../../secret')
 
 const WorkspaceSharingMutations = {
   async createWorkspaceToken(root, { workspaceId, privilege }, context) {

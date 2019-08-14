@@ -188,6 +188,7 @@ type ConceptLink {
   official: Boolean!
   workspace: Workspace!
   createdBy: User!
+  weight: Int!
 }
 
 type ConceptLinkConnection {
@@ -203,6 +204,7 @@ input ConceptLinkCreateInput {
   official: Boolean
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
+  weight: Int
 }
 
 input ConceptLinkCreateManyWithoutFromInput {
@@ -226,6 +228,7 @@ input ConceptLinkCreateWithoutFromInput {
   official: Boolean
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
+  weight: Int
 }
 
 input ConceptLinkCreateWithoutToInput {
@@ -234,6 +237,7 @@ input ConceptLinkCreateWithoutToInput {
   official: Boolean
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
+  weight: Int
 }
 
 input ConceptLinkCreateWithoutWorkspaceInput {
@@ -242,6 +246,7 @@ input ConceptLinkCreateWithoutWorkspaceInput {
   to: ConceptCreateOneWithoutLinksToConceptInput!
   official: Boolean
   createdBy: UserCreateOneInput!
+  weight: Int
 }
 
 type ConceptLinkEdge {
@@ -254,11 +259,14 @@ enum ConceptLinkOrderByInput {
   id_DESC
   official_ASC
   official_DESC
+  weight_ASC
+  weight_DESC
 }
 
 type ConceptLinkPreviousValues {
   id: ID!
   official: Boolean!
+  weight: Int!
 }
 
 input ConceptLinkScalarWhereInput {
@@ -278,6 +286,14 @@ input ConceptLinkScalarWhereInput {
   id_not_ends_with: ID
   official: Boolean
   official_not: Boolean
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   AND: [ConceptLinkScalarWhereInput!]
   OR: [ConceptLinkScalarWhereInput!]
   NOT: [ConceptLinkScalarWhereInput!]
@@ -307,14 +323,17 @@ input ConceptLinkUpdateInput {
   official: Boolean
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
+  weight: Int
 }
 
 input ConceptLinkUpdateManyDataInput {
   official: Boolean
+  weight: Int
 }
 
 input ConceptLinkUpdateManyMutationInput {
   official: Boolean
+  weight: Int
 }
 
 input ConceptLinkUpdateManyWithoutFromInput {
@@ -363,6 +382,7 @@ input ConceptLinkUpdateWithoutFromDataInput {
   official: Boolean
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
+  weight: Int
 }
 
 input ConceptLinkUpdateWithoutToDataInput {
@@ -370,6 +390,7 @@ input ConceptLinkUpdateWithoutToDataInput {
   official: Boolean
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
+  weight: Int
 }
 
 input ConceptLinkUpdateWithoutWorkspaceDataInput {
@@ -377,6 +398,7 @@ input ConceptLinkUpdateWithoutWorkspaceDataInput {
   to: ConceptUpdateOneRequiredWithoutLinksToConceptInput
   official: Boolean
   createdBy: UserUpdateOneRequiredInput
+  weight: Int
 }
 
 input ConceptLinkUpdateWithWhereUniqueWithoutFromInput {
@@ -433,6 +455,14 @@ input ConceptLinkWhereInput {
   official_not: Boolean
   workspace: WorkspaceWhereInput
   createdBy: UserWhereInput
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   AND: [ConceptLinkWhereInput!]
   OR: [ConceptLinkWhereInput!]
   NOT: [ConceptLinkWhereInput!]
@@ -856,6 +886,7 @@ type CourseLink {
   official: Boolean!
   createdBy: User!
   workspace: Workspace!
+  weight: Int!
 }
 
 type CourseLinkConnection {
@@ -871,6 +902,7 @@ input CourseLinkCreateInput {
   official: Boolean
   createdBy: UserCreateOneInput!
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
+  weight: Int
 }
 
 input CourseLinkCreateManyWithoutFromInput {
@@ -894,6 +926,7 @@ input CourseLinkCreateWithoutFromInput {
   official: Boolean
   createdBy: UserCreateOneInput!
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
+  weight: Int
 }
 
 input CourseLinkCreateWithoutToInput {
@@ -902,6 +935,7 @@ input CourseLinkCreateWithoutToInput {
   official: Boolean
   createdBy: UserCreateOneInput!
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
+  weight: Int
 }
 
 input CourseLinkCreateWithoutWorkspaceInput {
@@ -910,6 +944,7 @@ input CourseLinkCreateWithoutWorkspaceInput {
   to: CourseCreateOneWithoutLinksToCourseInput!
   official: Boolean
   createdBy: UserCreateOneInput!
+  weight: Int
 }
 
 type CourseLinkEdge {
@@ -922,11 +957,14 @@ enum CourseLinkOrderByInput {
   id_DESC
   official_ASC
   official_DESC
+  weight_ASC
+  weight_DESC
 }
 
 type CourseLinkPreviousValues {
   id: ID!
   official: Boolean!
+  weight: Int!
 }
 
 input CourseLinkScalarWhereInput {
@@ -946,6 +984,14 @@ input CourseLinkScalarWhereInput {
   id_not_ends_with: ID
   official: Boolean
   official_not: Boolean
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   AND: [CourseLinkScalarWhereInput!]
   OR: [CourseLinkScalarWhereInput!]
   NOT: [CourseLinkScalarWhereInput!]
@@ -975,14 +1021,17 @@ input CourseLinkUpdateInput {
   official: Boolean
   createdBy: UserUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
+  weight: Int
 }
 
 input CourseLinkUpdateManyDataInput {
   official: Boolean
+  weight: Int
 }
 
 input CourseLinkUpdateManyMutationInput {
   official: Boolean
+  weight: Int
 }
 
 input CourseLinkUpdateManyWithoutFromInput {
@@ -1031,6 +1080,7 @@ input CourseLinkUpdateWithoutFromDataInput {
   official: Boolean
   createdBy: UserUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
+  weight: Int
 }
 
 input CourseLinkUpdateWithoutToDataInput {
@@ -1038,6 +1088,7 @@ input CourseLinkUpdateWithoutToDataInput {
   official: Boolean
   createdBy: UserUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
+  weight: Int
 }
 
 input CourseLinkUpdateWithoutWorkspaceDataInput {
@@ -1045,6 +1096,7 @@ input CourseLinkUpdateWithoutWorkspaceDataInput {
   to: CourseUpdateOneRequiredWithoutLinksToCourseInput
   official: Boolean
   createdBy: UserUpdateOneRequiredInput
+  weight: Int
 }
 
 input CourseLinkUpdateWithWhereUniqueWithoutFromInput {
@@ -1101,6 +1153,14 @@ input CourseLinkWhereInput {
   official_not: Boolean
   createdBy: UserWhereInput
   workspace: WorkspaceWhereInput
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   AND: [CourseLinkWhereInput!]
   OR: [CourseLinkWhereInput!]
   NOT: [CourseLinkWhereInput!]

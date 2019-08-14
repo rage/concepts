@@ -126,6 +126,7 @@
         "maxBOF": 0,
         "maxEOF": 0
       }
-    ]
+    ],
+    "no-prototype-builtins": "off"
   }
 }

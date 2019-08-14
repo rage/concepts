@@ -8,6 +8,7 @@ const workspaceSharing = require('./WorkspaceSharing')
 const project = require('./Project')
 const port = require('./Port')
 const user = require('./User')
+const merge = require('./Merge')
 
 module.exports = {
   ...authentication,
@@ -19,5 +20,6 @@ module.exports = {
   ...workspaceSharing,
   ...project,
   ...port,
-  ...user
+  ...user,
+  ...merge
 }

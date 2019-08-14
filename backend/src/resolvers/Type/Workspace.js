@@ -10,6 +10,7 @@ module.exports = {
     'conceptLinks',
     'courseLinks',
     'concepts',
+    'clones',
     {
       name: 'tokens',
       checkPrivilegeArgs: root => ({
