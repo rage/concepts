@@ -1,5 +1,7 @@
 const crypto = require('crypto')
 
+const { Role, Privilege, checkAccess } = require('../../accessControl')
+const { NotFoundError } = require('../../errors')
 const makeSecret = require('../../secret')
 
 const clonedWorkspacesQuery = `
@@ -59,17 +61,18 @@ const sha1digest = (...vars) => {
 
 const MergeMutations = {
   async mergeWorkspaces(root, { projectId }, context) {
-    const activeTemplate = context.prisma.project({
-      id: projectId
-    }).activeTemplate()
-    if (!activeTemplate) {
-      throw new Error('No active template found.')
-    }
-    // TODO check access
+    await checkAccess(context, {
+      minimumRole: Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      projectId
+    })
 
     const result = await context.prisma.$graphql(clonedWorkspacesQuery, {
       id: projectId
     })
+    if (!result.project.activeTemplate) {
+      throw new NotFoundError('No active template found.')
+    }
 
     const seed = makeSecret(32)
     const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
@@ -118,7 +121,7 @@ const MergeMutations = {
       sourceTemplate: { connect: { id: templateId } },
       participants: {
         create: [{
-          privilege: 'OWNER',
+          privilege: Privilege.OWNER,
           user: { connect: { id: context.user.id } }
         }]
       },
