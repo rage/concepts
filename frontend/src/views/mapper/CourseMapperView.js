@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"activeHeader contentHeader courseTray" 64px
+    gridTemplate: `"activeHeader contentHeader courseTray" 42px
                    "activeCourse courses       courseTray" 1fr
                    / 25%         75%           25%`,
     '&.courseTrayOpen': {

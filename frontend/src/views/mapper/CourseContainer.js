@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
-import Typography from '@material-ui/core/Typography'
 
 import Course from './Course'
 import Masonry from './Masonry'
 import { useInfoBox } from '../../components/InfoBox'
+import DividerWithText from './DividerWithText'
 
 const CourseContainer = ({
   courseTrayOpen,
@@ -30,9 +30,11 @@ const CourseContainer = ({
   }, [addingLink, courseLinks])
 
   return <>
-    <Typography style={{ gridArea: 'contentHeader', margin: '8px 16px 16px' }} variant='h4'>
-      Prerequisites
-    </Typography>
+    <DividerWithText
+      gridArea='contentHeader'
+      content='Prerequisites'
+      margin='0px 16px 0px 8px'
+    />
     {
       courses && courses.length !== 0 ?
         <div onClick={() => setAddingLink(null)} style={{ gridArea: 'courses', overflowY: 'auto' }}>
