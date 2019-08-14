@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, Paper, Select, MenuItem, InputBase, List, IconButton, Typography
+  Button, Paper, Select, MenuItem, InputBase, List, IconButton
 } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
@@ -11,6 +11,7 @@ import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
+import DividerWithText from './DividerWithText'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -103,9 +104,11 @@ const ActiveCourse = ({
   const activeConceptRef = useRef()
 
   return <>
-    <Typography style={{ gridArea: 'activeHeader', margin: '8px 16px 16px' }} variant='h4'>
-      Editing course
-    </Typography>
+    <DividerWithText
+      content='Editing course'
+      gridArea='activeHeader'
+      margin='0px 8px 0px 8px'
+    />
     <Paper onClick={onClick} elevation={0} className={classes.root}>
       <div className={classes.header}>
         <Select
