@@ -27,6 +27,9 @@ query($id : ID!) {
               id
               from {
                 name
+                courses {
+                  name
+                }
               }
             }
           }
@@ -36,6 +39,13 @@ query($id : ID!) {
   }
 }
 `
+
+Object.prototype.setDefault = function(key, val) {
+  if (!this[key]) {
+    this[key] = val
+  }
+  return this[key]
+}
 
 const sha1digest = (...vars) => {
   const sha1 = crypto.createHash('sha1')
@@ -50,72 +60,50 @@ const MergeMutations = {
     const seed = makeSecret(32)
     const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
 
-    // Check if project has an active template
     const activeTemplate = context.prisma.project({
       id: projectId
     }).activeTemplate()
-
     if (!activeTemplate) {
       throw new Error('No active template found.')
     }
+    // TODO check access
 
-    // Merge
     const result = await context.prisma.$graphql(clonedWorkspacesQuery, {
       id: projectId
     })
 
-    // TODO simplify everything after this point
+    const name = `${result.project.activeTemplate.name} merge`
+    const templateId = result.project.activeTemplate.id
 
-    const activeTemplateId = result.project.activeTemplate.id
-    const activeTemplateName = result.project.activeTemplate.name
-    const clonedWorkspaces = result.project.activeTemplate.clones
+    const mergedCourses = {}
 
-    const mergedWorkspaceData = {
-      name: activeTemplateName + ' merge',
-      courses: {}, // Merged courses, value is a list of concepts related to the course
-      concepts: {}, // Merged concepts, to filter out duplicates
-      courseLinks: {}, // Key: fromCourseId + toCourseId, Strength of connection
-      conceptLinks: {} // Key: fromConceptId + toConceptId, Strength of connection
-    }
-
-    // Preprocess data
-    for (const workspace of clonedWorkspaces) {
+    for (const workspace of result.project.activeTemplate.clones) {
       for (const course of workspace.courses) {
-        if (!(course.name in mergedWorkspaceData.courses)) {
-          mergedWorkspaceData.courses[course.name] = []
-        }
-        // Add links to courses
-        if (mergedWorkspaceData.courseLinks[course.name] === undefined) {
-          mergedWorkspaceData.courseLinks[course.name] = {}
-        }
-        course.linksToCourse.forEach(courseLink => {
-          if (!mergedWorkspaceData.courseLinks[course.name][courseLink.from.name]) {
-            mergedWorkspaceData.courseLinks[course.name] = { [courseLink.from.name]: 1 }
-          } else {
-            mergedWorkspaceData.courseLinks[course.name][courseLink.from.name]++
-          }
+        const mergedCourse = mergedCourses.setDefault(course.name, {
+          links: {},
+          concepts: {}
         })
 
-        // Add concepts
-        for (const concept of course.concepts) {
-          if (!(concept.name in mergedWorkspaceData.concepts)) {
-            mergedWorkspaceData.concepts[concept.name] = course.name
-            mergedWorkspaceData.courses[course.name].push({
-              name: concept.name,
-              description: concept.description
-            })
+        const mergeLinks = (name, links, merged) => {
+          for (const link of links) {
+            merged.setDefault(link.from.name, {
+              course: link.from.courses ? link.from.courses[0].name : undefined,
+              weight: 0
+            }).weight++
           }
+        }
 
-          if (mergedWorkspaceData.conceptLinks[concept.name] === undefined) {
-            mergedWorkspaceData.conceptLinks[concept.name] = {}
-          }
-          concept.linksToConcept.forEach(conceptLink => {
-            if (!mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name]) {
-              mergedWorkspaceData.conceptLinks[concept.name] = { [conceptLink.from.name]: 1 }
-            } else {
-              mergedWorkspaceData.conceptLinks[concept.name][conceptLink.from.name]++
-            }
+        mergeLinks(course.name, course.linksToCourse, mergedCourse.links)
+
+        for (const concept of course.concepts) {
+          // TODO merge conflicting descriptions?
+          const mergedConcept = mergedCourse.concepts.setDefault(concept.name, {
+            description: concept.description,
+            course: course.name,
+            links: {}
           })
+
+          mergeLinks(concept.name, concept.linksToConcept, mergedConcept.links)
         }
       }
     }
@@ -123,17 +111,9 @@ const MergeMutations = {
     const workspaceId = hash()
     return await context.prisma.createWorkspace({
       id: workspaceId,
-      name: mergedWorkspaceData.name,
-      sourceProject: {
-        connect: {
-          id: projectId
-        }
-      },
-      sourceTemplate: {
-        connect: {
-          id: activeTemplateId
-        }
-      },
+      name,
+      sourceProject: { connect: { id: projectId } },
+      sourceTemplate: { connect: { id: templateId } },
       participants: {
         create: [{
           privilege: 'OWNER',
@@ -141,54 +121,45 @@ const MergeMutations = {
         }]
       },
       courses: {
-        create: Object.keys(mergedWorkspaceData.courses).map(courseName => ({
-          id: hash(courseName),
-          name: courseName,
-          createdBy: { connect: { id: context.user.id } },
-          concepts: {
-            create: mergedWorkspaceData.courses[courseName].map(concept => ({
-              id: hash(courseName, concept.name),
-              name: concept.name,
-              description: concept.description,
-              createdBy: { connect: { id: context.user.id } },
-              workspace: { connect: { id: workspaceId } }
-            }))
-          }
-        }))
+        create: Object.entries(mergedCourses)
+          .map(([courseName, concepts]) => ({
+            id: hash(courseName),
+            name: courseName,
+            createdBy: { connect: { id: context.user.id } },
+            concepts: {
+              create: Object.entries(concepts).map(([name, { description }]) => ({
+                id: hash(courseName, name),
+                name,
+                description,
+                createdBy: { connect: { id: context.user.id } },
+                workspace: { connect: { id: workspaceId } }
+              }))
+            }
+          }))
       },
       courseLinks: {
-        create: Object.keys(mergedWorkspaceData.courseLinks)
-          .map(fromCourse => Object.keys(mergedWorkspaceData.courseLinks[fromCourse])
-            .map(toCourse => ({
-              createdBy: {
-                connect: { id: context.user.id }
-              },
-              from: {
-                connect: { id: hash(fromCourse) }
-              },
-              to: {
-                connect: { id: hash(toCourse) }
-              }
-              // weight: mergedWorkspace.courseLinks[fromCourse][toCourse]
+        create: Object.entries(mergedCourses)
+          .flatMap(([toCourse, { links }]) => Object.entries(links)
+            .map(([fromCourse, { weight }]) => ({
+              createdBy: { connect: { id: context.user.id } },
+              from: { connect: { id: hash(fromCourse) } },
+              to: { connect: { id: hash(toCourse) } },
+              weight
             }))
-          ).reduce((a, b) => a.concat(b), [])
+          )
       },
       conceptLinks: {
-        create: Object.keys(mergedWorkspaceData.conceptLinks)
-          .map(fromConcept => Object.keys(mergedWorkspaceData.conceptLinks[fromConcept])
-            .map(toConcept => ({
-              createdBy: {
-                connect: {id: context.user.id }
-              },
-              from: {
-                connect: { id: hash(mergedWorkspaceData.concepts[fromConcept], fromConcept) }
-              },
-              to: {
-                connect: { id: hash(mergedWorkspaceData.concepts[toConcept], toConcept) }
-              }
-              // weight: mergedWorkspaceData.conceptLinks[fromConcept][toConcept]
-            }))
-          ).reduce((a, b) => a.concat(b), [])
+        create: Object.entries(mergedCourses)
+          .flatMap(([toCourse, { concepts }]) => Object.entries(concepts)
+            .flatMap(([toConcept, { links }]) => Object.entries(links)
+              .map(([fromConcept, { fromCourse, weight }]) => ({
+                createdBy: { connect: { id: context.user.id } },
+                from: { connect: { id: hash(fromCourse, fromConcept) } },
+                to: { connect: { id: hash(toCourse, toConcept) } },
+                weight
+              }))
+            )
+          )
       }
     })
   }
