@@ -44,11 +44,11 @@ query($id : ID!) {
 }
 `
 
-Object.prototype.setDefault = function(key, val) {
-  if (!this[key]) {
-    this[key] = val
+const setDefault = (obj, key, val) => {
+  if (!obj[key]) {
+    obj[key] = val
   }
-  return this[key]
+  return obj[key]
 }
 
 const sha1digest = (...vars) => {
@@ -79,7 +79,7 @@ const MergeMutations = {
 
     const mergeLinks = (links, merged) => {
       for (const link of links) {
-        merged.setDefault(link.from.name, {
+        setDefault(merged, link.from.name, {
           course: link.from.courses ? link.from.courses[0].name : undefined,
           weight: 0
         }).weight += link.weight
@@ -93,7 +93,7 @@ const MergeMutations = {
 
     for (const workspace of result.project.activeTemplate.clones) {
       for (const course of workspace.courses) {
-        const { links: courseLinks, concepts } = courses.setDefault(course.name, {
+        const { links: courseLinks, concepts } = setDefault(courses, course.name, {
           links: {},
           concepts: {}
         })
@@ -102,7 +102,7 @@ const MergeMutations = {
 
         for (const concept of course.concepts) {
           // TODO merge conflicting descriptions?
-          const { links: conceptLinks } = concepts.setDefault(concept.name, {
+          const { links: conceptLinks } = setDefault(concepts, concept.name, {
             description: concept.description,
             course: course.name,
             links: {}
