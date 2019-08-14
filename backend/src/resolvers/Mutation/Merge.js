@@ -71,7 +71,7 @@ const MergeMutations = {
       id: projectId
     })
     if (!result.project.activeTemplate) {
-      throw new NotFoundError('No active template found.')
+      throw new NotFoundError('activeTemplate')
     }
 
     const seed = makeSecret(32)
