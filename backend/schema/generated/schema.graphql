@@ -220,6 +220,7 @@ type CourseLink {
   official: Boolean!
   createdBy: User!
   workspace: Workspace!
+  weight: Int!
 }
 
 type Course {
@@ -239,6 +240,7 @@ type ConceptLink {
   official: Boolean!
   workspace: Workspace!
   createdBy: User!
+  weight: Int!
 }
 
 type Concept {
