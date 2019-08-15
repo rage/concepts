@@ -191,13 +191,22 @@ const NavBar = ({ location }) => {
   }
 
   const classes = useStyles()
+  const elemCount = path.length*2
   return (
     <div className={classes.root}>
       <AppBar elevation={0} position='static'>
         <Toolbar variant='dense'>
+          <style>{`
+.navbar-breadcrumb-separator {
+  color: inherit
+}
+.navbar-breadcrumbs > ol > .MuiBreadcrumbs-separator:nth-of-type(n+${elemCount}):nth-of-type(even) {
+  color: rgba(255, 255, 255, .25)
+}`
+          }</style>
           <Breadcrumbs
-            separator={<NavigateNextIcon />}
-            className={classes.breadcrumbs}
+            separator={<NavigateNextIcon className='navbar-breadcrumb-separator' />}
+            className={`${classes.breadcrumbs} navbar-breadcrumbs`}
           >
             {[...path, ...undo.current].map(item => {
               let content = item.name
@@ -210,7 +219,9 @@ const NavBar = ({ location }) => {
               }
               return (
                 <Typography
-                  key={item.name} variant='h6' color={item.historical ? 'textSecondary' : 'inherit'}
+                  key={item.name} variant='h6' style={{
+                    color: item.historical ? 'rgba(255, 255, 255, .25)' : 'inherit'
+                  }}
                 >
                   {content}
                 </Typography>
