@@ -199,7 +199,7 @@ const NavBar = ({ location }) => {
     const ws = getBreadcrumb('workspace')
     ws.name = workspaceQuery.loading ? loading
       : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
-  }
+   }
   if (courseQuery.data) {
     getBreadcrumb('course').name =
       courseQuery.loading ? loading : `Course: ${courseQuery.data.courseById.name}`

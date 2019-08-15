@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
+  Paper, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
   ListItemSecondaryAction, IconButton, Menu, MenuItem
 } from '@material-ui/core'
 import {
@@ -19,7 +19,7 @@ import { useInfoBox } from '../../components/InfoBox'
 const useStyles = makeStyles(theme => ({
   root: {
     padding: '16px',
-    // marginRight: '8px',
+    overflow: 'hidden',
     display: 'none',
     '&.courseTrayOpen': {
       display: 'flex',
@@ -40,7 +40,8 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     backgroundColor: theme.palette.background.paper,
-    overflow: 'auto'
+    overflow: 'auto',
+    flex: 1
   },
   courseName: {
     overflowWrap: 'break-word',

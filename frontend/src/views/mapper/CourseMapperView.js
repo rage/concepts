@@ -216,22 +216,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             workspaceId={workspaceQuery.data.workspaceById.id}
             urlPrefix={urlPrefix}
           />
-          {/* {
-            showFab && loggedIn ?
-              <Fab
-                ref={trayFabRef}
-                style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
-                onClick={handleTrayToggle}
-              >
-                {
-                  courseTrayOpen ?
-                    <ChevronRightIcon />
-                    :
-                    <ChevronLeftIcon />
-                }
-              </Fab>
-              : null
-          } */}
         </div>
         :
         <div style={{ textAlign: 'center' }}>
@@ -281,7 +265,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     {addingLink && <ConceptLink
       key='concept-link-creating' active={true}
       from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-      followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
+      followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
     />}
   </>
 }

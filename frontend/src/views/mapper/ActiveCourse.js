@@ -43,9 +43,9 @@ const useStyles = makeStyles(theme => ({
     marginRight: '-8px'
   },
   list: {
-    width: '100%',
     backgroundColor: theme.palette.background.paper,
-    overflow: 'auto'
+    overflow: 'auto',
+    flex: 1
   },
   listSection: {
     backgroundColor: 'inherit'
