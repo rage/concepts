@@ -42,6 +42,7 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
   switch (path[0]) {
   case 'mapper':
     return [{
+      type: 'course',
       name: 'Mapper',
       courseId: path[1],
       link: `${prefix}/mapper/${path[1]}`
@@ -71,7 +72,16 @@ const parseProjectPath = (projectId, path, prefix) => {
   case 'workspaces': {
     const link = `${prefix}/workspaces/${path[1]}`
     return [{
-      name: 'Workspace',
+      type: 'workspace',
+      name: 'User Workspace',
+      workspaceId: path[1],
+      link
+    }, ...parseWorkspacePath(path[1], path.slice(2), link)]
+  } case 'templates': {
+    const link = `${prefix}/templates/${path[1]}`
+    return [{
+      type: 'workspace',
+      name: 'Template',
       workspaceId: path[1],
       link
     }, ...parseWorkspacePath(path[1], path.slice(2), link)]
@@ -93,6 +103,7 @@ const parsePath = (path) => {
   case 'projects': {
     const link = `/projects/${path[1]}`
     return [{
+      type: 'project',
       name: 'Project',
       projectId: path[1],
       link
@@ -100,6 +111,7 @@ const parsePath = (path) => {
   } case 'workspaces': {
     const link = `/workspaces/${path[1]}`
     return [{
+      type: 'workspace',
       name: 'Workspace',
       workspaceId: path[1],
       link
@@ -122,7 +134,7 @@ const parseLocation = location => ([
   ...parsePath(location.pathname.split('/'))
 ])
 
-const pathItemId = item => item.link || item.courseId || item.name
+const pathItemId = item => item.link || item.name
 
 const NavBar = ({ location }) => {
   const [{ loggedIn, user }] = useLoginStateValue()
@@ -175,19 +187,20 @@ const NavBar = ({ location }) => {
   })
 
   const loading = <CircularProgress style={{ display: 'flex' }} color='inherit' size={24} />
-  const getBreadcrumb = name => path.find(p => p.name === name)
+  const getBreadcrumb = type => path.find(p => p.type === type)
 
   if (projectQuery.data) {
-    getBreadcrumb('Project').name =
-      projectQuery.loading ? loading : projectQuery.data.projectById.name
+    getBreadcrumb('project').name =
+      projectQuery.loading ? loading : `Project: ${projectQuery.data.projectById.name}`
   }
   if (workspaceQuery.data) {
-    getBreadcrumb('Workspace').name =
-      workspaceQuery.loading ? loading : workspaceQuery.data.workspaceById.name
+    const ws = getBreadcrumb('workspace')
+    ws.name = workspaceQuery.loading ? loading
+      : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
   }
   if (courseQuery.data) {
-    getBreadcrumb('Mapper').name =
-      courseQuery.loading ? loading : courseQuery.data.courseById.name
+    getBreadcrumb('course').name =
+      courseQuery.loading ? loading : `Course: ${courseQuery.data.courseById.name}`
   }
 
   const classes = useStyles()
