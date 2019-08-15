@@ -21,6 +21,7 @@ import cache from '../../apollo/update'
 import { ConceptLink } from './concept'
 import { useInfoBox } from '../../components/InfoBox'
 import NotFoundView from '../error/NotFoundView'
+import DividerWithText from './DividerWithText'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -30,21 +31,24 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     gridTemplate: `"traySpacer contentHeader activeHeader" 42px
                    "trayButton courses       activeCourse" 1fr
-                   / 4%              70%           25%`,
+                   / 3%              70%           27%`,
     '&.courseTrayOpen': {
-      gridTemplateColumns: '4% 45% 25%'
+      gridTemplate: `"traySpacer traySpacer contentHeader activeHeader" 42px
+                     "courseTray trayButton courses       activeCourse" 1fr
+                     / 20%        3%         52%           27%`
+      // gridTemplateColumns: '4% 45% 25%'
     },
-    transition: 'grid-template-columns .15s linear',
+    transition: 'grid-template-columns .5s linear',
     '@media screen and (max-width: 1699px)': {
-      gridTemplateColumns: '5% 55% 35%',
+      gridTemplateColumns: '4% 56% 40%',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '5% 55% 35%'
+        gridTemplateColumns: '25% 4% 46% 25%'
       }
     },
     '@media screen and (max-width: 1299px)': {
-      gridTemplateColumns: '8% 55% 35%',
+      gridTemplateColumns: '6% 57% 37%',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '8% 55% 35%'
+        gridTemplateColumns: '30% 6% 30% 33%'
       }
     }
   }
@@ -153,19 +157,24 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           id='course-view'
           className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
         >
-          {/* <CourseTray
-            activeCourseId={courseQuery.data.courseById.id}
-            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-            courseTrayOpen={courseTrayOpen}
-            courses={workspaceQuery.data.workspaceById.courses}
-            workspaceId={workspaceQuery.data.workspaceById.id}
-          /> */}
-          <div style={{ gridArea: 'traySpacer' }}></div>
+
+          {
+            courseTrayOpen
+              ? <DividerWithText gridArea='traySpacer' content='Courses in workspace' />
+              : <div style={{ gridArea: 'traySpacer' }}></div>
+          }
           {
             showFab && loggedIn ?
               <Button
                 ref={trayFabRef}
-                style={{ gridArea: 'trayButton', width: '48px', height: '48px', boxShadow: 'none', borderRadius: '0 4px 4px 0' }}
+                style={{
+                  gridArea: 'trayButton',
+                  width: '48px',
+                  height: '48px',
+                  boxShadow: 'none',
+                  borderRadius: '0 4px 4px 0',
+                  position: 'relative'
+                }}
                 variant='contained'
                 color='primary'
                 onClick={handleTrayToggle}
@@ -173,6 +182,13 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
                 {courseTrayOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
               </Button> : null
           }
+          <CourseTray
+            activeCourseId={courseQuery.data.courseById.id}
+            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
+            courseTrayOpen={courseTrayOpen}
+            courses={workspaceQuery.data.workspaceById.courses}
+            workspaceId={workspaceQuery.data.workspaceById.id}
+          />
           <CourseContainer
             courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}

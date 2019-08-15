@@ -18,12 +18,15 @@ import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    gridArea: 'courseTray',
-    display: 'flex',
-    flexDirection: 'column',
     padding: '16px',
-    boxSizing: 'border-box',
-    marginLeft: '8px'
+    // marginRight: '8px',
+    display: 'none',
+    '&.courseTrayOpen': {
+      display: 'flex',
+      flexDirection: 'column',
+      boxSizing: 'border-box',
+      gridArea: 'courseTray'
+    }
   },
   title: {
     paddingBottom: '0px',
@@ -194,10 +197,10 @@ const CourseTray = ({
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
   return (
-    <Paper elevation={0} className={classes.root}>
-      <Typography className={classes.title} variant='h4'>
+    <Paper elevation={0} className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}>
+      {/* <Typography className={classes.title} variant='h4'>
         Courses in workspace
-      </Typography>
+      </Typography> */}
 
       <TextField
         margin='dense'
@@ -212,7 +215,8 @@ const CourseTray = ({
         onChange={handleKeywordInput}
       />
 
-      {courses &&
+      {
+        courses &&
         <List disablePadding className={classes.list}>
           {courses
             .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
