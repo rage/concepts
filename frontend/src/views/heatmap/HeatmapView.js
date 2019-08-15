@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'
-import { Paper, Typography, CircularProgress } from '@material-ui/core'
+import { Paper, Typography, CircularProgress, Tooltip } from '@material-ui/core'
 
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
@@ -97,17 +97,15 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column'
   },
-  popper: {
-    padding: theme.spacing(2),
-    position: 'relative',
-    top: '-52px',
-    left: '53px'
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
   },
-  popperWrap: {
-    position: 'fixed',
-    display: 'none',
-    '&:hover': {
-    }
+  popper: {
+    padding: '5px'
   }
 }))
 
@@ -198,23 +196,30 @@ const TableCell = withRouter(({
 
   return (
     <td key={`table-${toCourse.id}-${fromCourse.id}`}>
-      <div
-        className={classes.tableCell}
-        style={{ backgroundColor: mapToGrad(conceptsLinked) }}
-        onClick={navigateToMapper(toCourse.id)}
-      />
-      {
-        concepts.length !== 0 &&
-        <div className={classes.popperWrap}>
-          <Paper key={`paper-${toCourse.id}-${fromCourse.id}`} className={classes.popper}>
-            {
-              concepts.map(concept => (
-                <Typography key={`typo-${concept}`}> {concept} </Typography>
-              ))
-            }
-          </Paper>
-        </div>
+      { concepts.length > 0 ?
+        <Tooltip
+          placement='right'
+          classes={{
+            tooltip: classes.tooltip,
+            popper: classes.popper
+          }}
+          title={concepts.map(concept =>
+            (<Typography key={`typo-${concept}`}> {concept} </Typography>))}
+        >
+          <div
+            className={classes.tableCell}
+            style={{ backgroundColor: mapToGrad(conceptsLinked) }}
+            onClick={navigateToMapper(toCourse.id)}
+          />
+        </Tooltip>
+        :
+        <div
+          className={classes.tableCell}
+          style={{ backgroundColor: mapToGrad(conceptsLinked) }}
+          onClick={navigateToMapper(toCourse.id)}
+        />
       }
+
     </td>
   )
 })
