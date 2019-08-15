@@ -186,7 +186,7 @@ const NavBar = ({ location }) => {
     }
   })
 
-  const loading = <CircularProgress style={{ display: 'flex' }} color='inherit' size={24} />
+  const loading = <CircularProgress style={{ display: 'flex', color: 'white' }} size={24} />
   const getBreadcrumb = type => path.find(p => p.type === type)
 
   if (projectQuery.data) {
