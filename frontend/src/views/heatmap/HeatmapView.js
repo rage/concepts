@@ -203,7 +203,7 @@ const TableCell = withRouter(({
             tooltip: classes.tooltip,
             popper: classes.popper
           }}
-          title={<ul className={classes.conceptList}>
+          title={<ul style={{ marginLeft: '-20px', marginRight: '5px' }}>
             {concepts.map(concept =>
               (<li key={`typo-${concept}`}>{concept}</li>))}
           </ul>
