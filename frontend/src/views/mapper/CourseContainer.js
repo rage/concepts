@@ -1,9 +1,18 @@
 import React, { useEffect, useRef } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
 import Course from './Course'
 import Masonry from './Masonry'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from './DividerWithText'
+
+const useStyles = makeStyles({
+  root: {
+    gridArea: 'courses',
+    overflowY: 'auto',
+    marginLeft: '8px'
+  }
+})
 
 const CourseContainer = ({
   courseTrayOpen,
@@ -17,6 +26,7 @@ const CourseContainer = ({
   courseId,
   urlPrefix
 }) => {
+  const classes = useStyles()
   const infoBox = useInfoBox()
   const connectionRef = useRef()
   const createConceptRef = useRef()
@@ -33,11 +43,11 @@ const CourseContainer = ({
     <DividerWithText
       gridArea='contentHeader'
       content='Prerequisites'
-      margin='0px 16px 0px 8px'
+      margin='0px 8px 0px 16px'
     />
     {
       courses && courses.length !== 0 ?
-        <div onClick={() => setAddingLink(null)} style={{ gridArea: 'courses', overflowY: 'auto' }}>
+        <div onClick={() => setAddingLink(null)} className={classes.root}>
           {courses && <Masonry courseTrayOpen={courseTrayOpen}>
             {courses.map((course, index) =>
               <Course

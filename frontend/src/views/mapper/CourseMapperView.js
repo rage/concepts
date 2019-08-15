@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import Fab from '@material-ui/core/Fab'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
+import { CircularProgress, Menu, MenuItem, Button } from '@material-ui/core'
+import {
+  ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon
+} from '@material-ui/icons'
 
 import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES
@@ -20,6 +18,7 @@ import cache from '../../apollo/update'
 import { ConceptLink } from './concept'
 import { useInfoBox } from '../../components/InfoBox'
 import NotFoundView from '../error/NotFoundView'
+import DividerWithText from './DividerWithText'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,17 +26,22 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"activeHeader contentHeader courseTray" 42px
-                   "activeCourse courses       courseTray" 1fr
-                   / 25%         75%           25%`,
+    gridTemplate: `"traySpacer traySpacer contentHeader activeHeader" 42px
+                   "courseTray trayButton courses       activeCourse" 1fr
+                  / 0          64px       8fr           3fr`,
     '&.courseTrayOpen': {
-      gridTemplateColumns: '25% 50% 25%'
+      gridTemplateColumns: '3fr 64px 7fr 3fr'
     },
-    transition: 'grid-template-columns .15s linear',
-    '@media screen and (max-width: 1299px)': {
-      gridTemplateColumns: '34% 66% 33%',
+    '@media screen and (max-width: 1999px)': {
+      gridTemplateColumns: '0 64px 6fr 3fr',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '34% 33% 33%'
+        gridTemplateColumns: '3fr 64px 5fr 3fr'
+      }
+    },
+    '@media screen and (max-width: 1499px)': {
+      gridTemplateColumns: '0 64px 4fr 3fr',
+      '&.courseTrayOpen': {
+        gridTemplateColumns: '3fr 64px 3fr 3fr'
       }
     }
   }
@@ -146,19 +150,34 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           id='course-view'
           className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
         >
-          <ActiveCourse
-            onClick={() => setAddingLink(null)}
-            course={courseQuery.data.courseById}
-            courses={workspaceQuery.data.workspaceById.courses}
-            updateCourse={updateCourse}
-            focusedConceptIds={focusedConceptIds}
-            addingLink={addingLink}
-            setAddingLink={setAddingLink}
-            toggleFocus={toggleFocus}
-            courseTrayOpen={courseTrayOpen}
+          <DividerWithText
+            gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
+          />
+          {
+            showFab && loggedIn ?
+              <Button
+                ref={trayFabRef}
+                style={{
+                  gridArea: 'trayButton',
+                  width: '48px',
+                  height: '48px',
+                  boxShadow: 'none',
+                  borderRadius: '0 4px 4px 0',
+                  position: 'relative'
+                }}
+                variant='contained'
+                color='primary'
+                onClick={handleTrayToggle}
+              >
+                {courseTrayOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </Button> : null
+          }
+          <CourseTray
+            activeCourseId={courseQuery.data.courseById.id}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
+            courseTrayOpen={courseTrayOpen}
+            courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
-            urlPrefix={urlPrefix}
           />
           <CourseContainer
             courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
@@ -173,30 +192,20 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             workspaceId={workspaceQuery.data.workspaceById.id}
             urlPrefix={urlPrefix}
           />
-          <CourseTray
-            activeCourseId={courseQuery.data.courseById.id}
-            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-            courseTrayOpen={courseTrayOpen}
+          <ActiveCourse
+            onClick={() => setAddingLink(null)}
+            course={courseQuery.data.courseById}
             courses={workspaceQuery.data.workspaceById.courses}
+            updateCourse={updateCourse}
+            focusedConceptIds={focusedConceptIds}
+            addingLink={addingLink}
+            setAddingLink={setAddingLink}
+            toggleFocus={toggleFocus}
+            courseTrayOpen={courseTrayOpen}
+            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
             workspaceId={workspaceQuery.data.workspaceById.id}
             urlPrefix={urlPrefix}
           />
-          {
-            showFab && loggedIn ?
-              <Fab
-                ref={trayFabRef}
-                style={{ position: 'absolute', top: '68px', zIndex: '1', right: '20px' }}
-                onClick={handleTrayToggle}
-              >
-                {
-                  courseTrayOpen ?
-                    <ChevronRightIcon />
-                    :
-                    <ChevronLeftIcon />
-                }
-              </Fab>
-              : null
-          }
         </div>
         :
         <div style={{ textAlign: 'center' }}>
@@ -216,7 +225,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
               )}
               linkId={link.id}
               from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-              fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
+              fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
               posOffsets={{ x0: -5, x1: +6 }} />
           )) : null
       ))}
@@ -246,7 +255,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     {addingLink && <ConceptLink
       key='concept-link-creating' active={true}
       from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-      followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? 7 : -7 }}
+      followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
     />}
   </>
 }

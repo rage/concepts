@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Paper, Typography, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
+  Paper, List, ListItem, ListItemText, Checkbox, Button, Tooltip, TextField,
   ListItemSecondaryAction, IconButton, Menu, MenuItem
 } from '@material-ui/core'
 import {
@@ -18,12 +18,16 @@ import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    gridArea: 'courseTray',
-    display: 'flex',
-    flexDirection: 'column',
     padding: '16px',
+    overflow: 'hidden',
     boxSizing: 'border-box',
-    marginLeft: '8px'
+    borderRadius: '0 0 4px 0',
+    flexDirection: 'column',
+    display: 'none',
+    '&.courseTrayOpen': {
+      display: 'flex',
+      gridArea: 'courseTray'
+    }
   },
   title: {
     paddingBottom: '0px',
@@ -37,7 +41,8 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     backgroundColor: theme.palette.background.paper,
-    overflow: 'auto'
+    overflow: 'auto',
+    flex: 1
   },
   courseName: {
     overflowWrap: 'break-word',
@@ -196,11 +201,7 @@ const CourseTray = ({
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
   return (
-    <Paper elevation={0} className={classes.root}>
-      <Typography className={classes.title} variant='h4'>
-        Courses in workspace
-      </Typography>
-
+    <Paper elevation={0} className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}>
       <TextField
         margin='dense'
         id='description'
@@ -214,7 +215,8 @@ const CourseTray = ({
         onChange={handleKeywordInput}
       />
 
-      {courses &&
+      {
+        courses &&
         <List disablePadding className={classes.list}>
           {courses
             .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))

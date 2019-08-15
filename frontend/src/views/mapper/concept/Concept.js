@@ -26,11 +26,11 @@ const useStyles = makeStyles(theme => ({
     hyphens: 'auto'
   },
   conceptCircle: {
-    zIndex: 2,
-    padding: '4px'
+    zIndex: 2
   },
   activeConceptCircle: {
-    zIndex: 2
+    zIndex: 2,
+    padding: '4px'
   },
   active: {
     backgroundColor: '#9ecae1',
@@ -76,7 +76,7 @@ const Concept = ({
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
 
-  const [,messageDispatch] = useMessageStateValue()
+  const [, messageDispatch] = useMessageStateValue()
   const [{ loggedIn }] = useLoginStateValue()
 
   const openEditConceptDialog = useEditConceptDialog()
@@ -171,14 +171,14 @@ const Concept = ({
         className={classes.listItem}
         ref={activeConceptRef}
       >
-        {!isActive && <ListItemIcon>
+        {isActive && <ListItemIcon>
           <IconButton
-            buttonRef={connectionRef} onClick={onClick}
-            className={`${classes.conceptCircle}
+            buttonRef={conceptLinkRef} onClick={onClick}
+            className={`${classes.activeConceptCircle}
                         ${focusedConceptIds.includes(concept.id) ? 'conceptCircleFocused' : ''}`}
           >
             <ArrowLeftIcon
-              viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
+              viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
               color={linkButtonColor} />
           </IconButton>
         </ListItemIcon>}
@@ -204,14 +204,14 @@ const Concept = ({
             <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
             <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
           </Menu>
-          {isActive && <IconButton
-            buttonRef={conceptLinkRef}
+          {!isActive && <IconButton
+            buttonRef={connectionRef}
             onClick={onClick}
-            className={`${classes.activeConceptCircle}
+            className={`${classes.conceptCircle}
                         ${focusedConceptIds.includes(concept.id) ? 'conceptCircleFocused' : ''}`}
           >
             <ArrowRightIcon
-              viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
+              viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
               color={linkButtonColor}
             />
           </IconButton>}
