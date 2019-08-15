@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'
-import { Paper, Typography, CircularProgress, Tooltip } from '@material-ui/core'
+import { Paper, Typography, CircularProgress, Tooltip, Zoom } from '@material-ui/core'
 
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
@@ -203,6 +203,7 @@ const TableCell = withRouter(({
             tooltip: classes.tooltip,
             popper: classes.popper
           }}
+          TransitionComponent={Zoom}
           title={concepts.map(concept =>
             (<Typography key={`typo-${concept}`}> {concept} </Typography>))}
         >
