@@ -204,7 +204,6 @@ const NavBar = ({ location }) => {
   }
 
   const classes = useStyles()
-  const elemCount = path.length*2
   return (
     <div className={classes.root}>
       <AppBar elevation={0} position='static'>
@@ -213,7 +212,11 @@ const NavBar = ({ location }) => {
 .navbar-breadcrumb-separator {
   color: inherit
 }
-.navbar-breadcrumbs > ol > .MuiBreadcrumbs-separator:nth-of-type(n+${elemCount}):nth-of-type(even) {
+.navbar-breadcrumbs
+    > ol
+    > .MuiBreadcrumbs-separator
+      :nth-of-type(n+${path.length*2})
+      :nth-of-type(even) {
   color: rgba(255, 255, 255, .25)
 }`
           }</style>
