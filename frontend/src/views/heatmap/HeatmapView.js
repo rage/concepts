@@ -204,7 +204,7 @@ const TableCell = withRouter(({
             popper: classes.popper
           }}
           title={concepts.map(concept =>
-            (<Typography key={`typo-${concept}`}> {concept} </Typography>))}
+            (<Typography key={`typo-${concept}`}> - {concept} </Typography>))}
         >
           <div
             className={classes.tableCell}
