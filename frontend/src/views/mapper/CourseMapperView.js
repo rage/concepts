@@ -27,17 +27,17 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"activeHeader contentHeader courseTray" 42px
-                   "activeCourse courses       courseTray" 1fr
-                   / 25%         75%           25%`,
+    gridTemplate: `"contentHeader activeHeader" 42px
+                   "courses       activeCourse" 1fr
+                   / 75%           25%`,
     '&.courseTrayOpen': {
-      gridTemplateColumns: '25% 50% 25%'
+      gridTemplateColumns: '50% 25%'
     },
     transition: 'grid-template-columns .15s linear',
     '@media screen and (max-width: 1299px)': {
-      gridTemplateColumns: '34% 66% 33%',
+      gridTemplateColumns: '66% 34%',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '34% 33% 33%'
+        gridTemplateColumns: '50% 50%'
       }
     }
   }
@@ -146,20 +146,13 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           id='course-view'
           className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
         >
-          <ActiveCourse
-            onClick={() => setAddingLink(null)}
-            course={courseQuery.data.courseById}
-            courses={workspaceQuery.data.workspaceById.courses}
-            updateCourse={updateCourse}
-            focusedConceptIds={focusedConceptIds}
-            addingLink={addingLink}
-            setAddingLink={setAddingLink}
-            toggleFocus={toggleFocus}
-            courseTrayOpen={courseTrayOpen}
+          {/* <CourseTray
+            activeCourseId={courseQuery.data.courseById.id}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
+            courseTrayOpen={courseTrayOpen}
+            courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
-            urlPrefix={urlPrefix}
-          />
+          /> */}
           <CourseContainer
             courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
@@ -173,12 +166,19 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             workspaceId={workspaceQuery.data.workspaceById.id}
             urlPrefix={urlPrefix}
           />
-          <CourseTray
-            activeCourseId={courseQuery.data.courseById.id}
-            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-            courseTrayOpen={courseTrayOpen}
+          <ActiveCourse
+            onClick={() => setAddingLink(null)}
+            course={courseQuery.data.courseById}
             courses={workspaceQuery.data.workspaceById.courses}
+            updateCourse={updateCourse}
+            focusedConceptIds={focusedConceptIds}
+            addingLink={addingLink}
+            setAddingLink={setAddingLink}
+            toggleFocus={toggleFocus}
+            courseTrayOpen={courseTrayOpen}
+            courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
             workspaceId={workspaceQuery.data.workspaceById.id}
+            urlPrefix={urlPrefix}
           />
           {
             showFab && loggedIn ?
