@@ -7,6 +7,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+import { Button } from '@material-ui/core'
 
 import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES
@@ -27,17 +28,23 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"contentHeader activeHeader" 42px
-                   "courses       activeCourse" 1fr
-                   / 75%           25%`,
+    gridTemplate: `"traySpacer contentHeader activeHeader" 42px
+                   "trayButton courses       activeCourse" 1fr
+                   / 4%              70%           25%`,
     '&.courseTrayOpen': {
-      gridTemplateColumns: '50% 25%'
+      gridTemplateColumns: '4% 45% 25%'
     },
     transition: 'grid-template-columns .15s linear',
-    '@media screen and (max-width: 1299px)': {
-      gridTemplateColumns: '66% 34%',
+    '@media screen and (max-width: 1699px)': {
+      gridTemplateColumns: '5% 55% 35%',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '50% 50%'
+        gridTemplateColumns: '5% 55% 35%'
+      }
+    },
+    '@media screen and (max-width: 1299px)': {
+      gridTemplateColumns: '8% 55% 35%',
+      '&.courseTrayOpen': {
+        gridTemplateColumns: '8% 55% 35%'
       }
     }
   }
@@ -153,6 +160,19 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
           /> */}
+          <div style={{ gridArea: 'traySpacer' }}></div>
+          {
+            showFab && loggedIn ?
+              <Button
+                ref={trayFabRef}
+                style={{ gridArea: 'trayButton', width: '48px', height: '48px', boxShadow: 'none', borderRadius: '0 4px 4px 0' }}
+                variant='contained'
+                color='primary'
+                onClick={handleTrayToggle}
+              >
+                {courseTrayOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </Button> : null
+          }
           <CourseContainer
             courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
@@ -180,7 +200,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             workspaceId={workspaceQuery.data.workspaceById.id}
             urlPrefix={urlPrefix}
           />
-          {
+          {/* {
             showFab && loggedIn ?
               <Fab
                 ref={trayFabRef}
@@ -195,7 +215,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
                 }
               </Fab>
               : null
-          }
+          } */}
         </div>
         :
         <div style={{ textAlign: 'center' }}>
@@ -215,7 +235,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
               )}
               linkId={link.id}
               from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-              fromAnchor='right middle' toAnchor='left middle' onContextMenu={handleMenuOpen}
+              fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
               posOffsets={{ x0: -5, x1: +6 }} />
           )) : null
       ))}

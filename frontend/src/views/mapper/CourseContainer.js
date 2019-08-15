@@ -33,7 +33,7 @@ const CourseContainer = ({
     <DividerWithText
       gridArea='contentHeader'
       content='Prerequisites'
-      margin='0px 16px 0px 8px'
+      margin='0px 8px 0px 8px'
     />
     {
       courses && courses.length !== 0 ?
