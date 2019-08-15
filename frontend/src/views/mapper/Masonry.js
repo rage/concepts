@@ -6,19 +6,19 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     boxSizing: 'border-box',
     columnCount: 1,
-    '@media screen and (min-width: 800px)': {
+    '@media screen and (min-width: 1000px)': {
       columnCount: 2,
       '&.courseTrayOpen': {
         columnCount: 1
       }
     },
-    '@media screen and (min-width: 1300px)': {
+    '@media screen and (min-width: 1500px)': {
       columnCount: 3,
       '&.courseTrayOpen': {
         columnCount: 2
       }
     },
-    '@media screen and (min-width: 1800px)': {
+    '@media screen and (min-width: 2000px)': {
       columnCount: 4,
       '&.courseTrayOpen': {
         columnCount: 3

@@ -20,12 +20,13 @@ const useStyles = makeStyles(theme => ({
   root: {
     padding: '16px',
     overflow: 'hidden',
+    boxSizing: 'border-box',
+    borderRadius: '0 0 4px 0',
+    flexDirection: 'column',
     display: 'none',
     '&.courseTrayOpen': {
       display: 'flex',
-      flexDirection: 'column',
-      boxSizing: 'border-box',
-      gridArea: 'courseTray'
+      gridArea: 'courseTray',
     }
   },
   title: {
@@ -201,10 +202,6 @@ const CourseTray = ({
 
   return (
     <Paper elevation={0} className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}>
-      {/* <Typography className={classes.title} variant='h4'>
-        Courses in workspace
-      </Typography> */}
-
       <TextField
         margin='dense'
         id='description'

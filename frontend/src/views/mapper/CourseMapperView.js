@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import Fab from '@material-ui/core/Fab'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -29,26 +28,22 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"traySpacer contentHeader activeHeader" 42px
-                   "trayButton courses       activeCourse" 1fr
-                   / 3%              70%           27%`,
+    gridTemplate: `"traySpacer traySpacer contentHeader activeHeader" 42px
+                   "courseTray trayButton courses       activeCourse" 1fr
+                  / 0          64px       8fr           3fr`,
     '&.courseTrayOpen': {
-      gridTemplate: `"traySpacer traySpacer contentHeader activeHeader" 42px
-                     "courseTray trayButton courses       activeCourse" 1fr
-                     / 20%        3%         52%           27%`
-      // gridTemplateColumns: '4% 45% 25%'
+      gridTemplateColumns: '3fr 64px 7fr 3fr'
     },
-    transition: 'grid-template-columns .5s linear',
-    '@media screen and (max-width: 1699px)': {
-      gridTemplateColumns: '4% 56% 40%',
+    '@media screen and (max-width: 1999px)': {
+      gridTemplateColumns: '0 64px 6fr 3fr',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '25% 4% 46% 25%'
+        gridTemplateColumns: '3fr 64px 5fr 3fr'
       }
     },
-    '@media screen and (max-width: 1299px)': {
-      gridTemplateColumns: '6% 57% 37%',
+    '@media screen and (max-width: 1499px)': {
+      gridTemplateColumns: '0 64px 4fr 3fr',
       '&.courseTrayOpen': {
-        gridTemplateColumns: '30% 6% 30% 33%'
+        gridTemplateColumns: '3fr 64px 3fr 3fr'
       }
     }
   }
@@ -157,12 +152,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           id='course-view'
           className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
         >
-
-          {
-            courseTrayOpen
-              ? <DividerWithText gridArea='traySpacer' content='Courses in workspace' />
-              : <div style={{ gridArea: 'traySpacer' }}></div>
-          }
+          <DividerWithText gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen} />
           {
             showFab && loggedIn ?
               <Button

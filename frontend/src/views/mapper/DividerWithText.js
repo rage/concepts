@@ -30,13 +30,13 @@ const useStyles = makeStyles({
   }
 })
 
-const DividerWithText = ({ content, gridArea, margin }) => {
+const DividerWithText = ({ content, gridArea, margin, hidden }) => {
   const classes = useStyles()
 
   return (
     <Typography
       className={classes.root}
-      style={{ gridArea, margin }}
+      style={{ gridArea, margin, display: hidden ? 'none' : 'initial' }}
       variant='h6'
     >
       {content}
