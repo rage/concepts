@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     display: 'none',
     '&.courseTrayOpen': {
       display: 'flex',
-      gridArea: 'courseTray',
+      gridArea: 'courseTray'
     }
   },
   title: {
