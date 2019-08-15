@@ -179,6 +179,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             courseTrayOpen={courseTrayOpen}
             courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
+            urlPrefix={urlPrefix}
           />
           {
             showFab && loggedIn ?

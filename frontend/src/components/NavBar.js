@@ -1,12 +1,19 @@
-import React  from 'react'
+import React, { useRef } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Toolbar, Typography, Breadcrumbs, Link as MaterialLink } from '@material-ui/core'
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Breadcrumbs,
+  Link as MaterialLink,
+  CircularProgress
+} from '@material-ui/core'
 import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
 import AuthenticationIcon from './AuthIcon'
-import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../graphql/Query'
+import { PROJECT_BY_ID, WORKSPACE_BY_ID, COURSE_BY_ID } from '../graphql/Query'
 import { useLoginStateValue } from '../store'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />
@@ -28,114 +35,212 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const parseWorkspacePath = (workspaceId, path) => {
+const parseWorkspacePath = (workspaceId, path, prefix) => {
   if (path.length === 0) {
     return []
   }
   switch (path[0]) {
   case 'mapper':
-    return [{ name: 'Mapper', id: path[1] }]
+    return [{
+      type: 'course',
+      name: 'Mapper',
+      courseId: path[1],
+      link: `${prefix}/mapper/${path[1]}`
+    }]
   case 'heatmap':
-    return [{ name: 'Heatmap' }]
+    return [{
+      name: 'Heatmap',
+      link: `${prefix}/heatmap`
+    }]
   case 'graph':
-    return [{ name: 'Graph' }]
+    return [{
+      name: 'Graph',
+      link: `${prefix}/graph`
+    }]
   default:
     return []
   }
 }
 
-const parseProjectPath = (projectId, path, meta) => {
+const parseProjectPath = (projectId, path, prefix) => {
   switch (path[0]) {
   case 'clone':
-    return [{ name: 'Clone' }]
-  case 'workspaces':
     return [{
-      name: (meta.workspaces[path[1]] || {}).name || 'Workspace',
-      id: path[1],
-      link: `/projects/${projectId}/workspaces/${path[1]}`
-    }].concat(parseWorkspacePath(path[1], path.slice(2), meta))
-  default:
+      name: 'Clone',
+      link: `${prefix}/clone`
+    }]
+  case 'workspaces': {
+    const link = `${prefix}/workspaces/${path[1]}`
+    return [{
+      type: 'workspace',
+      name: 'User Workspace',
+      workspaceId: path[1],
+      link
+    }, ...parseWorkspacePath(path[1], path.slice(2), link)]
+  } case 'templates': {
+    const link = `${prefix}/templates/${path[1]}`
+    return [{
+      type: 'workspace',
+      name: 'Template',
+      workspaceId: path[1],
+      link
+    }, ...parseWorkspacePath(path[1], path.slice(2), link)]
+  } default:
     return []
   }
 }
 
-const parsePath = (path, meta) => {
+const parsePath = (path) => {
   switch (path[0]) {
   case '':
-    return parsePath(path.slice(1), meta)
+    return parsePath(path.slice(1))
   case 'porting':
     return [{ name: 'Import data' }]
   case 'login':
     return [{ name: 'Log in' }]
   case 'user':
     return [{ name: 'User' }]
-  case 'projects':
+  case 'projects': {
+    const link = `/projects/${path[1]}`
     return [{
-      name: (meta.projects[path[1]] || {}).name || 'Project',
-      id: path[1],
-      link: `/projects/${path[1]}`
-    }].concat(parseProjectPath(path[1], path.slice(2), meta))
-  case 'workspaces':
+      type: 'project',
+      name: 'Project',
+      projectId: path[1],
+      link
+    }, ...parseProjectPath(path[1], path.slice(2), link)]
+  } case 'workspaces': {
+    const link = `/workspaces/${path[1]}`
     return [{
-      name: (meta.workspaces[path[1]] || {}).name || 'Workspace',
-      id: path[1],
-      link: `/workspaces/${path[1]}`
-    }].concat(parseWorkspacePath(path[1], path.slice(2), meta))
-
-  case 'join': {
+      type: 'workspace',
+      name: 'Workspace',
+      workspaceId: path[1],
+      link
+    }, ...parseWorkspacePath(path[1], path.slice(2), link)]
+  } case 'join': {
     const token = path[1]
-    const type = token[0] === 'w' ? 'workspace' : 'project'
-    return [{ name: `Join ${type}`, link: `/join/${token}` }]
+    return [{
+      name: `Join ${token[0] === 'w' ? 'workspace' : 'project'}`,
+      token,
+      link: `/join/${token}`
+    }]
   }
   default:
     return []
   }
 }
 
+const parseLocation = location => ([
+  { name: 'Home', link: '/' },
+  ...parsePath(location.pathname.split('/'))
+])
+
+const pathItemId = item => item.link || item.name
+
 const NavBar = ({ location }) => {
   const [{ loggedIn, user }] = useLoginStateValue()
+  const prevLocation = useRef(location.pathname)
+  const prevPath = useRef([])
+  const undo = useRef([])
 
-  const workspaceQuery = useQuery(WORKSPACES_FOR_USER, {
-    skip: !loggedIn
-  })
-  const workspaces = workspaceQuery.data && workspaceQuery.data.workspacesForUser
-    ? Object.fromEntries(workspaceQuery.data.workspacesForUser
-      .map(ws => [ws.workspace.id, ws.workspace]))
-    : {}
-  const projectQuery = useQuery(PROJECTS_FOR_USER, {
-    skip: !loggedIn || user.role !== 'STAFF'
-  })
-  const projects = projectQuery.data && projectQuery.data.projectsForUser
-    ? Object.fromEntries(projectQuery.data.projectsForUser.map(p => [p.project.id, p.project]))
-    : {}
-  const meta = { workspaces, projects }
+  const updateHistory = newPath => {
+    const newUndo = [...prevPath.current, ...undo.current]
+    if (newPath.length >= newUndo.length) {
+      undo.current = []
+      return
+    }
+    for (let i = 0; i < newPath.length; i++) {
+      if (pathItemId(newUndo[0]) !== pathItemId(newPath[i])) {
+        undo.current = []
+        return
+      }
+      newUndo.shift()
+    }
+    undo.current = newUndo
+    undo.current.forEach(node => node.historical = true)
+  }
 
-  const path = location.pathname.split('/')
+  const path = parseLocation(location)
+  if (prevLocation.current !== location.pathname) {
+    updateHistory(path)
+  }
+  prevLocation.current = location.pathname
+  prevPath.current = path
+  const { workspaceId, projectId, courseId } = Object.assign({}, ...path)
+
+  const projectQuery = useQuery(PROJECT_BY_ID, {
+    skip: !loggedIn || user.role !== 'STAFF' || !projectId,
+    variables: {
+      id: projectId
+    }
+  })
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
+    skip: !loggedIn || !workspaceId,
+    variables: {
+      id: workspaceId
+    }
+  })
+  const courseQuery = useQuery(COURSE_BY_ID, {
+    skip: !loggedIn || !courseId,
+    variables: {
+      id: courseId
+    }
+  })
+
+  const loading = <div style={{ display: 'flex' }}>
+    <CircularProgress color='inherit' size={24} />
+  </div>
+  const getBreadcrumb = type => path.find(p => p.type === type)
+
+  if (projectQuery.data) {
+    getBreadcrumb('project').name =
+      projectQuery.loading ? loading : `Project: ${projectQuery.data.projectById.name}`
+  }
+  if (workspaceQuery.data) {
+    const ws = getBreadcrumb('workspace')
+    ws.name = workspaceQuery.loading ? loading
+      : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
+  }
+  if (courseQuery.data) {
+    getBreadcrumb('course').name =
+      courseQuery.loading ? loading : `Course: ${courseQuery.data.courseById.name}`
+  }
+
   const classes = useStyles()
   return (
     <div className={classes.root}>
       <AppBar elevation={0} position='static'>
         <Toolbar variant='dense'>
+          <style>{`
+.navbar-breadcrumb-separator {
+  color: inherit
+}
+.navbar-breadcrumbs
+    > ol
+    > .MuiBreadcrumbs-separator:nth-of-type(n+${path.length*2}):nth-of-type(even) {
+  color: rgba(255, 255, 255, .25)
+}`
+          }</style>
           <Breadcrumbs
-            separator={<NavigateNextIcon />}
-            className={classes.breadcrumbs}
+            separator={<NavigateNextIcon className='navbar-breadcrumb-separator' />}
+            className={`${classes.breadcrumbs} navbar-breadcrumbs`}
           >
-            <Typography variant='h6' color='inherit'>
-              <Link style={{ textDecoration: 'none', color: 'inherit' }} to='/'>
-                Home
-              </Link>
-            </Typography>
-            {parsePath(path, meta).map(item => {
+            {[...path, ...undo.current].map(item => {
               let content = item.name
               if (item.link) {
                 content = (
-                  <Link style={{ textDecoration: 'none', color: 'inherit' }} to={item.link}>
+                  <Link style={{ textDecoration: 'none' }} to={item.link} color='inherit'>
                     {content}
                   </Link>
                 )
               }
               return (
-                <Typography key={item.name} variant='h6' color='inherit'>{content}</Typography>
+                <Typography
+                  key={item.name} variant='h6' style={{
+                    color: item.historical ? 'rgba(255, 255, 255, .25)' : 'inherit'
+                  }}
+                >
+                  {content}
+                </Typography>
               )
             })}
           </Breadcrumbs>
