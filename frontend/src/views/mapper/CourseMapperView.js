@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ChevronRightIcon from '@material-ui/icons/ChevronRight'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-import { Button } from '@material-ui/core'
+import { CircularProgress, Menu, MenuItem, Button } from '@material-ui/core'
+import {
+  ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon
+} from '@material-ui/icons'
 
 import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES
@@ -152,7 +150,9 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           id='course-view'
           className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
         >
-          <DividerWithText gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen} />
+          <DividerWithText
+            gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
+          />
           {
             showFab && loggedIn ?
               <Button
