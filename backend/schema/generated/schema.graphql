@@ -70,7 +70,7 @@ type Mutation {
   createProject(name: String!): Project
   updateProject(id: ID!, name: String!): Project
   deleteProject(id: ID!): Project
-  setActiveTemplate(projectId: ID!, workspaceId: ID): Project
+  setActiveTemplate(projectId: ID!, workspaceId: ID!): Project
 
   # Workspace mutations
   createWorkspace(name: String!, projectId: ID): Workspace
