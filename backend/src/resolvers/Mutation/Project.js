@@ -54,7 +54,6 @@ const ProjectMutations = {
           : { disconnect: true }
       }
     })
-
   }
 }
 
