@@ -285,11 +285,12 @@ const PortView = () => {
     setLoading(false)
   }
 
+  const handleProjectChange = (event) => {
+    setSelectState({ ...selectState, [event.target.name]: event.target.value, workspaceId: '' })
+  }
+
   const handleChange = (event) => {
-    const newState = event.target.name === 'projectId' && event.target.value === ''
-      ? { ...selectState, [event.target.name]: event.target.value, workspaceId: '' }
-      : { ...selectState, [event.target.name]: event.target.value }
-    setSelectState(newState)
+    setSelectState({ ...selectState, [event.target.name]: event.target.value })
   }
 
   const workspaceOptions = () => {
@@ -330,7 +331,7 @@ const PortView = () => {
               </InputLabel>
               <Select
                 value={selectState.projectId}
-                onChange={handleChange}
+                onChange={handleProjectChange}
                 input={
                   <OutlinedInput
                     labelWidth={projectLabelWidth}
