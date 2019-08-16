@@ -19,14 +19,21 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"header    header  header"         64px
-                   "______    ______  ______"         8px
-                   "toolbar   toolbar toolbar"        48px
-                   "_______   _______ _______"        8px
-                   "templates  ____   userWorkspaces" 1fr
-                  / 1fr        16px   1fr`,
+    gridGap: '8px 16px',
+    gridTemplate: `"header    header"         64px
+                   "toolbar   toolbar"        48px
+                   "templates userWorkspaces" 1fr
+                   "merges    userWorkspaces" 1fr
+                  / 1fr       1fr`,
     '@media screen and (max-width: 1312px)': {
       width: 'calc(100% - 32px)'
+    },
+    '& > div': {
+      overflow: 'hidden',
+      '& > div': {
+        height: '100%',
+        overflow: 'auto'
+      }
     }
   },
   header: {
@@ -37,20 +44,13 @@ const useStyles = makeStyles(() => ({
     gridArea: 'toolbar'
   },
   templates: {
-    gridArea: 'templates',
-    overflow: 'hidden',
-    '& > div': {
-      height: '100%',
-      overflow: 'auto'
-    }
+    gridArea: 'templates'
+  },
+  merges: {
+    gridArea: 'merges'
   },
   userWorkspaces: {
-    gridArea: 'userWorkspaces',
-    overflow: 'hidden',
-    '& > div': {
-      height: '100%',
-      overflow: 'auto'
-    }
+    gridArea: 'userWorkspaces'
   }
 }))
 
@@ -89,7 +89,7 @@ const ProjectView = ({ projectId }) => {
   return (
     <div className={classes.root}>
       <Typography className={classes.header} variant='h4'>
-            Project: {projectQuery.data.projectById.name}
+        Project: {projectQuery.data.projectById.name}
       </Typography>
       <span className={classes.toolbar}>
         <Button
@@ -107,6 +107,9 @@ const ProjectView = ({ projectId }) => {
           deleteTemplateWorkspace={deleteTemplateWorkspace}
           setActiveTemplate={setActiveTemplate}
         />
+      </div>
+      <div className={classes.merges}>
+        Hello, World!
       </div>
       <div className={classes.userWorkspaces}>
         <UserWorkspaceList
