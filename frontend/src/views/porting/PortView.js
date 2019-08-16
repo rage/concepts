@@ -87,24 +87,35 @@ const PLACEHOLDER = `{
 `
 
 const TEMPLATE = `{
-  "workspace": "",
+  "workspace": "My workspace",
   "courses": [
     {
-      "name": "",
+      "name": "My course",
       "concepts": [
         {
-          "name": "",
-          "description": "",
+          "name": "My concept",
+          "description": "Description of my concept",
           "prerequisites": [
             {
-              "name":""
+              "name":"Prerequisite concept"
             }
           ]
         }
       ],
       "prerequisites":[
-        ""
+        "Prerequisite course"
       ]
+    },
+    {
+      "name":"Prerequisite course",
+      "concepts": [
+        {
+          "name": "Prerequisite concept",
+          "description": "Description of prerequisite concept",
+          "prerequisites":[]
+        }
+      ],
+      "prerequisites":[]
     }
   ]
 }
@@ -393,7 +404,8 @@ const PortView = () => {
             label='JSON'
             placeholder={PLACEHOLDER}
             multiline
-            rowsMax='32'
+            rowsMax='13'
+            rows='10'
             className={classes.jsonField}
             margin='normal'
             variant='outlined'
