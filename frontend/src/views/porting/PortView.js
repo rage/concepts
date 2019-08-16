@@ -286,10 +286,10 @@ const PortView = () => {
   }
 
   const handleChange = (event) => {
-    setSelectState({
-      ...selectState,
-      [event.target.name]: event.target.value
-    })
+    const newState = event.target.name === 'projectId' && event.target.value === ''
+      ? { ...selectState, [event.target.name]: event.target.value, workspaceId: '' }
+      : { ...selectState, [event.target.name]: event.target.value }
+    setSelectState(newState)
   }
 
   const workspaceOptions = () => {
