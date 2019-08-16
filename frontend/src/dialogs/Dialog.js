@@ -17,7 +17,8 @@ const blankState = () => ({
   content: [],
   CustomActions: null,
   customActionsProps: null,
-  type: ''
+  type: '',
+  specialFields: []
 })
 
 const Dialog = ({ contextRef }) => {
@@ -65,7 +66,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
-    customActionsProps, type
+    customActionsProps, type, specialFields
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
@@ -84,7 +85,8 @@ const Dialog = ({ contextRef }) => {
       content: content || [],
       CustomActions,
       customActionsProps,
-      type
+      type,
+      specialFields
     })
   }
 
@@ -124,6 +126,11 @@ const Dialog = ({ contextRef }) => {
               fullWidth
               multiline={Boolean(key.multiline)}
             />
+          )
+        }
+        {
+          state.specialFields.map(CustomField =>
+            <CustomField />
           )
         }
       </DialogContent>
