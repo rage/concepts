@@ -85,6 +85,14 @@ const parseProjectPath = (projectId, path, prefix) => {
       workspaceId: path[1],
       link
     }, ...parseWorkspacePath(path[1], path.slice(2), link)]
+  } case 'merges': {
+    const link = `${prefix}/merges/${path[1]}`
+    return [{
+      type: 'workspace',
+      name: 'Merge',
+      workspaceId: path[1],
+      link
+    }, ...parseWorkspacePath(path[1], path.slice(2), link)]
   } default:
     return []
   }

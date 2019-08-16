@@ -28,6 +28,7 @@ module.exports = {
     'participants',
     'workspaces',
     'templates',
+    'merges',
     'activeTemplate',
     {
       name: 'tokens',

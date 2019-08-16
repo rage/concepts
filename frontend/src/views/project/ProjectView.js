@@ -9,6 +9,7 @@ import UserWorkspaceList from './UserWorkspaceList'
 import TemplateList from './TemplateList'
 import { useShareDialog } from '../../dialogs/sharing'
 import NotFoundView from '../error/NotFoundView'
+import MergeList from './MergeList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -19,9 +20,9 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridGap: '8px 16px',
-    gridTemplate: `"header    header"         64px
-                   "toolbar   toolbar"        48px
+    gridGap: '16px',
+    gridTemplate: `"header    header"         56px
+                   "toolbar   toolbar"        40px
                    "templates userWorkspaces" 1fr
                    "merges    userWorkspaces" 1fr
                   / 1fr       1fr`,
@@ -96,7 +97,7 @@ const ProjectView = ({ projectId }) => {
           color='primary' variant='contained'
           onClick={() => openShareProjectDialog(projectId, 'EDIT')}
         >
-              Share project
+          Share project
         </Button>
       </span>
       <div className={classes.templates}>
@@ -109,7 +110,11 @@ const ProjectView = ({ projectId }) => {
         />
       </div>
       <div className={classes.merges}>
-        Hello, World!
+        <MergeList
+          projectId={projectId}
+          activeTemplate={projectQuery.data.projectById.activeTemplate}
+          mergeWorkspaces={projectQuery.data.projectById.merges}
+        />
       </div>
       <div className={classes.userWorkspaces}>
         <UserWorkspaceList

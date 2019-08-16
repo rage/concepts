@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
-  CircularProgress, Menu, MenuItem, ListItemIcon
+  Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -189,39 +189,35 @@ This will change which template is cloned by users.`)
       />
       <List dense={false}>
         {
-          templateWorkspaces ?
-            templateWorkspaces.map(workspace => (
-              <ListItem
-                className={(activeTemplate) && workspace.id === activeTemplate.id ?
-                  classes.listItemActive
-                  : null}
-                button
-                key={workspace.id}
-                onClick={() => handleNavigateMapper(workspace.id)}
-              >
-                <ListItemText
-                  primary={
-                    <Typography variant='h6'>
-                      {workspace.name}
-                    </Typography>
-                  }
-                />
-                {
-                  loggedIn ?
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        aria-owns={menu ? 'template-list-menu' : undefined}
-                        onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                        <MoreVertIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction> : null
+          templateWorkspaces.map(workspace => (
+            <ListItem
+              className={(activeTemplate) && workspace.id === activeTemplate.id ?
+                classes.listItemActive
+                : null}
+              button
+              key={workspace.id}
+              onClick={() => handleNavigateMapper(workspace.id)}
+            >
+              <ListItemText
+                primary={
+                  <Typography variant='h6'>
+                    {workspace.name}
+                  </Typography>
                 }
+              />
+              {
+                loggedIn ?
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      aria-owns={menu ? 'template-list-menu' : undefined}
+                      onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction> : null
+              }
 
-              </ListItem>
-            )) :
-            <div style={{ textAlign: 'center' }}>
-              <CircularProgress className={classes.progress} />
-            </div>
+            </ListItem>
+          ))
         }
       </List>
       <Menu

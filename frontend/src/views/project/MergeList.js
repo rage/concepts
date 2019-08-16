@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import { useMutation } from 'react-apollo-hooks'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, IconButton,Menu,
-  MenuItem, ListItemIcon, Button
+  List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, IconButton,
+  Menu, MenuItem, ListItemIcon, Button
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -13,7 +14,8 @@ import {
 
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
 import { useMessageStateValue } from '../../store'
-import { useShareDialog } from '../../dialogs/sharing'
+import { PROJECT_BY_ID } from '../../graphql/Query'
+import { MERGE_PROJECT } from '../../graphql/Mutation'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,23 +31,30 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const UserWorkspaceList = ({ history, userWorkspaces, activeTemplate, projectId }) => {
-  const openShareCloneLinkDialog = useShareDialog(
-    'project',
-    'Invite students',
-    'Let students clone the active template to contribute towards the mapping.')
+const MergeList = ({ history, mergeWorkspaces, activeTemplate, projectId }) => {
+  // const openShareCloneLinkDialog = useShareDialog(
+  //   'project',
+  //   'Invite students',
+  //   'Let students clone the active template to contribute towards the mapping.')
 
   const [menu, setMenu] = useState(null)
   const messageDispatch = useMessageStateValue()[1]
 
+  const merge = useMutation(MERGE_PROJECT, {
+    refetchQueries: [{
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
+    }]
+  })
+
   const classes = useStyles()
 
   const handleNavigateMapper = (workspaceId) => {
-    history.push(`/projects/${projectId}/workspaces/${workspaceId}/mapper`)
+    history.push(`/projects/${projectId}/merges/${workspaceId}/mapper`)
   }
 
   const handleNavigateHeatmap = () => {
-    history.push(`/projects/${projectId}/workspaces/${menu.workspace.id}/heatmap`)
+    history.push(`/projects/${projectId}/merges/${menu.workspace.id}/heatmap`)
   }
 
   const handleMenuOpen = (workspace, event) => {
@@ -76,25 +85,22 @@ const UserWorkspaceList = ({ history, userWorkspaces, activeTemplate, projectId 
       <CardHeader
         action={
           <Button
-            variant='outlined' color='primary' aria-label='Invite students'
-            onClick={() => openShareCloneLinkDialog(projectId, 'CLONE')}
+            variant='outlined' color='primary'
+            onClick={() => merge({ variables: { projectId } })}
             disabled={!activeTemplate}
           >
-            Invite students
+            New merge
           </Button>
         }
-        title='Workspaces by users'
+        title='Merged workspaces'
       />
       <List dense={false}>
         {
-          userWorkspaces.map(workspace => (
+          mergeWorkspaces.map(workspace => (
             <ListItem
               button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
             >
-              <ListItemText
-                primary={workspace.name}
-                secondary={workspace.participants.find(p => p.privilege === 'OWNER').user.id}
-              />
+              <ListItemText primary={workspace.name} />
 
               <ListItemSecondaryAction>
                 <IconButton
@@ -129,4 +135,4 @@ const UserWorkspaceList = ({ history, userWorkspaces, activeTemplate, projectId 
   )
 }
 
-export default withRouter(UserWorkspaceList)
+export default withRouter(MergeList)
