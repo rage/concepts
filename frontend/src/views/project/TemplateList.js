@@ -255,7 +255,7 @@ This will change which template is cloned by users.`)
                 <RadioButtonUnchecked />
             }
           </ListItemIcon>
-          {!isActiveTemplate ? 'Set as active' : 'Is active'}
+          {!isActiveTemplate ? 'Set as' : 'Is'} active
         </MenuItem>
         <MenuItem aria-label='Edit' onClick={handleEditOpen}>
           <ListItemIcon>
