@@ -97,14 +97,25 @@ const TEMPLATE = `{
           "description": "Description of my concept",
           "prerequisites": [
             {
-              "name":"My concept"
+              "name":"Prerequisite concept"
             }
           ]
         }
       ],
       "prerequisites":[
-        "My courses"
+        "Prerequisite course"
       ]
+    },
+    {
+      "name":"Prerequisite course",
+      "concepts": [
+        {
+          "name": "Prerequisite concept",
+          "description": "Description of prerequisite concept",
+          "prerequisites":[]
+        }
+      ],
+      "prerequisites":[]
     }
   ]
 }
