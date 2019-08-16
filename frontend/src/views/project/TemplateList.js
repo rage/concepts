@@ -44,7 +44,7 @@ const TemplateList = ({
   projectId, activeTemplate, setActiveTemplate
 }) => {
   const classes = useStyles()
-  const [menu, setMenu] = useState(null)
+  const [menu, setMenu] = useState({ open: false })
 
   const { loggedIn } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
@@ -56,12 +56,13 @@ const TemplateList = ({
   const handleMenuOpen = (workspace, event) => {
     setMenu({
       anchor: event.currentTarget,
+      open: true,
       workspace
     })
   }
 
   const handleMenuClose = () => {
-    setMenu(null)
+    setMenu({ ...menu, open: false })
   }
 
   const handleWorkspaceExport = async () => {
@@ -145,25 +146,11 @@ const TemplateList = ({
       })
       return
     }
-    if (activeTemplate) {
-      if (menu.workspace.id === activeTemplate.id) {
-        try {
-          await setActiveTemplate({
-            variables: { projectId }
-          })
-        } catch (err) {
-          messageDispatch({
-            type: 'setError',
-            data: err.message
-          })
-        }
-        return
-      } else {
-        const change = window.confirm(
-          `Are you sure that you want to switch the active template? 
+    if (activeTemplate && menu.workspace.id !== activeTemplate.id) {
+      const change = window.confirm(
+        `Are you sure that you want to switch the active template? 
 This will change which template is cloned by users.`)
-        if (!change) return
-      }
+      if (!change) return
     }
     try {
       await setActiveTemplate({
@@ -185,7 +172,8 @@ This will change which template is cloned by users.`)
     history.push(`/projects/${projectId}/templates/${menu.workspace.id}/heatmap`)
   }
 
-  const isActiveTemplate = (menu && activeTemplate) && menu.workspace.id === activeTemplate.id
+  const isActiveTemplate = (menu.workspace && activeTemplate) &&
+    menu.workspace.id === activeTemplate.id
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -237,7 +225,7 @@ This will change which template is cloned by users.`)
         }
       </List>
       <Menu
-        id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={Boolean(menu)}
+        id='template-list-menu' anchorEl={menu ? menu.anchor : undefined} open={menu.open}
         onClose={handleMenuClose}
       >
         <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
@@ -258,7 +246,7 @@ This will change which template is cloned by users.`)
           </ListItemIcon>
           Share link
         </MenuItem>
-        <MenuItem aria-label='Set as active' onClick={handleSetActive}>
+        <MenuItem aria-label='Set as active' onClick={handleSetActive} disabled={isActiveTemplate}>
           <ListItemIcon>
             {
               isActiveTemplate ?
@@ -267,7 +255,7 @@ This will change which template is cloned by users.`)
                 <RadioButtonUnchecked />
             }
           </ListItemIcon>
-          {!isActiveTemplate ? 'Set' : 'Unset'} as active
+          {!isActiveTemplate ? 'Set as' : 'Is'} active
         </MenuItem>
         <MenuItem aria-label='Edit' onClick={handleEditOpen}>
           <ListItemIcon>

@@ -1,3 +1,5 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const ProjectMutations = {
@@ -40,6 +42,10 @@ const ProjectMutations = {
       minimumPrivilege: Privilege.EDIT,
       projectId: args.projectId
     })
+
+    const activeTemplate = await context.prisma.project({ id: args.projectId }).activeTemplate()
+    if (activeTemplate.id === args.workspaceId) throw new ForbiddenError('Access denied')
+
     return await context.prisma.updateProject({
       where: { id: args.projectId },
       data: {
