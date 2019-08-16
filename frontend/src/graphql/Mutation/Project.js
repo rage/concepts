@@ -27,7 +27,7 @@ mutation deleteProject($id: ID!) {
 `
 
 const SET_ACTIVE_TEMPLATE = gql`
-mutation setActiveTemplate($projectId: ID!, $workspaceId: ID) {
+mutation setActiveTemplate($projectId: ID!, $workspaceId: ID!) {
   setActiveTemplate(projectId: $projectId, workspaceId: $workspaceId) {
     id
     activeTemplate {
