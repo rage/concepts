@@ -611,6 +611,14 @@ export type Role = "GUEST" | "STUDENT" | "STAFF" | "ADMIN";
 
 export type Privilege = "CLONE" | "VIEW" | "EDIT" | "OWNER";
 
+export type Tag =
+  | "CREATE"
+  | "EVALUATE"
+  | "ANALYZE"
+  | "APPLY"
+  | "UNDERSTAND"
+  | "REMEMBER";
+
 export type WorkspaceParticipantOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -659,7 +667,9 @@ export type ConceptOrderByInput =
   | "description_ASC"
   | "description_DESC"
   | "official_ASC"
-  | "official_DESC";
+  | "official_DESC"
+  | "bloomsTag_ASC"
+  | "bloomsTag_DESC";
 
 export type ConceptLinkOrderByInput =
   | "id_ASC"
@@ -1110,6 +1120,10 @@ export interface ConceptWhereInput {
   resources_some?: Maybe<ResourceWhereInput>;
   resources_none?: Maybe<ResourceWhereInput>;
   workspace?: Maybe<WorkspaceWhereInput>;
+  bloomsTag?: Maybe<Tag>;
+  bloomsTag_not?: Maybe<Tag>;
+  bloomsTag_in?: Maybe<Tag[] | Tag>;
+  bloomsTag_not_in?: Maybe<Tag[] | Tag>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
@@ -1326,6 +1340,7 @@ export interface ConceptCreateInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface UserCreateOneInput {
@@ -1556,6 +1571,7 @@ export interface ConceptCreateWithoutCoursesInput {
   linksToConcept?: Maybe<ConceptLinkCreateManyWithoutToInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ConceptLinkCreateManyWithoutFromInput {
@@ -1589,6 +1605,7 @@ export interface ConceptCreateWithoutLinksToConceptInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface CourseCreateManyWithoutConceptsInput {
@@ -1673,6 +1690,7 @@ export interface ConceptCreateWithoutWorkspaceInput {
   linksToConcept?: Maybe<ConceptLinkCreateManyWithoutToInput>;
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ConceptLinkCreateManyWithoutToInput {
@@ -1706,6 +1724,7 @@ export interface ConceptCreateWithoutLinksFromConceptInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ResourceCreateManyWithoutConceptInput {
@@ -2079,6 +2098,7 @@ export interface ConceptUpdateInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface UserUpdateOneRequiredInput {
@@ -2456,6 +2476,7 @@ export interface ConceptUpdateWithoutCoursesDataInput {
   linksToConcept?: Maybe<ConceptLinkUpdateManyWithoutToInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ConceptLinkUpdateManyWithoutFromInput {
@@ -2514,6 +2535,7 @@ export interface ConceptUpdateWithoutLinksToConceptDataInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface CourseUpdateManyWithoutConceptsInput {
@@ -2660,6 +2682,7 @@ export interface ConceptUpdateWithoutWorkspaceDataInput {
   linksToConcept?: Maybe<ConceptLinkUpdateManyWithoutToInput>;
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ConceptLinkUpdateManyWithoutToInput {
@@ -2718,6 +2741,7 @@ export interface ConceptUpdateWithoutLinksFromConceptDataInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ResourceUpdateManyWithoutConceptInput {
@@ -3938,6 +3962,10 @@ export interface ConceptScalarWhereInput {
   description_not_ends_with?: Maybe<String>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
+  bloomsTag?: Maybe<Tag>;
+  bloomsTag_not?: Maybe<Tag>;
+  bloomsTag_in?: Maybe<Tag[] | Tag>;
+  bloomsTag_not_in?: Maybe<Tag[] | Tag>;
   AND?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
   OR?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
   NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
@@ -3952,6 +3980,7 @@ export interface ConceptUpdateManyDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface WorkspaceUpsertWithoutCoursesInput {
@@ -4130,6 +4159,7 @@ export interface ConceptUpdateManyMutationInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ConceptLinkCreateInput {
@@ -4288,6 +4318,7 @@ export interface ConceptCreateWithoutResourcesInput {
   linksToConcept?: Maybe<ConceptLinkCreateManyWithoutToInput>;
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ResourceUpdateInput {
@@ -4313,6 +4344,7 @@ export interface ConceptUpdateWithoutResourcesDataInput {
   linksToConcept?: Maybe<ConceptLinkUpdateManyWithoutToInput>;
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  bloomsTag?: Maybe<Tag>;
 }
 
 export interface ConceptUpsertWithoutResourcesInput {
@@ -4652,6 +4684,7 @@ export interface Concept {
   name: String;
   description?: String;
   official: Boolean;
+  bloomsTag?: Tag;
 }
 
 export interface ConceptPromise extends Promise<Concept>, Fragmentable {
@@ -4697,6 +4730,7 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
     last?: Int;
   }) => T;
   workspace: <T = WorkspacePromise>() => T;
+  bloomsTag: () => Promise<Tag>;
 }
 
 export interface ConceptSubscription
@@ -4746,6 +4780,7 @@ export interface ConceptSubscription
     last?: Int;
   }) => T;
   workspace: <T = WorkspaceSubscription>() => T;
+  bloomsTag: () => Promise<AsyncIterator<Tag>>;
 }
 
 export interface ConceptNullablePromise
@@ -4793,6 +4828,7 @@ export interface ConceptNullablePromise
     last?: Int;
   }) => T;
   workspace: <T = WorkspacePromise>() => T;
+  bloomsTag: () => Promise<Tag>;
 }
 
 export interface User {
@@ -6517,6 +6553,7 @@ export interface ConceptPreviousValues {
   name: String;
   description?: String;
   official: Boolean;
+  bloomsTag?: Tag;
 }
 
 export interface ConceptPreviousValuesPromise
@@ -6526,6 +6563,7 @@ export interface ConceptPreviousValuesPromise
   name: () => Promise<String>;
   description: () => Promise<String>;
   official: () => Promise<Boolean>;
+  bloomsTag: () => Promise<Tag>;
 }
 
 export interface ConceptPreviousValuesSubscription
@@ -6535,6 +6573,7 @@ export interface ConceptPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
+  bloomsTag: () => Promise<AsyncIterator<Tag>>;
 }
 
 export interface ConceptLinkSubscriptionPayload {
@@ -7140,6 +7179,10 @@ export const models: Model[] = [
   },
   {
     name: "Privilege",
+    embedded: false
+  },
+  {
+    name: "Tag",
     embedded: false
   },
   {

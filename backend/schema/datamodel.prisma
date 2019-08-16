@@ -25,6 +25,16 @@ enum Privilege {
   OWNER
 }
 
+# Revised Bloom's taxonomy
+enum Tag {
+  CREATE,
+  EVALUATE,
+  ANALYZE,
+  APPLY,
+  UNDERSTAND,
+  REMEMBER
+}
+
 type Project {
   id: ID! @id
   name: String!
@@ -123,6 +133,7 @@ type Concept {
   courses: [Course!]! @relation(name: "Courses")
   resources: [Resource!]!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
+  bloomsTag: Tag @default(value: REMEMBER)
 }
 
 type Resource {

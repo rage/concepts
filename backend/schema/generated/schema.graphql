@@ -156,6 +156,16 @@ enum Privilege {
   OWNER
 }
 
+# Revised Bloom's taxonomy
+enum Tag {
+  CREATE,
+  EVALUATE,
+  ANALYZE,
+  APPLY,
+  UNDERSTAND,
+  REMEMBER
+}
+
 type Project {
   id: ID!
   name: String!
@@ -254,6 +264,7 @@ type Concept {
   courses: [Course!]!
   resources: [Resource!]!
   workspace: Workspace!
+  bloomsTag: Tag
 }
 
 type Resource {
