@@ -70,8 +70,8 @@ const CloneView = ({ history, projectId }) => {
     }]
   })
 
-  const handleNavigateMapper = (workspaceId) => {
-    history.push(`/projects/${projectId}/workspaces/${workspaceId}/mapper`)
+  const handleNavigateManager = (workspaceId) => {
+    history.push(`/projects/${projectId}/workspaces/${workspaceId}/manager`)
   }
 
   const handleCreate = async () => {
@@ -155,7 +155,7 @@ const CloneView = ({ history, projectId }) => {
             <List className={classes.listRoot}>
               <ListItem
                 button key={workspace.data.workspaceBySourceTemplate.id}
-                onClick={() => handleNavigateMapper(
+                onClick={() => handleNavigateManager(
                   workspace.data.workspaceBySourceTemplate.id)}
               >
                 <ListItemText

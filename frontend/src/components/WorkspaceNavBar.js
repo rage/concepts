@@ -8,7 +8,7 @@ import {
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,  Edit as EditIcon,
-  MoreVert as MoreVertIcon, Share as ShareIcon
+  MoreVert as MoreVertIcon, Share as ShareIcon, VerticalSplit as VerticalSplitIcon
 } from '@material-ui/icons'
 
 import client from '../apollo/apolloClient'
@@ -120,7 +120,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
   }
 
   const onChange = (event, newPage) => {
-    const cid = courseId && newPage !== 'heatmap' && newPage !== 'graph' ? `/${courseId}` : ''
+    const cid = courseId && newPage === 'mapper' ? `/${courseId}` : ''
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
@@ -131,6 +131,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
           user.role === 'STAFF' && <div className={classes.leftPlaceholder} />
         }
         <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
+          <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
           <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
           <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />

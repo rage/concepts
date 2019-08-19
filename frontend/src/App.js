@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
 
 const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid`} render={({ match }) =>
-    <Redirect to={`${prefix}/${match.params.wid}/mapper`} />} />
+    <Redirect to={`${prefix}/${match.params.wid}/manager`} />} />
   <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
     <HeatmapView urlPrefix={prefix} workspaceId={match.params.wid} />
   )} />
@@ -56,7 +56,7 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
     <CytoGraphView workspaceId={wid} />} />
   <Route
-    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap)/:cid?`}
+    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap|manager)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>
       <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
     }

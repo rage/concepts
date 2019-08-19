@@ -42,6 +42,11 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
       courseId: path[1],
       link: `${prefix}/mapper/${path[1]}`
     }]
+  case 'manager':
+    return [{
+      name: 'Manager',
+      link: `${prefix}/manager`
+    }]
   case 'heatmap':
     return [{
       name: 'Heatmap',
