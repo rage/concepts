@@ -31,9 +31,9 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
 
 const CREATE_CONCEPT = gql`
 mutation createConcept($name: String!, $description:String!, $official:Boolean!, $workspaceId:ID!,
-                       $courseId:ID) {
+                       $courseId:ID, $bloomsTag:Tag) {
   createConcept(name:$name, description:$description, official:$official, workspaceId: $workspaceId,
-                courseId:$courseId) {
+                courseId:$courseId, bloomsTag:$bloomsTag) {
     __typename
     id
     name

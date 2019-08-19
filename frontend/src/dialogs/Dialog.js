@@ -126,27 +126,30 @@ const Dialog = ({ contextRef }) => {
                 multiline={Boolean(key.multiline)}
               />)
             } else if (key.type === 'select') {
-              return (<FormControl variant='outlined'>
-                <InputLabel ref={null} htmlFor='outlined-simple'>
-                  { key.label }
-                </InputLabel>
-                <Select
-                  inputProps={{
-                    name:key.label
-                  }}
-                  value={inputState[key.name]}
-                  onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
-                  input={<OutlinedInput labelWidth={null} name={key.label} id='outlined-simple' />}
-                >
-                  {
-                    key.values.map(value => (
-                      <MenuItem key={value} value={value}>
-                        {value}
-                      </MenuItem>
-                    ))
+              return (<TextField
+                id='standard-select-currency'
+                select
+                fullWidth
+                label='Select'
+                value={inputState[key.name]}
+                onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
+                SelectProps={{
+                  MenuProps: {
+
                   }
-                </Select>
-              </FormControl>)
+                }}
+                helperText={key.label}
+                margin='normal'
+              >
+                {
+                  key.values.map(value => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))
+                }
+              </TextField>)
+
             }
           })
         }
