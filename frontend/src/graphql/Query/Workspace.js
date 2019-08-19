@@ -89,6 +89,24 @@ query workspaceById($id: ID!) {
 }
 `
 
+const WORKSPACE_FOR_EDIT = gql`
+query workspaceById($id: ID!) {
+  workspaceById(id: $id) {
+    id
+    name
+    courses {
+      id
+      name
+      concepts {
+        id
+        name
+        description
+      }
+    }
+  }
+}
+`
+
 const WORKSPACE_DATA_FOR_GRAPH = gql`
 query workspaceById($id: ID!) {
 workspaceById(id: $id) {
@@ -121,6 +139,7 @@ query workspaceBySourceTemplate($sourceId: ID!) {
 export {
   ALL_WORKSPACES,
   WORKSPACES_FOR_USER,
+  WORKSPACE_FOR_EDIT,
   WORKSPACE_BY_ID,
   WORKSPACE_COURSES_AND_CONCEPTS,
   WORKSPACE_DATA_FOR_GRAPH,

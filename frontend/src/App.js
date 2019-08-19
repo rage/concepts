@@ -10,6 +10,7 @@ import CourseMapperView from './views/mapper/CourseMapperView'
 import PortView from './views/porting/PortView'
 import HomeView from './views/home/HomeView'
 import WorkspaceView from './views/workspace/WorkspaceView'
+import WorkspaceManagementView from './views/workspace/WorkspaceManagementView'
 import JoinView from './views/join/JoinView'
 import HeatmapView from './views/heatmap/HeatmapView'
 import LoginView from './views/login/LoginView'
@@ -37,6 +38,8 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
     <HeatmapView urlPrefix={prefix} workspaceId={match.params.wid} />
   )} />
+  <Route exact path={`${prefix}/:wid/manager`} render={({ match }) =>
+    <WorkspaceManagementView urlPrefix={prefix} workspaceId={match.params.wid} />} />
   <Route
     exact path={`${prefix}/:wid/mapper`}
     render={({ match, location }) =>
