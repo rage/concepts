@@ -69,6 +69,7 @@ const Dialog = ({ contextRef }) => {
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
+      console.log(fields)
       setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue || ''])))
     }
     setState({
@@ -109,7 +110,7 @@ const Dialog = ({ contextRef }) => {
         }
         {
           state.fields.map((key, index) => {
-            if (key.type === 'text-field') {
+            if (!key.type || key.type === 'text-field') {
               return (<TextField
                 key={key.name}
                 autoFocus={index === 0}
@@ -129,7 +130,6 @@ const Dialog = ({ contextRef }) => {
               return (<TextField
                 id='standard-select-currency'
                 select
-                fullWidth
                 variant='outlined'
                 style={{ width: '170px' }}
                 label={key.label}

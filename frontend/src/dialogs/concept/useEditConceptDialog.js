@@ -11,7 +11,7 @@ const useEditConceptDialog = () => {
     update: cache.updateConceptUpdate
   })
 
-  return (conceptId, name, description) => openDialog({
+  return (conceptId, name, description, bloomsTag) => openDialog({
     mutation: updateConcept,
     type: 'Concept',
     requiredVariables: {
@@ -34,7 +34,7 @@ const useEditConceptDialog = () => {
       type: 'select',
       name: 'bloomsTag',
       label: 'Select Bloom\'s tag',
-      defaultValue: 'REMEMBER',
+      defaultValue: bloomsTag,
       values: [
         'REMEMBER',
         'UNDERSTAND',

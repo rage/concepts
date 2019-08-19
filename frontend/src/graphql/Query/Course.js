@@ -52,6 +52,7 @@ fragment courseAndConcepts on Course {
       name
       description
       official
+      bloomsTag
       courses {
         id
       }

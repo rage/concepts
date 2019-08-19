@@ -142,7 +142,7 @@ const Concept = ({
 
   const handleEditConcept = () => {
     handleMenuClose()
-    openEditConceptDialog(concept.id, concept.name, concept.description)
+    openEditConceptDialog(concept.id, concept.name, concept.description, concept.bloomsTag)
   }
 
   const hasLinkToAddingLink = addingLink && (isActive

@@ -1,8 +1,8 @@
 import { gql } from 'apollo-boost'
 
 const UPDATE_CONCEPT = gql`
-mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean) {
-  updateConcept(id:$id, name:$name, description:$description, official: $official) {
+mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean, $bloomsTag: Tag) {
+  updateConcept(id:$id, name:$name, description:$description, official: $official, bloomsTag: $bloomsTag) {
     id
     name
     description
