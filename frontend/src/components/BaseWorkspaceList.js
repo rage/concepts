@@ -43,10 +43,10 @@ export const TYPE_TEMPLATE = 'templateList'
 export const TYPE_MERGE = 'mergeList'
 
 const TYPE_NAMES = {
-  TYPE_MAIN: 'workspace',
-  TYPE_USER: 'user workspace',
-  TYPE_TEMPLATE: 'template',
-  TYPE_MERGE: 'merge'
+  [TYPE_MAIN]: 'workspace',
+  [TYPE_USER]: 'user workspace',
+  [TYPE_TEMPLATE]: 'template',
+  [TYPE_MERGE]: 'merge'
 }
 
 const BaseWorkspaceList = ({

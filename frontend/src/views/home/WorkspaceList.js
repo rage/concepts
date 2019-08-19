@@ -7,9 +7,7 @@ import { DELETE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER } from '../../graphql/Query'
 import BaseWorkspaceList, { TYPE_MAIN } from '../../components/BaseWorkspaceList'
 
-const WorkspaceList = ({
-  workspaces, urlPrefix
-}) => {
+const WorkspaceList = ({ workspaces, urlPrefix }) => {
   const openEditDialog = useEditWorkspaceDialog()
   const openShareDialog = useShareDialog('workspace')
   const openCreateDialog = useCreateWorkspaceDialog()
