@@ -69,7 +69,6 @@ const Dialog = ({ contextRef }) => {
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
-      console.log(fields)
       setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue || ''])))
     }
     setState({
