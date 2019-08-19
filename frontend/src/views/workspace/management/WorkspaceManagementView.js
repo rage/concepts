@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography, CircularProgress, Paper } from '@material-ui/core'
 
-import { WORKSPACE_FOR_EDIT } from '../../../graphql/Query'
+import { WORKSPACE_BY_ID } from '../../../graphql/Query'
 import NotFoundView from '../../error/NotFoundView'
 import { useMessageStateValue } from '../../../store'
 import CourseList from './CourseList'
@@ -68,12 +68,12 @@ const WorkspaceManagementView = ({ workspaceId }) => {
 
   const [focusedCourse, setFocusedCourse] = useState(null)
 
-  const workspaceQuery = useQuery(WORKSPACE_FOR_EDIT, {
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
   })
 
   const refetchQueries = [{
-    query: WORKSPACE_FOR_EDIT,
+    query: WORKSPACE_BY_ID,
     variables: { id: workspaceId }
   }]
 

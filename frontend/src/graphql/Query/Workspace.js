@@ -74,6 +74,11 @@ query workspaceById($id: ID!) {
     courses {
       id
       name
+      concepts {
+        id
+        name
+        description
+      }
     }
     tokens {
       id
@@ -83,24 +88,6 @@ query workspaceById($id: ID!) {
       privilege
       user {
         id
-      }
-    }
-  }
-}
-`
-
-const WORKSPACE_FOR_EDIT = gql`
-query workspaceById($id: ID!) {
-  workspaceById(id: $id) {
-    id
-    name
-    courses {
-      id
-      name
-      concepts {
-        id
-        name
-        description
       }
     }
   }
@@ -139,7 +126,6 @@ query workspaceBySourceTemplate($sourceId: ID!) {
 export {
   ALL_WORKSPACES,
   WORKSPACES_FOR_USER,
-  WORKSPACE_FOR_EDIT,
   WORKSPACE_BY_ID,
   WORKSPACE_COURSES_AND_CONCEPTS,
   WORKSPACE_DATA_FOR_GRAPH,
