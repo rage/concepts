@@ -39,6 +39,10 @@ query projectById($id: ID!) {
         privilege
       }
     }
+    merges {
+      id
+      name
+    }
     activeTemplate {
       id
     }

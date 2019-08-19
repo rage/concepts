@@ -88,6 +88,9 @@ const App = () => {
       <Route
         path='/projects/:id/templates'
         render={({ match: { url } }) => workspaceRouter(url)} />
+      <Route
+        path='/projects/:id/merges'
+        render={({ match: { url } }) => workspaceRouter(url)} />
       <PrivateRoute
         exact path='/projects/:id' redirectPath='/login' condition={loggedIn}
         render={({ match: { params: { id } } }) =>

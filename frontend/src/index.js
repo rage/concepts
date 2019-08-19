@@ -12,6 +12,7 @@ import FocusOverlay from './components/FocusOverlay'
 import InfoBox from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
+import { LoadingProvider } from './components/NavBar'
 
 import './index.css'
 
@@ -97,7 +98,9 @@ ReactDOM.render(
           <DialogProvider>
             <FocusOverlay>
               <InfoBox>
-                <App />
+                <LoadingProvider>
+                  <App />
+                </LoadingProvider>
               </InfoBox>
             </FocusOverlay>
           </DialogProvider>

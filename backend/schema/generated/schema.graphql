@@ -162,6 +162,7 @@ type Project {
   workspaces: [Workspace!]!
   activeTemplate: Workspace
   templates: [Workspace!]!
+  merges: [Workspace!]!
   participants: [ProjectParticipant!]!
   tokens: [ProjectToken!]!
 }
@@ -171,6 +172,7 @@ type Workspace {
   name: String!
   sourceProject: Project
   sourceTemplate: Workspace
+  asMerge: Project
   asTemplate: Project
   clones: [Workspace!]!
   courses: [Course!]!
