@@ -23,11 +23,11 @@ const useCreateConceptDialog = workspaceId => {
     actionText: 'Create',
     title: 'Add concept',
     fields: [{
-      type: 'text-field',
+      type: 'textfield',
       name: 'name',
       required: true
     }, {
-      type: 'text-field',
+      type: 'textfield',
       name: 'description',
       multiline: true
     }, {

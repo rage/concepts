@@ -21,12 +21,12 @@ const useEditConceptDialog = () => {
     actionText: 'Save',
     title: 'Edit concept',
     fields: [{
-      type: 'text-field',
+      type: 'textfield',
       name: 'name',
       required: true,
       defaultValue: name
     }, {
-      type: 'text-field',
+      type: 'textfield',
       name: 'description',
       multiline: true,
       defaultValue: description

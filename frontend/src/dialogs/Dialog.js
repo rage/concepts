@@ -109,7 +109,7 @@ const Dialog = ({ contextRef }) => {
         }
         {
           state.fields.map((key, index) => {
-            if (!key.type || key.type === 'text-field') {
+            if (!key.type || key.type === 'textfield') {
               return (<TextField
                 key={key.name}
                 autoFocus={index === 0}
@@ -127,7 +127,6 @@ const Dialog = ({ contextRef }) => {
               />)
             } else if (key.type === 'select') {
               return (<TextField
-                id='standard-select-currency'
                 select
                 variant='outlined'
                 style={{ width: '170px' }}
