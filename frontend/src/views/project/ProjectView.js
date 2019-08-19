@@ -1,14 +1,14 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 import { Typography, CircularProgress, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
-import { DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE } from '../../graphql/Mutation'
 import UserWorkspaceList from './UserWorkspaceList'
-import TemplateList from './TemplateList'
 import { useShareDialog } from '../../dialogs/sharing'
 import NotFoundView from '../error/NotFoundView'
+import TemplateList from './TemplateList'
+import MergeList from './MergeList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -19,14 +19,21 @@ const useStyles = makeStyles(() => ({
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
     overflow: 'hidden',
-    gridTemplate: `"header    header  header"         64px
-                   "______    ______  ______"         8px
-                   "toolbar   toolbar toolbar"        48px
-                   "_______   _______ _______"        8px
-                   "templates  ____   userWorkspaces" 1fr
-                  / 1fr        16px   1fr`,
+    gridGap: '16px',
+    gridTemplate: `"header    header"         56px
+                   "toolbar   toolbar"        40px
+                   "templates userWorkspaces" 1fr
+                   "merges    userWorkspaces" 1fr
+                  / 1fr       1fr`,
     '@media screen and (max-width: 1312px)': {
       width: 'calc(100% - 32px)'
+    },
+    '& > div': {
+      overflow: 'hidden',
+      '& > div': {
+        height: '100%',
+        overflow: 'auto'
+      }
     }
   },
   header: {
@@ -37,20 +44,13 @@ const useStyles = makeStyles(() => ({
     gridArea: 'toolbar'
   },
   templates: {
-    gridArea: 'templates',
-    overflow: 'hidden',
-    '& > div': {
-      height: '100%',
-      overflow: 'auto'
-    }
+    gridArea: 'templates'
+  },
+  merges: {
+    gridArea: 'merges'
   },
   userWorkspaces: {
-    gridArea: 'userWorkspaces',
-    overflow: 'hidden',
-    '& > div': {
-      height: '100%',
-      overflow: 'auto'
-    }
+    gridArea: 'userWorkspaces'
   }
 }))
 
@@ -60,20 +60,6 @@ const ProjectView = ({ projectId }) => {
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
-  })
-
-  const deleteTemplateWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
-  })
-
-  const setActiveTemplate = useMutation(SET_ACTIVE_TEMPLATE, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
   })
 
   if (projectQuery.loading) {
@@ -89,14 +75,14 @@ const ProjectView = ({ projectId }) => {
   return (
     <div className={classes.root}>
       <Typography className={classes.header} variant='h4'>
-            Project: {projectQuery.data.projectById.name}
+        Project: {projectQuery.data.projectById.name}
       </Typography>
       <span className={classes.toolbar}>
         <Button
           color='primary' variant='contained'
           onClick={() => openShareProjectDialog(projectId, 'EDIT')}
         >
-              Share project
+          Share project
         </Button>
       </span>
       <div className={classes.templates}>
@@ -104,8 +90,15 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           templateWorkspaces={projectQuery.data.projectById.templates}
-          deleteTemplateWorkspace={deleteTemplateWorkspace}
-          setActiveTemplate={setActiveTemplate}
+          urlPrefix={`/projects/${projectId}/templates`}
+        />
+      </div>
+      <div className={classes.merges}>
+        <MergeList
+          projectId={projectId}
+          activeTemplate={projectQuery.data.projectById.activeTemplate}
+          mergeWorkspaces={projectQuery.data.projectById.merges}
+          urlPrefix={`/projects/${projectId}/merges`}
         />
       </div>
       <div className={classes.userWorkspaces}>
@@ -113,6 +106,7 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           userWorkspaces={projectQuery.data.projectById.workspaces}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
+          urlPrefix={`/projects/${projectId}/workspaces`}
         />
       </div>
     </div>

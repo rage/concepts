@@ -56,7 +56,8 @@ const sha1digest = (...vars) => {
   for (const item of vars) {
     sha1.update(item)
   }
-  return sha1.digest('base64')
+  // the replaces make it urlsafe base64 (https://tools.ietf.org/html/rfc4648)
+  return sha1.digest('base64').replace('/', '_').replace('+', '-')
 }
 
 const MergeMutations = {
@@ -117,7 +118,7 @@ const MergeMutations = {
     return await context.prisma.createWorkspace({
       id: workspaceId,
       name,
-      sourceProject: { connect: { id: projectId } },
+      asMerge: { connect: { id: projectId } },
       sourceTemplate: { connect: { id: templateId } },
       participants: {
         create: [{
