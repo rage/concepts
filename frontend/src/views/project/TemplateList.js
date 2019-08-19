@@ -46,8 +46,8 @@ const TemplateList = ({
   const classes = useStyles()
   const [menu, setMenu] = useState({ open: false })
 
-  const { loggedIn } = useLoginStateValue()[0]
-  const messageDispatch = useMessageStateValue()[1]
+  const [{ loggedIn }] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
 
   const openEditTemplateDialog = useEditTemplateDialog(projectId)
   const openCreateTemplateDialog = useCreateTemplateDialog(projectId)

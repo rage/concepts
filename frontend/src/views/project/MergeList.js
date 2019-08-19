@@ -9,13 +9,15 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   GridOn as GridOnIcon,
   MoreVert as MoreVertIcon,
-  CloudDownload as CloudDownloadIcon
+  CloudDownload as CloudDownloadIcon, Share as ShareIcon, Edit as EditIcon, Delete as DeleteIcon
 } from '@material-ui/icons'
 
 import { exportWorkspace } from '../../components/WorkspaceNavBar'
-import { useMessageStateValue } from '../../store'
-import { PROJECT_BY_ID } from '../../graphql/Query'
-import { MERGE_PROJECT } from '../../graphql/Mutation'
+import { useLoginStateValue, useMessageStateValue } from '../../store'
+import { PROJECT_BY_ID, WORKSPACES_FOR_USER } from '../../graphql/Query'
+import { DELETE_WORKSPACE, MERGE_PROJECT } from '../../graphql/Mutation'
+import { useShareDialog } from '../../dialogs/sharing'
+import { useEditWorkspaceDialog } from '../../dialogs/workspace'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,15 +34,21 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MergeList = ({ history, mergeWorkspaces, activeTemplate, projectId }) => {
-  // const openShareCloneLinkDialog = useShareDialog(
-  //   'project',
-  //   'Invite students',
-  //   'Let students clone the active template to contribute towards the mapping.')
-
   const [menu, setMenu] = useState(null)
-  const messageDispatch = useMessageStateValue()[1]
+  const [{ loggedIn }] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
+
+  const openEditWorkspaceDialog = useEditWorkspaceDialog()
+  const openShareWorkspaceDialog = useShareDialog('workspace')
 
   const merge = useMutation(MERGE_PROJECT, {
+    refetchQueries: [{
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
+    }]
+  })
+
+  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }
@@ -80,6 +88,54 @@ const MergeList = ({ history, mergeWorkspaces, activeTemplate, projectId }) => {
     }
   }
 
+  const handleEditOpen = () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    openEditWorkspaceDialog(menu.workspace.id, menu.workspace.name)
+  }
+
+  const handleShareOpen = () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    openShareWorkspaceDialog(menu.workspace.id, 'EDIT')
+  }
+
+  const handleDelete = async () => {
+    handleMenuClose()
+    if (!loggedIn) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+      return
+    }
+    const willDelete = window.confirm('Are you sure you want to delete this merge?')
+    if (willDelete) {
+      try {
+        await deleteWorkspace({
+          variables: { id: menu.workspace.id }
+        })
+      } catch (err) {
+        messageDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      }
+    }
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -104,12 +160,11 @@ const MergeList = ({ history, mergeWorkspaces, activeTemplate, projectId }) => {
 
               <ListItemSecondaryAction>
                 <IconButton
-                  aria-owns={menu ? 'template-list-menu' : undefined}
+                  aria-owns={menu ? 'merge-list-menu' : undefined}
                   onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
                   <MoreVertIcon />
                 </IconButton>
               </ListItemSecondaryAction>
-
             </ListItem>
           ))
         }
@@ -129,6 +184,24 @@ const MergeList = ({ history, mergeWorkspaces, activeTemplate, projectId }) => {
             <CloudDownloadIcon />
           </ListItemIcon>
           Export
+        </MenuItem>
+        <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+          <ListItemIcon>
+            <ShareIcon />
+          </ListItemIcon>
+          Share link
+        </MenuItem>
+        <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          Edit
+        </MenuItem>
+        <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon />
+          </ListItemIcon>
+          Delete
         </MenuItem>
       </Menu>
     </Card>
