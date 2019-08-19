@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
-  TextField
+  TextField, Select, MenuItem, FormControl, InputLabel, OutlinedInput
 } from '@material-ui/core'
 
 import { useMessageStateValue } from '../store'
@@ -17,8 +17,7 @@ const blankState = () => ({
   content: [],
   CustomActions: null,
   customActionsProps: null,
-  type: '',
-  specialFields: []
+  type: ''
 })
 
 const Dialog = ({ contextRef }) => {
@@ -66,7 +65,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
-    customActionsProps, type, specialFields
+    customActionsProps, type
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
@@ -85,8 +84,7 @@ const Dialog = ({ contextRef }) => {
       content: content || [],
       CustomActions,
       customActionsProps,
-      type,
-      specialFields
+      type
     })
   }
 
@@ -110,28 +108,47 @@ const Dialog = ({ contextRef }) => {
           )
         }
         {
-          state.fields.map((key, index) =>
-            <TextField
-              key={key.name}
-              autoFocus={index === 0}
-              variant='outlined'
-              margin='dense'
-              id={key.name}
-              label={key.name[0].toUpperCase() + key.name.substr(1)}
-              type='text'
-              rows={2}
-              rowsMax={10}
-              value={inputState[key.name]}
-              onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
-              fullWidth
-              multiline={Boolean(key.multiline)}
-            />
-          )
-        }
-        {
-          state.specialFields && state.specialFields.map(CustomField =>
-            <CustomField />
-          )
+          state.fields.map((key, index) => {
+            if (key.type === 'text-field') {
+              return (<TextField
+                key={key.name}
+                autoFocus={index === 0}
+                variant='outlined'
+                margin='dense'
+                id={key.name}
+                label={key.name[0].toUpperCase() + key.name.substr(1)}
+                type='text'
+                rows={2}
+                rowsMax={10}
+                value={inputState[key.name]}
+                onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
+                fullWidth
+                multiline={Boolean(key.multiline)}
+              />)
+            } else if (key.type === 'select') {
+              return (<FormControl variant='outlined'>
+                <InputLabel ref={null} htmlFor='outlined-simple'>
+                  { key.label }
+                </InputLabel>
+                <Select
+                  inputProps={{
+                    name:key.label
+                  }}
+                  value={inputState[key.name]}
+                  onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
+                  input={<OutlinedInput labelWidth={null} name={key.label} id='outlined-simple' />}
+                >
+                  {
+                    key.values.map(value => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>)
+            }
+          })
         }
       </DialogContent>
       <DialogActions>

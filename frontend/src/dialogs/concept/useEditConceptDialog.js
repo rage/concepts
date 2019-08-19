@@ -1,6 +1,5 @@
 import { useMutation } from 'react-apollo-hooks'
 
-import TagSelector from './TagSelector'
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
@@ -22,17 +21,29 @@ const useEditConceptDialog = () => {
     actionText: 'Save',
     title: 'Edit concept',
     fields: [{
+      type: 'text-field',
       name: 'name',
       required: true,
       defaultValue: name
     }, {
+      type: 'text-field',
       name: 'description',
       multiline: true,
       defaultValue: description
-    }],
-    specialFields: [
-      TagSelector
-    ]
+    }, {
+      type: 'select',
+      name: 'bloomsTag',
+      label: 'Set blooms tag',
+      defaultValue: 'REMEMBER',
+      values: [
+        'REMEMBER',
+        'UNDERSTAND',
+        'APPLY',
+        'ANALYZE',
+        'EVALUATE',
+        'CREATE'
+      ]
+    }]
   })
 }
 

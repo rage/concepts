@@ -7,6 +7,7 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
     name
     description
     official
+    bloomsTag
     courses {
           id
       }
@@ -38,6 +39,7 @@ mutation createConcept($name: String!, $description:String!, $official:Boolean!,
     name
     description
     official
+    bloomsTag
     courses {
       id
     }

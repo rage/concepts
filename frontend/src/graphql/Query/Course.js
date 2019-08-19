@@ -19,6 +19,7 @@ query courseById($id: ID!) {
       name
       description
       official
+      bloomsTag
       courses {
         id
       }
