@@ -71,33 +71,7 @@ const CourseEditor = ({ workspaceId, courseInEdit }) => {
             :
             <Typography variant='h5'>{courseInEdit.name}</Typography>
           :
-          <div className={classes.input}>
-            <TextField
-              variant='outlined'
-              margin='dense'
-              id='courseName'
-              name='courseName'
-              label='Course name'
-              type='text'
-              value={input.courseName}
-              fullWidth
-              onChange={(e) => setInput({ ...input, [e.target.name]: e.target.value })}
-            />
-            <Button
-              color='primary'
-              variant='contained'
-              onClick={() => setEditingCourse(false)}
-            >
-              Create
-            </Button>
-            <Button
-              color='primary'
-              variant='contained'
-              onClick={() => setEditingCourse(false)}
-            >
-              Close
-            </Button>
-          </div>
+          <CreateCourse closeForm={() => setEditingCourse(false)} />
       }
       {
         courseInEdit ?
@@ -166,6 +140,41 @@ const CourseEditor = ({ workspaceId, courseInEdit }) => {
           : null
       }
     </Paper>
+  )
+}
+
+const CreateCourse = ({ closeForm }) => {
+  const [name, setName] = useState('')
+  return (
+    <div>
+      <TextField
+        style={{ marginBottom: '8px' }}
+        variant='outlined'
+        margin='dense'
+        id='courseName'
+        name='courseName'
+        label='Course name'
+        type='text'
+        value={name}
+        fullWidth
+        onChange={(e) => setName(e.target.value)}
+      />
+      <Button
+        style={{ marginRight: '10px' }}
+        color='primary'
+        variant='contained'
+        onClick={closeForm}
+      >
+        Create
+      </Button>
+      <Button
+        color='primary'
+        variant='contained'
+        onClick={closeForm}
+      >
+        Close
+      </Button>
+    </div>
   )
 }
 
