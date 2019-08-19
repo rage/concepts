@@ -130,15 +130,10 @@ const Dialog = ({ contextRef }) => {
                 id='standard-select-currency'
                 select
                 fullWidth
-                label='Select'
+                variant='outlined'
+                label={key.label}
                 value={inputState[key.name]}
                 onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
-                SelectProps={{
-                  MenuProps: {
-
-                  }
-                }}
-                helperText={key.label}
                 margin='normal'
               >
                 {
