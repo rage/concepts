@@ -1,14 +1,13 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 import { Typography, CircularProgress, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
-import { DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE } from '../../graphql/Mutation'
 import UserWorkspaceList from './UserWorkspaceList'
-import TemplateList from './TemplateList'
 import { useShareDialog } from '../../dialogs/sharing'
 import NotFoundView from '../error/NotFoundView'
+import TemplateList from './TemplateList'
 import MergeList from './MergeList'
 
 const useStyles = makeStyles(() => ({
@@ -63,20 +62,6 @@ const ProjectView = ({ projectId }) => {
     variables: { id: projectId }
   })
 
-  const deleteTemplateWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
-  })
-
-  const setActiveTemplate = useMutation(SET_ACTIVE_TEMPLATE, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
-  })
-
   if (projectQuery.loading) {
     return (
       <div style={{ textAlign: 'center' }}>
@@ -105,8 +90,7 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           templateWorkspaces={projectQuery.data.projectById.templates}
-          deleteTemplateWorkspace={deleteTemplateWorkspace}
-          setActiveTemplate={setActiveTemplate}
+          urlPrefix={`/projects/${projectId}/templates`}
         />
       </div>
       <div className={classes.merges}>
@@ -114,6 +98,7 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           mergeWorkspaces={projectQuery.data.projectById.merges}
+          urlPrefix={`/projects/${projectId}/merges`}
         />
       </div>
       <div className={classes.userWorkspaces}>
@@ -121,6 +106,7 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           userWorkspaces={projectQuery.data.projectById.workspaces}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
+          urlPrefix={`/projects/${projectId}/workspaces`}
         />
       </div>
     </div>
