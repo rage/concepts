@@ -22,8 +22,9 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
   )
 
   return <BaseWorkspaceList type={TYPE_USER}
-    workspaces={userWorkspaces} urlPrefix={urlPrefix} activeTemplate={activeTemplate}
-    cardHeaderTitle={cardHeaderTitle} cardHeaderAction={cardHeaderAction}
+    workspaces={userWorkspaces} urlPrefix={urlPrefix} projectId={projectId}
+    activeTemplate={activeTemplate} cardHeaderTitle={cardHeaderTitle}
+    cardHeaderAction={cardHeaderAction}
   />
 }
 

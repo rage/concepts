@@ -35,9 +35,10 @@ const MergeList = ({ mergeWorkspaces, projectId, activeTemplate, urlPrefix }) =>
   )
 
   return <BaseWorkspaceList type={TYPE_MERGE}
-    workspaces={mergeWorkspaces} urlPrefix={urlPrefix} openEditDialog={openEditDialog}
-    openShareDialog={openShareDialog} deleteWorkspace={deleteWorkspace}
-    cardHeaderTitle={cardHeaderTitle} cardHeaderAction={cardHeaderAction}
+    workspaces={mergeWorkspaces} urlPrefix={urlPrefix} activeTemplate={activeTemplate}
+    projectId={projectId} openEditDialog={openEditDialog} openShareDialog={openShareDialog}
+    deleteWorkspace={deleteWorkspace} cardHeaderTitle={cardHeaderTitle}
+    cardHeaderAction={cardHeaderAction}
   />
 }
 

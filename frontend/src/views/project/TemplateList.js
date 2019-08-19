@@ -26,9 +26,9 @@ const TemplateList = ({ templateWorkspaces, projectId, activeTemplate, urlPrefix
   const cardHeaderTitle = 'Template workspaces'
 
   return <BaseWorkspaceList type={TYPE_TEMPLATE}
-    workspaces={templateWorkspaces} urlPrefix={urlPrefix} openEditDialog={openEditDialog}
-    openShareDialog={openShareDialog} openCreateDialog={openCreateDialog}
-    activeTemplate={activeTemplate} setActiveTemplate={setActiveTemplate}
+    workspaces={templateWorkspaces} urlPrefix={urlPrefix} activeTemplate={activeTemplate}
+    projectId={projectId} openEditDialog={openEditDialog} openShareDialog={openShareDialog}
+    openCreateDialog={openCreateDialog} setActiveTemplate={setActiveTemplate}
     deleteWorkspace={deleteWorkspace} cardHeaderTitle={cardHeaderTitle}
   />
 }
