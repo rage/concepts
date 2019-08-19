@@ -129,7 +129,7 @@ const Dialog = ({ contextRef }) => {
           )
         }
         {
-          state.specialFields.map(CustomField =>
+          state.specialFields && state.specialFields.map(CustomField =>
             <CustomField />
           )
         }

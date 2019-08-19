@@ -1,5 +1,6 @@
 import { useMutation } from 'react-apollo-hooks'
 
+import TagSelector from './TagSelector'
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
@@ -28,7 +29,10 @@ const useEditConceptDialog = () => {
       name: 'description',
       multiline: true,
       defaultValue: description
-    }]
+    }],
+    specialFields: [
+      TagSelector
+    ]
   })
 }
 
