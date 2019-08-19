@@ -131,6 +131,7 @@ const Dialog = ({ contextRef }) => {
                 select
                 fullWidth
                 variant='outlined'
+                style={{ width: '170px' }}
                 label={key.label}
                 value={inputState[key.name]}
                 onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
