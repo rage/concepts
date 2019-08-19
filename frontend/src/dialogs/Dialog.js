@@ -40,11 +40,14 @@ const Dialog = ({ contextRef }) => {
   const handleSubmit = (close) => {
     if (state.submitDisabled) return
     const variables = Object.fromEntries(state.fields
-      .map(key => [key.name, inputState[key.name].trim()]))
+      .map(key => [key.name, inputState[key.name] && inputState[key.name].trim()]))
     for (const key of state.fields) {
       if (variables[key.name] === '' && key.required) {
         window.alert(`${state.type} needs a ${key.name}!`)
         return
+      }
+      if (!variables[key.name] && key.nullable) {
+        variables[key.name] = null
       }
     }
     setSubmitDisabled(true)
@@ -135,6 +138,9 @@ const Dialog = ({ contextRef }) => {
                 onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
                 margin='normal'
               >
+                <MenuItem key={'null'} value={null}>
+                  None
+                </MenuItem>
                 {
                   key.values.map(value => (
                     <MenuItem key={value} value={value}>
