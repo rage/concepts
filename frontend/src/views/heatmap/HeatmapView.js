@@ -5,9 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'
 import { Paper, Typography, CircularProgress, Tooltip } from '@material-ui/core'
 
-import {
-  WORKSPACE_COURSES_AND_CONCEPTS
-} from '../../graphql/Query'
+import { WORKSPACE_COURSES_AND_CONCEPTS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 
 const cellDimension = {
@@ -64,12 +62,42 @@ const useStyles = makeStyles(theme => ({
     minWidth: `${cellDimension.width}px`,
     minHeight: '100%',
     boxShadow: '0 1px 0 0 black',
-    padding: '0 0 10px 0'
+    padding: '0 0 10px 0',
+    '& > div': {
+      width: '50px',
+      height: '160px',
+      '& > div': {
+        transform: 'translate(-61px, 61px) rotate(-90deg)',
+        width: '170px',
+        maxHeight: '50px',
+        paddingLeft: '5px',
+        '& > div': {
+          overflowWrap: 'break-word',
+          hyphens: 'auto',
+          maxWidth: '14ch',
+          maxHeight: '38px',
+          overflow: 'hidden',
+          textAlign: 'center',
+          textOverflow: 'ellipsis',
+          fontWeight: 'normal'
+        }
+      }
+    }
   },
   blankHeaderCell: {
     boxShadow: '1px 1px 0 0 black',
     minWidth: '150px',
-    minHeight: '150px'
+    minHeight: '150px',
+    '& > div.prerequisite': {
+      position: 'absolute',
+      transform: 'translate(34px, 24px) rotate(-90deg)',
+      right: '0'
+    },
+    '& > div.target': {
+      position: 'absolute',
+      bottom: '4px',
+      left: '4px'
+    }
   },
   headerText: {
     minWidth: '100%',
@@ -114,16 +142,8 @@ const BlankHeaderCell = () => {
 
   return (
     <th className={classes.blankHeaderCell}>
-      <div style={{
-        position: 'absolute',
-        transform: 'translate(34px, 24px) rotate(-90deg)',
-        right: '0'
-      }}>Prerequisite</div>
-      <div style={{
-        position: 'absolute',
-        bottom: '4px',
-        left: '4px'
-      }}>Target</div>
+      <div className='prerequisite'>Prerequisite</div>
+      <div className='target'>Target</div>
     </th>
   )
 }
@@ -133,27 +153,9 @@ const HeaderCell = ({ title }) => {
 
   return (
     <th className={classes.headerCell}>
-      <div style={{
-        width: '50px',
-        height: '160px'
-      }}>
-
-        <div style={{
-          transform: 'translate(-61px, 61px) rotate(-90deg)',
-          width: '170px',
-          maxHeight: '50px',
-          paddingLeft: '5px'
-        }}>
-          <div style={{
-            overflowWrap: 'break-word',
-            hyphens: 'auto',
-            maxWidth: '14ch',
-            maxHeight: '38px',
-            overflow: 'hidden',
-            textAlign: 'center',
-            textOverflow: 'ellipsis',
-            fontWeight: 'normal'
-          }}>
+      <div>
+        <div>
+          <div>
             {title}
           </div>
         </div>
@@ -172,9 +174,9 @@ const TableCell = withRouter(({
       .filter(conceptLink => conceptLink.from.courses
         .find(course => course.id === toCourse.id)
       ).length
-    ).reduce((a, b) => a + b, 0)
+    ).reduce(sum, 0)
 
-  const onlyUnique = (v, i, a) => a.indexOf(v) === i
+  const onlyUnique = (item, index, arr) => arr.indexOf(item) === index
 
   const concepts = fromCourse.concepts
     .flatMap(concept => concept.linksToConcept
@@ -185,7 +187,7 @@ const TableCell = withRouter(({
     .filter(onlyUnique)
 
   const mapToGrad = (amount) => {
-    const colorStrength = ['#fffff', ...Object.values(pink).slice(0, 9)]
+    const colorStrength = ['#ebedf0', ...Object.values(pink).slice(0, 9)]
     const val = (8 / maxGradVal) * (amount)
     return colorStrength[Math.ceil(val)]
   }
@@ -222,7 +224,6 @@ const TableCell = withRouter(({
           onClick={navigateToMapper(toCourse.id)}
         />
       }
-
     </td>
   )
 })

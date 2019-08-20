@@ -1,17 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
+import Ajv from 'ajv'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Container, TextField, CircularProgress, Card, CardHeader, CardContent,
-  Button, FormControl, InputLabel, Select, OutlinedInput, MenuItem
+  Container, TextField, CircularProgress, Card, CardHeader, CardContent, Button, FormControl,
+  InputLabel, Select, OutlinedInput, MenuItem
 } from '@material-ui/core'
-import green from '@material-ui/core/colors/green'
-import Ajv from 'ajv'
+import { green } from '@material-ui/core/colors'
 
 import schema from '../../static/port.schema'
-import {
-  IMPORT_DATA
-} from '../../graphql/Mutation'
+import { IMPORT_DATA } from '../../graphql/Mutation'
 import {
   PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES
 } from '../../graphql/Query'
@@ -169,32 +167,21 @@ const PortView = () => {
     }
   }
 
-  const validateJSON = (jsonData) => {
-    if (!validateData(jsonData)) {
-      const error = validateData.errors[0]
-      let errorMessage
-      if (error.keyword === 'required') {
-        errorMessage = error['message']
-      } else if (error.keyword === 'additionalProperties') {
-        errorMessage = `Unknown property '${error.params.additionalProperty}'`
-      } else if (error.keyword === 'type') {
-        errorMessage = `${error.dataPath.replace('.', '')} ${error.message}`
-      } else if (error.keyword === 'oneOf') {
-        errorMessage = 'must have either workspace or workspaceId'
-      } else if (error.keyword === 'minLength' && error.params.limit === 1) {
-        errorMessage = `${error.dataPath.replace('.', '')} must not be empty if set`
-      } else {
-        errorMessage = `Unknown error: ${error['message']}`
-      }
-
-      messageDispatch({
-        type: 'setError',
-        data: errorMessage
-      })
-
-      return false
+  const getErrorMessage = error => {
+    switch (error.keyword) {
+    case 'required':
+      return error.message
+    case 'additionalProperties':
+      return `Unknown property '${error.params.additionalProperty}'`
+    case 'type':
+      return `${error.dataPath.replace('.', '')} ${error.message}`
+    case 'oneOf':
+      return 'must have either workspace or workspaceId'
+    case 'minLength':
+      return `${error.dataPath.replace('.', '')} must not be empty if set`
+    default:
+      return `Unknown error: ${error['message']}`
     }
-    return true
   }
 
   const openFile = (event) => {
@@ -256,7 +243,11 @@ const PortView = () => {
     }
 
     addStateDataToJSON(jsonData)
-    if (!validateJSON(jsonData)) {
+    if (!validateData(jsonData)) {
+      messageDispatch({
+        type: 'setError',
+        data: getErrorMessage(validateData.errors[0])
+      })
       return
     }
 
@@ -388,7 +379,6 @@ const PortView = () => {
             {
               selectState.workspaceId === ''
                 ? <TextField
-                  id='workspaceName'
                   name='workspaceName'
                   label={selectState.projectId === '' ? 'Workspace name' : 'Template name'}
                   className={classes.workspaceName}
@@ -401,7 +391,6 @@ const PortView = () => {
           </div>
 
           <TextField
-            id='json-input'
             label='JSON'
             placeholder={PLACEHOLDER}
             multiline
@@ -424,9 +413,7 @@ const PortView = () => {
             >
               {!loading ? buttonText : '\u00A0'}
             </Button>
-            {
-              loading && <CircularProgress size={24} className={classes.buttonProgress} />
-            }
+            {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
           </div>
         </CardContent>
       </Card>

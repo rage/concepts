@@ -11,7 +11,7 @@ import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
-import DividerWithText from './DividerWithText'
+import DividerWithText from '../../components/DividerWithText'
 
 const useStyles = makeStyles(theme => ({
   root: {
