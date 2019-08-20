@@ -13,6 +13,7 @@ import {
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
 import colors from './hexcolors'
+import NotFoundView from '../error/NotFoundView'
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -127,6 +128,7 @@ const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
   const [zoom, setZoom] = useState(20)
+  const [error, setError] = useState(null)
   const [legendFilter, setLegendFilter] = useState([])
   const state = useRef({
     network: null,
@@ -404,15 +406,23 @@ const GraphView = ({ workspaceId }) => {
 
   useEffect(() => {
     (async () => {
-      const response = await client.query({
-        query: WORKSPACE_DATA_FOR_GRAPH,
-        variables: {
-          id: workspaceId
-        }
-      })
-      drawConceptGraph(response.data)
+      try {
+        const response = await client.query({
+          query: WORKSPACE_DATA_FOR_GRAPH,
+          variables: {
+            id: workspaceId
+          }
+        })
+        drawConceptGraph(response.data)
+      } catch (err) {
+        setError(err)
+      }
     })()
   }, [])
+
+  if (error) {
+    return <NotFoundView message='Workspace not found' />
+  }
 
   return <div className={classes.root}>
     <div className={classes.graph} ref={graphRef}>
