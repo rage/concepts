@@ -3,7 +3,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
-
+import TaxonomyTags from './TaxonomyTags'
 const useEditConceptDialog = () => {
   const { openDialog } = useDialog()
 
@@ -36,14 +36,7 @@ const useEditConceptDialog = () => {
       label: "Select Bloom's tags",
       nullable: true,
       defaultValue: tags[0].name,
-      values: [
-        'REMEMBER',
-        'UNDERSTAND',
-        'APPLY',
-        'ANALYZE',
-        'EVALUATE',
-        'CREATE'
-      ]
+      values: TaxonomyTags
     }]
   })
 }

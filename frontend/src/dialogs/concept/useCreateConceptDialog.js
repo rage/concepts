@@ -4,7 +4,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { useDialog } from '../DialogProvider'
 import cache from '../../apollo/update'
-
+import TaxonomyTags from './TaxonomyTags'
 const useCreateConceptDialog = workspaceId => {
   const { openDialog } = useDialog()
 
@@ -35,14 +35,7 @@ const useCreateConceptDialog = workspaceId => {
       nullable: true,
       name: 'tags',
       label: "Select Bloom's tags",
-      values: [
-        'REMEMBER',
-        'UNDERSTAND',
-        'APPLY',
-        'ANALYZE',
-        'EVALUATE',
-        'CREATE'
-      ]
+      values: TaxonomyTags
     }]
   })
 }
