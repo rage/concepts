@@ -79,7 +79,7 @@ const Concept = ({
   const [, messageDispatch] = useMessageStateValue()
   const [{ loggedIn }] = useLoginStateValue()
 
-  const openEditConceptDialog = useEditConceptDialog(workspaceId)
+  const openEditConceptDialog = useEditConceptDialog()
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
