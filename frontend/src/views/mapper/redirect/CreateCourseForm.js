@@ -6,8 +6,8 @@ import {
   Container, Button, TextField, Typography, FormHelperText
 } from '@material-ui/core'
 
-import { CREATE_COURSE } from '../../graphql/Mutation'
-import cache from '../../apollo/update'
+import { CREATE_COURSE } from '../../../graphql/Mutation'
+import cache from '../../../apollo/update'
 
 const styles = theme => ({
   paper: {
@@ -30,7 +30,7 @@ const styles = theme => ({
   }
 })
 
-const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
+const CreateCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
 
@@ -122,4 +122,4 @@ const WorkspaceDefaultCourseForm = ({ classes, workspaceId, history, urlPrefix }
   )
 }
 
-export default withRouter(withStyles(styles)(WorkspaceDefaultCourseForm))
+export default withRouter(withStyles(styles)(CreateCourseForm))

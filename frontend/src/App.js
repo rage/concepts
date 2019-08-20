@@ -9,8 +9,8 @@ import PrivateRoute from './components/PrivateRoute'
 import CourseMapperView from './views/mapper/CourseMapperView'
 import PortView from './views/porting/PortView'
 import HomeView from './views/home/HomeView'
-import WorkspaceView from './views/workspace/WorkspaceView'
-import WorkspaceManagementView from './views/workspace/management/WorkspaceManagementView'
+import MapperRedirectView from './views/mapper/redirect/MapperRedirectView'
+import WorkspaceManagementView from './views/workspace/WorkspaceManagementView'
 import JoinView from './views/join/JoinView'
 import HeatmapView from './views/heatmap/HeatmapView'
 import LoginView from './views/login/LoginView'
@@ -43,7 +43,7 @@ const workspaceRouter = (prefix) => <>
   <Route
     exact path={`${prefix}/:wid/mapper`}
     render={({ match, location }) =>
-      <WorkspaceView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
+      <MapperRedirectView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
     }
   />
   <Route

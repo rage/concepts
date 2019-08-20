@@ -20,11 +20,14 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(1)
+  },
+  textfield: {
+    margin: theme.spacing(1)
   }
 }))
 
 const CourseList = ({
-  courses, setFocusedCourse, focusedCourseId, createCourse, updateCourse, deleteCourse
+  courses, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(new Set())
@@ -44,7 +47,7 @@ const CourseList = ({
             className={course.id === focusedCourseId ? classes.listItemActive : null}
             button={!editing.has(course.id)}
             key={course.id}
-            onClick={() => !editing.has(course.id) && setFocusedCourse(course)}
+            onClick={() => !editing.has(course.id) && setFocusedCourseId(course.id)}
           >
             {editing.has(course.id) ? <>
               <CreateCourse
@@ -105,7 +108,7 @@ const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
   return (
     <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
-        style={{ marginBottom: '8px' }}
+        className={classes.textfield}
         variant='outlined'
         margin='dense'
         name='courseName'

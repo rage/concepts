@@ -213,23 +213,28 @@ const NavBar = ({ location }) => {
     }
   })
 
-  const bcLoading = <div style={{ display: 'flex' }}>
+  const breadcrumbLoadingSpinner = <div style={{ display: 'flex' }}>
     <CircularProgress color='inherit' size={24} />
   </div>
   const getBreadcrumb = type => path.find(p => p.type === type)
 
   if (projectQuery.data) {
     getBreadcrumb('project').name =
-      projectQuery.loading ? bcLoading : `Project: ${projectQuery.data.projectById.name}`
+      projectQuery.loading ? breadcrumbLoadingSpinner :
+        projectQuery.error ? 'Project not found' : `Project: ${projectQuery.data.projectById.name}`
   }
   if (workspaceQuery.data) {
     const ws = getBreadcrumb('workspace')
-    ws.name = workspaceQuery.loading ? bcLoading
-      : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
+    ws.name = workspaceQuery.loading
+      ? breadcrumbLoadingSpinner
+      : workspaceQuery.error
+        ? `${ws.name} not found`
+        : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
   }
   if (courseQuery.data) {
     getBreadcrumb('course').name =
-      courseQuery.loading ? bcLoading : `Course: ${courseQuery.data.courseById.name}`
+      courseQuery.loading ? breadcrumbLoadingSpinner :
+        courseQuery.error ? 'Course not found' : `Course: ${courseQuery.data.courseById.name}`
   }
 
   const classes = useStyles()

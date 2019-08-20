@@ -3,14 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography, CircularProgress, Paper } from '@material-ui/core'
 
-import { WORKSPACE_BY_ID } from '../../../graphql/Query'
-import NotFoundView from '../../error/NotFoundView'
-import { useMessageStateValue } from '../../../store'
+import { WORKSPACE_BY_ID } from '../../graphql/Query'
+import NotFoundView from '../error/NotFoundView'
+import { useMessageStateValue } from '../../store'
 import CourseList from './CourseList'
 import CourseEditor from './CourseEditor'
 import {
   CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
-} from '../../../graphql/Mutation'
+} from '../../graphql/Mutation'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -66,7 +66,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
 
   const [, messageDispatch] = useMessageStateValue()
 
-  const [focusedCourse, setFocusedCourse] = useState(null)
+  const [focusedCourseId, setFocusedCourseId] = useState(null)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -91,7 +91,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       </div>
     )
   } else if (workspaceQuery.error) {
-    return <NotFoundView message='Project not found' />
+    return <NotFoundView message='Workspace not found' />
   }
 
   const e = err => messageDispatch({
@@ -99,20 +99,22 @@ const WorkspaceManagementView = ({ workspaceId }) => {
     data: err.message
   })
 
-  if (focusedCourse && !workspaceQuery.data.workspaceById.courses.find(c => c.id === focusedCourse.id)) {
-    setFocusedCourse(null)
+  const workspace = workspaceQuery.data.workspaceById
+  const focusedCourse = focusedCourseId && workspace.courses.find(c => c.id === focusedCourseId)
+  if (focusedCourseId && !focusedCourse) {
+    setFocusedCourseId(null)
   }
 
   return (
     <div className={classes.root}>
       <Typography className={classes.header} variant='h4'>
-        Workspace: {workspaceQuery.data.workspaceById.name}
+        Workspace: {workspace.name}
       </Typography>
       <div className={classes.courses}>
         <CourseList
-          courses={workspaceQuery.data.workspaceById.courses}
-          setFocusedCourse={setFocusedCourse}
-          focusedCourseId={focusedCourse ? focusedCourse.id : null}
+          courses={workspace.courses}
+          setFocusedCourseId={setFocusedCourseId}
+          focusedCourseId={focusedCourseId}
           deleteCourse={id => deleteCourse({ variables: { id } }).catch(e)}
           updateCourse={(id, name) => updateCourse({ variables: { id, name } }).catch(e)}
           createCourse={name => createCourse({ variables: { name, workspaceId } }).catch(e)}

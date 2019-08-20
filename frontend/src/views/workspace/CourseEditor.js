@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(1)
+  },
+  textfield: {
+    margin: theme.spacing(1)
   }
 }))
 
@@ -102,6 +105,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
   return (
     <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
+        className={classes.textfield}
         variant='outlined'
         margin='dense'
         name='name'
@@ -113,7 +117,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         onChange={onChange}
       />
       <TextField
-        style={{ marginBottom: '8px' }}
+        className={classes.textfield}
         variant='outlined'
         margin='dense'
         name='description'
