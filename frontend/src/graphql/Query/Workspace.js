@@ -74,6 +74,11 @@ query workspaceById($id: ID!) {
     courses {
       id
       name
+      concepts {
+        id
+        name
+        description
+      }
     }
     tokens {
       id

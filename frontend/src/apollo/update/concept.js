@@ -1,8 +1,7 @@
-import {
-  COURSE_PREREQ_FRAGMENT
-} from '../../graphql/Query'
+import { COURSE_PREREQ_FRAGMENT, WORKSPACE_BY_ID } from '../../graphql/Query'
+import client from '../apolloClient'
 
-const createConcept = (store, response) => {
+const createConceptUpdate = (store, response) => {
   try {
     const addedConcept = response.data.createConcept
     const course = store.readFragment({
@@ -38,6 +37,24 @@ const deleteConceptUpdate = (store, response) => {
   } catch (error) { }
 }
 
+const deleteConceptFromByIdUpdate = (store, response, workspaceId) => {
+  try {
+    const dataInStore = store.readQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId }
+    })
+    const deletedConcept = response.data.deleteConcept
+    const courseId = deletedConcept.courseId
+    const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
+    course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+    client.writeQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId },
+      data: dataInStore
+    })
+  } catch (e) {}
+}
+
 const updateConceptUpdate = (store, response) => {
   try {
     const updatedConcept = response.data.updateConcept
@@ -58,6 +75,7 @@ const updateConceptUpdate = (store, response) => {
 
 export {
   deleteConceptUpdate,
+  deleteConceptFromByIdUpdate,
   updateConceptUpdate,
-  createConcept
+  createConceptUpdate
 }
