@@ -4,7 +4,7 @@ import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 
-const useEditConceptDialog = () => {
+const useEditConceptDialog = workspaceId => {
   const { openDialog } = useDialog()
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {

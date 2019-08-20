@@ -1,8 +1,6 @@
-import {
-  COURSE_PREREQ_FRAGMENT
-} from '../../graphql/Query'
+import { COURSE_PREREQ_FRAGMENT } from '../../graphql/Query'
 
-const createConcept = (store, response) => {
+const createConceptUpdate = (store, response) => {
   try {
     const addedConcept = response.data.createConcept
     const course = store.readFragment({
@@ -59,5 +57,5 @@ const updateConceptUpdate = (store, response) => {
 export {
   deleteConceptUpdate,
   updateConceptUpdate,
-  createConcept
+  createConceptUpdate
 }

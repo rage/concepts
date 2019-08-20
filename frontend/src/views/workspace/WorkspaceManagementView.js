@@ -11,6 +11,7 @@ import CourseEditor from './CourseEditor'
 import {
   CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
 } from '../../graphql/Mutation'
+import cache from '../../apollo/update'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -72,17 +73,12 @@ const WorkspaceManagementView = ({ workspaceId }) => {
     variables: { id: workspaceId }
   })
 
-  const refetchQueries = [{
-    query: WORKSPACE_BY_ID,
-    variables: { id: workspaceId }
-  }]
-
-  const createCourse = useMutation(CREATE_COURSE, { refetchQueries })
-  const updateCourse = useMutation(UPDATE_COURSE, { refetchQueries })
-  const deleteCourse = useMutation(DELETE_COURSE, { refetchQueries })
-  const createConcept = useMutation(CREATE_CONCEPT, { refetchQueries })
-  const updateConcept = useMutation(UPDATE_CONCEPT, { refetchQueries })
-  const deleteConcept = useMutation(DELETE_CONCEPT, { refetchQueries })
+  const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
+  const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
+  const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
+  const createConcept = useMutation(CREATE_CONCEPT, { update: cache.createConceptUpdate })
+  const updateConcept = useMutation(UPDATE_CONCEPT, { update: cache.updateConceptUpdate })
+  const deleteConcept = useMutation(DELETE_CONCEPT, { update: cache.deleteConceptUpdate })
 
   if (workspaceQuery.loading) {
     return (
