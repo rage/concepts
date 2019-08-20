@@ -35,7 +35,7 @@ const useEditConceptDialog = () => {
       name: 'tags',
       label: 'Select Bloom\'s tags',
       nullable: true,
-      defaultValue: tags === null ? '' : tags,
+      defaultValue: tags[0].name,
       values: [
         'REMEMBER',
         'UNDERSTAND',
