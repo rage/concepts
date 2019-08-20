@@ -20,6 +20,18 @@ const blankState = () => ({
   type: ''
 })
 
+const OptionalForm = ({ enable, onSubmit, children }) => {
+  if (!enable) {
+    return children
+  }
+  return <form onSubmit={evt => {
+    evt.preventDefault()
+    return onSubmit(evt)
+  }}>
+    {children}
+  </form>
+}
+
 const Dialog = ({ contextRef }) => {
   const stateChange = useRef(-1)
   const [state, setState] = useState(blankState())
@@ -97,85 +109,81 @@ const Dialog = ({ contextRef }) => {
       ...data
     })
   }
+  const onChange = evt => setInputState({ ...inputState, [evt.target.name]: evt.target.value })
 
   const { CustomActions } = state
   return (
     <MuiDialog open={state.open} onClose={closeDialog}>
       <DialogTitle>{state.title}</DialogTitle>
-      <DialogContent>
-        {
-          state.content.map((contentText, i) =>
-            <DialogContentText key={i}>
-              {contentText}
-            </DialogContentText>
-          )
-        }
-        {
-          state.fields.map((key, index) => {
-            if (!key.type || key.type === 'textfield') {
-              return (<TextField
-                key={key.name}
-                autoFocus={index === 0}
-                variant='outlined'
-                margin='dense'
-                id={key.name}
-                label={key.name[0].toUpperCase() + key.name.substr(1)}
-                type='text'
-                rows={2}
-                rowsMax={10}
-                value={inputState[key.name]}
-                onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
-                fullWidth
-                multiline={Boolean(key.multiline)}
-              />)
-            } else if (key.type === 'select') {
-              return (<TextField
-                select
-                variant='outlined'
-                style={{ width: '170px' }}
-                label={key.label}
-                value={inputState[key.name]}
-                onChange={(e) => setInputState({ ...inputState, [key.name]: e.target.value })}
-                margin='normal'
-              >
-                <MenuItem key={'null'} value={null}>
-                  None
-                </MenuItem>
-                {
-                  key.values.map(value => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))
-                }
-              </TextField>)
-
-            }
-          })
-        }
-      </DialogContent>
-      <DialogActions>
-        {
-          CustomActions ?
-            <CustomActions
-              closeDialog={closeDialog} handleSubmit={handleSubmit}
-              submitDisabled={state.submitDisabled} {...state.customActionsProps}
-            />
-            :
-            <>
-              <Button onClick={closeDialog} color='primary'>
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSubmit}
-                disabled={state.submitDisabled}
-                color='primary'
-              >
-                {state.actionText}
-              </Button>
-            </>
-        }
-      </DialogActions>
+      <OptionalForm enable={state.fields.length > 0} onSubmit={handleSubmit}>
+        <DialogContent>
+          {
+            state.content.map((contentText, i) =>
+              <DialogContentText key={i}>
+                {contentText}
+              </DialogContentText>
+            )
+          }
+          {
+            state.fields.map((key, index) => {
+              if (!key.type || key.type === 'textfield') {
+                return <TextField
+                  key={key.name}
+                  autoFocus={index === 0}
+                  variant='outlined'
+                  margin='dense'
+                  name={key.name}
+                  label={key.name[0].toUpperCase() + key.name.substr(1)}
+                  type='text'
+                  rows={2}
+                  rowsMax={10}
+                  value={inputState[key.name]}
+                  onChange={onChange}
+                  fullWidth
+                  multiline={Boolean(key.multiline)}
+                />
+              } else if (key.type === 'select') {
+                return <TextField
+                  key={key.name}
+                  select
+                  variant='outlined'
+                  style={{ width: '170px' }}
+                  label={key.label}
+                  value={inputState[key.name]}
+                  name={key.name}
+                  onChange={onChange}
+                  margin='normal'
+                >
+                  <MenuItem key={'null'} value={null}>None</MenuItem>
+                  {key.values.map(value => <MenuItem key={value} value={value}>{value}</MenuItem>)}
+                </TextField>
+              }
+            })
+          }
+        </DialogContent>
+        <DialogActions>
+          {
+            CustomActions ?
+              <CustomActions
+                closeDialog={closeDialog} handleSubmit={handleSubmit}
+                submitDisabled={state.submitDisabled} {...state.customActionsProps}
+              />
+              :
+              <>
+                <Button onClick={closeDialog} color='primary'>
+                  Cancel
+                </Button>
+                <Button
+                  type='submit'
+                  disabled={state.submitDisabled}
+                  color='primary'
+                >
+                  {state.actionText}
+                </Button>
+              </>
+          }
+        </DialogActions>
+      </OptionalForm>
     </MuiDialog>
   )
 }

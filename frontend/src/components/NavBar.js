@@ -1,14 +1,9 @@
-import React, { useRef } from 'react'
+import React, { createContext, useContext, useRef, useState } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Breadcrumbs,
-  Link as MaterialLink,
-  CircularProgress
+  AppBar, Toolbar, Typography, Breadcrumbs, Link as MaterialLink, CircularProgress, LinearProgress
 } from '@material-ui/core'
 import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
@@ -47,6 +42,11 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
       courseId: path[1],
       link: `${prefix}/mapper/${path[1]}`
     }]
+  case 'manager':
+    return [{
+      name: 'Manager',
+      link: `${prefix}/manager`
+    }]
   case 'heatmap':
     return [{
       name: 'Heatmap',
@@ -82,6 +82,14 @@ const parseProjectPath = (projectId, path, prefix) => {
     return [{
       type: 'workspace',
       name: 'Template',
+      workspaceId: path[1],
+      link
+    }, ...parseWorkspacePath(path[1], path.slice(2), link)]
+  } case 'merges': {
+    const link = `${prefix}/merges/${path[1]}`
+    return [{
+      type: 'workspace',
+      name: 'Merge',
       workspaceId: path[1],
       link
     }, ...parseWorkspacePath(path[1], path.slice(2), link)]
@@ -136,11 +144,30 @@ const parseLocation = location => ([
 
 const pathItemId = item => item.link || item.name
 
+export const LoadingContext = createContext(null)
+
+export const LoadingProvider = ({ children }) => {
+  const provider = useRef(null)
+  const setLoading = (...args) => provider.current(...args)
+  const setProvider = newProvider => provider.current = newProvider
+  return (
+    <LoadingContext.Provider value={{ setLoading, setProvider }}>
+      {children}
+    </LoadingContext.Provider>
+  )
+}
+
+export const useLoadingBar = () => useContext(LoadingContext)
+
 const NavBar = ({ location }) => {
   const [{ loggedIn, user }] = useLoginStateValue()
+  const [loading, setLoading] = useState(null)
   const prevLocation = useRef(location.pathname)
   const prevPath = useRef([])
   const undo = useRef([])
+
+  const { setProvider } = useLoadingBar()
+  setProvider(setLoading)
 
   const updateHistory = newPath => {
     const newUndo = [...prevPath.current, ...undo.current]
@@ -186,23 +213,28 @@ const NavBar = ({ location }) => {
     }
   })
 
-  const loading = <div style={{ display: 'flex' }}>
+  const breadcrumbLoadingSpinner = <div style={{ display: 'flex' }}>
     <CircularProgress color='inherit' size={24} />
   </div>
   const getBreadcrumb = type => path.find(p => p.type === type)
 
   if (projectQuery.data) {
     getBreadcrumb('project').name =
-      projectQuery.loading ? loading : `Project: ${projectQuery.data.projectById.name}`
+      projectQuery.loading ? breadcrumbLoadingSpinner :
+        projectQuery.error ? 'Project not found' : `Project: ${projectQuery.data.projectById.name}`
   }
   if (workspaceQuery.data) {
     const ws = getBreadcrumb('workspace')
-    ws.name = workspaceQuery.loading ? loading
-      : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
+    ws.name = workspaceQuery.loading
+      ? breadcrumbLoadingSpinner
+      : workspaceQuery.error
+        ? `${ws.name} not found`
+        : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
   }
   if (courseQuery.data) {
     getBreadcrumb('course').name =
-      courseQuery.loading ? loading : `Course: ${courseQuery.data.courseById.name}`
+      courseQuery.loading ? breadcrumbLoadingSpinner :
+        courseQuery.error ? 'Course not found' : `Course: ${courseQuery.data.courseById.name}`
   }
 
   const classes = useStyles()
@@ -250,6 +282,7 @@ const NavBar = ({ location }) => {
           <AuthenticationIcon />
         </Toolbar>
       </AppBar>
+      {loading && <LinearProgress color='secondary' />}
     </div>
   )
 }

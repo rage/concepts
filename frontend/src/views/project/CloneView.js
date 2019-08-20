@@ -70,8 +70,8 @@ const CloneView = ({ history, projectId }) => {
     }]
   })
 
-  const handleNavigateMapper = (workspaceId) => {
-    history.push(`/projects/${projectId}/workspaces/${workspaceId}/mapper`)
+  const handleNavigateManager = (workspaceId) => {
+    history.push(`/projects/${projectId}/workspaces/${workspaceId}/manager`)
   }
 
   const handleCreate = async () => {
@@ -97,12 +97,6 @@ const CloneView = ({ history, projectId }) => {
     })
   }
 
-  const handleKey = (e) => {
-    if (e.key === 'Enter') {
-      handleCreate(e)
-    }
-  }
-
   if (peekTemplate.loading) {
     return (
       <div style={{ textAlign: 'center' }}>
@@ -121,33 +115,35 @@ const CloneView = ({ history, projectId }) => {
 
   return (
     <Container component='main' maxWidth='xs' cl>
-      <TextField
-        disabled={inputDisabled}
-        variant='outlined'
-        margin='normal'
-        required
-        fullWidth
-        id='name'
-        label='Workspace name'
-        name='name'
-        onChange={(e) => setName(e.target.value)}
-        value={name}
-        autoFocus
-        onKeyPress={handleKey}
-      />
-      <Button
-        fullWidth
-        className={classes.button}
-        variant='outlined'
-        color='primary'
-        onClick={handleCreate}
-        disabled={!peekTemplate.data.limitedProjectById.activeTemplateId ||
-            loading ||
-            (workspace.data.workspaceBySourceTemplate &&
-              workspace.data.workspaceBySourceTemplate.id)}
-      >
-          Create workspace
-      </Button>
+      <form onSubmit={evt => {evt.preventDefault(); return handleCreate()}}>
+        <TextField
+          disabled={inputDisabled}
+          variant='outlined'
+          margin='normal'
+          required
+          fullWidth
+          id='name'
+          label='Workspace name'
+          name='name'
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          autoFocus
+        />
+        <Button
+          fullWidth
+          className={classes.button}
+          variant='outlined'
+          color='primary'
+          type='submit'
+          onClick={handleCreate}
+          disabled={!peekTemplate.data.limitedProjectById.activeTemplateId ||
+              loading ||
+              (workspace.data.workspaceBySourceTemplate &&
+                workspace.data.workspaceBySourceTemplate.id)}
+        >
+            Create workspace
+        </Button>
+      </form>
       <Divider />
       {
         workspace.data.workspaceBySourceTemplate ?
@@ -155,7 +151,7 @@ const CloneView = ({ history, projectId }) => {
             <List className={classes.listRoot}>
               <ListItem
                 button key={workspace.data.workspaceBySourceTemplate.id}
-                onClick={() => handleNavigateMapper(
+                onClick={() => handleNavigateManager(
                   workspace.data.workspaceBySourceTemplate.id)}
               >
                 <ListItemText

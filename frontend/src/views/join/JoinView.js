@@ -42,7 +42,7 @@ const JoinView = ({ history, token }) => {
         history.push(`/projects/${resp.data.useToken.project.id}/clone`)
       } else {
         history.push(type === 'workspace'
-          ? `/workspaces/${resp.data.useToken.workspace.id}/mapper`
+          ? `/workspaces/${resp.data.useToken.workspace.id}/manager`
           : `/projects/${resp.data.useToken.project.id}`)
       }
     }).catch(() => {
@@ -81,7 +81,7 @@ const JoinView = ({ history, token }) => {
   const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
   if (participant) {
     const path = type === 'workspace'
-      ? `/workspaces/${peek.data.peekToken.id}/mapper`
+      ? `/workspaces/${peek.data.peekToken.id}/manager`
       : (privilege === 'clone'
         ? `/projects/${peek.data.peekToken.id}/clone`
         : `/projects/${peek.data.peekToken.id}`)

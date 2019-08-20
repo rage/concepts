@@ -9,7 +9,8 @@ import PrivateRoute from './components/PrivateRoute'
 import CourseMapperView from './views/mapper/CourseMapperView'
 import PortView from './views/porting/PortView'
 import HomeView from './views/home/HomeView'
-import WorkspaceView from './views/workspace/WorkspaceView'
+import MapperRedirectView from './views/mapper/redirect/MapperRedirectView'
+import WorkspaceManagementView from './views/workspace/WorkspaceManagementView'
 import JoinView from './views/join/JoinView'
 import HeatmapView from './views/heatmap/HeatmapView'
 import LoginView from './views/login/LoginView'
@@ -33,14 +34,16 @@ const useStyles = makeStyles(() => ({
 
 const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid`} render={({ match }) =>
-    <Redirect to={`${prefix}/${match.params.wid}/mapper`} />} />
+    <Redirect to={`${prefix}/${match.params.wid}/manager`} />} />
   <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
     <HeatmapView urlPrefix={prefix} workspaceId={match.params.wid} />
   )} />
+  <Route exact path={`${prefix}/:wid/manager`} render={({ match }) =>
+    <WorkspaceManagementView urlPrefix={prefix} workspaceId={match.params.wid} />} />
   <Route
     exact path={`${prefix}/:wid/mapper`}
     render={({ match, location }) =>
-      <WorkspaceView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
+      <MapperRedirectView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
     }
   />
   <Route
@@ -53,7 +56,7 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
     <CytoGraphView workspaceId={wid} />} />
   <Route
-    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap)/:cid?`}
+    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap|manager)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>
       <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
     }
@@ -84,6 +87,9 @@ const App = () => {
         render={({ match: { url } }) => workspaceRouter(url)} />
       <Route
         path='/projects/:id/templates'
+        render={({ match: { url } }) => workspaceRouter(url)} />
+      <Route
+        path='/projects/:id/merges'
         render={({ match: { url } }) => workspaceRouter(url)} />
       <PrivateRoute
         exact path='/projects/:id' redirectPath='/login' condition={loggedIn}

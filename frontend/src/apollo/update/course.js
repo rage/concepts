@@ -1,7 +1,5 @@
 import client from '../apolloClient'
-import {
-  WORKSPACE_BY_ID, COURSE_PREREQUISITES
-} from '../../graphql/Query'
+import { WORKSPACE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
 
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)

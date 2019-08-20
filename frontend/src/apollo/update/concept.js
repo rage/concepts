@@ -1,8 +1,10 @@
-import {
-  COURSE_PREREQ_FRAGMENT
-} from '../../graphql/Query'
+import { COURSE_PREREQ_FRAGMENT, WORKSPACE_BY_ID } from '../../graphql/Query'
+import client from '../apolloClient'
 
-const createConcept = (store, response) => {
+const includedIn = (set, object) =>
+  set.map(p => p.id).includes(object.id)
+
+const createConceptUpdate = (store, response) => {
   try {
     const addedConcept = response.data.createConcept
     const course = store.readFragment({
@@ -18,6 +20,26 @@ const createConcept = (store, response) => {
       }
     })
   } catch (error) { }
+}
+
+const createConceptFromByIdUpdate = (store, response, workspaceId) => {
+  try {
+    const dataInStore = store.readQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId }
+    })
+    const createdConcept = response.data.createConcept
+    const courseId = createdConcept.courses[0].id
+    const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
+    if (!includedIn(course.concepts, createdConcept)) {
+      course.concepts = course.concepts.concat(createdConcept)
+      client.writeQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId },
+        data: dataInStore
+      })
+    }
+  } catch (e) { }
 }
 
 const deleteConceptUpdate = (store, response) => {
@@ -36,6 +58,24 @@ const deleteConceptUpdate = (store, response) => {
       }
     })
   } catch (error) { }
+}
+
+const deleteConceptFromByIdUpdate = (store, response, workspaceId) => {
+  try {
+    const dataInStore = store.readQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId }
+    })
+    const deletedConcept = response.data.deleteConcept
+    const courseId = deletedConcept.courseId
+    const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
+    course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+    client.writeQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId },
+      data: dataInStore
+    })
+  } catch (e) { }
 }
 
 const updateConceptUpdate = (store, response) => {
@@ -58,6 +98,8 @@ const updateConceptUpdate = (store, response) => {
 
 export {
   deleteConceptUpdate,
+  deleteConceptFromByIdUpdate,
   updateConceptUpdate,
-  createConcept
+  createConceptUpdate,
+  createConceptFromByIdUpdate
 }

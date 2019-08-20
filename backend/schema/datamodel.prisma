@@ -31,6 +31,7 @@ type Project {
   workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
   activeTemplate: Workspace @relation(link: INLINE, name:"Template")
   templates: [Workspace!]! @relation(name:"Templates")
+  merges: [Workspace!]! @relation(name:"Merges")
   participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject", onDelete: CASCADE)
   tokens: [ProjectToken!]! @relation(name: "ProjectAccessToken", onDelete: CASCADE)
 }
@@ -40,6 +41,7 @@ type Workspace {
   name: String!
   sourceProject: Project @relation(name: "UserWorkspaces")
   sourceTemplate: Workspace @relation(name: "TemplateClones")
+  asMerge: Project @relation(name:"Merges")
   asTemplate: Project @relation(name:"Templates")
   clones: [Workspace!]! @relation(name: "TemplateClones")
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
