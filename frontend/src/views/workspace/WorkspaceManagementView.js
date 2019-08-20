@@ -78,7 +78,12 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
   const createConcept = useMutation(CREATE_CONCEPT, { update: cache.createConceptUpdate })
   const updateConcept = useMutation(UPDATE_CONCEPT, { update: cache.updateConceptUpdate })
-  const deleteConcept = useMutation(DELETE_CONCEPT, { update: cache.deleteConceptUpdate })
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: (store, response) => {
+      cache.deleteConceptUpdate(store, response)
+      cache.deleteConceptFromByIdUpdate(store, response, workspaceId)
+    }
+  })
 
   if (workspaceQuery.loading) {
     return (
