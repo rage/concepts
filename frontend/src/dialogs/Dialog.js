@@ -152,7 +152,7 @@ const Dialog = ({ contextRef }) => {
                   key={key.name}
                   select
                   variant='outlined'
-                  style={{ width: '170px' }}
+                  style={{ width: '180px' }}
                   label={key.label}
                   value={inputState[key.name]}
                   name={key.name}
