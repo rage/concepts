@@ -57,7 +57,7 @@ const sha1digest = (...vars) => {
     sha1.update(item)
   }
   // the replaces make it urlsafe base64 (https://tools.ietf.org/html/rfc4648)
-  return sha1.digest('base64').replace('/', '_').replace('+', '-')
+  return sha1.digest('base64').replace(/\//g, '_').replace(/\+/g, '-')
 }
 
 const MergeMutations = {
@@ -76,7 +76,7 @@ const MergeMutations = {
     }
 
     const seed = makeSecret(32)
-    const hash = (...vars) => sha1digest(seed, ...vars).substr(0, 25)
+    const hash = (...vars) => `b${sha1digest(seed, ...vars).substr(0, 24)}`
 
     const mergeLinks = (links, merged) => {
       for (const link of links) {
