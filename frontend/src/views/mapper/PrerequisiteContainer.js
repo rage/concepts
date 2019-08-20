@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Course from './Course'
 import Masonry from './Masonry'
 import { useInfoBox } from '../../components/InfoBox'
-import DividerWithText from './DividerWithText'
+import DividerWithText from '../../components/DividerWithText'
 
 const useStyles = makeStyles({
   root: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   }
 })
 
-const CourseContainer = ({
+const PrerequisiteContainer = ({
   courseTrayOpen,
   courseLinks,
   courses,
@@ -73,4 +73,4 @@ const CourseContainer = ({
   </>
 }
 
-export default CourseContainer
+export default PrerequisiteContainer

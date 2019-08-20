@@ -10,7 +10,7 @@ import {
   WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES
 } from '../../graphql/Query'
 import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
-import CourseContainer from './CourseContainer'
+import PrerequisiteContainer from './PrerequisiteContainer'
 import CourseTray from './CourseTray'
 import ActiveCourse from './ActiveCourse'
 import { useLoginStateValue } from '../../store'
@@ -18,7 +18,7 @@ import cache from '../../apollo/update'
 import { ConceptLink } from './concept'
 import { useInfoBox } from '../../components/InfoBox'
 import NotFoundView from '../error/NotFoundView'
-import DividerWithText from './DividerWithText'
+import DividerWithText from '../../components/DividerWithText'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -179,7 +179,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             courses={workspaceQuery.data.workspaceById.courses}
             workspaceId={workspaceQuery.data.workspaceById.id}
           />
-          <CourseContainer
+          <PrerequisiteContainer
             courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
             courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
             courseId={courseQuery.data.courseById.id}
