@@ -60,27 +60,27 @@ const CourseList = ({
                 action='Save'
               />
             </> : <>
-              <ListItemText primary={
-                <Typography variant='h6'>{course.name}</Typography>
-              } />
-              <ListItemSecondaryAction>
-                <IconButton aria-label='Delete' onClick={evt => {
-                  evt.stopPropagation()
-                  const msg = `Are you sure you want to delete the course ${course.name}?`
-                  if (window.confirm(msg)) {
-                    deleteCourse(course.id)
-                  }
-                }}>
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton aria-label='Edit' onClick={evt => {
-                  evt.stopPropagation()
-                  startEditing(course.id)
-                }}>
-                  <EditIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </>}
+                <ListItemText primary={
+                  <Typography variant='h6'>{course.name}</Typography>
+                } />
+                <ListItemSecondaryAction>
+                  <IconButton aria-label='Delete' onClick={evt => {
+                    evt.stopPropagation()
+                    const msg = `Are you sure you want to delete the course ${course.name}?`
+                    if (window.confirm(msg)) {
+                      deleteCourse(course.id)
+                    }
+                  }}>
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton aria-label='Edit' onClick={evt => {
+                    evt.stopPropagation()
+                    startEditing(course.id)
+                  }}>
+                    <EditIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </>}
           </ListItem>
         ))
       }</List>
@@ -124,7 +124,7 @@ const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
         autoFocus={action !== 'Create'}
         onChange={evt => setName(evt.target.value)}
       />
-      <Button color='primary' variant='contained' type='submit' className={classes.button}>
+      <Button color='primary' variant='contained' disabled={!name} type='submit' className={classes.button}>
         {action}
       </Button>
       {cancel &&
