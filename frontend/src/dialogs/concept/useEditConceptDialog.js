@@ -34,7 +34,7 @@ const useEditConceptDialog = () => {
       type: 'select',
       name: 'tags',
       label: "Select Bloom's tags",
-      nullable: true,
+      isList: true,
       defaultValue: tags.length > 0 ? tags[0].name : '',
       values: TaxonomyTags
     }]

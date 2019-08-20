@@ -63,8 +63,8 @@ const Dialog = ({ contextRef }) => {
           'name': inputState[key.name]
         }
       }
-      if (!variables[key.name] && key.nullable) {
-        variables[key.name] = null
+      if (!variables[key.name] && key.isList) {
+        variables[key.name] = []
       }
     }
     setSubmitDisabled(true)
@@ -159,7 +159,7 @@ const Dialog = ({ contextRef }) => {
                   onChange={onChange}
                   margin='normal'
                 >
-                  <MenuItem key={'null'} value={null}>None</MenuItem>
+                  <MenuItem key={'null'} value={''}>None</MenuItem>
                   {key.values.map(value => <MenuItem key={value} value={value}>{value}</MenuItem>)}
                 </TextField>
               }
