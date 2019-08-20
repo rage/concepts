@@ -27,14 +27,24 @@ const ConceptMutations = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    
+
     const oldTags = await context.prisma.concept({ id }).tags()
 
-    const data = {tags}
-    
+    const tagsToDelete = oldTags
+      .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
+      .map(oldTag => ({ id: oldTag.id }))
+    const tagsToCreate = tags
+      .filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
+
+    const data = {
+      tags: {
+        delete: tagsToDelete,
+        create: tagsToCreate
+      }
+    }
+
     if (name !== undefined) data.name = name
     if (description !== undefined) data.description = description
-
 
     return await context.prisma.updateConcept({
       where: { id },
