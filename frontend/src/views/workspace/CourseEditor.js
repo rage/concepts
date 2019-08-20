@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
@@ -84,12 +84,14 @@ const initialState = {
 
 const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const nameRef = useRef()
   const [input, setInput] = useState({ ...initialState, ...defaultValues })
 
   const onSubmit = evt => {
     evt.preventDefault()
     submit(input)
     if (action === 'Create') {
+      nameRef.current.focus()
       setInput({ ...initialState })
     }
   }
@@ -113,6 +115,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         type='text'
         value={input.name}
         fullWidth
+        inputRef={nameRef}
         autoFocus={action !== 'Create'}
         onChange={onChange}
       />

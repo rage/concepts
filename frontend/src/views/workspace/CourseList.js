@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Card, CardHeader, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
@@ -91,12 +91,16 @@ const CourseList = ({
 
 const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const nameRef = useRef()
   const [name, setName] = useState(defaultName || '')
 
   const onSubmit = evt => {
     evt.preventDefault()
     submit(name)
-    setName('')
+    if (action === 'Create') {
+      nameRef.current.focus()
+      setName('')
+    }
   }
 
   const onKeyDown = evt => {
@@ -116,6 +120,7 @@ const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
         type='text'
         value={name}
         fullWidth
+        inputRef={nameRef}
         autoFocus={action !== 'Create'}
         onChange={evt => setName(evt.target.value)}
       />
