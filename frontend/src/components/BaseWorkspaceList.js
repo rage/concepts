@@ -7,8 +7,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
-  MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, RadioButtonChecked,
-  RadioButtonUnchecked
+  MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
+  RadioButtonChecked, RadioButtonUnchecked
 } from '@material-ui/icons'
 
 import { exportWorkspace } from './WorkspaceNavBar'
@@ -145,8 +145,12 @@ This will change which template is cloned by users.`)
     }
   }
 
-  const handleNavigateMapper = (workspaceId) => {
-    history.push(`${urlPrefix}/${workspaceId}/mapper`)
+  const handleNavigateManager = (workspaceId) => {
+    history.push(`${urlPrefix}/${workspaceId}/manager`)
+  }
+
+  const handleNavigateMapper = () => {
+    history.push(`${urlPrefix}/${menu.workspace.id}/mapper`)
   }
 
   const handleNavigateHeatmap = () => {
@@ -165,7 +169,7 @@ This will change which template is cloned by users.`)
             <ListItem
               className={activeTemplate && workspace.id === activeTemplate.id
                 ? classes.templateActive : ''}
-              button key={workspace.id} onClick={() => handleNavigateMapper(workspace.id)}
+              button key={workspace.id} onClick={() => handleNavigateManager(workspace.id)}
             >
               <ListItemText
                 primary={<Typography variant='h6'>{workspace.name}</Typography>}
@@ -183,6 +187,12 @@ This will change which template is cloned by users.`)
         }
       </List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
+        <MenuItem aria-label='Mapper' onClick={handleNavigateMapper}>
+          <ListItemIcon>
+            <ShuffleIcon />
+          </ListItemIcon>
+          Mapper
+        </MenuItem>
         <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
           <ListItemIcon>
             <GridOnIcon />
