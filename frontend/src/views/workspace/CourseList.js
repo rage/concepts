@@ -60,27 +60,27 @@ const CourseList = ({
                 action='Save'
               />
             </> : <>
-                <ListItemText primary={
-                  <Typography variant='h6'>{course.name}</Typography>
-                } />
-                <ListItemSecondaryAction>
-                  <IconButton aria-label='Delete' onClick={evt => {
-                    evt.stopPropagation()
-                    const msg = `Are you sure you want to delete the course ${course.name}?`
-                    if (window.confirm(msg)) {
-                      deleteCourse(course.id)
-                    }
-                  }}>
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton aria-label='Edit' onClick={evt => {
-                    evt.stopPropagation()
-                    startEditing(course.id)
-                  }}>
-                    <EditIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </>}
+              <ListItemText primary={
+                <Typography variant='h6'>{course.name}</Typography>
+              } />
+              <ListItemSecondaryAction>
+                <IconButton aria-label='Delete' onClick={evt => {
+                  evt.stopPropagation()
+                  const msg = `Are you sure you want to delete the course ${course.name}?`
+                  if (window.confirm(msg)) {
+                    deleteCourse(course.id)
+                  }
+                }}>
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton aria-label='Edit' onClick={evt => {
+                  evt.stopPropagation()
+                  startEditing(course.id)
+                }}>
+                  <EditIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </>}
           </ListItem>
         ))
       }</List>

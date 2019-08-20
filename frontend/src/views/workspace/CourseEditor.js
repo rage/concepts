@@ -50,23 +50,23 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
                 action='Save'
               />
             </> : <>
-                <ListItemText primary={
-                  <Typography variant='h6'>{concept.name}</Typography>
-                } />
-                <ListItemSecondaryAction>
-                  <IconButton aria-label='Delete' onClick={() => {
-                    const msg = `Are you sure you want to delete the concept ${concept.name}?`
-                    if (window.confirm(msg)) {
-                      deleteConcept(concept.id)
-                    }
-                  }}>
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton aria-label='Edit' onClick={() => startEditing(concept.id)}>
-                    <EditIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </>}
+              <ListItemText primary={
+                <Typography variant='h6'>{concept.name}</Typography>
+              } />
+              <ListItemSecondaryAction>
+                <IconButton aria-label='Delete' onClick={() => {
+                  const msg = `Are you sure you want to delete the concept ${concept.name}?`
+                  if (window.confirm(msg)) {
+                    deleteConcept(concept.id)
+                  }
+                }}>
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton aria-label='Edit' onClick={() => startEditing(concept.id)}>
+                  <EditIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </>}
           </ListItem>
         ))
       }</List>
