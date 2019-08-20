@@ -130,7 +130,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
-      <Button color='primary' variant='contained' type='submit' className={classes.button}>
+      <Button color='primary' variant='contained' disabled={!input.name} type='submit' className={classes.button}>
         {action}
       </Button>
       {cancel &&

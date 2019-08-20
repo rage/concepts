@@ -124,7 +124,7 @@ const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
         autoFocus={action !== 'Create'}
         onChange={evt => setName(evt.target.value)}
       />
-      <Button color='primary' variant='contained' type='submit' className={classes.button}>
+      <Button color='primary' variant='contained' disabled={!name} type='submit' className={classes.button}>
         {action}
       </Button>
       {cancel &&
