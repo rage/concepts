@@ -2,7 +2,7 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
 const ConceptMutations = {
-  async createConcept(root, { name, description, official, courseId, workspaceId, bloomsTag }, context) {
+  async createConcept(root, { name, description, official, courseId, workspaceId, tags }, context) {
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
@@ -16,21 +16,25 @@ const ConceptMutations = {
       description: description,
       official: Boolean(official),
       courses: courseId ? { connect: [{ id: courseId }] } : undefined,
-      bloomsTag
+      tags: { create: tags }
     })
   },
 
-  async updateConcept(root, { id, name, description, bloomsTag }, context) {
+  async updateConcept(root, { id, name, description, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const data = {}
+    
+    const oldTags = await context.prisma.concept({ id }).tags()
+
+    const data = {tags}
+    
     if (name !== undefined) data.name = name
     if (description !== undefined) data.description = description
-    if (bloomsTag !== undefined) data.bloomsTag = bloomsTag
+
 
     return await context.prisma.updateConcept({
       where: { id },

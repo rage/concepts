@@ -123,7 +123,14 @@ type Concept {
   courses: [Course!]! @relation(name: "Courses")
   resources: [Resource!]!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
-  bloomsTag: String
+  tags: [Tag!]!
+}
+
+type Tag {
+  id: ID! @id
+  name: String!
+  type: String! @default(value: "common")
+  priority: Int! @default(value: 0)
 }
 
 type Resource {

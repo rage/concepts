@@ -19,7 +19,7 @@ query courseById($id: ID!) {
       name
       description
       official
-      bloomsTag
+      tags
       courses {
         id
       }
@@ -52,7 +52,7 @@ fragment courseAndConcepts on Course {
       name
       description
       official
-      bloomsTag
+      tags
       courses {
         id
       }

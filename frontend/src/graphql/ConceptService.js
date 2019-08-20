@@ -1,13 +1,13 @@
 import { gql } from 'apollo-boost'
 
 const UPDATE_CONCEPT = gql`
-mutation updateConcept($id: ID!, $name:String, $description: String, $bloomsTag: bloomsTag) {
-  updateConcept(id:$id, name:$name, desc:$description, bloomsTag:$bloomsTag) {
+mutation updateConcept($id: ID!, $name:String, $description: String, $tags: tags) {
+  updateConcept(id:$id, name:$name, desc:$description, tags:$tags) {
     id
     name
     description
     official
-    bloomsTag
+    tags
   }
 }
 `
@@ -19,7 +19,7 @@ const ALL_CONCEPTS = gql`
         name
         description
         official
-        bloomsTag
+        tags
         linksToConcept {
             from {
                 id
@@ -46,13 +46,13 @@ mutation createConceptAndLinkTo($name: String!, $description: String!, $to:ID!) 
 `
 
 const CREATE_CONCEPT = gql`
-mutation createConcept($name: String!, $description:String!, $official:Boolean!, $course_id:ID!, $bloomsTag:Tag) {
-  createConcept(name:$name, desc:$description, official:$official, course_id:$course_id, bloomsTag:$bloomsTag) {
+mutation createConcept($name: String!, $description:String!, $official:Boolean!, $course_id:ID!, $tags:tags) {
+  createConcept(name:$name, desc:$description, official:$official, course_id:$course_id, tags:$tags) {
     id
     name
     description
     official
-    bloomsTag
+    tags
     linksFromConcept {
       id
       to {

@@ -33,8 +33,8 @@ const useCreateConceptDialog = workspaceId => {
     }, {
       type: 'select',
       nullable: true,
-      name: 'bloomsTag',
-      label: 'Select Bloom\'s tag',
+      name: 'tags',
+      label: 'Select Bloom\'s tags',
       values: [
         'REMEMBER',
         'UNDERSTAND',
