@@ -70,7 +70,7 @@ type Concept {
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
   workspace: Workspace!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 type ConceptConnection {
@@ -90,7 +90,7 @@ input ConceptCreateInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptCreateManyWithoutCoursesInput {
@@ -128,7 +128,7 @@ input ConceptCreateWithoutCoursesInput {
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptCreateWithoutLinksFromConceptInput {
@@ -141,7 +141,7 @@ input ConceptCreateWithoutLinksFromConceptInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptCreateWithoutLinksToConceptInput {
@@ -154,7 +154,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptCreateWithoutResourcesInput {
@@ -167,7 +167,7 @@ input ConceptCreateWithoutResourcesInput {
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptCreateWithoutWorkspaceInput {
@@ -180,7 +180,7 @@ input ConceptCreateWithoutWorkspaceInput {
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 type ConceptEdge {
@@ -497,7 +497,7 @@ type ConceptPreviousValues {
   name: String!
   description: String
   official: Boolean!
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptScalarWhereInput {
@@ -545,10 +545,20 @@ input ConceptScalarWhereInput {
   description_not_ends_with: String
   official: Boolean
   official_not: Boolean
-  bloomsTag: Tag
-  bloomsTag_not: Tag
-  bloomsTag_in: [Tag!]
-  bloomsTag_not_in: [Tag!]
+  bloomsTag: String
+  bloomsTag_not: String
+  bloomsTag_in: [String!]
+  bloomsTag_not_in: [String!]
+  bloomsTag_lt: String
+  bloomsTag_lte: String
+  bloomsTag_gt: String
+  bloomsTag_gte: String
+  bloomsTag_contains: String
+  bloomsTag_not_contains: String
+  bloomsTag_starts_with: String
+  bloomsTag_not_starts_with: String
+  bloomsTag_ends_with: String
+  bloomsTag_not_ends_with: String
   AND: [ConceptScalarWhereInput!]
   OR: [ConceptScalarWhereInput!]
   NOT: [ConceptScalarWhereInput!]
@@ -582,21 +592,21 @@ input ConceptUpdateInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateManyDataInput {
   name: String
   description: String
   official: Boolean
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateManyMutationInput {
   name: String
   description: String
   official: Boolean
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateManyWithoutCoursesInput {
@@ -658,7 +668,7 @@ input ConceptUpdateWithoutCoursesDataInput {
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateWithoutLinksFromConceptDataInput {
@@ -670,7 +680,7 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateWithoutLinksToConceptDataInput {
@@ -682,7 +692,7 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateWithoutResourcesDataInput {
@@ -694,7 +704,7 @@ input ConceptUpdateWithoutResourcesDataInput {
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateWithoutWorkspaceDataInput {
@@ -706,7 +716,7 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
-  bloomsTag: Tag
+  bloomsTag: String
 }
 
 input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
@@ -805,10 +815,20 @@ input ConceptWhereInput {
   resources_some: ResourceWhereInput
   resources_none: ResourceWhereInput
   workspace: WorkspaceWhereInput
-  bloomsTag: Tag
-  bloomsTag_not: Tag
-  bloomsTag_in: [Tag!]
-  bloomsTag_not_in: [Tag!]
+  bloomsTag: String
+  bloomsTag_not: String
+  bloomsTag_in: [String!]
+  bloomsTag_not_in: [String!]
+  bloomsTag_lt: String
+  bloomsTag_lte: String
+  bloomsTag_gt: String
+  bloomsTag_gte: String
+  bloomsTag_contains: String
+  bloomsTag_not_contains: String
+  bloomsTag_starts_with: String
+  bloomsTag_not_starts_with: String
+  bloomsTag_ends_with: String
+  bloomsTag_not_ends_with: String
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -2598,15 +2618,6 @@ type Subscription {
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
   workspaceParticipant(where: WorkspaceParticipantSubscriptionWhereInput): WorkspaceParticipantSubscriptionPayload
   workspaceToken(where: WorkspaceTokenSubscriptionWhereInput): WorkspaceTokenSubscriptionPayload
-}
-
-enum Tag {
-  CREATE
-  EVALUATE
-  ANALYZE
-  APPLY
-  UNDERSTAND
-  REMEMBER
 }
 
 type URL {

@@ -17,10 +17,6 @@ var models = [
     embedded: false
   },
   {
-    name: "Tag",
-    embedded: false
-  },
-  {
     name: "Project",
     embedded: false
   },

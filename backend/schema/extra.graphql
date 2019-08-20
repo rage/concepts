@@ -54,9 +54,9 @@ type Mutation {
   updateCourse(id: ID!, name: String!): Course
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, bloomsTag: Tag): Concept
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, bloomsTag: String): Concept
   deleteConcept(id: ID!): DeletedConcept
-  updateConcept(id: ID!, name:String, description: String, official: Boolean, bloomsTag: Tag): Concept
+  updateConcept(id: ID!, name:String, description: String, official: Boolean, bloomsTag: String): Concept
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
