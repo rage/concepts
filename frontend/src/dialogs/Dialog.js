@@ -60,9 +60,12 @@ const Dialog = ({ contextRef }) => {
       }
       if (key.type === 'select') {
         variables[key.name] = {
-          'name': inputState[key.name]
+          'name': inputState[key.name],
+          'type': 'bloom'
         }
       }
+
+      // Allow multible values for tags
       if (!variables[key.name] && key.isList) {
         variables[key.name] = []
       }
