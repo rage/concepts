@@ -33,7 +33,7 @@ const useEditConceptDialog = () => {
     }, {
       type: 'select',
       name: 'tags',
-      label: 'Select Bloom\'s tags',
+      label: "Select Bloom's tags",
       nullable: true,
       defaultValue: tags[0].name,
       values: [
