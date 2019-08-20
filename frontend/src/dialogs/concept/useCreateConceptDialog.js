@@ -1,9 +1,10 @@
+import React, { useRef, useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { useDialog } from '../DialogProvider'
 import cache from '../../apollo/update'
-
+import TaxonomyTags from './TaxonomyTags'
 const useCreateConceptDialog = workspaceId => {
   const { openDialog } = useDialog()
 
@@ -22,11 +23,19 @@ const useCreateConceptDialog = workspaceId => {
     actionText: 'Create',
     title: 'Add concept',
     fields: [{
+      type: 'textfield',
       name: 'name',
       required: true
     }, {
+      type: 'textfield',
       name: 'description',
       multiline: true
+    }, {
+      type: 'select',
+      nullable: true,
+      name: 'tags',
+      label: "Select Bloom's tags",
+      values: TaxonomyTags
     }]
   })
 }

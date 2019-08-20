@@ -19,6 +19,12 @@ query courseById($id: ID!) {
       name
       description
       official
+      tags {
+        id
+        name
+        type
+        priority
+      }
       courses {
         id
       }
@@ -51,6 +57,12 @@ fragment courseAndConcepts on Course {
       name
       description
       official
+      tags {
+        id
+        name
+        type
+        priority
+      }
       courses {
         id
       }

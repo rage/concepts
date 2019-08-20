@@ -2,7 +2,7 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
 const ConceptMutations = {
-  async createConcept(root, { name, description, official, courseId, workspaceId }, context) {
+  async createConcept(root, { name, description, official, courseId, workspaceId, tags }, context) {
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
@@ -15,18 +15,34 @@ const ConceptMutations = {
       workspace: { connect: { id: workspaceId } },
       description: description,
       official: Boolean(official),
-      courses: courseId ? { connect: [{ id: courseId }] } : undefined
+      courses: courseId ? { connect: [{ id: courseId }] } : undefined,
+      tags: { create: tags }
     })
   },
 
-  async updateConcept(root, { id, name, description }, context) {
+  async updateConcept(root, { id, name, description, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const data = {}
+
+    const oldTags = await context.prisma.concept({ id }).tags()
+
+    const tagsToDelete = oldTags
+      .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
+      .map(oldTag => ({ id: oldTag.id }))
+    const tagsToCreate = tags
+      .filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
+
+    const data = {
+      tags: {
+        delete: tagsToDelete,
+        create: tagsToCreate
+      }
+    }
+
     if (name !== undefined) data.name = name
     if (description !== undefined) data.description = description
 

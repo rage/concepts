@@ -26,6 +26,7 @@ export interface Exists {
   ) => Promise<boolean>;
   projectToken: (where?: ProjectTokenWhereInput) => Promise<boolean>;
   resource: (where?: ResourceWhereInput) => Promise<boolean>;
+  tag: (where?: TagWhereInput) => Promise<boolean>;
   uRL: (where?: URLWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
   workspace: (where?: WorkspaceWhereInput) => Promise<boolean>;
@@ -212,6 +213,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => ResourceConnectionPromise;
+  tag: (where: TagWhereUniqueInput) => TagNullablePromise;
+  tags: (args?: {
+    where?: TagWhereInput;
+    orderBy?: TagOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<Tag>;
+  tagsConnection: (args?: {
+    where?: TagWhereInput;
+    orderBy?: TagOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => TagConnectionPromise;
   uRL: (where: URLWhereUniqueInput) => URLNullablePromise;
   uRLs: (args?: {
     where?: URLWhereInput;
@@ -457,6 +477,22 @@ export interface Prisma {
   }) => ResourcePromise;
   deleteResource: (where: ResourceWhereUniqueInput) => ResourcePromise;
   deleteManyResources: (where?: ResourceWhereInput) => BatchPayloadPromise;
+  createTag: (data: TagCreateInput) => TagPromise;
+  updateTag: (args: {
+    data: TagUpdateInput;
+    where: TagWhereUniqueInput;
+  }) => TagPromise;
+  updateManyTags: (args: {
+    data: TagUpdateManyMutationInput;
+    where?: TagWhereInput;
+  }) => BatchPayloadPromise;
+  upsertTag: (args: {
+    where: TagWhereUniqueInput;
+    create: TagCreateInput;
+    update: TagUpdateInput;
+  }) => TagPromise;
+  deleteTag: (where: TagWhereUniqueInput) => TagPromise;
+  deleteManyTags: (where?: TagWhereInput) => BatchPayloadPromise;
   createURL: (data: URLCreateInput) => URLPromise;
   updateURL: (args: {
     data: URLUpdateInput;
@@ -582,6 +618,9 @@ export interface Subscription {
   resource: (
     where?: ResourceSubscriptionWhereInput
   ) => ResourceSubscriptionPayloadSubscription;
+  tag: (
+    where?: TagSubscriptionWhereInput
+  ) => TagSubscriptionPayloadSubscription;
   uRL: (
     where?: URLSubscriptionWhereInput
   ) => URLSubscriptionPayloadSubscription;
@@ -690,6 +729,16 @@ export type URLOrderByInput =
   | "id_DESC"
   | "address_ASC"
   | "address_DESC";
+
+export type TagOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "type_ASC"
+  | "type_DESC"
+  | "priority_ASC"
+  | "priority_DESC";
 
 export type ProjectOrderByInput =
   | "id_ASC"
@@ -1114,6 +1163,9 @@ export interface ConceptWhereInput {
   resources_some?: Maybe<ResourceWhereInput>;
   resources_none?: Maybe<ResourceWhereInput>;
   workspace?: Maybe<WorkspaceWhereInput>;
+  tags_every?: Maybe<TagWhereInput>;
+  tags_some?: Maybe<TagWhereInput>;
+  tags_none?: Maybe<TagWhereInput>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
@@ -1240,6 +1292,62 @@ export interface URLWhereInput {
   NOT?: Maybe<URLWhereInput[] | URLWhereInput>;
 }
 
+export interface TagWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  type?: Maybe<String>;
+  type_not?: Maybe<String>;
+  type_in?: Maybe<String[] | String>;
+  type_not_in?: Maybe<String[] | String>;
+  type_lt?: Maybe<String>;
+  type_lte?: Maybe<String>;
+  type_gt?: Maybe<String>;
+  type_gte?: Maybe<String>;
+  type_contains?: Maybe<String>;
+  type_not_contains?: Maybe<String>;
+  type_starts_with?: Maybe<String>;
+  type_not_starts_with?: Maybe<String>;
+  type_ends_with?: Maybe<String>;
+  type_not_ends_with?: Maybe<String>;
+  priority?: Maybe<Int>;
+  priority_not?: Maybe<Int>;
+  priority_in?: Maybe<Int[] | Int>;
+  priority_not_in?: Maybe<Int[] | Int>;
+  priority_lt?: Maybe<Int>;
+  priority_lte?: Maybe<Int>;
+  priority_gt?: Maybe<Int>;
+  priority_gte?: Maybe<Int>;
+  AND?: Maybe<TagWhereInput[] | TagWhereInput>;
+  OR?: Maybe<TagWhereInput[] | TagWhereInput>;
+  NOT?: Maybe<TagWhereInput[] | TagWhereInput>;
+}
+
 export interface WorkspaceTokenWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
@@ -1298,6 +1406,10 @@ export type ResourceWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
+export type TagWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
 export type URLWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
@@ -1330,6 +1442,7 @@ export interface ConceptCreateInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  tags?: Maybe<TagCreateManyInput>;
 }
 
 export interface UserCreateOneInput {
@@ -1604,6 +1717,7 @@ export interface ConceptCreateWithoutCoursesInput {
   linksToConcept?: Maybe<ConceptLinkCreateManyWithoutToInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  tags?: Maybe<TagCreateManyInput>;
 }
 
 export interface ConceptLinkCreateManyWithoutFromInput {
@@ -1637,6 +1751,7 @@ export interface ConceptCreateWithoutLinksToConceptInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  tags?: Maybe<TagCreateManyInput>;
 }
 
 export interface CourseCreateManyWithoutConceptsInput {
@@ -1722,6 +1837,7 @@ export interface ConceptCreateWithoutWorkspaceInput {
   linksToConcept?: Maybe<ConceptLinkCreateManyWithoutToInput>;
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
+  tags?: Maybe<TagCreateManyInput>;
 }
 
 export interface ConceptLinkCreateManyWithoutToInput {
@@ -1755,6 +1871,7 @@ export interface ConceptCreateWithoutLinksFromConceptInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  tags?: Maybe<TagCreateManyInput>;
 }
 
 export interface ResourceCreateManyWithoutConceptInput {
@@ -2085,6 +2202,18 @@ export interface ProjectParticipantCreateWithoutProjectInput {
   user: UserCreateOneWithoutProjectParticipationsInput;
 }
 
+export interface TagCreateManyInput {
+  create?: Maybe<TagCreateInput[] | TagCreateInput>;
+  connect?: Maybe<TagWhereUniqueInput[] | TagWhereUniqueInput>;
+}
+
+export interface TagCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  type?: Maybe<String>;
+  priority?: Maybe<Int>;
+}
+
 export interface WorkspaceCreateOneWithoutConceptLinksInput {
   create?: Maybe<WorkspaceCreateWithoutConceptLinksInput>;
   connect?: Maybe<WorkspaceWhereUniqueInput>;
@@ -2135,6 +2264,7 @@ export interface ConceptUpdateInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  tags?: Maybe<TagUpdateManyInput>;
 }
 
 export interface UserUpdateOneRequiredInput {
@@ -2579,6 +2709,7 @@ export interface ConceptUpdateWithoutCoursesDataInput {
   linksToConcept?: Maybe<ConceptLinkUpdateManyWithoutToInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  tags?: Maybe<TagUpdateManyInput>;
 }
 
 export interface ConceptLinkUpdateManyWithoutFromInput {
@@ -2637,6 +2768,7 @@ export interface ConceptUpdateWithoutLinksToConceptDataInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  tags?: Maybe<TagUpdateManyInput>;
 }
 
 export interface CourseUpdateManyWithoutConceptsInput {
@@ -2784,6 +2916,7 @@ export interface ConceptUpdateWithoutWorkspaceDataInput {
   linksToConcept?: Maybe<ConceptLinkUpdateManyWithoutToInput>;
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
+  tags?: Maybe<TagUpdateManyInput>;
 }
 
 export interface ConceptLinkUpdateManyWithoutToInput {
@@ -2842,6 +2975,7 @@ export interface ConceptUpdateWithoutLinksFromConceptDataInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  tags?: Maybe<TagUpdateManyInput>;
 }
 
 export interface ResourceUpdateManyWithoutConceptInput {
@@ -3980,6 +4114,108 @@ export interface WorkspaceUpsertWithoutConceptsInput {
   create: WorkspaceCreateWithoutConceptsInput;
 }
 
+export interface TagUpdateManyInput {
+  create?: Maybe<TagCreateInput[] | TagCreateInput>;
+  update?: Maybe<
+    TagUpdateWithWhereUniqueNestedInput[] | TagUpdateWithWhereUniqueNestedInput
+  >;
+  upsert?: Maybe<
+    TagUpsertWithWhereUniqueNestedInput[] | TagUpsertWithWhereUniqueNestedInput
+  >;
+  delete?: Maybe<TagWhereUniqueInput[] | TagWhereUniqueInput>;
+  connect?: Maybe<TagWhereUniqueInput[] | TagWhereUniqueInput>;
+  set?: Maybe<TagWhereUniqueInput[] | TagWhereUniqueInput>;
+  disconnect?: Maybe<TagWhereUniqueInput[] | TagWhereUniqueInput>;
+  deleteMany?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
+  updateMany?: Maybe<
+    TagUpdateManyWithWhereNestedInput[] | TagUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface TagUpdateWithWhereUniqueNestedInput {
+  where: TagWhereUniqueInput;
+  data: TagUpdateDataInput;
+}
+
+export interface TagUpdateDataInput {
+  name?: Maybe<String>;
+  type?: Maybe<String>;
+  priority?: Maybe<Int>;
+}
+
+export interface TagUpsertWithWhereUniqueNestedInput {
+  where: TagWhereUniqueInput;
+  update: TagUpdateDataInput;
+  create: TagCreateInput;
+}
+
+export interface TagScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  type?: Maybe<String>;
+  type_not?: Maybe<String>;
+  type_in?: Maybe<String[] | String>;
+  type_not_in?: Maybe<String[] | String>;
+  type_lt?: Maybe<String>;
+  type_lte?: Maybe<String>;
+  type_gt?: Maybe<String>;
+  type_gte?: Maybe<String>;
+  type_contains?: Maybe<String>;
+  type_not_contains?: Maybe<String>;
+  type_starts_with?: Maybe<String>;
+  type_not_starts_with?: Maybe<String>;
+  type_ends_with?: Maybe<String>;
+  type_not_ends_with?: Maybe<String>;
+  priority?: Maybe<Int>;
+  priority_not?: Maybe<Int>;
+  priority_in?: Maybe<Int[] | Int>;
+  priority_not_in?: Maybe<Int[] | Int>;
+  priority_lt?: Maybe<Int>;
+  priority_lte?: Maybe<Int>;
+  priority_gt?: Maybe<Int>;
+  priority_gte?: Maybe<Int>;
+  AND?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
+  OR?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
+  NOT?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
+}
+
+export interface TagUpdateManyWithWhereNestedInput {
+  where: TagScalarWhereInput;
+  data: TagUpdateManyDataInput;
+}
+
+export interface TagUpdateManyDataInput {
+  name?: Maybe<String>;
+  type?: Maybe<String>;
+  priority?: Maybe<Int>;
+}
+
 export interface ConceptUpsertWithoutLinksFromConceptInput {
   update: ConceptUpdateWithoutLinksFromConceptDataInput;
   create: ConceptCreateWithoutLinksFromConceptInput;
@@ -4432,6 +4668,7 @@ export interface ConceptCreateWithoutResourcesInput {
   linksToConcept?: Maybe<ConceptLinkCreateManyWithoutToInput>;
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
+  tags?: Maybe<TagCreateManyInput>;
 }
 
 export interface ResourceUpdateInput {
@@ -4457,6 +4694,7 @@ export interface ConceptUpdateWithoutResourcesDataInput {
   linksToConcept?: Maybe<ConceptLinkUpdateManyWithoutToInput>;
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
+  tags?: Maybe<TagUpdateManyInput>;
 }
 
 export interface ConceptUpsertWithoutResourcesInput {
@@ -4467,6 +4705,18 @@ export interface ConceptUpsertWithoutResourcesInput {
 export interface ResourceUpdateManyMutationInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
+}
+
+export interface TagUpdateInput {
+  name?: Maybe<String>;
+  type?: Maybe<String>;
+  priority?: Maybe<Int>;
+}
+
+export interface TagUpdateManyMutationInput {
+  name?: Maybe<String>;
+  type?: Maybe<String>;
+  priority?: Maybe<Int>;
 }
 
 export interface URLCreateInput {
@@ -4709,6 +4959,17 @@ export interface ResourceSubscriptionWhereInput {
   >;
 }
 
+export interface TagSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<TagWhereInput>;
+  AND?: Maybe<TagSubscriptionWhereInput[] | TagSubscriptionWhereInput>;
+  OR?: Maybe<TagSubscriptionWhereInput[] | TagSubscriptionWhereInput>;
+  NOT?: Maybe<TagSubscriptionWhereInput[] | TagSubscriptionWhereInput>;
+}
+
 export interface URLSubscriptionWhereInput {
   mutation_in?: Maybe<MutationType[] | MutationType>;
   updatedFields_contains?: Maybe<String>;
@@ -4842,6 +5103,15 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
     last?: Int;
   }) => T;
   workspace: <T = WorkspacePromise>() => T;
+  tags: <T = FragmentableArray<Tag>>(args?: {
+    where?: TagWhereInput;
+    orderBy?: TagOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ConceptSubscription
@@ -4891,6 +5161,15 @@ export interface ConceptSubscription
     last?: Int;
   }) => T;
   workspace: <T = WorkspaceSubscription>() => T;
+  tags: <T = Promise<AsyncIterator<TagSubscription>>>(args?: {
+    where?: TagWhereInput;
+    orderBy?: TagOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface ConceptNullablePromise
@@ -4938,6 +5217,15 @@ export interface ConceptNullablePromise
     last?: Int;
   }) => T;
   workspace: <T = WorkspacePromise>() => T;
+  tags: <T = FragmentableArray<Tag>>(args?: {
+    where?: TagWhereInput;
+    orderBy?: TagOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface User {
@@ -5901,6 +6189,36 @@ export interface URLNullablePromise extends Promise<URL | null>, Fragmentable {
   resource: <T = ResourcePromise>() => T;
 }
 
+export interface Tag {
+  id: ID_Output;
+  name: String;
+  type: String;
+  priority: Int;
+}
+
+export interface TagPromise extends Promise<Tag>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  type: () => Promise<String>;
+  priority: () => Promise<Int>;
+}
+
+export interface TagSubscription
+  extends Promise<AsyncIterator<Tag>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  type: () => Promise<AsyncIterator<String>>;
+  priority: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface TagNullablePromise extends Promise<Tag | null>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  type: () => Promise<String>;
+  priority: () => Promise<Int>;
+}
+
 export interface ConceptConnection {
   pageInfo: PageInfo;
   edges: ConceptEdge[];
@@ -6364,6 +6682,60 @@ export interface AggregateResourcePromise
 
 export interface AggregateResourceSubscription
   extends Promise<AsyncIterator<AggregateResource>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface TagConnection {
+  pageInfo: PageInfo;
+  edges: TagEdge[];
+}
+
+export interface TagConnectionPromise
+  extends Promise<TagConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<TagEdge>>() => T;
+  aggregate: <T = AggregateTagPromise>() => T;
+}
+
+export interface TagConnectionSubscription
+  extends Promise<AsyncIterator<TagConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TagEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTagSubscription>() => T;
+}
+
+export interface TagEdge {
+  node: Tag;
+  cursor: String;
+}
+
+export interface TagEdgePromise extends Promise<TagEdge>, Fragmentable {
+  node: <T = TagPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TagEdgeSubscription
+  extends Promise<AsyncIterator<TagEdge>>,
+    Fragmentable {
+  node: <T = TagSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateTag {
+  count: Int;
+}
+
+export interface AggregateTagPromise
+  extends Promise<AggregateTag>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateTagSubscription
+  extends Promise<AsyncIterator<AggregateTag>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -7032,6 +7404,56 @@ export interface ResourcePreviousValuesSubscription
   description: () => Promise<AsyncIterator<String>>;
 }
 
+export interface TagSubscriptionPayload {
+  mutation: MutationType;
+  node: Tag;
+  updatedFields: String[];
+  previousValues: TagPreviousValues;
+}
+
+export interface TagSubscriptionPayloadPromise
+  extends Promise<TagSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TagPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TagPreviousValuesPromise>() => T;
+}
+
+export interface TagSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TagSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TagSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TagPreviousValuesSubscription>() => T;
+}
+
+export interface TagPreviousValues {
+  id: ID_Output;
+  name: String;
+  type: String;
+  priority: Int;
+}
+
+export interface TagPreviousValuesPromise
+  extends Promise<TagPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  type: () => Promise<String>;
+  priority: () => Promise<Int>;
+}
+
+export interface TagPreviousValuesSubscription
+  extends Promise<AsyncIterator<TagPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  type: () => Promise<AsyncIterator<String>>;
+  priority: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface URLSubscriptionPayload {
   mutation: MutationType;
   node: URL;
@@ -7355,6 +7777,10 @@ export const models: Model[] = [
   },
   {
     name: "Concept",
+    embedded: false
+  },
+  {
+    name: "Tag",
     embedded: false
   },
   {

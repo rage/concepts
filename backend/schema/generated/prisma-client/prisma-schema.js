@@ -35,6 +35,10 @@ type AggregateResource {
   count: Int!
 }
 
+type AggregateTag {
+  count: Int!
+}
+
 type AggregateURL {
   count: Int!
 }
@@ -70,6 +74,7 @@ type Concept {
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
   workspace: Workspace!
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
 }
 
 type ConceptConnection {
@@ -89,6 +94,7 @@ input ConceptCreateInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
 }
 
 input ConceptCreateManyWithoutCoursesInput {
@@ -126,6 +132,7 @@ input ConceptCreateWithoutCoursesInput {
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
 }
 
 input ConceptCreateWithoutLinksFromConceptInput {
@@ -138,6 +145,7 @@ input ConceptCreateWithoutLinksFromConceptInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
 }
 
 input ConceptCreateWithoutLinksToConceptInput {
@@ -150,6 +158,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
 }
 
 input ConceptCreateWithoutResourcesInput {
@@ -162,6 +171,7 @@ input ConceptCreateWithoutResourcesInput {
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
 }
 
 input ConceptCreateWithoutWorkspaceInput {
@@ -174,6 +184,7 @@ input ConceptCreateWithoutWorkspaceInput {
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
+  tags: TagCreateManyInput
 }
 
 type ConceptEdge {
@@ -568,6 +579,7 @@ input ConceptUpdateInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
 }
 
 input ConceptUpdateManyDataInput {
@@ -641,6 +653,7 @@ input ConceptUpdateWithoutCoursesDataInput {
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
 }
 
 input ConceptUpdateWithoutLinksFromConceptDataInput {
@@ -652,6 +665,7 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
 }
 
 input ConceptUpdateWithoutLinksToConceptDataInput {
@@ -663,6 +677,7 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
 }
 
 input ConceptUpdateWithoutResourcesDataInput {
@@ -674,6 +689,7 @@ input ConceptUpdateWithoutResourcesDataInput {
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
 }
 
 input ConceptUpdateWithoutWorkspaceDataInput {
@@ -685,6 +701,7 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
+  tags: TagUpdateManyInput
 }
 
 input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
@@ -783,6 +800,9 @@ input ConceptWhereInput {
   resources_some: ResourceWhereInput
   resources_none: ResourceWhereInput
   workspace: WorkspaceWhereInput
+  tags_every: TagWhereInput
+  tags_some: TagWhereInput
+  tags_none: TagWhereInput
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -1460,6 +1480,12 @@ type Mutation {
   upsertResource(where: ResourceWhereUniqueInput!, create: ResourceCreateInput!, update: ResourceUpdateInput!): Resource!
   deleteResource(where: ResourceWhereUniqueInput!): Resource
   deleteManyResources(where: ResourceWhereInput): BatchPayload!
+  createTag(data: TagCreateInput!): Tag!
+  updateTag(data: TagUpdateInput!, where: TagWhereUniqueInput!): Tag
+  updateManyTags(data: TagUpdateManyMutationInput!, where: TagWhereInput): BatchPayload!
+  upsertTag(where: TagWhereUniqueInput!, create: TagCreateInput!, update: TagUpdateInput!): Tag!
+  deleteTag(where: TagWhereUniqueInput!): Tag
+  deleteManyTags(where: TagWhereInput): BatchPayload!
   createURL(data: URLCreateInput!): URL!
   updateURL(data: URLUpdateInput!, where: URLWhereUniqueInput!): URL
   updateManyURLs(data: URLUpdateManyMutationInput!, where: URLWhereInput): BatchPayload!
@@ -2328,6 +2354,9 @@ type Query {
   resource(where: ResourceWhereUniqueInput!): Resource
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource]!
   resourcesConnection(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResourceConnection!
+  tag(where: TagWhereUniqueInput!): Tag
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag]!
+  tagsConnection(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TagConnection!
   uRL(where: URLWhereUniqueInput!): URL
   uRLs(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL]!
   uRLsConnection(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): URLConnection!
@@ -2619,11 +2648,246 @@ type Subscription {
   projectParticipant(where: ProjectParticipantSubscriptionWhereInput): ProjectParticipantSubscriptionPayload
   projectToken(where: ProjectTokenSubscriptionWhereInput): ProjectTokenSubscriptionPayload
   resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
+  tag(where: TagSubscriptionWhereInput): TagSubscriptionPayload
   uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
   workspaceParticipant(where: WorkspaceParticipantSubscriptionWhereInput): WorkspaceParticipantSubscriptionPayload
   workspaceToken(where: WorkspaceTokenSubscriptionWhereInput): WorkspaceTokenSubscriptionPayload
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  type: String!
+  priority: Int!
+}
+
+type TagConnection {
+  pageInfo: PageInfo!
+  edges: [TagEdge]!
+  aggregate: AggregateTag!
+}
+
+input TagCreateInput {
+  id: ID
+  name: String!
+  type: String
+  priority: Int
+}
+
+input TagCreateManyInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+type TagEdge {
+  node: Tag!
+  cursor: String!
+}
+
+enum TagOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  type_ASC
+  type_DESC
+  priority_ASC
+  priority_DESC
+}
+
+type TagPreviousValues {
+  id: ID!
+  name: String!
+  type: String!
+  priority: Int!
+}
+
+input TagScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  type: String
+  type_not: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_lt: String
+  type_lte: String
+  type_gt: String
+  type_gte: String
+  type_contains: String
+  type_not_contains: String
+  type_starts_with: String
+  type_not_starts_with: String
+  type_ends_with: String
+  type_not_ends_with: String
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  AND: [TagScalarWhereInput!]
+  OR: [TagScalarWhereInput!]
+  NOT: [TagScalarWhereInput!]
+}
+
+type TagSubscriptionPayload {
+  mutation: MutationType!
+  node: Tag
+  updatedFields: [String!]
+  previousValues: TagPreviousValues
+}
+
+input TagSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TagWhereInput
+  AND: [TagSubscriptionWhereInput!]
+  OR: [TagSubscriptionWhereInput!]
+  NOT: [TagSubscriptionWhereInput!]
+}
+
+input TagUpdateDataInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateManyDataInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateManyInput {
+  create: [TagCreateInput!]
+  update: [TagUpdateWithWhereUniqueNestedInput!]
+  upsert: [TagUpsertWithWhereUniqueNestedInput!]
+  delete: [TagWhereUniqueInput!]
+  connect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  disconnect: [TagWhereUniqueInput!]
+  deleteMany: [TagScalarWhereInput!]
+  updateMany: [TagUpdateManyWithWhereNestedInput!]
+}
+
+input TagUpdateManyMutationInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateManyWithWhereNestedInput {
+  where: TagScalarWhereInput!
+  data: TagUpdateManyDataInput!
+}
+
+input TagUpdateWithWhereUniqueNestedInput {
+  where: TagWhereUniqueInput!
+  data: TagUpdateDataInput!
+}
+
+input TagUpsertWithWhereUniqueNestedInput {
+  where: TagWhereUniqueInput!
+  update: TagUpdateDataInput!
+  create: TagCreateInput!
+}
+
+input TagWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  type: String
+  type_not: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_lt: String
+  type_lte: String
+  type_gt: String
+  type_gte: String
+  type_contains: String
+  type_not_contains: String
+  type_starts_with: String
+  type_not_starts_with: String
+  type_ends_with: String
+  type_not_ends_with: String
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  AND: [TagWhereInput!]
+  OR: [TagWhereInput!]
+  NOT: [TagWhereInput!]
+}
+
+input TagWhereUniqueInput {
+  id: ID
 }
 
 type URL {

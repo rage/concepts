@@ -7,6 +7,7 @@ module.exports = {
     'courses',
     'resources',
     'createdBy',
-    'workspace'
+    'workspace',
+    'tags'
   ])
 }
