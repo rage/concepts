@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, CircularProgress, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox
+  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox
 } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'

@@ -177,6 +177,7 @@ const Dialog = ({ contextRef }) => {
                   })}
                 </TextField>
               }
+              return null
             })
           }
         </DialogContent>
