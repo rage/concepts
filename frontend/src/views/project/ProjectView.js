@@ -9,6 +9,7 @@ import { useShareDialog } from '../../dialogs/sharing'
 import NotFoundView from '../error/NotFoundView'
 import TemplateList from './TemplateList'
 import MergeList from './MergeList'
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -29,11 +30,10 @@ const useStyles = makeStyles(() => ({
       width: 'calc(100% - 32px)'
     },
     '& > div': {
-      overflow: 'hidden',
-      '& > div': {
-        height: '100%',
-        overflow: 'auto'
-      }
+      overflow: 'hidden'
+    },
+    '&.hideToolbar': {
+      gridTemplateRows: '56px 0 1fr 1fr'
     }
   },
   header: {
@@ -57,6 +57,7 @@ const useStyles = makeStyles(() => ({
 const ProjectView = ({ projectId }) => {
   const classes = useStyles()
   const openShareProjectDialog = useShareDialog('project')
+  const [{ user }] = useLoginStateValue()
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
@@ -72,19 +73,28 @@ const ProjectView = ({ projectId }) => {
     return <NotFoundView message='Project not found' />
   }
 
+  const showToolbar = projectQuery.data.projectById.participants.find(participant =>
+    participant.user.id === user.id && participant.privilege === 'OWNER'
+  )
+
+  console.log(showToolbar)
+
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${showToolbar ? '' : 'hideToolbar'}`}>
       <Typography className={classes.header} variant='h4'>
         Project: {projectQuery.data.projectById.name}
       </Typography>
-      <span className={classes.toolbar}>
-        <Button
-          color='primary' variant='contained'
-          onClick={() => openShareProjectDialog(projectId, 'EDIT')}
-        >
-          Share project
-        </Button>
-      </span>
+      {
+        showToolbar &&
+          <span className={classes.toolbar}>
+            <Button
+              color='primary' variant='contained'
+              onClick={() => openShareProjectDialog(projectId, 'EDIT')}
+            >
+              Share project
+            </Button>
+          </span>
+      }
       <div className={classes.templates}>
         <TemplateList
           projectId={projectId}
