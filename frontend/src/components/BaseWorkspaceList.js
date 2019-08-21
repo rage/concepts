@@ -205,14 +205,17 @@ This will change which template is cloned by users.`)
           </ListItemIcon>
           Export
         </MenuItem>
-        {type !== TYPE_USER && <>
+        {
+          type !== TYPE_USER &&
           <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>
               <ShareIcon />
             </ListItemIcon>
-            Share link
+          Share link
           </MenuItem>
-          {type === TYPE_TEMPLATE &&
+        }
+        {
+          type !== TYPE_USER && type === TYPE_TEMPLATE &&
             <MenuItem onClick={handleSetActive} disabled={isActiveTemplate}>
               <ListItemIcon>
                 {
@@ -224,20 +227,26 @@ This will change which template is cloned by users.`)
               </ListItemIcon>
               {!isActiveTemplate ? 'Set as' : 'Is'} active
             </MenuItem>
-          }
+
+        }
+        {
+          type !== TYPE_USER &&
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>
             Edit
           </MenuItem>
+        }
+        {
+          type !== TYPE_USER &&
           <MenuItem aria-label='Delete' onClick={handleDelete}>
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>
             Delete
           </MenuItem>
-        </>}
+        }
       </Menu>
     </Card>
   )
