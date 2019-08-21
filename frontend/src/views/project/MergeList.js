@@ -26,6 +26,7 @@ const MergeList = ({ mergeWorkspaces, projectId, activeTemplate, urlPrefix }) =>
   const cardHeaderTitle = 'Merged workspaces'
   const cardHeaderAction = (
     <Button
+      style={{ margin: '6px' }}
       variant='outlined' color='primary'
       onClick={() => merge({ variables: { projectId } })}
       disabled={!activeTemplate}
