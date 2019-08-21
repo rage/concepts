@@ -16,7 +16,8 @@ const Link = props => <MaterialLink {...props} component={RouterLink} />
 
 const useStyles = makeStyles(() => ({
   root: {
-    gridArea: 'navbar'
+    gridArea: 'navbar',
+    zIndex: 2
   },
   breadcrumbs: {
     flexGrow: 1,

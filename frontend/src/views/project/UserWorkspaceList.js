@@ -13,6 +13,7 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
   const cardHeaderTitle = 'Workspaces by users'
   const cardHeaderAction = (
     <Button
+      style={{ margin: '6px' }}
       variant='outlined' color='primary'
       onClick={() => openShareDialog(projectId, 'CLONE')}
       disabled={!activeTemplate}

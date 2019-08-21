@@ -26,9 +26,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column'
   },
-  iconButton: {
-    padding: '6px 12px 6px 12px'
-  },
   list: {
     flex: 1,
     overflow: 'auto'
@@ -68,7 +65,7 @@ const BaseWorkspaceList = ({
   }
 
   cardHeaderAction = cardHeaderAction || (
-    <IconButton className={classes.iconButton} aria-label='Add' onClick={handleCreateOpen}>
+    <IconButton aria-label='Add' onClick={handleCreateOpen}>
       <AddIcon />
     </IconButton>
   )
