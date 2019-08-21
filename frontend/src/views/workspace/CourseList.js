@@ -13,16 +13,23 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible'
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  list: {
+    overflow: 'auto'
   },
   listItemActive: {
     boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
   },
-  button: {
+  submit: {
+    margin: theme.spacing(1, 0)
+  },
+  cancel: {
     margin: theme.spacing(1)
   },
   textfield: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1, 0)
   }
 }))
 
@@ -30,6 +37,7 @@ const CourseList = ({
   courses, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
 }) => {
   const classes = useStyles()
+  const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopEditing = id => {
@@ -41,7 +49,7 @@ const CourseList = ({
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader title='Courses' />
-      <List className={classes.list}>{
+      <List ref={listRef} className={classes.list}>{
         courses.map(course => (
           <ListItem
             className={course.id === focusedCourseId ? classes.listItemActive : null}
@@ -84,7 +92,10 @@ const CourseList = ({
           </ListItem>
         ))
       }</List>
-      <CreateCourse submit={createCourse} />
+      <CreateCourse submit={async (...args) => {
+        await createCourse(...args)
+        listRef.current.scrollTop = listRef.current.scrollHeight
+      }} />
     </Card>
   )
 }
@@ -124,11 +135,14 @@ const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
         autoFocus={action !== 'Create'}
         onChange={evt => setName(evt.target.value)}
       />
-      <Button color='primary' variant='contained' disabled={!name} type='submit' className={classes.button}>
+      <Button
+        color='primary' variant='contained' disabled={!name} type='submit'
+        className={classes.submit}
+      >
         {action}
       </Button>
       {cancel &&
-        <Button color='primary' variant='contained' onClick={cancel} className={classes.button}>
+        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
         </Button>
       }

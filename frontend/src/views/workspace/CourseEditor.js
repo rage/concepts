@@ -13,18 +13,26 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible'
+    display: 'flex',
+    flexDirection: 'column'
   },
-  button: {
+  list: {
+    overflow: 'auto'
+  },
+  submit: {
+    margin: theme.spacing(1, 0)
+  },
+  cancel: {
     margin: theme.spacing(1)
   },
   textfield: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1, 0)
   }
 }))
 
 const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
+  const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopEditing = id => {
@@ -36,7 +44,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader title={`Concepts of ${course.name}`} />
-      <List>{
+      <List ref={listRef} className={classes.list}>{
         course.concepts.map(concept => (
           <ListItem divider key={concept.id}>
             {editing.has(concept.id) ? <>
@@ -70,7 +78,10 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </ListItem>
         ))
       }</List>
-      <CreateConcept submit={createConcept} />
+      <CreateConcept submit={async (...args) => {
+        await createConcept(...args)
+        listRef.current.scrollTop = listRef.current.scrollHeight
+      }} />
     </Card>
   )
 }
@@ -130,11 +141,14 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
-      <Button color='primary' variant='contained' disabled={!input.name} type='submit' className={classes.button}>
+      <Button
+        color='primary' variant='contained' disabled={!input.name} type='submit'
+        className={classes.submit}
+      >
         {action}
       </Button>
       {cancel &&
-        <Button color='primary' variant='contained' onClick={cancel} className={classes.button}>
+        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
         </Button>
       }
