@@ -4,6 +4,7 @@ import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import TaxonomyTags from './TaxonomyTags'
+
 const useEditConceptDialog = () => {
   const { openDialog } = useDialog()
 
@@ -21,21 +22,20 @@ const useEditConceptDialog = () => {
     actionText: 'Save',
     title: 'Edit concept',
     fields: [{
-      type: 'textfield',
       name: 'name',
       required: true,
       defaultValue: name
     }, {
-      type: 'textfield',
       name: 'description',
       multiline: true,
       defaultValue: description
     }, {
       type: 'select',
-      name: 'tags',
+      name: 'bloomTag',
       label: "Select Bloom's tags",
-      isList: true,
-      defaultValue: tags.find(tag => tag.type === 'bloom') ? tags[0].name : '',
+      list: 'tags',
+      valueMutator: name => ({ name, type: 'bloom' }),
+      defaultValue: (tags.find(tag => tag.type === 'bloom') || {}).name,
       values: TaxonomyTags
     }]
   })
