@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
-  List, ListItem, ListItemText, Typography, Button, Container, Paper, TextField,
-  Divider, CircularProgress
+  List, ListItem, ListItemText, Typography, Button, Container, Paper, TextField, Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
@@ -11,6 +10,7 @@ import { CLONE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
 import { useMessageStateValue } from '../../store'
 import NotFoundView from '../error/NotFoundView'
+import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -98,11 +98,7 @@ const CloneView = ({ history, projectId }) => {
   }
 
   if (peekTemplate.loading) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <CircularProgress />
-      </div>
-    )
+    return <LoadingBar id='clone-view' />
   } else if (peekTemplate.error) {
     return <NotFoundView message='Your share link is not valid' />
   }

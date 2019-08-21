@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,6 +10,7 @@ import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 import AuthenticationIcon from './AuthIcon'
 import { PROJECT_BY_ID, WORKSPACE_BY_ID, COURSE_BY_ID } from '../graphql/Query'
 import { useLoginStateValue } from '../store'
+import { useLoadingBar } from './LoadingBar'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />
 
@@ -144,30 +145,28 @@ const parseLocation = location => ([
 
 const pathItemId = item => item.link || item.name
 
-export const LoadingContext = createContext(null)
-
-export const LoadingProvider = ({ children }) => {
-  const provider = useRef(null)
-  const setLoading = (...args) => provider.current(...args)
-  const setProvider = newProvider => provider.current = newProvider
-  return (
-    <LoadingContext.Provider value={{ setLoading, setProvider }}>
-      {children}
-    </LoadingContext.Provider>
-  )
-}
-
-export const useLoadingBar = () => useContext(LoadingContext)
-
 const NavBar = ({ location }) => {
   const [{ loggedIn, user }] = useLoginStateValue()
   const [loading, setLoading] = useState(null)
+  const loadingCache = useRef(new Set())
   const prevLocation = useRef(location.pathname)
   const prevPath = useRef([])
   const undo = useRef([])
 
   const { setProvider } = useLoadingBar()
-  setProvider(setLoading)
+  setProvider({
+    startLoading: id => {
+      if (!loading && !loadingCache.current.has(id)) {
+        setLoading(true)
+      }
+      loadingCache.current.add(id)
+    },
+    stopLoading: id => {
+      if (loadingCache.current.delete(id) && loadingCache.current.size === 0) {
+        setLoading(false)
+      }
+    }
+  })
 
   const updateHistory = newPath => {
     const newUndo = [...prevPath.current, ...undo.current]
