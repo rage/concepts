@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
-  TextField, Select, MenuItem, FormControl, InputLabel, OutlinedInput
+  TextField, MenuItem
 } from '@material-ui/core'
 
 import { useMessageStateValue } from '../store'
@@ -51,24 +51,26 @@ const Dialog = ({ contextRef }) => {
 
   const handleSubmit = (close) => {
     if (state.submitDisabled) return
-    const variables = Object.fromEntries(state.fields
-      .map(key => [key.name, typeof inputState[key.name] === 'string' && inputState[key.name].trim()]))
+    const variables = {}
     for (const key of state.fields) {
-      if (variables[key.name] === '' && key.required) {
-        window.alert(`${state.type} needs a ${key.name}!`)
-        return
+      let data = inputState[key.name]
+      if (typeof data === 'string') {
+        data = data.trim()
       }
-      if (key.type === 'select') {
-        variables[key.name] = {
-          'name': inputState[key.name],
-          'type': 'bloom'
+      if (key.list && !variables[key.list]) variables[key.list] = []
+      if (!data) {
+        if (key.required) {
+          window.alert(`${state.type} needs a ${key.name}!`)
+          return
         }
+        continue
       }
-
-      // Allow multible values for tags
-      if (!variables[key.name] && key.isList) {
-        variables[key.name] = []
+      if (key.valueMutator) {
+        data = key.valueMutator(data)
+        if (!data) return
       }
+      if (key.list) variables[key.list].push(data)
+      else variables[key.name] = data
     }
     setSubmitDisabled(true)
     state.mutation({ variables: { ...state.requiredVariables, ...variables } })
@@ -163,7 +165,16 @@ const Dialog = ({ contextRef }) => {
                   margin='normal'
                 >
                   <MenuItem key={'null'} value={''}>None</MenuItem>
-                  {key.values.map(value => <MenuItem key={value} value={value}>{value}</MenuItem>)}
+                  {key.values.map(data => {
+                    if (typeof value === 'string') {
+                      data = { value: data }
+                    }
+                    return (
+                      <MenuItem key={data.value} value={data.value}>
+                        {data.label || data.value}
+                      </MenuItem>
+                    )
+                  })}
                 </TextField>
               }
             })
