@@ -23,13 +23,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: 'auto',
     boxSizing: 'border-box',
     overflow: 'hidden',
-    '&.mainWorkspaceList': {
-      maxWidth: '720px',
-      '@media screen and (max-width: 752px)': {
-        width: 'calc(100% - 32px)'
-      }
-    },
-
     display: 'flex',
     flexDirection: 'column'
   },
@@ -63,7 +56,7 @@ const TYPE_NAMES = {
 const BaseWorkspaceList = ({
   history, type, workspaces, activeTemplate, projectId, urlPrefix,
   openCreateDialog, openEditDialog, openShareDialog, cardHeaderAction, cardHeaderTitle,
-  deleteWorkspace, setActiveTemplate
+  deleteWorkspace, setActiveTemplate, style
 }) => {
   const classes = useStyles()
   const [menu, setMenu] = useState({ open: false })
@@ -172,7 +165,7 @@ This will change which template is cloned by users.`)
     menu.workspace.id === activeTemplate.id
 
   return (
-    <Card elevation={0} className={`${classes.root} ${type}`}>
+    <Card elevation={0} className={classes.root} style={style}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
       <List dense={false} className={classes.list}>
         {

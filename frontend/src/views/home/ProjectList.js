@@ -15,15 +15,10 @@ import { PROJECTS_FOR_USER } from '../../graphql/Query'
 const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
-    maxWidth: '720px',
     width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible',
-    '@media screen and (max-width: 752px)': {
-      width: 'calc(100% - 32px)'
-    }
+    overflow: 'auto',
+    gridArea: 'projects'
   },
   progress: {
     margin: theme.spacing(2)

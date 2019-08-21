@@ -17,7 +17,7 @@ const WorkspaceList = ({ workspaces, urlPrefix }) => {
     }]
   })
   const cardHeaderTitle = 'Workspaces'
-  return <BaseWorkspaceList type={TYPE_MAIN}
+  return <BaseWorkspaceList type={TYPE_MAIN} style={{ gridArea: 'workspaces' }}
     workspaces={workspaces} urlPrefix={urlPrefix} openEditDialog={openEditDialog}
     openShareDialog={openShareDialog} openCreateDialog={openCreateDialog}
     deleteWorkspace={deleteWorkspace} cardHeaderTitle={cardHeaderTitle}
