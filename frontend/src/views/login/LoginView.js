@@ -6,9 +6,7 @@ import {
   Container, Button, TextField, Typography, FormHelperText, CircularProgress, Divider
 } from '@material-ui/core'
 
-import {
-  CREATE_GUEST_ACCOUNT
-} from '../../graphql/Mutation'
+import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { useLoginStateValue } from '../../store'
 

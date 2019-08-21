@@ -18,16 +18,27 @@ const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
     width: '100%',
+    height: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible',
+    overflow: 'hidden',
     '&.mainWorkspaceList': {
       maxWidth: '720px',
       '@media screen and (max-width: 752px)': {
         width: 'calc(100% - 32px)'
       }
-    }
+    },
+
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  iconButton: {
+    padding: '6px 12px 6px 12px'
+  },
+  list: {
+    flex: 1,
+    overflow: 'auto'
   },
   progress: {
     margin: theme.spacing(2)
@@ -64,7 +75,7 @@ const BaseWorkspaceList = ({
   }
 
   cardHeaderAction = cardHeaderAction || (
-    <IconButton aria-label='Add' onClick={handleCreateOpen}>
+    <IconButton className={classes.iconButton} aria-label='Add' onClick={handleCreateOpen}>
       <AddIcon />
     </IconButton>
   )
@@ -163,7 +174,7 @@ This will change which template is cloned by users.`)
   return (
     <Card elevation={0} className={`${classes.root} ${type}`}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
-      <List dense={false}>
+      <List dense={false} className={classes.list}>
         {
           workspaces.map(workspace => (
             <ListItem
@@ -205,14 +216,17 @@ This will change which template is cloned by users.`)
           </ListItemIcon>
           Export
         </MenuItem>
-        {type !== TYPE_USER && <>
+        {
+          type !== TYPE_USER &&
           <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>
               <ShareIcon />
             </ListItemIcon>
-            Share link
+          Share link
           </MenuItem>
-          {type === TYPE_TEMPLATE &&
+        }
+        {
+          type !== TYPE_USER && type === TYPE_TEMPLATE &&
             <MenuItem onClick={handleSetActive} disabled={isActiveTemplate}>
               <ListItemIcon>
                 {
@@ -224,20 +238,26 @@ This will change which template is cloned by users.`)
               </ListItemIcon>
               {!isActiveTemplate ? 'Set as' : 'Is'} active
             </MenuItem>
-          }
+
+        }
+        {
+          type !== TYPE_USER &&
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>
             Edit
           </MenuItem>
+        }
+        {
+          type !== TYPE_USER &&
           <MenuItem aria-label='Delete' onClick={handleDelete}>
             <ListItemIcon>
               <DeleteIcon />
             </ListItemIcon>
             Delete
           </MenuItem>
-        </>}
+        }
       </Menu>
     </Card>
   )

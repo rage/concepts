@@ -1,4 +1,3 @@
-import React, { useRef, useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
@@ -23,11 +22,9 @@ const useCreateConceptDialog = workspaceId => {
     actionText: 'Create',
     title: 'Add concept',
     fields: [{
-      type: 'textfield',
       name: 'name',
       required: true
     }, {
-      type: 'textfield',
       name: 'description',
       multiline: true
     }, {

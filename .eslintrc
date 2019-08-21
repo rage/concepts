@@ -37,6 +37,12 @@
       "error",
       "never"
     ],
+    "comma-spacing": [
+      "error",
+      {
+        "after": true
+      }
+    ],
     "eol-last": [
       "error",
       "always"
@@ -59,7 +65,16 @@
       "error",
       {
         "newlines-between": "always",
-        "groups": ["builtin", "external", ["internal", "sibling", "parent"], "index"]
+        "groups": [
+          "builtin",
+          "external",
+          [
+            "internal",
+            "sibling",
+            "parent"
+          ],
+          "index"
+        ]
       }
     ],
     "max-len": [
@@ -103,6 +118,12 @@
       {
         "before": true,
         "after": true
+      }
+    ],
+    "key-spacing": [
+      "error",
+      {
+        "afterColon": true
       }
     ],
     "template-curly-spacing": [

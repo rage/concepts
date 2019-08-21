@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery } from 'react-apollo-hooks'
-import { Typography, CircularProgress, Button } from '@material-ui/core'
+import { Typography, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import UserWorkspaceList from './UserWorkspaceList'
@@ -10,6 +10,7 @@ import NotFoundView from '../error/NotFoundView'
 import TemplateList from './TemplateList'
 import MergeList from './MergeList'
 import { useLoginStateValue } from '../../store'
+import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -64,11 +65,7 @@ const ProjectView = ({ projectId }) => {
   })
 
   if (projectQuery.loading) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <CircularProgress />
-      </div>
-    )
+    return <LoadingBar id='project-view' />
   } else if (projectQuery.error) {
     return <NotFoundView message='Project not found' />
   }
@@ -76,8 +73,6 @@ const ProjectView = ({ projectId }) => {
   const showToolbar = projectQuery.data.projectById.participants.find(participant =>
     participant.user.id === user.id && participant.privilege === 'OWNER'
   )
-
-  console.log(showToolbar)
 
   return (
     <div className={`${classes.root} ${showToolbar ? '' : 'hideToolbar'}`}>

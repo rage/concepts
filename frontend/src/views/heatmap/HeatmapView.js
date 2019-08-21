@@ -3,10 +3,11 @@ import { withRouter } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'
-import { Paper, Typography, CircularProgress, Tooltip } from '@material-ui/core'
+import { Paper, Typography, Tooltip } from '@material-ui/core'
 
 import { WORKSPACE_COURSES_AND_CONCEPTS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
+import LoadingBar from '../../components/LoadingBar'
 
 const cellDimension = {
   width: 50,
@@ -240,6 +241,8 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
 
   if (workspaceCourseQuery.error) {
     return <NotFoundView message='Workspace not found' />
+  } else if (!workspaceCourseQuery.data.workspaceById) {
+    return <LoadingBar id='heatmap-view'/>
   }
 
   const maxGradVal = workspaceCourseQuery.data.workspaceById ?
@@ -259,50 +262,43 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
       <Paper className={classes.paper}>
         <Typography variant='h5' style={{ marginBottom: '32px' }}>Course overview</Typography>
-        {
-          workspaceCourseQuery.data.workspaceById ?
-            <div className={classes.scrollSyncTable}>
-              {
-                workspaceCourseQuery.data.workspaceById.courses.length > 0 ?
-                  <table>
-                    <thead>
-                      <tr>
-                        <BlankHeaderCell />
-                        {workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                          <HeaderCell key={course.id} title={course.name} />
-                        ))}
-                      </tr>
-                    </thead>
+        <div className={classes.scrollSyncTable}>
+          {
+            workspaceCourseQuery.data.workspaceById.courses.length > 0 ?
+              <table>
+                <thead>
+                  <tr>
+                    <BlankHeaderCell />
+                    {workspaceCourseQuery.data.workspaceById.courses.map(course => (
+                      <HeaderCell key={course.id} title={course.name} />
+                    ))}
+                  </tr>
+                </thead>
 
-                    <tbody>
-                      {
-                        workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
-                          <tr key={`${fromCourse.id}`}>
-                            <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
-                            {
-                              workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
-                                <TableCell
-                                  workspaceId={workspaceId} maxGradVal={maxGradVal}
-                                  key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
-                                  toCourse={toCourse} urlPrefix={urlPrefix} />
-                              ))
-                            }
-                          </tr>
-                        ))
-                      }
-                    </tbody>
-                  </table>
-                  :
-                  <Typography style={{ color: '#bbb', textAlign: 'center' }}>
-                    No courses available
-                  </Typography>
-              }
-            </div>
-            :
-            <div style={{ textAlign: 'center' }}>
-              <CircularProgress />
-            </div>
-        }
+                <tbody>
+                  {
+                    workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
+                      <tr key={`${fromCourse.id}`}>
+                        <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
+                        {
+                          workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
+                            <TableCell
+                              workspaceId={workspaceId} maxGradVal={maxGradVal}
+                              key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
+                              toCourse={toCourse} urlPrefix={urlPrefix} />
+                          ))
+                        }
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+              :
+              <Typography style={{ color: '#bbb', textAlign: 'center' }}>
+                No courses available
+              </Typography>
+          }
+        </div>
       </Paper>
     </div></div>
   )

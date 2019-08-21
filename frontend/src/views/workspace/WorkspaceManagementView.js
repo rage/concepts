@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { Typography, CircularProgress, Paper } from '@material-ui/core'
+import { Typography, Paper } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -12,6 +12,7 @@ import {
   CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
+import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -91,11 +92,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   })
 
   if (workspaceQuery.loading) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <CircularProgress />
-      </div>
-    )
+    return <LoadingBar id='workspace-management'/>
   } else if (workspaceQuery.error) {
     return <NotFoundView message='Workspace not found' />
   }
