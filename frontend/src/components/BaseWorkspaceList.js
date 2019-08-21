@@ -18,16 +18,24 @@ const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
     width: '100%',
+    height: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible',
+    overflow: 'hidden',
     '&.mainWorkspaceList': {
       maxWidth: '720px',
       '@media screen and (max-width: 752px)': {
         width: 'calc(100% - 32px)'
       }
-    }
+    },
+
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  list: {
+    flex: 1,
+    overflow: 'auto'
   },
   progress: {
     margin: theme.spacing(2)
@@ -163,7 +171,7 @@ This will change which template is cloned by users.`)
   return (
     <Card elevation={0} className={`${classes.root} ${type}`}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
-      <List dense={false}>
+      <List dense={false} className={classes.list}>
         {
           workspaces.map(workspace => (
             <ListItem
