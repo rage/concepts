@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader
+  Card, CardHeader, Tooltip, Fade
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
@@ -13,18 +13,40 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
-    overflow: 'visible'
+    display: 'flex',
+    flexDirection: 'column'
   },
-  button: {
+  list: {
+    overflow: 'auto'
+  },
+  submit: {
+    margin: theme.spacing(1, 0)
+  },
+  cancel: {
     margin: theme.spacing(1)
+  },
+  conceptName: {
+    overflowWrap: 'break-word',
+    maxWidth: 'calc(100% - 96px)'
   },
   textfield: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1, 0)
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
+  },
+  popper: {
+    padding: '5px'
   }
 }))
 
 const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
+  const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopEditing = id => {
@@ -36,10 +58,19 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader title={`Concepts of ${course.name}`} />
-      <List>{
+      <List ref={listRef} className={classes.list}>{
         course.concepts.map(concept => (
-          <ListItem divider key={concept.id}>
-            {editing.has(concept.id) ? <>
+          <Tooltip
+            key={concept.id}
+            placement='top'
+            classes={{
+              tooltip: classes.tooltip,
+              popper: classes.popper
+            }}
+            TransitionComponent={Fade}
+            title={concept.description || 'No description available'}>
+            <ListItem divider key={concept.id}>
+              {editing.has(concept.id) ? <>
               <CreateConcept
                 submit={args => {
                   stopEditing(concept.id)
@@ -51,7 +82,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
               />
             </> : <>
               <ListItemText primary={
-                <Typography variant='h6'>{concept.name}</Typography>
+                <Typography className={classes.conceptName} variant='h6'>{concept.name}</Typography>
               } />
               <ListItemSecondaryAction>
                 <IconButton aria-label='Delete' onClick={() => {
@@ -67,10 +98,14 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
                 </IconButton>
               </ListItemSecondaryAction>
             </>}
-          </ListItem>
+            </ListItem>
+          </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={createConcept} />
+      <CreateConcept submit={async (...args) => {
+        await createConcept(...args)
+        listRef.current.scrollTop = listRef.current.scrollHeight
+      }} />
     </Card>
   )
 }
@@ -130,11 +165,14 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
-      <Button color='primary' variant='contained' disabled={!input.name} type='submit' className={classes.button}>
+      <Button
+        color='primary' variant='contained' disabled={!input.name} type='submit'
+        className={classes.submit}
+      >
         {action}
       </Button>
       {cancel &&
-        <Button color='primary' variant='contained' onClick={cancel} className={classes.button}>
+        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
         </Button>
       }

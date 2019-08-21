@@ -29,11 +29,7 @@ const useStyles = makeStyles(() => ({
       width: 'calc(100% - 32px)'
     },
     '& > div': {
-      overflow: 'hidden',
-      '& > div': {
-        height: '100%',
-        overflow: 'auto'
-      }
+      overflow: 'hidden'
     }
   },
   header: {
