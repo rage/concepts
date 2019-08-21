@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
   listItemActive: {
     boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
   },
+  courseName: {
+    overflowWrap: 'break-word',
+    maxWidth: 'calc(100% - 96px)'
+  },
   submit: {
     margin: theme.spacing(1, 0)
   },
@@ -69,7 +73,7 @@ const CourseList = ({
               />
             </> : <>
               <ListItemText primary={
-                <Typography variant='h6'>{course.name}</Typography>
+                <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
               } />
               <ListItemSecondaryAction>
                 <IconButton aria-label='Delete' onClick={evt => {

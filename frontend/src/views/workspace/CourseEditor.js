@@ -25,6 +25,10 @@ const useStyles = makeStyles(theme => ({
   cancel: {
     margin: theme.spacing(1)
   },
+  conceptName: {
+    overflowWrap: 'break-word',
+    maxWidth: 'calc(100% - 96px)'
+  },
   textfield: {
     margin: theme.spacing(1, 0)
   }
@@ -59,7 +63,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
               />
             </> : <>
               <ListItemText primary={
-                <Typography variant='h6'>{concept.name}</Typography>
+                <Typography className={classes.conceptName} variant='h6'>{concept.name}</Typography>
               } />
               <ListItemSecondaryAction>
                 <IconButton aria-label='Delete' onClick={() => {
