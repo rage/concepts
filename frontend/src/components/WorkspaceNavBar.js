@@ -29,7 +29,8 @@ const useStyles = makeStyles({
     height: '56px'
   },
   navbar: {
-    flex: 1
+    flex: 1,
+    zIndex: 2
   },
   menuButton: {
     width: '56px',
