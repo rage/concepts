@@ -14,6 +14,7 @@ import {
 import client from '../../apollo/apolloClient'
 import colors from './hexcolors'
 import NotFoundView from '../error/NotFoundView'
+import LoadingBar from '../../components/LoadingBar'
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -398,7 +399,7 @@ const GraphView = ({ workspaceId }) => {
       },
       name: 'klay'
     })
-    loadingRef.current.style.display = 'none'
+    loadingRef.current.componentWillUnmount()
     controlsRef.current.style.display = 'block'
 
     cur.conceptLayout.run()
@@ -415,6 +416,7 @@ const GraphView = ({ workspaceId }) => {
         })
         drawConceptGraph(response.data)
       } catch (err) {
+        console.error(err)
         setError(err)
       }
     })()
@@ -426,11 +428,7 @@ const GraphView = ({ workspaceId }) => {
 
   return <div className={classes.root}>
     <div className={classes.graph} ref={graphRef}>
-      {!state.current.network &&
-        <div ref={loadingRef} style={{ textAlign: 'center' }}>
-          <CircularProgress />
-        </div>
-      }
+      {!state.current.network && <LoadingBar id='graph-view' componentRef={loadingRef} />}
     </div>
     <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
       <div className={classes.buttonWrapper}>

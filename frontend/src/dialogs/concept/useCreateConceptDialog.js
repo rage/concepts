@@ -1,4 +1,3 @@
-import React, { useRef, useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
