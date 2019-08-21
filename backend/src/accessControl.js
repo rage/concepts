@@ -51,6 +51,11 @@ query($id: ID!, $userId: ID!) {
         privilege
       }
     }
+    asMerge {
+      participants(where: { user: { id: $userId } }) {
+        privilege
+      }
+    }
     sourceProject {
       participants(where: { user: { id: $userId } }) {
         privilege
@@ -130,6 +135,7 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
 
     return readPrivilege(proRes.workspace.sourceProject) >= privilegeToInt(minimumPrivilege)
       || readPrivilege(proRes.workspace.asTemplate) >= privilegeToInt(minimumPrivilege)
+      || readPrivilege(proRes.workspace.asMerge) >= privilegeToInt(minimumPrivilege)
   } else {
     return false
   }
