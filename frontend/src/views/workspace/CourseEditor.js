@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader
+  Card, CardHeader, Tooltip, Fade
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
@@ -31,6 +31,16 @@ const useStyles = makeStyles(theme => ({
   },
   textfield: {
     margin: theme.spacing(1, 0)
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
+  },
+  popper: {
+    padding: '5px'
   }
 }))
 
@@ -50,8 +60,17 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
       <CardHeader title={`Concepts of ${course.name}`} />
       <List ref={listRef} className={classes.list}>{
         course.concepts.map(concept => (
-          <ListItem divider key={concept.id}>
-            {editing.has(concept.id) ? <>
+          <Tooltip
+            key={concept.id}
+            placement='top'
+            classes={{
+              tooltip: classes.tooltip,
+              popper: classes.popper
+            }}
+            TransitionComponent={Fade}
+            title={concept.description || 'No description available'}>
+            <ListItem divider key={concept.id}>
+              {editing.has(concept.id) ? <>
               <CreateConcept
                 submit={args => {
                   stopEditing(concept.id)
@@ -79,7 +98,8 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
                 </IconButton>
               </ListItemSecondaryAction>
             </>}
-          </ListItem>
+            </ListItem>
+          </Tooltip>
         ))
       }</List>
       <CreateConcept submit={async (...args) => {
