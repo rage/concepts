@@ -9,12 +9,22 @@ import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: 'grid',
+    gridTemplate: `"workspaces gap  projects" 1fr
+                  / 1fr        16px 1fr`,
+    width: '1440px',
+    '@media screen and (max-width: 1472px)': {
+      width: 'calc(100% - 32px)'
+    },
     gridArea: 'content / content / bottom-navbar / bottom-navbar',
-    overflow: 'auto',
-    '& > div:not(:first-child)': {
-      marginTop: '16px'
+    overflow: 'hidden',
+    margin: '6px auto 16px',
+    '&:not(.staff)': {
+      gridTemplateColumns: '1fr 0 0',
+      width: '720px',
+      '@media screen and (max-width: 752px)': {
+        width: 'calc(100% - 32px)'
+      }
     }
   }
 }))
@@ -34,7 +44,7 @@ const UserViewContent = ({ user }) => {
   }
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${user.role.toLowerCase()}`}>
       <WorkspaceList
         workspaces={workspaceQuery.data.workspacesForUser.map(ws => ws.workspace)}
         urlPrefix='/workspaces' />
