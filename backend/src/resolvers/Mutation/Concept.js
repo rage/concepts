@@ -56,7 +56,7 @@ const ConceptMutations = {
 
     return await context.prisma.updateConcept({
       where: { id },
-      data: data
+      data
     })
   },
 
