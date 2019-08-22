@@ -76,7 +76,11 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
               <CreateConcept
                 submit={args => {
                   stopEditing(concept.id)
-                  updateConcept({ id: concept.id, ...args })
+                  const { name, description, tag, official } = args
+                  updateConcept({ id: concept.id, name, description, tags: [{
+                    name: tag,
+                    type: 'bloom'
+                  }], official })
                 }}
                 cancel={() => stopEditing(concept.id)}
                 defaultValues={concept}
@@ -119,12 +123,20 @@ const initialState = {
   name: '',
   description: '',
   tag: '',
+  tags: [],
   official: false
 }
 
 const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
   const nameRef = useRef()
+  if (defaultValues) {
+    defaultValues.tags = defaultValues.tags.map(tag => ({
+      name: tag.name,
+      type: tag.type
+    }))
+    defaultValues.tag = (defaultValues.tags.find(tag => tag.type === 'bloom') || {}).name
+  }
   const [input, setInput] = useState({ ...initialState, ...defaultValues })
 
   const onSubmit = evt => {
