@@ -78,6 +78,12 @@ query workspaceById($id: ID!) {
         id
         name
         description
+        tags {
+          id
+          name
+          type
+          priority
+        }
       }
     }
     tokens {
