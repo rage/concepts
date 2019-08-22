@@ -399,7 +399,7 @@ const GraphView = ({ workspaceId }) => {
       },
       name: 'klay'
     })
-    loadingRef.current.componentWillUnmount()
+    loadingRef.current.stopLoading()
     controlsRef.current.style.display = 'block'
 
     cur.conceptLayout.run()

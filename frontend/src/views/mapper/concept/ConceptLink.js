@@ -3,8 +3,11 @@ import { withStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
 
+// TODO turn these into functional components
+
 export default class ConceptLink extends Component {
-  componentWillMount() {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount() {
     this.fromAnchor = this.parseAnchor(this.props.fromAnchor)
     this.toAnchor = this.parseAnchor(this.props.toAnchor)
     this.delay = this.parseDelay(this.props.delay)
@@ -18,7 +21,8 @@ export default class ConceptLink extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.fromAnchor !== this.props.fromAnchor) {
       this.fromAnchor = this.parseAnchor(this.props.fromAnchor)
     }
@@ -194,7 +198,8 @@ export class Line extends PureComponent {
     this.dynY = null
   }
 
-  componentWillReceiveProps(nextProps) {
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.pos = {
       x0: nextProps.x0,
       y0: nextProps.y0,
