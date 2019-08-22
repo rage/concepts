@@ -9,6 +9,7 @@ query($id : ID!) {
       id
       name
       conceptLinks {
+        official
         createdBy {
           id
         }
@@ -20,6 +21,7 @@ query($id : ID!) {
         }
       }
       courseLinks {
+        official
         createdBy {
           id
         }
@@ -33,6 +35,7 @@ query($id : ID!) {
       courses {
         id
         name
+        official
         createdBy {
           id
         }
@@ -40,6 +43,7 @@ query($id : ID!) {
           id
           name
           description
+          official
           createdBy {
             id
           }
@@ -220,12 +224,14 @@ const WorkspaceMutations = {
         create: templateWorkspace.courses.map(course => ({
           id: makeNewId(course.id),
           name: course.name,
+          official: course.official,
           createdBy: { connect: { id: course.createdBy.id } },
           concepts: {
             create: course.concepts.map(concept => ({
               id: makeNewId(concept.id),
               name: concept.name,
               description: concept.description,
+              official: concept.official,
               createdBy: { connect: { id: concept.createdBy.id } },
               workspace: { connect: { id: workspaceId } }
             }))
@@ -234,6 +240,7 @@ const WorkspaceMutations = {
       },
       conceptLinks: {
         create: templateWorkspace.conceptLinks.map(link => ({
+          official: link.official,
           createdBy: { connect: { id: link.createdBy.id } },
           from: { connect: { id: makeNewId(link.from.id) } },
           to: { connect: { id: makeNewId(link.to.id) } }
@@ -241,6 +248,7 @@ const WorkspaceMutations = {
       },
       courseLinks: {
         create: templateWorkspace.courseLinks.map(link => ({
+          official: link.official,
           createdBy: { connect: { id: link.createdBy.id } },
           from: { connect: { id: makeNewId(link.from.id) } },
           to: { connect: { id: makeNewId(link.to.id) } }
