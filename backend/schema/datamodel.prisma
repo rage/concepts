@@ -97,6 +97,7 @@ type CourseLink {
 type Course {
   id: ID! @id
   name: String!
+  official: Boolean! @default(value: false)
   createdBy: User!
   linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)

@@ -241,6 +241,7 @@ type CourseLink {
 type Course {
   id: ID!
   name: String!
+  official: Boolean!
   createdBy: User!
   linksFromCourse: [CourseLink!]!
   linksToCourse: [CourseLink!]!

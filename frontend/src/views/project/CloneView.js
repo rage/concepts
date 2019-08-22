@@ -103,14 +103,17 @@ const CloneView = ({ history, projectId }) => {
     return <NotFoundView message='Your share link is not valid' />
   }
 
-  const inputDisabled = (peekTemplate.data.limitedProjectById &&
-    !peekTemplate.data.limitedProjectById.activeTemplateId) ||
-    loading ||
-    (workspace.data && workspace.data.workspaceBySourceTemplate &&
-      workspace.data.workspaceBySourceTemplate.id)
+  const inputDisabled = Boolean(
+    (peekTemplate.data.limitedProjectById
+      && !peekTemplate.data.limitedProjectById.activeTemplateId)
+    || loading
+    || (workspace.data
+      && workspace.data.workspaceBySourceTemplate
+      && workspace.data.workspaceBySourceTemplate.id)
+  )
 
   return (
-    <Container component='main' maxWidth='xs' cl>
+    <Container component='main' maxWidth='xs'>
       <form onSubmit={evt => {evt.preventDefault(); return handleCreate()}}>
         <TextField
           disabled={inputDisabled}
@@ -132,10 +135,7 @@ const CloneView = ({ history, projectId }) => {
           color='primary'
           type='submit'
           onClick={handleCreate}
-          disabled={!peekTemplate.data.limitedProjectById.activeTemplateId ||
-              loading ||
-              (workspace.data.workspaceBySourceTemplate &&
-                workspace.data.workspaceBySourceTemplate.id)}
+          disabled={inputDisabled}
         >
             Create workspace
         </Button>
