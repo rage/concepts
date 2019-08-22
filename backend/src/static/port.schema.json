@@ -3,10 +3,14 @@
   "type": "object",
   "oneOf": [
     {
-      "required": ["workspaceId"]
+      "required": [
+        "workspaceId"
+      ]
     },
     {
-      "required": ["workspace"]
+      "required": [
+        "workspace"
+      ]
     }
   ],
   "required": [
@@ -40,11 +44,6 @@
       ],
       "minLength": 1
     },
-    "defaultCourse": {
-      "type": "string",
-      "description": "Name of course to view by default. Must be defined in courses.",
-      "examples": ["Ohjelmoinnin perusteet"]
-    },
     "courses": {
       "type": "array",
       "description": "List of courses in workspace",
@@ -66,13 +65,40 @@
             ],
             "minLength": 1
           },
+          "official": {
+            "type": "boolean",
+            "description": "Whether or not the course is official, rather than user-specified",
+            "examples": [
+              true
+            ]
+          },
           "prerequisites": {
             "type": "array",
             "description": "List of prerequisite courses for this course",
             "items": {
-              "type": "string",
+              "type": "object",
               "description": "Course prerequisite name",
-              "minLength": 1
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the prerequisite concept",
+                  "examples": [
+                    "Ehtolause"
+                  ],
+                  "minLength": 1
+                },
+                "official": {
+                  "type": "boolean",
+                  "description": "Whether or not the course prerequisite link is official, rather than user-specified",
+                  "examples": [
+                    true
+                  ]
+                }
+              }
             }
           },
           "concepts": {
@@ -91,9 +117,17 @@
                   "type": "string",
                   "description": "Name of concept",
                   "examples": [
-                    "Toistolause", "Ehtolause"
+                    "Toistolause",
+                    "Ehtolause"
                   ],
                   "minLength": 1
+                },
+                "official": {
+                  "type": "boolean",
+                  "description": "Whether or not the concept is official, rather than user-specified",
+                  "examples": [
+                    true
+                  ]
                 },
                 "description": {
                   "type": "string",

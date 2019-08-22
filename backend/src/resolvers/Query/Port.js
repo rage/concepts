@@ -9,17 +9,20 @@ query($id : ID!) {
     name
     courses {
       name
+      official
       concepts {
         name
         description
+        official
         prerequisites: linksToConcept {
+          official
           from {
             name
-            official
           }
         }
       }
       prerequisites: linksToCourse {
+        official
         from {
           name
         }
