@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade
+  Card, CardHeader, Tooltip, Fade, MenuItem
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
+
+import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -102,8 +104,11 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={async (...args) => {
-        await createConcept(...args)
+      <CreateConcept submit={async ({ name, description, tag, official }) => {
+        await createConcept({ name, description, tags: [{
+          name: tag,
+          type: 'bloom'
+        }], official })
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
     </Card>
@@ -165,6 +170,28 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
+      <TextField
+        select
+        variant='outlined'
+        className={classes.textfield}
+        label='tags'
+        value={input['tag']}
+        name='tag'
+        onChange={onChange}
+        margin='dense'
+      >
+        <MenuItem key={'null'} value={''}>None</MenuItem>
+        {TaxonomyTags.map(data => {
+          if (typeof value === 'string') {
+            data = { value: data }
+          }
+          return (
+            <MenuItem key={data.value} value={data.value}>
+              {data.label || data.value}
+            </MenuItem>
+          )
+        })}
+      </TextField>
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
         className={classes.submit}
