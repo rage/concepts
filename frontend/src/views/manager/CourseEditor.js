@@ -186,7 +186,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         select
         variant='outlined'
         className={classes.textfield}
-        label='tags'
+        label="Select Bloom's tags"
         fullWidth
         value={input['tag']}
         name='tag'
