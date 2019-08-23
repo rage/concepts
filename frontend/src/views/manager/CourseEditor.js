@@ -76,8 +76,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
               <CreateConcept
                 submit={args => {
                   stopEditing(concept.id)
-                  const { name, description, tags, official } = args
-                  updateConcept({ id: concept.id, name, description, tags, official })
+                  updateConcept({ id: concept.id, ...args })
                 }}
                 cancel={() => stopEditing(concept.id)}
                 defaultValues={concept}
@@ -105,8 +104,8 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={async ({ name, description, tags, official }) => {
-        await createConcept({ name, description, tags, official })
+      <CreateConcept submit={async (args) => {
+        await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
     </Card>
