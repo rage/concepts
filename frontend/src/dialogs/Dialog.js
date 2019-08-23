@@ -63,7 +63,7 @@ const Dialog = ({ contextRef }) => {
           window.alert(`${state.type} needs a ${key.name}!`)
           return
         }
-        continue
+        if (key.omitEmpty) continue
       }
       if (key.valueMutator) {
         data = key.valueMutator(data)
