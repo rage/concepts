@@ -74,11 +74,13 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
             <ListItem divider key={concept.id}>
               {editing.has(concept.id) ? <>
               <CreateConcept
-                concept={concept}
-                createConcept={createConcept}
-                updateConcept={updateConcept}
-                submit={() => {
+                submit={args => {
                   stopEditing(concept.id)
+                  const { name, description, tag, official } = args
+                  updateConcept({ id: concept.id, name, description, tags: [{
+                    name: tag,
+                    type: 'bloom'
+                  }], official })
                 }}
                 cancel={() => stopEditing(concept.id)}
                 defaultValues={concept}
@@ -106,13 +108,13 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </Tooltip>
         ))
       }</List>
-      <CreateConcept
-        createConcept={createConcept}
-        updateConcept={updateConcept}
-        submit={() => {
-          listRef.current.scrollTop = listRef.current.scrollHeight
-        }}
-        action='Create' />
+      <CreateConcept submit={async ({ name, description, tag, official }) => {
+        await createConcept({ name, description, tags: [{
+          name: tag,
+          type: 'bloom'
+        }], official })
+        listRef.current.scrollTop = listRef.current.scrollHeight
+      }} />
     </Card>
   )
 }
@@ -125,8 +127,7 @@ const initialState = {
   official: false
 }
 
-const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel,
-  concept, createConcept, updateConcept }) => {
+const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
   const nameRef = useRef()
   if (defaultValues) {
@@ -138,23 +139,12 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel,
   }
   const [input, setInput] = useState({ ...initialState, ...defaultValues })
 
-  const onSubmit = async evt => {
+  const onSubmit = evt => {
     evt.preventDefault()
     submit(input)
-    const { name, description, tag, official } = input
     if (action === 'Create') {
-      await createConcept({ name, description, tags: [{
-        name: tag,
-        type: 'bloom'
-      }], official })
       nameRef.current.focus()
       setInput({ ...initialState })
-    } else if (action === 'Save') {
-      const tags = input.tags.filter(tag => tag.type !== 'bloom')
-      await updateConcept({ id: concept.id, name, description, tags: [{
-        name: tag,
-        type: 'bloom'
-      }, ...tags], official })
     }
   }
 
