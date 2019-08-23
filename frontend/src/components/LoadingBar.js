@@ -1,4 +1,4 @@
-import React, { Component, createContext, useContext, useRef } from 'react'
+import React, { createContext, useContext, useRef, useEffect } from 'react'
 
 export const LoadingContext = createContext(null)
 
@@ -16,29 +16,19 @@ export const LoadingProvider = ({ children }) => {
 
 export const useLoadingBar = () => useContext(LoadingContext)
 
-class InnerLoadingBar extends Component {
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.componentRef) {
-      nextProps.componentRef.current = this
-    }
-  }
-
-  componentWillMount() {
-    this.props.startLoading(this.props.id)
-  }
-
-  componentWillUnmount() {
-    this.props.stopLoading(this.props.id)
-  }
-
-  render() {
-    return this.props.children || null
-  }
-}
-
-const LoadingBar = props => {
+const LoadingBar = ({ id, componentRef, children = null }) => {
   const { startLoading, stopLoading } = useLoadingBar()
-  return <InnerLoadingBar {...props} startLoading={startLoading} stopLoading={stopLoading} />
+
+  if (componentRef) {
+    componentRef.current = { stopLoading }
+  }
+
+  useEffect(() => {
+    startLoading(id)
+    return () => stopLoading(id)
+  }, [])
+
+  return children
 }
 
 export default LoadingBar

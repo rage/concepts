@@ -92,12 +92,12 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   // Closes infoBox when leaving the page
   useEffect(() => infoBox.close, [])
 
-  const handleMenuOpen = (event, link) => {
+  const handleMenuOpen = (event, linkId) => {
     event.preventDefault()
     setConceptLinkMenu({
       x: event.pageX + window.pageXOffset,
       y: event.pageY + 32 + window.pageYOffset,
-      linkId: link.props.linkId
+      linkId
     })
   }
 
@@ -129,7 +129,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
-    setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 500)
+    setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 0)
   }
 
   if (workspaceQuery.error) {
