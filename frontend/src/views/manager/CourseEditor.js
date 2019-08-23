@@ -120,6 +120,7 @@ const initialState = {
   name: '',
   description: '',
   tags: [],
+  bloomTag: '',
   official: false
 }
 
