@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, MenuItem
+  Card, CardHeader, Tooltip, Fade, MenuItem, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
@@ -108,7 +108,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={async (args) => {
+      <CreateConcept submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
@@ -181,6 +181,19 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
+      <FormControl fullWidth>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={input.official}
+              onChange={evt => setInput({ ...input, official: evt.target.checked })}
+              value='official'
+              color='primary'
+            />
+          }
+          label='Official'
+        />
+      </FormControl>
       <TextField
         select
         variant='outlined'
