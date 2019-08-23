@@ -116,7 +116,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
         title={`Concepts of ${course.name}`}
         action={
           merging ? [
-            cardHeaderButton('Merge', () => doMerge(), merging.size === 0),
+            cardHeaderButton('Merge…', () => doMerge(), merging.size === 0),
             cardHeaderButton('Cancel', () => stopMerging())
           ] : [
             cardHeaderButton('Start merge', () => startMerging())
