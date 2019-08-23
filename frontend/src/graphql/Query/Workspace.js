@@ -74,10 +74,12 @@ query workspaceById($id: ID!) {
     courses {
       id
       name
+      official
       concepts {
         id
         name
         description
+        official
         tags {
           id
           name
