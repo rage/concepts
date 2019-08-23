@@ -76,11 +76,8 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
               <CreateConcept
                 submit={args => {
                   stopEditing(concept.id)
-                  const { name, description, tag, official } = args
-                  updateConcept({ id: concept.id, name, description, tags: [{
-                    name: tag,
-                    type: 'bloom'
-                  }], official })
+                  const { name, description, tags, official } = args
+                  updateConcept({ id: concept.id, name, description, tags, official })
                 }}
                 cancel={() => stopEditing(concept.id)}
                 defaultValues={concept}
@@ -108,11 +105,8 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={async ({ name, description, tag, official }) => {
-        await createConcept({ name, description, tags: [{
-          name: tag,
-          type: 'bloom'
-        }], official })
+      <CreateConcept submit={async ({ name, description, tags, official }) => {
+        await createConcept({ name, description, tags, official })
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
     </Card>
@@ -122,7 +116,6 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
 const initialState = {
   name: '',
   description: '',
-  tag: '',
   tags: [],
   official: false
 }
@@ -130,17 +123,19 @@ const initialState = {
 const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
   const nameRef = useRef()
-  if (defaultValues) {
-    defaultValues.tags = defaultValues.tags.map(tag => ({
-      name: tag.name,
-      type: tag.type
-    }))
-    defaultValues.tag = (defaultValues.tags.find(tag => tag.type === 'bloom') || {}).name
-  }
-  const [input, setInput] = useState({ ...initialState, ...defaultValues })
+  const localInitialState = { ...initialState, ...defaultValues }
+  const [input, setInput] = useState({
+    ...localInitialState,
+    tags: localInitialState.tags.filter(tag => tag.type !== 'bloom'),
+    bloomTag: (localInitialState.tags.find(tag => tag.type === 'bloom') || {}).name || ''
+  })
 
   const onSubmit = evt => {
     evt.preventDefault()
+    if (input.bloomTag) {
+      input.tags.push({ type: 'bloom', name: input.bloomTag })
+    }
+    delete input.bloomTag
     submit(input)
     if (action === 'Create') {
       nameRef.current.focus()
@@ -188,8 +183,8 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         className={classes.textfield}
         label="Select Bloom's tags"
         fullWidth
-        value={input['tag']}
-        name='tag'
+        value={input.bloomTag}
+        name='bloomTag'
         onChange={onChange}
         margin='dense'
       >
