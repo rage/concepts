@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade
+  Card, CardHeader, Tooltip, Fade, MenuItem
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
+
+import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -102,8 +104,8 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
           </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={async (...args) => {
-        await createConcept(...args)
+      <CreateConcept submit={async (args) => {
+        await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
     </Card>
@@ -113,17 +115,26 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
 const initialState = {
   name: '',
   description: '',
-  tag: '',
+  tags: [],
   official: false
 }
 
 const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
   const nameRef = useRef()
-  const [input, setInput] = useState({ ...initialState, ...defaultValues })
+  const localInitialState = { ...initialState, ...defaultValues }
+  const [input, setInput] = useState({
+    ...localInitialState,
+    tags: localInitialState.tags.filter(tag => tag.type !== 'bloom'),
+    bloomTag: (localInitialState.tags.find(tag => tag.type === 'bloom') || {}).name || ''
+  })
 
   const onSubmit = evt => {
     evt.preventDefault()
+    if (input.bloomTag) {
+      input.tags.push({ type: 'bloom', name: input.bloomTag })
+    }
+    delete input.bloomTag
     submit(input)
     if (action === 'Create') {
       nameRef.current.focus()
@@ -165,6 +176,29 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
+      <TextField
+        select
+        variant='outlined'
+        className={classes.textfield}
+        label="Select Bloom's tags"
+        fullWidth
+        value={input.bloomTag}
+        name='bloomTag'
+        onChange={onChange}
+        margin='dense'
+      >
+        <MenuItem value=''>None</MenuItem>
+        {TaxonomyTags.map(data => {
+          if (typeof value === 'string') {
+            data = { value: data }
+          }
+          return (
+            <MenuItem key={data.value} value={data.value}>
+              {data.label || data.value}
+            </MenuItem>
+          )
+        })}
+      </TextField>
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
         className={classes.submit}
