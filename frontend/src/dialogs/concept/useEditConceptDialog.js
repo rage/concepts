@@ -34,6 +34,7 @@ const useEditConceptDialog = () => {
       name: 'bloomTag',
       label: "Select Bloom's tags",
       list: 'tags',
+      omitEmpty: true,
       valueMutator: name => ({ name, type: 'bloom' }),
       defaultValue: (tags.find(tag => tag.type === 'bloom') || {}).name,
       values: TaxonomyTags

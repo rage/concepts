@@ -32,6 +32,7 @@ const useCreateConceptDialog = workspaceId => {
       type: 'select',
       name: 'bloomTag',
       list: 'tags',
+      omitEmpty: true,
       valueMutator: name => ({ name, type: 'bloom' }),
       label: "Select Bloom's tags",
       values: TaxonomyTags
