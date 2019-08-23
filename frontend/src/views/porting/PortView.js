@@ -80,7 +80,6 @@ const PLACEHOLDER = `{
       ],
       "prerequisites": [
         {
-
           "name": "Prerequisite course name",
           "official": true // Optional field
         }
