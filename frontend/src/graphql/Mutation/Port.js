@@ -13,6 +13,13 @@ mutation importData($data: String!) {
         name
       }
     }
+    asTemplate {
+      id
+    }
+    tokens {
+      id
+      privilege
+    }
   }
 }
 `

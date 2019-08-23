@@ -100,8 +100,10 @@ const TEMPLATE = `{
           ]
         }
       ],
-      "prerequisites":[
-        "Prerequisite course"
+      "prerequisites":[ 
+        {
+          "name": "Prerequisite course"
+        }
       ]
     },
     {
@@ -128,6 +130,7 @@ const PortView = () => {
   const [buttonText, setButtonText] = useState('Import')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+  const timeoutRef = useRef(null)
 
   const [{ user }] = useLoginStateValue()
   const messageDispatch = useMessageStateValue()[1]
@@ -149,6 +152,9 @@ const PortView = () => {
   useEffect(() => {
     setProjectLabelWidth(projectInputLabel.current.offsetWidth)
     setWorkspaceLabelWidth(workspaceInputLabel.current.offsetWidth)
+    return () => {
+      clearTimeout(timeoutRef.current)
+    }
   }, [])
   // End select properties
 
@@ -262,7 +268,7 @@ const PortView = () => {
 
       setSuccess(true)
       setButtonText('Data imported')
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         setSuccess(false)
         setButtonText('Import')
       }, 2000)
