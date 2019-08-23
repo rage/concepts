@@ -54,7 +54,6 @@ const Dialog = ({ contextRef }) => {
     const variables = {}
     for (const key of state.fields) {
       let data = inputState[key.name]
-      if (key.name === 'description') console.log('Description: ', typeof data)
       if (typeof data === 'string') {
         data = data.trim()
       }
@@ -73,7 +72,6 @@ const Dialog = ({ contextRef }) => {
       if (key.list) variables[key.list].push(data)
       else variables[key.name] = data
     }
-    console.log('Variables: ', variables)
     setSubmitDisabled(true)
     state.mutation({ variables: { ...state.requiredVariables, ...variables } })
       .catch(() => {
