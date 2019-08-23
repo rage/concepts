@@ -16,6 +16,7 @@ query($id : ID!) {
         courses {
           id
           name
+          official
           linksToCourse {
             weight
             from {
@@ -26,6 +27,7 @@ query($id : ID!) {
             id
             name
             description
+            official
             linksToConcept {
               id
               weight
@@ -95,9 +97,11 @@ const MergeMutations = {
     for (const workspace of result.project.activeTemplate.clones) {
       for (const course of workspace.courses) {
         const { links: courseLinks, concepts } = setDefault(courses, course.name, {
+          official: course.official,
           links: {},
           concepts: {}
         })
+        if (course.official) courses[course.name].official = course.official
 
         mergeLinks(course.linksToCourse, courseLinks)
 
@@ -105,9 +109,11 @@ const MergeMutations = {
           // TODO merge conflicting descriptions?
           const { links: conceptLinks } = setDefault(concepts, concept.name, {
             description: concept.description,
+            official: concept.official,
             course: course.name,
             links: {}
           })
+          if (concept.official) concepts[concept.name].official = concept.official
 
           mergeLinks(concept.linksToConcept, conceptLinks)
         }
@@ -128,15 +134,17 @@ const MergeMutations = {
       },
       courses: {
         create: Object.entries(courses)
-          .map(([courseName, { concepts }]) => ({
+          .map(([courseName, { official, concepts }]) => ({
             id: hash(courseName),
             name: courseName,
+            official,
             createdBy: { connect: { id: context.user.id } },
             concepts: {
-              create: Object.entries(concepts).map(([name, { description }]) => ({
+              create: Object.entries(concepts).map(([name, { official, description }]) => ({
                 id: hash(courseName, name),
                 name,
                 description,
+                official,
                 createdBy: { connect: { id: context.user.id } },
                 workspace: { connect: { id: workspaceId } }
               }))

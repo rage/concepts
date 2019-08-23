@@ -81,7 +81,7 @@ query workspaceById($id: ID!) {
         tags {
           id
           name
-          type 
+          type
           priority
         }
       }
