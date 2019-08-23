@@ -1,6 +1,6 @@
 const Ajv = require('ajv')
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege, roleToInt } = require('../../accessControl')
 const schema = require('../../static/port.schema')
 
 const validateData = Ajv().compile(schema)
@@ -9,6 +9,7 @@ const PortMutations = {
   async importData(root, { data }, context) {
     await checkAccess(context, { minimumRole: Role.STUDENT })
     let json
+    const canSetOfficial = roleToInt(context.role) >= roleToInt(Role.STAFF)
 
     try {
       json = JSON.parse(data)
@@ -23,7 +24,6 @@ const PortMutations = {
     }
 
     // Check if project exists
-    let project
     if (json['projectId']) {
       await checkAccess(context, {
         minimumPrivilege: Privilege.EDIT,
@@ -34,14 +34,6 @@ const PortMutations = {
           id: json['projectId']
         }).templates()
         if (!templates.find(template => template.id === json['workspaceId'])) return null
-      } else if (json['workspace']) {
-        project = await context.prisma.project({
-          id: json['projectId']
-        })
-        // No such project
-        if (!project) {
-          return null
-        }
       }
     }
 
@@ -76,6 +68,7 @@ const PortMutations = {
     const courseData = await Promise.all(courses.map(async course => {
       const courseObj = await context.prisma.createCourse({
         name: course['name'],
+        official: canSetOfficial && Boolean(json['projectId'] || course['official']),
         createdBy: { connect: { id: context.user.id } },
         workspace: { connect: { id: workspace.id } }
       })
@@ -84,10 +77,10 @@ const PortMutations = {
         context.prisma.createConcept({
           name: concept['name'],
           description: concept['description'],
+          official: canSetOfficial && Boolean(json['projectId'] || concept['official']),
           createdBy: { connect: { id: context.user.id } },
           workspace: { connect: { id: workspace.id } },
-          courses: { connect: [{ id: courseObj.id }] },
-          official: Boolean(concept['official'])
+          courses: { connect: [{ id: courseObj.id }] }
         })
       ))
 
@@ -110,10 +103,10 @@ const PortMutations = {
       await Promise.all((course['prerequisites'] || []).map(async prerequisiteCourse =>
         context.prisma.createCourseLink({
           to: { connect: { id: courseData[idx].id } },
-          from: { connect: { id: courseDictionary[prerequisiteCourse].id } },
+          from: { connect: { id: courseDictionary[prerequisiteCourse['name']].id } },
           workspace: { connect: { id: workspace.id } },
           createdBy: { connect: { id: context.user.id } },
-          official: Boolean(prerequisiteCourse['official'])
+          official: canSetOfficial && Boolean(json['projectId'] || prerequisiteCourse['official'])
         })
       ))
       // Link concept prerequisite
@@ -136,7 +129,7 @@ const PortMutations = {
               from: { connect: { id: fromConceptId } },
               createdBy: { connect: { id: context.user.id } },
               workspace: { connect: { id: workspace.id } },
-              official: Boolean(prerequisiteConcept['official'])
+              official: canSetOfficial && Boolean(json['projectId'] || prerequisiteConcept['official'])
             })
           ))
         }
@@ -148,7 +141,7 @@ const PortMutations = {
       await context.prisma.updateWorkspace({
         where: { id: workspace.id },
         data: {
-          asTemplate: { connect: { id: project.id } }
+          asTemplate: { connect: { id: json['projectId'] } }
         }
       })
     }

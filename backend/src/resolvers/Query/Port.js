@@ -9,17 +9,20 @@ query($id : ID!) {
     name
     courses {
       name
+      official
       concepts {
         name
         description
+        official
         prerequisites: linksToConcept {
+          official
           from {
             name
-            official
           }
         }
       }
       prerequisites: linksToCourse {
+        official
         from {
           name
         }
@@ -57,22 +60,28 @@ const PortQueries = {
     for (const course of workspace['courses']) {
       const courseData = {
         'name': course['name'],
+        'official': course['official'],
         'concepts': [],
         'prerequisites': []
       }
       for (const prerequisiteCourse of course['prerequisites']) {
-        courseData['prerequisites'].push(prerequisiteCourse['from']['name'])
+        courseData['prerequisites'].push({
+          'name': prerequisiteCourse['from']['name'],
+          'official': prerequisiteCourse['official']
+        })
       }
       for (const concept of course['concepts']) {
         const conceptData = {
           'name': concept['name'],
+          'official': concept['official'],
           'description': concept['description'],
           'prerequisites': []
         }
         for (const prerequisiteConcept of concept['prerequisites']) {
           // Add concept prerequisite to concept
           conceptData['prerequisites'].push({
-            'name': prerequisiteConcept['from']['name']
+            'name': prerequisiteConcept['from']['name'],
+            'official': prerequisiteConcept['official']
           })
         }
         // Add concept to course
