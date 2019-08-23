@@ -39,7 +39,10 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     gridArea: 'header',
-    margin: '16px 0'
+    margin: '16px 0 0',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis'
   },
   toolbar: {
     gridArea: 'toolbar'

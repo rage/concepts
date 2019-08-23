@@ -26,6 +26,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column'
   },
+  workspaceName: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
   list: {
     flex: 1,
     overflow: 'auto'
@@ -173,7 +178,11 @@ This will change which template is cloned by users.`)
               button key={workspace.id} onClick={() => handleNavigateManager(workspace.id)}
             >
               <ListItemText
-                primary={<Typography variant='h6'>{workspace.name}</Typography>}
+                primary={
+                  <Typography className={classes.workspaceName} variant='h6'>
+                    {workspace.name}
+                  </Typography>
+                }
                 secondary={type === TYPE_USER && workspace.participants
                   .find(p => p.privilege === 'OWNER').user.id}
               />
