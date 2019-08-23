@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
@@ -64,13 +64,17 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
   const [editing, setEditing] = useState(new Set())
   const [merging, setMerging] = useState(null)
   const startEditing = id => setEditing(new Set(editing).add(id))
+  const stopAllEditing = () => setEditing(new Set())
   const stopEditing = id => {
     const copy = new Set(editing)
     copy.delete(id)
     setEditing(copy)
   }
 
-  const startMerging = () => setMerging(new Set())
+  const startMerging = () => {
+    stopAllEditing()
+    setMerging(new Set())
+  }
   const toggleMergingConcept = id => {
     const copy = new Set(merging)
     if (copy.has(id)) {
@@ -80,6 +84,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
     }
     setMerging(copy)
   }
+
   const stopMerging = () => setMerging(null)
   const doMerge = () => {
     alert('Not yet implemented')
@@ -87,12 +92,18 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
     stopMerging()
   }
 
-  const cardHeaderButton = (text, onClick) => (
+  useEffect(() => () => {
+    stopAllEditing()
+    stopMerging()
+  }, [course])
+
+  const cardHeaderButton = (text, onClick, disabled = false) => (
     <Button
       key={text}
       style={{ margin: '6px' }}
       variant='outlined' color='primary'
-      onClick={onClick}
+      onClick={!disabled ? onClick : undefined}
+      disabled={disabled}
     >
       {text}
     </Button>
@@ -105,7 +116,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
         title={`Concepts of ${course.name}`}
         action={
           merging ? [
-            cardHeaderButton('Merge', () => doMerge()),
+            cardHeaderButton('Merge', () => doMerge(), merging.size === 0),
             cardHeaderButton('Cancel', () => stopMerging())
           ] : [
             cardHeaderButton('Start merge', () => startMerging())
@@ -124,7 +135,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
             TransitionComponent={Fade}
             title={concept.description || 'No description available'}>
             <ListItem divider key={concept.id}>
-              {editing.has(concept.id) ? <>
+              {editing.has(concept.id) ? (
                 <CreateConcept
                   submit={args => {
                     stopEditing(concept.id)
@@ -134,31 +145,33 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
                   defaultValues={concept}
                   action='Save'
                 />
-              </> : <>
+              ) : <>
                 <ListItemText className={classes.conceptBody} primary={
                   <Typography className={classes.conceptName} variant='h6'>
                     {concept.name}
                   </Typography>
                 } />
-                {merging ? <ListItemSecondaryAction>
-                  <Checkbox
-                    checked={merging.has(concept.id)}
-                    onClick={() => toggleMergingConcept(concept.id)}
-                    color='primary'
-                  />
-                </ListItemSecondaryAction> : <ListItemSecondaryAction>
-                  <IconButton aria-label='Delete' onClick={() => {
-                    const msg = `Are you sure you want to delete the concept ${concept.name}?`
-                    if (window.confirm(msg)) {
-                      deleteConcept(concept.id)
-                    }
-                  }}>
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton aria-label='Edit' onClick={() => startEditing(concept.id)}>
-                    <EditIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>}
+                <ListItemSecondaryAction>
+                  {merging ? (
+                    <Checkbox
+                      checked={merging.has(concept.id)}
+                      onClick={() => toggleMergingConcept(concept.id)}
+                      color='primary'
+                    />
+                  ) : <>
+                    <IconButton aria-label='Delete' onClick={() => {
+                      const msg = `Are you sure you want to delete the concept ${concept.name}?`
+                      if (window.confirm(msg)) {
+                        deleteConcept(concept.id)
+                      }
+                    }}>
+                      <DeleteIcon />
+                    </IconButton>
+                    <IconButton aria-label='Edit' onClick={() => startEditing(concept.id)}>
+                      <EditIcon />
+                    </IconButton>
+                  </>}
+                </ListItemSecondaryAction>
               </>}
             </ListItem>
           </Tooltip>

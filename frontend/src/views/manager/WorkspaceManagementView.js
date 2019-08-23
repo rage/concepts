@@ -95,7 +95,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   })
 
   if (workspaceQuery.loading) {
-    return <LoadingBar id='workspace-management'/>
+    return <LoadingBar id='workspace-management' />
   } else if (workspaceQuery.error) {
     return <NotFoundView message='Workspace not found' />
   }
