@@ -193,7 +193,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         onChange={onChange}
         margin='dense'
       >
-        <MenuItem key={'null'} value={''}>None</MenuItem>
+        <MenuItem value=''>None</MenuItem>
         {TaxonomyTags.map(data => {
           if (typeof value === 'string') {
             data = { value: data }
