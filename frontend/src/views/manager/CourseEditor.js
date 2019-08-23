@@ -187,6 +187,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         variant='outlined'
         className={classes.textfield}
         label='tags'
+        fullWidth
         value={input['tag']}
         name='tag'
         onChange={onChange}
