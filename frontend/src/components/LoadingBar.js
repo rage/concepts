@@ -20,7 +20,7 @@ const LoadingBar = ({ id, componentRef, children = null }) => {
   const { startLoading, stopLoading } = useLoadingBar()
 
   if (componentRef) {
-    componentRef.current.stopLoading = stopLoading
+    componentRef.current = { stopLoading }
   }
 
   useEffect(() => {
