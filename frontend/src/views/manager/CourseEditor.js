@@ -27,9 +27,13 @@ const useStyles = makeStyles(theme => ({
   cancel: {
     margin: theme.spacing(1)
   },
+  conceptBody: {
+    paddingRight: '104px'
+  },
   conceptName: {
-    overflowWrap: 'break-word',
-    maxWidth: 'calc(100% - 96px)'
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   textfield: {
     margin: theme.spacing(1, 0)
@@ -83,7 +87,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
                 action='Save'
               />
             </> : <>
-              <ListItemText primary={
+              <ListItemText className={classes.conceptBody} primary={
                 <Typography className={classes.conceptName} variant='h6'>{concept.name}</Typography>
               } />
               <ListItemSecondaryAction>

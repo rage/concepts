@@ -20,6 +20,14 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     gridArea: 'projects'
   },
+  projectName: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+  projectButton: {
+    paddingRight: '104px'
+  },
   progress: {
     margin: theme.spacing(2)
   }
@@ -72,9 +80,12 @@ const ProjectList = ({ history, projects }) => {
       <List dense={false}>
         {
           projects.map(project => (
-            <ListItem button key={project.id} onClick={() => handleNavigateProject(project.id)}>
+            <ListItem
+              button key={project.id} onClick={() => handleNavigateProject(project.id)}
+              classes={{ button: classes.projectButton }}
+            >
               <ListItemText primary={
-                <Typography variant='h6'>{project.name}</Typography>
+                <Typography className={classes.projectName} variant='h6'>{project.name}</Typography>
               } />
               <ListItemSecondaryAction>
                 <IconButton aria-label='Delete' onClick={() => handleDelete(project.id)}>

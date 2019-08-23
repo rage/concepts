@@ -22,9 +22,13 @@ const useStyles = makeStyles(theme => ({
   listItemActive: {
     boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
   },
+  courseButton: {
+    paddingRight: '104px'
+  },
   courseName: {
-    overflowWrap: 'break-word',
-    maxWidth: 'calc(100% - 96px)'
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   submit: {
     margin: theme.spacing(1, 0)
@@ -58,6 +62,7 @@ const CourseList = ({
           <ListItem
             className={course.id === focusedCourseId ? classes.listItemActive : null}
             button={!editing.has(course.id)}
+            classes={{ button: classes.courseButton }}
             key={course.id}
             onClick={() => !editing.has(course.id) && setFocusedCourseId(course.id)}
           >

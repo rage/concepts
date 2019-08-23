@@ -268,6 +268,10 @@ const NavBar = ({ location }) => {
               return (
                 <Typography
                   key={item.name} variant='h6' style={{
+                    textOverflow: 'ellipsis',
+                    maxWidth: '20vw',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
                     color: item.historical ? 'rgba(255, 255, 255, .25)' : 'inherit'
                   }}
                 >
