@@ -1,17 +1,9 @@
-import React, {
-  Component,
-  PureComponent,
-  useRef,
-  useEffect,
-  useLayoutEffect,
-  useCallback
-} from 'react'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import React, { Component, useRef, useEffect, useLayoutEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
 
-// TODO turn these into functional components
-
+// TODO turn this into a functional component
 export default class ConceptLink extends Component {
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount() {
@@ -113,7 +105,7 @@ export default class ConceptLink extends Component {
       throw new Error('LinkTo anchor format is "<x> <y>"')
     }
     const [x, y] = parts
-    return Object.assign({}, defaultAnchor, this.parseAnchorText(x), this.parseAnchorText(y))
+    return { ...defaultAnchor, ...this.parseAnchorText(x), ...this.parseAnchorText(y) }
   }
 
   detect() {
@@ -125,7 +117,7 @@ export default class ConceptLink extends Component {
       return false
     }
 
-    const offset = Object.assign({ x0: 0, y0: 0, x1: 0, y1: 0 }, this.props.posOffsets)
+    const offset = { x0: 0, y0: 0, x1: 0, y1: 0, ...this.props.posOffsets }
 
     return () => {
       const fromBox = from.getBoundingClientRect()
@@ -142,9 +134,7 @@ export default class ConceptLink extends Component {
 
   render() {
     const points = this.detect()
-    return points ? (
-      <Line {...points()} refreshPoints={points} {...this.props} />
-    ) : null
+    return points ? <Line {...points()} refreshPoints={points} {...this.props} /> : null
   }
 }
 
@@ -234,12 +224,12 @@ const Line = ({
     recalculate()
   }
 
-  const elCallback = useCallback(node => {
+  const elCallback =node => {
     el.current = node
     if (linkRef) {
       linkRef.current = node
     }
-  })
+  }
 
   // componentWillReceiveProps
   useEffect(() => {
