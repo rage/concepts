@@ -30,7 +30,7 @@ const LinkSharingActions = ({ ctx, handleSubmit, submitDisabled, url }) => {
     <Button onClick={() => handleSubmit(false)} disabled={submitDisabled} color='primary'>
       {submitDisabled ? 'Generating...' : url ? 'Regenerate link' : 'Generate link'}
     </Button>
-    <Button onClick={ctx.closeDialog()} color='primary'>
+    <Button onClick={ctx.closeDialog} color='primary'>
       Close
     </Button>
   </>
