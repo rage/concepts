@@ -59,9 +59,6 @@ query($conceptIds: [ID!]!) {
     official
     linksFromConcept {
       id
-      from {
-        id
-      }
       to {
         id
       }
@@ -71,9 +68,6 @@ query($conceptIds: [ID!]!) {
     linksToConcept {
       id
       from {
-        id
-      }
-      to {
         id
       }
       official
@@ -256,8 +250,7 @@ const MergeMutations = {
       id_in: conceptIds
     })
 
-    const links = type => {
-      const Type = type.substr(0, 1).toUpperCase() + type.substr(1)
+    const links = (Type, type) => {
       const data = Object.values(concepts).flatMap(concept => concept[`links${Type}Concept`])
       const ids = data.map(link => link[type].id)
       return data
@@ -265,8 +258,10 @@ const MergeMutations = {
           ids.indexOf(item[type].id) === index
           && !conceptIds.includes(item[type].id))
         .map(link => ({
-          from: { connect: { id: link.from.id } },
-          to: { connect: { id: link.to.id } },
+          ...(type === 'from'
+            ? { from: { connect: { id: link.from.id } } }
+            : { to: { connect: { id: link.to.id } } }
+          ),
           official: official && link.official,
           weight: link.weight,
           workspace: { connect: { id: workspaceId } },
@@ -279,8 +274,8 @@ const MergeMutations = {
       description,
       official,
       tags: { create: tags },
-      linksFromConcept: { create: links('from') },
-      linksToConcept: { create: links('to') },
+      linksFromConcept: { create: links('From', 'to') },
+      linksToConcept: { create: links('To', 'from') },
 
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
