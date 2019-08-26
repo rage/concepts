@@ -250,8 +250,8 @@ const MergeMutations = {
       id_in: conceptIds
     })
 
-    const links = (Type, type) => {
-      const data = Object.values(concepts).flatMap(concept => concept[`links${Type}Concept`])
+    const links = (src, type) => {
+      const data = Object.values(concepts).flatMap(concept => concept[`links${src}Concept`])
       const ids = data.map(link => link[type].id)
       return data
         .filter((item, index) =>
