@@ -50,7 +50,7 @@ const MergeDialogContent = ({ state, setState, concepts, contentWidth }) => {
 
 const stepField = ['name', 'description', 'tags']
 
-const MergeDialog = ({ workspaceId, courseId, conceptIds, close }) => {
+const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
   const contentRef = useRef(null)
   const [contentWidth, setContentWidth] = useState('720px')
   const [state, setState] = useState({
@@ -109,7 +109,7 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, close }) => {
     .filter(concept => conceptIds.has(concept.id))
 
   return (
-    <Dialog open={true} fullWidth={true} maxWidth='sm'>
+    <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
       <DialogTitle>Merge concepts</DialogTitle>
       <form onSubmit={submit}>
         <DialogContent ref={contentRef}>

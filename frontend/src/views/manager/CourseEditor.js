@@ -65,7 +65,8 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const [merging, setMerging] = useState(null)
-  const [mergeDialogOpen, setMergeDialogOpen] = useState(false)
+  const mergeDialogTimeout = useRef(-1)
+  const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopAllEditing = () => setEditing(new Set())
   const stopEditing = id => {
@@ -89,8 +90,14 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   }
 
   const stopMerging = () => setMerging(null)
-  const openMergeDialog = () => setMergeDialogOpen(true)
-  const closeMergeDialog = () => setMergeDialogOpen(false)
+  const openMergeDialog = () => {
+    clearTimeout(mergeDialogTimeout.current)
+    setMergeDialogOpen({ open: true })
+  }
+  const closeMergeDialog = () => {
+    setMergeDialogOpen({ open: false })
+    mergeDialogTimeout.current = setTimeout(() => setMergeDialogOpen(null), 500)
+  }
 
   useEffect(() => () => {
     stopAllEditing()
@@ -124,8 +131,9 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
           ]
         }
       />
-      {mergeDialogOpen && <MergeDialog
+      {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
+        open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
         course.concepts.map(concept => (
