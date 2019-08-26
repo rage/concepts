@@ -118,11 +118,9 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, close }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button disabled={state.step <= 0} onClick={back} color='primary'>Back</Button>
-
-          <div style={{ flex: '1 0 0' }} />
-
-          <Button onClick={close} color='primary'>Cancel</Button>
+          <Button onClick={state.step <= 0 ? close : back} color='primary'>
+            {state.step <= 0 ? 'Cancel' : 'Back'}
+          </Button>
           <Button
             type='submit' color='primary'
             disabled={state.step < 2 ? state[stepField[state.step]] === null : state.submitDisabled}
