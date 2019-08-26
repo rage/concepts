@@ -59,10 +59,10 @@ const Course = ({
   workspaceId,
   urlPrefix
 }) => {
-  const { loggedIn } = useLoginStateValue()[0]
+  const { user, loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId)
-  const openEditCourseDialog = useEditCourseDialog(workspaceId)
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
+  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
 
   const onHeaderClickHandle = () => {
     history.push(`${urlPrefix}/${workspaceId}/mapper/${course.id}`)
@@ -77,7 +77,8 @@ const Course = ({
         }
         action={
           loggedIn ?
-            <IconButton onClick={() => openEditCourseDialog(course.id, course.name)}>
+            <IconButton onClick={() =>
+              openEditCourseDialog(course.id, course.name, course.official)}>
               <EditIcon />
             </IconButton>
             : null

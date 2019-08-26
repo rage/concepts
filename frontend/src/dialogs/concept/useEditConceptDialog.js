@@ -5,14 +5,14 @@ import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import TaxonomyTags from './TaxonomyTags'
 
-const useEditConceptDialog = () => {
+const useEditConceptDialog = isStaff => {
   const { openDialog } = useDialog()
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate
   })
 
-  return (conceptId, name, description, tags) => openDialog({
+  return (conceptId, name, description, tags, official) => openDialog({
     mutation: updateConcept,
     type: 'Concept',
     requiredVariables: {
@@ -29,7 +29,14 @@ const useEditConceptDialog = () => {
       name: 'description',
       multiline: true,
       defaultValue: description
-    }, {
+    },
+    {
+      name: 'official',
+      type: 'checkbox',
+      defaultValue: official,
+      hidden: !isStaff
+    },
+    {
       type: 'select',
       name: 'bloomTag',
       label: "Select Bloom's tags",

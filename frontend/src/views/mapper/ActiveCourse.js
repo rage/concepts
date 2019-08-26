@@ -78,7 +78,7 @@ const ActiveCourse = ({
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
-  const { loggedIn } = useLoginStateValue()[0]
+  const { user, loggedIn } = useLoginStateValue()[0]
 
   useEffect(() => {
     const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
@@ -96,8 +96,8 @@ const ActiveCourse = ({
     }
   }, [course.concepts, addingLink, courseLinks])
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId)
-  const openEditCourseDialog = useEditCourseDialog(workspaceId)
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
+  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
 
   const createButtonRef = useRef()
   const conceptLinkRef = useRef()
@@ -122,7 +122,7 @@ const ActiveCourse = ({
           )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
         </Select>
         <div className={classes.titleEditWrapper}>
-          <IconButton onClick={() => openEditCourseDialog(course.id, course.name)}>
+          <IconButton onClick={() => openEditCourseDialog(course.id, course.name, course.official)}>
             <EditIcon />
           </IconButton>
         </div>

@@ -5,7 +5,7 @@ import { useDialog } from '../DialogProvider'
 import cache from '../../apollo/update'
 import TaxonomyTags from './TaxonomyTags'
 
-const useCreateConceptDialog = workspaceId => {
+const useCreateConceptDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
 
   const createConcept = useMutation(CREATE_CONCEPT, {
@@ -28,7 +28,13 @@ const useCreateConceptDialog = workspaceId => {
     }, {
       name: 'description',
       multiline: true
-    }, {
+    },
+    {
+      name: 'official',
+      type: 'checkbox',
+      hidden: !isStaff
+    },
+    {
       type: 'select',
       name: 'bloomTag',
       list: 'tags',

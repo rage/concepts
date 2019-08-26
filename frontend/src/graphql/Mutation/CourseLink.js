@@ -8,6 +8,7 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
     from {
       id
       name
+      official
       concepts {
         id
         name
