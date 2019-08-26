@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
-  TextField, MenuItem
+  TextField, MenuItem, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 
 import { useMessageStateValue } from '../store'
@@ -84,6 +84,8 @@ const Dialog = ({ contextRef }) => {
         ? closeDialog
         : () => setSubmitDisabled(false))
   }
+  const setCheckboxValue = key =>
+    key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
   contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
@@ -94,7 +96,8 @@ const Dialog = ({ contextRef }) => {
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
-      setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue || ''])))
+      setInputState(Object.fromEntries(fields.map(key =>
+        [key.name, key.type === 'checkbox' ? setCheckboxValue(key) : key.defaultValue || ''])))
     }
     setState({
       open: true,
@@ -104,6 +107,7 @@ const Dialog = ({ contextRef }) => {
       actionText,
       fields: fields
         ? fields.map(field => typeof field === 'string' ? { name: field } : field)
+          .filter(field => !field.hidden)
         : [],
       title,
       content: content || [],
@@ -176,6 +180,21 @@ const Dialog = ({ contextRef }) => {
                     )
                   })}
                 </TextField>
+              } else if (key.type === 'checkbox') {
+                return <FormControl fullWidth key={key.name}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={inputState[key.name]}
+                        onChange={evt =>
+                          setInputState({ ...inputState, [key.name]: evt.target.checked })}
+                        value={key.name}
+                        color='primary'
+                      />
+                    }
+                    label={key.name[0].toUpperCase() + key.name.substr(1)}
+                  />
+                </FormControl>
               }
               return null
             })

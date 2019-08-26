@@ -122,8 +122,8 @@ const WorkspaceManagementView = ({ workspaceId }) => {
           setFocusedCourseId={setFocusedCourseId}
           focusedCourseId={focusedCourseId}
           deleteCourse={id => deleteCourse({ variables: { id } }).catch(e)}
-          updateCourse={(id, name) => updateCourse({ variables: { id, name } }).catch(e)}
-          createCourse={name => createCourse({ variables: { name, workspaceId } }).catch(e)}
+          updateCourse={args => updateCourse({ variables: args }).catch(e)}
+          createCourse={args => createCourse({ variables: { workspaceId, ...args } }).catch(e)}
         />
       </div>
       <div className={classes.newCourse}>

@@ -5,6 +5,7 @@ query coursesByWorkspace($workspaceId: ID!) {
   coursesByWorkspace(workspaceId: $workspaceId) {
     id
     name
+    official
   }
 }
 `
@@ -14,6 +15,7 @@ query courseById($id: ID!) {
   courseById(id: $id) {
     id
     name
+    official
     concepts {
       id
       name
@@ -52,6 +54,7 @@ fragment courseAndConcepts on Course {
     __typename
     id
     name
+    official
     concepts {
       id
       name
@@ -89,6 +92,7 @@ query courseAndPrerequisites($courseId: ID!) {
   courseAndPrerequisites(courseId: $courseId) {
     id
     name
+    official
     linksToCourse {
       id
       from {

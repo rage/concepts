@@ -2,9 +2,11 @@ import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Card, CardHeader, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  TextField, Button
+  TextField, Button, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
+
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -68,12 +70,13 @@ const CourseList = ({
           >
             {editing.has(course.id) ? <>
               <CreateCourse
-                submit={name => {
+                submit={args => {
                   stopEditing(course.id)
-                  updateCourse(course.id, name)
+                  updateCourse({ id: course.id, ...args })
                 }}
                 cancel={() => stopEditing(course.id)}
                 defaultName={course.name}
+                defaultOfficial={course.official}
                 action='Save'
               />
             </> : <>
@@ -101,25 +104,29 @@ const CourseList = ({
           </ListItem>
         ))
       }</List>
-      <CreateCourse submit={async (...args) => {
-        await createCourse(...args)
+      <CreateCourse submit={async args => {
+        await createCourse(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
     </Card>
   )
 }
 
-const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
+const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
-  const [name, setName] = useState(defaultName || '')
+  const [input, setInput] = useState({
+    name: defaultName || '',
+    official: defaultOfficial || false
+  })
 
   const onSubmit = evt => {
     evt.preventDefault()
-    submit(name)
+    submit(input)
     if (action === 'Create') {
       nameRef.current.focus()
-      setName('')
+      setInput({ name: '', official: false })
     }
   }
 
@@ -138,14 +145,30 @@ const CreateCourse = ({ submit, defaultName, action = 'Create', cancel }) => {
         name='courseName'
         label='Course name'
         type='text'
-        value={name}
+        value={input.name}
         fullWidth
         inputRef={nameRef}
         autoFocus={action !== 'Create'}
-        onChange={evt => setName(evt.target.value)}
+        onChange={evt => setInput({ ...input, name: evt.target.value })}
       />
+      { user.role === 'STAFF' ?
+        <FormControl fullWidth>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.official}
+                onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                value='official'
+                color='primary'
+              />
+            }
+            label='Official'
+          />
+        </FormControl>
+        : null
+      }
       <Button
-        color='primary' variant='contained' disabled={!name} type='submit'
+        color='primary' variant='contained' disabled={!input.name} type='submit'
         className={classes.submit}
       >
         {action}

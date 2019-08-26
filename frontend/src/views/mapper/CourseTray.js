@@ -13,7 +13,7 @@ import { withRouter } from 'react-router-dom'
 import cache from '../../apollo/update'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
@@ -146,7 +146,7 @@ const PrerequisiteCourse = withRouter(({
           >
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name)
+              openEditCourseDialog(course.id, course.name, course.official)
             }}>Edit</MenuItem>
             <MenuItem onClick={deleteCourse}>Delete</MenuItem>
           </Menu>
@@ -170,9 +170,10 @@ const CourseTray = ({
   const infoBox = useInfoBox()
   const createButtonRef = useRef()
   const checkboxRef = useRef()
+  const [{ user }] = useLoginStateValue()
 
-  const openEditCourseDialog = useEditCourseDialog(workspaceId)
-  const openCreateCourseDialog = useCreateCourseDialog(workspaceId)
+  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
+  const openCreateCourseDialog = useCreateCourseDialog(workspaceId, user.role === 'STAFF')
 
   useEffect(() => {
     const enoughCourses = courses && courses.length === 1

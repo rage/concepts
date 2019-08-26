@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, MenuItem, Checkbox
+  Card, CardHeader, Tooltip, Fade, MenuItem, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 import MergeDialog from './MergeDialog'
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -181,7 +182,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
           </Tooltip>
         ))
       }</List>
-      <CreateConcept submit={async (args) => {
+      <CreateConcept submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
       }} />
@@ -199,6 +200,7 @@ const initialState = {
 
 const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const localInitialState = { ...initialState, ...defaultValues }
   const [input, setInput] = useState({
@@ -254,6 +256,23 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
+      {
+        user.role === 'STAFF' ?
+          <FormControl fullWidth>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={input.official}
+                  onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                  value='official'
+                  color='primary'
+                />
+              }
+              label='Official'
+            />
+          </FormControl>
+          : null
+      }
       <TextField
         select
         variant='outlined'
