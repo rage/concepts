@@ -1,8 +1,9 @@
 const { ApolloError } = require('apollo-server-core')
 
 class NotFoundError extends ApolloError {
-  constructor(type) {
-    super(`${type[0].toUpperCase()}${type.slice(1)} not found`, 'NOT_FOUND', { type })
+  constructor(type, id) {
+    const idStr = id ? ` ${id}` : ''
+    super(`${type[0].toUpperCase()}${type.slice(1)}${idStr} not found`, 'NOT_FOUND', { type, id })
 
     Object.defineProperty(this, 'name', { value: 'NotFoundError' })
   }

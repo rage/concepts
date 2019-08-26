@@ -56,7 +56,7 @@ type Mutation {
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, tags: [TagCreateInput!]): Concept
   deleteConcept(id: ID!): DeletedConcept
-  updateConcept(id: ID!, name:String, description: String, official: Boolean, tags: [TagUpdateInput!]): Concept
+  updateConcept(id: ID!, name: String, description: String, official: Boolean, tags: [TagUpdateInput!]): Concept
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
@@ -98,7 +98,7 @@ type Mutation {
   createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
   updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
   deleteProjectParticipant(id: ID!): ProjectParticipant
-  
+
   # Token
   createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
   createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
@@ -107,6 +107,7 @@ type Mutation {
 
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
+  mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, tags: [TagCreateInput!]): Concept!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject

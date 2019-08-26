@@ -1,8 +1,9 @@
 import { gql } from 'apollo-boost'
 
 const UPDATE_CONCEPT = gql`
-mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean, $tags: [TagUpdateInput!]) {
-  updateConcept(id:$id, name:$name, description:$description, official: $official, tags: $tags) {
+mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean,
+                       $tags: [TagUpdateInput!]) {
+  updateConcept(id: $id, name: $name, description: $description, official: $official, tags: $tags) {
     id
     name
     description
@@ -14,8 +15,8 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
       priority
     }
     courses {
-          id
-      }
+      id
+    }
     linksFromConcept {
       id
       official
@@ -35,10 +36,10 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
 `
 
 const CREATE_CONCEPT = gql`
-mutation createConcept($name: String!, $description:String!, $official:Boolean!, $workspaceId:ID!,
-                       $courseId:ID, $tags:[TagCreateInput!]) {
-  createConcept(name:$name, description:$description, official:$official, workspaceId: $workspaceId,
-                courseId:$courseId, tags:$tags) {
+mutation createConcept($name: String!, $description: String!, $official: Boolean!,
+                       $workspaceId: ID!, $courseId: ID, $tags: [TagCreateInput!]) {
+  createConcept(name: $name, description: $description, official: $official,
+                workspaceId: $workspaceId, courseId: $courseId, tags:$tags) {
     __typename
     id
     name
