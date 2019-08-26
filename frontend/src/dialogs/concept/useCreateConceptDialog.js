@@ -32,7 +32,6 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
     {
       name: 'official',
       type: 'checkbox',
-      defaultValue: false,
       hidden: !isStaff
     },
     {

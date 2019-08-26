@@ -84,6 +84,8 @@ const Dialog = ({ contextRef }) => {
         ? closeDialog
         : () => setSubmitDisabled(false))
   }
+  const setCheckboxValue = key =>
+    key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
   contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
@@ -94,7 +96,8 @@ const Dialog = ({ contextRef }) => {
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
-      setInputState(Object.fromEntries(fields.map(key => [key.name, key.defaultValue || ''])))
+      setInputState(Object.fromEntries(fields.map(key =>
+        [key.name, key.type === 'checkbox' ? setCheckboxValue(key) : key.defaultValue || ''])))
     }
     setState({
       open: true,
@@ -178,7 +181,7 @@ const Dialog = ({ contextRef }) => {
                   })}
                 </TextField>
               } else if (key.type === 'checkbox') {
-                return <FormControl fullWidth>
+                return <FormControl fullWidth key={key.name}>
                   <FormControlLabel
                     control={
                       <Checkbox
