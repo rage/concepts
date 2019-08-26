@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
-  TextField, MenuItem
+  TextField, MenuItem, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 
 import { useMessageStateValue } from '../store'
@@ -104,6 +104,7 @@ const Dialog = ({ contextRef }) => {
       actionText,
       fields: fields
         ? fields.map(field => typeof field === 'string' ? { name: field } : field)
+          .filter(field => !field.hidden)
         : [],
       title,
       content: content || [],
@@ -176,6 +177,21 @@ const Dialog = ({ contextRef }) => {
                     )
                   })}
                 </TextField>
+              } else if (key.type === 'checkbox') {
+                return <FormControl fullWidth>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={inputState[key.name]}
+                        onChange={evt =>
+                          setInputState({ ...inputState, [key.name]: evt.target.checked })}
+                        value={key.name}
+                        color='primary'
+                      />
+                    }
+                    label={key.name[0].toUpperCase() + key.name.substr(1)}
+                  />
+                </FormControl>
               }
               return null
             })

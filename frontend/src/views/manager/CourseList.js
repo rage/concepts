@@ -6,6 +6,8 @@ import {
 } from '@material-ui/core'
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
 
+import { useLoginStateValue } from '../../store'
+
 const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
@@ -112,6 +114,7 @@ const CourseList = ({
 
 const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
     name: defaultName || '',
@@ -148,19 +151,22 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create',
         autoFocus={action !== 'Create'}
         onChange={evt => setInput({ ...input, name: evt.target.value })}
       />
-      <FormControl fullWidth>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={input.official}
-              onChange={evt => setInput({ ...input, official: evt.target.checked })}
-              value='official'
-              color='primary'
-            />
-          }
-          label='Official'
-        />
-      </FormControl>
+      { user.role === 'STAFF' ?
+        <FormControl fullWidth>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.official}
+                onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                value='official'
+                color='primary'
+              />
+            }
+            label='Official'
+          />
+        </FormControl>
+        : null
+      }
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
         className={classes.submit}

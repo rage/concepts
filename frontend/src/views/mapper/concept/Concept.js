@@ -77,9 +77,9 @@ const Concept = ({
   const classes = useStyles()
 
   const [, messageDispatch] = useMessageStateValue()
-  const [{ loggedIn }] = useLoginStateValue()
+  const [{ user, loggedIn }] = useLoginStateValue()
 
-  const openEditConceptDialog = useEditConceptDialog()
+  const openEditConceptDialog = useEditConceptDialog(user.role === 'STAFF')
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
@@ -142,7 +142,8 @@ const Concept = ({
 
   const handleEditConcept = () => {
     handleMenuClose()
-    openEditConceptDialog(concept.id, concept.name, concept.description, concept.tags)
+    openEditConceptDialog(concept.id, concept.name,
+      concept.description, concept.tags, concept.official)
   }
 
   const hasLinkToAddingLink = addingLink && (isActive

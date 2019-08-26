@@ -4,7 +4,7 @@ import { CREATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 
-const useCreateCourseDialog = workspaceId => {
+const useCreateCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
 
   const createCourse = useMutation(CREATE_COURSE, {
@@ -26,6 +26,12 @@ const useCreateCourseDialog = workspaceId => {
     fields: [{
       name: 'name',
       required: true
+    },
+    {
+      name: 'official',
+      type: 'checkbox',
+      defaultValue: false,
+      hidden: !isStaff
     }]
   })
 }

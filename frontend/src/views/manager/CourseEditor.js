@@ -7,6 +7,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
+import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -126,6 +127,7 @@ const initialState = {
 
 const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const localInitialState = { ...initialState, ...defaultValues }
   const [input, setInput] = useState({
@@ -181,19 +183,23 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         fullWidth
         onChange={onChange}
       />
-      <FormControl fullWidth>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={input.official}
-              onChange={evt => setInput({ ...input, official: evt.target.checked })}
-              value='official'
-              color='primary'
+      {
+        user.role === 'STAFF' ?
+          <FormControl fullWidth>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={input.official}
+                  onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                  value='official'
+                  color='primary'
+                />
+              }
+              label='Official'
             />
-          }
-          label='Official'
-        />
-      </FormControl>
+          </FormControl>
+          : null
+      }
       <TextField
         select
         variant='outlined'
