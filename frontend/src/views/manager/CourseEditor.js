@@ -117,7 +117,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         title={`Concepts of ${course.name}`}
         action={
           merging ? [
-            cardHeaderButton('Merge…', () => openMergeDialog(), merging.size === 0),
+            cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
             cardHeaderButton('Cancel', () => stopMerging())
           ] : [
             cardHeaderButton('Start merge', () => startMerging())
