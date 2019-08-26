@@ -129,6 +129,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       <div className={classes.newCourse}>
         {focusedCourse
           ? <CourseEditor
+            workspaceId={workspaceId}
             course={focusedCourse}
             createConcept={args => createConcept({
               variables: {

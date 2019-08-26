@@ -185,7 +185,7 @@ const Dialog = ({ contextRef }) => {
           {
             CustomActions ?
               <CustomActions
-                closeDialog={closeDialog} handleSubmit={handleSubmit}
+                ctx={contextRef.current} handleSubmit={handleSubmit}
                 submitDisabled={state.submitDisabled} {...state.customActionsProps}
               />
               :

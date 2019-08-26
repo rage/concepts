@@ -1,11 +1,13 @@
 const crypto = require('crypto')
 
+const { ForbiddenError } = require('apollo-server-core')
+
 const { Role, Privilege, checkAccess } = require('../../accessControl')
 const { NotFoundError } = require('../../errors')
 const makeSecret = require('../../secret')
 
-const clonedWorkspacesQuery = `
-query($id : ID!) {
+const workspaceDataForMerge = `
+query($id: ID!) {
   project(where: {
     id: $id
   }) {
@@ -46,6 +48,53 @@ query($id : ID!) {
 }
 `
 
+const conceptDataForMerge = `
+query($conceptIds: [ID!]!) {
+  concepts(where: {
+    id_in: $conceptIds
+  }) {
+    id
+    name
+    description
+    official
+    linksFromConcept {
+      id
+      from {
+        id
+      }
+      to {
+        id
+      }
+      official
+      weight
+    }
+    linksToConcept {
+      id
+      from {
+        id
+      }
+      to {
+        id
+      }
+      official
+      weight
+    }
+    courses {
+      id
+    }
+    workspace {
+      id
+    }
+    tags {
+      id
+      name
+      type
+      priority
+    }
+  }
+}
+`
+
 const setDefault = (obj, key, val) => {
   if (!obj[key]) {
     obj[key] = val
@@ -70,7 +119,7 @@ const MergeMutations = {
       projectId
     })
 
-    const result = await context.prisma.$graphql(clonedWorkspacesQuery, {
+    const result = await context.prisma.$graphql(workspaceDataForMerge, {
       id: projectId
     })
     if (!result.project.activeTemplate) {
@@ -175,6 +224,67 @@ const MergeMutations = {
             )
           )
       }
+    })
+  },
+  async mergeConcepts(root, {
+    workspaceId, conceptIds, courseId, name, description, official, tags
+  }, context) {
+    await checkAccess(context, {
+      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
+    })
+
+    const result = await context.prisma.$graphql(conceptDataForMerge, {
+      conceptIds
+    })
+    if (!result.concepts) {
+      throw new NotFoundError('concepts')
+    }
+    const concepts = Object.fromEntries(result.concepts.map(concept => [concept.id, concept]))
+    for (const conceptId of conceptIds) {
+      if (!concepts.hasOwnProperty(conceptId)) {
+        throw new NotFoundError('concept', conceptId)
+      }
+      if (concepts[conceptId].workspace.id !== workspaceId) {
+        throw new ForbiddenError("Can't merge concepts in different workspaces")
+      }
+    }
+
+    await context.prisma.deleteManyConcepts({
+      // eslint-disable-next-line camelcase
+      id_in: conceptIds
+    })
+
+    const links = type => {
+      const Type = type.substr(0, 1).toUpperCase() + type.substr(1)
+      const data = Object.values(concepts).flatMap(concept => concept[`links${Type}Concept`])
+      const ids = data.map(link => link[type].id)
+      return data
+        .filter((item, index) =>
+          ids.indexOf(item[type].id) === index
+          && !conceptIds.includes(item[type].id))
+        .map(link => ({
+          from: { connect: { id: link.from.id } },
+          to: { connect: { id: link.to.id } },
+          official: official && link.official,
+          weight: link.weight,
+          workspace: { connect: { id: workspaceId } },
+          createdBy: { connect: { id: context.user.id } }
+        }))
+    }
+
+    return await context.prisma.createConcept({
+      name,
+      description,
+      official,
+      tags: { create: tags },
+      linksFromConcept: { create: links('from') },
+      linksToConcept: { create: links('to') },
+
+      createdBy: { connect: { id: context.user.id } },
+      workspace: { connect: { id: workspaceId } },
+      courses: { connect: [{ id: courseId }] }
     })
   }
 }

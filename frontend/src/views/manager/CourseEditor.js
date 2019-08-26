@@ -7,6 +7,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
+import MergeDialog from './MergeDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,11 +59,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) => {
+const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
   const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const [merging, setMerging] = useState(null)
+  const [mergeDialogOpen, setMergeDialogOpen] = useState(false)
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopAllEditing = () => setEditing(new Set())
   const stopEditing = id => {
@@ -86,15 +88,13 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
   }
 
   const stopMerging = () => setMerging(null)
-  const doMerge = () => {
-    alert('Not yet implemented')
-    console.log(merging)
-    stopMerging()
-  }
+  const openMergeDialog = () => setMergeDialogOpen(true)
+  const closeMergeDialog = () => setMergeDialogOpen(false)
 
   useEffect(() => () => {
     stopAllEditing()
     stopMerging()
+    closeMergeDialog()
   }, [course])
 
   const cardHeaderButton = (text, onClick, disabled = false) => (
@@ -116,13 +116,16 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
         title={`Concepts of ${course.name}`}
         action={
           merging ? [
-            cardHeaderButton('Merge…', () => doMerge(), merging.size === 0),
+            cardHeaderButton('Merge…', () => openMergeDialog(), merging.size === 0),
             cardHeaderButton('Cancel', () => stopMerging())
           ] : [
             cardHeaderButton('Start merge', () => startMerging())
           ]
         }
       />
+      {mergeDialogOpen && <MergeDialog
+        workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
+      /> }
       <List ref={listRef} className={classes.list}>{
         course.concepts.map(concept => (
           <Tooltip
