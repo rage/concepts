@@ -61,6 +61,8 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
     setEditing(copy)
   }
 
+  const disableTooltip = editing.size > 0
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader title={`Concepts of ${course.name}`} />
@@ -74,7 +76,7 @@ const CourseEditor = ({ course, createConcept, updateConcept, deleteConcept }) =
               popper: classes.popper
             }}
             TransitionComponent={Fade}
-            title={concept.description || 'No description available'}>
+            title={disableTooltip ? '' : concept.description || 'No description available'}>
             <ListItem divider key={concept.id}>
               {editing.has(concept.id) ? <>
               <CreateConcept
