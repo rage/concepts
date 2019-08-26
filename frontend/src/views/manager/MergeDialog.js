@@ -9,6 +9,9 @@ import { MERGE_CONCEPTS } from '../../graphql/Mutation'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 
 const MergeDialogContent = ({ state, setState, concepts, contentWidth }) => {
+  if (!concepts) {
+    return null
+  }
   switch (state.step) {
   case 0: // Name
     return <>
@@ -104,9 +107,10 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     }
   }
 
-  const concepts = workspaceQuery.data.workspaceById && workspaceQuery.data.workspaceById
-    .courses.flatMap(course => course.concepts)
-    .filter(concept => conceptIds.has(concept.id))
+  const concepts = conceptIds && workspaceQuery.data.workspaceById &&
+    workspaceQuery.data.workspaceById
+      .courses.flatMap(course => course.concepts)
+      .filter(concept => conceptIds.has(concept.id))
 
   return (
     <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
