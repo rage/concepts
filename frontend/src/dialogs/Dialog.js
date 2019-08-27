@@ -161,17 +161,15 @@ const Dialog = ({ contextRef }) => {
                 return <Select
                   key={field.name}
                   onChange={selected => setInputState({ ...inputState, [field.name]: selected })}
-                  onCreateOption={newOption => {
-                    if (field.onSelectCreate) {
-                      newOption = field.onSelectCreate(newOption)
-                    } else {
-                      newOption = { label: newOption, value: newOption }
-                    }
-                    setInputState({
-                      ...inputState,
-                      [field.name]: [...inputState[field.name], newOption]
-                    })
-                  }}
+                  onCreateOption={newOption => setInputState({
+                    ...inputState,
+                    [field.name]: [
+                      ...inputState[field.name],
+                      field.onSelectCreate
+                        ? field.onSelectCreate(newOption)
+                        : { label: newOption, value: newOption }
+                    ]
+                  })}
                   options={field.values}
                   value={inputState[field.name]}
                   styles={field.styles}
