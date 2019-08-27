@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1, 0)
   },
   cancel: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1, 0, 1, 1)
   },
   conceptBody: {
     paddingRight: '104px'
@@ -275,23 +275,6 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         fullWidth
         onChange={onChange}
       />
-      {
-        user.role === 'STAFF' ?
-          <FormControl fullWidth>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={input.official}
-                  onChange={evt => setInput({ ...input, official: evt.target.checked })}
-                  value='official'
-                  color='primary'
-                />
-              }
-              label='Official'
-            />
-          </FormControl>
-          : null
-      }
       <Select
         onChange={selected => setInput({ ...input, tags: selected })}
         onCreateOption={newOption => setInput({
@@ -315,6 +298,21 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
         </Button>
+      }
+      { user.role === 'STAFF' &&
+        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.official}
+                onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                value='official'
+                color='primary'
+              />
+            }
+            label='Official'
+          />
+        </FormControl>
       }
     </form>
   )

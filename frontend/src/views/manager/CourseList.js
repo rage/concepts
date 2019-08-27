@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1, 0)
   },
   cancel: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1, 0, 1, 1)
   },
   textfield: {
     margin: theme.spacing(1, 0)
@@ -151,8 +151,19 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create',
         autoFocus={action !== 'Create'}
         onChange={evt => setInput({ ...input, name: evt.target.value })}
       />
-      { user.role === 'STAFF' ?
-        <FormControl fullWidth>
+      <Button
+        color='primary' variant='contained' disabled={!input.name} type='submit'
+        className={classes.submit}
+      >
+        {action}
+      </Button>
+      {cancel &&
+        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
+          Cancel
+        </Button>
+      }
+      { user.role === 'STAFF' &&
+        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={
               <Checkbox
@@ -165,18 +176,6 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create',
             label='Official'
           />
         </FormControl>
-        : null
-      }
-      <Button
-        color='primary' variant='contained' disabled={!input.name} type='submit'
-        className={classes.submit}
-      >
-        {action}
-      </Button>
-      {cancel &&
-        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
-          Cancel
-        </Button>
       }
     </form>
   )

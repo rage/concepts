@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, CircularProgress
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button
 } from '@material-ui/core'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
