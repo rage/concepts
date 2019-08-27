@@ -3,6 +3,7 @@ import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
   TextField, MenuItem, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
+import Select from 'react-select/creatable'
 
 import { useMessageStateValue } from '../store'
 
@@ -157,29 +158,34 @@ const Dialog = ({ contextRef }) => {
                   multiline={Boolean(key.multiline)}
                 />
               } else if (key.type === 'select') {
-                return <TextField
+                return <Select
                   key={key.name}
-                  select
-                  variant='outlined'
-                  style={{ width: '180px' }}
-                  label={key.label}
-                  value={inputState[key.name]}
-                  name={key.name}
-                  onChange={onChange}
-                  margin='normal'
-                >
-                  <MenuItem key={'null'} value={''}>None</MenuItem>
-                  {key.values.map(data => {
-                    if (typeof value === 'string') {
-                      data = { value: data }
+                  onChange={selected => setInputState({ ...inputState, [key.name]: selected })}
+                  onCreateOption={newOption => {
+                    if (key.onSelectCreate) {
+                      newOption = key.onSelectCreate(newOption)
+                    } else {
+                      newOption = { label: newOption, value: newOption }
                     }
-                    return (
-                      <MenuItem key={data.value} value={data.value}>
-                        {data.label || data.value}
-                      </MenuItem>
-                    )
-                  })}
-                </TextField>
+                    setInputState({
+                      ...inputState,
+                      [key.name]: [...inputState[key.name], newOption]
+                    })
+                  }}
+                  options={key.values}
+                  value={inputState[key.name]}
+                  styles={{
+                    ...(key.styles || {}),
+                    menu: styles => ({
+                      ...styles,
+                      position: 'fixed',
+                      width: '720px',
+                      top: 'unset'
+                    })
+                  }}
+                  defaultValue={key.defaultValue}
+                  isMulti={key.isMultiSelect}
+                />
               } else if (key.type === 'checkbox') {
                 return <FormControl fullWidth key={key.name}>
                   <FormControlLabel

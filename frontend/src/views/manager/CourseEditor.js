@@ -127,7 +127,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
             cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
             cardHeaderButton('Cancel', () => stopMerging())
           ] : [
-            cardHeaderButton('Start merge', () => startMerging())
+            cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
           ]
         }
       />
@@ -293,7 +293,7 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
         margin='dense'
       >
         <MenuItem value=''>None</MenuItem>
-        {TaxonomyTags.map(data => {
+        {Object.values(TaxonomyTags).map(data => {
           if (typeof value === 'string') {
             data = { value: data }
           }
