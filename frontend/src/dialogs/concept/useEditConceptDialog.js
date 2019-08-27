@@ -41,7 +41,6 @@ const useEditConceptDialog = isStaff => {
       type: 'select',
       name: 'tags',
       label: 'Select tags',
-      omitEmpty: true,
       ...tagSelectProps(tags),
       values: Object.values(TaxonomyTags)
     }]

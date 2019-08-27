@@ -2,7 +2,7 @@ import chroma from 'chroma-js'
 
 import TaxonomyTags from './TaxonomyTags'
 
-export const backendToSelect = tags => tags.map(tag =>
+export const backendToSelect = tags => tags ? tags.map(tag =>
   tag.type === 'bloom' && tag.name in TaxonomyTags
     ? TaxonomyTags[tag.name]
     : {
@@ -10,12 +10,12 @@ export const backendToSelect = tags => tags.map(tag =>
       label: tag.name,
       type: 'custom'
     }
-)
+) : []
 
-export const selectToBackend = tags => tags.map(tag => ({
+export const selectToBackend = tags => tags ? tags.map(tag => ({
   type: tag.type,
   name: tag.value
-}))
+})) : []
 
 export const tagSelectStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {

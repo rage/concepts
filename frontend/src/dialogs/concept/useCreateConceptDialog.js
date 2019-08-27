@@ -39,7 +39,6 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
       type: 'select',
       name: 'tags',
       label: 'Select tags',
-      omitEmpty: true,
       ...tagSelectProps(),
       values: Object.values(TaxonomyTags)
     }]

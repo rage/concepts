@@ -40,7 +40,7 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
 
   case 2: // Tags
     if (state.tags === null) {
-      setState({ ...state, tags: backendToSelect(concepts.flatMap(concept => concept.tags) || []) })
+      setState({ ...state, tags: backendToSelect(concepts.flatMap(concept => concept.tags)) })
     }
     return <>
       <DialogContentText>Choose tags for the merged concept</DialogContentText>
