@@ -73,6 +73,8 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopAllEditing = () => setEditing(new Set())
+  const [conceptFilter, setConceptFilter] = useState('')
+
   const stopEditing = id => {
     const copy = new Set(editing)
     copy.delete(id)
@@ -135,34 +137,37 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
           ]
         }
       />
+      <TextField value={conceptFilter} onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
       {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
-        course.concepts.map(concept => (
-          <Tooltip
-            key={concept.id}
-            placement='top'
-            classes={{
-              tooltip: classes.tooltip,
-              popper: classes.popper
-            }}
-            TransitionComponent={Fade}
-            title={editing.has(concept.id) ? '' : concept.description || 'No description available'}
-          >
-            <ListItem divider key={concept.id}>
-              {editing.has(concept.id) ? (
-                <CreateConcept
-                  submit={args => {
-                    stopEditing(concept.id)
-                    updateConcept({ id: concept.id, ...args })
-                  }}
-                  cancel={() => stopEditing(concept.id)}
-                  defaultValues={concept}
-                  action='Save'
-                />
-              ) : <>
+        course.concepts.map(concept => {
+          if (conceptFilter.length === 0 ||
+              concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
+            return (<Tooltip
+              key={concept.id}
+              placement='top'
+              classes={{
+                tooltip: classes.tooltip,
+                popper: classes.popper
+              }}
+              TransitionComponent={Fade}
+              title={editing.has(concept.id) ? '' : concept.description || 'No description available'}
+            >
+              <ListItem divider key={concept.id}>
+                {editing.has(concept.id) ? (
+                  <CreateConcept
+                    submit={args => {
+                      stopEditing(concept.id)
+                      updateConcept({ id: concept.id, ...args })
+                    }}
+                    cancel={() => stopEditing(concept.id)}
+                    defaultValues={concept}
+                    action='Save'
+                  />
+                ) : <>
                 <ListItemText className={classes.conceptBody} primary={
                   <Typography className={classes.conceptName} variant='h6'>
                     {concept.name}
@@ -190,9 +195,12 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                   </>}
                 </ListItemSecondaryAction>
               </>}
-            </ListItem>
-          </Tooltip>
-        ))
+              </ListItem>
+            </Tooltip>)
+          } else {
+            return null
+          }
+        })
       }</List>
       <CreateConcept submit={async args => {
         await createConcept(args)
