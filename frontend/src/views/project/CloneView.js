@@ -49,12 +49,12 @@ const CloneView = ({ history, token, peek, projectId }) => {
   const classes = useStyles()
 
   const peekTemplate = useQuery(PEEK_ACTIVE_TEMPLATE, {
-    skip: Boolean(peek),
+    skip: Boolean(token),
     variables: { id: projectId }
   })
 
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: !(peekTemplate.data && peekTemplate.data.limitedProjectById &&
+    skip: Boolean(token) || !(peekTemplate.data && peekTemplate.data.limitedProjectById &&
       peekTemplate.data.limitedProjectById.activeTemplateId),
     variables: {
       sourceId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
@@ -65,12 +65,13 @@ const CloneView = ({ history, token, peek, projectId }) => {
   const joinShareLink = useMutation(USE_SHARE_LINK)
 
   const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
-    refetchQueries: [{
-      query: WORKSPACE_BY_SOURCE_TEMPLATE, variables: {
+    refetchQueries: !token ? [{
+      query: WORKSPACE_BY_SOURCE_TEMPLATE,
+      variables: {
         sourceId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
           peekTemplate.data.limitedProjectById.activeTemplateId : undefined
       }
-    }]
+    }] : []
   })
 
   const handleNavigateManager = (projectId, workspaceId) => {
