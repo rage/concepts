@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server-core')
 
+const { Role } = require('../../accessControl')
 const mockWorkspace = require('../../static/mockWorkspace')
 const tmc = require('../../TMCAuthentication')
 const makeSecret = require('../../secret')
@@ -57,13 +58,12 @@ const makeMockWorkspaceForUser = async (context, userId) => {
 const AuthenticationMutations = {
   async createGuest(root, args, context) {
     const guest = await context.prisma.createUser({
-      role: 'GUEST'
+      role: Role.GUEST
     })
     const token = jwt.sign({
       role: guest.role,
       id: guest.id
-    },
-    process.env.SECRET)
+    }, process.env.SECRET)
     await makeMockWorkspaceForUser(context, guest.id)
     return {
       token,
@@ -85,9 +85,9 @@ const AuthenticationMutations = {
     if (!user) {
       const userData = { tmcId }
       if (userDetails && userDetails.administrator) {
-        userData.role = 'ADMIN'
+        userData.role = Role.ADMIN
       } else {
-        userData.role = 'STAFF'
+        userData.role = Role.STUDENT
       }
       const createdUser = await context.prisma.createUser(userData)
       const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
