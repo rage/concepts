@@ -24,6 +24,7 @@ const PrerequisiteContainer = ({
   toggleFocus,
   workspaceId,
   courseId,
+  activeCourse,
   urlPrefix
 }) => {
   const classes = useStyles()
@@ -32,12 +33,14 @@ const PrerequisiteContainer = ({
   const createConceptRef = useRef()
 
   useEffect(() => {
+    const activeCourseHasPrereqConcepts = activeCourse.concepts.find(concept =>
+      concept.linksToConcept.length > 0)
     if (courseLinks.length === 1 && courseLinks[0].from.concepts.length === 0) {
       infoBox.open(createConceptRef.current, 'right-start', 'CREATE_CONCEPT_PREREQ', 0, 20)
-    } else if (addingLink) {
-      infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_END', 0, 20)
+    } else if (courseLinks.length > 0 && !addingLink && !activeCourseHasPrereqConcepts) {
+      infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
     }
-  }, [addingLink, courseLinks])
+  }, [activeCourse.concepts, addingLink, courseLinks])
 
   return <>
     <DividerWithText

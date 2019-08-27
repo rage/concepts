@@ -82,7 +82,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       && courseQuery.data.courseById.concepts.find(concept => concept.linksToConcept.length > 0
         && focusedConceptIds.includes(concept.id))
     if (!courseTrayOpen && conceptsExist) {
-      infoBox.open(trayFabRef.current, 'left-start', 'OPEN_COURSE_TRAY', 0, 50)
+      infoBox.open(trayFabRef.current, 'right-start', 'OPEN_COURSE_TRAY', 0, 50)
     }
     if (activeConceptHasLinks && focusedConceptIds.length > 0) {
       infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
