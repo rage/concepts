@@ -174,15 +174,9 @@ const Dialog = ({ contextRef }) => {
                   }}
                   options={field.values}
                   value={inputState[field.name]}
-                  styles={{
-                    ...(field.styles || {}),
-                    menu: styles => ({
-                      ...styles,
-                      position: 'fixed',
-                      width: '552px',
-                      top: 'unset'
-                    })
-                  }}
+                  styles={field.styles}
+                  menuPlacement='auto'
+                  menuPosition='fixed'
                   defaultValue={field.defaultValue}
                   isMulti={field.isMultiSelect}
                 />

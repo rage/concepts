@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, MenuItem, FormControlLabel, Checkbox, FormControl
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 import Select from 'react-select/creatable'
@@ -11,10 +11,7 @@ import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
 import {
-  backendToSelect,
-  onTagCreate,
-  selectToBackend,
-  tagSelectStyles
+  backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/concept/tagSelectUtils'
 
 const useStyles = makeStyles(theme => ({
@@ -293,13 +290,13 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           ...input,
           tags: [...input.tags, onTagCreate(newOption)]
         })}
-        styles={{
-          ...tagSelectStyles
-        }}
+        styles={tagSelectStyles}
         options={Object.values(TaxonomyTags)}
         value={input.tags}
         defaultValue={backendToSelect(defaultValues.tags || [])}
         isMulti={true}
+        menuPlacement='auto'
+        menuPortalTarget={document.body}
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
