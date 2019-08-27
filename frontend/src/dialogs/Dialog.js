@@ -3,6 +3,7 @@ import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
   TextField, MenuItem, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
+import Select from 'react-select/creatable'
 
 import { useMessageStateValue } from '../store'
 
@@ -139,60 +140,57 @@ const Dialog = ({ contextRef }) => {
             )
           }
           {
-            state.fields.map((key, index) => {
-              if (!key.type || key.type === 'textfield') {
+            state.fields.map((field, index) => {
+              if (!field.type || field.type === 'textfield') {
                 return <TextField
-                  key={key.name}
+                  key={field.name}
                   autoFocus={index === 0}
                   variant='outlined'
                   margin='dense'
-                  name={key.name}
-                  label={key.name[0].toUpperCase() + key.name.substr(1)}
+                  name={field.name}
+                  label={field.name[0].toUpperCase() + field.name.substr(1)}
                   type='text'
                   rows={2}
                   rowsMax={10}
-                  value={inputState[key.name]}
+                  value={inputState[field.name]}
                   onChange={onChange}
                   fullWidth
-                  multiline={Boolean(key.multiline)}
+                  multiline={Boolean(field.multiline)}
                 />
-              } else if (key.type === 'select') {
-                return <TextField
-                  key={key.name}
-                  select
-                  variant='outlined'
-                  style={{ width: '180px' }}
-                  label={key.label}
-                  value={inputState[key.name]}
-                  name={key.name}
-                  onChange={onChange}
-                  margin='normal'
-                >
-                  <MenuItem key={'null'} value={''}>None</MenuItem>
-                  {key.values.map(data => {
-                    if (typeof value === 'string') {
-                      data = { value: data }
-                    }
-                    return (
-                      <MenuItem key={data.value} value={data.value}>
-                        {data.label || data.value}
-                      </MenuItem>
-                    )
+              } else if (field.type === 'select') {
+                return <Select
+                  key={field.name}
+                  onChange={selected => setInputState({ ...inputState, [field.name]: selected })}
+                  onCreateOption={newOption => setInputState({
+                    ...inputState,
+                    [field.name]: [
+                      ...inputState[field.name],
+                      field.onSelectCreate
+                        ? field.onSelectCreate(newOption)
+                        : { label: newOption, value: newOption }
+                    ]
                   })}
-                </TextField>
-              } else if (key.type === 'checkbox') {
-                return <FormControl fullWidth key={key.name}>
+                  options={field.values}
+                  value={inputState[field.name]}
+                  styles={field.styles}
+                  menuPlacement='auto'
+                  menuPosition='fixed'
+                  defaultValue={field.defaultValue}
+                  isMulti={field.isMultiSelect}
+                />
+              } else if (field.type === 'checkbox') {
+                return <FormControl fullWidth key={field.name}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={inputState[key.name]}
+                        checked={inputState[field.name]}
                         onChange={evt =>
-                          setInputState({ ...inputState, [key.name]: evt.target.checked })}
-                        value={key.name}
+                          setInputState({ ...inputState, [field.name]: evt.target.checked })}
+                        value={field.name}
                         color='primary'
                       />
                     }
-                    label={key.name[0].toUpperCase() + key.name.substr(1)}
+                    label={field.name[0].toUpperCase() + field.name.substr(1)}
                   />
                 </FormControl>
               }

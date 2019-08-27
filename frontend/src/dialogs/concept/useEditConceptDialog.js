@@ -4,6 +4,7 @@ import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import TaxonomyTags from './TaxonomyTags'
+import tagSelectProps from './tagSelectUtils'
 
 const useEditConceptDialog = isStaff => {
   const { openDialog } = useDialog()
@@ -38,13 +39,10 @@ const useEditConceptDialog = isStaff => {
     },
     {
       type: 'select',
-      name: 'bloomTag',
-      label: "Select Bloom's tags",
-      list: 'tags',
-      omitEmpty: true,
-      valueMutator: name => ({ name, type: 'bloom' }),
-      defaultValue: (tags.find(tag => tag.type === 'bloom') || {}).name,
-      values: TaxonomyTags
+      name: 'tags',
+      label: 'Select tags',
+      ...tagSelectProps(tags),
+      values: Object.values(TaxonomyTags)
     }]
   })
 }

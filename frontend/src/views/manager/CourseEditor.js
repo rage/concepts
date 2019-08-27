@@ -2,13 +2,17 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, MenuItem, FormControlLabel, Checkbox, FormControl
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
+import Select from 'react-select/creatable'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
+import {
+  backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
+} from '../../dialogs/concept/tagSelectUtils'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -127,7 +131,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
             cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
             cardHeaderButton('Cancel', () => stopMerging())
           ] : [
-            cardHeaderButton('Start merge', () => startMerging())
+            cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
           ]
         }
       />
@@ -206,24 +210,23 @@ const initialState = {
   official: false
 }
 
-const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => {
+const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
-  const localInitialState = { ...initialState, ...defaultValues }
   const [input, setInput] = useState({
-    ...localInitialState,
-    tags: localInitialState.tags.filter(tag => tag.type !== 'bloom'),
-    bloomTag: (localInitialState.tags.find(tag => tag.type === 'bloom') || {}).name || ''
+    ...initialState,
+    ...defaultValues,
+    tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
 
   const onSubmit = evt => {
     evt.preventDefault()
-    if (input.bloomTag) {
-      input.tags.push({ type: 'bloom', name: input.bloomTag })
-    }
     delete input.bloomTag
-    submit(input)
+    submit({
+      ...input,
+      tags: selectToBackend(input.tags)
+    })
     if (action === 'Create') {
       nameRef.current.focus()
       setInput({ ...initialState })
@@ -281,29 +284,19 @@ const CreateConcept = ({ submit, defaultValues, action = 'Create', cancel }) => 
           </FormControl>
           : null
       }
-      <TextField
-        select
-        variant='outlined'
-        className={classes.textfield}
-        label="Select Bloom's tags"
-        fullWidth
-        value={input.bloomTag}
-        name='bloomTag'
-        onChange={onChange}
-        margin='dense'
-      >
-        <MenuItem value=''>None</MenuItem>
-        {TaxonomyTags.map(data => {
-          if (typeof value === 'string') {
-            data = { value: data }
-          }
-          return (
-            <MenuItem key={data.value} value={data.value}>
-              {data.label || data.value}
-            </MenuItem>
-          )
+      <Select
+        onChange={selected => setInput({ ...input, tags: selected })}
+        onCreateOption={newOption => setInput({
+          ...input,
+          tags: [...input.tags, onTagCreate(newOption)]
         })}
-      </TextField>
+        styles={tagSelectStyles}
+        options={Object.values(TaxonomyTags)}
+        value={input.tags}
+        isMulti={true}
+        menuPlacement='auto'
+        menuPortalTarget={document.body}
+      />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
         className={classes.submit}

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import {
   TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText
@@ -7,8 +7,12 @@ import Select from 'react-select/creatable'
 
 import { MERGE_CONCEPTS } from '../../graphql/Mutation'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
+import {
+  backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
+} from '../../dialogs/concept/tagSelectUtils'
+import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 
-const MergeDialogContent = ({ state, setState, concepts, contentWidth }) => {
+const MergeDialogContent = ({ state, setState, concepts }) => {
   if (!concepts) {
     return null
   }
@@ -20,15 +24,8 @@ const MergeDialogContent = ({ state, setState, concepts, contentWidth }) => {
         onChange={({ value }) => setState({ ...state, name: value })}
         options={concepts.map(concept => ({ value: concept.name, label: concept.name }))}
         value={state.name ? { value: state.name, label: state.name } : undefined}
-        id='merge-dialog-name'
-        styles={{
-          menu: styles => ({
-            ...styles,
-            position: 'fixed',
-            width: contentWidth,
-            top: 'unset'
-          })
-        }}
+        menuPlacement='auto'
+        menuPosition='fixed'
       />
     </>
   case 1: // Description
@@ -42,9 +39,24 @@ const MergeDialogContent = ({ state, setState, concepts, contentWidth }) => {
     </>
 
   case 2: // Tags
+    if (state.tags === null) {
+      setState({ ...state, tags: backendToSelect(concepts.flatMap(concept => concept.tags)) })
+    }
     return <>
       <DialogContentText>Choose tags for the merged concept</DialogContentText>
-      <DialogContentText>TODO</DialogContentText>
+      <Select
+        onChange={selected => setState({ ...state, tags: selected })}
+        onCreateOption={newOption => setState({
+          ...state,
+          tags: [...state.tags, onTagCreate(newOption)]
+        })}
+        styles={tagSelectStyles}
+        options={Object.values(TaxonomyTags)}
+        value={state.tags}
+        isMulti={true}
+        menuPlacement='auto'
+        menuPosition='fixed'
+      />
     </>
   default:
     throw new Error('Invalid step')
@@ -54,23 +66,13 @@ const MergeDialogContent = ({ state, setState, concepts, contentWidth }) => {
 const stepField = ['name', 'description', 'tags']
 
 const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
-  const contentRef = useRef(null)
-  const [contentWidth, setContentWidth] = useState('720px')
   const [state, setState] = useState({
     step: 0,
     name: null,
     description: '',
     official: false,
-    tags: []
+    tags: null
   })
-
-  useLayoutEffect(() => {
-    if (contentRef.current) {
-      const style = getComputedStyle(contentRef.current)
-      const w = parseInt(style.width) - parseInt(style.paddingRight) - parseInt(style.paddingLeft)
-      setContentWidth(`${w}px`)
-    }
-  }, [contentRef.current])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: {
@@ -101,7 +103,8 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
           workspaceId,
           courseId,
           conceptIds: Array.from(conceptIds),
-          ...state
+          ...state,
+          tags: selectToBackend(state.tags)
         }
       }).then(close)
     }
@@ -116,10 +119,8 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
       <DialogTitle>Merge concepts</DialogTitle>
       <form onSubmit={submit}>
-        <DialogContent ref={contentRef}>
-          <MergeDialogContent
-            state={state} setState={setState} concepts={concepts} contentWidth={contentWidth}
-          />
+        <DialogContent>
+          <MergeDialogContent state={state} setState={setState} concepts={concepts} />
         </DialogContent>
         <DialogActions>
           <Button onClick={state.step <= 0 ? close : back} color='primary'>
