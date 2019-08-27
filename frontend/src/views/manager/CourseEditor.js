@@ -133,7 +133,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
           ]
         }
       />
-      <TextField value={conceptFilter} onChange={(event) => setConceptFilter(event.target.value)} placeholder='Filter concepts...' />
+      <TextField value={conceptFilter} onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
       {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
