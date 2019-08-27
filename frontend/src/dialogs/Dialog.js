@@ -140,42 +140,42 @@ const Dialog = ({ contextRef }) => {
             )
           }
           {
-            state.fields.map((key, index) => {
-              if (!key.type || key.type === 'textfield') {
+            state.fields.map((field, index) => {
+              if (!field.type || field.type === 'textfield') {
                 return <TextField
-                  key={key.name}
+                  key={field.name}
                   autoFocus={index === 0}
                   variant='outlined'
                   margin='dense'
-                  name={key.name}
-                  label={key.name[0].toUpperCase() + key.name.substr(1)}
+                  name={field.name}
+                  label={field.name[0].toUpperCase() + field.name.substr(1)}
                   type='text'
                   rows={2}
                   rowsMax={10}
-                  value={inputState[key.name]}
+                  value={inputState[field.name]}
                   onChange={onChange}
                   fullWidth
-                  multiline={Boolean(key.multiline)}
+                  multiline={Boolean(field.multiline)}
                 />
-              } else if (key.type === 'select') {
+              } else if (field.type === 'select') {
                 return <Select
-                  key={key.name}
-                  onChange={selected => setInputState({ ...inputState, [key.name]: selected })}
+                  key={field.name}
+                  onChange={selected => setInputState({ ...inputState, [field.name]: selected })}
                   onCreateOption={newOption => {
-                    if (key.onSelectCreate) {
-                      newOption = key.onSelectCreate(newOption)
+                    if (field.onSelectCreate) {
+                      newOption = field.onSelectCreate(newOption)
                     } else {
                       newOption = { label: newOption, value: newOption }
                     }
                     setInputState({
                       ...inputState,
-                      [key.name]: [...inputState[key.name], newOption]
+                      [field.name]: [...inputState[field.name], newOption]
                     })
                   }}
-                  options={key.values}
-                  value={inputState[key.name]}
+                  options={field.values}
+                  value={inputState[field.name]}
                   styles={{
-                    ...(key.styles || {}),
+                    ...(field.styles || {}),
                     menu: styles => ({
                       ...styles,
                       position: 'fixed',
@@ -183,22 +183,22 @@ const Dialog = ({ contextRef }) => {
                       top: 'unset'
                     })
                   }}
-                  defaultValue={key.defaultValue}
-                  isMulti={key.isMultiSelect}
+                  defaultValue={field.defaultValue}
+                  isMulti={field.isMultiSelect}
                 />
-              } else if (key.type === 'checkbox') {
-                return <FormControl fullWidth key={key.name}>
+              } else if (field.type === 'checkbox') {
+                return <FormControl fullWidth key={field.name}>
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={inputState[key.name]}
+                        checked={inputState[field.name]}
                         onChange={evt =>
-                          setInputState({ ...inputState, [key.name]: evt.target.checked })}
-                        value={key.name}
+                          setInputState({ ...inputState, [field.name]: evt.target.checked })}
+                        value={field.name}
                         color='primary'
                       />
                     }
-                    label={key.name[0].toUpperCase() + key.name.substr(1)}
+                    label={field.name[0].toUpperCase() + field.name.substr(1)}
                   />
                 </FormControl>
               }
