@@ -16,6 +16,7 @@ const PEEK_SHARE_LINK = gql`
       ... on LimitedProject {
         id
         name
+        activeTemplateId
         participants {
           privilege
           user {

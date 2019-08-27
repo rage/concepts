@@ -6,7 +6,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
-import { CLONE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
+import { CLONE_TEMPLATE_WORKSPACE, USE_SHARE_LINK } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
 import { useMessageStateValue } from '../../store'
 import NotFoundView from '../error/NotFoundView'
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const CloneView = ({ history, projectId }) => {
+const CloneView = ({ history, token, peek, projectId }) => {
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const [, messageDispatch] = useMessageStateValue()
@@ -49,6 +49,7 @@ const CloneView = ({ history, projectId }) => {
   const classes = useStyles()
 
   const peekTemplate = useQuery(PEEK_ACTIVE_TEMPLATE, {
+    skip: Boolean(peek),
     variables: { id: projectId }
   })
 
@@ -61,6 +62,8 @@ const CloneView = ({ history, projectId }) => {
     }
   })
 
+  const joinShareLink = useMutation(USE_SHARE_LINK)
+
   const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
     refetchQueries: [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE, variables: {
@@ -70,31 +73,45 @@ const CloneView = ({ history, projectId }) => {
     }]
   })
 
-  const handleNavigateManager = (workspaceId) => {
+  const handleNavigateManager = (projectId, workspaceId) => {
     history.push(`/projects/${projectId}/workspaces/${workspaceId}/manager`)
   }
 
   const handleCreate = async () => {
+    if (peek) {
+      try {
+        const res = await joinShareLink({
+          variables: { token }
+        })
+        projectId = res.data.useToken.project.id
+      } catch (err) {
+        messageDispatch({
+          type: 'setError',
+          message: err.message
+        })
+      }
+    }
     const workspaceName = name.trim()
     if (workspaceName === '') {
       alert('Workspaces need a name!')
       return
     }
     setLoading(true)
-    cloneTemplate({
-      variables: {
-        projectId,
-        name: workspaceName
-      }
-    }).catch(err => {
+    try {
+      const res = await cloneTemplate({
+        variables: {
+          projectId,
+          name: workspaceName
+        }
+      })
+      handleNavigateManager(projectId, res.data.cloneTemplateWorkspace.id)
+    } catch (err) {
       messageDispatch({
         type: 'setError',
         message: err.message
       })
-    }).finally(() => {
       setLoading(false)
-      setName('')
-    })
+    }
   }
 
   if (peekTemplate.loading) {
@@ -103,9 +120,10 @@ const CloneView = ({ history, projectId }) => {
     return <NotFoundView message='Your share link is not valid' />
   }
 
-  const inputDisabled = Boolean(
-    (peekTemplate.data.limitedProjectById
-      && !peekTemplate.data.limitedProjectById.activeTemplateId)
+  const peekData = peekTemplate.data ? peekTemplate.data.limitedProjectById
+    : peek.data.peekShareLink
+
+  const inputDisabled = Boolean((peekData && !peekData.activeTemplateId)
     || loading
     || (workspace.data
       && workspace.data.workspaceBySourceTemplate
@@ -124,7 +142,7 @@ const CloneView = ({ history, projectId }) => {
           id='name'
           label='Workspace name'
           name='name'
-          onChange={(e) => setName(e.target.value)}
+          onChange={evt => setName(evt.target.value)}
           value={name}
           autoFocus
         />
@@ -134,21 +152,20 @@ const CloneView = ({ history, projectId }) => {
           variant='outlined'
           color='primary'
           type='submit'
-          onClick={handleCreate}
-          disabled={inputDisabled}
+          disabled={inputDisabled || name.length === 0}
         >
             Create workspace
         </Button>
       </form>
       <Divider />
       {
-        workspace.data.workspaceBySourceTemplate ?
+        workspace.data && workspace.data.workspaceBySourceTemplate ?
           <Paper className={classes.paper}>
             <List className={classes.listRoot}>
               <ListItem
                 button key={workspace.data.workspaceBySourceTemplate.id}
                 onClick={() => handleNavigateManager(
-                  workspace.data.workspaceBySourceTemplate.id)}
+                  projectId, workspace.data.workspaceBySourceTemplate.id)}
               >
                 <ListItemText
                   primary={
