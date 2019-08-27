@@ -8,6 +8,8 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import { USE_SHARE_LINK } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, PEEK_SHARE_LINK, PROJECTS_FOR_USER } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
+import CloneView from '../project/CloneView'
+import LoadingBar from '../../components/LoadingBar'
 
 const JoinView = ({ history, token }) => {
   const [loading, setLoading] = useState(false)
@@ -62,11 +64,7 @@ const JoinView = ({ history, token }) => {
   )
 
   if (peek.loading) {
-    return dialog(
-      <DialogContent style={{ textAlign: 'center' }}>
-        <CircularProgress />
-      </DialogContent>
-    )
+    return <LoadingBar />
   } else if (peek.error) {
     return dialog(
       <Dialog open onClose={handleClose}>
@@ -86,6 +84,8 @@ const JoinView = ({ history, token }) => {
         ? `/projects/${peek.data.peekToken.id}/clone`
         : `/projects/${peek.data.peekToken.id}`)
     return <Redirect to={path} />
+  } else if (privilege === 'clone') {
+    return <CloneView token={token} peek={peek} />
   }
 
   return dialog(<>
