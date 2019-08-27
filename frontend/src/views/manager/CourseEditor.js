@@ -293,7 +293,6 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         styles={tagSelectStyles}
         options={Object.values(TaxonomyTags)}
         value={input.tags}
-        defaultValue={backendToSelect(defaultValues.tags || [])}
         isMulti={true}
         menuPlacement='auto'
         menuPortalTarget={document.body}

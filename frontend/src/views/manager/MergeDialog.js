@@ -39,24 +39,24 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
     </>
 
   case 2: // Tags
+    if (state.tags === null) {
+      setState({ ...state, tags: backendToSelect(concepts.flatMap(concept => concept.tags) || []) })
+    }
     return <>
       <DialogContentText>Choose tags for the merged concept</DialogContentText>
-      <DialogContentText>
-        <Select
-          onChange={selected => setState({ ...state, tags: selected })}
-          onCreateOption={newOption => setState({
-            ...state,
-            tags: [...state.tags, onTagCreate(newOption)]
-          })}
-          styles={tagSelectStyles}
-          options={Object.values(TaxonomyTags)}
-          value={state.tags}
-          defaultValue={backendToSelect(concepts.flatMap(concept => concept.tags) || [])}
-          isMulti={true}
-          menuPlacement='auto'
-          menuPortalTarget={document.body}
-        />
-      </DialogContentText>
+      <Select
+        onChange={selected => setState({ ...state, tags: selected })}
+        onCreateOption={newOption => setState({
+          ...state,
+          tags: [...state.tags, onTagCreate(newOption)]
+        })}
+        styles={tagSelectStyles}
+        options={Object.values(TaxonomyTags)}
+        value={state.tags}
+        isMulti={true}
+        menuPlacement='auto'
+        menuPosition='fixed'
+      />
     </>
   default:
     throw new Error('Invalid step')
@@ -71,7 +71,7 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     name: null,
     description: '',
     official: false,
-    tags: []
+    tags: null
   })
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
