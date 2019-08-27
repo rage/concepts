@@ -179,7 +179,7 @@ const Dialog = ({ contextRef }) => {
                     menu: styles => ({
                       ...styles,
                       position: 'fixed',
-                      width: '720px',
+                      width: '552px',
                       top: 'unset'
                     })
                   }}

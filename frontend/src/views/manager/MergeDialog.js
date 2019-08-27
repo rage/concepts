@@ -55,7 +55,7 @@ const stepField = ['name', 'description', 'tags']
 
 const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
   const contentRef = useRef(null)
-  const [contentWidth, setContentWidth] = useState('720px')
+  const [contentWidth, setContentWidth] = useState('552px')
   const [state, setState] = useState({
     step: 0,
     name: null,
