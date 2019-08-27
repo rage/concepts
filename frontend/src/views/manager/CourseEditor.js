@@ -2,9 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, ButtonGroup
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
+import  ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import  ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import Select from 'react-select/creatable'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
@@ -137,7 +139,17 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
           ]
         }
       />
-      <TextField value={conceptFilter} onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
+
+      <TextField style={{ marginBottom: '6px' }}
+        value={conceptFilter}
+        onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
+
+      <ButtonGroup fullWidth color='primary' variant='contained' size='small'>
+        <Button>Duplicate<ArrowDropDownIcon /></Button>
+        <Button>New <ArrowDropUpIcon /></Button>
+        <Button>Sort <ArrowDropDownIcon /></Button>
+      </ButtonGroup>
+
       {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
