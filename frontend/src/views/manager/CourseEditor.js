@@ -85,6 +85,7 @@ const sortingOptions = {
 
 const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
   const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const [merging, setMerging] = useState(null)
@@ -163,12 +164,14 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         classes={{ title: classes.header, content: classes.headerContent }}
         title={`Concepts of ${course.name}`}
         action={
-          merging ? [
-            cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
-            cardHeaderButton('Cancel', () => stopMerging())
-          ] : [
-            cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
-          ]
+          user.role === 'STAFF'
+            ? (merging ? [
+              cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
+              cardHeaderButton('Cancel', () => stopMerging())
+            ] : [
+              cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
+            ])
+            : null
         }
       />
 
