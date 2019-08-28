@@ -145,19 +145,15 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   )
 
   const sort = (concepts) => {
-    const sorted = [...concepts]
     switch (sortMethod) {
     case 'ALPHABETICAL_ASC':
-      sorted.sort()
-      return sorted
+      return [...concepts].sort((a, b) => a.name.localeCompare(b.name, 'fi'))
     case 'ALPHABETICAL_DESC':
-      sorted.sort()
-      sorted.reverse()
-      return sorted
+      return [...concepts].sort((a, b) => b.name.localeCompare(a.name, 'fi'))
     case 'CREATION_ASC':
-      return sorted
+      return concepts
     case 'CREATION_DESC':
-      return sorted
+      return [...concepts].reverse()
     }
   }
 
