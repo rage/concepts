@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button,
-  TextField, MenuItem, FormControlLabel, Checkbox, FormControl
+  TextField, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
 
