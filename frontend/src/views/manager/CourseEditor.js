@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, MenuItem, FormGroup
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 import Select from 'react-select/creatable'
@@ -31,6 +31,14 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis'
+  },
+  filterBar: {
+    display: 'flex',
+    marginBottom: '8px'
+  },
+  filterText: {
+    flex: 1,
+    marginRight: '8px'
   },
   list: {
     overflow: 'auto'
@@ -61,11 +69,23 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     padding: '5px'
+  },
+  rowButton: {
+    width: '33%',
+    marginRight: '2px'
   }
 }))
 
+const sortingOptions = {
+  ALPHABETICAL_ASC: 'Alphabetical (A-Z)',
+  ALPHABETICAL_DESC: 'Alphabetical (Z-A)',
+  CREATION_ASC: 'Creation date (oldest first)',
+  CREATION_DESC: 'Creation date (newest first)'
+}
+
 const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
   const listRef = useRef()
   const [editing, setEditing] = useState(new Set())
   const [merging, setMerging] = useState(null)
@@ -74,6 +94,8 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopAllEditing = () => setEditing(new Set())
   const [conceptFilter, setConceptFilter] = useState('')
+
+  const [sortMethod, setSortMethod] = useState('CREATION_ASC')
 
   const stopEditing = id => {
     const copy = new Set(editing)
@@ -123,27 +145,66 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
     </Button>
   )
 
+  const sort = (concepts) => {
+    switch (sortMethod) {
+    case 'ALPHABETICAL_ASC':
+      return [...concepts].sort((a, b) => a.name.localeCompare(b.name, 'fi'))
+    case 'ALPHABETICAL_DESC':
+      return [...concepts].sort((a, b) => b.name.localeCompare(a.name, 'fi'))
+    case 'CREATION_ASC':
+      return concepts
+    case 'CREATION_DESC':
+      return [...concepts].reverse()
+    }
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
         title={`Concepts of ${course.name}`}
         action={
-          merging ? [
-            cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
-            cardHeaderButton('Cancel', () => stopMerging())
-          ] : [
-            cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
-          ]
+          user.role === 'STAFF'
+            ? (merging ? [
+              cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
+              cardHeaderButton('Cancel', () => stopMerging())
+            ] : [
+              cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
+            ])
+            : null
         }
       />
-      <TextField value={conceptFilter} onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
+
+      <div className={classes.filterBar}>
+        <TextField
+          variant='outlined'
+          margin='dense'
+          label='Filter concepts'
+          value={conceptFilter}
+          onChange={evt => setConceptFilter(evt.target.value)}
+          className={classes.filterText} />
+        <TextField
+          select
+          variant='outlined'
+          margin='dense'
+          label='Sort by'
+          value={sortMethod}
+          onChange={evt => {
+            setSortMethod(evt.target.value)
+          }}
+        >
+          {Object.entries(sortingOptions).map(([key, label]) =>
+            <MenuItem key={key} value={key}>{label}</MenuItem>
+          )}
+        </TextField>
+      </div>
+
       {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
-        course.concepts.map(concept => {
+        sort(course.concepts).map(concept => {
           if (conceptFilter.length === 0 ||
               concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
             return (<Tooltip
@@ -154,7 +215,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                 popper: classes.popper
               }}
               TransitionComponent={Fade}
-              title={editing.has(concept.id) ? '' : concept.description || 'No description available'}
+              title={(editing.has(concept.id) && concept.description) || 'No description available'}
             >
               <ListItem divider key={concept.id}>
                 {editing.has(concept.id) ? (
