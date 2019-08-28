@@ -2,11 +2,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, ButtonGroup, Popper, Grow,
-  MenuList, MenuItem, ClickAwayListener, Paper
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl,
+  Select as MUISelect, MenuItem, OutlinedInput, InputLabel
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
-import  ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import Select from 'react-select/creatable'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
@@ -81,10 +80,14 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const stopAllEditing = () => setEditing(new Set())
   const [conceptFilter, setConceptFilter] = useState('')
 
-  const [sortMenuOpen, setSortMenuOpen] = useState(false)
-  const [sortItemIndex, setSortItemIndex] = useState(0)
-  const sortAnchorRef = useRef(null)
+  const sortLabelRef = useRef(null)
+  const [sortMethod, setSortMethod] = useState('')
   const sortingOptions = ['alphabetical', 'creation']
+  const [sortLabelWidth, setSortLabelWidth] = React.useState(0)
+
+  React.useEffect(() => {
+    setSortLabelWidth(sortLabelRef.current.offsetWidth)
+  }, [])
 
   const stopEditing = id => {
     const copy = new Set(editing)
@@ -134,22 +137,6 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
     </Button>
   )
 
-  const setSelectedSortingIndex = (event, index) => {
-    setSortItemIndex(index)
-    setSortMenuOpen(false)
-  }
-
-  const openSortMenu = () => {
-    setSortMenuOpen(true)
-  }
-
-  const closeSortMenu = (event) => {
-    if (sortAnchorRef.current && sortAnchorRef.current.contains(event.target)) {
-      return
-    }
-    setSortMenuOpen(false)
-  }
-
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -165,47 +152,35 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         }
       />
 
-      <TextField style={{ marginBottom: '6px' }}
-        value={conceptFilter}
-        onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
-
       <div>
-        <Button size='small' variant='outlined' className={classes.rowButton}>Duplicate </Button>
-        <Button size='small' variant='outlined' className={classes.rowButton}>New </Button>
-        <ButtonGroup ref={sortAnchorRef} size='small' style={{ width: '33%' }}>
-          <Button size='small' style={{ width: '80%' }}>{sortingOptions[sortItemIndex]} </Button>
-          <Button onClick={openSortMenu}
-            size='small'
-          >
-            <ArrowDropDownIcon />
-          </Button>
-        </ButtonGroup>
-      </div>
+        <TextField
+          variant='outlined'
+          style={{ width: '60%', marginRight: '2px', marginBottom: '8px' }}
+          value={conceptFilter}
+          onChange={evt => setConceptFilter(evt.target.value)}
+          size='small'
+          placeholder='Filter concepts...' />
 
-      <Popper style={{ zIndex: 2 }} open={sortMenuOpen} anchorEl={sortAnchorRef.current} transition disablePortal>
-        {({ TransitionProps }) => (
-          <Grow
-            {...TransitionProps}
-            placement='bottom'
+        <FormControl variant='outlined' style={{ width: '39%' }}>
+          <InputLabel ref={sortLabelRef} htmlFor='sorting-method-label'>
+           Sort by
+          </InputLabel>
+          <MUISelect
+            value={sortMethod}
+            onChange={event => setSortMethod(event.target.value)}
+            input={<OutlinedInput labelWidth={sortLabelWidth} id='sorting-method-label' />}
           >
-            <Paper id='menu-list-grow'>
-              <ClickAwayListener onClickAway={closeSortMenu}>
-                <MenuList>
-                  {sortingOptions.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      selected={index === sortItemIndex}
-                      onClick={event => setSelectedSortingIndex(event, index)}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+            <MenuItem value=''>
+            </MenuItem>
+            {
+              sortingOptions.map(option => (
+                <MenuItem value={option}> {option} </MenuItem>
+              ))
+            }
+          </MUISelect>
+        </FormControl>
+
+      </div>
 
       {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
