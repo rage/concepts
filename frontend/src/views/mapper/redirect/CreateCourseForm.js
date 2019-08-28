@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import { useMutation } from 'react-apollo-hooks'
-import { withStyles } from '@material-ui/core/styles'
-import {
-  Container, Button, TextField, Typography, FormHelperText
-} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import { Container, Button, TextField, Typography, FormHelperText } from '@material-ui/core'
 
 import { CREATE_COURSE } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -17,20 +15,21 @@ const styles = theme => ({
     alignItems: 'center'
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1)
   },
   list: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1)
   },
   submit: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2)
   }
-})
+}))
 
-const CreateCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
+const CreateCourseForm = ({ workspaceId, history, urlPrefix }) => {
+  const classes = useStyles()
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
 
@@ -38,14 +37,17 @@ const CreateCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
     update: cache.createCourseUpdate(workspaceId)
   })
 
-  const createDefaultCourse = async (e) => {
-    e.preventDefault()
+  const createDefaultCourse = evt => {
+    evt.preventDefault()
     const courseName = name.trim()
     if (courseName === '') {
       window.alert('Course needs a name!')
       return
     }
+    createDefaultCourseAsync(courseName)
+  }
 
+  const createDefaultCourseAsync = async courseName => {
     // Create course
     let courseRes
     try {
@@ -82,7 +84,7 @@ const CreateCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
           Create course
         </Typography>
 
-        <div className={classes.form}>
+        <form className={classes.form} onSubmit={createDefaultCourse}>
           <TextField
             error={error}
             variant='outlined'
@@ -98,13 +100,7 @@ const CreateCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
             autoFocus
           />
           <FormHelperText error={error}>
-            {
-              error ?
-                <span>
-                  Something went wrong
-                </span>
-                : null
-            }
+            { error ? 'Something went wrong' : null }
           </FormHelperText>
           <Button
             type='submit'
@@ -112,14 +108,13 @@ const CreateCourseForm = ({ classes, workspaceId, history, urlPrefix }) => {
             variant='contained'
             color='primary'
             className={classes.submit}
-            onClick={createDefaultCourse}
           >
             Create
           </Button>
-        </div>
+        </form>
       </div>
     </Container>
   )
 }
 
-export default withRouter(withStyles(styles)(CreateCourseForm))
+export default withRouter(CreateCourseForm)

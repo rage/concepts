@@ -1,11 +1,11 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
-import { CircularProgress } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../../graphql/Query/Workspace'
 import CreateCourseForm from './CreateCourseForm'
 import NotFoundView from '../../error/NotFoundView'
+import LoadingBar from '../../../components/LoadingBar'
 
 const MapperRedirectView = ({ workspaceId, location, urlPrefix }) => {
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -15,11 +15,7 @@ const MapperRedirectView = ({ workspaceId, location, urlPrefix }) => {
   })
 
   if (workspaceQuery.loading) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <CircularProgress />
-      </div>
-    )
+    return <LoadingBar id='mapper-view' />
   } else if (workspaceQuery.error) {
     return <NotFoundView message='Workspace not found' />
   }
