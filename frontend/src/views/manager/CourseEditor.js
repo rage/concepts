@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl,
-  Select as MUISelect, MenuItem, OutlinedInput, InputLabel
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, MenuItem, FormGroup
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 import Select from 'react-select/creatable'
@@ -32,6 +31,14 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis'
+  },
+  filterBar: {
+    display: 'flex',
+    marginBottom: '8px'
+  },
+  filterText: {
+    flex: 1,
+    marginRight: '8px'
   },
   list: {
     overflow: 'auto'
@@ -69,6 +76,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const sortingOptions = {
+  ALPHABETICAL_ASC: 'Alphabetical (A-Z)',
+  ALPHABETICAL_DESC: 'Alphabetical (Z-A)',
+  CREATION_ASC: 'Creation date (oldest first)',
+  CREATION_DESC: 'Creation date (newest first)'
+}
+
 const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
   const listRef = useRef()
@@ -80,14 +94,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const stopAllEditing = () => setEditing(new Set())
   const [conceptFilter, setConceptFilter] = useState('')
 
-  const sortLabelRef = useRef(null)
-  const [sortMethod, setSortMethod] = useState('')
-  const sortingOptions = ['alphabetical', 'creation']
-  const [sortLabelWidth, setSortLabelWidth] = React.useState(0)
-
-  React.useEffect(() => {
-    setSortLabelWidth(sortLabelRef.current.offsetWidth)
-  }, [])
+  const [sortMethod, setSortMethod] = useState('CREATION_ASC')
 
   const stopEditing = id => {
     const copy = new Set(editing)
@@ -152,34 +159,26 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         }
       />
 
-      <div>
+      <div className={classes.filterBar}>
         <TextField
           variant='outlined'
-          style={{ width: '60%', marginRight: '2px', marginBottom: '8px' }}
+          margin='dense'
+          label='Filter concepts'
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
-          size='small'
-          placeholder='Filter concepts...' />
-
-        <FormControl variant='outlined' style={{ width: '39%' }}>
-          <InputLabel ref={sortLabelRef} htmlFor='sorting-method-label'>
-           Sort by
-          </InputLabel>
-          <MUISelect
-            value={sortMethod}
-            onChange={event => setSortMethod(event.target.value)}
-            input={<OutlinedInput labelWidth={sortLabelWidth} id='sorting-method-label' />}
-          >
-            <MenuItem value=''>
-            </MenuItem>
-            {
-              sortingOptions.map(option => (
-                <MenuItem value={option}> {option} </MenuItem>
-              ))
-            }
-          </MUISelect>
-        </FormControl>
-
+          className={classes.filterText} />
+        <TextField
+          select
+          variant='outlined'
+          margin='dense'
+          label='Sort by'
+          value={sortMethod}
+          onChange={evt => setSortMethod(evt.target.value)}
+        >
+          {Object.entries(sortingOptions).map(([key, label]) =>
+            <MenuItem key={key} value={key}>{label}</MenuItem>
+          )}
+        </TextField>
       </div>
 
       {mergeDialogOpen !== null && <MergeDialog
@@ -198,7 +197,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                 popper: classes.popper
               }}
               TransitionComponent={Fade}
-              title={editing.has(concept.id) ? '' : concept.description || 'No description available'}
+              title={(editing.has(concept.id) && concept.description) || 'No description available'}
             >
               <ListItem divider key={concept.id}>
                 {editing.has(concept.id) ? (
