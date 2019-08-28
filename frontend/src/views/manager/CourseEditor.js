@@ -144,6 +144,23 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
     </Button>
   )
 
+  const sort = (concepts) => {
+    const sorted = [...concepts]
+    switch (sortMethod) {
+    case 'ALPHABETICAL_ASC':
+      sorted.sort()
+      return sorted
+    case 'ALPHABETICAL_DESC':
+      sorted.sort()
+      sorted.reverse()
+      return sorted
+    case 'CREATION_ASC':
+      return sorted
+    case 'CREATION_DESC':
+      return sorted
+    }
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -173,7 +190,9 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
           margin='dense'
           label='Sort by'
           value={sortMethod}
-          onChange={evt => setSortMethod(evt.target.value)}
+          onChange={evt => {
+            setSortMethod(evt.target.value)
+          }}
         >
           {Object.entries(sortingOptions).map(([key, label]) =>
             <MenuItem key={key} value={key}>{label}</MenuItem>
@@ -186,7 +205,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
-        course.concepts.map(concept => {
+        sort(course.concepts).map(concept => {
           if (conceptFilter.length === 0 ||
               concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
             return (<Tooltip
