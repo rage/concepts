@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, ButtonGroup
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, ButtonGroup, Popper, Grow,
+  MenuList, MenuItem, ClickAwayListener, Paper
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 import  ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import  ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import Select from 'react-select/creatable'
 
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
@@ -63,6 +63,10 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     padding: '5px'
+  },
+  rowButton: {
+    width: '33%',
+    marginRight: '2px'
   }
 }))
 
@@ -76,6 +80,11 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const startEditing = id => setEditing(new Set(editing).add(id))
   const stopAllEditing = () => setEditing(new Set())
   const [conceptFilter, setConceptFilter] = useState('')
+
+  const [sortMenuOpen, setSortMenuOpen] = useState(false)
+  const [sortItemIndex, setSortItemIndex] = useState(0)
+  const sortAnchorRef = useRef(null)
+  const sortingOptions = ['alphabetical', 'creation']
 
   const stopEditing = id => {
     const copy = new Set(editing)
@@ -125,6 +134,22 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
     </Button>
   )
 
+  const setSelectedSortingIndex = (event, index) => {
+    setSortItemIndex(index)
+    setSortMenuOpen(false)
+  }
+
+  const openSortMenu = () => {
+    setSortMenuOpen(true)
+  }
+
+  const closeSortMenu = (event) => {
+    if (sortAnchorRef.current && sortAnchorRef.current.contains(event.target)) {
+      return
+    }
+    setSortMenuOpen(false)
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -144,11 +169,43 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         value={conceptFilter}
         onChange={evt => setConceptFilter(evt.target.value)} placeholder='Filter concepts...' />
 
-      <ButtonGroup fullWidth color='primary' variant='contained' size='small'>
-        <Button>Duplicate<ArrowDropDownIcon /></Button>
-        <Button>New <ArrowDropUpIcon /></Button>
-        <Button>Sort <ArrowDropDownIcon /></Button>
-      </ButtonGroup>
+      <div>
+        <Button size='small' variant='outlined' className={classes.rowButton}>Duplicate </Button>
+        <Button size='small' variant='outlined' className={classes.rowButton}>New </Button>
+        <ButtonGroup ref={sortAnchorRef} size='small' style={{ width: '33%' }}>
+          <Button size='small' style={{ width: '80%' }}>{sortingOptions[sortItemIndex]} </Button>
+          <Button onClick={openSortMenu}
+            size='small'
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+      </div>
+
+      <Popper style={{ zIndex: 2 }} open={sortMenuOpen} anchorEl={sortAnchorRef.current} transition disablePortal>
+        {({ TransitionProps }) => (
+          <Grow
+            {...TransitionProps}
+            placement='bottom'
+          >
+            <Paper id='menu-list-grow'>
+              <ClickAwayListener onClickAway={closeSortMenu}>
+                <MenuList>
+                  {sortingOptions.map((option, index) => (
+                    <MenuItem
+                      key={option}
+                      selected={index === sortItemIndex}
+                      onClick={event => setSelectedSortingIndex(event, index)}
+                    >
+                      {option}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
 
       {mergeDialogOpen !== null && <MergeDialog
         workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
