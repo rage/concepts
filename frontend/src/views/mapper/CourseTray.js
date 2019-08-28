@@ -178,9 +178,9 @@ const CourseTray = ({
   useEffect(() => {
     const enoughCourses = courses && courses.length === 1
     if (courseTrayOpen && enoughCourses) {
-      infoBox.open(createButtonRef.current, 'left-start', 'CREATE_COURSE', 0, 50)
+      infoBox.open(createButtonRef.current, 'right-end', 'CREATE_COURSE', 0, 50)
     } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
-      infoBox.open(checkboxRef.current, 'left-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
+      infoBox.open(checkboxRef.current, 'right-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
     }
   }, [courseTrayOpen, courses, courseLinks])
 

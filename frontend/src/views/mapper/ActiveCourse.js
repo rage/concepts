@@ -82,19 +82,17 @@ const ActiveCourse = ({
 
   useEffect(() => {
     const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
-    const prereqConceptExists = courseLinks.find(link => link.from.concepts.length > 0)
     if (hasLinks && focusedConceptIds.length === 0) {
-      infoBox.open(activeConceptRef.current, 'right-start', 'FOCUS_CONCEPT', 0, 50)
+      infoBox.open(activeConceptRef.current, 'left-start', 'FOCUS_CONCEPT', 0, 50)
     }
     if (hasLinks) return
     if (course.concepts.length === 0) {
-      infoBox.open(createButtonRef.current, 'right-start', 'CREATE_CONCEPT_TARGET', 0, 50)
+      infoBox.open(createButtonRef.current, 'left-end', 'CREATE_CONCEPT_TARGET', 0, 50)
     }
-    if (!prereqConceptExists) return
-    if (courseLinks.length > 0 && !addingLink) {
-      infoBox.open(conceptLinkRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
+    if (addingLink) {
+      infoBox.open(conceptLinkRef.current, 'left-start', 'DRAW_LINK_END', 0, 20)
     }
-  }, [course.concepts, addingLink, courseLinks])
+  }, [addingLink, courseLinks])
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
