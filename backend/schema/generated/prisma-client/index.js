@@ -57,6 +57,14 @@ var models = [
     embedded: false
   },
   {
+    name: "PointGroup",
+    embedded: false
+  },
+  {
+    name: "Completion",
+    embedded: false
+  },
+  {
     name: "Tag",
     embedded: false
   },

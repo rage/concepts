@@ -50,6 +50,8 @@ type Workspace {
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
   participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace", onDelete: CASCADE)
   tokens: [WorkspaceToken!]! @relation(name: "WorkspaceAccessToken", onDelete: CASCADE)
+  mainCourse: Course @relation(link: INLINE, name: "MainCourse")
+  pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup")
 }
 
 type WorkspaceParticipant {
@@ -127,6 +129,24 @@ type Concept {
   resources: [Resource!]!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
   tags: [Tag!]!
+}
+
+type PointGroup {
+  id: ID! @id
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int! @default(value: 1)
+  workspace: Workspace! @relation(name: "WorkspacePointGroup")
+  pointsPerConcept: Float! @default(value: 0.5)
+  completions: [Completion!]!
+}
+
+type Completion {
+  id: ID! @id
+  user: User!
+  conceptAmount: Int! @default(value: 0)
+  createdAt: DateTime! @createdAt
 }
 
 type Tag {

@@ -195,6 +195,8 @@ type Workspace {
   courseLinks: [CourseLink!]!
   participants: [WorkspaceParticipant!]!
   tokens: [WorkspaceToken!]!
+  mainCourse: Course
+  pointGroups: [PointGroup!]!
 }
 
 type WorkspaceParticipant {
@@ -272,6 +274,24 @@ type Concept {
   resources: [Resource!]!
   workspace: Workspace!
   tags: [Tag!]!
+}
+
+type PointGroup {
+  id: ID!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int!
+  workspace: Workspace!
+  pointsPerConcept: Float!
+  completions: [Completion!]!
+}
+
+type Completion {
+  id: ID!
+  user: User!
+  conceptAmount: Int!
+  createdAt: DateTime!
 }
 
 type Tag {
