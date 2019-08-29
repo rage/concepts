@@ -125,7 +125,7 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
   const nameRef = useRef()
   const [input, setInput] = useState({
     name: defaultName || '',
-    official: defaultOfficial || false,
+    official: Boolean(defaultOfficial),
     tags: backendToSelect(defaultTags)
   })
   const [themeInput, setThemeInput] = useState('')
