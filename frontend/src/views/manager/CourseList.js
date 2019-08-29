@@ -7,7 +7,8 @@ import {
 import Select from 'react-select/creatable'
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
 
-import { backendToSelect, onTagCreate, selectToBackend, tagSelectStyles } from '../../dialogs/concept/tagSelectUtils'
+import { backendToSelect, onTagCreate,
+  selectToBackend, tagSelectStyles } from '../../dialogs/concept/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -125,16 +126,16 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
   const [input, setInput] = useState({
     name: defaultName || '',
     official: defaultOfficial || false,
-    tags: defaultTags ? backendToSelect(defaultTags) : [],
-    themeInput: ''
+    tags: backendToSelect(defaultTags)
   })
+  const [themeInput, setThemeInput] = useState('')
 
   const onSubmit = evt => {
     evt.preventDefault()
-    submit(input)
+    submit({ ...input,  tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ name: '', official: false })
+      setInput({ name: '', themeInput: '', tags: [], official: false })
     }
   }
 
@@ -145,16 +146,15 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
   }
 
   const handleKeyDownSelect = event => {
-    const option = input.themeInput
-    if (!option) return
+    if (!themeInput) return
     switch (event.key) {
     case 'Enter':
     case 'Tab':
       setInput({
         ...input,
-        themeInput: '',
-        tags: [...input.tags, onTagCreate(option)]
+        tags: [...input.tags, onTagCreate(themeInput)]
       })
+      setThemeInput('')
       event.preventDefault()
     }
   }
@@ -180,7 +180,7 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
           DropdownIndicator: null
         }}
         onKeyDown={handleKeyDownSelect}
-        onInputChange={value => setInput({ ...input, themeInput: value })}
+        onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
         value={input.tags}
         isMulti={true}
@@ -188,7 +188,7 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
         placeholder='Themes...'
         menuIsOpen={false}
         menuPortalTarget={document.body}
-        inputValue={input.themeInput}
+        inputValue={themeInput}
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'

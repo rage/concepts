@@ -9,7 +9,7 @@ const CourseQueries = {
       workspaceId
     })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
-
+    
     return context.prisma.createCourse({
       name: name,
       official: Boolean(belongsToTemplate || official),
