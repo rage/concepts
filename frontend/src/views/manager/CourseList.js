@@ -135,7 +135,8 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
     submit({ ...input,  tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ name: '', themeInput: '', tags: [], official: false })
+      setInput({ name: '', tags: [], official: false })
+      setThemeInput('')
     }
   }
 
