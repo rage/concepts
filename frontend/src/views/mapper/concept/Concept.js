@@ -93,17 +93,19 @@ const Concept = ({
 
   const onClick = evt => {
     if (addingLink) {
+      if (addingLink.type !== ownType) {
+        createConceptLink({
+          variables: {
+            to: isActive ? concept.id : addingLink.id,
+            from: isActive ? addingLink.id : concept.id,
+            workspaceId
+          }
+        }).catch(() => messageDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        }))
+      }
       setAddingLink(null)
-      createConceptLink({
-        variables: {
-          to: isActive ? concept.id : addingLink.id,
-          from: isActive ? addingLink.id : concept.id,
-          workspaceId
-        }
-      }).catch(() => messageDispatch({
-        type: 'setError',
-        data: 'Access denied'
-      }))
     } else {
       setAddingLink({
         id: concept.id,
