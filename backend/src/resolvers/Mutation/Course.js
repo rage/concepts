@@ -35,7 +35,7 @@ const CourseQueries = {
     return await context.prisma.deleteCourse({ id })
   },
 
-  async updateCourse(root, { id, name, official }, context) {
+  async updateCourse(root, { id, name, official, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
     await checkAccess(context, {
       minimumRole: official ? Role.STAFF : Role.GUEST,
@@ -45,7 +45,18 @@ const CourseQueries = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldCourse = await context.prisma.course({ id })
 
+    const oldTags = await context.prisma.course({ id }).tags()
+    const tagsToDelete = oldTags
+      .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
+      .map(oldTag => ({ id: oldTag.id }))
+    const tagsToCreate = tags
+      .filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
+
     const data = {
+      tags: {
+        delete: tagsToDelete,
+        create: tagsToCreate
+      },
       official: Boolean(official)
     }
     if (name !== undefined) {
