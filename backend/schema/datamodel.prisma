@@ -103,6 +103,7 @@ type Course {
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"Courses")
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
+  tags: [Tag!]!
 }
 
 type ConceptLink {

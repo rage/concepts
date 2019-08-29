@@ -6,6 +6,7 @@ module.exports = {
     'linksToCourse',
     'linksFromCourse',
     'createdBy',
-    'workspace'
+    'workspace',
+    'tags'
   ])
 }

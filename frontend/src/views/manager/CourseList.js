@@ -4,8 +4,12 @@ import {
   Typography, Card, CardHeader, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
   TextField, Button, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
+import Select from 'react-select/creatable'
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
 
+import {
+  backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
+} from '../../dialogs/concept/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -40,6 +44,9 @@ const useStyles = makeStyles(theme => ({
   },
   textfield: {
     margin: theme.spacing(1, 0)
+  },
+  form: {
+    width: '100%'
   }
 }))
 
@@ -77,6 +84,7 @@ const CourseList = ({
                 cancel={() => stopEditing(course.id)}
                 defaultName={course.name}
                 defaultOfficial={course.official}
+                defaultTags={course.tags}
                 action='Save'
               />
             </> : <>
@@ -112,21 +120,24 @@ const CourseList = ({
   )
 }
 
-const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create', cancel }) => {
+const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, action = 'Create', cancel }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
     name: defaultName || '',
-    official: defaultOfficial || false
+    official: Boolean(defaultOfficial),
+    tags: backendToSelect(defaultTags)
   })
+  const [themeInput, setThemeInput] = useState('')
 
   const onSubmit = evt => {
     evt.preventDefault()
-    submit(input)
+    submit({ ...input,  tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ name: '', official: false })
+      setInput({ name: '', tags: [], official: false })
+      setThemeInput('')
     }
   }
 
@@ -136,8 +147,22 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create',
     }
   }
 
+  const handleKeyDownSelect = event => {
+    if (!themeInput) return
+    switch (event.key) {
+    case 'Enter':
+    case 'Tab':
+      setInput({
+        ...input,
+        tags: [...input.tags, onTagCreate(themeInput)]
+      })
+      setThemeInput('')
+      event.preventDefault()
+    }
+  }
+
   return (
-    <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
+    <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
         className={classes.textfield}
         variant='outlined'
@@ -150,6 +175,22 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create',
         inputRef={nameRef}
         autoFocus={action !== 'Create'}
         onChange={evt => setInput({ ...input, name: evt.target.value })}
+      />
+      <Select
+        onChange={selected => setInput({ ...input, tags: selected })}
+        components={{
+          DropdownIndicator: null
+        }}
+        onKeyDown={handleKeyDownSelect}
+        onInputChange={value => setThemeInput(value)}
+        styles={tagSelectStyles}
+        value={input.tags}
+        isMulti={true}
+        menuPlacement='auto'
+        placeholder='Themes...'
+        menuIsOpen={false}
+        menuPortalTarget={document.body}
+        inputValue={themeInput}
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
