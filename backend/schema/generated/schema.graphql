@@ -49,9 +49,9 @@ type Mutation {
   login(tmcToken: String!): AuthPayload
   createGuest: AuthPayload
   # Course mutations
-  createCourse(name: String!, workspaceId: ID!, official: Boolean): Course
+  createCourse(name: String!, workspaceId: ID!, official: Boolean, tags: [TagCreateInput!]): Course
   deleteCourse(id: ID!): Course
-  updateCourse(id: ID!, name: String!, official: Boolean): Course
+  updateCourse(id: ID!, name: String!, official: Boolean, tags: [TagUpdateInput!]): Course
 
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, tags: [TagCreateInput!]): Concept
@@ -248,6 +248,7 @@ type Course {
   linksToCourse: [CourseLink!]!
   concepts: [Concept!]!
   workspace: Workspace!
+  tags: [Tag!]!
 }
 
 type ConceptLink {

@@ -4,8 +4,10 @@ import {
   Typography, Card, CardHeader, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
   TextField, Button, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
+import Select from 'react-select/creatable'
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
 
+import { backendToSelect, onTagCreate, selectToBackend, tagSelectStyles } from '../../dialogs/concept/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -112,13 +114,14 @@ const CourseList = ({
   )
 }
 
-const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create', cancel }) => {
+const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, action = 'Create', cancel }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
     name: defaultName || '',
-    official: defaultOfficial || false
+    official: defaultOfficial || false,
+    tags: defaultTags ? backendToSelect(defaultTags) : []
   })
 
   const onSubmit = evt => {
@@ -150,6 +153,18 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, action = 'Create',
         inputRef={nameRef}
         autoFocus={action !== 'Create'}
         onChange={evt => setInput({ ...input, name: evt.target.value })}
+      />
+      <Select
+        onChange={selected => setInput({ ...input, tags: selected })}
+        onCreateOption={newOption => setInput({
+          ...input,
+          tags: [...input.tags, onTagCreate(newOption)]
+        })}
+        styles={tagSelectStyles}
+        value={input.tags}
+        isMulti={true}
+        menuPlacement='auto'
+        menuPortalTarget={document.body}
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'

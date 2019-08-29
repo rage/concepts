@@ -2,7 +2,7 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
 const CourseQueries = {
-  async createCourse(root, { name, workspaceId, official }, context) {
+  async createCourse(root, { name, workspaceId, official, tags }, context) {
     await checkAccess(context, {
       minimumRole: official ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
@@ -14,7 +14,8 @@ const CourseQueries = {
       name: name,
       official: Boolean(belongsToTemplate || official),
       createdBy: { connect: { id: context.user.id } },
-      workspace: { connect: { id: workspaceId } }
+      workspace: { connect: { id: workspaceId } },
+      tags: { create: tags }
     })
   },
 
