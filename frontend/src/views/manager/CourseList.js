@@ -7,7 +7,7 @@ import {
 import Select from 'react-select/creatable'
 import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
 
-import { backendToSelect, onTagCreate,
+import {
   selectToBackend, tagSelectStyles } from '../../dialogs/concept/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
 
