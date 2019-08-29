@@ -42,6 +42,9 @@ const useStyles = makeStyles(theme => ({
   },
   textfield: {
     margin: theme.spacing(1, 0)
+  },
+  form: {
+    width: '100%'
   }
 }))
 
@@ -79,6 +82,7 @@ const CourseList = ({
                 cancel={() => stopEditing(course.id)}
                 defaultName={course.name}
                 defaultOfficial={course.official}
+                defaultTags={course.tags}
                 action='Save'
               />
             </> : <>
@@ -156,7 +160,7 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
   }
 
   return (
-    <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
+    <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
         className={classes.textfield}
         variant='outlined'

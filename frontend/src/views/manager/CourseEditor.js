@@ -73,6 +73,9 @@ const useStyles = makeStyles(theme => ({
   rowButton: {
     width: '33%',
     marginRight: '2px'
+  },
+  form: {
+    width: '100%'
   }
 }))
 
@@ -311,7 +314,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
 
   return (
-    <form onSubmit={onSubmit} onKeyDown={onKeyDown}>
+    <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
         className={classes.textfield}
         variant='outlined'
