@@ -7,7 +7,7 @@ import { signOut } from '../lib/authentication'
 import { useLoginStateValue } from '../store'
 
 const AuthenticationIcon = withRouter(({ history }) => {
-  const [{ loggedIn }, dispatch] = useLoginStateValue()
+  const [{loggedIn, user}, dispatch] = useLoginStateValue()
   const [anchorElement, setAnchorElement] = useState(null)
   const anchorElementOpen = Boolean(anchorElement)
 
@@ -60,8 +60,10 @@ const AuthenticationIcon = withRouter(({ history }) => {
       }}
       onClose={handleAnchorClose}
     >
-      {
-        loggedIn && JSON.parse(localStorage.current_user).user.role !== 'GUEST' &&
+      <MenuItem>
+        Logged in as {user.role === 'GUEST' ? 'a guest' : user.username}
+      </MenuItem>
+      {loggedIn && user.role !== 'GUEST' &&
         <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
       }
       <MenuItem onClick={logout}>Logout</MenuItem>

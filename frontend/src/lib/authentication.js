@@ -16,8 +16,12 @@ export const signIn = async ({
 }) => {
   const res = await tmcClient.authenticate({ username: email, password })
   const apiResponse = await apiAuthentication(res.accessToken)
-  await window.localStorage.setItem('current_user', JSON.stringify(apiResponse.data.login))
-  return apiResponse.data.login
+  const data = apiResponse.data.login
+  if (data.user) {
+    data.user.username = res.username
+  }
+  await window.localStorage.setItem('current_user', JSON.stringify(data))
+  return data
 }
 
 export const signOut = async () => {
