@@ -11,6 +11,7 @@ import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphq
 import { useMessageStateValue } from '../../store'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
+import generateName from '../../lib/generateName'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,8 +44,8 @@ const useStyles = makeStyles(theme => ({
 
 const CloneView = ({ history, token, peek, projectId }) => {
   const [loading, setLoading] = useState(false)
-  const [name, setName] = useState('')
   const [, messageDispatch] = useMessageStateValue()
+  const [name, setName] = useState(generateName())
 
   const classes = useStyles()
 
