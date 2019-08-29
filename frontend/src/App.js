@@ -16,6 +16,7 @@ import HeatmapView from './views/heatmap/HeatmapView'
 import LoginView from './views/login/LoginView'
 import CytoGraphView from './views/graph/CytoGraphView'
 import ProjectView from './views/project/ProjectView'
+import ProjectNavBar from './components/ProjectNavBar'
 import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
 
@@ -63,6 +64,44 @@ const workspaceRouter = (prefix) => <>
   />
 </>
 
+const projectRouter = (prefix, loggedIn) => <>
+  <Route exact path={`${prefix}/:id`} render={({ match }) =>
+    <Redirect to={`${prefix}/${match.params.id}/overview`} />} />
+  <Route
+    exact path={`${prefix}/:id/:page(overview|manager)`}
+    render={({ match: { params: { id, page } } }) =>
+      <ProjectNavBar urlPrefix={prefix} projectId={id} page={page} />
+    }
+  />
+  <Route
+    exact path={`${prefix}/:id/overview`}
+    render={({ match: { params: { id } } }) =>
+      <ProjectView projectId={id} />
+    }
+  />
+  <Route
+    exact path={`${prefix}/:id/manager`}
+    render={({ match: { params: { id } } }) =>
+      <NotFoundView /> // TODO add project manager
+    }
+  />
+  <Route
+    exact path={`${prefix}/:id/clone`}
+    render={({ match: { params: { id } } }) =>
+      <CloneView projectId={id} />
+    }
+  />
+  <Route
+    path={`${prefix}/:id/workspaces`}
+    render={({ match: { url } }) => workspaceRouter(url)} />
+  <Route
+    path={`${prefix}/:id/templates`}
+    render={({ match: { url } }) => workspaceRouter(url)} />
+  <Route
+    path={`${prefix}/:id/merges`}
+    render={({ match: { url } }) => workspaceRouter(url)} />
+</>
+
 const App = () => {
   const { loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
@@ -91,18 +130,9 @@ const App = () => {
       <Route
         path='/projects/:id/merges'
         render={({ match: { url } }) => workspaceRouter(url)} />
-      <PrivateRoute
-        exact path='/projects/:id' redirectPath='/login' condition={loggedIn}
-        render={({ match: { params: { id } } }) =>
-          <ProjectView projectId={id} />
-        }
-      />
-      <PrivateRoute
-        exact path='/projects/:id/clone' redirectPath='/login' condition={loggedIn}
-        render={({ match: { params: { id } } }) =>
-          <CloneView projectId={id} />
-        }
-      />
+
+      <PrivateRoute path='/projects' redirectPath='/login' condition={loggedIn}
+        render={() => projectRouter('/projects')} />
       <Route render={() => <NotFoundView />} />
     </Switch>
   </div>

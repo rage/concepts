@@ -47,7 +47,7 @@ const JoinView = ({ history, token }) => {
       } else {
         history.push(type === 'workspace'
           ? `/workspaces/${resp.data.useToken.workspace.id}/manager`
-          : `/projects/${resp.data.useToken.project.id}`)
+          : `/projects/${resp.data.useToken.project.id}/overview`)
       }
     }).catch(() => {
       messageDispatch({
@@ -84,7 +84,7 @@ const JoinView = ({ history, token }) => {
       ? `/workspaces/${peek.data.peekToken.id}/manager`
       : (privilege === 'clone'
         ? `/projects/${peek.data.peekToken.id}/clone`
-        : `/projects/${peek.data.peekToken.id}`)
+        : `/projects/${peek.data.peekToken.id}/overview`)
     return <Redirect to={path} />
   } else if (privilege === 'clone') {
     return <CloneView token={token} peek={peek} />

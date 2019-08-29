@@ -64,7 +64,7 @@ const ProjectList = ({ history, projects }) => {
   }
 
   const handleNavigateProject = (projectId) => {
-    history.push(`/projects/${projectId}`)
+    history.push(`/projects/${projectId}/overview`)
   }
 
   return (
