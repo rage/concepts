@@ -121,7 +121,8 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
   const [input, setInput] = useState({
     name: defaultName || '',
     official: defaultOfficial || false,
-    tags: defaultTags ? backendToSelect(defaultTags) : []
+    tags: defaultTags ? backendToSelect(defaultTags) : [],
+    themeInput: ''
   })
 
   const onSubmit = evt => {
@@ -136,6 +137,21 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
   const onKeyDown = evt => {
     if (cancel && evt.key === 'Escape') {
       cancel()
+    }
+  }
+
+  const handleKeyDownSelect = event => {
+    const option = input.themeInput
+    if (!option) return
+    switch (event.key) {
+    case 'Enter':
+    case 'Tab':
+      setInput({
+        ...input,
+        themeInput: '',
+        tags: [...input.tags, onTagCreate(option)]
+      })
+      event.preventDefault()
     }
   }
 
@@ -156,15 +172,19 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
       />
       <Select
         onChange={selected => setInput({ ...input, tags: selected })}
-        onCreateOption={newOption => setInput({
-          ...input,
-          tags: [...input.tags, onTagCreate(newOption)]
-        })}
+        components={{
+          DropdownIndicator: null
+        }}
+        onKeyDown={handleKeyDownSelect}
+        onInputChange={value => setInput({ ...input, themeInput: value })}
         styles={tagSelectStyles}
         value={input.tags}
         isMulti={true}
         menuPlacement='auto'
+        placeholder='Themes...'
+        menuIsOpen={false}
         menuPortalTarget={document.body}
+        inputValue={input.themeInput}
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
