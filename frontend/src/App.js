@@ -19,6 +19,7 @@ import ProjectView from './views/project/ProjectView'
 import ProjectNavBar from './components/ProjectNavBar'
 import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
+import ProjectManagerView from './views/project/manager/ProjectManagerView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -64,7 +65,7 @@ const workspaceRouter = (prefix) => <>
   />
 </>
 
-const projectRouter = (prefix, loggedIn) => <>
+const projectRouter = prefix => <>
   <Route exact path={`${prefix}/:id`} render={({ match }) =>
     <Redirect to={`${prefix}/${match.params.id}/overview`} />} />
   <Route
@@ -82,7 +83,7 @@ const projectRouter = (prefix, loggedIn) => <>
   <Route
     exact path={`${prefix}/:id/manager`}
     render={({ match: { params: { id } } }) =>
-      <NotFoundView /> // TODO add project manager
+      <ProjectManagerView projectId={id} />
     }
   />
   <Route
