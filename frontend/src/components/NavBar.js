@@ -66,6 +66,16 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
 
 const parseProjectPath = (projectId, path, prefix) => {
   switch (path[0]) {
+  case 'overview':
+    return [{
+      name: 'Overview',
+      link: `${prefix}/overview`
+    }]
+  case 'manager':
+    return [{
+      name: 'Manager',
+      link: `${prefix}/manager`
+    }]
   case 'clone':
     return [{
       name: 'Clone',
