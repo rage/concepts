@@ -2,20 +2,28 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Table, TableBody, TableCell, TableHead,
-  TableRow, Paper, TextField, IconButton
+  TableRow, Card, TextField, IconButton, CardHeader
 } from '@material-ui/core'
 import {
-  Delete as DeleteIcon,  Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
+  Add as AddIcon, Delete as DeleteIcon,  Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
 } from '@material-ui/icons'
 
 const useStyles = makeStyles(theme => ({
   root: {
+    ...theme.mixins.gutters(),
     width: '100%',
-    marginTop: theme.spacing(3),
-    overflowX: 'auto'
+    height: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'auto'
   },
   table: {
-    width: '100%'
+    width: '100%',
+    flex: 1,
+    overflow: 'auto'
   },
   textField: {
   },
@@ -46,16 +54,25 @@ const columns = [
   { title: 'Group', field: 'groupName', type: 'text' },
   { title: 'Start date', field: 'startDate', type: 'date' },
   { title: 'End date', field: 'endDate', type: 'date' },
-  { title: 'Max points', field: 'maxPoints', type: 'number' },
-  { title: 'Points per concept', field: 'pointsPerConcept', type: 'number', step: '0.1' }
+  { title: 'Max points', field: 'maxPoints', type: 'number', min: '0' },
+  { title: 'Points per concept', field: 'pointsPerConcept', type: 'number', step: '0.1', min: '0.0' }
 ]
 
 const EditableTable = () => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
+  const [state, setState] = useState(Object.fromEntries(columns.map(col => [col.field, ''])))
+
+  const handleChange = (evt) => setState({ ...state, [evt.target.name]: evt.target.value })
 
   return (
-    <Paper className={classes.root} elevation={0}>
+    <Card className={classes.root} elevation={0}>
+      <CardHeader action={
+        <IconButton aria-label='Add' onClick={() => setEditing('ADD')}>
+          <AddIcon />
+        </IconButton>}
+      title={'Point groups'}
+      />
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
@@ -74,9 +91,40 @@ const EditableTable = () => {
               setEditing={setEditing}
             />
           ))}
+          {
+            editing && !rows.find(data => data.id === editing) &&
+            <TableRow>
+              {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
+                <TextField
+                  name={col.field}
+                  className={classes.textField}
+                  type={col.type}
+                  onChange={handleChange}
+                  margin='none'
+                  inputProps={{
+                    step: col.step,
+                    min: col.min
+                  }}
+                />
+              </TableCell>
+              )}
+              <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
+                <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
+                  <IconButton>
+                    <DoneIcon />
+                  </IconButton>
+                </div>
+                <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
+                  <IconButton>
+                    <ClearIcon />
+                  </IconButton>
+                </div>
+              </TableCell>
+            </TableRow>
+          }
         </TableBody>
       </Table>
-    </Paper>
+    </Card>
   )
 }
 
@@ -98,7 +146,8 @@ const EditableTableRow = ({ data, columns, editing, setEditing }) => {
           onChange={handleChange}
           margin='none'
           inputProps={{
-            step: col.step
+            step: col.step,
+            min: col.min
           }}
         />
       </TableCell>
