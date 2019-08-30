@@ -1539,6 +1539,13 @@ input CourseUpdateOneInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseUpdateOneRequiredInput {
+  create: CourseCreateInput
+  update: CourseUpdateDataInput
+  upsert: CourseUpsertNestedInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseUpdateOneRequiredWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   update: CourseUpdateWithoutLinksFromCourseDataInput
@@ -1811,6 +1818,7 @@ type PointGroup {
   endDate: DateTime!
   maxPoints: Int!
   workspace: Workspace!
+  course: Course!
   pointsPerConcept: Float!
   completions(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Completion!]
 }
@@ -1828,6 +1836,7 @@ input PointGroupCreateInput {
   endDate: DateTime!
   maxPoints: Int
   workspace: WorkspaceCreateOneWithoutPointGroupsInput!
+  course: CourseCreateOneInput!
   pointsPerConcept: Float
   completions: CompletionCreateManyInput
 }
@@ -1843,6 +1852,7 @@ input PointGroupCreateWithoutWorkspaceInput {
   startDate: DateTime!
   endDate: DateTime!
   maxPoints: Int
+  course: CourseCreateOneInput!
   pointsPerConcept: Float
   completions: CompletionCreateManyInput
 }
@@ -1966,6 +1976,7 @@ input PointGroupUpdateInput {
   endDate: DateTime
   maxPoints: Int
   workspace: WorkspaceUpdateOneRequiredWithoutPointGroupsInput
+  course: CourseUpdateOneRequiredInput
   pointsPerConcept: Float
   completions: CompletionUpdateManyInput
 }
@@ -2008,6 +2019,7 @@ input PointGroupUpdateWithoutWorkspaceDataInput {
   startDate: DateTime
   endDate: DateTime
   maxPoints: Int
+  course: CourseUpdateOneRequiredInput
   pointsPerConcept: Float
   completions: CompletionUpdateManyInput
 }
@@ -2077,6 +2089,7 @@ input PointGroupWhereInput {
   maxPoints_gt: Int
   maxPoints_gte: Int
   workspace: WorkspaceWhereInput
+  course: CourseWhereInput
   pointsPerConcept: Float
   pointsPerConcept_not: Float
   pointsPerConcept_in: [Float!]

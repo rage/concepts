@@ -284,6 +284,7 @@ type PointGroup {
   endDate: DateTime!
   maxPoints: Int!
   workspace: Workspace!
+  course: Course!
   pointsPerConcept: Float!
   completions: [Completion!]!
 }

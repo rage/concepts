@@ -139,6 +139,7 @@ type PointGroup {
   endDate: DateTime!
   maxPoints: Int! @default(value: 1)
   workspace: Workspace! @relation(name: "WorkspacePointGroup")
+  course: Course! @relation(link: INLINE, name: "CoursePointGroup")
   pointsPerConcept: Float! @default(value: 0.5)
   completions: [Completion!]!
 }

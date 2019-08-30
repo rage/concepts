@@ -12,6 +12,14 @@ module.exports = {
     'concepts',
     'clones',
     {
+      name: 'pointGroups',
+      checkPrivilegeArgs: root => ({
+        minimumPrivilege: Privilege.OWNER,
+        workspaceId: root.id
+      }),
+      insufficientPrivilegeValue: () => []
+    },
+    {
       name: 'tokens',
       checkPrivilegeArgs: root => ({
         minimumPrivilege: Privilege.OWNER,

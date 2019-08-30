@@ -30,6 +30,14 @@ query projectById($id: ID!) {
           id
         }
       }
+      pointGroups {
+        id
+        name
+        startDate
+        endDate
+        maxPoints
+        pointsPerConcept
+      }
     }
     templates {
       id

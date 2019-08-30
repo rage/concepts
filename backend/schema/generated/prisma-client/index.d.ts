@@ -1543,6 +1543,7 @@ export interface PointGroupWhereInput {
   maxPoints_gt?: Maybe<Int>;
   maxPoints_gte?: Maybe<Int>;
   workspace?: Maybe<WorkspaceWhereInput>;
+  course?: Maybe<CourseWhereInput>;
   pointsPerConcept?: Maybe<Float>;
   pointsPerConcept_not?: Maybe<Float>;
   pointsPerConcept_in?: Maybe<Float[] | Float>;
@@ -2291,6 +2292,7 @@ export interface PointGroupCreateWithoutWorkspaceInput {
   startDate: DateTimeInput;
   endDate: DateTimeInput;
   maxPoints?: Maybe<Int>;
+  course: CourseCreateOneInput;
   pointsPerConcept?: Maybe<Float>;
   completions?: Maybe<CompletionCreateManyInput>;
 }
@@ -3902,8 +3904,16 @@ export interface PointGroupUpdateWithoutWorkspaceDataInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   maxPoints?: Maybe<Int>;
+  course?: Maybe<CourseUpdateOneRequiredInput>;
   pointsPerConcept?: Maybe<Float>;
   completions?: Maybe<CompletionUpdateManyInput>;
+}
+
+export interface CourseUpdateOneRequiredInput {
+  create?: Maybe<CourseCreateInput>;
+  update?: Maybe<CourseUpdateDataInput>;
+  upsert?: Maybe<CourseUpsertNestedInput>;
+  connect?: Maybe<CourseWhereUniqueInput>;
 }
 
 export interface CompletionUpdateManyInput {
@@ -5159,6 +5169,7 @@ export interface PointGroupCreateInput {
   endDate: DateTimeInput;
   maxPoints?: Maybe<Int>;
   workspace: WorkspaceCreateOneWithoutPointGroupsInput;
+  course: CourseCreateOneInput;
   pointsPerConcept?: Maybe<Float>;
   completions?: Maybe<CompletionCreateManyInput>;
 }
@@ -5191,6 +5202,7 @@ export interface PointGroupUpdateInput {
   endDate?: Maybe<DateTimeInput>;
   maxPoints?: Maybe<Int>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutPointGroupsInput>;
+  course?: Maybe<CourseUpdateOneRequiredInput>;
   pointsPerConcept?: Maybe<Float>;
   completions?: Maybe<CompletionUpdateManyInput>;
 }
@@ -7013,6 +7025,7 @@ export interface PointGroupPromise extends Promise<PointGroup>, Fragmentable {
   endDate: () => Promise<DateTimeOutput>;
   maxPoints: () => Promise<Int>;
   workspace: <T = WorkspacePromise>() => T;
+  course: <T = CoursePromise>() => T;
   pointsPerConcept: () => Promise<Float>;
   completions: <T = FragmentableArray<Completion>>(args?: {
     where?: CompletionWhereInput;
@@ -7034,6 +7047,7 @@ export interface PointGroupSubscription
   endDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   maxPoints: () => Promise<AsyncIterator<Int>>;
   workspace: <T = WorkspaceSubscription>() => T;
+  course: <T = CourseSubscription>() => T;
   pointsPerConcept: () => Promise<AsyncIterator<Float>>;
   completions: <T = Promise<AsyncIterator<CompletionSubscription>>>(args?: {
     where?: CompletionWhereInput;
@@ -7055,6 +7069,7 @@ export interface PointGroupNullablePromise
   endDate: () => Promise<DateTimeOutput>;
   maxPoints: () => Promise<Int>;
   workspace: <T = WorkspacePromise>() => T;
+  course: <T = CoursePromise>() => T;
   pointsPerConcept: () => Promise<Float>;
   completions: <T = FragmentableArray<Completion>>(args?: {
     where?: CompletionWhereInput;
