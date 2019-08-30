@@ -19,7 +19,11 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
   },
+  tableRowDisabled: {
+    color: 'rgba(0, 0, 0, 0.26)'
+  },
   tableCell: {
+    color: 'inherit',
     padding: theme.spacing(1, 1)
   }
 }))
@@ -36,7 +40,7 @@ const rows = [
   createData(5, 'osa05', Date(), Date(), 49, 3.9)
 ]
 
-const headers = ['Group', 'Start date', 'End date', 'Max points', 'Points per concept']
+const columns = ['Group', 'Start date', 'End date', 'Max points', 'Points per concept']
 
 const EditableTable = () => {
   const classes = useStyles()
@@ -47,7 +51,7 @@ const EditableTable = () => {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            {headers.map(columnName =>
+            {columns.map(columnName =>
               <TableCell className={classes.tableCell}>{columnName}</TableCell>)}
             <TableCell align='center' className={classes.tableCell}>Actions</TableCell>
           </TableRow>
@@ -69,9 +73,9 @@ const EditableTable = () => {
 
 const EditableTableRow = ({ data, editing, setEditing }) => {
   const classes = useStyles()
-  if (editing) {
+  if (editing === data.id) {
     return <TableRow>
-      <TableCell className={classes.tableCell}>
+      <TableCell className={classes.tableCell} style={{ minWidth: '80px' }}>
         <TextField
           className={classes.textField}
           defaultValue={data.groupName}
@@ -113,9 +117,13 @@ const EditableTableRow = ({ data, editing, setEditing }) => {
       <TableCell className={classes.tableCell}>
         <TextField
           className={classes.textField}
+          type='number'
           defaultValue={data.pointsPerConcept}
           onChange={() => {}}
           margin='none'
+          inputProps={{
+            step: '0.1'
+          }}
         />
       </TableCell>
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
@@ -128,17 +136,29 @@ const EditableTableRow = ({ data, editing, setEditing }) => {
       </TableCell>
     </TableRow>
   } else {
-    return <TableRow>
-      <TableCell className={classes.tableCell}>{data.groupName}</TableCell>
-      <TableCell className={classes.tableCell}>{data.startDate}</TableCell>
-      <TableCell className={classes.tableCell}>{data.endDate}</TableCell>
-      <TableCell className={classes.tableCell}>{data.maxPoints}</TableCell>
-      <TableCell className={classes.tableCell}>{data.pointsPerConcept}</TableCell>
-      <TableCell className={classes.tableCell} align='center'  style={{ minWidth: '140px' }}>
-        <IconButton onClick={() => setEditing(data.groupName)}>
+    const iconColor = editing && editing !== data.id ? 'inherit' : undefined
+
+    return <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
+      <TableCell className={classes.tableCell} style={{ minWidth: '80px' }}>
+        {data.groupName}
+      </TableCell>
+      <TableCell className={classes.tableCell}>
+        {data.startDate}
+      </TableCell>
+      <TableCell className={classes.tableCell}>
+        {data.endDate}
+      </TableCell>
+      <TableCell className={classes.tableCell}>
+        {data.maxPoints}
+      </TableCell>
+      <TableCell className={classes.tableCell}>
+        {data.pointsPerConcept}
+      </TableCell>
+      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
+        <IconButton color={iconColor} onClick={() => setEditing(data.id)}>
           <EditIcon />
         </IconButton>
-        <IconButton>
+        <IconButton color={iconColor}>
           <DeleteIcon />
         </IconButton>
       </TableCell>
