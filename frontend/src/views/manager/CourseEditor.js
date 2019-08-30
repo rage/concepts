@@ -86,6 +86,14 @@ const sortingOptions = {
   CREATION_DESC: 'Creation date (newest first)'
 }
 
+const CustomTooltip = ({ visible, children, ...args }) => visible ? (
+  <Tooltip
+    {...args}
+  >
+    {children}
+  </Tooltip>
+) : (<> {children} </>)
+
 const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
@@ -210,15 +218,16 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
         sort(course.concepts).map(concept => {
           if (conceptFilter.length === 0 ||
               concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
-            return (<Tooltip
+            return (<CustomTooltip
               key={concept.id}
               placement='top'
               classes={{
                 tooltip: classes.tooltip,
                 popper: classes.popper
               }}
+              visible={!editing.has(concept.id)}
               TransitionComponent={Fade}
-              title={(editing.has(concept.id) && concept.description) || 'No description available'}
+              title={concept.description || 'No description available'}
             >
               <ListItem divider key={concept.id}>
                 {editing.has(concept.id) ? (
@@ -260,7 +269,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                 </ListItemSecondaryAction>
               </>}
               </ListItem>
-            </Tooltip>)
+            </CustomTooltip>)
           } else {
             return null
           }
