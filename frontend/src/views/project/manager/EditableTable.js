@@ -7,6 +7,8 @@ import {
 import {
   Add as AddIcon, Delete as DeleteIcon,  Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
 } from '@material-ui/icons'
+import { DateTimePicker } from '@material-ui/pickers'
+import moment from 'moment'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,28 +42,61 @@ function createData(id, groupName, startDate, endDate, maxPoints, pointsPerConce
   return { id, groupName, startDate, endDate, maxPoints, pointsPerConcept }
 }
 
-const rows = [
-  createData(1, 'osa01', Date(), Date(), 24, 4.0),
-  createData(2, 'osa02', Date(), Date(), 37, 4.3),
-  createData(3, 'osa03', Date(), Date(), 24, 6.0),
-  createData(4, 'osa04', Date(), Date(), 67, 4.3),
-  createData(5, 'osa05', Date(), Date(), 49, 3.9)
-]
+const formatDate = (date) => moment(date).format('D/MM/YYYY, HH:mm')
+const tempDate = new Date()
 
-// const columns = ['Group', 'Start date', 'End date', 'Max points', 'Points per concept']
+const rows = [
+  createData(1, 'osa01', tempDate, tempDate, 24, 4.0),
+  createData(2, 'osa02', tempDate, tempDate, 37, 4.3),
+  createData(3, 'osa03', tempDate, tempDate, 24, 6.0),
+  createData(4, 'osa04', tempDate, tempDate, 67, 4.3),
+  createData(5, 'osa05', tempDate, tempDate, 49, 3.9)
+]
 
 const columns = [
-  { title: 'Group', field: 'groupName', type: 'text' },
-  { title: 'Start date', field: 'startDate', type: 'date' },
-  { title: 'End date', field: 'endDate', type: 'date' },
-  { title: 'Max points', field: 'maxPoints', type: 'number', min: '0' },
-  { title: 'Points per concept', field: 'pointsPerConcept', type: 'number', step: '0.1', min: '0.0' }
+  { title: 'Group', field: 'groupName', type: 'text', minWidth: '80px' },
+  { title: 'Start date', field: 'startDate', type: 'date', minWidth: '80px' },
+  { title: 'End date', field: 'endDate', type: 'date', minWidth: '80px' },
+  { title: 'Max points', field: 'maxPoints', type: 'number', min: '0', minWidth: '40px' },
+  {
+    title: 'Points per concept',
+    field: 'pointsPerConcept',
+    type: 'number',
+    step: '0.1',
+    min: '0.0',
+    minWidth: '40px'
+  }
 ]
+
+const setPlaceholder = (type, title) => {
+  switch (type) {
+  case 'number':
+    return null
+  case 'text':
+    return title
+  default:
+    return ''
+  }
+}
+
+const setDefaultValue = (type) => {
+  switch (type) {
+  case 'number':
+    return 1
+  case 'text':
+    return ''
+  case 'date':
+    return new Date().toISOString()
+  default:
+    return ''
+  }
+}
 
 const EditableTable = () => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
-  const [state, setState] = useState(Object.fromEntries(columns.map(col => [col.field, ''])))
+  const [state, setState] = useState(Object.fromEntries(columns.map(col =>
+    [col.field, setDefaultValue(col.type)])))
 
   const handleChange = (evt) => setState({ ...state, [evt.target.name]: evt.target.value })
 
@@ -95,17 +130,29 @@ const EditableTable = () => {
             editing && !rows.find(data => data.id === editing) &&
             <TableRow>
               {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
-                <TextField
-                  name={col.field}
-                  className={classes.textField}
-                  type={col.type}
-                  onChange={handleChange}
-                  margin='none'
-                  inputProps={{
-                    step: col.step,
-                    min: col.min
-                  }}
-                />
+                {col.type === 'date' ?
+                  <DateTimePicker
+                    disablePast
+                    ampm={false}
+                    value={state[col.field]}
+                    onChange={(value) => {
+                      setState({ ...state, [col.field]: value })
+                    }} />
+                  :
+                  <TextField
+                    name={col.field}
+                    value={state[col.field]}
+                    className={classes.textField}
+                    type={col.type}
+                    placeholder={setPlaceholder(col.type, col.title)}
+                    onChange={handleChange}
+                    margin='none'
+                    inputProps={{
+                      step: col.step,
+                      min: col.min
+                    }}
+                  />
+                }
               </TableCell>
               )}
               <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
@@ -138,18 +185,30 @@ const EditableTableRow = ({ data, columns, editing, setEditing }) => {
   if (editing === data.id) {
     return <TableRow>
       {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
-        <TextField
-          name={col.field}
-          className={classes.textField}
-          type={col.type}
-          defaultValue={data[col.field]}
-          onChange={handleChange}
-          margin='none'
-          inputProps={{
-            step: col.step,
-            min: col.min
-          }}
-        />
+        {col.type === 'date' ?
+          <DateTimePicker
+            disablePast
+            ampm={false}
+            value={state[col.field]}
+            onChange={(value) => {
+              setState({ ...state, [col.field]: value })
+            }}
+          />
+          :
+          <TextField
+            name={col.field}
+            className={classes.textField}
+            type={col.type}
+            value={state[col.field]}
+            onChange={handleChange}
+            margin='none'
+            inputProps={{
+              step: col.step,
+              min: col.min
+            }}
+          />
+        }
+
       </TableCell>
       )}
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
@@ -170,7 +229,7 @@ const EditableTableRow = ({ data, columns, editing, setEditing }) => {
 
     return <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
       {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
-        {data[col.field]}
+        {col.type === 'date' ? formatDate(data[col.field]) : data[col.field] }
       </TableCell>
       )}
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
