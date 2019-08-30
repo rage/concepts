@@ -218,7 +218,8 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                 popper: classes.popper
               }}
               TransitionComponent={Fade}
-              title={(editing.has(concept.id) && concept.description) || 'No description available'}
+              title={!editing.has(concept.id) ?
+                (concept.description || 'No description available') : ''}
             >
               <ListItem divider key={concept.id}>
                 {editing.has(concept.id) ? (
