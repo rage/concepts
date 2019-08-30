@@ -40,19 +40,27 @@ const rows = [
   createData(5, 'osa05', Date(), Date(), 49, 3.9)
 ]
 
-const columns = ['Group', 'Start date', 'End date', 'Max points', 'Points per concept']
+// const columns = ['Group', 'Start date', 'End date', 'Max points', 'Points per concept']
+
+const columns = [
+  { title: 'Group', field: 'groupName', type: 'text' },
+  { title: 'Start date', field: 'startDate', type: 'date' },
+  { title: 'End date', field: 'endDate', type: 'date' },
+  { title: 'Max points', field: 'maxPoints', type: 'number' },
+  { title: 'Points per concept', field: 'pointsPerConcept', type: 'number', step: '0.1' }
+]
 
 const EditableTable = () => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
 
   return (
-    <Paper className={classes.root} elevation='0'>
+    <Paper className={classes.root} elevation={0}>
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            {columns.map(columnName =>
-              <TableCell className={classes.tableCell}>{columnName}</TableCell>)}
+            {columns.map(col =>
+              <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>)}
             <TableCell align='center' className={classes.tableCell}>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -62,6 +70,7 @@ const EditableTable = () => {
               key={data.id}
               data={data}
               editing={editing}
+              columns={columns}
               setEditing={setEditing}
             />
           ))}
@@ -71,96 +80,61 @@ const EditableTable = () => {
   )
 }
 
-const EditableTableRow = ({ data, editing, setEditing }) => {
+const EditableTableRow = ({ data, columns, editing, setEditing }) => {
   const classes = useStyles()
+  const [state, setState] = useState(Object.fromEntries(columns.map(col =>
+    [col.field, data[col.field]])))
+
+  const handleChange = (evt) => setState({ ...state, [evt.target.name]: evt.target.value })
+
   if (editing === data.id) {
     return <TableRow>
-      <TableCell className={classes.tableCell} style={{ minWidth: '80px' }}>
+      {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
         <TextField
+          name={col.field}
           className={classes.textField}
-          defaultValue={data.groupName}
-          onChange={() => {}}
-          margin='none'
-        />
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        <TextField
-          className={classes.textField}
-          type='date'
-          defaultValue={data.startDate}
-          onChange={() => {}}
-          InputLabelProps={{
-            shrink: true
-          }}
-        />
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        <TextField
-          className={classes.textField}
-          type='date'
-          defaultValue={data.endDate}
-          onChange={() => {}}
-          InputLabelProps={{
-            shrink: true
-          }}
-        />
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        <TextField
-          className={classes.textField}
-          type='number'
-          defaultValue={data.maxPoints}
-          onChange={() => {}}
-          margin='none'
-        />
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        <TextField
-          className={classes.textField}
-          type='number'
-          defaultValue={data.pointsPerConcept}
-          onChange={() => {}}
+          type={col.type}
+          defaultValue={data[col.field]}
+          onChange={handleChange}
           margin='none'
           inputProps={{
-            step: '0.1'
+            step: col.step
           }}
         />
       </TableCell>
+      )}
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
-        <IconButton onClick={() => setEditing(null)}>
-          <DoneIcon />
-        </IconButton>
-        <IconButton>
-          <ClearIcon onClick={() => setEditing(null)} />
-        </IconButton>
+        <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
+          <IconButton>
+            <DoneIcon />
+          </IconButton>
+        </div>
+        <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
+          <IconButton>
+            <ClearIcon />
+          </IconButton>
+        </div>
       </TableCell>
     </TableRow>
   } else {
     const iconColor = editing && editing !== data.id ? 'inherit' : undefined
 
     return <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-      <TableCell className={classes.tableCell} style={{ minWidth: '80px' }}>
-        {data.groupName}
+      {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
+        {data[col.field]}
       </TableCell>
-      <TableCell className={classes.tableCell}>
-        {data.startDate}
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        {data.endDate}
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        {data.maxPoints}
-      </TableCell>
-      <TableCell className={classes.tableCell}>
-        {data.pointsPerConcept}
-      </TableCell>
+      )}
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
-        <IconButton color={iconColor} onClick={() => setEditing(data.id)}>
-          <EditIcon />
-        </IconButton>
-        <IconButton color={iconColor}>
-          <DeleteIcon />
-        </IconButton>
+        <div style={{ display: 'inline' }} onClick={() => setEditing(data.id)}>
+          <IconButton color={iconColor}>
+            <EditIcon />
+          </IconButton>
+        </div>
+        <div style={{ display: 'inline' }}>
+          <IconButton color={iconColor}>
+            <DeleteIcon />
+          </IconButton>
+        </div>
       </TableCell>
     </TableRow>
   }
