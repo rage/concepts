@@ -177,7 +177,7 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
         onChange={evt => setInput({ ...input, name: evt.target.value })}
       />
       <Select
-        onChange={selected => setInput({ ...input, tags: selected })}
+        onChange={selected => setInput({ ...input, tags: selected || [] })}
         components={{
           DropdownIndicator: null
         }}

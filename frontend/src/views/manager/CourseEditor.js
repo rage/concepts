@@ -341,7 +341,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         onChange={onChange}
       />
       <Select
-        onChange={selected => setInput({ ...input, tags: selected })}
+        onChange={selected => setInput({ ...input, tags: selected || [] })}
         onCreateOption={newOption => setInput({
           ...input,
           tags: [...input.tags, onTagCreate(newOption)]
