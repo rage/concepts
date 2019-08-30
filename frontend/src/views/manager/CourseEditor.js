@@ -344,7 +344,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         onChange={selected => setInput({ ...input, tags: selected })}
         onCreateOption={newOption => setInput({
           ...input,
-          tags: input.tags ? [...input.tags, onTagCreate(newOption)] : [onTagCreate(newOption)]
+          tags: [...(input.tags || []), onTagCreate(newOption)]
         })}
         styles={tagSelectStyles}
         options={Object.values(TaxonomyTags)}
