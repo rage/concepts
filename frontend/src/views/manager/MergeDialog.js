@@ -45,7 +45,7 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
     return <>
       <DialogContentText>Choose tags for the merged concept</DialogContentText>
       <Select
-        onChange={selected => setState({ ...state, tags: selected })}
+        onChange={selected => setState({ ...state, tags: selected || [] })}
         onCreateOption={newOption => setState({
           ...state,
           tags: [...(state.tags || []), onTagCreate(newOption)]
