@@ -6,6 +6,7 @@ import { Typography } from '@material-ui/core'
 import { PROJECT_BY_ID } from '../../../graphql/Query'
 import NotFoundView from '../../error/NotFoundView'
 import LoadingBar from '../../../components/LoadingBar'
+import EditableTable from './EditableTable'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -67,7 +68,7 @@ const ProjectManagerView = ({ projectId }) => {
         TODO
       </div>
       <div className={classes.points}>
-        TODO
+        <EditableTable />
       </div>
     </div>
   )
