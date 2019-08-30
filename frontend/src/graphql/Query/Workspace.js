@@ -75,6 +75,12 @@ query workspaceById($id: ID!) {
       id
       name
       official
+      tags {
+        id
+        name
+        type
+        priority
+      }
       concepts {
         id
         name

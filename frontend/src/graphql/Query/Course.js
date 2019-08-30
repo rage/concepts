@@ -6,6 +6,12 @@ query coursesByWorkspace($workspaceId: ID!) {
     id
     name
     official
+    tags {
+      id
+      name
+      type
+      priority
+    }
   }
 }
 `
@@ -16,6 +22,12 @@ query courseById($id: ID!) {
     id
     name
     official
+    tags {
+      id
+      name
+      type
+      priority
+    }
     concepts {
       id
       name
