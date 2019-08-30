@@ -57,6 +57,9 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
+  listItemDisabled: {
+    color: 'rgba(0, 0, 0, 0.26)'
+  },
   textfield: {
     margin: theme.spacing(1, 0)
   },
@@ -90,24 +93,16 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const listRef = useRef()
-  const [editing, setEditing] = useState(new Set())
+  const [editing, setEditing] = useState(null)
   const [merging, setMerging] = useState(null)
   const mergeDialogTimeout = useRef(-1)
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
-  const startEditing = id => setEditing(new Set(editing).add(id))
-  const stopAllEditing = () => setEditing(new Set())
   const [conceptFilter, setConceptFilter] = useState('')
 
   const [sortMethod, setSortMethod] = useState('CREATION_ASC')
 
-  const stopEditing = id => {
-    const copy = new Set(editing)
-    copy.delete(id)
-    setEditing(copy)
-  }
-
   const startMerging = () => {
-    stopAllEditing()
+    setEditing(null)
     setMerging(new Set())
   }
   const toggleMergingConcept = id => {
@@ -131,7 +126,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   }
 
   useEffect(() => () => {
-    stopAllEditing()
+    setEditing(null)
     stopMerging()
     closeMergeDialog()
   }, [course])
@@ -218,26 +213,29 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                 popper: classes.popper
               }}
               TransitionComponent={Fade}
-              title={!editing.has(concept.id) ?
+              title={editing !== concept.id ?
                 (concept.description || 'No description available') : ''}
             >
-              <ListItem divider key={concept.id}>
-                {editing.has(concept.id) ? (
+              <ListItem
+                divider key={concept.id}
+                className={editing && editing !== concept.id ? classes.listItemDisabled : null}
+              >
+                {editing === concept.id ? (
                   <CreateConcept
                     submit={args => {
-                      stopEditing(concept.id)
+                      setEditing(null)
                       updateConcept({ id: concept.id, ...args })
                     }}
-                    cancel={() => stopEditing(concept.id)}
+                    cancel={() => setEditing(null)}
                     defaultValues={concept}
                     action='Save'
                   />
                 ) : <>
-                <ListItemText className={classes.conceptBody} primary={
-                  <Typography className={classes.conceptName} variant='h6'>
+                <ListItemText className={classes.conceptBody}>
+                  <Typography variant='h6' className={classes.conceptName}>
                     {concept.name}
                   </Typography>
-                } />
+                </ListItemText>
                 <ListItemSecondaryAction>
                   {merging ? (
                     <Checkbox
@@ -246,15 +244,21 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                       color='primary'
                     />
                   ) : <>
-                    <IconButton aria-label='Delete' onClick={() => {
-                      const msg = `Are you sure you want to delete the concept ${concept.name}?`
-                      if (window.confirm(msg)) {
-                        deleteConcept(concept.id)
-                      }
-                    }}>
+                    <IconButton
+                      color={editing ? 'inherit' : undefined}
+                      aria-label='Delete' onClick={() => {
+                        const msg = `Are you sure you want to delete the concept ${concept.name}?`
+                        if (window.confirm(msg)) {
+                          deleteConcept(concept.id)
+                        }
+                      }}
+                    >
                       <DeleteIcon />
                     </IconButton>
-                    <IconButton aria-label='Edit' onClick={() => startEditing(concept.id)}>
+                    <IconButton
+                      color={editing ? 'inherit' : undefined} aria-label='Edit'
+                      onClick={() => setEditing(concept.id)}
+                    >
                       <EditIcon />
                     </IconButton>
                   </>}
