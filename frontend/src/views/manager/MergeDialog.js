@@ -48,7 +48,7 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
         onChange={selected => setState({ ...state, tags: selected || [] })}
         onCreateOption={newOption => setState({
           ...state,
-          tags: [...(state.tags || []), onTagCreate(newOption)]
+          tags: [...state.tags, onTagCreate(newOption)]
         })}
         styles={tagSelectStyles}
         options={Object.values(TaxonomyTags)}

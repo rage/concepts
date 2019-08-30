@@ -154,7 +154,7 @@ const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, actio
     case 'Tab':
       setInput({
         ...input,
-        tags: [...(input.tags || []), onTagCreate(themeInput)]
+        tags: [...input.tags, onTagCreate(themeInput)]
       })
       setThemeInput('')
       event.preventDefault()
