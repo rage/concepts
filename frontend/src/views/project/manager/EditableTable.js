@@ -67,7 +67,9 @@ const setDefaultValue = (type) => {
   }
 }
 
-const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMutation }) => {
+const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
+  updateMutation, deleteMutation, disabled
+}) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
   const [state, setState] = useState(Object.fromEntries(columns.map(col =>
@@ -77,6 +79,7 @@ const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMu
   const handleChange = evt => setState({ ...state, [evt.target.name]: evt.target.value })
 
   const handleCreate = () => {
+    if (disabled) return
     const variables = {}
     for (const col of columns) {
       variables[col.field] = (col.type === 'number') ? Number(state[col.field]) : state[col.field]
@@ -97,9 +100,12 @@ const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMu
   return (
     <Card className={classes.root} elevation={0}>
       <CardHeader action={
-        <IconButton aria-label='Add' onClick={() => setEditing('ADD')}>
-          <AddIcon />
-        </IconButton>}
+        <>
+          <AdditionalAction />
+          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing('ADD')}>
+            <AddIcon />
+          </IconButton>
+        </>}
       title={'Point groups'}
       />
       <Table className={classes.table}>
@@ -115,6 +121,7 @@ const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMu
             <EditableTableRow
               key={data.id}
               data={data}
+              disabled={disabled}
               editing={editing}
               columns={columns}
               updateMutation={updateMutation}
@@ -153,16 +160,12 @@ const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMu
               </TableCell>
               )}
               <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
-                <div style={{ display: 'inline' }} onClick={handleCreate}>
-                  <IconButton>
-                    <DoneIcon />
-                  </IconButton>
-                </div>
-                <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
-                  <IconButton>
-                    <ClearIcon />
-                  </IconButton>
-                </div>
+                <IconButton disabled={disabled} onClick={handleCreate}>
+                  <DoneIcon />
+                </IconButton>
+                <IconButton disabled={disabled} onClick={() => setEditing(null)}>
+                  <ClearIcon />
+                </IconButton>
               </TableCell>
             </TableRow>
           }
@@ -173,7 +176,7 @@ const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMu
 }
 
 const EditableTableRow = ({
-  data, columns,
+  data, columns, disabled,
   editing, setEditing,
   updateMutation, deleteMutation
 }) => {
@@ -234,12 +237,12 @@ const EditableTableRow = ({
       )}
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
         <div style={{ display: 'inline' }} onClick={handleUpdate}>
-          <IconButton>
+          <IconButton disabled={disabled}>
             <DoneIcon />
           </IconButton>
         </div>
         <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
-          <IconButton>
+          <IconButton disabled={disabled}>
             <ClearIcon />
           </IconButton>
         </div>
@@ -255,12 +258,12 @@ const EditableTableRow = ({
       )}
       <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
         <div style={{ display: 'inline' }} onClick={() => setEditing(data.id)}>
-          <IconButton color={iconColor}>
+          <IconButton color={iconColor} disabled={disabled}>
             <EditIcon />
           </IconButton>
         </div>
         <div style={{ display: 'inline' }} onClick={() => deleteMutation({ id: data.id })}>
-          <IconButton color={iconColor}>
+          <IconButton color={iconColor} disabled={disabled}>
             <DeleteIcon />
           </IconButton>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { Typography } from '@material-ui/core'
+import { Typography, TextField, MenuItem } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../../graphql/Query'
 import { CREATE_POINTGROUP, UPDATE_POINTGROUP,
@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
 const ProjectManagerView = ({ projectId }) => {
   const classes = useStyles()
 
-  const [courseForPoints, setCourseForPoints] = useState(null)
+  const [courseForPoints, setCourseForPoints] = useState('')
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
@@ -97,10 +97,39 @@ const ProjectManagerView = ({ projectId }) => {
     return <NotFoundView message='Project not found' />
   }
 
+  const projectData = projectQuery.data.projectById && projectQuery.data.projectById
+  const activeTemplate = projectQuery.data.projectById
+                      && projectQuery.data.projectById.activeTemplate
+
+  const editableTableDisabled = !activeTemplate || (
+    activeTemplate &&
+    activeTemplate.courses &&
+    activeTemplate.courses.length === 0
+  )
+
+  const CourseSelector = () => (
+    <TextField
+      select
+      disabled={editableTableDisabled}
+      variant='outlined'
+      margin='dense'
+      label='Course'
+      value={courseForPoints}
+      style={{ width: '200px' }}
+      onChange={evt => {
+        setCourseForPoints(evt.target.value)
+      }}
+    >
+      {(activeTemplate ? activeTemplate.courses : []).map(course =>
+        <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+      )}
+    </TextField>
+  )
+
   return (
     <div className={classes.root}>
       <Typography className={classes.header} variant='h4'>
-        Project: {projectQuery.data.projectById.name}
+        Project: {projectData.name}
       </Typography>
       <div className={classes.sharing}>
         TODO
@@ -108,14 +137,16 @@ const ProjectManagerView = ({ projectId }) => {
       <div className={classes.points}>
         <EditableTable
           columns={columns}
+          AdditionalAction={CourseSelector}
+          disabled={editableTableDisabled}
           createMutation={args => createPointGroup({ variables: {
-            workspaceId: projectQuery.data.projectById.activeTemplate.id,
-            courseId: projectQuery.data.projectById.activeTemplate.courses[0].id,
+            workspaceId: activeTemplate && activeTemplate.id,
+            courseId: courseForPoints,
             ...args
           } })}
           updateMutation={args => updatePointGroup({ variables: { ...args } })}
           deleteMutation={args => deletePointGroup({ variables: { ...args } })}
-          rows={projectQuery.data.projectById.activeTemplate.pointGroups}
+          rows={activeTemplate ? activeTemplate.pointGroups : []}
         />
       </div>
     </div>
