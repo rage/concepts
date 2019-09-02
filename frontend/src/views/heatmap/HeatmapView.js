@@ -153,7 +153,7 @@ const HeaderCell = ({ title }) => {
   const classes = useStyles()
 
   return (
-    <th className={classes.headerCell}>
+    <th title={title} className={classes.headerCell}>
       <div>
         <div>
           <div className={classes.headerOverflow}>
@@ -279,7 +279,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
                   {
                     workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
                       <tr key={`${fromCourse.id}`}>
-                        <th className={classes.sideHeaderCell}>
+                        <th title={fromCourse.name} className={classes.sideHeaderCell}>
                           <div className={classes.headerOverflow}>
                             {fromCourse.name}
                           </div>
