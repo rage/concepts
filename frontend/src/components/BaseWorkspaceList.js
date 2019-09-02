@@ -169,33 +169,31 @@ This will change which template is cloned by users.`)
   return (
     <Card elevation={0} className={classes.root} style={style}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
-      <List dense={false} className={classes.list}>
-        {
-          workspaces.map(workspace => (
-            <ListItem
-              className={activeTemplate && workspace.id === activeTemplate.id
-                ? classes.templateActive : ''}
-              button key={workspace.id} onClick={() => handleNavigateManager(workspace.id)}
-            >
-              <ListItemText
-                primary={
-                  <Typography className={classes.workspaceName} variant='h6'>
-                    {workspace.name}
-                  </Typography>
-                }
-                secondary={type === TYPE_USER && workspace.participants
-                  .find(p => p.privilege === 'OWNER').user.id}
-              />
+      <List dense={false} className={classes.list}>{
+        workspaces.map(workspace => (
+          <ListItem
+            className={activeTemplate && workspace.id === activeTemplate.id
+              ? classes.templateActive : ''}
+            button key={workspace.id} onClick={() => handleNavigateManager(workspace.id)}
+          >
+            <ListItemText
+              primary={
+                <Typography className={classes.workspaceName} variant='h6'>
+                  {workspace.name}
+                </Typography>
+              }
+              secondary={type === TYPE_USER && workspace.participants
+                .find(p => p.privilege === 'OWNER').user.id}
+            />
 
-              <ListItemSecondaryAction>
-                <IconButton onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
-                  <MoreVertIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))
-        }
-      </List>
+            <ListItemSecondaryAction>
+              <IconButton onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+                <MoreVertIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))
+      }</List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
         <MenuItem aria-label='Mapper' onClick={handleNavigateMapper}>
           <ListItemIcon>
@@ -215,8 +213,7 @@ This will change which template is cloned by users.`)
           </ListItemIcon>
           Export
         </MenuItem>
-        {
-          type !== TYPE_USER &&
+        {type !== TYPE_USER &&
           <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>
               <ShareIcon />
@@ -224,23 +221,18 @@ This will change which template is cloned by users.`)
           Share link
           </MenuItem>
         }
-        {
-          type !== TYPE_USER && type === TYPE_TEMPLATE &&
-            <MenuItem onClick={handleSetActive} disabled={isActiveTemplate}>
-              <ListItemIcon>
-                {
-                  isActiveTemplate ?
-                    <RadioButtonChecked />
-                    :
-                    <RadioButtonUnchecked />
-                }
-              </ListItemIcon>
-              {!isActiveTemplate ? 'Set as' : 'Is'} active
-            </MenuItem>
-
+        {type !== TYPE_USER && type === TYPE_TEMPLATE &&
+          <MenuItem onClick={handleSetActive} disabled={isActiveTemplate}>
+            <ListItemIcon>
+              {isActiveTemplate
+                ? <RadioButtonChecked />
+                : <RadioButtonUnchecked />
+              }
+            </ListItemIcon>
+            {!isActiveTemplate ? 'Set as' : 'Is'} active
+          </MenuItem>
         }
-        {
-          type !== TYPE_USER &&
+        {type !== TYPE_USER &&
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
               <EditIcon />
@@ -248,8 +240,7 @@ This will change which template is cloned by users.`)
             Edit
           </MenuItem>
         }
-        {
-          type !== TYPE_USER &&
+        {type !== TYPE_USER &&
           <MenuItem aria-label='Delete' onClick={handleDelete}>
             <ListItemIcon>
               <DeleteIcon />
