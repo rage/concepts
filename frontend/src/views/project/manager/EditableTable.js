@@ -10,6 +10,8 @@ import {
 import { DateTimePicker } from '@material-ui/pickers'
 import moment from 'moment'
 
+import { useMessageStateValue } from '../../../store'
+
 const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
@@ -38,36 +40,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function createData(id, groupName, startDate, endDate, maxPoints, pointsPerConcept) {
-  return { id, groupName, startDate, endDate, maxPoints, pointsPerConcept }
-}
-
 const DATETIME_FORMAT = 'D.M.YYYY, HH:mm'
 const formatDate = date => moment(date).format(DATETIME_FORMAT)
-const tempDate = new Date()
-
-const rows = [
-  createData(1, 'osa01', tempDate, tempDate, 24, 4.0),
-  createData(2, 'osa02', tempDate, tempDate, 37, 4.3),
-  createData(3, 'osa03', tempDate, tempDate, 24, 6.0),
-  createData(4, 'osa04', tempDate, tempDate, 67, 4.3),
-  createData(5, 'osa05', tempDate, tempDate, 49, 3.9)
-]
-
-const columns = [
-  { title: 'Group', field: 'groupName', type: 'text', minWidth: '80px' },
-  { title: 'Start date', field: 'startDate', type: 'date', minWidth: '80px' },
-  { title: 'End date', field: 'endDate', type: 'date', minWidth: '80px' },
-  { title: 'Max points', field: 'maxPoints', type: 'number', min: '0', minWidth: '40px' },
-  {
-    title: 'Points per concept',
-    field: 'pointsPerConcept',
-    type: 'number',
-    step: '0.1',
-    min: '0.0',
-    minWidth: '40px'
-  }
-]
 
 const setPlaceholder = (type, title) => {
   switch (type) {
@@ -93,13 +67,32 @@ const setDefaultValue = (type) => {
   }
 }
 
-const EditableTable = () => {
+const EditableTable = ({ columns, rows, createMutation, updateMutation, deleteMutation }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
   const [state, setState] = useState(Object.fromEntries(columns.map(col =>
     [col.field, setDefaultValue(col.type)])))
+  const [, messageDispatch] = useMessageStateValue()
 
-  const handleChange = (evt) => setState({ ...state, [evt.target.name]: evt.target.value })
+  const handleChange = evt => setState({ ...state, [evt.target.name]: evt.target.value })
+
+  const handleCreate = () => {
+    const variables = {}
+    for (const col of columns) {
+      variables[col.field] = (col.type === 'number') ? Number(state[col.field]) : state[col.field]
+    }
+    createMutation(variables).catch(() => {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+    })
+      .finally(() => {
+        setEditing(null)
+        setState(Object.fromEntries(columns.map(col =>
+          [col.field, setDefaultValue(col.type)])))
+      })
+  }
 
   return (
     <Card className={classes.root} elevation={0}>
@@ -124,6 +117,8 @@ const EditableTable = () => {
               data={data}
               editing={editing}
               columns={columns}
+              updateMutation={updateMutation}
+              deleteMutation={deleteMutation}
               setEditing={setEditing}
             />
           ))}
@@ -136,6 +131,7 @@ const EditableTable = () => {
                     disablePast
                     ampm={false}
                     value={state[col.field]}
+                    format={DATETIME_FORMAT}
                     onChange={(value) => {
                       setState({ ...state, [col.field]: value })
                     }} />
@@ -156,8 +152,8 @@ const EditableTable = () => {
                 }
               </TableCell>
               )}
-              <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
-                <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
+              <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
+                <div style={{ display: 'inline' }} onClick={handleCreate}>
                   <IconButton>
                     <DoneIcon />
                   </IconButton>
@@ -176,12 +172,36 @@ const EditableTable = () => {
   )
 }
 
-const EditableTableRow = ({ data, columns, editing, setEditing }) => {
+const EditableTableRow = ({
+  data, columns,
+  editing, setEditing,
+  updateMutation, deleteMutation
+}) => {
   const classes = useStyles()
   const [state, setState] = useState(Object.fromEntries(columns.map(col =>
     [col.field, data[col.field]])))
+  const [, messageDispatch] = useMessageStateValue()
 
   const handleChange = (evt) => setState({ ...state, [evt.target.name]: evt.target.value })
+
+  const handleUpdate = () => {
+    const variables = {}
+    for (const col of columns) {
+      variables[col.field] = (col.type === 'number') ? Number(state[col.field]) : state[col.field]
+    }
+    updateMutation({ id: editing, ...variables })
+      .then(response => {
+        setEditing(null)
+        const newData = response.data.updatePointGroup
+        setState(Object.fromEntries(columns.map(col =>
+          [col.field, newData[col.field]])))
+      }).catch(() => {
+        messageDispatch({
+          type: 'setError',
+          data: 'Access denied'
+        })
+      })
+  }
 
   if (editing === data.id) {
     return <TableRow>
@@ -210,11 +230,10 @@ const EditableTableRow = ({ data, columns, editing, setEditing }) => {
             }}
           />
         }
-
       </TableCell>
       )}
-      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
-        <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
+      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
+        <div style={{ display: 'inline' }} onClick={handleUpdate}>
           <IconButton>
             <DoneIcon />
           </IconButton>
@@ -234,13 +253,13 @@ const EditableTableRow = ({ data, columns, editing, setEditing }) => {
         {col.type === 'date' ? formatDate(data[col.field]) : data[col.field] }
       </TableCell>
       )}
-      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '140px' }}>
+      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
         <div style={{ display: 'inline' }} onClick={() => setEditing(data.id)}>
           <IconButton color={iconColor}>
             <EditIcon />
           </IconButton>
         </div>
-        <div style={{ display: 'inline' }}>
+        <div style={{ display: 'inline' }} onClick={() => deleteMutation({ id: data.id })}>
           <IconButton color={iconColor}>
             <DeleteIcon />
           </IconButton>

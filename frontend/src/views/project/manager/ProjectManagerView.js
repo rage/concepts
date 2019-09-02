@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../../graphql/Query'
+import { CREATE_POINTGROUP, UPDATE_POINTGROUP,
+  DELETE_POINTGROUP
+} from '../../../graphql/Mutation'
 import NotFoundView from '../../error/NotFoundView'
 import LoadingBar from '../../../components/LoadingBar'
 import EditableTable from './EditableTable'
@@ -49,9 +52,44 @@ const useStyles = makeStyles(() => ({
 const ProjectManagerView = ({ projectId }) => {
   const classes = useStyles()
 
+  const [courseForPoints, setCourseForPoints] = useState(null)
+
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
   })
+
+  const createPointGroup = useMutation(CREATE_POINTGROUP, {
+    refetchQueries: [
+      { query: PROJECT_BY_ID, variables: { id: projectId } }
+    ]
+  })
+
+  const updatePointGroup = useMutation(UPDATE_POINTGROUP, {
+    refetchQueries: [
+      { query: PROJECT_BY_ID, variables: { id: projectId } }
+    ]
+  })
+
+  const deletePointGroup = useMutation(DELETE_POINTGROUP, {
+    refetchQueries: [
+      { query: PROJECT_BY_ID, variables: { id: projectId } }
+    ]
+  })
+
+  const columns = [
+    { title: 'Group', field: 'name', type: 'text', minWidth: '80px' },
+    { title: 'Start date', field: 'startDate', type: 'date', minWidth: '80px' },
+    { title: 'End date', field: 'endDate', type: 'date', minWidth: '80px' },
+    { title: 'Max points', field: 'maxPoints', type: 'number', min: '0', minWidth: '40px' },
+    {
+      title: 'Points per concept',
+      field: 'pointsPerConcept',
+      type: 'number',
+      step: '0.1',
+      min: '0.0',
+      minWidth: '40px'
+    }
+  ]
 
   if (projectQuery.loading) {
     return <LoadingBar id='project-manager-view' />
@@ -68,7 +106,17 @@ const ProjectManagerView = ({ projectId }) => {
         TODO
       </div>
       <div className={classes.points}>
-        <EditableTable />
+        <EditableTable
+          columns={columns}
+          createMutation={args => createPointGroup({ variables: {
+            workspaceId: projectQuery.data.projectById.activeTemplate.id,
+            courseId: projectQuery.data.projectById.activeTemplate.courses[0].id,
+            ...args
+          } })}
+          updateMutation={args => updatePointGroup({ variables: { ...args } })}
+          deleteMutation={args => deletePointGroup({ variables: { ...args } })}
+          rows={projectQuery.data.projectById.activeTemplate.pointGroups}
+        />
       </div>
     </div>
   )

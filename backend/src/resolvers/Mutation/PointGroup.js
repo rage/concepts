@@ -24,8 +24,13 @@ const PointGroupMutations = {
       workspaceId
     })
 
+    console.log('BEFORE')
+
     checkScalars(startDate, endDate, maxPoints,
       pointsPerConcept)
+
+    console.log('HERE')
+    console.log(startDate, endDate)
 
     return await context.prisma.createPointGroup({
       name,

@@ -9,6 +9,7 @@ const project = require('./Project')
 const port = require('./Port')
 const user = require('./User')
 const merge = require('./Merge')
+const pointGroup = require('./PointGroup')
 
 module.exports = {
   ...authentication,
@@ -21,5 +22,6 @@ module.exports = {
   ...project,
   ...port,
   ...user,
-  ...merge
+  ...merge,
+  ...pointGroup
 }

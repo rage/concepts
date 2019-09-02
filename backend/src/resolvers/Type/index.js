@@ -11,6 +11,8 @@ const workspaceToken = require('./WorkspaceToken')
 const projectToken = require('./ProjectToken')
 const workspaceParticipant = require('./WorkspaceParticipant')
 const projectParticipant = require('./ProjectParticipant')
+const pointGroup = require('./PointGroup')
+const completion = require('./Completion')
 
 module.exports = {
   ...concept,
@@ -25,5 +27,7 @@ module.exports = {
   ...workspaceToken,
   ...projectToken,
   ...workspaceParticipant,
-  ...projectParticipant
+  ...projectParticipant,
+  ...pointGroup,
+  ...completion
 }

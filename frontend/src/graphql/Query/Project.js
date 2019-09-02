@@ -30,14 +30,6 @@ query projectById($id: ID!) {
           id
         }
       }
-      pointGroups {
-        id
-        name
-        startDate
-        endDate
-        maxPoints
-        pointsPerConcept
-      }
     }
     templates {
       id
@@ -53,6 +45,19 @@ query projectById($id: ID!) {
     }
     activeTemplate {
       id
+      name
+      courses {
+        id
+        name
+      }
+      pointGroups {
+        id
+        name
+        startDate
+        endDate
+        maxPoints
+        pointsPerConcept
+      }
     }
     participants {
       privilege
