@@ -141,7 +141,7 @@ type PointGroup {
   workspace: Workspace! @relation(name: "WorkspacePointGroup")
   course: Course! @relation(link: INLINE, name: "CoursePointGroup")
   pointsPerConcept: Float! @default(value: 0.5)
-  completions: [Completion!]!
+  completions: [Completion!]! @relation(name: "PointGroupCompletions", onDelete: CASCADE)
 }
 
 type Completion {

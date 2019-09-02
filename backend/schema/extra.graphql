@@ -83,6 +83,13 @@ type Mutation {
   updateTemplateWorkspace(id: ID!, name: String, active: Boolean): Workspace
   cloneTemplateWorkspace(projectId: ID!, name: String!): Workspace
 
+  # PointGroup
+  createPointGroup(name: String!, startDate: String!, endDate: String!, maxPoints: Int!,
+    pointsPerConcept: Float!, courseId: ID!, workspaceId: ID!): PointGroup
+  deletePointGroup(id: ID!): PointGroup
+  updatePointGroup(id: ID!, name: String, startDate: String, endDate: String, maxPoints: Int,
+    pointsPerConcept: Float): PointGroup
+
   # Porting mutations
   importData(data: String!): Workspace
 

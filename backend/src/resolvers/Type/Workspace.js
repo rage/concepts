@@ -14,7 +14,7 @@ module.exports = {
     {
       name: 'pointGroups',
       checkPrivilegeArgs: root => ({
-        minimumPrivilege: Privilege.OWNER,
+        minimumPrivilege: Privilege.EDIT,
         workspaceId: root.id
       }),
       insufficientPrivilegeValue: () => []
