@@ -229,22 +229,26 @@ const NavBar = ({ location }) => {
   const getBreadcrumb = type => path.find(p => p.type === type)
 
   if (projectQuery.data) {
-    getBreadcrumb('project').name =
-      projectQuery.loading ? breadcrumbLoadingSpinner :
-        projectQuery.error ? 'Project not found' : `Project: ${projectQuery.data.projectById.name}`
+    getBreadcrumb('project').name = projectQuery.error
+      ? 'Project not found'
+      : projectQuery.loading || !projectQuery.data.projectById
+        ? breadcrumbLoadingSpinner
+        : `Project: ${projectQuery.data.projectById.name}`
   }
   if (workspaceQuery.data) {
     const ws = getBreadcrumb('workspace')
-    ws.name = workspaceQuery.loading
-      ? breadcrumbLoadingSpinner
-      : workspaceQuery.error
-        ? `${ws.name} not found`
+    ws.name = workspaceQuery.error
+      ? `${ws.name} not found`
+      : workspaceQuery.loading && !workspaceQuery.data.workspaceById
+        ? breadcrumbLoadingSpinner
         : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
   }
   if (courseQuery.data) {
-    getBreadcrumb('course').name =
-      courseQuery.loading ? breadcrumbLoadingSpinner :
-        courseQuery.error ? 'Course not found' : `Course: ${courseQuery.data.courseById.name}`
+    getBreadcrumb('course').name = courseQuery.error
+      ? 'Course not found'
+      : courseQuery.loading || !courseQuery.data.courseById
+        ? breadcrumbLoadingSpinner
+        : `Course: ${courseQuery.data.courseById.name}`
   }
 
   const classes = useStyles()
