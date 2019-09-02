@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { Typography, TextField, MenuItem } from '@material-ui/core'
+import { TextField, MenuItem } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../../graphql/Query'
 import { CREATE_POINTGROUP, UPDATE_POINTGROUP,
@@ -15,41 +15,11 @@ const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
     maxWidth: '1280px',
-    margin: '0 auto',
-    display: 'grid',
-    // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
-    // objects in the parent-level grid.
-    overflow: 'hidden',
-    gridGap: '16px',
-    gridTemplate: `"header  header" 56px
-                   "sharing points" 1fr
-                  / 1fr       1fr`,
-    '@media screen and (max-width: 1312px)': {
-      width: 'calc(100% - 32px)'
-    },
-    '& > div': {
-      overflow: 'hidden'
-    },
-    '&.hideToolbar': {
-      gridTemplateRows: '56px 0 1fr 1fr'
-    }
-  },
-  header: {
-    gridArea: 'header',
-    margin: '16px 0 0',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
-  },
-  sharing: {
-    gridArea: 'sharing'
-  },
-  points: {
-    gridArea: 'points'
+    margin: '0 auto'
   }
 }))
 
-const ProjectManagerView = ({ projectId }) => {
+const PointGroupsView = ({ projectId }) => {
   const classes = useStyles()
 
   const [courseForPoints, setCourseForPoints] = useState('')
@@ -97,7 +67,6 @@ const ProjectManagerView = ({ projectId }) => {
     return <NotFoundView message='Project not found' />
   }
 
-  const projectData = projectQuery.data.projectById && projectQuery.data.projectById
   const activeTemplate = projectQuery.data.projectById
                       && projectQuery.data.projectById.activeTemplate
 
@@ -128,29 +97,21 @@ const ProjectManagerView = ({ projectId }) => {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.header} variant='h4'>
-        Project: {projectData.name}
-      </Typography>
-      <div className={classes.sharing}>
-        TODO
-      </div>
-      <div className={classes.points}>
-        <EditableTable
-          columns={columns}
-          AdditionalAction={CourseSelector}
-          disabled={editableTableDisabled}
-          createMutation={args => createPointGroup({ variables: {
-            workspaceId: activeTemplate && activeTemplate.id,
-            courseId: courseForPoints,
-            ...args
-          } })}
-          updateMutation={args => updatePointGroup({ variables: { ...args } })}
-          deleteMutation={args => deletePointGroup({ variables: { ...args } })}
-          rows={activeTemplate ? activeTemplate.pointGroups : []}
-        />
-      </div>
+      <EditableTable
+        columns={columns}
+        AdditionalAction={CourseSelector}
+        disabled={editableTableDisabled}
+        createMutation={args => createPointGroup({ variables: {
+          workspaceId: activeTemplate && activeTemplate.id,
+          courseId: courseForPoints,
+          ...args
+        } })}
+        updateMutation={args => updatePointGroup({ variables: { ...args } })}
+        deleteMutation={args => deletePointGroup({ variables: { ...args } })}
+        rows={activeTemplate ? activeTemplate.pointGroups : []}
+      />
     </div>
   )
 }
 
-export default ProjectManagerView
+export default PointGroupsView

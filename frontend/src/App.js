@@ -19,7 +19,7 @@ import ProjectView from './views/project/ProjectView'
 import ProjectNavBar from './components/ProjectNavBar'
 import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
-import ProjectManagerView from './views/project/manager/ProjectManagerView'
+import PointGroupsView from './views/project/manager/PointGroupsView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -69,7 +69,7 @@ const projectRouter = prefix => <>
   <Route exact path={`${prefix}/:id`} render={({ match }) =>
     <Redirect to={`${prefix}/${match.params.id}/overview`} />} />
   <Route
-    exact path={`${prefix}/:id/:page(overview|manager)`}
+    exact path={`${prefix}/:id/:page(overview|points)`}
     render={({ match: { params: { id, page } } }) =>
       <ProjectNavBar urlPrefix={prefix} projectId={id} page={page} />
     }
@@ -81,9 +81,9 @@ const projectRouter = prefix => <>
     }
   />
   <Route
-    exact path={`${prefix}/:id/manager`}
+    exact path={`${prefix}/:id/points`}
     render={({ match: { params: { id } } }) =>
-      <ProjectManagerView projectId={id} />
+      <PointGroupsView projectId={id} />
     }
   />
   <Route

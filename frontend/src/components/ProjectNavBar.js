@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, Delete as DeleteIcon,  Edit as EditIcon,
-  MoreVert as MoreVertIcon, Share as ShareIcon, VerticalSplit as VerticalSplitIcon
+  MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon
 } from '@material-ui/icons'
 
 import { PROJECT_BY_ID, PROJECTS_FOR_USER } from '../graphql/Query'
@@ -110,9 +110,9 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
             icon={<ShuffleIcon />}
           />
           <BottomNavigationAction
-            value='manager'
-            label='Manager'
-            icon={<VerticalSplitIcon />}
+            value='points'
+            label='Points'
+            icon={<TimelapseIcon />}
           />
         </BottomNavigation>
         {user.role === 'STAFF' && <>

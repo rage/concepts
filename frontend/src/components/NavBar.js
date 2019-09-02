@@ -71,10 +71,10 @@ const parseProjectPath = (projectId, path, prefix) => {
       name: 'Overview',
       link: `${prefix}/overview`
     }]
-  case 'manager':
+  case 'points':
     return [{
-      name: 'Manager',
-      link: `${prefix}/manager`
+      name: 'Point Groups',
+      link: `${prefix}/points`
     }]
   case 'clone':
     return [{
