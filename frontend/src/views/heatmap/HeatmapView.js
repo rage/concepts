@@ -53,12 +53,6 @@ const useStyles = makeStyles(theme => ({
     },
     backgroundColor: '#ebedf0'
   },
-  sideHeaderCell: {
-    boxShadow: '1px 0 0 0 black',
-    padding: '0 10px 0 0',
-    width: '230px',
-    fontWeight: 'normal'
-  },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
     minHeight: '100%',
@@ -130,6 +124,9 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     padding: '5px'
+  },
+  sideHeaderCell: {
+
   },
   headerOverflow: {
     overflow: 'hidden',
@@ -282,7 +279,11 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
                   {
                     workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
                       <tr key={`${fromCourse.id}`}>
-                        <th className={classes.sideHeaderCell} className={classes.headerOverflow}> {fromCourse.name} </th>
+                        <th className={classes.sideHeaderCell}>
+                          <div className={classes.headerOverflow}>
+                            {fromCourse.name}
+                          </div>
+                        </th>
                         {
                           workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
                             <TableCell
