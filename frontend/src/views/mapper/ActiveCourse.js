@@ -108,7 +108,7 @@ const ActiveCourse = ({
       margin='0px 8px 0px 8px'
     />
     <Paper onClick={onClick} elevation={0} className={classes.root}>
-      <div className={classes.header}>
+      <div title={course.name} className={classes.header}>
         <Select
           value={course.id}
           classes={{ root: classes.titleSelect }}
