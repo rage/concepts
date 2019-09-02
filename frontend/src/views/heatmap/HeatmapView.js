@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '1px 0 0 0 black',
     padding: '0 10px 0 0',
     width: '230px',
-    fontWeight:'normal'
+    fontWeight: 'normal'
   },
   headerCell: {
     minWidth: `${cellDimension.width}px`,
@@ -135,6 +135,12 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     padding: '5px'
+  },
+  headerOverflow: {
+    maxWidth: '30ch',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   }
 }))
 
@@ -156,7 +162,7 @@ const HeaderCell = ({ title }) => {
     <th className={classes.headerCell}>
       <div>
         <div>
-          <div>
+          <div className={classes.headerOverflow}>
             {title}
           </div>
         </div>
@@ -242,7 +248,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
   if (workspaceCourseQuery.error) {
     return <NotFoundView message='Workspace not found' />
   } else if (!workspaceCourseQuery.data.workspaceById) {
-    return <LoadingBar id='heatmap-view'/>
+    return <LoadingBar id='heatmap-view' />
   }
 
   const maxGradVal = workspaceCourseQuery.data.workspaceById ?
@@ -279,7 +285,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
                   {
                     workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
                       <tr key={`${fromCourse.id}`}>
-                        <th className={classes.sideHeaderCell}> {fromCourse.name} </th>
+                        <th className={classes.sideHeaderCell} className={classes.headerOverflow}> {fromCourse.name} </th>
                         {
                           workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
                             <TableCell
