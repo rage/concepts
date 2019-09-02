@@ -6,16 +6,14 @@ import { useShareDialog } from '../../dialogs/sharing'
 import { DELETE_TEMPLATE_WORKSPACE, SET_ACTIVE_TEMPLATE } from '../../graphql/Mutation'
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import BaseWorkspaceList, { TYPE_TEMPLATE } from '../../components/BaseWorkspaceList'
+import cache from '../../apollo/update'
 
 const TemplateList = ({ templateWorkspaces, projectId, activeTemplate, urlPrefix }) => {
   const openEditDialog = useEditTemplateDialog(projectId)
   const openCreateDialog = useCreateTemplateDialog(projectId)
   const openShareDialog = useShareDialog('workspace')
   const setActiveTemplate = useMutation(SET_ACTIVE_TEMPLATE, {
-    refetchQueries: [{
-      query: PROJECT_BY_ID,
-      variables: { id: projectId }
-    }]
+    update: cache.updateActiveTemplate(projectId)
   })
   const deleteWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
     refetchQueries: [{
