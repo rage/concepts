@@ -73,13 +73,8 @@ const useStyles = makeStyles(theme => ({
         maxHeight: '50px',
         paddingLeft: '5px',
         '& > div': {
-          overflowWrap: 'break-word',
           hyphens: 'auto',
-          maxWidth: '14ch',
-          maxHeight: '38px',
-          overflow: 'hidden',
-          textAlign: 'center',
-          textOverflow: 'ellipsis',
+          maxWidth: '130px',
           fontWeight: 'normal'
         }
       }
@@ -137,10 +132,12 @@ const useStyles = makeStyles(theme => ({
     padding: '5px'
   },
   headerOverflow: {
-    maxWidth: '30ch',
-    whiteSpace: 'nowrap',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    wordBreak: 'break-word',
+    lineClamp: 2,
+    boxOrient: 'vertical',
+    display: '-webkit-box'
   }
 }))
 
