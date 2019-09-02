@@ -42,7 +42,8 @@ function createData(id, groupName, startDate, endDate, maxPoints, pointsPerConce
   return { id, groupName, startDate, endDate, maxPoints, pointsPerConcept }
 }
 
-const formatDate = (date) => moment(date).format('D/MM/YYYY, HH:mm')
+const DATETIME_FORMAT = 'D.M.YYYY, HH:mm'
+const formatDate = date => moment(date).format(DATETIME_FORMAT)
 const tempDate = new Date()
 
 const rows = [
@@ -190,6 +191,7 @@ const EditableTableRow = ({ data, columns, editing, setEditing }) => {
             disablePast
             ampm={false}
             value={state[col.field]}
+            format={DATETIME_FORMAT}
             onChange={(value) => {
               setState({ ...state, [col.field]: value })
             }}
