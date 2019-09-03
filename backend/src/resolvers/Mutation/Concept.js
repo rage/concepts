@@ -3,10 +3,12 @@ const { ForbiddenError } = require('apollo-server-core')
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
+const isDefined = (val) => val !== undefined
+
 const ConceptMutations = {
   async createConcept(root, { name, description, official, courseId, workspaceId, tags }, context) {
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -27,7 +29,7 @@ const ConceptMutations = {
   async updateConcept(root, { id, name, description, official, tags, frozen }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: official || frozen ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) || isDefined(frozen) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })

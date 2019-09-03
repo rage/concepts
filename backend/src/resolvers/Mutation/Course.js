@@ -3,10 +3,12 @@ const { ForbiddenError } = require('apollo-server-core')
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
+const isDefined = (val) => val !== undefined
+
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, tags }, context) {
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -41,7 +43,7 @@ const CourseQueries = {
   async updateCourse(root, { id, name, official, frozen, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: official || frozen ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) || isDefined(frozen) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
