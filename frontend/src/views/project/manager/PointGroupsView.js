@@ -97,7 +97,7 @@ const PointGroupsView = ({ projectId }) => {
       disabled={disabled}
       variant='outlined'
       margin='dense'
-      label='Tracking course'
+      label={disabled ? 'No courses to show' : 'Tracking course'}
       value={mainCourse ? mainCourse.id : ''}
       style={{ width: '200px' }}
       onChange={handleMainCourseChange}
