@@ -38,17 +38,18 @@ const CourseQueries = {
     return await context.prisma.deleteCourse({ id })
   },
 
-  async updateCourse(root, { id, name, official, tags }, context) {
+  async updateCourse(root, { id, name, official, frozen, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: official || frozen ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldCourse = await context.prisma.course({ id })
 
-    if (oldCourse.frozen) throw new ForbiddenError('This course is frozen')
+    if (oldCourse.frozen && frozen === undefined)
+      throw new ForbiddenError('This course is frozen')
 
     const oldTags = await context.prisma.course({ id }).tags()
     const tagsToDelete = oldTags
@@ -62,7 +63,8 @@ const CourseQueries = {
         delete: tagsToDelete,
         create: tagsToCreate
       },
-      official: Boolean(official)
+      official: Boolean(official),
+      frozen: Boolean(frozen)
     }
     if (name !== undefined) {
       if (!belongsToTemplate && name !== oldCourse.name) data.official = false

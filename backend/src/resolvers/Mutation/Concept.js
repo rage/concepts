@@ -24,10 +24,10 @@ const ConceptMutations = {
     })
   },
 
-  async updateConcept(root, { id, name, description, official, tags }, context) {
+  async updateConcept(root, { id, name, description, official, tags, frozen }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: official || frozen ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -36,7 +36,8 @@ const ConceptMutations = {
     const oldConcept = await context.prisma.concept({ id })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
 
-    if (oldConcept.frozen) throw new ForbiddenError('This concept is frozen')
+    if (oldConcept.frozen && frozen === undefined)
+      throw new ForbiddenError('This concept is frozen')
 
     const tagsToDelete = oldTags
       .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
@@ -49,7 +50,8 @@ const ConceptMutations = {
         delete: tagsToDelete,
         create: tagsToCreate
       },
-      official: Boolean(official)
+      official: Boolean(official),
+      frozen: Boolean(frozen)
     }
 
     if (description !== undefined) data.description = description
