@@ -20,6 +20,18 @@ query($id : ID!) {
             name
           }
         }
+        tags {
+          id
+          name
+          type
+          priority
+        }
+      }
+      tags {
+        id
+        name
+        type
+        priority
       }
       prerequisites: linksToCourse {
         official
@@ -62,7 +74,8 @@ const PortQueries = {
         'name': course['name'],
         'official': course['official'],
         'concepts': [],
-        'prerequisites': []
+        'prerequisites': [],
+        'tags': []
       }
       for (const prerequisiteCourse of course['prerequisites']) {
         courseData['prerequisites'].push({
@@ -70,12 +83,25 @@ const PortQueries = {
           'official': prerequisiteCourse['official']
         })
       }
+      for (const tag of course['tags']) {
+        courseData.tags.push({
+          'name': tag.name,
+          'type': tag.type
+        })
+      }
       for (const concept of course['concepts']) {
         const conceptData = {
           'name': concept['name'],
           'official': concept['official'],
           'description': concept['description'],
-          'prerequisites': []
+          'prerequisites': [],
+          'tags': []
+        }
+        for (const tag of concept['tags']) {
+          conceptData.tags.push({
+            'name': tag.name,
+            'type': tag.type
+          })
         }
         for (const prerequisiteConcept of concept['prerequisites']) {
           // Add concept prerequisite to concept
