@@ -143,8 +143,8 @@ const MergeMutations = {
         })
         updatedLink.weight += link.weight
         updatedLink.count++
-        updatedLink.official = link.official && link.official
-        updatedLink.frozen = link.frozen && link.frozen
+        updatedLink.official = updatedLink.official || link.official
+        updatedLink.frozen = updatedLink.frozen || link.frozen
       }
     }
 
@@ -155,26 +155,30 @@ const MergeMutations = {
 
     for (const workspace of result.project.activeTemplate.clones) {
       for (const course of workspace.courses) {
-        const { links: courseLinks, concepts } = setDefault(courses, course.name, {
-          official: course.official && course.official,
-          frozen: course.frozen && course.frozen,
+        const updatedCourse = setDefault(courses, course.name, {
+          official: course.official,
+          frozen: course.frozen,
           links: {},
           concepts: {}
         })
+        updatedCourse.official = updatedCourse.official || course.official
+        updatedCourse.frozen = updatedCourse.frozen || course.frozen
 
-        mergeLinks(course.linksToCourse, courseLinks)
+        mergeLinks(course.linksToCourse, updatedCourse.links)
 
         for (const concept of course.concepts) {
           // TODO merge conflicting descriptions?
-          const updatedConcept = setDefault(concepts, concept.name, {
+          const updatedConcept = setDefault(updatedCourse.concepts, concept.name, {
             description: concept.description,
-            official: concept.official && concept.official,
-            frozen: concept.frozen && concept.frozen,
+            official: concept.official,
+            frozen: concept.frozen,
             course: course.name,
             links: {},
             count: 0
           })
           updatedConcept.count++
+          updatedConcept.official = updatedConcept.official || concept.official
+          updatedConcept.frozen = updatedConcept.frozen || concept.frozen
 
           mergeLinks(concept.linksToConcept, updatedConcept.links)
         }
