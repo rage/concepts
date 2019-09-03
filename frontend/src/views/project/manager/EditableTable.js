@@ -29,8 +29,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     overflow: 'auto'
   },
-  textField: {
-  },
   tableRowDisabled: {
     color: 'rgba(0, 0, 0, 0.26)'
   },
@@ -40,80 +38,121 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const NEW_ROW = 'NEW'
+
 const DATETIME_FORMAT = 'D.M.YYYY, HH:mm'
-const formatDate = date => moment(date).format(DATETIME_FORMAT)
 
-const setPlaceholder = (type, title) => {
-  switch (type) {
-  case 'number':
-    return null
-  case 'text':
-    return title
-  default:
+const noop = val => val
+const returnValue = val => () => val
+
+const TextViewCell = ({ value }) => value
+const TextEditCell = ({ col, state, setState }) => (
+  <TextField
+    name={col.field}
+    value={state[col.field]}
+    type={col.type.inputType}
+    placeholder={col.type.placeholder(col)}
+    onChange={evt => setState({ ...state, [col.field]: evt.target.value })}
+    margin='none'
+    inputProps={{
+      step: col.step,
+      min: col.min
+    }}
+  />
+)
+
+const DateViewCell = ({ value }) => moment(value).format(DATETIME_FORMAT)
+const DateEditCell = ({ col, state, setState }) => (
+  <DateTimePicker
+    disablePast
+    ampm={false}
+    value={state[col.field]}
+    format={DATETIME_FORMAT}
+    onChange={value => setState({ ...state, [col.field]: value })}
+  />
+)
+
+const typeBase = {
+  // Cast value before sending to server.
+  cast: noop,
+  // Get placeholder for column.
+  placeholder: col => col.title,
+  // The component to use for displaying the column.
+  // Available props: classes, col, value
+  DisplayComponent: TextViewCell,
+  // The component to use when editing the column.
+  // Available props: classes, col, state, setState
+  EditComponent: TextEditCell,
+  // The default value for the column.
+  get defaultValue() {
     return ''
   }
 }
 
-const setDefaultValue = (type) => {
-  switch (type) {
-  case 'number':
-    return 1
-  case 'text':
-    return ''
-  case 'date':
-    return new Date().toISOString()
-  default:
-    return ''
+export const Type = {
+  NUMBER: {
+    ...typeBase,
+    cast: Number,
+    placeholder: returnValue(null),
+    defaultValue: 1,
+    inputType: 'number'
+  },
+  TEXT: {
+    ...typeBase
+  },
+  DATE: {
+    ...typeBase,
+    DisplayComponent: DateViewCell,
+    EditComponent: DateEditCell,
+    get defaultValue() {
+      return new Date().toISOString()
+    }
   }
 }
 
-const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
-  updateMutation, deleteMutation, disabled
+const EditableTable = ({
+  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
   const [state, setState] = useState(Object.fromEntries(columns.map(col =>
-    [col.field, setDefaultValue(col.type)])))
+    [col.field, col.type.defaultValue])))
   const [, messageDispatch] = useMessageStateValue()
 
-  const handleChange = evt => setState({ ...state, [evt.target.name]: evt.target.value })
-
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (disabled) return
-    const variables = {}
-    for (const col of columns) {
-      variables[col.field] = (col.type === 'number') ? Number(state[col.field]) : state[col.field]
-    }
-    createMutation(variables).catch(() => {
+    const variables = Object.fromEntries(columns
+      .map(col => [col.field, col.type.cast(state[col.field])]))
+    try {
+      await createMutation(variables)
+      setEditing(null)
+      setState(Object.fromEntries(columns.map(col => [col.field, col.type.defaultValue])))
+    } catch (err) {
       messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
-    })
-      .finally(() => {
-        setEditing(null)
-        setState(Object.fromEntries(columns.map(col =>
-          [col.field, setDefaultValue(col.type)])))
-      })
+    }
   }
 
   return (
     <Card className={classes.root} elevation={0}>
-      <CardHeader action={
-        <>
+      <CardHeader
+        action={<>
           <AdditionalAction />
-          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing('ADD')}>
+          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
             <AddIcon />
           </IconButton>
         </>}
-      title={'Point groups'}
+        title='Point groups'
       />
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
             {columns.map(col =>
-              <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>)}
-            <TableCell align='center' className={classes.tableCell}>Actions</TableCell>
+              <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>
+            )}
+            <TableCell align='right' className={classes.tableCell}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -129,45 +168,11 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
               setEditing={setEditing}
             />
           ))}
-          {
-            editing && !rows.find(data => data.id === editing) &&
-            <TableRow>
-              {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
-                {col.type === 'date' ?
-                  <DateTimePicker
-                    disablePast
-                    ampm={false}
-                    value={state[col.field]}
-                    format={DATETIME_FORMAT}
-                    onChange={(value) => {
-                      setState({ ...state, [col.field]: value })
-                    }} />
-                  :
-                  <TextField
-                    name={col.field}
-                    value={state[col.field]}
-                    className={classes.textField}
-                    type={col.type}
-                    placeholder={setPlaceholder(col.type, col.title)}
-                    onChange={handleChange}
-                    margin='none'
-                    inputProps={{
-                      step: col.step,
-                      min: col.min
-                    }}
-                  />
-                }
-              </TableCell>
-              )}
-              <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
-                <IconButton disabled={disabled} onClick={handleCreate}>
-                  <DoneIcon />
-                </IconButton>
-                <IconButton disabled={disabled} onClick={() => setEditing(null)}>
-                  <ClearIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
+          {editing === NEW_ROW &&
+            <EditTableRow
+              columns={columns} classes={classes} state={state} setState={setState}
+              disabled={disabled} submit={handleCreate} cancel={() => setEditing(null)}
+            />
           }
         </TableBody>
       </Table>
@@ -175,100 +180,84 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
   )
 }
 
+const EditTableRow = ({ columns, classes, state, setState, disabled, submit, cancel }) => (
+  <TableRow>
+    {columns.map(col => (
+      <TableCell key={col.field} className={classes.tableCell}>
+        <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
+      </TableCell>
+    ))}
+    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+      <IconButton
+        onClick={submit}
+        disabled={disabled || columns
+          .find(col => col.required && !state[col.field]) !== undefined}>
+        <DoneIcon />
+      </IconButton>
+      <IconButton disabled={disabled} onClick={cancel}>
+        <ClearIcon />
+      </IconButton>
+    </TableCell>
+  </TableRow>
+)
+
+const DisplayTableRow = ({
+  columns, classes, data, editing, setEditing, disabled, iconColor, deleteRow
+}) => (
+  <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
+    {columns.map(col => (
+      <TableCell key={col.field} className={classes.tableCell}>
+        <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
+      </TableCell>
+    ))}
+    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+      <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
+        <EditIcon />
+      </IconButton>
+      <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
+        <DeleteIcon />
+      </IconButton>
+    </TableCell>
+  </TableRow>
+)
+
 const EditableTableRow = ({
-  data, columns, disabled,
-  editing, setEditing,
-  updateMutation, deleteMutation
+  data, columns, disabled, editing, setEditing, updateMutation, deleteMutation
 }) => {
   const classes = useStyles()
-  const [state, setState] = useState(Object.fromEntries(columns.map(col =>
-    [col.field, data[col.field]])))
+  const [state, setState] = useState(Object.fromEntries(columns
+    .map(col => [col.field, data[col.field]])))
   const [, messageDispatch] = useMessageStateValue()
 
-  const handleChange = (evt) => setState({ ...state, [evt.target.name]: evt.target.value })
-
-  const handleUpdate = () => {
-    const variables = {}
-    for (const col of columns) {
-      variables[col.field] = (col.type === 'number') ? Number(state[col.field]) : state[col.field]
-    }
-    updateMutation({ id: editing, ...variables })
-      .then(response => {
-        setEditing(null)
-        const newData = response.data.updatePointGroup
-        setState(Object.fromEntries(columns.map(col =>
-          [col.field, newData[col.field]])))
-      }).catch(() => {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
+  const handleUpdate = async () => {
+    const variables = Object.fromEntries(columns
+      .map(col => [col.field, col.type.cast(state[col.field])]))
+    variables.id = editing
+    try {
+      const response = await updateMutation(variables)
+      setEditing(null)
+      const newData = response.data.updatePointGroup
+      setState(Object.fromEntries(columns.map(col => [col.field, newData[col.field]])))
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
       })
+    }
   }
 
   if (editing === data.id) {
-    return <TableRow>
-      {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
-        {col.type === 'date' ?
-          <DateTimePicker
-            disablePast
-            ampm={false}
-            value={state[col.field]}
-            format={DATETIME_FORMAT}
-            onChange={(value) => {
-              setState({ ...state, [col.field]: value })
-            }}
-          />
-          :
-          <TextField
-            name={col.field}
-            className={classes.textField}
-            type={col.type}
-            value={state[col.field]}
-            onChange={handleChange}
-            margin='none'
-            inputProps={{
-              step: col.step,
-              min: col.min
-            }}
-          />
-        }
-      </TableCell>
-      )}
-      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
-        <div style={{ display: 'inline' }} onClick={handleUpdate}>
-          <IconButton disabled={disabled}>
-            <DoneIcon />
-          </IconButton>
-        </div>
-        <div style={{ display: 'inline' }} onClick={() => setEditing(null)}>
-          <IconButton disabled={disabled}>
-            <ClearIcon />
-          </IconButton>
-        </div>
-      </TableCell>
-    </TableRow>
+    return <EditTableRow
+      columns={columns} classes={classes} state={state} setState={setState} disabled={disabled}
+      submit={handleUpdate} cancel={() => setEditing(null)}
+    />
   } else {
     const iconColor = editing && editing !== data.id ? 'inherit' : undefined
 
-    return <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-      {columns.map(col => <TableCell key={col.field} className={classes.tableCell}>
-        {col.type === 'date' ? formatDate(data[col.field]) : data[col.field] }
-      </TableCell>
-      )}
-      <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
-        <div style={{ display: 'inline' }} onClick={() => setEditing(data.id)}>
-          <IconButton color={iconColor} disabled={disabled}>
-            <EditIcon />
-          </IconButton>
-        </div>
-        <div style={{ display: 'inline' }} onClick={() => deleteMutation({ id: data.id })}>
-          <IconButton color={iconColor} disabled={disabled}>
-            <DeleteIcon />
-          </IconButton>
-        </div>
-      </TableCell>
-    </TableRow>
+    return <DisplayTableRow
+      columns={columns} classes={classes} data={data} editing={editing} setEditing={setEditing}
+      disabled={disabled} iconColor={iconColor} deleteRow={id => deleteMutation({ id })}
+    />
   }
 }
 
