@@ -38,7 +38,7 @@ const ConceptMutations = {
     const oldConcept = await context.prisma.concept({ id })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
 
-    if (oldConcept.frozen && frozen === undefined)
+    if (oldConcept.frozen && frozen !== false)
       throw new ForbiddenError('This concept is frozen')
 
     const tagsToDelete = oldTags

@@ -50,7 +50,7 @@ const CourseQueries = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldCourse = await context.prisma.course({ id })
 
-    if (oldCourse.frozen && frozen === undefined)
+    if (oldCourse.frozen && frozen !== false)
       throw new ForbiddenError('This course is frozen')
 
     const oldTags = await context.prisma.course({ id }).tags()
