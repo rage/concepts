@@ -48,9 +48,11 @@ const UserViewContent = ({ user }) => {
       <WorkspaceList
         workspaces={workspaceQuery.data.workspacesForUser.map(ws => ws.workspace)
           .filter(workspace => !workspace.asTemplate)}
-        urlPrefix='/workspaces' />
+        urlPrefix='/workspaces'
+      />
       {user.role === 'STAFF' &&
-        <ProjectList projects={projectQuery.data.projectsForUser.map(p => p.project)} />}
+        <ProjectList projects={projectQuery.data.projectsForUser.map(p => p.project)} />
+      }
     </div>
   )
 }

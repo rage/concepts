@@ -5,9 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Button, Grid, Typography, Container } from '@material-ui/core'
 
 import { useLoginStateValue } from '../../store'
-import {
-  CREATE_GUEST_ACCOUNT
-} from '../../graphql/Mutation'
+import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import UserViewContent from './UserViewContent'
 
 const useStyles = makeStyles(theme => ({
@@ -22,15 +20,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const HomeView = (props) => {
-  const [{ loggedIn, user }, dispatch] = useLoginStateValue()
-
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
-
+const HomeView = ({ history }) => {
   const classes = useStyles()
-  const redirectTo = (path) => () => {
-    props.history.push(path)
-  }
+  const [{ loggedIn, user }, dispatch] = useLoginStateValue()
+  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const createGuestAccount = async () => {
     const result = await createGuestMutation()
@@ -59,12 +52,14 @@ const HomeView = (props) => {
           Concepts
         </Typography>
         <Typography variant='h6' align='center' color='textSecondary' paragraph>
-        The concepts tool provides the ability for study programmes to gain a better picture of their study plan, while students are able to practice mapping the concepts being taught, which boosts learning.
+          The concepts tool provides the ability for study programmes to gain a better picture of
+          their study plan, while students are able to practice mapping the concepts being taught,
+          which boosts learning.
         </Typography>
         <div className={classes.heroButtons}>
           <Grid container spacing={2} justify='center'>
             <Grid item>
-              <Button variant='contained' color='primary' onClick={redirectTo('/login')}>
+              <Button variant='contained' color='primary' onClick={() => history.push('/login')}>
                 Login and choose workspace
               </Button>
             </Grid>

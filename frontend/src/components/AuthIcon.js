@@ -7,7 +7,7 @@ import { signOut } from '../lib/authentication'
 import { useLoginStateValue } from '../store'
 
 const AuthenticationIcon = withRouter(({ history }) => {
-  const [{loggedIn, user}, dispatch] = useLoginStateValue()
+  const [{ loggedIn, user }, dispatch] = useLoginStateValue()
   const [anchorElement, setAnchorElement] = useState(null)
   const anchorElementOpen = Boolean(anchorElement)
 
