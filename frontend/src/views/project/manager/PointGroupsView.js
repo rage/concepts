@@ -9,8 +9,8 @@ import { CREATE_POINTGROUP, UPDATE_POINTGROUP,
 } from '../../../graphql/Mutation'
 import NotFoundView from '../../error/NotFoundView'
 import LoadingBar from '../../../components/LoadingBar'
-import EditableTable from './EditableTable'
 import { useMessageStateValue } from '../../../store'
+import EditableTable, { Type } from './EditableTable'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -53,18 +53,11 @@ const PointGroupsView = ({ projectId }) => {
   })
 
   const columns = [
-    { title: 'Group', field: 'name', type: 'text', minWidth: '80px' },
-    { title: 'Start date', field: 'startDate', type: 'date', minWidth: '80px' },
-    { title: 'End date', field: 'endDate', type: 'date', minWidth: '80px' },
-    { title: 'Max points', field: 'maxPoints', type: 'number', min: '0', minWidth: '40px' },
-    {
-      title: 'Points per concept',
-      field: 'pointsPerConcept',
-      type: 'number',
-      step: '0.1',
-      min: '0.0',
-      minWidth: '40px'
-    }
+    { title: 'Group', field: 'name', type: Type.TEXT },
+    { title: 'Start date', field: 'startDate', type: Type.DATE },
+    { title: 'End date', field: 'endDate', type: Type.DATE },
+    { title: 'Max points', field: 'maxPoints', type: Type.NUMBER, min: 0 },
+    { title: 'Points per concept', field: 'pointsPerConcept', type: Type.NUMBER, step: 0.1, min: 0 }
   ]
 
   if (projectQuery.loading) {
