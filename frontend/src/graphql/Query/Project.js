@@ -67,6 +67,10 @@ query projectById($id: ID!) {
     }
     participants {
       privilege
+      token {
+        id
+        revoked
+      }
       user {
         id
       }

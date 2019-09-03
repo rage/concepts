@@ -6,7 +6,7 @@ import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import {
-  Shuffle as ShuffleIcon, Delete as DeleteIcon,  Edit as EditIcon,
+  Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon, Group as GroupIcon,
   MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon
 } from '@material-ui/icons'
 
@@ -113,6 +113,11 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
             value='points'
             label='Points'
             icon={<TimelapseIcon />}
+          />
+          <BottomNavigationAction
+            value='members'
+            label='Members'
+            icon={<GroupIcon />}
           />
         </BottomNavigation>
         {user.role === 'STAFF' && <>

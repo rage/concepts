@@ -49,6 +49,11 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
       name: 'Manager',
       link: `${prefix}/manager`
     }]
+  case 'members':
+    return [{
+      name: 'Members',
+      link: `${prefix}/members`
+    }]
   case 'heatmap':
     return [{
       name: 'Heatmap',
@@ -75,6 +80,11 @@ const parseProjectPath = (projectId, path, prefix) => {
     return [{
       name: 'Point Groups',
       link: `${prefix}/points`
+    }]
+  case 'members':
+    return [{
+      name: 'Members',
+      link: `${prefix}/members`
     }]
   case 'clone':
     return [{

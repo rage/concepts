@@ -10,7 +10,7 @@ import {
 import { DateTimePicker } from '@material-ui/pickers'
 import moment from 'moment'
 
-import { useMessageStateValue } from '../../../store'
+import { useMessageStateValue } from '../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +45,7 @@ const DATETIME_FORMAT = 'D.M.YYYY, HH:mm'
 const noop = val => val
 const returnValue = val => () => val
 
-const TextViewCell = ({ value }) => value
+const TextViewCell = ({ value }) => value || null
 const TextEditCell = ({ col, state, setState }) => (
   <TextField
     name={col.field}
@@ -139,7 +139,7 @@ const EditableTable = ({
     <Card className={classes.root} elevation={0}>
       <CardHeader
         action={<>
-          <AdditionalAction />
+          {AdditionalAction && <AdditionalAction />}
           <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
             <AddIcon />
           </IconButton>

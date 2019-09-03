@@ -3,14 +3,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
-import { PROJECT_BY_ID } from '../../../graphql/Query'
+import { PROJECT_BY_ID } from '../../graphql/Query'
 import { CREATE_POINTGROUP, UPDATE_POINTGROUP,
   DELETE_POINTGROUP, UPDATE_TEMPLATE_WORKSPACE
-} from '../../../graphql/Mutation'
-import NotFoundView from '../../error/NotFoundView'
-import LoadingBar from '../../../components/LoadingBar'
-import { useMessageStateValue } from '../../../store'
-import EditableTable, { Type } from './EditableTable'
+} from '../../graphql/Mutation'
+import NotFoundView from '../error/NotFoundView'
+import LoadingBar from '../../components/LoadingBar'
+import { useMessageStateValue } from '../../store'
+import EditableTable, { Type } from '../../components/EditableTable'
 
 const useStyles = makeStyles(() => ({
   root: {

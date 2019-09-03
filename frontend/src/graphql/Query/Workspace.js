@@ -100,6 +100,10 @@ query workspaceById($id: ID!) {
     }
     participants {
       privilege
+      token {
+        id
+        revoked
+      }
       user {
         id
       }

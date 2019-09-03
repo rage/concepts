@@ -6,9 +6,9 @@ import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import {
-  Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon,
-  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,  Edit as EditIcon,
-  MoreVert as MoreVertIcon, Share as ShareIcon, VerticalSplit as VerticalSplitIcon
+  Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
+  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
+  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon
 } from '@material-ui/icons'
 
 import client from '../apollo/apolloClient'
@@ -136,6 +136,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
           <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
           <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
+          <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
         </BottomNavigation>
         {user.role === 'STAFF' && <>
           <IconButton
