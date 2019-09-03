@@ -1,3 +1,5 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
@@ -32,6 +34,8 @@ const CourseQueries = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
+    const toDelete = await context.prisma.courseLink({ id })
+    if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
     return await context.prisma.deleteCourseLink({ id })
   }
 }

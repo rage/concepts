@@ -1,3 +1,5 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
@@ -25,6 +27,8 @@ const CourseQueries = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
+    const toDelete = await context.prisma.conceptLink({ id })
+    if (toDelete.frozen) throw new ForbiddenError('This course is frozen')
     await context.prisma.deleteManyCourseLinks({
       OR: [
         { from: { id } },
@@ -43,6 +47,8 @@ const CourseQueries = {
     })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldCourse = await context.prisma.course({ id })
+
+    if (oldCourse.frozen) throw new ForbiddenError('This course is frozen')
 
     const oldTags = await context.prisma.course({ id }).tags()
     const tagsToDelete = oldTags

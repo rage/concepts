@@ -1,3 +1,5 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
@@ -33,6 +35,8 @@ const ConceptMutations = {
     const oldTags = await context.prisma.concept({ id }).tags()
     const oldConcept = await context.prisma.concept({ id })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
+
+    if (oldConcept.frozen) throw new ForbiddenError('This concept is frozen')
 
     const tagsToDelete = oldTags
       .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
@@ -70,11 +74,13 @@ const ConceptMutations = {
     const toDelete = await context.prisma.concept({ id }).$fragment(`
       fragment ConceptWithCourse on Concept {
         id
+        frozen
         courses {
           id
         }
       }
     `)
+    if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
     await context.prisma.deleteConcept({ id })
     return {
       id: toDelete.id,

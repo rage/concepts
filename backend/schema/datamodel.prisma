@@ -91,6 +91,7 @@ type CourseLink {
   from: Course! @relation(link: INLINE, name: "FromCourse")
   to: Course! @relation(link: INLINE, name: "ToCourse")
   official: Boolean! @default(value: false)
+  frozen: Boolean! @default(value: false)
   createdBy: User!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
   weight: Int! @default(value: 1)
@@ -100,7 +101,10 @@ type Course {
   id: ID! @id
   name: String!
   official: Boolean! @default(value: false)
+  frozen: Boolean! @default(value: false)
   createdBy: User!
+  sourceCourse: Course @relation(name: "CourseClones")
+  clones: [Course!]! @relation(name: "CourseClones")
   linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"Courses")
@@ -113,6 +117,7 @@ type ConceptLink {
   from: Concept! @relation(link: INLINE, name: "FromConcept")
   to: Concept! @relation(link: INLINE, name: "ToConcept")
   official: Boolean! @default(value: false)
+  frozen: Boolean! @default(value: false)
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
   createdBy: User!
   weight: Int! @default(value: 1)
@@ -123,7 +128,10 @@ type Concept {
   name: String!
   description: String
   official: Boolean! @default(value: false)
+  frozen: Boolean! @default(value: false)
   createdBy: User!
+  sourceConcept: Concept @relation(name: "ConceptClones")
+  clones: [Concept!]! @relation(name: "ConceptClones")
   linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
   linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
   courses: [Course!]! @relation(name: "Courses")

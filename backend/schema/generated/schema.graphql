@@ -243,6 +243,7 @@ type CourseLink {
   from: Course!
   to: Course!
   official: Boolean!
+  frozen: Boolean!
   createdBy: User!
   workspace: Workspace!
   weight: Int!
@@ -252,7 +253,10 @@ type Course {
   id: ID!
   name: String!
   official: Boolean!
+  frozen: Boolean!
   createdBy: User!
+  sourceCourse: Course
+  clones: [Course!]!
   linksFromCourse: [CourseLink!]!
   linksToCourse: [CourseLink!]!
   concepts: [Concept!]!
@@ -265,6 +269,7 @@ type ConceptLink {
   from: Concept!
   to: Concept!
   official: Boolean!
+  frozen: Boolean!
   workspace: Workspace!
   createdBy: User!
   weight: Int!
@@ -275,7 +280,10 @@ type Concept {
   name: String!
   description: String
   official: Boolean!
+  frozen: Boolean!
   createdBy: User!
+  sourceConcept: Concept
+  clones: [Concept!]!
   linksFromConcept: [ConceptLink!]!
   linksToConcept: [ConceptLink!]!
   courses: [Course!]!

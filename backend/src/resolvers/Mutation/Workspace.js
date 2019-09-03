@@ -10,6 +10,7 @@ query($id : ID!) {
       name
       conceptLinks {
         official
+        frozen
         createdBy {
           id
         }
@@ -22,6 +23,7 @@ query($id : ID!) {
       }
       courseLinks {
         official
+        frozen
         createdBy {
           id
         }
@@ -36,6 +38,7 @@ query($id : ID!) {
         id
         name
         official
+        frozen
         createdBy {
           id
         }
@@ -44,6 +47,7 @@ query($id : ID!) {
           name
           description
           official
+          frozen
           createdBy {
             id
           }
@@ -225,15 +229,19 @@ const WorkspaceMutations = {
           id: makeNewId(course.id),
           name: course.name,
           official: course.official,
+          frozen: course.frozen,
           createdBy: { connect: { id: course.createdBy.id } },
+          sourceCourse: { connect: { id: course.id } },
           concepts: {
             create: course.concepts.map(concept => ({
               id: makeNewId(concept.id),
               name: concept.name,
               description: concept.description,
               official: concept.official,
+              frozen: concept.frozen,
               createdBy: { connect: { id: concept.createdBy.id } },
-              workspace: { connect: { id: workspaceId } }
+              workspace: { connect: { id: workspaceId } },
+              sourceConcept: { connect: { id: concept.id } }
             }))
           }
         }))
@@ -242,6 +250,7 @@ const WorkspaceMutations = {
         create: templateWorkspace.conceptLinks.map(link => ({
           official: link.official,
           createdBy: { connect: { id: link.createdBy.id } },
+          frozen: link.frozen,
           from: { connect: { id: makeNewId(link.from.id) } },
           to: { connect: { id: makeNewId(link.to.id) } }
         }))
@@ -250,6 +259,7 @@ const WorkspaceMutations = {
         create: templateWorkspace.courseLinks.map(link => ({
           official: link.official,
           createdBy: { connect: { id: link.createdBy.id } },
+          frozen: link.frozen,
           from: { connect: { id: makeNewId(link.from.id) } },
           to: { connect: { id: makeNewId(link.to.id) } }
         }))
