@@ -125,14 +125,13 @@ const EditableTable = ({
       .map(col => [col.field, col.type.cast(state[col.field])]))
     try {
       await createMutation(variables)
+      setEditing(null)
+      setState(Object.fromEntries(columns.map(col => [col.field, col.type.defaultValue])))
     } catch (err) {
       messageDispatch({
         type: 'setError',
         data: 'Access denied'
       })
-    } finally {
-      setEditing(null)
-      setState(Object.fromEntries(columns.map(col => [col.field, col.type.defaultValue])))
     }
   }
 
