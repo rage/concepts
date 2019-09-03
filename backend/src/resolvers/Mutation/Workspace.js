@@ -126,7 +126,7 @@ const WorkspaceMutations = {
     })
     return context.prisma.deleteWorkspace({ id })
   },
-  async updateTemplateWorkspace(root, { id, name, active }, context) {
+  async updateTemplateWorkspace(root, { id, name, active, courseId }, context) {
     await checkAccess(context, {
       minimumRole: Role.STAFF,
       minimumPrivilege: Privilege.EDIT,
@@ -149,7 +149,7 @@ const WorkspaceMutations = {
     }
     return context.prisma.updateWorkspace({
       where: { id },
-      data: { name }
+      data: { name, mainCourse: { connect: { id: courseId } } }
     })
   },
 

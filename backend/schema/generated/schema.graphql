@@ -80,7 +80,7 @@ type Mutation {
   # Template workspace mutations
   createTemplateWorkspace(projectId: ID!, name: String!): Workspace
   deleteTemplateWorkspace(id: ID!): Workspace
-  updateTemplateWorkspace(id: ID!, name: String, active: Boolean): Workspace
+  updateTemplateWorkspace(id: ID!, name: String, active: Boolean, courseId: ID): Workspace
   cloneTemplateWorkspace(projectId: ID!, name: String!): Workspace
 
   # PointGroup

@@ -11,6 +11,7 @@ module.exports = {
     'courseLinks',
     'concepts',
     'clones',
+    'mainCourse',
     {
       name: 'pointGroups',
       checkPrivilegeArgs: root => ({

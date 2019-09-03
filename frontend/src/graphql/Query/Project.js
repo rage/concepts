@@ -57,6 +57,12 @@ query projectById($id: ID!) {
         endDate
         maxPoints
         pointsPerConcept
+        course {
+          id
+        }
+      }
+      mainCourse {
+        id
       }
     }
     participants {

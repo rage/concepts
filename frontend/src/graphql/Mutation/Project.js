@@ -44,6 +44,12 @@ mutation setActiveTemplate($projectId: ID!, $workspaceId: ID!) {
         endDate
         maxPoints
         pointsPerConcept
+        course {
+          id
+        }
+      }
+      mainCourse {
+        id
       }
     }
   }
