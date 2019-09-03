@@ -113,6 +113,8 @@ export const Type = {
   }
 }
 
+const NEW_ROW = 'NEW'
+
 const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
   updateMutation, deleteMutation, disabled
 }) => {
@@ -144,7 +146,7 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
       <CardHeader
         action={<>
           <AdditionalAction />
-          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing('NEW')}>
+          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
             <AddIcon />
           </IconButton>
         </>}
@@ -171,7 +173,7 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
               setEditing={setEditing}
             />
           ))}
-          {editing === 'NEW' &&
+          {editing === NEW_ROW &&
             <EditTableRow
               columns={columns} classes={classes} state={state} setState={setState}
               disabled={disabled} submit={handleCreate} cancel={() => setEditing(null)}
