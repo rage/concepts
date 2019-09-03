@@ -196,7 +196,10 @@ const EditTableRow = ({
     ))}
     <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
       <div style={{ display: 'inline' }} onClick={submit}>
-        <IconButton disabled={disabled}>
+        <IconButton
+          disabled={disabled || columns
+            .find(col => col.required && !state[col.field]) !== undefined}
+        >
           <DoneIcon />
         </IconButton>
       </div>

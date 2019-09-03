@@ -53,7 +53,7 @@ const PointGroupsView = ({ projectId }) => {
   })
 
   const columns = [
-    { title: 'Group', field: 'name', type: Type.TEXT },
+    { title: 'Group', field: 'name', type: Type.TEXT, required: true },
     { title: 'Start date', field: 'startDate', type: Type.DATE },
     { title: 'End date', field: 'endDate', type: Type.DATE },
     { title: 'Max points', field: 'maxPoints', type: Type.NUMBER, min: 0 },
