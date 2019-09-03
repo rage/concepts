@@ -251,6 +251,8 @@ const WorkspaceMutations = {
           official: link.official,
           createdBy: { connect: { id: link.createdBy.id } },
           frozen: link.frozen,
+          weight: link.weight,
+          count: link.count,
           from: { connect: { id: makeNewId(link.from.id) } },
           to: { connect: { id: makeNewId(link.to.id) } }
         }))
@@ -260,6 +262,8 @@ const WorkspaceMutations = {
           official: link.official,
           createdBy: { connect: { id: link.createdBy.id } },
           frozen: link.frozen,
+          weight: link.weight,
+          count: link.count,
           from: { connect: { id: makeNewId(link.from.id) } },
           to: { connect: { id: makeNewId(link.to.id) } }
         }))

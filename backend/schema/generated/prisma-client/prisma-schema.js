@@ -271,6 +271,7 @@ type Concept {
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
   workspace: Workspace!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  count: Int!
 }
 
 type ConceptConnection {
@@ -294,6 +295,7 @@ input ConceptCreateInput {
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateManyWithoutCoursesInput {
@@ -345,6 +347,7 @@ input ConceptCreateWithoutClonesInput {
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateWithoutCoursesInput {
@@ -361,6 +364,7 @@ input ConceptCreateWithoutCoursesInput {
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateWithoutLinksFromConceptInput {
@@ -377,6 +381,7 @@ input ConceptCreateWithoutLinksFromConceptInput {
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateWithoutLinksToConceptInput {
@@ -393,6 +398,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateWithoutResourcesInput {
@@ -409,6 +415,7 @@ input ConceptCreateWithoutResourcesInput {
   courses: CourseCreateManyWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateWithoutSourceConceptInput {
@@ -425,6 +432,7 @@ input ConceptCreateWithoutSourceConceptInput {
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
+  count: Int
 }
 
 input ConceptCreateWithoutWorkspaceInput {
@@ -441,6 +449,7 @@ input ConceptCreateWithoutWorkspaceInput {
   courses: CourseCreateManyWithoutConceptsInput
   resources: ResourceCreateManyWithoutConceptInput
   tags: TagCreateManyInput
+  count: Int
 }
 
 type ConceptEdge {
@@ -457,6 +466,7 @@ type ConceptLink {
   workspace: Workspace!
   createdBy: User!
   weight: Int!
+  count: Int!
 }
 
 type ConceptLinkConnection {
@@ -474,6 +484,7 @@ input ConceptLinkCreateInput {
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
   weight: Int
+  count: Int
 }
 
 input ConceptLinkCreateManyWithoutFromInput {
@@ -499,6 +510,7 @@ input ConceptLinkCreateWithoutFromInput {
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
   weight: Int
+  count: Int
 }
 
 input ConceptLinkCreateWithoutToInput {
@@ -509,6 +521,7 @@ input ConceptLinkCreateWithoutToInput {
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
   weight: Int
+  count: Int
 }
 
 input ConceptLinkCreateWithoutWorkspaceInput {
@@ -519,6 +532,7 @@ input ConceptLinkCreateWithoutWorkspaceInput {
   frozen: Boolean
   createdBy: UserCreateOneInput!
   weight: Int
+  count: Int
 }
 
 type ConceptLinkEdge {
@@ -535,6 +549,8 @@ enum ConceptLinkOrderByInput {
   frozen_DESC
   weight_ASC
   weight_DESC
+  count_ASC
+  count_DESC
 }
 
 type ConceptLinkPreviousValues {
@@ -542,6 +558,7 @@ type ConceptLinkPreviousValues {
   official: Boolean!
   frozen: Boolean!
   weight: Int!
+  count: Int!
 }
 
 input ConceptLinkScalarWhereInput {
@@ -571,6 +588,14 @@ input ConceptLinkScalarWhereInput {
   weight_lte: Int
   weight_gt: Int
   weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [ConceptLinkScalarWhereInput!]
   OR: [ConceptLinkScalarWhereInput!]
   NOT: [ConceptLinkScalarWhereInput!]
@@ -602,18 +627,21 @@ input ConceptLinkUpdateInput {
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
   weight: Int
+  count: Int
 }
 
 input ConceptLinkUpdateManyDataInput {
   official: Boolean
   frozen: Boolean
   weight: Int
+  count: Int
 }
 
 input ConceptLinkUpdateManyMutationInput {
   official: Boolean
   frozen: Boolean
   weight: Int
+  count: Int
 }
 
 input ConceptLinkUpdateManyWithoutFromInput {
@@ -664,6 +692,7 @@ input ConceptLinkUpdateWithoutFromDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
   weight: Int
+  count: Int
 }
 
 input ConceptLinkUpdateWithoutToDataInput {
@@ -673,6 +702,7 @@ input ConceptLinkUpdateWithoutToDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
   weight: Int
+  count: Int
 }
 
 input ConceptLinkUpdateWithoutWorkspaceDataInput {
@@ -682,6 +712,7 @@ input ConceptLinkUpdateWithoutWorkspaceDataInput {
   frozen: Boolean
   createdBy: UserUpdateOneRequiredInput
   weight: Int
+  count: Int
 }
 
 input ConceptLinkUpdateWithWhereUniqueWithoutFromInput {
@@ -748,6 +779,14 @@ input ConceptLinkWhereInput {
   weight_lte: Int
   weight_gt: Int
   weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [ConceptLinkWhereInput!]
   OR: [ConceptLinkWhereInput!]
   NOT: [ConceptLinkWhereInput!]
@@ -768,6 +807,8 @@ enum ConceptOrderByInput {
   official_DESC
   frozen_ASC
   frozen_DESC
+  count_ASC
+  count_DESC
 }
 
 type ConceptPreviousValues {
@@ -776,6 +817,7 @@ type ConceptPreviousValues {
   description: String
   official: Boolean!
   frozen: Boolean!
+  count: Int!
 }
 
 input ConceptScalarWhereInput {
@@ -825,6 +867,14 @@ input ConceptScalarWhereInput {
   official_not: Boolean
   frozen: Boolean
   frozen_not: Boolean
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [ConceptScalarWhereInput!]
   OR: [ConceptScalarWhereInput!]
   NOT: [ConceptScalarWhereInput!]
@@ -862,6 +912,7 @@ input ConceptUpdateInput {
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateManyDataInput {
@@ -869,6 +920,7 @@ input ConceptUpdateManyDataInput {
   description: String
   official: Boolean
   frozen: Boolean
+  count: Int
 }
 
 input ConceptUpdateManyMutationInput {
@@ -876,6 +928,7 @@ input ConceptUpdateManyMutationInput {
   description: String
   official: Boolean
   frozen: Boolean
+  count: Int
 }
 
 input ConceptUpdateManyWithoutCoursesInput {
@@ -962,6 +1015,7 @@ input ConceptUpdateWithoutClonesDataInput {
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithoutCoursesDataInput {
@@ -977,6 +1031,7 @@ input ConceptUpdateWithoutCoursesDataInput {
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithoutLinksFromConceptDataInput {
@@ -992,6 +1047,7 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithoutLinksToConceptDataInput {
@@ -1007,6 +1063,7 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithoutResourcesDataInput {
@@ -1022,6 +1079,7 @@ input ConceptUpdateWithoutResourcesDataInput {
   courses: CourseUpdateManyWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithoutSourceConceptDataInput {
@@ -1037,6 +1095,7 @@ input ConceptUpdateWithoutSourceConceptDataInput {
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithoutWorkspaceDataInput {
@@ -1052,6 +1111,7 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   courses: CourseUpdateManyWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   tags: TagUpdateManyInput
+  count: Int
 }
 
 input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
@@ -1175,6 +1235,14 @@ input ConceptWhereInput {
   tags_every: TagWhereInput
   tags_some: TagWhereInput
   tags_none: TagWhereInput
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -1353,6 +1421,7 @@ type CourseLink {
   createdBy: User!
   workspace: Workspace!
   weight: Int!
+  count: Int!
 }
 
 type CourseLinkConnection {
@@ -1370,6 +1439,7 @@ input CourseLinkCreateInput {
   createdBy: UserCreateOneInput!
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
   weight: Int
+  count: Int
 }
 
 input CourseLinkCreateManyWithoutFromInput {
@@ -1395,6 +1465,7 @@ input CourseLinkCreateWithoutFromInput {
   createdBy: UserCreateOneInput!
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
   weight: Int
+  count: Int
 }
 
 input CourseLinkCreateWithoutToInput {
@@ -1405,6 +1476,7 @@ input CourseLinkCreateWithoutToInput {
   createdBy: UserCreateOneInput!
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
   weight: Int
+  count: Int
 }
 
 input CourseLinkCreateWithoutWorkspaceInput {
@@ -1415,6 +1487,7 @@ input CourseLinkCreateWithoutWorkspaceInput {
   frozen: Boolean
   createdBy: UserCreateOneInput!
   weight: Int
+  count: Int
 }
 
 type CourseLinkEdge {
@@ -1431,6 +1504,8 @@ enum CourseLinkOrderByInput {
   frozen_DESC
   weight_ASC
   weight_DESC
+  count_ASC
+  count_DESC
 }
 
 type CourseLinkPreviousValues {
@@ -1438,6 +1513,7 @@ type CourseLinkPreviousValues {
   official: Boolean!
   frozen: Boolean!
   weight: Int!
+  count: Int!
 }
 
 input CourseLinkScalarWhereInput {
@@ -1467,6 +1543,14 @@ input CourseLinkScalarWhereInput {
   weight_lte: Int
   weight_gt: Int
   weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [CourseLinkScalarWhereInput!]
   OR: [CourseLinkScalarWhereInput!]
   NOT: [CourseLinkScalarWhereInput!]
@@ -1498,18 +1582,21 @@ input CourseLinkUpdateInput {
   createdBy: UserUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
   weight: Int
+  count: Int
 }
 
 input CourseLinkUpdateManyDataInput {
   official: Boolean
   frozen: Boolean
   weight: Int
+  count: Int
 }
 
 input CourseLinkUpdateManyMutationInput {
   official: Boolean
   frozen: Boolean
   weight: Int
+  count: Int
 }
 
 input CourseLinkUpdateManyWithoutFromInput {
@@ -1560,6 +1647,7 @@ input CourseLinkUpdateWithoutFromDataInput {
   createdBy: UserUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
   weight: Int
+  count: Int
 }
 
 input CourseLinkUpdateWithoutToDataInput {
@@ -1569,6 +1657,7 @@ input CourseLinkUpdateWithoutToDataInput {
   createdBy: UserUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
   weight: Int
+  count: Int
 }
 
 input CourseLinkUpdateWithoutWorkspaceDataInput {
@@ -1578,6 +1667,7 @@ input CourseLinkUpdateWithoutWorkspaceDataInput {
   frozen: Boolean
   createdBy: UserUpdateOneRequiredInput
   weight: Int
+  count: Int
 }
 
 input CourseLinkUpdateWithWhereUniqueWithoutFromInput {
@@ -1644,6 +1734,14 @@ input CourseLinkWhereInput {
   weight_lte: Int
   weight_gt: Int
   weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
   AND: [CourseLinkWhereInput!]
   OR: [CourseLinkWhereInput!]
   NOT: [CourseLinkWhereInput!]

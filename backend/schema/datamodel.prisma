@@ -94,7 +94,8 @@ type CourseLink {
   frozen: Boolean! @default(value: false)
   createdBy: User!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
-  weight: Int! @default(value: 1)
+  weight: Int! @default(value: 100)
+  count: Int! @default(value: 1)
 }
 
 type Course {
@@ -120,7 +121,8 @@ type ConceptLink {
   frozen: Boolean! @default(value: false)
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
   createdBy: User!
-  weight: Int! @default(value: 1)
+  weight: Int! @default(value: 100)
+  count: Int! @default(value: 1)
 }
 
 type Concept {
@@ -138,6 +140,7 @@ type Concept {
   resources: [Resource!]!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
   tags: [Tag!]!
+  count: Int! @default(value: 1)
 }
 
 type PointGroup {

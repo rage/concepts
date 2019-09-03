@@ -772,7 +772,9 @@ export type CourseLinkOrderByInput =
   | "frozen_ASC"
   | "frozen_DESC"
   | "weight_ASC"
-  | "weight_DESC";
+  | "weight_DESC"
+  | "count_ASC"
+  | "count_DESC";
 
 export type ConceptOrderByInput =
   | "id_ASC"
@@ -784,7 +786,9 @@ export type ConceptOrderByInput =
   | "official_ASC"
   | "official_DESC"
   | "frozen_ASC"
-  | "frozen_DESC";
+  | "frozen_DESC"
+  | "count_ASC"
+  | "count_DESC";
 
 export type ConceptLinkOrderByInput =
   | "id_ASC"
@@ -794,7 +798,9 @@ export type ConceptLinkOrderByInput =
   | "frozen_ASC"
   | "frozen_DESC"
   | "weight_ASC"
-  | "weight_DESC";
+  | "weight_DESC"
+  | "count_ASC"
+  | "count_DESC";
 
 export type ResourceOrderByInput =
   | "id_ASC"
@@ -1226,6 +1232,14 @@ export interface CourseLinkWhereInput {
   weight_lte?: Maybe<Int>;
   weight_gt?: Maybe<Int>;
   weight_gte?: Maybe<Int>;
+  count?: Maybe<Int>;
+  count_not?: Maybe<Int>;
+  count_in?: Maybe<Int[] | Int>;
+  count_not_in?: Maybe<Int[] | Int>;
+  count_lt?: Maybe<Int>;
+  count_lte?: Maybe<Int>;
+  count_gt?: Maybe<Int>;
+  count_gte?: Maybe<Int>;
   AND?: Maybe<CourseLinkWhereInput[] | CourseLinkWhereInput>;
   OR?: Maybe<CourseLinkWhereInput[] | CourseLinkWhereInput>;
   NOT?: Maybe<CourseLinkWhereInput[] | CourseLinkWhereInput>;
@@ -1299,6 +1313,14 @@ export interface ConceptWhereInput {
   tags_every?: Maybe<TagWhereInput>;
   tags_some?: Maybe<TagWhereInput>;
   tags_none?: Maybe<TagWhereInput>;
+  count?: Maybe<Int>;
+  count_not?: Maybe<Int>;
+  count_in?: Maybe<Int[] | Int>;
+  count_not_in?: Maybe<Int[] | Int>;
+  count_lt?: Maybe<Int>;
+  count_lte?: Maybe<Int>;
+  count_gt?: Maybe<Int>;
+  count_gte?: Maybe<Int>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
@@ -1335,6 +1357,14 @@ export interface ConceptLinkWhereInput {
   weight_lte?: Maybe<Int>;
   weight_gt?: Maybe<Int>;
   weight_gte?: Maybe<Int>;
+  count?: Maybe<Int>;
+  count_not?: Maybe<Int>;
+  count_in?: Maybe<Int[] | Int>;
+  count_not_in?: Maybe<Int[] | Int>;
+  count_lt?: Maybe<Int>;
+  count_lte?: Maybe<Int>;
+  count_gt?: Maybe<Int>;
+  count_gte?: Maybe<Int>;
   AND?: Maybe<ConceptLinkWhereInput[] | ConceptLinkWhereInput>;
   OR?: Maybe<ConceptLinkWhereInput[] | ConceptLinkWhereInput>;
   NOT?: Maybe<ConceptLinkWhereInput[] | ConceptLinkWhereInput>;
@@ -1964,6 +1994,7 @@ export interface CourseLinkCreateWithoutFromInput {
   createdBy: UserCreateOneInput;
   workspace: WorkspaceCreateOneWithoutCourseLinksInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseCreateOneWithoutLinksToCourseInput {
@@ -2022,6 +2053,7 @@ export interface CourseLinkCreateWithoutToInput {
   createdBy: UserCreateOneInput;
   workspace: WorkspaceCreateOneWithoutCourseLinksInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseCreateOneWithoutLinksFromCourseInput {
@@ -2064,6 +2096,7 @@ export interface ConceptCreateWithoutCoursesInput {
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptCreateOneWithoutClonesInput {
@@ -2085,6 +2118,7 @@ export interface ConceptCreateWithoutClonesInput {
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkCreateManyWithoutFromInput {
@@ -2102,6 +2136,7 @@ export interface ConceptLinkCreateWithoutFromInput {
   workspace: WorkspaceCreateOneWithoutConceptLinksInput;
   createdBy: UserCreateOneInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptCreateOneWithoutLinksToConceptInput {
@@ -2123,6 +2158,7 @@ export interface ConceptCreateWithoutLinksToConceptInput {
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptCreateManyWithoutSourceConceptInput {
@@ -2147,6 +2183,7 @@ export interface ConceptCreateWithoutSourceConceptInput {
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkCreateManyWithoutToInput {
@@ -2164,6 +2201,7 @@ export interface ConceptLinkCreateWithoutToInput {
   workspace: WorkspaceCreateOneWithoutConceptLinksInput;
   createdBy: UserCreateOneInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptCreateOneWithoutLinksFromConceptInput {
@@ -2185,6 +2223,7 @@ export interface ConceptCreateWithoutLinksFromConceptInput {
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseCreateManyWithoutConceptsInput {
@@ -2251,6 +2290,7 @@ export interface ConceptCreateWithoutWorkspaceInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ResourceCreateManyWithoutConceptInput {
@@ -2307,6 +2347,7 @@ export interface ConceptLinkCreateWithoutWorkspaceInput {
   frozen?: Maybe<Boolean>;
   createdBy: UserCreateOneInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseLinkCreateManyWithoutWorkspaceInput {
@@ -2325,6 +2366,7 @@ export interface CourseLinkCreateWithoutWorkspaceInput {
   frozen?: Maybe<Boolean>;
   createdBy: UserCreateOneInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface WorkspaceParticipantCreateManyWithoutWorkspaceInput {
@@ -3122,6 +3164,7 @@ export interface CourseLinkUpdateWithoutFromDataInput {
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseLinksInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseUpdateOneRequiredWithoutLinksToCourseInput {
@@ -3221,6 +3264,7 @@ export interface CourseLinkUpdateWithoutToDataInput {
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseLinksInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseUpdateOneRequiredWithoutLinksFromCourseInput {
@@ -3284,6 +3328,7 @@ export interface ConceptUpdateWithoutCoursesDataInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpdateOneWithoutClonesInput {
@@ -3308,6 +3353,7 @@ export interface ConceptUpdateWithoutClonesDataInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkUpdateManyWithoutFromInput {
@@ -3349,6 +3395,7 @@ export interface ConceptLinkUpdateWithoutFromDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptLinksInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpdateOneRequiredWithoutLinksToConceptInput {
@@ -3371,6 +3418,7 @@ export interface ConceptUpdateWithoutLinksToConceptDataInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpdateManyWithoutSourceConceptInput {
@@ -3415,6 +3463,7 @@ export interface ConceptUpdateWithoutSourceConceptDataInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkUpdateManyWithoutToInput {
@@ -3456,6 +3505,7 @@ export interface ConceptLinkUpdateWithoutToDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptLinksInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
@@ -3478,6 +3528,7 @@ export interface ConceptUpdateWithoutLinksFromConceptDataInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseUpdateManyWithoutConceptsInput {
@@ -3585,6 +3636,7 @@ export interface ConceptUpdateWithoutWorkspaceDataInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ResourceUpdateManyWithoutConceptInput {
@@ -3920,6 +3972,14 @@ export interface ConceptScalarWhereInput {
   official_not?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   frozen_not?: Maybe<Boolean>;
+  count?: Maybe<Int>;
+  count_not?: Maybe<Int>;
+  count_in?: Maybe<Int[] | Int>;
+  count_not_in?: Maybe<Int[] | Int>;
+  count_lt?: Maybe<Int>;
+  count_lte?: Maybe<Int>;
+  count_gt?: Maybe<Int>;
+  count_gte?: Maybe<Int>;
   AND?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
   OR?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
   NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
@@ -3935,6 +3995,7 @@ export interface ConceptUpdateManyDataInput {
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkUpdateManyWithoutWorkspaceInput {
@@ -3977,6 +4038,7 @@ export interface ConceptLinkUpdateWithoutWorkspaceDataInput {
   frozen?: Maybe<Boolean>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -4012,6 +4074,14 @@ export interface ConceptLinkScalarWhereInput {
   weight_lte?: Maybe<Int>;
   weight_gt?: Maybe<Int>;
   weight_gte?: Maybe<Int>;
+  count?: Maybe<Int>;
+  count_not?: Maybe<Int>;
+  count_in?: Maybe<Int[] | Int>;
+  count_not_in?: Maybe<Int[] | Int>;
+  count_lt?: Maybe<Int>;
+  count_lte?: Maybe<Int>;
+  count_gt?: Maybe<Int>;
+  count_gte?: Maybe<Int>;
   AND?: Maybe<ConceptLinkScalarWhereInput[] | ConceptLinkScalarWhereInput>;
   OR?: Maybe<ConceptLinkScalarWhereInput[] | ConceptLinkScalarWhereInput>;
   NOT?: Maybe<ConceptLinkScalarWhereInput[] | ConceptLinkScalarWhereInput>;
@@ -4026,6 +4096,7 @@ export interface ConceptLinkUpdateManyDataInput {
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseLinkUpdateManyWithoutWorkspaceInput {
@@ -4064,6 +4135,7 @@ export interface CourseLinkUpdateWithoutWorkspaceDataInput {
   frozen?: Maybe<Boolean>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -4099,6 +4171,14 @@ export interface CourseLinkScalarWhereInput {
   weight_lte?: Maybe<Int>;
   weight_gt?: Maybe<Int>;
   weight_gte?: Maybe<Int>;
+  count?: Maybe<Int>;
+  count_not?: Maybe<Int>;
+  count_in?: Maybe<Int[] | Int>;
+  count_not_in?: Maybe<Int[] | Int>;
+  count_lt?: Maybe<Int>;
+  count_lte?: Maybe<Int>;
+  count_gt?: Maybe<Int>;
+  count_gte?: Maybe<Int>;
   AND?: Maybe<CourseLinkScalarWhereInput[] | CourseLinkScalarWhereInput>;
   OR?: Maybe<CourseLinkScalarWhereInput[] | CourseLinkScalarWhereInput>;
   NOT?: Maybe<CourseLinkScalarWhereInput[] | CourseLinkScalarWhereInput>;
@@ -4113,6 +4193,7 @@ export interface CourseLinkUpdateManyDataInput {
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface WorkspaceParticipantUpdateManyWithoutWorkspaceInput {
@@ -5422,6 +5503,7 @@ export interface ConceptCreateInput {
   resources?: Maybe<ResourceCreateManyWithoutConceptInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpdateInput {
@@ -5438,6 +5520,7 @@ export interface ConceptUpdateInput {
   resources?: Maybe<ResourceUpdateManyWithoutConceptInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpdateManyMutationInput {
@@ -5445,6 +5528,7 @@ export interface ConceptUpdateManyMutationInput {
   description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkCreateInput {
@@ -5456,6 +5540,7 @@ export interface ConceptLinkCreateInput {
   workspace: WorkspaceCreateOneWithoutConceptLinksInput;
   createdBy: UserCreateOneInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkUpdateInput {
@@ -5466,12 +5551,14 @@ export interface ConceptLinkUpdateInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptLinksInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptLinkUpdateManyMutationInput {
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseUpdateInput {
@@ -5503,6 +5590,7 @@ export interface CourseLinkCreateInput {
   createdBy: UserCreateOneInput;
   workspace: WorkspaceCreateOneWithoutCourseLinksInput;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseLinkUpdateInput {
@@ -5513,12 +5601,14 @@ export interface CourseLinkUpdateInput {
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCourseLinksInput>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface CourseLinkUpdateManyMutationInput {
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   weight?: Maybe<Int>;
+  count?: Maybe<Int>;
 }
 
 export interface PointGroupCreateInput {
@@ -5693,6 +5783,7 @@ export interface ConceptCreateWithoutResourcesInput {
   courses?: Maybe<CourseCreateManyWithoutConceptsInput>;
   workspace: WorkspaceCreateOneWithoutConceptsInput;
   tags?: Maybe<TagCreateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ResourceUpdateInput {
@@ -5722,6 +5813,7 @@ export interface ConceptUpdateWithoutResourcesDataInput {
   courses?: Maybe<CourseUpdateManyWithoutConceptsInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutConceptsInput>;
   tags?: Maybe<TagUpdateManyInput>;
+  count?: Maybe<Int>;
 }
 
 export interface ConceptUpsertWithoutResourcesInput {
@@ -6983,6 +7075,7 @@ export interface CourseLink {
   official: Boolean;
   frozen: Boolean;
   weight: Int;
+  count: Int;
 }
 
 export interface CourseLinkPromise extends Promise<CourseLink>, Fragmentable {
@@ -6994,6 +7087,7 @@ export interface CourseLinkPromise extends Promise<CourseLink>, Fragmentable {
   createdBy: <T = UserPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   weight: () => Promise<Int>;
+  count: () => Promise<Int>;
 }
 
 export interface CourseLinkSubscription
@@ -7007,6 +7101,7 @@ export interface CourseLinkSubscription
   createdBy: <T = UserSubscription>() => T;
   workspace: <T = WorkspaceSubscription>() => T;
   weight: () => Promise<AsyncIterator<Int>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface CourseLinkNullablePromise
@@ -7020,6 +7115,7 @@ export interface CourseLinkNullablePromise
   createdBy: <T = UserPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   weight: () => Promise<Int>;
+  count: () => Promise<Int>;
 }
 
 export interface Concept {
@@ -7028,6 +7124,7 @@ export interface Concept {
   description?: String;
   official: Boolean;
   frozen: Boolean;
+  count: Int;
 }
 
 export interface ConceptPromise extends Promise<Concept>, Fragmentable {
@@ -7093,6 +7190,7 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  count: () => Promise<Int>;
 }
 
 export interface ConceptSubscription
@@ -7162,6 +7260,7 @@ export interface ConceptSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface ConceptNullablePromise
@@ -7229,6 +7328,7 @@ export interface ConceptNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  count: () => Promise<Int>;
 }
 
 export interface ConceptLink {
@@ -7236,6 +7336,7 @@ export interface ConceptLink {
   official: Boolean;
   frozen: Boolean;
   weight: Int;
+  count: Int;
 }
 
 export interface ConceptLinkPromise extends Promise<ConceptLink>, Fragmentable {
@@ -7247,6 +7348,7 @@ export interface ConceptLinkPromise extends Promise<ConceptLink>, Fragmentable {
   workspace: <T = WorkspacePromise>() => T;
   createdBy: <T = UserPromise>() => T;
   weight: () => Promise<Int>;
+  count: () => Promise<Int>;
 }
 
 export interface ConceptLinkSubscription
@@ -7260,6 +7362,7 @@ export interface ConceptLinkSubscription
   workspace: <T = WorkspaceSubscription>() => T;
   createdBy: <T = UserSubscription>() => T;
   weight: () => Promise<AsyncIterator<Int>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface ConceptLinkNullablePromise
@@ -7273,6 +7376,7 @@ export interface ConceptLinkNullablePromise
   workspace: <T = WorkspacePromise>() => T;
   createdBy: <T = UserPromise>() => T;
   weight: () => Promise<Int>;
+  count: () => Promise<Int>;
 }
 
 export interface Resource {
@@ -8528,6 +8632,7 @@ export interface ConceptPreviousValues {
   description?: String;
   official: Boolean;
   frozen: Boolean;
+  count: Int;
 }
 
 export interface ConceptPreviousValuesPromise
@@ -8538,6 +8643,7 @@ export interface ConceptPreviousValuesPromise
   description: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
+  count: () => Promise<Int>;
 }
 
 export interface ConceptPreviousValuesSubscription
@@ -8548,6 +8654,7 @@ export interface ConceptPreviousValuesSubscription
   description: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface ConceptLinkSubscriptionPayload {
@@ -8580,6 +8687,7 @@ export interface ConceptLinkPreviousValues {
   official: Boolean;
   frozen: Boolean;
   weight: Int;
+  count: Int;
 }
 
 export interface ConceptLinkPreviousValuesPromise
@@ -8589,6 +8697,7 @@ export interface ConceptLinkPreviousValuesPromise
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   weight: () => Promise<Int>;
+  count: () => Promise<Int>;
 }
 
 export interface ConceptLinkPreviousValuesSubscription
@@ -8598,6 +8707,7 @@ export interface ConceptLinkPreviousValuesSubscription
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   weight: () => Promise<AsyncIterator<Int>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface CourseSubscriptionPayload {
@@ -8680,6 +8790,7 @@ export interface CourseLinkPreviousValues {
   official: Boolean;
   frozen: Boolean;
   weight: Int;
+  count: Int;
 }
 
 export interface CourseLinkPreviousValuesPromise
@@ -8689,6 +8800,7 @@ export interface CourseLinkPreviousValuesPromise
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   weight: () => Promise<Int>;
+  count: () => Promise<Int>;
 }
 
 export interface CourseLinkPreviousValuesSubscription
@@ -8698,6 +8810,7 @@ export interface CourseLinkPreviousValuesSubscription
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   weight: () => Promise<AsyncIterator<Int>>;
+  count: () => Promise<AsyncIterator<Int>>;
 }
 
 export interface PointGroupSubscriptionPayload {

@@ -114,7 +114,7 @@ type Mutation {
 
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
-  mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, tags: [TagCreateInput!]): Concept!
+  mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagCreateInput!]): Concept!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
@@ -247,6 +247,7 @@ type CourseLink {
   createdBy: User!
   workspace: Workspace!
   weight: Int!
+  count: Int!
 }
 
 type Course {
@@ -273,6 +274,7 @@ type ConceptLink {
   workspace: Workspace!
   createdBy: User!
   weight: Int!
+  count: Int!
 }
 
 type Concept {
@@ -290,6 +292,7 @@ type Concept {
   resources: [Resource!]!
   workspace: Workspace!
   tags: [Tag!]!
+  count: Int!
 }
 
 type PointGroup {
