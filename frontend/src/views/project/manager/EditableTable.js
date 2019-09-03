@@ -29,8 +29,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     overflow: 'auto'
   },
-  textField: {
-  },
   tableRowDisabled: {
     color: 'rgba(0, 0, 0, 0.26)'
   },
@@ -40,16 +38,18 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const NEW_ROW = 'NEW'
+
 const DATETIME_FORMAT = 'D.M.YYYY, HH:mm'
 
 const noop = val => val
 const returnValue = val => () => val
 
-const TextEditCell = ({ classes, col, state, setState }) => (
+const TextViewCell = ({ value }) => value
+const TextEditCell = ({ col, state, setState }) => (
   <TextField
     name={col.field}
     value={state[col.field]}
-    className={classes.textField}
     type={col.type.inputType}
     placeholder={col.type.placeholder(col)}
     onChange={evt => setState({ ...state, [col.field]: evt.target.value })}
@@ -61,6 +61,7 @@ const TextEditCell = ({ classes, col, state, setState }) => (
   />
 )
 
+const DateViewCell = ({ value }) => moment(value).format(DATETIME_FORMAT)
 const DateEditCell = ({ col, state, setState }) => (
   <DateTimePicker
     disablePast
@@ -70,10 +71,6 @@ const DateEditCell = ({ col, state, setState }) => (
     onChange={value => setState({ ...state, [col.field]: value })}
   />
 )
-
-const TextViewCell = ({ value }) => value
-
-const DateViewCell = ({ value }) => moment(value).format(DATETIME_FORMAT)
 
 const typeBase = {
   // Cast value before sending to server.
@@ -113,10 +110,8 @@ export const Type = {
   }
 }
 
-const NEW_ROW = 'NEW'
-
-const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
-  updateMutation, deleteMutation, disabled
+const EditableTable = ({
+  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
@@ -156,7 +151,8 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
         <TableHead>
           <TableRow>
             {columns.map(col =>
-              <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>)}
+              <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>
+            )}
             <TableCell align='right' className={classes.tableCell}>Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -185,9 +181,7 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
   )
 }
 
-const EditTableRow = ({
-  columns, classes, state, setState, disabled, submit, cancel
-}) => (
+const EditTableRow = ({ columns, classes, state, setState, disabled, submit, cancel }) => (
   <TableRow>
     {columns.map(col => (
       <TableCell key={col.field} className={classes.tableCell}>
@@ -229,9 +223,7 @@ const DisplayTableRow = ({
 )
 
 const EditableTableRow = ({
-  data, columns, disabled,
-  editing, setEditing,
-  updateMutation, deleteMutation
+  data, columns, disabled, editing, setEditing, updateMutation, deleteMutation
 }) => {
   const classes = useStyles()
   const [state, setState] = useState(Object.fromEntries(columns
