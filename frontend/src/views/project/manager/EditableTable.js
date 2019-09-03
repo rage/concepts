@@ -157,7 +157,7 @@ const EditableTable = ({ columns, rows, AdditionalAction, createMutation,
           <TableRow>
             {columns.map(col =>
               <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>)}
-            <TableCell align='center' className={classes.tableCell}>Actions</TableCell>
+            <TableCell align='right' className={classes.tableCell}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -194,20 +194,16 @@ const EditTableRow = ({
         <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
       </TableCell>
     ))}
-    <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
-      <div style={{ display: 'inline' }} onClick={submit}>
-        <IconButton
-          disabled={disabled || columns
-            .find(col => col.required && !state[col.field]) !== undefined}
-        >
-          <DoneIcon />
-        </IconButton>
-      </div>
-      <div style={{ display: 'inline' }} onClick={cancel}>
-        <IconButton disabled={disabled}>
-          <ClearIcon />
-        </IconButton>
-      </div>
+    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+      <IconButton
+        onClick={submit}
+        disabled={disabled || columns
+          .find(col => col.required && !state[col.field]) !== undefined}>
+        <DoneIcon />
+      </IconButton>
+      <IconButton disabled={disabled} onClick={cancel}>
+        <ClearIcon />
+      </IconButton>
     </TableCell>
   </TableRow>
 )
@@ -221,17 +217,13 @@ const DisplayTableRow = ({
         <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
       </TableCell>
     ))}
-    <TableCell className={classes.tableCell} align='center' style={{ minWidth: '120px' }}>
-      <div style={{ display: 'inline' }} onClick={() => setEditing(data.id)}>
-        <IconButton color={iconColor} disabled={disabled}>
-          <EditIcon />
-        </IconButton>
-      </div>
-      <div style={{ display: 'inline' }} onClick={() => deleteRow(data.id)}>
-        <IconButton color={iconColor} disabled={disabled}>
-          <DeleteIcon />
-        </IconButton>
-      </div>
+    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+      <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
+        <EditIcon />
+      </IconButton>
+      <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
+        <DeleteIcon />
+      </IconButton>
     </TableCell>
   </TableRow>
 )
