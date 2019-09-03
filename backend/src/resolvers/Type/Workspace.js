@@ -11,6 +11,15 @@ module.exports = {
     'courseLinks',
     'concepts',
     'clones',
+    'mainCourse',
+    {
+      name: 'pointGroups',
+      checkPrivilegeArgs: root => ({
+        minimumPrivilege: Privilege.EDIT,
+        workspaceId: root.id
+      }),
+      insufficientPrivilegeValue: () => []
+    },
     {
       name: 'tokens',
       checkPrivilegeArgs: root => ({

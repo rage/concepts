@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
   listItemActive: {
     boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
   },
+  listItemDisabled: {
+    color: 'rgba(0, 0, 0, 0.26)'
+  },
   courseButton: {
     paddingRight: '104px'
   },
@@ -55,13 +58,7 @@ const CourseList = ({
 }) => {
   const classes = useStyles()
   const listRef = useRef()
-  const [editing, setEditing] = useState(new Set())
-  const startEditing = id => setEditing(new Set(editing).add(id))
-  const stopEditing = id => {
-    const copy = new Set(editing)
-    copy.delete(id)
-    setEditing(copy)
-  }
+  const [editing, setEditing] = useState(null)
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -69,19 +66,20 @@ const CourseList = ({
       <List ref={listRef} className={classes.list}>{
         courses.map(course => (
           <ListItem
-            className={course.id === focusedCourseId ? classes.listItemActive : null}
-            button={!editing.has(course.id)}
+            className={course.id === focusedCourseId ? classes.listItemActive :
+              editing && editing !== course.id ? classes.listItemDisabled : null}
+            button={editing !== course.id}
             classes={{ button: classes.courseButton }}
             key={course.id}
-            onClick={() => !editing.has(course.id) && setFocusedCourseId(course.id)}
+            onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
           >
-            {editing.has(course.id) ? <>
+            {editing === course.id ? <>
               <CreateCourse
                 submit={args => {
-                  stopEditing(course.id)
+                  setEditing(null)
                   updateCourse({ id: course.id, ...args })
                 }}
-                cancel={() => stopEditing(course.id)}
+                cancel={() => setEditing(null)}
                 defaultName={course.name}
                 defaultOfficial={course.official}
                 defaultTags={course.tags}
@@ -92,19 +90,23 @@ const CourseList = ({
                 <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
               } />
               <ListItemSecondaryAction>
-                <IconButton aria-label='Delete' onClick={evt => {
-                  evt.stopPropagation()
-                  const msg = `Are you sure you want to delete the course ${course.name}?`
-                  if (window.confirm(msg)) {
-                    deleteCourse(course.id)
-                  }
-                }}>
+                <IconButton
+                  color={editing ? 'inherit' : undefined} aria-label='Delete' onClick={evt => {
+                    evt.stopPropagation()
+                    const msg = `Are you sure you want to delete the course ${course.name}?`
+                    if (window.confirm(msg)) {
+                      deleteCourse(course.id)
+                    }
+                  }}
+                >
                   <DeleteIcon />
                 </IconButton>
-                <IconButton aria-label='Edit' onClick={evt => {
-                  evt.stopPropagation()
-                  startEditing(course.id)
-                }}>
+                <IconButton
+                  color={editing ? 'inherit' : undefined} aria-label='Edit' onClick={evt => {
+                    evt.stopPropagation()
+                    setEditing(course.id)
+                  }}
+                >
                   <EditIcon />
                 </IconButton>
               </ListItemSecondaryAction>
@@ -120,7 +122,9 @@ const CourseList = ({
   )
 }
 
-const CreateCourse = ({ submit, defaultName, defaultOfficial, defaultTags, action = 'Create', cancel }) => {
+const CreateCourse = ({
+  submit, defaultName, defaultOfficial, defaultTags, action = 'Create', cancel
+}) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()

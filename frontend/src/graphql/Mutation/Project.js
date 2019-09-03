@@ -32,6 +32,25 @@ mutation setActiveTemplate($projectId: ID!, $workspaceId: ID!) {
     id
     activeTemplate {
       id
+      name
+      courses {
+        id
+        name
+      }
+      pointGroups {
+        id
+        name
+        startDate
+        endDate
+        maxPoints
+        pointsPerConcept
+        course {
+          id
+        }
+      }
+      mainCourse {
+        id
+      }
     }
   }
 }

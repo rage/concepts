@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo-hooks'
 import { CssBaseline } from '@material-ui/core'
+import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+import MomentUtils from '@date-io/moment'
 
 import App from './App'
 import client from './apollo/apolloClient'
@@ -85,27 +87,29 @@ const getLoggedInUser = () => {
 ReactDOM.render(
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <MessagingStateProvider
-        initialState={{ error: '', notification: '' }}
-        reducer={messageReducer}
-      >
-        <LoginStateProvider
-          initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
-          reducer={loginReducer}
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <MessagingStateProvider
+          initialState={{ error: '', notification: '' }}
+          reducer={messageReducer}
         >
-          <CssBaseline />
-          <InfoSnackbar />
-          <DialogProvider>
-            <FocusOverlay>
-              <InfoBox>
-                <LoadingProvider>
-                  <App />
-                </LoadingProvider>
-              </InfoBox>
-            </FocusOverlay>
-          </DialogProvider>
-        </LoginStateProvider>
-      </MessagingStateProvider>
+          <LoginStateProvider
+            initialState={{ loggedIn: isSignedIn(), user: getLoggedInUser() }}
+            reducer={loginReducer}
+          >
+            <CssBaseline />
+            <InfoSnackbar />
+            <DialogProvider>
+              <FocusOverlay>
+                <InfoBox>
+                  <LoadingProvider>
+                    <App />
+                  </LoadingProvider>
+                </InfoBox>
+              </FocusOverlay>
+            </DialogProvider>
+          </LoginStateProvider>
+        </MessagingStateProvider>
+      </MuiPickersUtilsProvider>
     </ApolloProvider>
   </BrowserRouter>,
   document.getElementById('root')
