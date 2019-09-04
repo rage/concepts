@@ -184,7 +184,10 @@ const EditTableRow = ({ columns, classes, state, setState, disabled, submit, can
   <TableRow>
     {columns.map(col => (
       <TableCell key={col.field} className={classes.tableCell}>
-        <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
+        {!col.readOnly
+          ? <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
+          : <col.type.DisplayComponent classes={classes} col={col} value={state[col.field]} />
+        }
       </TableCell>
     ))}
     <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>

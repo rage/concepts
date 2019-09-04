@@ -106,6 +106,7 @@ query workspaceById($id: ID!) {
       }
       user {
         id
+        role
       }
     }
   }

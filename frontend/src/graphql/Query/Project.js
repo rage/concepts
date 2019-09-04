@@ -73,6 +73,7 @@ query projectById($id: ID!) {
       }
       user {
         id
+        role
       }
     }
   }

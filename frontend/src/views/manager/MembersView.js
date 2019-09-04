@@ -36,12 +36,12 @@ Type.PRIVILEGE = {
 }
 
 const columns = [
-  { title: 'User', field: 'id', type: Type.TEXT },
+  { title: 'User', field: 'id', type: Type.TEXT, readOnly: true },
   { title: 'Privilege', field: 'privilege', type: Type.PRIVILEGE },
   { title: 'Token', field: 'token', type: Type.TEXT }
 ]
 
-const PrivilegeView = ({ projectId, workspaceId }) => {
+const MembersView = ({ projectId, workspaceId }) => {
   const classes = useStyles()
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
@@ -81,4 +81,4 @@ const PrivilegeView = ({ projectId, workspaceId }) => {
   )
 }
 
-export default PrivilegeView
+export default MembersView

@@ -20,7 +20,7 @@ import ProjectNavBar from './components/ProjectNavBar'
 import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
 import PointGroupsView from './views/project/PointGroupsView'
-import PrivilegeView from './views/manager/PrivilegeView'
+import MembersView from './views/manager/MembersView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,9 +59,9 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/graph`} render={({ match: { params: { wid } } }) =>
     <CytoGraphView workspaceId={wid} />} />
   <Route exact path={`${prefix}/:wid/members`} render={({ match: { params: { wid } } }) =>
-    <PrivilegeView workspaceId={wid} />} />
+    <MembersView workspaceId={wid} />} />
   <Route
-    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap|manager/members)/:cid?`}
+    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap|manager|members)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>
       <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
     }
@@ -84,7 +84,7 @@ const projectRouter = prefix => <>
     }
   />
   <Route exact path={`${prefix}/:id/members`} render={({ match: { params: { id } } }) =>
-    <PrivilegeView projectId={id} />} />
+    <MembersView projectId={id} />} />
   <Route
     exact path={`${prefix}/:id/points`}
     render={({ match: { params: { id } } }) =>
