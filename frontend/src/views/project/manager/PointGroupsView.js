@@ -4,7 +4,8 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../../graphql/Query'
-import { CREATE_POINTGROUP, UPDATE_POINTGROUP,
+import {
+  CREATE_POINTGROUP, UPDATE_POINTGROUP,
   DELETE_POINTGROUP, UPDATE_TEMPLATE_WORKSPACE
 } from '../../../graphql/Mutation'
 import NotFoundView from '../../error/NotFoundView'
@@ -114,11 +115,13 @@ const PointGroupsView = ({ projectId }) => {
         columns={columns}
         AdditionalAction={CourseSelector}
         disabled={editableTableDisabled}
-        createMutation={args => createPointGroup({ variables: {
-          workspaceId: activeTemplate && activeTemplate.id,
-          courseId: mainCourse && mainCourse.id,
-          ...args
-        } })}
+        createMutation={args => createPointGroup({
+          variables: {
+            workspaceId: activeTemplate && activeTemplate.id,
+            courseId: mainCourse && mainCourse.id,
+            ...args
+          }
+        })}
         updateMutation={args => updatePointGroup({ variables: { ...args } })}
         deleteMutation={args => deletePointGroup({ variables: { ...args } })}
         rows={activeTemplate ? activeTemplate.pointGroups.filter(group =>

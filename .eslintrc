@@ -164,6 +164,13 @@
     ],
     "space-infix-ops": [
       "error"
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "multiline": true,
+        "consistent": true
+      }
     ]
   }
 }

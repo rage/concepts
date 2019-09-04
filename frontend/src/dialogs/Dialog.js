@@ -162,7 +162,8 @@ const Dialog = ({ contextRef }) => {
                   key={field.name}
                   onChange={selected => setInputState({
                     ...inputState,
-                    [field.name]: selected || [] }
+                    [field.name]: selected || []
+                  }
                   )}
                   onCreateOption={newOption => setInputState({
                     ...inputState,

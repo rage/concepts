@@ -16,8 +16,7 @@ import {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters(),
-    width: '100%',
+    ...theme.mixins.gutters(), width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
