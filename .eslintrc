@@ -148,6 +148,16 @@
         "maxEOF": 0
       }
     ],
-    "no-prototype-builtins": "off"
+    "no-prototype-builtins": "off",
+    "dot-notation": [
+      "error",
+      {
+        "allowKeywords": true
+      }
+    ],
+    "quote-props": [
+      "error",
+      "consistent-as-needed"
+    ]
   }
 }
