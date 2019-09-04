@@ -275,25 +275,27 @@ const MergeMutations = {
       id_in: conceptIds
     })
 
-    const links = (src, type) => {
+    const generateLinks = (src, type) => {
       const data = Object.values(concepts).flatMap(concept => concept[`links${src}Concept`])
-      const ids = data.map(link => link[type].id)
-      return data
-        .filter((item, index) =>
-          ids.indexOf(item[type].id) === index
-          && !conceptIds.includes(item[type].id))
-        .map(link => ({
-          ...(type === 'from'
-            ? { from: { connect: { id: link.from.id } } }
-            : { to: { connect: { id: link.to.id } } }
-          ),
+        .filter(item => !conceptIds.includes(item[type].id))
+      const linksMap = {}
+      for (const link of data) {
+        const key = link[type].id
+        const updatedLink = setDefault(linksMap, key, {
+          [type]: { connect: { id: link[type].id } },
           official: official && link.official,
           frozen: frozen && link.frozen,
-          weight: link.weight,
-          count: link.count,
+          weight: 0,
+          count: 0,
           workspace: { connect: { id: workspaceId } },
           createdBy: { connect: { id: context.user.id } }
-        }))
+        })
+        updatedLink.weight += link.weight
+        updatedLink.count += link.count
+      }
+      return Object.values(linksMap).map(link => ({
+        ...link, weight: Math.round(link.weight / link.count)
+      }))
     }
 
     return await context.prisma.createConcept({
@@ -301,8 +303,8 @@ const MergeMutations = {
       description,
       official,
       tags: { create: tags },
-      linksFromConcept: { create: links('From', 'to') },
-      linksToConcept: { create: links('To', 'from') },
+      linksFromConcept: { create: generateLinks('From', 'to') },
+      linksToConcept: { create: generateLinks('To', 'from') },
 
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
