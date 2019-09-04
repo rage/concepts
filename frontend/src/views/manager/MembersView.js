@@ -35,10 +35,15 @@ Type.PRIVILEGE = {
   defaultValue: 'EDIT'
 }
 
+Type.SHARE_TOKEN = {
+  ...Type.TEXT,
+  DisplayComponent: ({ value: { id, revoked } }) => revoked ? <del>{id}</del> : id || null
+}
+
 const columns = [
   { title: 'User', field: 'id', type: Type.TEXT, readOnly: true },
   { title: 'Privilege', field: 'privilege', type: Type.PRIVILEGE },
-  { title: 'Token', field: 'token', type: Type.TEXT }
+  { title: 'Token', field: 'token', type: Type.SHARE_TOKEN }
 ]
 
 const MembersView = ({ projectId, workspaceId }) => {
@@ -80,7 +85,7 @@ const MembersView = ({ projectId, workspaceId }) => {
         rows={privileges.map(pcp => ({
           id: getName(pcp.user),
           privilege: pcp.privilege,
-          token: pcp.token ? pcp.token.id : ''
+          token: pcp.token || {}
         }))}
       />
     </div>
