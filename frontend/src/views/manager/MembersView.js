@@ -67,12 +67,18 @@ const MembersView = ({ projectId, workspaceId }) => {
     (workspaceQuery.data || {}).workspaceById
   ).participants
 
+  const getName = user => {
+    const role = user.role.toLowerCase()
+    return `${user.id} (${role})`
+  }
+
   return (
     <div className={classes.root}>
       <EditableTable
+        title='Members'
         columns={columns}
         rows={privileges.map(pcp => ({
-          id: `${pcp.user.role} ${pcp.user.id}`,
+          id: getName(pcp.user),
           privilege: pcp.privilege,
           token: pcp.token ? pcp.token.id : ''
         }))}

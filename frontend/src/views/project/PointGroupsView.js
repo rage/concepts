@@ -112,6 +112,7 @@ const PointGroupsView = ({ projectId }) => {
   return (
     <div className={classes.root}>
       <EditableTable
+        title='Point groups'
         columns={columns}
         AdditionalAction={CourseSelector}
         disabled={editableTableDisabled}

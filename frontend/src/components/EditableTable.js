@@ -111,7 +111,7 @@ export const Type = {
 }
 
 const EditableTable = ({
-  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled
+  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled, title
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
@@ -138,13 +138,15 @@ const EditableTable = ({
   return (
     <Card className={classes.root} elevation={0}>
       <CardHeader
-        action={<>
+        action={(createMutation || AdditionalAction) && <>
           {AdditionalAction && <AdditionalAction />}
-          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
-            <AddIcon />
-          </IconButton>
+          {createMutation &&
+            <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
+              <AddIcon />
+            </IconButton>
+          }
         </>}
-        title='Point groups'
+        title={title}
       />
       <Table className={classes.table}>
         <TableHead>
