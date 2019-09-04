@@ -1,6 +1,6 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege, roleToInt } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
 const isDefined = (val) => val !== undefined
@@ -14,8 +14,32 @@ const ConceptMutations = {
     })
 
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
-
-    return await context.prisma.createConcept({
+    let relevantPointGroups
+    if (roleToInt(context.role) === roleToInt(Role.STUDENT)) {
+      const mainCourse = await context.prisma.workspace({ id: workspaceId }).mainCourse()
+        .sourceTemplate()
+      const sourceCourse = await context.prisma.course({ id: courseId }).sourceCourse()
+      if (mainCourse && sourceCourse && mainCourse.id === sourceCourse.id) {
+        const pointGroups = await context.prisma.workspace({ id: workspaceId })
+          .sourceTemplate().pointGroups().$fragment(`
+          fragment PointGroupWithCourse on PointGroup {
+            id name
+            startDate endDate
+            maxPoints pointsPerConcept
+            course { id }
+          }
+        `)
+        if (pointGroups.length < 0) {
+          relevantPointGroups = pointGroups.filter(group => {
+            const currentTime = new Date().getTime()
+            return group.course.id === mainCourse.id
+            && new Date(group.startDate).getTime() <= currentTime
+            && new Date(group.endDate).getTime() >= currentTime
+          })
+        }
+      }
+    }
+    const createdConcept = await context.prisma.createConcept({
       name,
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
@@ -24,6 +48,44 @@ const ConceptMutations = {
       courses: courseId ? { connect: [{ id: courseId }] } : undefined,
       tags: { create: tags }
     })
+
+    if (createdConcept && relevantPointGroups < 0) {
+      for (const group of relevantPointGroups) {
+        const existingCompletions = await context.prisma.pointGroup({ id: group.id }).completions()
+          .$fragment(`
+            fragment CompletionWithUser on Completion {
+              id
+              conceptAmount
+              user { id }
+            }
+          `)
+        const completionForUser = existingCompletions.find(completion =>
+          completion.user.id === context.user.id)
+        if (completionForUser) {
+          await context.prisma.updateCompletion({
+            where: { id: completionForUser.id },
+            data: {
+              conceptAmount: completionForUser.conceptAmount + 1
+            }
+          })
+        } else {
+          await context.prisma.updatePointGroup({
+            where: { id: group.id },
+            data: {
+              completions: {
+                create: [
+                  {
+                    conceptAmount: 1,
+                    user: { connect: { id: context.user.id } }
+                  }
+                ]
+              }
+            }
+          })
+        }
+      }
+    }
+    return createdConcept
   },
 
   async updateConcept(root, { id, name, description, official, tags, frozen }, context) {
