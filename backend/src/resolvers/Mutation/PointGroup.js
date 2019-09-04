@@ -16,8 +16,10 @@ const checkScalars = (startDate, endDate, maxPoints,
 }
 
 const PointGroupMutations = {
-  async createPointGroup(root, { name, startDate, endDate, maxPoints,
-    pointsPerConcept, courseId, workspaceId }, context) {
+  async createPointGroup(root, {
+    name, startDate, endDate, maxPoints,
+    pointsPerConcept, courseId, workspaceId
+  }, context) {
     await checkAccess(context, {
       minimumRole: Role.STAFF,
       minimumPrivilege: Privilege.EDIT,
@@ -38,8 +40,10 @@ const PointGroupMutations = {
     })
   },
 
-  async updatePointGroup(root, { id, name, startDate, endDate, maxPoints,
-    pointsPerConcept }, context) {
+  async updatePointGroup(root, {
+    id, name, startDate, endDate, maxPoints,
+    pointsPerConcept
+  }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.pointGroup({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.STAFF,

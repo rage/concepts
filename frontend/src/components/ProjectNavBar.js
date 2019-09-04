@@ -6,7 +6,7 @@ import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import {
-  Shuffle as ShuffleIcon, Delete as DeleteIcon,  Edit as EditIcon,
+  Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon,
   MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon
 } from '@material-ui/icons'
 

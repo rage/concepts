@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon,
-  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,  Edit as EditIcon,
+  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon,
   MoreVert as MoreVertIcon, Share as ShareIcon, VerticalSplit as VerticalSplitIcon
 } from '@material-ui/icons'
 
@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
 const downloadFile = (data, fileName) => {
   const element = document.createElement('a')
-  element.href = URL.createObjectURL(new Blob([data], { 'type': 'application/json' }))
+  element.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
   element.download = fileName
   document.body.appendChild(element)
   element.click()
@@ -55,7 +55,7 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
     }
   })
 
-  downloadFile(queryResponse['data']['exportData'], `${workspaceName}.json`)
+  downloadFile(queryResponse.data.exportData, `${workspaceName}.json`)
 }
 
 const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) => {

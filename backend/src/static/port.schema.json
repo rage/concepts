@@ -72,6 +72,19 @@
               true
             ]
           },
+          "tags": {
+            "type": "array",
+            "description": "List of tags",
+            "items": {
+              "type":"object",
+              "description": "Tag",
+              "required": [
+                "name",
+                "type"
+              ]
+            },
+            "additionalProperties": false
+          },
           "prerequisites": {
             "type": "array",
             "description": "List of prerequisite courses for this course",
@@ -121,6 +134,19 @@
                     "Ehtolause"
                   ],
                   "minLength": 1
+                },
+                "tags": {
+                  "type": "array",
+                  "description": "List of tags",
+                  "items": {
+                    "type":"object",
+                    "description": "Tag",
+                    "required": [
+                      "name",
+                      "type"
+                    ]
+                  },
+                  "additionalProperties": false
                 },
                 "official": {
                   "type": "boolean",
