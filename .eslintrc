@@ -161,6 +161,9 @@
     ],
     "no-multi-spaces": [
       "error"
+    ],
+    "space-infix-ops": [
+      "error"
     ]
   }
 }
