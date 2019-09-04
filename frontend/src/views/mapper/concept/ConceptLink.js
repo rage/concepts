@@ -224,7 +224,7 @@ const Line = ({
     recalculate()
   }
 
-  const elCallback =node => {
+  const elCallback = node => {
     el.current = node
     if (linkRef) {
       linkRef.current = node

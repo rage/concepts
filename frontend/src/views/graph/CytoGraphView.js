@@ -310,22 +310,22 @@ const GraphView = ({ workspaceId }) => {
         {
           selector: 'node',
           style: {
-            'label': 'data(label)',
-            'shape': 'round-rectangle',
-            'width': 'label',
-            'height': 'label',
+            label: 'data(label)',
+            shape: 'round-rectangle',
+            width: 'label',
+            height: 'label',
             'background-color': 'data(color)',
             'text-wrap': 'wrap',
             'text-max-width': '200px',
             'text-valign': 'center',
-            'padding': '10px',
-            'display': 'data(display)'
+            padding: '10px',
+            display: 'data(display)'
           }
         },
         {
           selector: 'edge',
           style: {
-            'width': 5,
+            width: 5,
             'line-color': '#ccc',
             'target-arrow-color': '#ccc',
             'mid-target-arrow-shape': 'triangle'
@@ -341,7 +341,7 @@ const GraphView = ({ workspaceId }) => {
         {
           selector: 'edge.highlight',
           style: {
-            'width': 8,
+            width: 8,
             'mid-target-arrow-color': 'data(color)',
             'line-fill': 'linear-gradient',
             'line-gradient-stop-colors': 'data(gradient)'

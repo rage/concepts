@@ -262,7 +262,7 @@ const NavBar = ({ location }) => {
 }
 .navbar-breadcrumbs
     > ol
-    > .MuiBreadcrumbs-separator:nth-of-type(n+${path.length*2}):nth-of-type(even) {
+    > .MuiBreadcrumbs-separator:nth-of-type(n+${path.length * 2}):nth-of-type(even) {
   color: rgba(255, 255, 255, .25)
 }`
           }</style>

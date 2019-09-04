@@ -191,7 +191,7 @@ const PortView = () => {
     case 'minLength':
       return `${error.dataPath.replace('.', '')} must not be empty if set`
     default:
-      return `Unknown error: ${error['message']}`
+      return `Unknown error: ${error.message}`
     }
   }
 
@@ -225,17 +225,17 @@ const PortView = () => {
 
   const addStateDataToJSON = (jsonData) => {
     if (selectState.workspaceId !== '') {
-      jsonData['workspaceId'] = selectState.workspaceId
+      jsonData.workspaceId = selectState.workspaceId
       if (selectState.projectId !== '') {
-        jsonData['projectId'] = selectState.projectId
+        jsonData.projectId = selectState.projectId
       }
-      if (jsonData['workspace']) delete jsonData['workspace']
+      if (jsonData.workspace) delete jsonData.workspace
     } else if (selectState.workspaceName !== '') {
-      jsonData['workspace'] = selectState.workspaceName
+      jsonData.workspace = selectState.workspaceName
       if (selectState.projectId !== '') {
-        jsonData['projectId'] = selectState.projectId
+        jsonData.projectId = selectState.projectId
       }
-      if (jsonData['workspaceId']) delete jsonData['workspaceId']
+      if (jsonData.workspaceId) delete jsonData.workspaceId
     }
   }
 
@@ -342,7 +342,7 @@ const PortView = () => {
                   />
                 }
               >
-                <MenuItem value={''}>
+                <MenuItem value=''>
                   <em>None</em>
                 </MenuItem>
                 {
@@ -372,7 +372,7 @@ const PortView = () => {
                       />
                     }
                   >
-                    <MenuItem value={''}>
+                    <MenuItem value=''>
                       <em>None</em>
                     </MenuItem>
                     {

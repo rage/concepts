@@ -157,7 +157,20 @@
     ],
     "quote-props": [
       "error",
-      "consistent-as-needed"
+      "as-needed"
+    ],
+    "no-multi-spaces": [
+      "error"
+    ],
+    "space-infix-ops": [
+      "error"
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "multiline": true,
+        "consistent": true
+      }
     ]
   }
 }
