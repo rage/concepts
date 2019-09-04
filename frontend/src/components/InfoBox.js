@@ -8,7 +8,7 @@ import userGuide from '../static/userGuide'
 import { setProgress, getUser } from '../lib/userProgress'
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  'root': {
     zIndex: '200',
     width: '400px',
     display: 'flex',
@@ -17,12 +17,12 @@ const useStyles = makeStyles(theme => ({
     boxSizing: 'border-box',
     backgroundColor: theme.palette.primary.main
   },
-  popper: {
-    zIndex: '200',
+  'popper': {
+    'zIndex': '200',
     '&.enableTransition': {
       transition: 'transform .5s linear'
     },
-    animation: '$fadein .5s',
+    'animation': '$fadein .5s',
     '&.fadeout': {
       opacity: 0,
       transition: 'opacity .5s ease-out'
@@ -36,21 +36,21 @@ const useStyles = makeStyles(theme => ({
       opacity: 1
     }
   },
-  infoHeader: {
+  'infoHeader': {
     display: 'flex',
     alignItems: 'center'
   },
-  infoHeaderIcon: {
+  'infoHeaderIcon': {
     flex: '1 1 auto',
     marginTop: '-8px',
     marginLeft: '-13px',
     marginRight: '-4px',
     alignSelf: 'flex-start'
   },
-  headerTitleContainer: {
+  'headerTitleContainer': {
     flex: '1 1 auto'
   },
-  title: {
+  'title': {
     paddingBottom: '0px',
     maxWidth: '100%',
     overflowWrap: 'break-word',
@@ -58,13 +58,13 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '8px',
     color: 'white'
   },
-  icon: {
+  'icon': {
     color: 'white'
   },
-  body: {
+  'body': {
     color: 'white'
   },
-  button: {
+  'button': {
     color: 'white',
     width: '50px',
     borderColor: 'white',

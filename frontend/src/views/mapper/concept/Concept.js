@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     padding: '4px'
   },
   active: {
-    backgroundColor: '#9ecae1',
+    'backgroundColor': '#9ecae1',
     '&:hover': {
       backgroundColor: '#9ecae1'
     },
@@ -42,8 +42,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   listItem: {
-    width: '100%',
-    backgroundColor: '#fff',
+    'width': '100%',
+    'backgroundColor': '#fff',
     '&:focus': {
       backgroundColor: '#fff'
     }

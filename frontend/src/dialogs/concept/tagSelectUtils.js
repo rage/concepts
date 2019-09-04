@@ -25,21 +25,21 @@ export const tagSelectStyles = {
     const color = chroma(data.color)
     return {
       ...styles,
-      backgroundColor: isDisabled
+      'backgroundColor': isDisabled
         ? null
         : isSelected
           ? data.color
           : isFocused
             ? color.alpha(0.1).css()
             : null,
-      color: isDisabled
+      'color': isDisabled
         ? '#ccc'
         : isSelected
           ? chroma.contrast(color, 'white') > 2
             ? 'white'
             : 'black'
           : data.color,
-      cursor: isDisabled ? 'not-allowed' : 'default',
+      'cursor': isDisabled ? 'not-allowed' : 'default',
 
       ':active': {
         ...styles[':active'],
@@ -63,7 +63,7 @@ export const tagSelectStyles = {
   }),
   multiValueRemove: (styles, { data }) => ({
     ...styles,
-    color: data.color,
+    'color': data.color,
     ':hover': {
       backgroundColor: data.color,
       color: 'white'

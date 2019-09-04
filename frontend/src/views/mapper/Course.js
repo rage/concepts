@@ -24,8 +24,8 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: '0px'
   },
   title: {
-    overflowWrap: 'break-word',
-    hyphens: 'auto',
+    'overflowWrap': 'break-word',
+    'hyphens': 'auto',
     '&:hover': {
       textDecoration: 'underline',
       cursor: 'pointer'

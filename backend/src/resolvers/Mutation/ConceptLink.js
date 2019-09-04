@@ -17,8 +17,8 @@ const ConceptLink = {
     })
     if (linkExists) return null
     return await context.prisma.createConceptLink({
-      to:        { connect: { id: to } },
-      from:      { connect: { id: from } },
+      to: { connect: { id: to } },
+      from: { connect: { id: from } },
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
       official: Boolean(official)

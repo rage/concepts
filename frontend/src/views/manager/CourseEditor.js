@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Typography, Button, TextField, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, MenuItem, FormGroup
+  Card, CardHeader, Tooltip, Fade, FormControlLabel, Checkbox, FormControl, MenuItem
 } from '@material-ui/core'
 import { Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 import Select from 'react-select/creatable'

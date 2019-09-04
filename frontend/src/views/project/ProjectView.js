@@ -14,15 +14,15 @@ import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(() => ({
   root: {
-    width: '100%',
-    maxWidth: '1280px',
-    margin: '0 auto',
-    display: 'grid',
+    'width': '100%',
+    'maxWidth': '1280px',
+    'margin': '0 auto',
+    'display': 'grid',
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
-    overflow: 'hidden',
-    gridGap: '16px',
-    gridTemplate: `"header    header"         56px
+    'overflow': 'hidden',
+    'gridGap': '16px',
+    'gridTemplate': `"header    header"         56px
                    "toolbar   toolbar"        40px
                    "templates userWorkspaces" 1fr
                    "merges    userWorkspaces" 1fr

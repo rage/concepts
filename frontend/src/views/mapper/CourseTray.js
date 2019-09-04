@@ -18,12 +18,12 @@ import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: '16px',
-    overflow: 'hidden',
-    boxSizing: 'border-box',
-    borderRadius: '0 0 4px 0',
-    flexDirection: 'column',
-    display: 'none',
+    'padding': '16px',
+    'overflow': 'hidden',
+    'boxSizing': 'border-box',
+    'borderRadius': '0 0 4px 0',
+    'flexDirection': 'column',
+    'display': 'none',
     '&.courseTrayOpen': {
       display: 'flex',
       gridArea: 'courseTray'

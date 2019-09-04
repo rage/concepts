@@ -28,7 +28,7 @@ const client = new ApolloClient({
       if (data.token) {
         operation.setContext({
           headers: {
-            authorization: `Bearer ${data.token}`,
+            'authorization': `Bearer ${data.token}`,
             'X-Concepts-IsMutation': isMutation.toString()
           }
         })
