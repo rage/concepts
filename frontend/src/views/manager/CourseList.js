@@ -189,7 +189,7 @@ const CreateCourse = ({
         onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
         value={input.tags}
-        isMulti={true}
+        isMulti
         menuPlacement='auto'
         placeholder='Themes...'
         menuIsOpen={false}

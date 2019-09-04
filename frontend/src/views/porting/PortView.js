@@ -342,7 +342,7 @@ const PortView = () => {
                   />
                 }
               >
-                <MenuItem value={''}>
+                <MenuItem value=''>
                   <em>None</em>
                 </MenuItem>
                 {
@@ -372,7 +372,7 @@ const PortView = () => {
                       />
                     }
                   >
-                    <MenuItem value={''}>
+                    <MenuItem value=''>
                       <em>None</em>
                     </MenuItem>
                     {
