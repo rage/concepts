@@ -1,3 +1,5 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
@@ -32,6 +34,8 @@ const ConceptLink = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
+    const toDelete = await context.prisma.conceptLink({ id: args.id })
+    if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
     return await context.prisma.deleteConceptLink({
       id: args.id
     })

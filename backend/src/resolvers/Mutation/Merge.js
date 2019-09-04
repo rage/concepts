@@ -19,8 +19,11 @@ query($id: ID!) {
           id
           name
           official
+          frozen
           linksToCourse {
             weight
+            official
+            frozen
             from {
               name
             }
@@ -30,9 +33,12 @@ query($id: ID!) {
             name
             description
             official
+            frozen
             linksToConcept {
               id
               weight
+              official
+              frozen
               from {
                 name
                 courses {
@@ -57,13 +63,16 @@ query($conceptIds: [ID!]!) {
     name
     description
     official
+    frozen
     linksFromConcept {
       id
       to {
         id
       }
       official
+      frozen
       weight
+      count
     }
     linksToConcept {
       id
@@ -71,7 +80,9 @@ query($conceptIds: [ID!]!) {
         id
       }
       official
+      frozen
       weight
+      count
     }
     courses {
       id
@@ -125,10 +136,15 @@ const MergeMutations = {
 
     const mergeLinks = (links, merged) => {
       for (const link of links) {
-        setDefault(merged, link.from.name, {
+        const updatedLink = setDefault(merged, link.from.name, {
           course: link.from.courses ? link.from.courses[0].name : undefined,
-          weight: 0
-        }).weight += link.weight
+          weight: 0,
+          count: 0
+        })
+        updatedLink.weight += link.weight
+        updatedLink.count++
+        updatedLink.official = updatedLink.official || link.official
+        updatedLink.frozen = updatedLink.frozen || link.frozen
       }
     }
 
@@ -139,26 +155,32 @@ const MergeMutations = {
 
     for (const workspace of result.project.activeTemplate.clones) {
       for (const course of workspace.courses) {
-        const { links: courseLinks, concepts } = setDefault(courses, course.name, {
+        const updatedCourse = setDefault(courses, course.name, {
           official: course.official,
+          frozen: course.frozen,
           links: {},
           concepts: {}
         })
-        if (course.official) courses[course.name].official = course.official
+        updatedCourse.official = updatedCourse.official || course.official
+        updatedCourse.frozen = updatedCourse.frozen || course.frozen
 
-        mergeLinks(course.linksToCourse, courseLinks)
+        mergeLinks(course.linksToCourse, updatedCourse.links)
 
         for (const concept of course.concepts) {
           // TODO merge conflicting descriptions?
-          const { links: conceptLinks } = setDefault(concepts, concept.name, {
+          const updatedConcept = setDefault(updatedCourse.concepts, concept.name, {
             description: concept.description,
             official: concept.official,
+            frozen: concept.frozen,
             course: course.name,
-            links: {}
+            links: {},
+            count: 0
           })
-          if (concept.official) concepts[concept.name].official = concept.official
+          updatedConcept.count++
+          updatedConcept.official = updatedConcept.official || concept.official
+          updatedConcept.frozen = updatedConcept.frozen || concept.frozen
 
-          mergeLinks(concept.linksToConcept, conceptLinks)
+          mergeLinks(concept.linksToConcept, updatedConcept.links)
         }
       }
     }
@@ -183,11 +205,12 @@ const MergeMutations = {
             official,
             createdBy: { connect: { id: context.user.id } },
             concepts: {
-              create: Object.entries(concepts).map(([name, { official, description }]) => ({
+              create: Object.entries(concepts).map(([name, { official, description, count }]) => ({
                 id: hash(courseName, name),
                 name,
                 description,
                 official,
+                count,
                 createdBy: { connect: { id: context.user.id } },
                 workspace: { connect: { id: workspaceId } }
               }))
@@ -197,11 +220,12 @@ const MergeMutations = {
       courseLinks: {
         create: Object.entries(courses)
           .flatMap(([toCourse, { links }]) => Object.entries(links)
-            .map(([fromCourse, { weight }]) => ({
+            .map(([fromCourse, { weight, count }]) => ({
               createdBy: { connect: { id: context.user.id } },
               from: { connect: { id: hash(fromCourse) } },
               to: { connect: { id: hash(toCourse) } },
-              weight
+              weight: Math.round(weight / count),
+              count
             }))
           )
       },
@@ -209,11 +233,12 @@ const MergeMutations = {
         create: Object.entries(courses)
           .flatMap(([toCourse, { concepts }]) => Object.entries(concepts)
             .flatMap(([toConcept, { links }]) => Object.entries(links)
-              .map(([fromConcept, { course: fromCourse, weight }]) => ({
+              .map(([fromConcept, { course: fromCourse, weight, count }]) => ({
                 createdBy: { connect: { id: context.user.id } },
                 from: { connect: { id: hash(fromCourse, fromConcept) } },
                 to: { connect: { id: hash(toCourse, toConcept) } },
-                weight
+                weight: Math.round(weight / count),
+                count
               }))
             )
           )
@@ -221,7 +246,7 @@ const MergeMutations = {
     })
   },
   async mergeConcepts(root, {
-    workspaceId, conceptIds, courseId, name, description, official, tags
+    workspaceId, conceptIds, courseId, name, description, official, frozen, tags
   }, context) {
     await checkAccess(context, {
       minimumRole: official ? Role.STAFF : Role.GUEST,
@@ -250,23 +275,27 @@ const MergeMutations = {
       id_in: conceptIds
     })
 
-    const links = (src, type) => {
+    const generateLinks = (src, type) => {
       const data = Object.values(concepts).flatMap(concept => concept[`links${src}Concept`])
-      const ids = data.map(link => link[type].id)
-      return data
-        .filter((item, index) =>
-          ids.indexOf(item[type].id) === index
-          && !conceptIds.includes(item[type].id))
-        .map(link => ({
-          ...(type === 'from'
-            ? { from: { connect: { id: link.from.id } } }
-            : { to: { connect: { id: link.to.id } } }
-          ),
+        .filter(item => !conceptIds.includes(item[type].id))
+      const linksMap = {}
+      for (const link of data) {
+        const key = link[type].id
+        const updatedLink = setDefault(linksMap, key, {
+          [type]: { connect: { id: link[type].id } },
           official: official && link.official,
-          weight: link.weight,
+          frozen: frozen && link.frozen,
+          weight: 0,
+          count: 0,
           workspace: { connect: { id: workspaceId } },
           createdBy: { connect: { id: context.user.id } }
-        }))
+        })
+        updatedLink.weight += link.weight
+        updatedLink.count += link.count
+      }
+      return Object.values(linksMap).map(link => ({
+        ...link, weight: Math.round(link.weight / link.count)
+      }))
     }
 
     return await context.prisma.createConcept({
@@ -274,8 +303,8 @@ const MergeMutations = {
       description,
       official,
       tags: { create: tags },
-      linksFromConcept: { create: links('From', 'to') },
-      linksToConcept: { create: links('To', 'from') },
+      linksFromConcept: { create: generateLinks('From', 'to') },
+      linksToConcept: { create: generateLinks('To', 'from') },
 
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
