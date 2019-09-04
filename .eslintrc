@@ -158,6 +158,9 @@
     "quote-props": [
       "error",
       "consistent-as-needed"
+    ],
+    "no-multi-spaces": [
+      "error"
     ]
   }
 }

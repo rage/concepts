@@ -137,7 +137,7 @@ const CreateCourse = ({
 
   const onSubmit = evt => {
     evt.preventDefault()
-    submit({ ...input,  tags: selectToBackend(input.tags) })
+    submit({ ...input, tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
       setInput({ name: '', tags: [], official: false })

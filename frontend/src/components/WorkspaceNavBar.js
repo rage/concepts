@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon,
-  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon,  Edit as EditIcon,
+  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon,
   MoreVert as MoreVertIcon, Share as ShareIcon, VerticalSplit as VerticalSplitIcon
 } from '@material-ui/icons'
 

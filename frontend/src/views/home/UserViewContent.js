@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core'
 import { useQuery } from 'react-apollo-hooks'
 
 import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
-import WorkspaceList  from './WorkspaceList'
+import WorkspaceList from './WorkspaceList'
 import ProjectList from './ProjectList'
 import LoadingBar from '../../components/LoadingBar'
 
