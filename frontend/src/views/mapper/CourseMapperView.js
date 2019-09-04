@@ -248,9 +248,9 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       <MenuItem onClick={deleteLink}>Delete link</MenuItem>
     </Menu>
     {addingLink && <ConceptLink
-      key='concept-link-creating' active={true}
+      key='concept-link-creating' active
       from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-      followMouse={true} posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
+      followMouse posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
     />}
   </>
 }

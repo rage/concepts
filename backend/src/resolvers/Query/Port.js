@@ -1,12 +1,13 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { NotFoundError } = require('../../errors')
 
 const exportQuery = `
 query($id : ID!) {
   workspace(where: {
     id: $id
   }) {
-    id
-    name
+    workspaceId: id
+    workspace: name
     courses {
       name
       official
@@ -20,6 +21,14 @@ query($id : ID!) {
             name
           }
         }
+        tags {
+          name
+          type
+        }
+      }
+      tags {
+        name
+        type
       }
       prerequisites: linksToCourse {
         official
@@ -44,55 +53,24 @@ const PortQueries = {
       id: workspaceId
     })
 
-    const workspace = result['workspace']
-
-    if (!workspace) {
-      throw new Error('Workspace not found')
+    if (!result.workspace) {
+      throw new NotFoundError('workspace')
     }
+
+    const prereqMap = ({ from, official }) => ({ name: from.name, official })
 
     // Create json from workspace
-    const jsonData = {
-      'workspaceId': workspace.id,
-      'workspace': workspace.name,
-      'courses': []
-    }
-
-    for (const course of workspace['courses']) {
-      const courseData = {
-        'name': course['name'],
-        'official': course['official'],
-        'concepts': [],
-        'prerequisites': []
-      }
-      for (const prerequisiteCourse of course['prerequisites']) {
-        courseData['prerequisites'].push({
-          'name': prerequisiteCourse['from']['name'],
-          'official': prerequisiteCourse['official']
-        })
-      }
-      for (const concept of course['concepts']) {
-        const conceptData = {
-          'name': concept['name'],
-          'official': concept['official'],
-          'description': concept['description'],
-          'prerequisites': []
-        }
-        for (const prerequisiteConcept of concept['prerequisites']) {
-          // Add concept prerequisite to concept
-          conceptData['prerequisites'].push({
-            'name': prerequisiteConcept['from']['name'],
-            'official': prerequisiteConcept['official']
-          })
-        }
-        // Add concept to course
-        courseData['concepts'].push(conceptData)
-      }
-
-      // Add course prerequisites
-      jsonData['courses'].push(courseData)
-    }
-
-    return JSON.stringify(jsonData)
+    return JSON.stringify({
+      ...result.workspace,
+      courses: result.workspace.courses.map(({ concepts, prerequisites, ...course }) => ({
+        ...course,
+        concepts: concepts.map(({ prerequisites, ...concept }) => ({
+          ...concept,
+          prerequisites: prerequisites.map(prereqMap)
+        })),
+        prerequisites: prerequisites.map(prereqMap)
+      }))
+    })
   }
 }
 

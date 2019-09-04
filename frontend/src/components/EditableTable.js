@@ -5,7 +5,7 @@ import {
   TableRow, Card, TextField, IconButton, CardHeader
 } from '@material-ui/core'
 import {
-  Add as AddIcon, Delete as DeleteIcon,  Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
+  Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
 } from '@material-ui/icons'
 import { DateTimePicker } from '@material-ui/pickers'
 import moment from 'moment'

@@ -131,7 +131,7 @@ const ActiveCourse = ({
           <Concept
             conceptLinkRef={index === 0 ? conceptLinkRef : undefined}
             activeConceptRef={index === 0 ? activeConceptRef : undefined}
-            isActive={true}
+            isActive
             concept={concept}
             key={concept.id}
             focusedConceptIds={focusedConceptIds}

@@ -1,10 +1,14 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
+
+const isDefined = (val) => val !== undefined
 
 const ConceptMutations = {
   async createConcept(root, { name, description, official, courseId, workspaceId, tags }, context) {
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -22,10 +26,10 @@ const ConceptMutations = {
     })
   },
 
-  async updateConcept(root, { id, name, description, official, tags }, context) {
+  async updateConcept(root, { id, name, description, official, tags, frozen }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) || isDefined(frozen) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -33,6 +37,9 @@ const ConceptMutations = {
     const oldTags = await context.prisma.concept({ id }).tags()
     const oldConcept = await context.prisma.concept({ id })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
+
+    if (oldConcept.frozen && frozen !== false)
+      throw new ForbiddenError('This concept is frozen')
 
     const tagsToDelete = oldTags
       .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
@@ -45,7 +52,8 @@ const ConceptMutations = {
         delete: tagsToDelete,
         create: tagsToCreate
       },
-      official: Boolean(official)
+      official: Boolean(official),
+      frozen: Boolean(frozen)
     }
 
     if (description !== undefined) data.description = description
@@ -70,11 +78,13 @@ const ConceptMutations = {
     const toDelete = await context.prisma.concept({ id }).$fragment(`
       fragment ConceptWithCourse on Concept {
         id
+        frozen
         courses {
           id
         }
       }
     `)
+    if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
     await context.prisma.deleteConcept({ id })
     return {
       id: toDelete.id,

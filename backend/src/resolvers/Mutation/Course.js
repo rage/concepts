@@ -1,10 +1,14 @@
+const { ForbiddenError } = require('apollo-server-core')
+
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
+
+const isDefined = (val) => val !== undefined
 
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, tags }, context) {
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -25,6 +29,8 @@ const CourseQueries = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
+    const toDelete = await context.prisma.conceptLink({ id })
+    if (toDelete.frozen) throw new ForbiddenError('This course is frozen')
     await context.prisma.deleteManyCourseLinks({
       OR: [
         { from: { id } },
@@ -34,15 +40,18 @@ const CourseQueries = {
     return await context.prisma.deleteCourse({ id })
   },
 
-  async updateCourse(root, { id, name, official, tags }, context) {
+  async updateCourse(root, { id, name, official, frozen, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: isDefined(official) || isDefined(frozen) ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldCourse = await context.prisma.course({ id })
+
+    if (oldCourse.frozen && frozen !== false)
+      throw new ForbiddenError('This course is frozen')
 
     const oldTags = await context.prisma.course({ id }).tags()
     const tagsToDelete = oldTags
@@ -56,7 +65,8 @@ const CourseQueries = {
         delete: tagsToDelete,
         create: tagsToCreate
       },
-      official: Boolean(official)
+      official: Boolean(official),
+      frozen: Boolean(frozen)
     }
     if (name !== undefined) {
       if (!belongsToTemplate && name !== oldCourse.name) data.official = false

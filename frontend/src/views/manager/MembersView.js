@@ -72,7 +72,7 @@ const MembersView = ({ projectId, workspaceId }) => {
       <EditableTable
         columns={columns}
         rows={privileges.map(pcp => ({
-          id: pcp.user.id,
+          id: `${pcp.user.role} ${pcp.user.id}`,
           privilege: pcp.privilege,
           token: pcp.token ? pcp.token.id : ''
         }))}

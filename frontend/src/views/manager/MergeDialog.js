@@ -53,7 +53,7 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
         styles={tagSelectStyles}
         options={Object.values(TaxonomyTags)}
         value={state.tags}
-        isMulti={true}
+        isMulti
         menuPlacement='auto'
         menuPosition='fixed'
       />
@@ -116,7 +116,7 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
       .filter(concept => conceptIds.has(concept.id))
 
   return (
-    <Dialog open={open} onClose={close} fullWidth={true} maxWidth='sm'>
+    <Dialog open={open} onClose={close} fullWidth maxWidth='sm'>
       <DialogTitle>Merge concepts</DialogTitle>
       <form onSubmit={submit}>
         <DialogContent>
