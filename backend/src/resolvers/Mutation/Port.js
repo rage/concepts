@@ -70,7 +70,8 @@ const PortMutations = {
         name: course['name'],
         official: canSetOfficial && Boolean(json['projectId'] || course['official']),
         createdBy: { connect: { id: context.user.id } },
-        workspace: { connect: { id: workspace.id } }
+        workspace: { connect: { id: workspace.id } }, 
+        tags: { create: course['tags']}
       })
 
       const concepts = await Promise.all(course['concepts'].map(async concept =>
@@ -80,7 +81,8 @@ const PortMutations = {
           official: canSetOfficial && Boolean(json['projectId'] || concept['official']),
           createdBy: { connect: { id: context.user.id } },
           workspace: { connect: { id: workspace.id } },
-          courses: { connect: [{ id: courseObj.id }] }
+          courses: { connect: [{ id: courseObj.id }] },
+          tags: { create: concept['tags']}
         })
       ))
 
