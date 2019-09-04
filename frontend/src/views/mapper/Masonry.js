@@ -3,23 +3,23 @@ import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   masonry: {
-    'width': '100%',
-    'boxSizing': 'border-box',
-    'columnCount': 1,
+    width: '100%',
+    boxSizing: 'border-box',
+    columnCount: 1,
     '@media screen and (min-width: 1000px)': {
-      'columnCount': 2,
+      columnCount: 2,
       '&.courseTrayOpen': {
         columnCount: 1
       }
     },
     '@media screen and (min-width: 1500px)': {
-      'columnCount': 3,
+      columnCount: 3,
       '&.courseTrayOpen': {
         columnCount: 2
       }
     },
     '@media screen and (min-width: 2000px)': {
-      'columnCount': 4,
+      columnCount: 4,
       '&.courseTrayOpen': {
         columnCount: 3
       }

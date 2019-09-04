@@ -157,7 +157,7 @@
     ],
     "quote-props": [
       "error",
-      "consistent-as-needed"
+      "as-needed"
     ],
     "no-multi-spaces": [
       "error"

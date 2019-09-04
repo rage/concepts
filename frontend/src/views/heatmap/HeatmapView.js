@@ -16,19 +16,19 @@ const cellDimension = {
 
 const useStyles = makeStyles(theme => ({
   scrollSyncTable: {
-    'overflow': 'auto',
-    'maxHeight': '100%',
-    'maxWidth': '100%',
+    overflow: 'auto',
+    maxHeight: '100%',
+    maxWidth: '100%',
     '& > table': {
-      'position': 'relative',
-      'borderCollapse': 'collapse',
+      position: 'relative',
+      borderCollapse: 'collapse',
       '& th': {
         position: 'sticky',
         top: 0,
         background: '#fff'
       },
       '& > thead th': {
-        'color': '#000',
+        color: '#000',
         '&:first-child': {
           left: 0,
           zIndex: 1
@@ -41,31 +41,31 @@ const useStyles = makeStyles(theme => ({
     }
   },
   tableCell: {
-    'width': `${cellDimension.width}px`,
-    'height': `${cellDimension.height}px`,
+    width: `${cellDimension.width}px`,
+    height: `${cellDimension.height}px`,
     '&:hover': {
-      'outline': '50px solid rgba(0, 0, 0, 0.05)',
-      'outlineOffset': '-50px',
-      'cursor': 'pointer',
+      outline: '50px solid rgba(0, 0, 0, 0.05)',
+      outlineOffset: '-50px',
+      cursor: 'pointer',
       '& + div': {
         display: 'block'
       }
     },
-    'backgroundColor': '#ebedf0'
+    backgroundColor: '#ebedf0'
   },
   headerCell: {
-    'minWidth': `${cellDimension.width}px`,
-    'minHeight': '100%',
-    'boxShadow': '0 1px 0 0 black',
-    'padding': '0 0 10px 0',
+    minWidth: `${cellDimension.width}px`,
+    minHeight: '100%',
+    boxShadow: '0 1px 0 0 black',
+    padding: '0 0 10px 0',
     '& > div': {
-      'width': '50px',
-      'height': '160px',
+      width: '50px',
+      height: '160px',
       '& > div': {
-        'transform': 'translate(-61px, 61px) rotate(-90deg)',
-        'width': '170px',
-        'maxHeight': '50px',
-        'paddingLeft': '5px',
+        transform: 'translate(-61px, 61px) rotate(-90deg)',
+        width: '170px',
+        maxHeight: '50px',
+        paddingLeft: '5px',
         '& > div': {
           hyphens: 'auto',
           maxWidth: '130px',
@@ -75,9 +75,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   blankHeaderCell: {
-    'boxShadow': '1px 1px 0 0 black',
-    'minWidth': '150px',
-    'minHeight': '150px',
+    boxShadow: '1px 1px 0 0 black',
+    minWidth: '150px',
+    minHeight: '150px',
     '& > div.prerequisite': {
       position: 'absolute',
       transform: 'translate(34px, 24px) rotate(-90deg)',

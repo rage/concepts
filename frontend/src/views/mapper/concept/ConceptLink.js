@@ -169,9 +169,9 @@ const useLineStyles = makeStyles({
     }
   },
   linetoLine: {
-    'position': 'absolute',
-    'pointerEvents': 'none',
-    'borderTop': '3px solid rgba(117, 117, 117, 0.15)',
+    position: 'absolute',
+    pointerEvents: 'none',
+    borderTop: '3px solid rgba(117, 117, 117, 0.15)',
     '&.linetoActive': {
       borderTopColor: '#f50057'
     }

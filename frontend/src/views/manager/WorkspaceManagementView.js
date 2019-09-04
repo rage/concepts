@@ -16,15 +16,15 @@ import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(() => ({
   root: {
-    'width': '100%',
-    'maxWidth': '1280px',
-    'margin': '0 auto',
-    'display': 'grid',
+    width: '100%',
+    maxWidth: '1280px',
+    margin: '0 auto',
+    display: 'grid',
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
-    'overflow': 'hidden',
-    'gridGap': '16px',
-    'gridTemplate': `"header  header"    56px
+    overflow: 'hidden',
+    gridGap: '16px',
+    gridTemplate: `"header  header"    56px
                    "courses newCourse" 1fr
                   / 1fr     1fr`,
     '@media screen and (max-width: 1312px)': {
@@ -42,16 +42,16 @@ const useStyles = makeStyles(() => ({
     gridArea: 'toolbar'
   },
   courses: {
-    'gridArea': 'courses',
-    'overflow': 'hidden',
+    gridArea: 'courses',
+    overflow: 'hidden',
     '& > div': {
       height: '100%',
       overflow: 'auto'
     }
   },
   newCourse: {
-    'gridArea': 'newCourse',
-    'overflow': 'hidden',
+    gridArea: 'newCourse',
+    overflow: 'hidden',
     '& > div': {
       height: '100%',
       overflow: 'auto'

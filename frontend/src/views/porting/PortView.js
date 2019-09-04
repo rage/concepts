@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1)
   },
   buttonSuccess: {
-    'backgroundColor': green[500],
+    backgroundColor: green[500],
     '&:hover': {
       backgroundColor: green[700]
     }

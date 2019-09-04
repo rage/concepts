@@ -14,9 +14,9 @@ const dividerLine = {
 
 const useStyles = makeStyles({
   root: {
-    'overflow': 'hidden',
-    'textAlign': 'center',
-    'color': '#333',
+    overflow: 'hidden',
+    textAlign: 'center',
+    color: '#333',
     '&:before': {
       ...dividerLine,
       right: '0.5em',

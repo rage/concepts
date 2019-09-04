@@ -24,8 +24,8 @@ const useStyles = makeStyles(() => ({
     color: 'inherit'
   },
   savingIndicator: {
-    'fontSize': '.6em',
-    'color': 'rgba(255, 255, 255, 0.6)',
+    fontSize: '.6em',
+    color: 'rgba(255, 255, 255, 0.6)',
     '&:not(.logged-in)': {
       display: 'none'
     }

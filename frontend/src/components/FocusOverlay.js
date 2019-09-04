@@ -2,15 +2,15 @@ import React, { useContext, useState, createContext, useRef, useEffect } from 'r
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
-  'root': {
-    'position': 'fixed',
-    'top': 0,
-    'right': 0,
-    'bottom': 0,
-    'left': 0,
-    'backgroundColor': 'rgba(0, 0, 0, 0.4)',
-    'zIndex': 100,
-    'animation': '$fadein .5s',
+  root: {
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    zIndex: 100,
+    animation: '$fadein .5s',
     '&.fadeout': {
       opacity: 0,
       transition: 'opacity .5s ease-out'
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     }
   },
 
-  'box': {
+  box: {
     position: 'fixed'
   },
 

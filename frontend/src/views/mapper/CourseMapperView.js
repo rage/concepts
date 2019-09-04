@@ -21,24 +21,24 @@ import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(() => ({
   root: {
-    'display': 'grid',
+    display: 'grid',
     // For some reason, this makes the 1fr sizing work without needing to hardcode heights of other
     // objects in the parent-level grid.
-    'overflow': 'hidden',
-    'gridTemplate': `"traySpacer traySpacer contentHeader activeHeader" 42px
+    overflow: 'hidden',
+    gridTemplate: `"traySpacer traySpacer contentHeader activeHeader" 42px
                    "courseTray trayButton courses       activeCourse" 1fr
                   / 0          64px       8fr           3fr`,
     '&.courseTrayOpen': {
       gridTemplateColumns: '3fr 64px 7fr 3fr'
     },
     '@media screen and (max-width: 1999px)': {
-      'gridTemplateColumns': '0 64px 6fr 3fr',
+      gridTemplateColumns: '0 64px 6fr 3fr',
       '&.courseTrayOpen': {
         gridTemplateColumns: '3fr 64px 5fr 3fr'
       }
     },
     '@media screen and (max-width: 1499px)': {
-      'gridTemplateColumns': '0 64px 4fr 3fr',
+      gridTemplateColumns: '0 64px 4fr 3fr',
       '&.courseTrayOpen': {
         gridTemplateColumns: '3fr 64px 3fr 3fr'
       }
