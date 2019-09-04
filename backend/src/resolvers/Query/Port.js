@@ -6,8 +6,8 @@ query($id : ID!) {
   workspace(where: {
     id: $id
   }) {
-    id
-    name
+    workspaceId: id
+    workspace: name
     courses {
       name
       official
@@ -22,17 +22,13 @@ query($id : ID!) {
           }
         }
         tags {
-          id
           name
           type
-          priority
         }
       }
       tags {
-        id
         name
         type
-        priority
       }
       prerequisites: linksToCourse {
         official
@@ -61,34 +57,18 @@ const PortQueries = {
       throw new NotFoundError('workspace')
     }
 
+    const prereqMap = ({ from, official }) => ({ name: from.name, official })
+
     // Create json from workspace
     return JSON.stringify({
-      workspaceId: result.workspace.id,
-      workspace: result.workspace.name,
-      courses: result.workspace.courses.map(course => ({
-        name: course.name,
-        official: course.official,
-        concepts: course.concepts.map(concept => ({
-          name: concept.name,
-          official: concept.official,
-          description: concept.description,
-          prerequisites: concept.prerequisites.map(prereq => ({
-            name: prereq.from.name,
-            official: prereq.official
-          })),
-          tags: concept.tags.map(tag => ({
-            name: tag.name,
-            type: tag.type
-          }))
+      ...result.workspace,
+      courses: result.workspace.courses.map(({ concepts, prerequisites, ...course }) => ({
+        ...course,
+        concepts: concepts.map(({ prerequisites, ...concept }) => ({
+          ...concept,
+          prerequisites: prerequisites.map(prereqMap)
         })),
-        prerequisites: course.prerequisites.map(prereq => ({
-          name: prereq.from.name,
-          official: prereq.official
-        })),
-        tags: course.tags.map(tag => ({
-          name: tag.name,
-          type: tag.type
-        }))
+        prerequisites: prerequisites.map(prereqMap)
       }))
     })
   }
