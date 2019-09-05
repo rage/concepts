@@ -283,7 +283,7 @@ const initialState = {
   description: '',
   tags: [],
   bloomTag: '',
-  official: false
+  official: undefined
 }
 
 const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }) => {
