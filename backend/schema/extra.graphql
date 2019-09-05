@@ -42,6 +42,8 @@ type Query {
 
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace
+  workspaceMemberInfo(id: ID!): [MemberInfo]!
+  projectMemberInfo(id: ID!): [MemberInfo]!
 }
 
 type Mutation {
@@ -97,20 +99,12 @@ type Mutation {
   updateUser(id: ID!, guideProgress: Int!): User
 
   # Sharing
-  createWorkspaceParticipant(workspaceId: ID!, privilege: Privilege!, userId: ID!): WorkspaceParticipant
-  updateWorkspaceParticipant(id: ID!, privilege: Privilege!): WorkspaceParticipant
-  deleteWorkspaceParticipant(id: ID!): WorkspaceParticipant
-
-  # Participant
-  createProjectParticipant(projectId: ID!, privilege: Privilege!, userId: ID!): ProjectParticipant
-  updateProjectParticipant(id: ID!, privilege: Privilege!): ProjectParticipant
-  deleteProjectParticipant(id: ID!): ProjectParticipant
-
-  # Token
   createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
   createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
   deleteToken(id: ID!): ProjectOrWorkspaceToken
   useToken(id: ID!): ProjectOrWorkspaceParticipant
+  updateParticipant(type: Type!, id: ID!, privilege: Privilege!): IDAndPrivilege
+  deleteParticipant(type: Type!, id: ID!): ID
 
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
@@ -120,6 +114,16 @@ type Mutation {
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
+
+type IDAndPrivilege {
+  id: ID!
+  privilege: Privilege!
+}
+
+enum Type {
+  PROJECT
+  WORKSPACE
+}
 
 type LimitedProject {
   id: ID!
@@ -149,4 +153,22 @@ input TagUpdateInput {
   name: String!
   type: String
   priority: Int
+}
+
+type MemberInfo {
+  participantId: ID!
+  id: ID!
+  role: Role
+  privilege: Privilege
+  token: LimitedToken
+  tmcId: ID
+  name: String
+  email: String
+  username: String
+}
+
+type LimitedToken {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
 }

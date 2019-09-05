@@ -1,6 +1,8 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
+const {
+  checkAccess, checkPrivilege, Role, Privilege, privilegeToInt
+} = require('../../accessControl')
 
 const cloneTokenProjectQuery = `
 query($id: ID!, $userId: ID!) {
@@ -58,38 +60,6 @@ const WorkspaceQueries = {
       id: context.user.id
     }).workspaceParticipations()
   },
-  async peekToken(root, { id }, context) {
-    await checkAccess(context, { minimumRole: Role.GUEST })
-    let privilege
-    if (id[0] === 'w') {
-      privilege = await context.prisma.workspaceToken({ id }).privilege()
-    } else if (id[0] === 'p') {
-      privilege = await context.prisma.projectToken({ id }).privilege()
-    } else {
-      throw Error('invalid share token')
-    }
-    if (privilege === Privilege.CLONE && id[0] === 'p') {
-      const data = await context.prisma.$graphql(cloneTokenProjectQuery, {
-        id,
-        userId: context.user.id
-      })
-      return {
-        __typename: 'LimitedProject',
-        id: data.projectToken.project.id,
-        name: data.projectToken.project.name,
-        activeTemplateId: data.projectToken.project.activeTemplate.id,
-        participants: data.projectToken.project.participants
-      }
-    }
-    if (privilegeToInt(privilege) < privilegeToInt(Privilege.READ)) {
-      throw new ForbiddenError('Token does not allow reading')
-    }
-
-    if (id[0] === 'w') {
-      return await context.prisma.workspaceToken({ id }).workspace()
-    }
-    return await context.prisma.projectToken({ id }).project()
-  },
   async workspaceBySourceTemplate(root, { sourceId }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
     const res = await context.prisma.$graphql(workspaceBySourceTemplateQuery, {
@@ -97,6 +67,37 @@ const WorkspaceQueries = {
     })
     return res.user.workspaceParticipations[0] &&
       res.user.workspaceParticipations[0].workspace
+  },
+  async workspaceMemberInfo(root, { id }, context) {
+    await checkAccess(context, { workspaceId: id, minimumPrivilege: Privilege.READ })
+    const data = await context.prisma.workspace({ id }).$fragment(`
+      fragment WorkspaceParticipants on Workspace {
+        participants {
+          id
+          privilege
+          token {
+            id
+            privilege
+            revoked
+          }
+          user {
+            id
+            tmcId
+            role
+          }
+        }
+      }
+    `)
+    const participants = data.participants.map(pcp => ({
+      participantId: pcp.id,
+      privilege: pcp.privilege,
+      token: pcp.token,
+      ...pcp.user
+    }))
+    if (checkPrivilege(context, { workspaceId: id, minimumPrivilege: Privilege.OWNER })) {
+      // TODO add name/email/username to participants
+    }
+    return participants
   }
 }
 

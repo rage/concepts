@@ -1,20 +1,5 @@
 import { gql } from 'apollo-boost'
 
-const ALL_WORKSPACES = gql`
-{
-  allWorkspaces {
-    id
-    name
-    participants {
-      privilege
-      user {
-        id
-      }
-    }
-  }
-}
-`
-
 const COURSES_FOR_WORKSPACE_FRAGMENT = gql`
 fragment coursesForWorkspace on Workspace {
   id
@@ -113,22 +98,41 @@ query workspaceById($id: ID!) {
 }
 `
 
+const WORKSPACE_BY_ID_MEMBER_INFO = gql`
+query workspaceMemberInfo($id: ID!) {
+  workspaceMemberInfo(id: $id) {
+    participantId
+    id
+    role
+    privilege
+    token {
+      id
+      revoked
+    }
+    tmcId
+    name
+    email
+    username
+  }
+}
+`
+
 const WORKSPACE_DATA_FOR_GRAPH = gql`
 query workspaceById($id: ID!) {
-workspaceById(id: $id) {
-  id
-  ...coursesForWorkspace
-}
+  workspaceById(id: $id) {
+    id
+    ...coursesForWorkspace
+  }
 }
 ${COURSES_FOR_WORKSPACE_FRAGMENT}
 `
 
 const WORKSPACE_COURSES_AND_CONCEPTS = gql`
 query workspaceById($id: ID!) {
-workspaceById(id: $id) {
-  id
-  ...coursesForWorkspace
-}
+  workspaceById(id: $id) {
+    id
+    ...coursesForWorkspace
+  }
 }
 ${COURSES_FOR_WORKSPACE_FRAGMENT}
 `
@@ -143,9 +147,9 @@ query workspaceBySourceTemplate($sourceId: ID!) {
 `
 
 export {
-  ALL_WORKSPACES,
   WORKSPACES_FOR_USER,
   WORKSPACE_BY_ID,
+  WORKSPACE_BY_ID_MEMBER_INFO,
   WORKSPACE_COURSES_AND_CONCEPTS,
   WORKSPACE_DATA_FOR_GRAPH,
   WORKSPACE_BY_SOURCE_TEMPLATE,

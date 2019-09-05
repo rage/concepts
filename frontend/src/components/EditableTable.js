@@ -186,10 +186,10 @@ const EditTableRow = ({ columns, classes, state, setState, disabled, submit, can
   <TableRow>
     {columns.map(col => (
       <TableCell key={col.field} className={classes.tableCell}>
-        {!col.readOnly
+        {!col.hidden && (!col.readOnly
           ? <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
           : <col.type.DisplayComponent classes={classes} col={col} value={state[col.field]} />
-        }
+        )}
       </TableCell>
     ))}
     <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
@@ -210,7 +210,7 @@ const DisplayTableRow = ({
   columns, classes, data, editing, setEditing, disabled, iconColor, deleteRow
 }) => (
   <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-    {columns.map(col => (
+    {columns.map(col => !col.hidden && (
       <TableCell key={col.field} className={classes.tableCell}>
         <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
       </TableCell>
@@ -241,8 +241,11 @@ const EditableTableRow = ({
     try {
       const response = await updateMutation(variables)
       setEditing(null)
-      const newData = response.data.updatePointGroup
-      setState(Object.fromEntries(columns.map(col => [col.field, newData[col.field]])))
+      if (response) {
+        setState(Object.fromEntries(columns.map(col =>
+          [col.field, response.hasOwnProperty(col.field) ? response[col.field] : state[col.field]]
+        )))
+      }
     } catch (err) {
       messageDispatch({
         type: 'setError',

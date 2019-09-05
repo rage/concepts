@@ -123,7 +123,8 @@ const PointGroupsView = ({ projectId }) => {
             ...args
           }
         })}
-        updateMutation={args => updatePointGroup({ variables: { ...args } })}
+        updateMutation={async args =>
+          (await updatePointGroup({ variables: { ...args } })).data.updatePointGroup}
         deleteMutation={args => deletePointGroup({ variables: { ...args } })}
         rows={activeTemplate ? activeTemplate.pointGroups.filter(group =>
           group.course.id === (mainCourse && mainCourse.id)) : []}

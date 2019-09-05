@@ -1,12 +1,16 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from 'react-apollo-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
-import { PROJECT_BY_ID, WORKSPACE_BY_ID } from '../../graphql/Query'
+import {
+  PROJECT_BY_ID, PROJECT_BY_ID_MEMBER_INFO, WORKSPACE_BY_ID, WORKSPACE_BY_ID_MEMBER_INFO
+} from '../../graphql/Query'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import EditableTable, { Type } from '../../components/EditableTable'
+import { useLoginStateValue } from '../../store'
+import { DELETE_PARTICIPANT, UPDATE_PARTICIPANT } from '../../graphql/Mutation'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -18,6 +22,10 @@ const useStyles = makeStyles(() => ({
 
 Type.PRIVILEGE = {
   ...Type.TEXT,
+  DisplayComponent: ({ value, ...props }) => Type.TEXT.DisplayComponent({
+    value: value.substr(0, 1) + value.substr(1).toLowerCase(),
+    ...props
+  }),
   EditComponent: ({ col, state, setState }) => (
     <TextField
       select
@@ -27,7 +35,7 @@ Type.PRIVILEGE = {
       margin='none'
     >
       <MenuItem value='CLONE'>Clone</MenuItem>
-      <MenuItem value='READ'>Read</MenuItem>
+      <MenuItem value='VIEW'>View</MenuItem>
       <MenuItem value='EDIT'>Edit</MenuItem>
       <MenuItem value='OWNER'>Owner</MenuItem>
     </TextField>
@@ -41,52 +49,75 @@ Type.SHARE_TOKEN = {
 }
 
 const columns = [
-  { title: 'User', field: 'id', type: Type.TEXT, readOnly: true },
+  { title: 'User', field: 'name', type: Type.TEXT, readOnly: true },
   { title: 'Privilege', field: 'privilege', type: Type.PRIVILEGE },
-  { title: 'Token', field: 'token', type: Type.SHARE_TOKEN }
+  { title: 'Token', field: 'token', type: Type.SHARE_TOKEN, readOnly: true },
+  { field: 'id', type: Type.TEXT, hidden: true }
 ]
 
 const MembersView = ({ projectId, workspaceId }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
 
-  const projectQuery = useQuery(PROJECT_BY_ID, {
-    variables: { id: projectId },
-    skip: !projectId
+  const mainQueryType = projectId ? PROJECT_BY_ID : WORKSPACE_BY_ID
+  const memberQueryType = projectId ? PROJECT_BY_ID_MEMBER_INFO : WORKSPACE_BY_ID_MEMBER_INFO
+  const id = projectId || workspaceId
+  const type = projectId ? 'project' : 'workspace'
+
+  const mainQuery = useQuery(mainQueryType, {
+    variables: { id }
   })
 
-  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
-    variables: { id: workspaceId },
-    skip: !workspaceId
+  const mainData = mainQuery.data && mainQuery.data[`${type}ById`]
+
+  const memberQuery = useQuery(memberQueryType, {
+    variables: { id },
+    skip: !mainData || (mainData.participants
+      .find(pcp => pcp.user.id === user.id) || {}).privilege !== 'OWNER'
   })
 
-  if (projectQuery.loading || workspaceQuery.loading) {
+  const memberData = memberQuery.data && memberQuery.data[`${type}MemberInfo`]
+
+  const updateParticipant = useMutation(UPDATE_PARTICIPANT, {
+    refetchQueries: [{
+      query: memberQueryType,
+      variables: { id }
+    }]
+  })
+
+  const deleteParticipant = useMutation(DELETE_PARTICIPANT, {
+    refetchQueries: [{
+      query: memberQueryType,
+      variables: { id }
+    }]
+  })
+
+  if (mainQuery.loading) {
     return <LoadingBar id='privilege-view' />
-  } else if (projectQuery.error) {
-    return <NotFoundView message='Project not found' />
-  } else if (workspaceQuery.error) {
-    return <NotFoundView message='Workspace not found' />
+  } else if (mainQuery.error) {
+    return <NotFoundView message={`${projectId ? 'Project' : 'Workspace'} not found`} />
   }
 
-  const privileges = (
-    (projectQuery.data || {}).projectById ||
-    (workspaceQuery.data || {}).workspaceById
-  ).participants
-
-  const getName = user => {
-    const role = user.role.toLowerCase()
-    return `${user.id} (${role})`
-  }
+  const getName = user =>
+    `${user.name || user.email || user.username || user.id} (${user.role.toLowerCase()})`
 
   return (
     <div className={classes.root}>
       <EditableTable
         title='Members'
         columns={columns}
-        rows={privileges.map(pcp => ({
-          id: getName(pcp.user),
-          privilege: pcp.privilege,
-          token: pcp.token || {}
+        rows={(memberData || []).map(user => ({
+          name: getName(user),
+          privilege: user.privilege,
+          token: user.token || {},
+          id: user.participantId
         }))}
+        deleteMutation={({ id }) => deleteParticipant({
+          variables: { id, type: type.toUpperCase() }
+        })}
+        updateMutation={async ({ id, privilege }) => (await updateParticipant({
+          variables: { id, privilege, type: type.toUpperCase() }
+        })).data.updateParticipant}
       />
     </div>
   )

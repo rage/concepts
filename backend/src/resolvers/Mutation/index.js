@@ -4,7 +4,7 @@ const courseLink = require('./CourseLink')
 const concept = require('./Concept')
 const conceptLink = require('./ConceptLink')
 const workspace = require('./Workspace')
-const workspaceSharing = require('./WorkspaceSharing')
+const sharing = require('./Sharing')
 const project = require('./Project')
 const port = require('./Port')
 const user = require('./User')
@@ -18,7 +18,7 @@ module.exports = {
   ...concept,
   ...conceptLink,
   ...workspace,
-  ...workspaceSharing,
+  ...sharing,
   ...project,
   ...port,
   ...user,
