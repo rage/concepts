@@ -36,7 +36,8 @@ const ConceptMutations = {
 
     if (oldConcept.frozen && frozen !== false)
       throw new ForbiddenError('This concept is frozen')
-    if ((official !== undefined && official !== oldConcept.official) || (frozen || oldConcept.frozen)) {
+    if ((official !== undefined && official !== oldConcept.official)
+        || (frozen || oldConcept.frozen)) {
       await checkAccess(context, {
         minimumRole: Role.STAFF,
         workspaceId
