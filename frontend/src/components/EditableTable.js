@@ -151,7 +151,7 @@ const EditableTable = ({
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            {columns.map(col =>
+            {columns.map(col => !col.hidden &&
               <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>
             )}
             <TableCell align='right' className={classes.tableCell}>Actions</TableCell>
@@ -184,12 +184,12 @@ const EditableTable = ({
 
 const EditTableRow = ({ columns, classes, state, setState, disabled, submit, cancel }) => (
   <TableRow>
-    {columns.map(col => (
+    {columns.map(col => !col.hidden && (
       <TableCell key={col.field} className={classes.tableCell}>
-        {!col.hidden && (!col.readOnly
+        {!col.readOnly
           ? <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
           : <col.type.DisplayComponent classes={classes} col={col} value={state[col.field]} />
-        )}
+        }
       </TableCell>
     ))}
     <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
