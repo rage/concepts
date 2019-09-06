@@ -31,8 +31,8 @@ const ConceptMutations = {
           relevantPointGroups = pointGroups.filter(group => {
             const currentTime = new Date().getTime()
             return group.course.id === mainCourse.id
-            && new Date(group.startDate).getTime() <= currentTime
-            && new Date(group.endDate).getTime() >= currentTime
+              && new Date(group.startDate).getTime() <= currentTime
+              && new Date(group.endDate).getTime() >= currentTime
           })
         }
       }
@@ -72,12 +72,10 @@ const ConceptMutations = {
             where: { id: group.id },
             data: {
               completions: {
-                create: [
-                  {
-                    conceptAmount: 1,
-                    user: { connect: { id: context.user.id } }
-                  }
-                ]
+                create: [{
+                  conceptAmount: 1,
+                  user: { connect: { id: context.user.id } }
+                }]
               }
             }
           })

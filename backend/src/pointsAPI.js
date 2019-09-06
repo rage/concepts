@@ -1,79 +1,59 @@
 const { userDetails } = require('./TMCAuthentication')
 const { prisma } = require('../schema/generated/prisma-client')
 
-const getTokenFrom = (request) => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7)
+const HEADER_PREFIX = 'Bearer '.toLowerCase()
+
+const getTokenFrom = request => {
+  const authorization = request.get('Authorization') || ''
+  return authorization.toLowerCase().startsWith(HEADER_PREFIX)
+    && authorization.substr(HEADER_PREFIX.length)
+}
+
+const convertPointGroup = ({ name, completions: [completion], maxPoints, pointsPerConcept }) => {
+  const nPoints = Math.min(maxPoints, completion.conceptAmount * pointsPerConcept)
+
+  return {
+    group: name,
+    progress: nPoints / maxPoints,
+    /* eslint-disable camelcase */
+    n_points: nPoints,
+    max_points: maxPoints
+    /* eslint-enable camelcase */
   }
-  return null
 }
 
 const pointsAPI = async (req, res) => {
   const { pid, cid } = req.params
   const token = getTokenFrom(req)
-  if (!token) return res.status(401).send('Token missing')
-  if (!pid || !cid) return res.status(401).send('Project or course id missing')
-  let userData
+  let tmcId
+  if (!token) return res.status(401).send({ error: 'Authorization header missing or invalid' })
+  else if (!pid) return res.status(401).send({ error: 'Project ID missing' })
+  else if (!cid) return res.status(401).send({ error: 'Course ID missing' })
   try {
-    userData = await userDetails(token)
+    tmcId = (await userDetails(token)).id
   } catch (e) {
-    return res.status(401).send('Token invalid')
+    return res.status(401).json({ error: 'Token invalid' })
   }
-  const tmcId = userData.id
   const data = await prisma.$graphql(`
-    query($projectId: ID!,$courseId: ID!) {
-      project(where: { id: $projectId }) {
-        id
+    query($pid: ID!, $cid: ID!, $tmcId: Int!) {
+      project(where: { id: $pid }) {
         activeTemplate {
-          id
-          pointGroups(where: {course: {id: $courseId} }) {
-            id name
-            maxPoints pointsPerConcept
-            course { id }
+          pointGroups(where: { course: { id: $cid } }) {
+            name
+            maxPoints
+            pointsPerConcept
+            completions(where: { user: { tmcId: $tmcId } }) {
+              conceptAmount
+              user { tmcId }
+            }
           }
         }
       }
     }
-  `,
-  {
-    projectId: pid,
-    courseId: cid
-  })
-  const project = data.project
-  const userProgress = []
-  const pointGroups = (project && project.activeTemplate) && project.activeTemplate.pointGroups
-  if (project && pointGroups) {
-    for (const pointGroup of pointGroups) {
-      console.log(pointGroup)
-      const existingCompletions = await prisma.pointGroup({ id: pointGroup.id }).completions()
-        .$fragment(`
-      fragment CompletionWithUser on Completion {
-        id
-        conceptAmount
-        user { tmcId }
-      }
-      `)
-      const completionForUser = existingCompletions.find(completion =>
-        completion.user.tmcId === tmcId)
-      const userPoints = completionForUser.conceptAmount * pointGroup.pointsPerConcept
-      const progress = pointGroup.maxPoints < userPoints ? 1.00 : pointGroup.maxPoints / userPoints
-      const nPoints = pointGroup.maxPoints < userPoints ? pointGroup.maxPoints : userPoints
-
-      /* eslint-disable camelcase */
-      userProgress.push({
-        group: pointGroup.name,
-        progress,
-        n_points: nPoints,
-        max_points: pointGroup.maxPoints
-      })
-      /* eslint-enable camelcase */
-    }
-  }
-
-  return res.json(userProgress)
+  `, { pid, cid, tmcId })
+  return res.json(
+    (data.project && data.project.activeTemplate && data.project.activeTemplate.pointGroups || [])
+      .map(convertPointGroup))
 }
 
-module.exports = {
-  pointsAPI
-}
+module.exports = pointsAPI
