@@ -83,9 +83,26 @@ const USE_SHARE_LINK = gql`
   }
 `
 
+const UPDATE_PARTICIPANT = gql`
+  mutation updateParticipant($id: ID!, $privilege: Privilege!, $type: Type!) {
+    updateParticipant(id: $id, privilege: $privilege, type: $type) {
+      id
+      privilege
+    }
+  }
+`
+
+const DELETE_PARTICIPANT = gql`
+  mutation deleteParticipant($id: ID!, $type: Type!) {
+    deleteParticipant(id: $id, type: $type)
+  }
+`
+
 export {
   CREATE_SHARE_LINK,
   CREATE_PROJECT_SHARE_LINK,
   DELETE_SHARE_LINK,
-  USE_SHARE_LINK
+  USE_SHARE_LINK,
+  UPDATE_PARTICIPANT,
+  DELETE_PARTICIPANT
 }

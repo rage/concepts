@@ -84,6 +84,48 @@ const WorkspaceSharingMutations = {
     } else {
       throw Error('invalid share token')
     }
+  },
+  async updateParticipant(root, { type, id, privilege }, context) {
+    if (type === 'PROJECT') {
+      const { id: projectId } = nullShield(
+        await context.prisma.projectParticipant({ id }).project(), 'project')
+      await checkAccess(context, { projectId, minimumPrivilege: Privilege.OWNER })
+      await context.prisma.updateProjectParticipant({
+        where: { id },
+        data: { privilege }
+      })
+      return {
+        id,
+        privilege
+      }
+    } else if (type === 'WORKSPACE') {
+      const { id: workspaceId } = nullShield(
+        await context.prisma.workspaceParticipant({ id }).workspace())
+      await checkAccess(context, { workspaceId, minimumPrivilege: Privilege.OWNER })
+      await context.prisma.updateWorkspaceParticipant({
+        where: { id },
+        data: { privilege }
+      })
+      return {
+        id,
+        privilege
+      }
+    }
+  },
+  async deleteParticipant(root, { type, id }, context) {
+    if (type === 'PROJECT') {
+      const { id: projectId } = nullShield(
+        await context.prisma.projectParticipant({ id }).project(), 'project')
+      await checkAccess(context, { projectId, minimumPrivilege: Privilege.OWNER })
+      await context.prisma.deleteProjectParticipant({ id })
+      return id
+    } else if (type === 'WORKSPACE') {
+      const { id: workspaceId } = nullShield(
+        await context.prisma.workspaceParticipant({ id }).workspace())
+      await checkAccess(context, { workspaceId, minimumPrivilege: Privilege.OWNER })
+      await context.prisma.deleteWorkspaceParticipant({ id })
+      return id
+    }
   }
 }
 

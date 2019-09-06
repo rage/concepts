@@ -6,7 +6,7 @@ import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import {
-  Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon,
+  Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon, Group as GroupIcon,
   MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon
 } from '@material-ui/icons'
 
@@ -42,8 +42,8 @@ Consider your actions.`
 
 const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
   const classes = useStyles()
-  const { user } = useLoginStateValue()[0]
-  const messageDispatch = useMessageStateValue()[1]
+  const [{ user }] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
@@ -97,6 +97,10 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
     history.push(`${urlPrefix}/${projectId}/${newPage}`)
   }
 
+  const isOwner = (projectQuery.data.projectById
+    && projectQuery.data.projectById.participants.find(pcp => pcp.user.id === user.id) || {}
+  ).privilege === 'OWNER'
+
   return (
     <>
       <Paper className={classes.root} square>
@@ -114,6 +118,11 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
             label='Points'
             icon={<TimelapseIcon />}
           />
+          {isOwner && <BottomNavigationAction
+            value='members'
+            label='Members'
+            icon={<GroupIcon />}
+          />}
         </BottomNavigation>
         {user.role === 'STAFF' && <>
           <IconButton

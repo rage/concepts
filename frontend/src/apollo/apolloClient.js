@@ -16,7 +16,7 @@ const client = new ApolloClient({
         'X-Concepts-IsMutation': isMutation.toString()
       }
     })
-    const rawData = window.localStorage.getItem('current_user')
+    const rawData = window.localStorage.currentUser
     if (rawData) {
       let data
       try {

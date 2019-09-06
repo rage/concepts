@@ -28,7 +28,7 @@ const HomeView = ({ history }) => {
   const createGuestAccount = async () => {
     const result = await createGuestMutation()
     const userData = result.data.createGuest
-    await window.localStorage.setItem('current_user', JSON.stringify(userData))
+    window.localStorage.currentUser = JSON.stringify(userData)
     await dispatch({
       type: 'login',
       data: userData.user
