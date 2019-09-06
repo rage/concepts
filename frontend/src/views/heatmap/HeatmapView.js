@@ -126,7 +126,7 @@ const useStyles = makeStyles(theme => ({
     padding: '5px'
   },
   sideHeaderCell: {
-
+    fontWeight: 'normal'
   },
   headerOverflow: {
     overflow: 'hidden',
