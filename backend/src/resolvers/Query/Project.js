@@ -47,6 +47,35 @@ const ProjectQueries = {
     return await context.prisma.user({
       id: context.user.id
     }).projectParticipations()
+  },
+  async projectMemberInfo(root, { id }, context) {
+    await checkAccess(context, { projectId: id, minimumPrivilege: Privilege.OWNER })
+    const data = await context.prisma.project({ id }).$fragment(`
+      fragment ProjectParticipants on Project {
+        participants {
+          id
+          privilege
+          token {
+            id
+            privilege
+            revoked
+          }
+          user {
+            id
+            tmcId
+            role
+          }
+        }
+      }
+    `)
+    const participants = data.participants.map(pcp => ({
+      participantId: pcp.id,
+      privilege: pcp.privilege,
+      token: pcp.token,
+      ...pcp.user
+    }))
+    // TODO add name/email/username to participants
+    return participants
   }
 }
 

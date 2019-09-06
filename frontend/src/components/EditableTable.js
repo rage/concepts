@@ -10,7 +10,7 @@ import {
 import { DateTimePicker } from '@material-ui/pickers'
 import moment from 'moment'
 
-import { useMessageStateValue } from '../../../store'
+import { useMessageStateValue } from '../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +45,7 @@ const DATETIME_FORMAT = 'D.M.YYYY, HH:mm'
 const noop = val => val
 const returnValue = val => () => val
 
-const TextViewCell = ({ value }) => value
+const TextViewCell = ({ value }) => value || null
 const TextEditCell = ({ col, state, setState }) => (
   <TextField
     name={col.field}
@@ -111,7 +111,7 @@ export const Type = {
 }
 
 const EditableTable = ({
-  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled
+  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled, title
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
@@ -138,18 +138,20 @@ const EditableTable = ({
   return (
     <Card className={classes.root} elevation={0}>
       <CardHeader
-        action={<>
-          <AdditionalAction />
-          <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
-            <AddIcon />
-          </IconButton>
+        action={(createMutation || AdditionalAction) && <>
+          {AdditionalAction && <AdditionalAction />}
+          {createMutation &&
+            <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
+              <AddIcon />
+            </IconButton>
+          }
         </>}
-        title='Point groups'
+        title={title}
       />
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            {columns.map(col =>
+            {columns.map(col => !col.hidden &&
               <TableCell key={col.field} className={classes.tableCell}>{col.title}</TableCell>
             )}
             <TableCell align='right' className={classes.tableCell}>Actions</TableCell>
@@ -182,9 +184,12 @@ const EditableTable = ({
 
 const EditTableRow = ({ columns, classes, state, setState, disabled, submit, cancel }) => (
   <TableRow>
-    {columns.map(col => (
+    {columns.map(col => !col.hidden && (
       <TableCell key={col.field} className={classes.tableCell}>
-        <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
+        {!col.readOnly
+          ? <col.type.EditComponent classes={classes} col={col} state={state} setState={setState} />
+          : <col.type.DisplayComponent classes={classes} col={col} value={state[col.field]} />
+        }
       </TableCell>
     ))}
     <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
@@ -205,7 +210,7 @@ const DisplayTableRow = ({
   columns, classes, data, editing, setEditing, disabled, iconColor, deleteRow
 }) => (
   <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-    {columns.map(col => (
+    {columns.map(col => !col.hidden && (
       <TableCell key={col.field} className={classes.tableCell}>
         <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
       </TableCell>
@@ -236,8 +241,11 @@ const EditableTableRow = ({
     try {
       const response = await updateMutation(variables)
       setEditing(null)
-      const newData = response.data.updatePointGroup
-      setState(Object.fromEntries(columns.map(col => [col.field, newData[col.field]])))
+      if (response) {
+        setState(Object.fromEntries(columns.map(col =>
+          [col.field, response.hasOwnProperty(col.field) ? response[col.field] : state[col.field]]
+        )))
+      }
     } catch (err) {
       messageDispatch({
         type: 'setError',

@@ -6,16 +6,16 @@ export const setProgress = async (index, userId) => {
     const response = await updateUser({
       variables: { id: userId, guideProgress: index }
     })
-    const currentUser = JSON.parse(localStorage.getItem('current_user'))
+    const currentUser = JSON.parse(window.localStorage.currentUser)
     const newUser = currentUser.user
     newUser.guideProgress = response.data.updateUser.guideProgress
-    localStorage.setItem('current_user', JSON.stringify(currentUser))
+    window.localStorage.currentUser = JSON.stringify(currentUser)
     return response.data.updateUser
   } catch (error) {}
 }
 
 export const getUser = () => {
-  const local = JSON.parse(localStorage.getItem('current_user'))
+  const local = JSON.parse(window.localStorage.currentUser)
   return local && local.user
 }
 

@@ -6,9 +6,9 @@ import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
 import {
-  Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon,
-  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon,
-  MoreVert as MoreVertIcon, Share as ShareIcon, VerticalSplit as VerticalSplitIcon
+  Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
+  CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
+  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon
 } from '@material-ui/icons'
 
 import client from '../apollo/apolloClient'
@@ -125,6 +125,10 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
+  const isOwner = (workspaceQuery.data.workspaceById
+    && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id) || {}
+  ).privilege === 'OWNER'
+
   return (
     <>
       <Paper className={classes.root} square>
@@ -136,6 +140,9 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
           <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
           <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
+          {isOwner &&
+            <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
+          }
         </BottomNavigation>
         {user.role === 'STAFF' && <>
           <IconButton

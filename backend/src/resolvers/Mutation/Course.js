@@ -3,12 +3,10 @@ const { ForbiddenError } = require('apollo-server-core')
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
-const isDefined = (val) => val !== undefined
-
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, tags }, context) {
     await checkAccess(context, {
-      minimumRole: isDefined(official) ? Role.STAFF : Role.GUEST,
+      minimumRole: official ? Role.STAFF : Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
@@ -43,17 +41,25 @@ const CourseQueries = {
   async updateCourse(root, { id, name, official, frozen, tags }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: isDefined(official) || isDefined(frozen) ? Role.STAFF : Role.GUEST,
+      minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldCourse = await context.prisma.course({ id })
 
     if (oldCourse.frozen && frozen !== false)
       throw new ForbiddenError('This course is frozen')
+    if ((official !== undefined && official !== oldCourse.official)
+      || (frozen || oldCourse.frozen)) {
+      await checkAccess(context, {
+        minimumRole: Role.STAFF,
+        workspaceId
+      })
+    }
 
+    const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldTags = await context.prisma.course({ id }).tags()
+
     const tagsToDelete = oldTags
       .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
       .map(oldTag => ({ id: oldTag.id }))

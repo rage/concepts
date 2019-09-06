@@ -67,10 +67,34 @@ query projectById($id: ID!) {
     }
     participants {
       privilege
+      token {
+        id
+        revoked
+      }
       user {
         id
+        role
       }
     }
+  }
+}
+`
+
+const PROJECT_BY_ID_MEMBER_INFO = gql`
+query projectMemberInfo($id: ID!) {
+  projectMemberInfo(id: $id) {
+    participantId
+    id
+    role
+    privilege
+    token {
+      id
+      revoked
+    }
+    tmcId
+    name
+    email
+    username
   }
 }
 `
@@ -101,6 +125,7 @@ query limitedProjectById($id: ID!) {
 export {
   PROJECTS_FOR_USER,
   PROJECT_BY_ID,
+  PROJECT_BY_ID_MEMBER_INFO,
   PROJECT_BY_ID_TEMPLATES,
   PEEK_ACTIVE_TEMPLATE
 }

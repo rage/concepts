@@ -77,7 +77,7 @@ const messageReducer = (state, action) => {
 const getLoggedInUser = () => {
   let user
   try {
-    user = JSON.parse(localStorage.getItem('current_user')).user
+    user = JSON.parse(window.localStorage.currentUser).user
     return user
   } catch (error) {
     return {}
