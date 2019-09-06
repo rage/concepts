@@ -1,4 +1,4 @@
-const { checkAccess, checkPrivilege, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const studentQuery = `
 query($id: ID!) {
@@ -49,7 +49,7 @@ const ProjectQueries = {
     }).projectParticipations()
   },
   async projectMemberInfo(root, { id }, context) {
-    await checkAccess(context, { projectId: id, minimumPrivilege: Privilege.READ })
+    await checkAccess(context, { projectId: id, minimumPrivilege: Privilege.OWNER })
     const data = await context.prisma.project({ id }).$fragment(`
       fragment ProjectParticipants on Project {
         participants {
@@ -74,9 +74,7 @@ const ProjectQueries = {
       token: pcp.token,
       ...pcp.user
     }))
-    if (checkPrivilege(context, { projectId: id, minimumPrivilege: Privilege.OWNER })) {
-      // TODO add name/email/username to participants
-    }
+    // TODO add name/email/username to participants
     return participants
   }
 }

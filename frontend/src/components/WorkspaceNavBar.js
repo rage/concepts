@@ -125,6 +125,10 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
+  const isOwner = (workspaceQuery.data.workspaceById
+    && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id) || {}
+  ).privilege === 'OWNER'
+
   return (
     <>
       <Paper className={classes.root} square>
@@ -136,7 +140,9 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
           <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
           <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
-          <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
+          {isOwner &&
+            <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
+          }
         </BottomNavigation>
         {user.role === 'STAFF' && <>
           <IconButton

@@ -1,29 +1,4 @@
-const { ForbiddenError } = require('apollo-server-core')
-
-const {
-  checkAccess, checkPrivilege, Role, Privilege, privilegeToInt
-} = require('../../accessControl')
-
-const cloneTokenProjectQuery = `
-query($id: ID!, $userId: ID!) {
-  projectToken(where: { id: $id }) {
-    project {
-      id
-      name
-      activeTemplate {
-        id
-      }
-      participants(where: { user: { id: $userId }}) {
-        id
-        user {
-          id
-        }
-        privilege
-      }
-    }
-  }
-}
-`
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const workspaceBySourceTemplateQuery = `
 query($id: ID!, $userId: ID!) {
@@ -69,7 +44,7 @@ const WorkspaceQueries = {
       res.user.workspaceParticipations[0].workspace
   },
   async workspaceMemberInfo(root, { id }, context) {
-    await checkAccess(context, { workspaceId: id, minimumPrivilege: Privilege.READ })
+    await checkAccess(context, { workspaceId: id, minimumPrivilege: Privilege.OWNER })
     const data = await context.prisma.workspace({ id }).$fragment(`
       fragment WorkspaceParticipants on Workspace {
         participants {
@@ -94,9 +69,7 @@ const WorkspaceQueries = {
       token: pcp.token,
       ...pcp.user
     }))
-    if (checkPrivilege(context, { workspaceId: id, minimumPrivilege: Privilege.OWNER })) {
-      // TODO add name/email/username to participants
-    }
+    // TODO add name/email/username to participants
     return participants
   }
 }
