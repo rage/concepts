@@ -14,7 +14,8 @@ const ConceptMutations = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     let relevantPointGroups
     if (roleToInt(context.role) === roleToInt(Role.STUDENT)) {
-      const mainCourse = await context.prisma.workspace({ id: workspaceId }).sourceTemplate().mainCourse()
+      const mainCourse = await context.prisma.workspace({ id: workspaceId })
+        .sourceTemplate().mainCourse()
       const sourceCourse = await context.prisma.course({ id: courseId }).sourceCourse()
       if (mainCourse && sourceCourse && mainCourse.id === sourceCourse.id) {
         const pointGroups = await context.prisma.workspace({ id: workspaceId })
@@ -26,7 +27,7 @@ const ConceptMutations = {
             course { id }
           }
         `)
-        if (pointGroups.length > 0) {
+        if (pointGroups && pointGroups.length > 0) {
           relevantPointGroups = pointGroups.filter(group => {
             const currentTime = new Date().getTime()
             return group.course.id === mainCourse.id
@@ -47,7 +48,7 @@ const ConceptMutations = {
       tags: { create: tags }
     })
 
-    if (createdConcept && relevantPointGroups.length > 0) {
+    if (createdConcept && relevantPointGroups && relevantPointGroups.length > 0) {
       for (const group of relevantPointGroups) {
         const existingCompletions = await context.prisma.pointGroup({ id: group.id }).completions()
           .$fragment(`
