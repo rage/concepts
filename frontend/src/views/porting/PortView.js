@@ -140,7 +140,7 @@ const PortView = () => {
   const [{ user }] = useLoginStateValue()
   const messageDispatch = useMessageStateValue()[1]
 
-  const dataPortingMutation = useMutation(IMPORT_DATA, {
+  const [dataPortingMutation] = useMutation(IMPORT_DATA, {
     update: cache.jsonPortUpdate(user.id)
   })
 

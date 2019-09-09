@@ -7,7 +7,7 @@ import { useDialog } from '../DialogProvider'
 const useEditCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
 
-  const updateCourse = useMutation(UPDATE_COURSE, {
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
   })
 

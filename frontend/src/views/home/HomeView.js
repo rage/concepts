@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 const HomeView = ({ history }) => {
   const classes = useStyles()
   const [{ loggedIn, user }, dispatch] = useLoginStateValue()
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
+  const [createGuestMutation] = useMutation(CREATE_GUEST_ACCOUNT)
 
   const createGuestAccount = async () => {
     const result = await createGuestMutation()

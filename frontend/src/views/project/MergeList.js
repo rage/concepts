@@ -11,13 +11,13 @@ import BaseWorkspaceList, { TYPE_MERGE } from '../../components/BaseWorkspaceLis
 const MergeList = ({ mergeWorkspaces, projectId, activeTemplate, urlPrefix }) => {
   const openEditDialog = useEditWorkspaceDialog()
   const openShareDialog = useShareDialog('workspace')
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
+  const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }
     }]
   })
-  const merge = useMutation(MERGE_PROJECT, {
+  const [merge] = useMutation(MERGE_PROJECT, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }

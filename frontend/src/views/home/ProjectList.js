@@ -41,7 +41,7 @@ const ProjectList = ({ history, projects }) => {
   const openCreateProjectDialog = useCreateProjectDialog()
   const openEditProjectDialog = useEditProjectDialog()
 
-  const deleteProject = useMutation(DELETE_PROJECT, {
+  const [deleteProject] = useMutation(DELETE_PROJECT, {
     refetchQueries: [{
       query: PROJECTS_FOR_USER
     }]

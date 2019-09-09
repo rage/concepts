@@ -80,7 +80,7 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     }
   })
 
-  const doMerge = useMutation(MERGE_CONCEPTS, {
+  const [doMerge] = useMutation(MERGE_CONCEPTS, {
     refetchQueries: [{
       query: WORKSPACE_BY_ID,
       variables: {

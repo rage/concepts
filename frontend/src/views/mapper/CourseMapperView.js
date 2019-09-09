@@ -71,7 +71,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     variables: { id: courseId }
   })
 
-  const updateCourse = useMutation(UPDATE_COURSE, {
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
@@ -104,7 +104,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     })
   }
 
-  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+  const [deleteConceptLink] = useMutation(DELETE_CONCEPT_LINK, {
     update: cache.deleteConceptLinkUpdate(courseId, workspaceId)
   })
 

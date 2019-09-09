@@ -68,7 +68,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
     variables: { id: workspaceId }
   })
 
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
+  const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [
       { query: WORKSPACES_FOR_USER }
     ]

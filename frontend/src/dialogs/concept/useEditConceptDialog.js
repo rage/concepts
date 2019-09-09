@@ -9,7 +9,7 @@ import tagSelectProps from './tagSelectUtils'
 const useEditConceptDialog = isStaff => {
   const { openDialog } = useDialog()
 
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
+  const [updateConcept] = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate
   })
 

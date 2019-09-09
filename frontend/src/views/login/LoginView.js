@@ -72,7 +72,7 @@ const LoginView = ({ history, location }) => {
     })
   }
 
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
+  const [createGuestMutation] = useMutation(CREATE_GUEST_ACCOUNT)
 
   const createGuestAccount = async () => {
     const result = await createGuestMutation()

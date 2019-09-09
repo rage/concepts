@@ -81,11 +81,11 @@ const Concept = ({
 
   const openEditConceptDialog = useEditConceptDialog(user.role === 'STAFF')
 
-  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+  const [createConceptLink] = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
   })
 
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
+  const [deleteConcept] = useMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate
   })
 

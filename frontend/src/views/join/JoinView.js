@@ -27,7 +27,7 @@ const JoinView = ({ history, token }) => {
       ? [{ query: PROJECTS_FOR_USER }]
       : [])
 
-  const joinShareLink = useMutation(USE_SHARE_LINK, {
+  const [joinShareLink] = useMutation(USE_SHARE_LINK, {
     refetchQueries
   })
 

@@ -11,7 +11,7 @@ const WorkspaceList = ({ workspaces, urlPrefix }) => {
   const openEditDialog = useEditWorkspaceDialog()
   const openShareDialog = useShareDialog('workspace')
   const openCreateDialog = useCreateWorkspaceDialog()
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
+  const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
       query: WORKSPACES_FOR_USER
     }]
