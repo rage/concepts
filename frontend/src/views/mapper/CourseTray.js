@@ -44,6 +44,14 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     flex: 1
   },
+  listItem: {
+    '&:hover $lockIcon': {
+      display: 'inline-flex'
+    }
+  },
+  lockIcon: {
+    display: 'none'
+  },
   courseName: {
     overflowWrap: 'break-word',
     maxWidth: 'calc(100% - 58px)'
@@ -131,19 +139,21 @@ const PrerequisiteCourse = withRouter(({
       <ListItem ref={checkboxRef} divider button onClick={onClick} className={classes.listItem}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
+          {
+            course.frozen &&
+              <IconButton disabled classes={{ root: classes.lockIcon }}>
+                <LockIcon />
+              </IconButton>
+          }
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
           {
-            (!course.frozen || user.role === 'STAFF') ?
+            (!course.frozen || user.role === 'STAFF') &&
               <IconButton
                 aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
                 aria-haspopup='true'
                 onClick={handleMenuOpen}
               >
                 <MoreVertIcon />
-              </IconButton>
-              :
-              <IconButton disabled>
-                <LockIcon />
               </IconButton>
           }
           <Menu
