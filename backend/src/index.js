@@ -13,6 +13,7 @@ const { logError } = require('./errorLogger')
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 const types = require('./resolvers/Type')
+const pointsAPI = require('./pointsAPI')
 
 const resolvers = {
   Query: {
@@ -40,6 +41,9 @@ const server = new GraphQLServer({
   }),
   middlewares: [authenticate]
 })
+
+// Points for completions
+server.express.get('/projects/:pid/courses/:cid/progress', pointsAPI)
 
 if (process.env.ENVIRONMENT === 'production') {
   const BUILD_PATH = path.join(__dirname, '../../frontend/build')

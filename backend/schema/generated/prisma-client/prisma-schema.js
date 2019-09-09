@@ -76,6 +76,7 @@ type Completion {
   user: User!
   conceptAmount: Int!
   createdAt: DateTime!
+  pointGroup: PointGroup!
 }
 
 type CompletionConnection {
@@ -88,11 +89,18 @@ input CompletionCreateInput {
   id: ID
   user: UserCreateOneInput!
   conceptAmount: Int
+  pointGroup: PointGroupCreateOneWithoutCompletionsInput!
 }
 
-input CompletionCreateManyInput {
-  create: [CompletionCreateInput!]
+input CompletionCreateManyWithoutPointGroupInput {
+  create: [CompletionCreateWithoutPointGroupInput!]
   connect: [CompletionWhereUniqueInput!]
+}
+
+input CompletionCreateWithoutPointGroupInput {
+  id: ID
+  user: UserCreateOneInput!
+  conceptAmount: Int
 }
 
 type CompletionEdge {
@@ -169,34 +177,30 @@ input CompletionSubscriptionWhereInput {
   NOT: [CompletionSubscriptionWhereInput!]
 }
 
-input CompletionUpdateDataInput {
-  user: UserUpdateOneRequiredInput
-  conceptAmount: Int
-}
-
 input CompletionUpdateInput {
   user: UserUpdateOneRequiredInput
   conceptAmount: Int
+  pointGroup: PointGroupUpdateOneRequiredWithoutCompletionsInput
 }
 
 input CompletionUpdateManyDataInput {
   conceptAmount: Int
 }
 
-input CompletionUpdateManyInput {
-  create: [CompletionCreateInput!]
-  update: [CompletionUpdateWithWhereUniqueNestedInput!]
-  upsert: [CompletionUpsertWithWhereUniqueNestedInput!]
+input CompletionUpdateManyMutationInput {
+  conceptAmount: Int
+}
+
+input CompletionUpdateManyWithoutPointGroupInput {
+  create: [CompletionCreateWithoutPointGroupInput!]
   delete: [CompletionWhereUniqueInput!]
   connect: [CompletionWhereUniqueInput!]
   set: [CompletionWhereUniqueInput!]
   disconnect: [CompletionWhereUniqueInput!]
+  update: [CompletionUpdateWithWhereUniqueWithoutPointGroupInput!]
+  upsert: [CompletionUpsertWithWhereUniqueWithoutPointGroupInput!]
   deleteMany: [CompletionScalarWhereInput!]
   updateMany: [CompletionUpdateManyWithWhereNestedInput!]
-}
-
-input CompletionUpdateManyMutationInput {
-  conceptAmount: Int
 }
 
 input CompletionUpdateManyWithWhereNestedInput {
@@ -204,15 +208,20 @@ input CompletionUpdateManyWithWhereNestedInput {
   data: CompletionUpdateManyDataInput!
 }
 
-input CompletionUpdateWithWhereUniqueNestedInput {
-  where: CompletionWhereUniqueInput!
-  data: CompletionUpdateDataInput!
+input CompletionUpdateWithoutPointGroupDataInput {
+  user: UserUpdateOneRequiredInput
+  conceptAmount: Int
 }
 
-input CompletionUpsertWithWhereUniqueNestedInput {
+input CompletionUpdateWithWhereUniqueWithoutPointGroupInput {
   where: CompletionWhereUniqueInput!
-  update: CompletionUpdateDataInput!
-  create: CompletionCreateInput!
+  data: CompletionUpdateWithoutPointGroupDataInput!
+}
+
+input CompletionUpsertWithWhereUniqueWithoutPointGroupInput {
+  where: CompletionWhereUniqueInput!
+  update: CompletionUpdateWithoutPointGroupDataInput!
+  create: CompletionCreateWithoutPointGroupInput!
 }
 
 input CompletionWhereInput {
@@ -247,6 +256,7 @@ input CompletionWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  pointGroup: PointGroupWhereInput
   AND: [CompletionWhereInput!]
   OR: [CompletionWhereInput!]
   NOT: [CompletionWhereInput!]
@@ -2283,12 +2293,28 @@ input PointGroupCreateInput {
   workspace: WorkspaceCreateOneWithoutPointGroupsInput!
   course: CourseCreateOneInput!
   pointsPerConcept: Float
-  completions: CompletionCreateManyInput
+  completions: CompletionCreateManyWithoutPointGroupInput
 }
 
 input PointGroupCreateManyWithoutWorkspaceInput {
   create: [PointGroupCreateWithoutWorkspaceInput!]
   connect: [PointGroupWhereUniqueInput!]
+}
+
+input PointGroupCreateOneWithoutCompletionsInput {
+  create: PointGroupCreateWithoutCompletionsInput
+  connect: PointGroupWhereUniqueInput
+}
+
+input PointGroupCreateWithoutCompletionsInput {
+  id: ID
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int
+  workspace: WorkspaceCreateOneWithoutPointGroupsInput!
+  course: CourseCreateOneInput!
+  pointsPerConcept: Float
 }
 
 input PointGroupCreateWithoutWorkspaceInput {
@@ -2299,7 +2325,7 @@ input PointGroupCreateWithoutWorkspaceInput {
   maxPoints: Int
   course: CourseCreateOneInput!
   pointsPerConcept: Float
-  completions: CompletionCreateManyInput
+  completions: CompletionCreateManyWithoutPointGroupInput
 }
 
 type PointGroupEdge {
@@ -2423,7 +2449,7 @@ input PointGroupUpdateInput {
   workspace: WorkspaceUpdateOneRequiredWithoutPointGroupsInput
   course: CourseUpdateOneRequiredInput
   pointsPerConcept: Float
-  completions: CompletionUpdateManyInput
+  completions: CompletionUpdateManyWithoutPointGroupInput
 }
 
 input PointGroupUpdateManyDataInput {
@@ -2459,6 +2485,23 @@ input PointGroupUpdateManyWithWhereNestedInput {
   data: PointGroupUpdateManyDataInput!
 }
 
+input PointGroupUpdateOneRequiredWithoutCompletionsInput {
+  create: PointGroupCreateWithoutCompletionsInput
+  update: PointGroupUpdateWithoutCompletionsDataInput
+  upsert: PointGroupUpsertWithoutCompletionsInput
+  connect: PointGroupWhereUniqueInput
+}
+
+input PointGroupUpdateWithoutCompletionsDataInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  maxPoints: Int
+  workspace: WorkspaceUpdateOneRequiredWithoutPointGroupsInput
+  course: CourseUpdateOneRequiredInput
+  pointsPerConcept: Float
+}
+
 input PointGroupUpdateWithoutWorkspaceDataInput {
   name: String
   startDate: DateTime
@@ -2466,12 +2509,17 @@ input PointGroupUpdateWithoutWorkspaceDataInput {
   maxPoints: Int
   course: CourseUpdateOneRequiredInput
   pointsPerConcept: Float
-  completions: CompletionUpdateManyInput
+  completions: CompletionUpdateManyWithoutPointGroupInput
 }
 
 input PointGroupUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: PointGroupWhereUniqueInput!
   data: PointGroupUpdateWithoutWorkspaceDataInput!
+}
+
+input PointGroupUpsertWithoutCompletionsInput {
+  update: PointGroupUpdateWithoutCompletionsDataInput!
+  create: PointGroupCreateWithoutCompletionsInput!
 }
 
 input PointGroupUpsertWithWhereUniqueWithoutWorkspaceInput {
