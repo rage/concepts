@@ -10,7 +10,7 @@ const getTokenFrom = request => {
 }
 
 const convertPointGroup = ({ name, completions: [completion], maxPoints, pointsPerConcept }) => {
-  const nPoints = Math.min(maxPoints, completion.conceptAmount * pointsPerConcept)
+  const nPoints = Math.min(maxPoints, ((completion || {}).conceptAmount || 0) * pointsPerConcept)
 
   return {
     group: name,
@@ -44,7 +44,6 @@ const pointsAPI = async (req, res) => {
             pointsPerConcept
             completions(where: { user: { tmcId: $tmcId } }) {
               conceptAmount
-              user { tmcId }
             }
           }
         }

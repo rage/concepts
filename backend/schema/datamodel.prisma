@@ -160,6 +160,7 @@ type Completion {
   user: User!
   conceptAmount: Int! @default(value: 0)
   createdAt: DateTime! @createdAt
+  pointGroup: PointGroup! @relation(name: "PointGroupCompletions")
 }
 
 type Tag {

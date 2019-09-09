@@ -334,6 +334,7 @@ type Completion {
   user: User!
   conceptAmount: Int!
   createdAt: DateTime!
+  pointGroup: PointGroup!
 }
 
 type Tag {

@@ -1646,6 +1646,7 @@ export interface CompletionWhereInput {
   createdAt_lte?: Maybe<DateTimeInput>;
   createdAt_gt?: Maybe<DateTimeInput>;
   createdAt_gte?: Maybe<DateTimeInput>;
+  pointGroup?: Maybe<PointGroupWhereInput>;
   AND?: Maybe<CompletionWhereInput[] | CompletionWhereInput>;
   OR?: Maybe<CompletionWhereInput[] | CompletionWhereInput>;
   NOT?: Maybe<CompletionWhereInput[] | CompletionWhereInput>;
@@ -1716,6 +1717,7 @@ export interface CompletionCreateInput {
   id?: Maybe<ID_Input>;
   user: UserCreateOneInput;
   conceptAmount?: Maybe<Int>;
+  pointGroup: PointGroupCreateOneWithoutCompletionsInput;
 }
 
 export interface UserCreateOneInput {
@@ -2457,12 +2459,21 @@ export interface PointGroupCreateWithoutWorkspaceInput {
   maxPoints?: Maybe<Int>;
   course: CourseCreateOneInput;
   pointsPerConcept?: Maybe<Float>;
-  completions?: Maybe<CompletionCreateManyInput>;
+  completions?: Maybe<CompletionCreateManyWithoutPointGroupInput>;
 }
 
-export interface CompletionCreateManyInput {
-  create?: Maybe<CompletionCreateInput[] | CompletionCreateInput>;
+export interface CompletionCreateManyWithoutPointGroupInput {
+  create?: Maybe<
+    | CompletionCreateWithoutPointGroupInput[]
+    | CompletionCreateWithoutPointGroupInput
+  >;
   connect?: Maybe<CompletionWhereUniqueInput[] | CompletionWhereUniqueInput>;
+}
+
+export interface CompletionCreateWithoutPointGroupInput {
+  id?: Maybe<ID_Input>;
+  user: UserCreateOneInput;
+  conceptAmount?: Maybe<Int>;
 }
 
 export interface UserCreateOneWithoutWorkspaceParticipationsInput {
@@ -2731,9 +2742,48 @@ export interface WorkspaceCreateWithoutCourseLinksInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
 }
 
+export interface PointGroupCreateOneWithoutCompletionsInput {
+  create?: Maybe<PointGroupCreateWithoutCompletionsInput>;
+  connect?: Maybe<PointGroupWhereUniqueInput>;
+}
+
+export interface PointGroupCreateWithoutCompletionsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  startDate: DateTimeInput;
+  endDate: DateTimeInput;
+  maxPoints?: Maybe<Int>;
+  workspace: WorkspaceCreateOneWithoutPointGroupsInput;
+  course: CourseCreateOneInput;
+  pointsPerConcept?: Maybe<Float>;
+}
+
+export interface WorkspaceCreateOneWithoutPointGroupsInput {
+  create?: Maybe<WorkspaceCreateWithoutPointGroupsInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export interface WorkspaceCreateWithoutPointGroupsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  sourceProject?: Maybe<ProjectCreateOneWithoutWorkspacesInput>;
+  sourceTemplate?: Maybe<WorkspaceCreateOneWithoutClonesInput>;
+  asMerge?: Maybe<ProjectCreateOneWithoutMergesInput>;
+  asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
+  clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
+  courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
+  conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
+  courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
+  tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
+  mainCourse?: Maybe<CourseCreateOneInput>;
+}
+
 export interface CompletionUpdateInput {
   user?: Maybe<UserUpdateOneRequiredInput>;
   conceptAmount?: Maybe<Int>;
+  pointGroup?: Maybe<PointGroupUpdateOneRequiredWithoutCompletionsInput>;
 }
 
 export interface UserUpdateOneRequiredInput {
@@ -4348,7 +4398,7 @@ export interface PointGroupUpdateWithoutWorkspaceDataInput {
   maxPoints?: Maybe<Int>;
   course?: Maybe<CourseUpdateOneRequiredInput>;
   pointsPerConcept?: Maybe<Float>;
-  completions?: Maybe<CompletionUpdateManyInput>;
+  completions?: Maybe<CompletionUpdateManyWithoutPointGroupInput>;
 }
 
 export interface CourseUpdateOneRequiredInput {
@@ -4358,20 +4408,23 @@ export interface CourseUpdateOneRequiredInput {
   connect?: Maybe<CourseWhereUniqueInput>;
 }
 
-export interface CompletionUpdateManyInput {
-  create?: Maybe<CompletionCreateInput[] | CompletionCreateInput>;
-  update?: Maybe<
-    | CompletionUpdateWithWhereUniqueNestedInput[]
-    | CompletionUpdateWithWhereUniqueNestedInput
-  >;
-  upsert?: Maybe<
-    | CompletionUpsertWithWhereUniqueNestedInput[]
-    | CompletionUpsertWithWhereUniqueNestedInput
+export interface CompletionUpdateManyWithoutPointGroupInput {
+  create?: Maybe<
+    | CompletionCreateWithoutPointGroupInput[]
+    | CompletionCreateWithoutPointGroupInput
   >;
   delete?: Maybe<CompletionWhereUniqueInput[] | CompletionWhereUniqueInput>;
   connect?: Maybe<CompletionWhereUniqueInput[] | CompletionWhereUniqueInput>;
   set?: Maybe<CompletionWhereUniqueInput[] | CompletionWhereUniqueInput>;
   disconnect?: Maybe<CompletionWhereUniqueInput[] | CompletionWhereUniqueInput>;
+  update?: Maybe<
+    | CompletionUpdateWithWhereUniqueWithoutPointGroupInput[]
+    | CompletionUpdateWithWhereUniqueWithoutPointGroupInput
+  >;
+  upsert?: Maybe<
+    | CompletionUpsertWithWhereUniqueWithoutPointGroupInput[]
+    | CompletionUpsertWithWhereUniqueWithoutPointGroupInput
+  >;
   deleteMany?: Maybe<CompletionScalarWhereInput[] | CompletionScalarWhereInput>;
   updateMany?: Maybe<
     | CompletionUpdateManyWithWhereNestedInput[]
@@ -4379,20 +4432,20 @@ export interface CompletionUpdateManyInput {
   >;
 }
 
-export interface CompletionUpdateWithWhereUniqueNestedInput {
+export interface CompletionUpdateWithWhereUniqueWithoutPointGroupInput {
   where: CompletionWhereUniqueInput;
-  data: CompletionUpdateDataInput;
+  data: CompletionUpdateWithoutPointGroupDataInput;
 }
 
-export interface CompletionUpdateDataInput {
+export interface CompletionUpdateWithoutPointGroupDataInput {
   user?: Maybe<UserUpdateOneRequiredInput>;
   conceptAmount?: Maybe<Int>;
 }
 
-export interface CompletionUpsertWithWhereUniqueNestedInput {
+export interface CompletionUpsertWithWhereUniqueWithoutPointGroupInput {
   where: CompletionWhereUniqueInput;
-  update: CompletionUpdateDataInput;
-  create: CompletionCreateInput;
+  update: CompletionUpdateWithoutPointGroupDataInput;
+  create: CompletionCreateWithoutPointGroupInput;
 }
 
 export interface CompletionScalarWhereInput {
@@ -5484,6 +5537,56 @@ export interface UserUpsertNestedInput {
   create: UserCreateInput;
 }
 
+export interface PointGroupUpdateOneRequiredWithoutCompletionsInput {
+  create?: Maybe<PointGroupCreateWithoutCompletionsInput>;
+  update?: Maybe<PointGroupUpdateWithoutCompletionsDataInput>;
+  upsert?: Maybe<PointGroupUpsertWithoutCompletionsInput>;
+  connect?: Maybe<PointGroupWhereUniqueInput>;
+}
+
+export interface PointGroupUpdateWithoutCompletionsDataInput {
+  name?: Maybe<String>;
+  startDate?: Maybe<DateTimeInput>;
+  endDate?: Maybe<DateTimeInput>;
+  maxPoints?: Maybe<Int>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutPointGroupsInput>;
+  course?: Maybe<CourseUpdateOneRequiredInput>;
+  pointsPerConcept?: Maybe<Float>;
+}
+
+export interface WorkspaceUpdateOneRequiredWithoutPointGroupsInput {
+  create?: Maybe<WorkspaceCreateWithoutPointGroupsInput>;
+  update?: Maybe<WorkspaceUpdateWithoutPointGroupsDataInput>;
+  upsert?: Maybe<WorkspaceUpsertWithoutPointGroupsInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export interface WorkspaceUpdateWithoutPointGroupsDataInput {
+  name?: Maybe<String>;
+  sourceProject?: Maybe<ProjectUpdateOneWithoutWorkspacesInput>;
+  sourceTemplate?: Maybe<WorkspaceUpdateOneWithoutClonesInput>;
+  asMerge?: Maybe<ProjectUpdateOneWithoutMergesInput>;
+  asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
+  clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
+  courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
+  conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
+  courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
+  tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
+  mainCourse?: Maybe<CourseUpdateOneInput>;
+}
+
+export interface WorkspaceUpsertWithoutPointGroupsInput {
+  update: WorkspaceUpdateWithoutPointGroupsDataInput;
+  create: WorkspaceCreateWithoutPointGroupsInput;
+}
+
+export interface PointGroupUpsertWithoutCompletionsInput {
+  update: PointGroupUpdateWithoutCompletionsDataInput;
+  create: PointGroupCreateWithoutCompletionsInput;
+}
+
 export interface CompletionUpdateManyMutationInput {
   conceptAmount?: Maybe<Int>;
 }
@@ -5620,29 +5723,7 @@ export interface PointGroupCreateInput {
   workspace: WorkspaceCreateOneWithoutPointGroupsInput;
   course: CourseCreateOneInput;
   pointsPerConcept?: Maybe<Float>;
-  completions?: Maybe<CompletionCreateManyInput>;
-}
-
-export interface WorkspaceCreateOneWithoutPointGroupsInput {
-  create?: Maybe<WorkspaceCreateWithoutPointGroupsInput>;
-  connect?: Maybe<WorkspaceWhereUniqueInput>;
-}
-
-export interface WorkspaceCreateWithoutPointGroupsInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  sourceProject?: Maybe<ProjectCreateOneWithoutWorkspacesInput>;
-  sourceTemplate?: Maybe<WorkspaceCreateOneWithoutClonesInput>;
-  asMerge?: Maybe<ProjectCreateOneWithoutMergesInput>;
-  asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
-  clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
-  courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
-  conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
-  courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
-  participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
-  tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
-  mainCourse?: Maybe<CourseCreateOneInput>;
+  completions?: Maybe<CompletionCreateManyWithoutPointGroupInput>;
 }
 
 export interface PointGroupUpdateInput {
@@ -5653,35 +5734,7 @@ export interface PointGroupUpdateInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutPointGroupsInput>;
   course?: Maybe<CourseUpdateOneRequiredInput>;
   pointsPerConcept?: Maybe<Float>;
-  completions?: Maybe<CompletionUpdateManyInput>;
-}
-
-export interface WorkspaceUpdateOneRequiredWithoutPointGroupsInput {
-  create?: Maybe<WorkspaceCreateWithoutPointGroupsInput>;
-  update?: Maybe<WorkspaceUpdateWithoutPointGroupsDataInput>;
-  upsert?: Maybe<WorkspaceUpsertWithoutPointGroupsInput>;
-  connect?: Maybe<WorkspaceWhereUniqueInput>;
-}
-
-export interface WorkspaceUpdateWithoutPointGroupsDataInput {
-  name?: Maybe<String>;
-  sourceProject?: Maybe<ProjectUpdateOneWithoutWorkspacesInput>;
-  sourceTemplate?: Maybe<WorkspaceUpdateOneWithoutClonesInput>;
-  asMerge?: Maybe<ProjectUpdateOneWithoutMergesInput>;
-  asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
-  clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
-  courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
-  concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
-  conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
-  courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
-  participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
-  tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
-  mainCourse?: Maybe<CourseUpdateOneInput>;
-}
-
-export interface WorkspaceUpsertWithoutPointGroupsInput {
-  update: WorkspaceUpdateWithoutPointGroupsDataInput;
-  create: WorkspaceCreateWithoutPointGroupsInput;
+  completions?: Maybe<CompletionUpdateManyWithoutPointGroupInput>;
 }
 
 export interface PointGroupUpdateManyMutationInput {
@@ -6219,6 +6272,7 @@ export interface CompletionPromise extends Promise<Completion>, Fragmentable {
   user: <T = UserPromise>() => T;
   conceptAmount: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
+  pointGroup: <T = PointGroupPromise>() => T;
 }
 
 export interface CompletionSubscription
@@ -6228,6 +6282,7 @@ export interface CompletionSubscription
   user: <T = UserSubscription>() => T;
   conceptAmount: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  pointGroup: <T = PointGroupSubscription>() => T;
 }
 
 export interface CompletionNullablePromise
@@ -6237,6 +6292,7 @@ export interface CompletionNullablePromise
   user: <T = UserPromise>() => T;
   conceptAmount: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
+  pointGroup: <T = PointGroupPromise>() => T;
 }
 
 export interface User {
