@@ -152,6 +152,8 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
       return concepts
     case 'CREATION_DESC':
       return [...concepts].reverse()
+    default:
+      return concepts
     }
   }
 
@@ -243,6 +245,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                       color='primary'
                     />
                   ) : <>
+                  {!concept.frozen &&
                     <IconButton
                       color={editing ? 'inherit' : undefined}
                       aria-label='Delete' onClick={() => {
@@ -254,12 +257,15 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
                     >
                       <DeleteIcon />
                     </IconButton>
+                  }
+                  {(!concept.frozen || user.role === 'STAFF') &&
                     <IconButton
                       color={editing ? 'inherit' : undefined} aria-label='Edit'
                       onClick={() => setEditing(concept.id)}
                     >
                       <EditIcon />
                     </IconButton>
+                  }
                   </>}
                 </ListItemSecondaryAction>
               </>}
@@ -283,7 +289,8 @@ const initialState = {
   description: '',
   tags: [],
   bloomTag: '',
-  official: undefined
+  official: undefined,
+  frozen: undefined
 }
 
 const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }) => {
@@ -367,7 +374,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           Cancel
         </Button>
       }
-      { user.role === 'STAFF' &&
+      { user.role === 'STAFF' && <>
         <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={
@@ -381,6 +388,20 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
             label='Official'
           />
         </FormControl>
+        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.frozen}
+                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
+                value='frozen'
+                color='primary'
+              />
+            }
+            label='Frozen'
+          />
+        </FormControl>
+        </>
       }
     </form>
   )

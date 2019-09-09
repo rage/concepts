@@ -6,6 +6,7 @@ query coursesByWorkspace($workspaceId: ID!) {
     id
     name
     official
+    frozen
     tags {
       id
       name
@@ -22,6 +23,7 @@ query courseById($id: ID!) {
     id
     name
     official
+    frozen
     tags {
       id
       name
@@ -33,6 +35,7 @@ query courseById($id: ID!) {
       name
       description
       official
+      frozen
       tags {
         id
         name
@@ -67,11 +70,13 @@ fragment courseAndConcepts on Course {
     id
     name
     official
+    frozen
     concepts {
       id
       name
       description
       official
+      frozen
       tags {
         id
         name
@@ -105,6 +110,7 @@ query courseAndPrerequisites($courseId: ID!) {
     id
     name
     official
+    frozen
     linksToCourse {
       id
       from {

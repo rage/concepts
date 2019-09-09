@@ -13,7 +13,7 @@ const useEditConceptDialog = isStaff => {
     update: cache.updateConceptUpdate
   })
 
-  return (conceptId, name, description, tags, official) => openDialog({
+  return (conceptId, name, description, tags, official, frozen) => openDialog({
     mutation: updateConcept,
     type: 'Concept',
     requiredVariables: {
@@ -35,6 +35,12 @@ const useEditConceptDialog = isStaff => {
       name: 'official',
       type: 'checkbox',
       defaultValue: official,
+      hidden: !isStaff
+    },
+    {
+      name: 'frozen',
+      type: 'checkbox',
+      defaultValue: frozen,
       hidden: !isStaff
     },
     {

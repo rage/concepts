@@ -11,7 +11,7 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
-  return (courseId, name, official) => openDialog({
+  return (courseId, name, official, frozen) => openDialog({
     mutation: updateCourse,
     type: 'Course',
     requiredVariables: {
@@ -32,6 +32,12 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
       name: 'official',
       type: 'checkbox',
       defaultValue: official,
+      hidden: !isStaff
+    },
+    {
+      name: 'frozen',
+      type: 'checkbox',
+      defaultValue: frozen,
       hidden: !isStaff
     }]
   })

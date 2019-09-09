@@ -31,6 +31,11 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       name: 'official',
       type: 'checkbox',
       hidden: !isStaff
+    },
+    {
+      name: 'frozen',
+      type: 'checkbox',
+      hidden: !isStaff
     }]
   })
 }

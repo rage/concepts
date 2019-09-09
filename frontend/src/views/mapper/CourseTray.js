@@ -6,7 +6,7 @@ import {
   ListItemSecondaryAction, IconButton, Menu, MenuItem
 } from '@material-ui/core'
 import {
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon, Lock as LockIcon
 } from '@material-ui/icons'
 import { withRouter } from 'react-router-dom'
 
@@ -71,6 +71,7 @@ const PrerequisiteCourse = withRouter(({
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
+  const [{ user }] = useLoginStateValue()
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget)
@@ -131,13 +132,20 @@ const PrerequisiteCourse = withRouter(({
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
-          <IconButton
-            aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
-            aria-haspopup='true'
-            onClick={handleMenuOpen}
-          >
-            <MoreVertIcon />
-          </IconButton>
+          {
+            (!course.frozen || user.role === 'STAFF') ?
+              <IconButton
+                aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
+                aria-haspopup='true'
+                onClick={handleMenuOpen}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              :
+              <IconButton disabled>
+                <LockIcon />
+              </IconButton>
+          }
           <Menu
             id='prerequisite-course-menu'
             anchorEl={anchorEl}
@@ -146,9 +154,9 @@ const PrerequisiteCourse = withRouter(({
           >
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name, course.official)
+              openEditCourseDialog(course.id, course.name, course.official, course.frozen)
             }}>Edit</MenuItem>
-            <MenuItem onClick={deleteCourse}>Delete</MenuItem>
+            {!course.frozen && <MenuItem onClick={deleteCourse}>Delete</MenuItem>}
           </Menu>
         </ListItemSecondaryAction>
       </ListItem>

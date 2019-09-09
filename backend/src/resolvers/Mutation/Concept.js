@@ -70,21 +70,25 @@ const updatePointGroups = async (pointGroups, context) => {
 }
 
 const ConceptMutations = {
-  async createConcept(root, { name, description, official, courseId, workspaceId, tags }, context) {
+  async createConcept(root, {
+    name, description, official, frozen,
+    courseId, workspaceId, tags
+  }, context) {
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
 
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
-
+    if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
     const createdConcept = await context.prisma.createConcept({
       name,
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
       description: description,
       official: Boolean(belongsToTemplate || official),
+      frozen: Boolean(frozen),
       courses: courseId ? { connect: [{ id: courseId }] } : undefined,
       tags: { create: tags }
     })

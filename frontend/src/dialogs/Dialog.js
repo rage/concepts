@@ -183,7 +183,8 @@ const Dialog = ({ contextRef }) => {
                   isMulti={field.isMultiSelect}
                 />
               } else if (field.type === 'checkbox') {
-                return <FormControl fullWidth key={field.name}>
+                return <FormControl style={{ verticalAlign: 'middle', marginRight: '12px' }}
+                  key={field.name}>
                   <FormControlLabel
                     control={
                       <Checkbox

@@ -9,11 +9,13 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
       id
       name
       official
+      frozen
       concepts {
         id
         name
         description
         official
+        frozen
         courses {
           id
         }

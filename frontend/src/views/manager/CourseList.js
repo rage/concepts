@@ -59,6 +59,7 @@ const CourseList = ({
   const classes = useStyles()
   const listRef = useRef()
   const [editing, setEditing] = useState(null)
+  const [{ user }] = useLoginStateValue()
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -82,6 +83,7 @@ const CourseList = ({
                 cancel={() => setEditing(null)}
                 defaultName={course.name}
                 defaultOfficial={course.official}
+                defaultFrozen={course.frozen}
                 defaultTags={course.tags}
                 action='Save'
               />
@@ -90,25 +92,29 @@ const CourseList = ({
                 <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
               } />
               <ListItemSecondaryAction>
-                <IconButton
-                  color={editing ? 'inherit' : undefined} aria-label='Delete' onClick={evt => {
-                    evt.stopPropagation()
-                    const msg = `Are you sure you want to delete the course ${course.name}?`
-                    if (window.confirm(msg)) {
-                      deleteCourse(course.id)
-                    }
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  color={editing ? 'inherit' : undefined} aria-label='Edit' onClick={evt => {
-                    evt.stopPropagation()
-                    setEditing(course.id)
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
+                {!course.frozen &&
+                  <IconButton
+                    color={editing ? 'inherit' : undefined} aria-label='Delete' onClick={evt => {
+                      evt.stopPropagation()
+                      const msg = `Are you sure you want to delete the course ${course.name}?`
+                      if (window.confirm(msg)) {
+                        deleteCourse(course.id)
+                      }
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                }
+                {(!course.frozen || user.role === 'STAFF') &&
+                  <IconButton
+                    color={editing ? 'inherit' : undefined} aria-label='Edit' onClick={evt => {
+                      evt.stopPropagation()
+                      setEditing(course.id)
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                }
               </ListItemSecondaryAction>
             </>}
           </ListItem>
@@ -123,7 +129,7 @@ const CourseList = ({
 }
 
 const CreateCourse = ({
-  submit, defaultName, defaultOfficial, defaultTags, action = 'Create', cancel
+  submit, defaultName, defaultOfficial, defaultFrozen, defaultTags, action = 'Create', cancel
 }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
@@ -131,6 +137,7 @@ const CreateCourse = ({
   const [input, setInput] = useState({
     name: defaultName || '',
     official: Boolean(defaultOfficial),
+    frozen: Boolean(defaultFrozen),
     tags: backendToSelect(defaultTags)
   })
   const [themeInput, setThemeInput] = useState('')
@@ -140,7 +147,7 @@ const CreateCourse = ({
     submit({ ...input, tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ name: '', tags: [], official: false })
+      setInput({ name: '', tags: [], official: false, frozen: false })
       setThemeInput('')
     }
   }
@@ -153,9 +160,7 @@ const CreateCourse = ({
 
   const handleKeyDownSelect = event => {
     if (!themeInput) return
-    switch (event.key) {
-    case 'Enter':
-    case 'Tab':
+    if (event.key === 'Tab' || event.key === 'Enter') {
       setInput({
         ...input,
         tags: [...input.tags, onTagCreate(themeInput)]
@@ -207,7 +212,7 @@ const CreateCourse = ({
           Cancel
         </Button>
       }
-      { user.role === 'STAFF' &&
+      { user.role === 'STAFF' && <>
         <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={
@@ -221,6 +226,20 @@ const CreateCourse = ({
             label='Official'
           />
         </FormControl>
+        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.frozen}
+                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
+                value='frozen'
+                color='primary'
+              />
+            }
+            label='Frozen'
+          />
+        </FormControl>
+        </>
       }
     </form>
   )
