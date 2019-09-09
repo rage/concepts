@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -97,7 +97,7 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
     history.push(`${urlPrefix}/${projectId}/${newPage}`)
   }
 
-  const isOwner = (projectQuery.data.projectById
+  const isOwner = (projectQuery.data && projectQuery.data.projectById
     && projectQuery.data.projectById.participants.find(pcp => pcp.user.id === user.id) || {}
   ).privilege === 'OWNER'
 

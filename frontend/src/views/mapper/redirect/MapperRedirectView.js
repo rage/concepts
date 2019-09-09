@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 
 import { WORKSPACE_BY_ID } from '../../../graphql/Query/Workspace'
 import CreateCourseForm from './CreateCourseForm'

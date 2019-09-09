@@ -1,4 +1,4 @@
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { useDialog } from '../DialogProvider'

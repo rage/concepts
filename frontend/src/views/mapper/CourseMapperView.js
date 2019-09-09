@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Menu, MenuItem, Button } from '@material-ui/core'
 import {
@@ -76,6 +76,9 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   })
 
   useEffect(() => {
+    if (!courseQuery.data) {
+      return
+    }
     const conceptsExist = courseQuery.data.courseById
       && courseQuery.data.courseById.concepts.length === 1
     const activeConceptHasLinks = courseQuery.data.courseById
@@ -136,8 +139,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     return <NotFoundView message='Workspace not found' />
   } else if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
-  } else if (!prereqQuery.data.courseAndPrerequisites || !courseQuery.data.courseById
-      || !workspaceQuery.data.workspaceById) {
+  } else if (prereqQuery.loading || courseQuery.loading || workspaceQuery.loading) {
     return <LoadingBar id='course-view' />
   }
 

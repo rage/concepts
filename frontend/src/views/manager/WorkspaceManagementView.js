@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { Typography, Paper } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'

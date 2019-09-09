@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 
 import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
 import WorkspaceList from './WorkspaceList'
@@ -38,8 +38,7 @@ const UserViewContent = ({ user }) => {
 
   const classes = useStyles()
 
-  if (!workspaceQuery.data.workspacesForUser ||
-      (user.role === 'STAFF' && !projectQuery.data.projectsForUser)) {
+  if (workspaceQuery.loading || projectQuery.loading) {
     return <LoadingBar id='main-view' />
   }
 

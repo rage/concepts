@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { useCreateWorkspaceDialog, useEditWorkspaceDialog } from '../../dialogs/workspace'
 import { useShareDialog } from '../../dialogs/sharing'

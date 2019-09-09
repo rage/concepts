@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import {
   CREATE_SHARE_LINK, DELETE_SHARE_LINK, CREATE_PROJECT_SHARE_LINK

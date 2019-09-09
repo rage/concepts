@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { Typography, Button } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'

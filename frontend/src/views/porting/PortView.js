@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import Ajv from 'ajv'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -297,10 +297,10 @@ const PortView = () => {
 
   const workspaceOptions = () => {
     if (selectState.projectId)
-      return templatesQuery.data.projectById &&
+      return templatesQuery.data && templatesQuery.data.projectById &&
         templatesQuery.data.projectById.templates
     else
-      return workspacesQuery.data.workspacesForUser &&
+      return workspacesQuery.data && workspacesQuery.data.workspacesForUser &&
         workspacesQuery.data.workspacesForUser
           .filter(w => !w.workspace.asTemplate)
           .map(w => w.workspace)
@@ -346,7 +346,7 @@ const PortView = () => {
                   <em>None</em>
                 </MenuItem>
                 {
-                  projectsQuery.data.projectsForUser && projectsQuery.data.projectsForUser
+                  projectsQuery.data && projectsQuery.data.projectsForUser && projectsQuery.data.projectsForUser
                     .map(p => (
                       <MenuItem key={p.project.id} value={p.project.id}>
                         {p.project.name}

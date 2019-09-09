@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import {
   TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText
 } from '@material-ui/core'
@@ -110,7 +110,7 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     }
   }
 
-  const concepts = conceptIds && workspaceQuery.data.workspaceById &&
+  const concepts = conceptIds && workspaceQuery.data && workspaceQuery.data.workspaceById &&
     workspaceQuery.data.workspaceById
       .courses.flatMap(course => course.concepts)
       .filter(concept => conceptIds.has(concept.id))

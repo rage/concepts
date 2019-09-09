@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -60,8 +60,8 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
 
 const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
-  const { user } = useLoginStateValue()[0]
-  const messageDispatch = useMessageStateValue()[1]
+  const [{ user }] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -125,7 +125,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
-  const isOwner = (workspaceQuery.data.workspaceById
+  const isOwner = (workspaceQuery.data && workspaceQuery.data.workspaceById
     && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id) || {}
   ).privilege === 'OWNER'
 

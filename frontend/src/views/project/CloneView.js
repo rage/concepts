@@ -4,7 +4,7 @@ import {
   List, ListItem, ListItemText, Typography, Button, Container, Paper, TextField, Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import { CLONE_TEMPLATE_WORKSPACE, USE_SHARE_LINK } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
@@ -67,8 +67,7 @@ const PointGroupsView = ({ projectId }) => {
     return <NotFoundView message='Project not found' />
   }
 
-  const activeTemplate = projectQuery.data.projectById
-                      && projectQuery.data.projectById.activeTemplate
+  const activeTemplate = projectQuery.data.projectById.activeTemplate
   const mainCourse = activeTemplate && activeTemplate.mainCourse
   const disabled = !activeTemplate || (
     activeTemplate &&
