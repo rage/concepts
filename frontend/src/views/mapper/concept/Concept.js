@@ -49,6 +49,14 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: '#fff'
     }
   },
+  listItemContainer: {
+    '&:hover $lockIcon': {
+      visibility: 'visible'
+    }
+  },
+  lockIcon: {
+    visibility: 'hidden'
+  },
   tooltip: {
     backgroundColor: 'white',
     color: 'rgba(0, 0, 0, 0.87)',
@@ -174,6 +182,7 @@ const Concept = ({
         onClick={() => toggleFocus(concept.id)}
         className={classes.listItem}
         ref={activeConceptRef}
+        classes={{ container: classes.listItemContainer }}
       >
         {isActive && <ListItemIcon>
           <IconButton
@@ -200,7 +209,7 @@ const Concept = ({
                 <MoreVertIcon />
               </IconButton>
               :
-              <IconButton disabled>
+              <IconButton disabled classes={{ root: classes.lockIcon }}>
                 <LockIcon />
               </IconButton>
           }

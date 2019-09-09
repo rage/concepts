@@ -21,7 +21,13 @@ const useStyles = makeStyles(theme => ({
     padding: '16px',
     boxSizing: 'border-box',
     margin: '0 8px',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    '&:hover $lockIcon': {
+      visibility: 'visible'
+    }
+  },
+  lockIcon: {
+    visibility: 'hidden'
   },
   header: {
     display: 'flex',
@@ -127,7 +133,7 @@ const ActiveCourse = ({
                 <EditIcon />
               </IconButton>
               :
-              <IconButton disabled>
+              <IconButton disabled classes={{ root: classes.lockIcon }}>
                 <LockIcon />
               </IconButton>
           }

@@ -46,11 +46,11 @@ const useStyles = makeStyles(theme => ({
   },
   listItemContainer: {
     '&:hover $lockIcon': {
-      display: 'inline-flex'
+      visibility: 'visible'
     }
   },
   lockIcon: {
-    display: 'none'
+    visibility: 'hidden'
   },
   courseName: {
     overflowWrap: 'break-word',
@@ -136,7 +136,10 @@ const PrerequisiteCourse = withRouter(({
   }
   return (
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
-      <ListItem ref={checkboxRef} divider button onClick={onClick} classes={{ container: classes.listItemContainer }}>
+      <ListItem
+        ref={checkboxRef} divider button onClick={onClick}
+        classes={{ container: classes.listItemContainer }}
+      >
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           {

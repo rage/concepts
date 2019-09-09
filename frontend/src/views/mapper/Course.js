@@ -12,7 +12,13 @@ import { useEditCourseDialog } from '../../dialogs/course'
 const useStyles = makeStyles(theme => ({
   root: {
     margin: '0px 8px 16px 8px',
-    width: '100%'
+    width: '100%',
+    '&:hover $lockIcon': {
+      visibility: 'visible'
+    }
+  },
+  lockIcon: {
+    visibility: 'hidden'
   },
   list: {
     width: '100%',
@@ -82,7 +88,7 @@ const Course = ({
               <EditIcon />
             </IconButton>
             :
-            <IconButton disabled>
+            <IconButton disabled classes={{ root: classes.lockIcon }}>
               <LockIcon />
             </IconButton>
         }>
