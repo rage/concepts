@@ -53,6 +53,9 @@ query courseById($id: ID!) {
         id
         official
         from {
+          courses {
+            id
+          }
           id
         }
       }

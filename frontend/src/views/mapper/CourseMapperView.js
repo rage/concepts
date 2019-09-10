@@ -145,6 +145,9 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     (courseQuery.data.courseById && courseQuery.data.courseById.concepts.length !== 0) ||
     (workspaceQuery.data.workspaceById && workspaceQuery.data.workspaceById.courses.length > 1)
 
+  const courseSet = new Set(prereqQuery.data.courseAndPrerequisites &&
+    prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from.id))
+
   return <>
     <div
       id='course-view'
@@ -209,21 +212,21 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     </div>
     {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
       && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
-        prereqQuery.data.courseAndPrerequisites.linksToCourse
-          .filter(link => link.from.id === concept.courses[0].id)
-          ? concept.linksToConcept.map((link, lIdx) => (
-            <ConceptLink
-              linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
-              key={`concept-link-${link.id}`} delay={1}
-              active={!addingLink && (
-                focusedConceptIds.includes(concept.id) || focusedConceptIds.includes(link.from.id)
-              )}
-              linkId={link.id}
-              from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-              fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
-              posOffsets={{ x0: -5, x1: +6 }} />
-          )) : null
-      ))}
+        concept.linksToConcept.map((link, lIdx) => courseSet.has(link.from.courses[0].id) &&
+          <ConceptLink
+            linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
+            key={`concept-link-${link.id}`} delay={1}
+            active={!addingLink && (
+              focusedConceptIds.includes(concept.id) || focusedConceptIds.includes(link.from.id)
+            )}
+            linkId={link.id}
+            from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
+            fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
+            posOffsets={{ x0: -5, x1: +6 }}
+          />
+        )
+      ))
+    }
     <div ref={conceptLinkMenuRef} style={{
       position: 'absolute',
       width: '1px',
