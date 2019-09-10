@@ -12,7 +12,7 @@ import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
-} from '../../dialogs/concept/tagSelectUtils'
+} from '../../dialogs/tagSelectUtils'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -353,6 +353,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         options={Object.values(TaxonomyTags)}
         value={input.tags}
         isMulti
+        placeholder='Select tags...'
         menuPlacement='auto'
         menuPortalTarget={document.body}
       />

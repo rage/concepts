@@ -146,7 +146,7 @@ const PrerequisiteCourse = withRouter(({
           >
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name, course.official)
+              openEditCourseDialog(course.id, course.name, course.official, course.tags)
             }}>Edit</MenuItem>
             <MenuItem onClick={deleteCourse}>Delete</MenuItem>
           </Menu>
