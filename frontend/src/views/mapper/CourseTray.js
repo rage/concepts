@@ -24,11 +24,12 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '0 0 4px 0',
     flexDirection: 'column',
     display: 'none',
-    '&.courseTrayOpen': {
+    '&$courseTrayOpen': {
       display: 'flex',
       gridArea: 'courseTray'
     }
   },
+  courseTrayOpen: {},
   title: {
     paddingBottom: '0px',
     maxWidth: 'calc(100% - 64px)',
@@ -202,7 +203,9 @@ const CourseTray = ({
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
   return (
-    <Paper elevation={0} className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}>
+    <Paper
+      elevation={0} className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}
+    >
       <TextField
         margin='dense'
         id='description'

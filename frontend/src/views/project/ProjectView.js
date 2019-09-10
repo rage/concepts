@@ -33,10 +33,11 @@ const useStyles = makeStyles(() => ({
     '& > div': {
       overflow: 'hidden'
     },
-    '&.hideToolbar': {
+    '&$hideToolbar': {
       gridTemplateRows: '56px 0 1fr 1fr'
     }
   },
+  hideToolbar: {},
   header: {
     gridArea: 'header',
     margin: '16px 0 0',
@@ -78,7 +79,7 @@ const ProjectView = ({ projectId }) => {
   )
 
   return (
-    <div className={`${classes.root} ${showToolbar ? '' : 'hideToolbar'}`}>
+    <div className={`${classes.root} ${showToolbar ? '' : classes.hideToolbar}`}>
       <Typography className={classes.header} variant='h4'>
         Project: {projectQuery.data.projectById.name}
       </Typography>
