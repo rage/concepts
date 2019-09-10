@@ -12,7 +12,7 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
-  return (courseId, name, official, themes) => openDialog({
+  return (courseId, name, official, tags) => openDialog({
     mutation: updateCourse,
     type: 'Course',
     requiredVariables: {
@@ -45,8 +45,8 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
       components: {
         DropdownIndicator: null
       },
-      defaultValue: themes ? backendToSelect(themes) : [],
-      values: themes
+      defaultValue: tags ? backendToSelect(tags) : [],
+      values: []
     }]
   })
 }
