@@ -120,7 +120,6 @@ const ActiveCourse = ({
           )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
         </Select>
         <div className={classes.titleEditWrapper}>
-
           <IconButton
             onClick={() => openEditCourseDialog(course.id, course.name, course.official,
               course.frozen, course.tags)}

@@ -64,11 +64,13 @@ const CourseQueries = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldTags = await context.prisma.course({ id }).tags()
 
-    const tagsToDelete = oldTags
-      .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
-      .map(oldTag => ({ id: oldTag.id }))
-    const tagsToCreate = tags ? tags
-      .filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id)) : []
+    const tagsToDelete = tags
+      ? oldTags.filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
+        .map(oldTag => ({ id: oldTag.id }))
+      : []
+    const tagsToCreate = tags
+      ? tags.filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
+      : []
 
     const data = {
       tags: {

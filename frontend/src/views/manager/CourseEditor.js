@@ -390,32 +390,32 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         </Button>
       }
       { user.role === 'STAFF' && <>
-        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={input.official}
-                onChange={evt => setInput({ ...input, official: evt.target.checked })}
-                value='official'
-                color='primary'
-              />
-            }
-            label='Official'
-          />
-        </FormControl>
-        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={input.frozen}
-                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
-                value='frozen'
-                color='primary'
-              />
-            }
-            label='Frozen'
-          />
-        </FormControl>
+          <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={input.official}
+                  onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                  value='official'
+                  color='primary'
+                />
+              }
+              label='Official'
+            />
+          </FormControl>
+          <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={input.frozen}
+                  onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
+                  value='frozen'
+                  color='primary'
+                />
+              }
+              label='Frozen'
+            />
+          </FormControl>
         </>
       }
     </form>

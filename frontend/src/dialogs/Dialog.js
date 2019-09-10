@@ -163,8 +163,7 @@ const Dialog = ({ contextRef }) => {
                   onChange={selected => setInputState({
                     ...inputState,
                     [field.name]: selected || []
-                  }
-                  )}
+                  })}
                   onCreateOption={newOption => setInputState({
                     ...inputState,
                     [field.name]: [
@@ -185,8 +184,10 @@ const Dialog = ({ contextRef }) => {
                   isMulti={field.isMultiSelect}
                 />
               } else if (field.type === 'checkbox') {
-                return <FormControl style={{ verticalAlign: 'middle', marginRight: '12px' }}
-                  key={field.name}>
+                return <FormControl
+                  style={{ verticalAlign: 'middle', marginRight: '12px' }}
+                  key={field.name}
+                >
                   <FormControlLabel
                     control={
                       <Checkbox
