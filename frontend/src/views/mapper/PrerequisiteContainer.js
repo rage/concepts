@@ -17,7 +17,6 @@ const useStyles = makeStyles({
 const PrerequisiteContainer = ({
   courseTrayOpen,
   courseLinks,
-  courses,
   focusedConceptIds,
   addingLink,
   setAddingLink,
@@ -49,15 +48,15 @@ const PrerequisiteContainer = ({
       margin='0px 8px 0px 16px'
     />
     {
-      courses && courses.length !== 0 ?
+      courseLinks && courseLinks.length !== 0 ?
         <div onClick={() => setAddingLink(null)} className={classes.root}>
-          {courses && <Masonry courseTrayOpen={courseTrayOpen}>
-            {courses.map((course, index) =>
+          {courseLinks && <Masonry courseTrayOpen={courseTrayOpen}>
+            {courseLinks.map((link, index) =>
               <Course
-                key={course.id}
-                course={course}
+                key={link.id}
+                courseLink={link}
                 connectionRef={index === 0 ? connectionRef : undefined}
-                createConceptRef={(index === 0 && course.concepts.length === 0)
+                createConceptRef={(index === 0 && link.from.concepts.length === 0)
                   ? createConceptRef : undefined}
                 focusedConceptIds={focusedConceptIds}
                 addingLink={addingLink}

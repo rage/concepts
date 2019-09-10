@@ -48,6 +48,7 @@ query courseById($id: ID!) {
       linksFromConcept {
         id
         official
+        frozen
         to {
           id
         }
@@ -55,6 +56,7 @@ query courseById($id: ID!) {
       linksToConcept {
         id
         official
+        frozen
         from {
           id
         }
@@ -89,6 +91,7 @@ fragment courseAndConcepts on Course {
       linksFromConcept {
         id
         official
+        frozen
         to {
           id
         }
@@ -96,6 +99,7 @@ fragment courseAndConcepts on Course {
       linksToConcept {
         id
         official
+        frozen
         from {
           id
         }
@@ -113,6 +117,8 @@ query courseAndPrerequisites($courseId: ID!) {
     frozen
     linksToCourse {
       id
+      official
+      frozen
       from {
         id
         __typename

@@ -62,6 +62,7 @@ type Mutation {
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
+  updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink
   deleteCourseLink(id: ID!): CourseLink
 
   # Concept link mutations
