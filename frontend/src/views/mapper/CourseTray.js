@@ -6,7 +6,7 @@ import {
   ListItemSecondaryAction, IconButton, Menu, MenuItem
 } from '@material-ui/core'
 import {
-  MoreVert as MoreVertIcon, Lock as LockIcon
+  MoreVert as MoreVertIcon
 } from '@material-ui/icons'
 import { withRouter } from 'react-router-dom'
 
@@ -43,14 +43,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
     flex: 1
-  },
-  listItemContainer: {
-    '&:hover $lockIcon': {
-      visibility: 'visible'
-    }
-  },
-  lockIcon: {
-    visibility: 'hidden'
   },
   courseName: {
     overflowWrap: 'break-word',
@@ -138,27 +130,18 @@ const PrerequisiteCourse = withRouter(({
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
       <ListItem
         ref={checkboxRef} divider button onClick={onClick}
-        classes={{ container: classes.listItemContainer }}
       >
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
-          {
-            course.frozen &&
-              <IconButton disabled classes={{ root: classes.lockIcon }}>
-                <LockIcon />
-              </IconButton>
-          }
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
-          {
-            (!course.frozen || user.role === 'STAFF') &&
-              <IconButton
-                aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
-                aria-haspopup='true'
-                onClick={handleMenuOpen}
-              >
-                <MoreVertIcon />
-              </IconButton>
-          }
+          <IconButton
+            aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
+            aria-haspopup='true'
+            onClick={handleMenuOpen}
+            disabled={(course.frozen && user.role !== 'STAFF')}
+          >
+            <MoreVertIcon />
+          </IconButton>
           <Menu
             id='prerequisite-course-menu'
             anchorEl={anchorEl}

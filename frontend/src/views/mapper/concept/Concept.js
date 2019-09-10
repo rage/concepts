@@ -5,8 +5,7 @@ import {
   ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Fade
 } from '@material-ui/core'
 import {
-  MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon,
-  Lock as LockIcon
+  MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon
 } from '@material-ui/icons'
 import Tooltip from '@material-ui/core/Tooltip'
 
@@ -46,14 +45,6 @@ const useStyles = makeStyles(theme => ({
     '&:focus': {
       backgroundColor: '#fff'
     }
-  },
-  listItemContainer: {
-    '&:hover $lockIcon': {
-      visibility: 'visible'
-    }
-  },
-  lockIcon: {
-    visibility: 'hidden'
   },
   tooltip: {
     backgroundColor: 'white',
@@ -180,7 +171,6 @@ const Concept = ({
         onClick={() => toggleFocus(concept.id)}
         className={classes.listItem}
         ref={activeConceptRef}
-        classes={{ container: classes.listItemContainer }}
       >
         {isActive && <ListItemIcon>
           <IconButton
@@ -197,20 +187,14 @@ const Concept = ({
           {concept.name}
         </ListItemText>
         <ListItemSecondaryAction>
-          {
-            loggedIn && (!concept.frozen || user.role === 'STAFF') ?
-              <IconButton
-                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                aria-haspopup='true'
-                onClick={handleMenuOpen}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              :
-              <IconButton disabled classes={{ root: classes.lockIcon }}>
-                <LockIcon />
-              </IconButton>
-          }
+          <IconButton
+            aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+            aria-haspopup='true'
+            onClick={handleMenuOpen}
+            disabled={!loggedIn || (concept.frozen && user.role !== 'STAFF')}
+          >
+            <MoreVertIcon />
+          </IconButton>
           <Menu
             anchorEl={state.anchorEl}
             open={Boolean(state.anchorEl)}

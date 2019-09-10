@@ -21,13 +21,7 @@ const useStyles = makeStyles(theme => ({
     padding: '16px',
     boxSizing: 'border-box',
     margin: '0 8px',
-    overflow: 'hidden',
-    '&:hover $lockIcon': {
-      visibility: 'visible'
-    }
-  },
-  lockIcon: {
-    visibility: 'hidden'
+    overflow: 'hidden'
   },
   header: {
     display: 'flex',
@@ -126,18 +120,14 @@ const ActiveCourse = ({
           )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
         </Select>
         <div className={classes.titleEditWrapper}>
-          {
-            (!course.frozen || user.role === 'STAFF') ?
-              <IconButton onClick={() =>
-                openEditCourseDialog(course.id, course.name, course.official,
-                  course.frozen, course.tags)}>
-                <EditIcon />
-              </IconButton>
-              :
-              <IconButton disabled classes={{ root: classes.lockIcon }}>
-                <LockIcon />
-              </IconButton>
-          }
+
+          <IconButton
+            onClick={() => openEditCourseDialog(course.id, course.name, course.official,
+              course.frozen, course.tags)}
+            disabled={(course.frozen && user.role !== 'STAFF')}
+          >
+            <EditIcon />
+          </IconButton>
         </div>
       </div>
 
