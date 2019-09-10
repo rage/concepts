@@ -36,8 +36,8 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       type: 'select',
       name: 'themes',
       isMultiSelect: true,
-      label: 'Themes...',
       menuIsOpen: false,
+      label: 'Themes...',
       components: {
         DropdownIndicator: null
       },

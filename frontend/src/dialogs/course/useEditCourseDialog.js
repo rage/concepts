@@ -33,6 +33,17 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
       type: 'checkbox',
       defaultValue: official,
       hidden: !isStaff
+    },
+    {
+      type: 'select',
+      name: 'themes',
+      isMultiSelect: true,
+      label: 'Themes...',
+      menuIsOpen: false,
+      components: {
+        DropdownIndicator: null
+      },
+      values: []
     }]
   })
 }
