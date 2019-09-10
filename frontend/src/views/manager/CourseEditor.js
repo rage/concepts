@@ -353,7 +353,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         options={Object.values(TaxonomyTags)}
         value={input.tags}
         isMulti
-        placeholder='Select tags'
+        placeholder='Select tags...'
         menuPlacement='auto'
         menuPortalTarget={document.body}
       />
