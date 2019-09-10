@@ -3,7 +3,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
-import { backendToSelect } from '../concept/tagSelectUtils'
+import { backendToSelect, selectToBackend } from '../tagSelectUtils'
 
 const useEditCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -37,10 +37,11 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     },
     {
       type: 'select',
-      name: 'themes',
+      name: 'tags',
       isMultiSelect: true,
       label: 'Themes...',
       menuIsOpen: false,
+      valueMutator: selectToBackend,
       components: {
         DropdownIndicator: null
       },

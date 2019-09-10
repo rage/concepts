@@ -12,7 +12,7 @@ import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
-} from '../../dialogs/concept/tagSelectUtils'
+} from '../../dialogs/tagSelectUtils'
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -9,7 +9,7 @@ import { MERGE_CONCEPTS } from '../../graphql/Mutation'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
-} from '../../dialogs/concept/tagSelectUtils'
+} from '../../dialogs/tagSelectUtils'
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 
 const MergeDialogContent = ({ state, setState, concepts }) => {

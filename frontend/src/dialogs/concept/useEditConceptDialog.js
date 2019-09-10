@@ -4,7 +4,7 @@ import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import TaxonomyTags from './TaxonomyTags'
-import tagSelectProps from './tagSelectUtils'
+import tagSelectProps from '../tagSelectUtils'
 
 const useEditConceptDialog = isStaff => {
   const { openDialog } = useDialog()

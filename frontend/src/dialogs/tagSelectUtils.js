@@ -1,6 +1,6 @@
 import chroma from 'chroma-js'
 
-import TaxonomyTags from './TaxonomyTags'
+import TaxonomyTags from './concept/TaxonomyTags'
 
 export const backendToSelect = tags => tags ? tags.map(tag =>
   tag.type === 'bloom' && tag.name in TaxonomyTags
