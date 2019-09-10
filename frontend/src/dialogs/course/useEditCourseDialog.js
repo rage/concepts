@@ -3,6 +3,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
+import { backendToSelect } from '../concept/tagSelectUtils'
 
 const useEditCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -11,7 +12,7 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
-  return (courseId, name, official) => openDialog({
+  return (courseId, name, official, themes) => openDialog({
     mutation: updateCourse,
     type: 'Course',
     requiredVariables: {
@@ -43,7 +44,8 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
       components: {
         DropdownIndicator: null
       },
-      values: []
+      defaultValue: themes ? backendToSelect(themes) : [],
+      values: themes
     }]
   })
 }
