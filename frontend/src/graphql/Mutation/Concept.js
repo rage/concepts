@@ -22,6 +22,7 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
     linksFromConcept {
       id
       official
+      frozen
       to {
         id
       }
@@ -29,6 +30,7 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
     linksToConcept {
       id
       official
+      frozen
       from {
         id
       }
@@ -60,6 +62,7 @@ mutation createConcept($name: String!, $description: String!, $official: Boolean
     linksFromConcept {
       id
       official
+      frozen
       to {
         id
       }
@@ -67,6 +70,7 @@ mutation createConcept($name: String!, $description: String!, $official: Boolean
     linksToConcept {
       id
       official
+      frozen
       from {
         id
       }

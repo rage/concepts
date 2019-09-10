@@ -129,7 +129,8 @@ const ActiveCourse = ({
           {
             (!course.frozen || user.role === 'STAFF') ?
               <IconButton onClick={() =>
-                openEditCourseDialog(course.id, course.name, course.official, course.frozen)}>
+                openEditCourseDialog(course.id, course.name, course.official,
+                  course.frozen, course.tags)}>
                 <EditIcon />
               </IconButton>
               :

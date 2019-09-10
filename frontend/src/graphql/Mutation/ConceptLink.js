@@ -5,6 +5,7 @@ mutation createConceptLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: B
   createConceptLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official) {
     id
     official
+    frozen
     to {
       id
     }

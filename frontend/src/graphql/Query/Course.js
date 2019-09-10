@@ -73,6 +73,12 @@ fragment courseAndConcepts on Course {
     name
     official
     frozen
+    tags {
+      id
+      name
+      type
+      priority
+    }
     concepts {
       id
       name

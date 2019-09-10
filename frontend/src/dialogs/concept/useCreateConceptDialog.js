@@ -4,7 +4,7 @@ import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { useDialog } from '../DialogProvider'
 import cache from '../../apollo/update'
 import TaxonomyTags from './TaxonomyTags'
-import tagSelectProps from './tagSelectUtils'
+import tagSelectProps from '../tagSelectUtils'
 
 const useCreateConceptDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -43,7 +43,7 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
     {
       type: 'select',
       name: 'tags',
-      label: 'Select tags',
+      label: 'Select tags...',
       ...tagSelectProps(),
       values: Object.values(TaxonomyTags)
     }]

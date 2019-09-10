@@ -35,14 +35,15 @@ const updateCourseUpdate = (workspaceId) =>
       const updatedCourse = response.data.updateCourse
       if (includedIn(dataInStore.workspaceById.courses, updatedCourse)) {
         dataInStore.workspaceById.courses = dataInStore.workspaceById.courses
-          .map(course => course.id === updatedCourse.id ? updatedCourse : course)
+          .map(course => course.id === updatedCourse.id ? { ...course, ...updatedCourse } : course)
         client.writeQuery({
           query: WORKSPACE_BY_ID,
           variables: { id: workspaceId },
           data: dataInStore
         })
       }
-    } catch (e) { }
+    } catch (e) {
+    }
   }
 
 const deleteCourseUpdate = (workspaceId, activeCourseId) =>

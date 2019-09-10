@@ -11,6 +11,12 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
       name
       official
       frozen
+      tags {
+        id
+        name
+        type
+        priority
+      }
       concepts {
         id
         name
@@ -20,16 +26,24 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
         courses {
           id
         }
+        tags {
+          id
+          name
+          type
+          priority
+        }
         linksToConcept {
-            official
+          id
+          official
+          frozen
+          from {
             id
-            from {
-              id
-            }
+          }
         }
         linksFromConcept {
-          official
           id
+          official
+          frozen
           to {
             id
           }

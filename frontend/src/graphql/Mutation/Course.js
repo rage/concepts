@@ -57,17 +57,18 @@ mutation updateCourse($id: ID!, $name: String!, $official: Boolean,
       type
       priority
     }
-    linksToCourse {
-      from {
-        id
-      }
-    }
     concepts {
       id
       name
       description
       official
       frozen
+      tags {
+        id
+        name
+        type
+        priority
+      }
       courses {
         id
       }

@@ -9,7 +9,7 @@ import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@mater
 
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
-} from '../../dialogs/concept/tagSelectUtils'
+} from '../../dialogs/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
 
 const useStyles = makeStyles(theme => ({
