@@ -5,7 +5,7 @@ import {
   TextField, Button, FormControlLabel, Checkbox, FormControl
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
-import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
+import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
@@ -31,8 +31,14 @@ const useStyles = makeStyles(theme => ({
   listItemDisabled: {
     color: 'rgba(0, 0, 0, 0.26)'
   },
+  lockIcon: {
+    visibility: 'hidden'
+  },
   courseButton: {
-    paddingRight: '104px'
+    paddingRight: '104px',
+    '&:hover $lockIcon': {
+      visibility: 'visible'
+    }
   },
   courseName: {
     whiteSpace: 'nowrap',
@@ -92,6 +98,11 @@ const CourseList = ({
                 <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
               } />
               <ListItemSecondaryAction>
+                {course.frozen && user.role !== 'STAFF' && (
+                  <IconButton disabled classes={{ root: classes.lockIcon }}>
+                    <LockIcon />
+                  </IconButton>
+                )}
                 {!course.frozen &&
                   <IconButton
                     color={editing ? 'inherit' : undefined} aria-label='Delete' onClick={evt => {

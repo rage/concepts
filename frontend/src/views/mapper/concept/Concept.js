@@ -5,9 +5,7 @@ import {
   ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Fade
 } from '@material-ui/core'
 import {
-  MoreVert as MoreVertIcon,
-  ArrowLeft as ArrowLeftIcon,
-  ArrowRight as ArrowRightIcon,
+  MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon,
   Lock as LockIcon
 } from '@material-ui/icons'
 import Tooltip from '@material-ui/core/Tooltip'
