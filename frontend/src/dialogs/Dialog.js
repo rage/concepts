@@ -174,6 +174,7 @@ const Dialog = ({ contextRef }) => {
                         : { label: newOption, value: newOption }
                     ]
                   })}
+                  components={field.components}
                   options={field.values}
                   value={inputState[field.name]}
                   styles={field.styles}

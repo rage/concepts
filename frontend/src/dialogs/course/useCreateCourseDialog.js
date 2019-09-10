@@ -31,6 +31,17 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       name: 'official',
       type: 'checkbox',
       hidden: !isStaff
+    },
+    {
+      type: 'select',
+      name: 'themes',
+      isMultiSelect: true,
+      label: 'Themes...',
+      menuIsOpen: false,
+      components: {
+        DropdownIndicator: null
+      },
+      values: []
     }]
   })
 }
