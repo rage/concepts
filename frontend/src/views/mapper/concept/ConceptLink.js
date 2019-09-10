@@ -157,10 +157,10 @@ const useLineStyles = makeStyles({
     }
   },
   linetoWrapper: {
-    '&:not(.linetoActive)': {
+    '&:not($linetoActive)': {
       pointerEvents: 'none'
     },
-    '&.linetoActive:before': {
+    '&$linetoActive:before': {
       borderRightColor: 'red'
     },
     '&:before': {
@@ -181,10 +181,11 @@ const useLineStyles = makeStyles({
     position: 'absolute',
     pointerEvents: 'none',
     borderTop: '3px solid rgba(117, 117, 117, 0.15)',
-    '&.linetoActive': {
+    '&$linetoActive': {
       borderTopColor: '#f50057'
     }
-  }
+  },
+  linetoActive: {}
 })
 
 const Line = ({
@@ -321,7 +322,7 @@ const Line = ({
       className={classes.linetoPlaceholder} data-link-from={from} data-link-to={to} {...attributes}
     >
       <div
-        className={`${classes.linetoWrapper} ${active && !followMouse ? 'linetoActive' : ''}`}
+        className={`${classes.linetoWrapper} ${active && !followMouse ? classes.linetoActive : ''}`}
         ref={elCallback} style={wrapperStyle}
       >
         {(active && !followMouse) &&
@@ -333,7 +334,7 @@ const Line = ({
         }
         <div
           style={innerStyle}
-          className={`${classes.linetoLine} ${active ? 'linetoActive' : ''}`}
+          className={`${classes.linetoLine} ${active ? classes.linetoActive : ''}`}
         />
       </div>
     </div>
