@@ -174,6 +174,7 @@ const Dialog = ({ contextRef }) => {
                         : { label: newOption, value: newOption }
                     ]
                   })}
+                  placeholder={field.label}
                   components={{ ...field.components }}
                   options={field.values}
                   value={inputState[field.name]}
