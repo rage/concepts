@@ -10,13 +10,12 @@ const CourseQueries = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
 
     if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
 
     return context.prisma.createCourse({
       name: name,
-      official: Boolean(belongsToTemplate || official),
+      official: Boolean(official),
       frozen: Boolean(frozen),
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },

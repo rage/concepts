@@ -80,14 +80,13 @@ const ConceptMutations = {
       workspaceId
     })
 
-    const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
     const createdConcept = await context.prisma.createConcept({
       name,
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
-      description: description,
-      official: Boolean(belongsToTemplate || official),
+      description,
+      official: Boolean(official),
       frozen: Boolean(frozen),
       courses: courseId ? { connect: [{ id: courseId }] } : undefined,
       tags: { create: tags }

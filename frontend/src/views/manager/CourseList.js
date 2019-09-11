@@ -60,18 +60,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const CourseList = ({
-  courses, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
+  workspace, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
 }) => {
   const classes = useStyles()
   const listRef = useRef()
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
 
+  const isTemplate = Boolean(workspace.asTemplate && workspace.asTemplate.id)
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader title='Courses' />
       <List ref={listRef} className={classes.list}>{
-        courses.map(course => (
+        workspace.courses.map(course => (
           <ListItem
             className={course.id === focusedCourseId ? classes.listItemActive :
               editing && editing !== course.id ? classes.listItemDisabled : null}
@@ -87,10 +89,7 @@ const CourseList = ({
                   updateCourse({ id: course.id, ...args })
                 }}
                 cancel={() => setEditing(null)}
-                defaultName={course.name}
-                defaultOfficial={course.official}
-                defaultFrozen={course.frozen}
-                defaultTags={course.tags}
+                defaultValues={course}
                 action='Save'
               />
             </> : <>
@@ -134,22 +133,28 @@ const CourseList = ({
       <CreateCourse submit={async args => {
         await createCourse(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
-      }} />
+      }} defaultValues={{ official: isTemplate }} />
     </Card>
   )
 }
 
+const initialState = {
+  name: '',
+  official: undefined,
+  frozen: undefined,
+  tags: []
+}
+
 const CreateCourse = ({
-  submit, defaultName, defaultOfficial, defaultFrozen, defaultTags, action = 'Create', cancel
+  submit, defaultValues, action = 'Create', cancel
 }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
-    name: defaultName || '',
-    official: Boolean(defaultOfficial),
-    frozen: Boolean(defaultFrozen),
-    tags: backendToSelect(defaultTags)
+    ...initialState,
+    ...defaultValues,
+    tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
   const [themeInput, setThemeInput] = useState('')
 
@@ -158,7 +163,7 @@ const CreateCourse = ({
     submit({ ...input, tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ name: '', tags: [], official: false, frozen: false })
+      setInput({ ...initialState, ...defaultValues })
       setThemeInput('')
     }
   }

@@ -1,4 +1,5 @@
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
+
 import { savingIndicator } from '../components/NavBar'
 
 let requestsInFlight = 0

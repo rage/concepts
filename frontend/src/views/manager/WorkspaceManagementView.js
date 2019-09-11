@@ -118,7 +118,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       </Typography>
       <div className={classes.courses}>
         <CourseList
-          courses={workspace.courses}
+          workspace={workspace}
           setFocusedCourseId={setFocusedCourseId}
           focusedCourseId={focusedCourseId}
           deleteCourse={id => deleteCourse({ variables: { id } }).catch(e)}
@@ -129,7 +129,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       <div className={classes.newCourse}>
         {focusedCourse
           ? <CourseEditor
-            workspaceId={workspaceId}
+            workspace={workspaceQuery.data.workspaceById}
             course={focusedCourse}
             createConcept={args => createConcept({
               variables: {

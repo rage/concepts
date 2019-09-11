@@ -1,5 +1,4 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullShield } = require('../../errors')
 const makeSecret = require('../../secret')
 
 const workspaceAllDataQuery = `

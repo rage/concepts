@@ -96,7 +96,7 @@ const sortingOptions = {
   CREATION_DESC: 'Creation date (newest first)'
 }
 
-const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, deleteConcept }) => {
+const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const listRef = useRef()
@@ -107,6 +107,8 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
   const [conceptFilter, setConceptFilter] = useState('')
 
   const [sortMethod, setSortMethod] = useState('CREATION_ASC')
+
+  const isTemplate = Boolean(workspace.asTemplate && workspace.asTemplate.id)
 
   const startMerging = () => {
     setEditing(null)
@@ -207,7 +209,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
       </div>
 
       {mergeDialogOpen !== null && <MergeDialog
-        workspaceId={workspaceId} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
+        workspace={workspace} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
@@ -293,7 +295,7 @@ const CourseEditor = ({ workspaceId, course, createConcept, updateConcept, delet
       <CreateConcept submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
-      }} />
+      }} defaultValues={{ official: isTemplate }} />
     </Card>
   )
 }
@@ -326,7 +328,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
     })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ ...initialState })
+      setInput({ ...initialState, ...defaultValues })
     }
   }
 
