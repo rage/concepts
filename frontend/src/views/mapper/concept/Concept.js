@@ -175,8 +175,7 @@ const Concept = ({
         {isActive && <ListItemIcon>
           <IconButton
             buttonRef={conceptLinkRef} onClick={onClick}
-            className={`${classes.activeConceptCircle}
-                        ${focusedConceptIds.includes(concept.id) ? 'conceptCircleFocused' : ''}`}
+            className={classes.activeConceptCircle}
           >
             <ArrowLeftIcon
               viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
@@ -188,7 +187,6 @@ const Concept = ({
         </ListItemText>
         <ListItemSecondaryAction>
           <IconButton
-            aria-owns={state.anchorEl ? 'simple-menu' : undefined}
             aria-haspopup='true'
             onClick={handleMenuOpen}
             disabled={!loggedIn || (concept.frozen && user.role !== 'STAFF')}
@@ -206,8 +204,7 @@ const Concept = ({
           {!isActive && <IconButton
             buttonRef={connectionRef}
             onClick={onClick}
-            className={`${classes.conceptCircle}
-                        ${focusedConceptIds.includes(concept.id) ? 'conceptCircleFocused' : ''}`}
+            className={classes.conceptCircle}
           >
             <ArrowRightIcon
               viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}

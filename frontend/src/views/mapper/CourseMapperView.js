@@ -28,22 +28,23 @@ const useStyles = makeStyles(() => ({
     gridTemplate: `"traySpacer traySpacer contentHeader activeHeader" 42px
                    "courseTray trayButton courses       activeCourse" 1fr
                   / 0          64px       8fr           3fr`,
-    '&.courseTrayOpen': {
+    '&$courseTrayOpen': {
       gridTemplateColumns: '3fr 64px 7fr 3fr'
     },
     '@media screen and (max-width: 1999px)': {
       gridTemplateColumns: '0 64px 6fr 3fr',
-      '&.courseTrayOpen': {
+      '&$courseTrayOpen': {
         gridTemplateColumns: '3fr 64px 5fr 3fr'
       }
     },
     '@media screen and (max-width: 1499px)': {
       gridTemplateColumns: '0 64px 4fr 3fr',
-      '&.courseTrayOpen': {
+      '&$courseTrayOpen': {
         gridTemplateColumns: '3fr 64px 3fr 3fr'
       }
     }
-  }
+  },
+  courseTrayOpen: {}
 }))
 
 const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
@@ -148,7 +149,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   return <>
     <div
       id='course-view'
-      className={`${classes.root} ${courseTrayOpen ? 'courseTrayOpen' : ''}`}
+      className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}
     >
       <DividerWithText
         gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
