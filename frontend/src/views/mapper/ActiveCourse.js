@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Button, Paper, Select, MenuItem, InputBase, List, IconButton
 } from '@material-ui/core'
-import { Edit as EditIcon } from '@material-ui/icons'
+import { Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
 import { Concept } from './concept'
 import { useCreateConceptDialog } from '../../dialogs/concept'
@@ -120,9 +120,11 @@ const ActiveCourse = ({
           )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
         </Select>
         <div className={classes.titleEditWrapper}>
-          <IconButton onClick={() =>
-            openEditCourseDialog(course.id, course.name, course.official, course.tags)
-          }>
+          <IconButton
+            onClick={() => openEditCourseDialog(course.id, course.name, course.official,
+              course.frozen, course.tags)}
+            disabled={(course.frozen && user.role !== 'STAFF')}
+          >
             <EditIcon />
           </IconButton>
         </div>

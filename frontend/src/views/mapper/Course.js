@@ -2,12 +2,19 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
-import { Edit as EditIcon } from '@material-ui/icons'
+import {
+  Edit as EditIcon,
+  Lock as LockedIcon,
+  LockOpen as LockOpenIcon
+} from '@material-ui/icons'
+import { useMutation } from 'react-apollo-hooks'
 
 import { Concept } from './concept'
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue, useMessageStateValue } from '../../store'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
+import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
+import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Course = ({
-  course,
+  courseLink,
   connectionRef,
   createConceptRef,
   activeCourseId,
@@ -61,11 +68,24 @@ const Course = ({
 }) => {
   const { user, loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
+  const [, messageDispatch] = useMessageStateValue()
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
+  const course = courseLink.from
+  const updateCourseLink = useMutation(UPDATE_COURSE_LINK, {
+    update: cache.updateCourseLinkUpdate(workspaceId, activeCourseId)
+  })
 
   const onHeaderClickHandle = () => {
     history.push(`${urlPrefix}/${workspaceId}/mapper/${course.id}`)
+  }
+
+  const setCourseLinkFrozen = async (frozen) => {
+    await updateCourseLink({ variables: { id: courseLink.id, frozen } })
+      .catch(() => messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      }))
   }
 
   return (
@@ -75,13 +95,21 @@ const Course = ({
         title={
           <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
         }
-        action={
-          loggedIn ?
-            <IconButton onClick={() =>
-              openEditCourseDialog(course.id, course.name, course.official)}>
-              <EditIcon />
+        action={<>
+          {(user.role === 'STAFF' || courseLink.frozen) &&
+            <IconButton
+              disabled={user.role !== 'STAFF'}
+              onClick={() => setCourseLinkFrozen(!courseLink.frozen)}
+            >
+              {courseLink.frozen ? <LockedIcon /> : <LockOpenIcon />}
             </IconButton>
-            : null
+          }
+          <IconButton disabled={!loggedIn || (course.frozen && user.role !== 'STAFF')}
+            onClick={() => openEditCourseDialog(course.id, course.name,
+              course.official, course.frozen)}>
+            <EditIcon />
+          </IconButton>
+          </>
         }>
       </CardHeader>
 

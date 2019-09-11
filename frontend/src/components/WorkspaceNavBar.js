@@ -125,8 +125,8 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
-  const isOwner = (workspaceQuery.data.workspaceById
-    && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id) || {}
+  const isOwner = ((workspaceQuery.data.workspaceById
+    && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id)) || {}
   ).privilege === 'OWNER'
 
   return (

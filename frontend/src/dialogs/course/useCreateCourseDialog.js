@@ -33,6 +33,10 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       hidden: !isStaff
     },
     {
+      name: 'frozen',
+      type: 'checkbox',
+      hidden: !isStaff
+    }, {
       type: 'select',
       name: 'tags',
       isMultiSelect: true,

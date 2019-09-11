@@ -60,6 +60,7 @@ query workspaceById($id: ID!) {
       id
       name
       official
+      frozen
       tags {
         id
         name
@@ -71,6 +72,7 @@ query workspaceById($id: ID!) {
         name
         description
         official
+        frozen
         tags {
           id
           name

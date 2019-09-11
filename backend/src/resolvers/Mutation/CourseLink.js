@@ -26,7 +26,21 @@ const CourseQueries = {
       workspace: { connect: { id: workspaceId } }
     })
   },
+  async updateCourseLink(root, { id, frozen, official }, context) {
+    const { id: workspaceId } = nullShield(await context.prisma.courseLink({ id }).workspace())
+    await checkAccess(context, {
+      minimumRole: Role.STAFF,
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId
+    })
+    const oldLink = await context.prisma.courseLink({ id })
+    if (oldLink.frozen && frozen !== false) throw new ForbiddenError('This link is frozen')
 
+    return await context.prisma.updateCourseLink({
+      where: { id },
+      data: { frozen, official }
+    })
+  },
   async deleteCourseLink(root, { id }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.courseLink({ id }).workspace())
     await checkAccess(context, {
