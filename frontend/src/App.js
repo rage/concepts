@@ -109,7 +109,7 @@ const projectRouter = prefix => <>
 </>
 
 const App = () => {
-  const { loggedIn } = useLoginStateValue()[0]
+  const [{ loggedIn }] = useLoginStateValue()
   const classes = useStyles()
 
   return <div className={classes.root}>
