@@ -58,6 +58,9 @@ query courseById($id: ID!) {
         official
         frozen
         from {
+          courses {
+            id
+          }
           id
         }
       }

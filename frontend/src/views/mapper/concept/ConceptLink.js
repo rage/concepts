@@ -1,10 +1,16 @@
-import React, { Component, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { Component, useEffect, useLayoutEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
 
 // TODO turn this into a functional component
 export default class ConceptLink extends Component {
+  constructor(props) {
+    super(props)
+    this.fromRef = React.createRef()
+    this.toRef = React.createRef()
+  }
+
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount() {
     this.fromAnchor = this.parseAnchor(this.props.fromAnchor)
@@ -111,17 +117,20 @@ export default class ConceptLink extends Component {
   detect() {
     const { from: fromId, to: toId } = this.props
 
-    const from = document.getElementById(fromId)
-    const to = document.getElementById(toId)
-    if (!from || !to) {
+    const fromRef = this.fromRef
+    const toRef = this.toRef
+
+    fromRef.current = document.getElementById(fromId)
+    toRef.current = document.getElementById(toId)
+    if (!fromRef.current || !toRef.current) {
       return false
     }
 
     const offset = { x0: 0, y0: 0, x1: 0, y1: 0, ...this.props.posOffsets }
 
     return () => {
-      const fromBox = from.getBoundingClientRect()
-      const toBox = to.getBoundingClientRect()
+      const fromBox = fromRef.current.getBoundingClientRect()
+      const toBox = toRef.current.getBoundingClientRect()
 
       const x0 = fromBox.x + fromBox.width * this.fromAnchor.x + window.pageXOffset + offset.x0
       const y0 = fromBox.y + fromBox.height * this.fromAnchor.y + window.pageYOffset + offset.y0
@@ -148,10 +157,10 @@ const useLineStyles = makeStyles({
     }
   },
   linetoWrapper: {
-    '&:not(.linetoActive)': {
+    '&:not($linetoActive)': {
       pointerEvents: 'none'
     },
-    '&.linetoActive:before': {
+    '&$linetoActive:before': {
       borderRightColor: 'red'
     },
     '&:before': {
@@ -172,10 +181,11 @@ const useLineStyles = makeStyles({
     position: 'absolute',
     pointerEvents: 'none',
     borderTop: '3px solid rgba(117, 117, 117, 0.15)',
-    '&.linetoActive': {
+    '&$linetoActive': {
       borderTopColor: '#f50057'
     }
-  }
+  },
+  linetoActive: {}
 })
 
 const Line = ({
@@ -312,7 +322,7 @@ const Line = ({
       className={classes.linetoPlaceholder} data-link-from={from} data-link-to={to} {...attributes}
     >
       <div
-        className={`${classes.linetoWrapper} ${active && !followMouse ? 'linetoActive' : ''}`}
+        className={`${classes.linetoWrapper} ${active && !followMouse ? classes.linetoActive : ''}`}
         ref={elCallback} style={wrapperStyle}
       >
         {(active && !followMouse) &&
@@ -324,7 +334,7 @@ const Line = ({
         }
         <div
           style={innerStyle}
-          className={`${classes.linetoLine} ${active ? 'linetoActive' : ''}`}
+          className={`${classes.linetoLine} ${active ? classes.linetoActive : ''}`}
         />
       </div>
     </div>

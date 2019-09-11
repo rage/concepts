@@ -120,6 +120,7 @@ const PrerequisiteCourse = withRouter(({
           variables: { to: activeCourseId, from: course.id, workspaceId: workspaceId }
         })
       }
+      setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 0)
     } catch (err) {
       messageDispatch({
         type: 'setError',
