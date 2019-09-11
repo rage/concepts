@@ -338,7 +338,6 @@ const PortView = () => {
                   <OutlinedInput
                     labelWidth={projectLabelWidth}
                     name='projectId'
-                    id='outlined-simple'
                   />
                 }
               >
@@ -368,7 +367,6 @@ const PortView = () => {
                       <OutlinedInput
                         labelWidth={workspaceLabelWidth}
                         name='workspaceId'
-                        id='outlined-simple'
                       />
                     }
                   >

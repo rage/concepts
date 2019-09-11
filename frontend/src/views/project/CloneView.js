@@ -141,7 +141,6 @@ const CloneView = ({ history, token, peek, projectId }) => {
           margin='normal'
           required
           fullWidth
-          id='name'
           label='Workspace name'
           name='name'
           onChange={evt => setName(evt.target.value)}

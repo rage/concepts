@@ -113,7 +113,6 @@ const LoginView = ({ history, location }) => {
             margin='normal'
             required
             fullWidth
-            id='email'
             label='email or username'
             name='email'
             autoComplete='email'
@@ -131,7 +130,6 @@ const LoginView = ({ history, location }) => {
             name='password'
             label='password'
             type='password'
-            id='password'
             autoComplete='current-password'
             onChange={(e) => setPassword(e.target.value)}
             value={password}
