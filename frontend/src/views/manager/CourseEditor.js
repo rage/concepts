@@ -13,8 +13,6 @@ import { useLoginStateValue } from '../../store'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
-import { useQuery } from 'react-apollo-hooks'
-import { WORKSPACE_BY_ID } from '../../graphql/Query'
 
 const useStyles = makeStyles(theme => ({
   root: {

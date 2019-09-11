@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Button, Paper, Select, MenuItem, InputBase, List, IconButton
 } from '@material-ui/core'
-import { Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
+import { Edit as EditIcon } from '@material-ui/icons'
 
 import { Concept } from './concept'
 import { useCreateConceptDialog } from '../../dialogs/concept'
