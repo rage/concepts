@@ -24,8 +24,8 @@ const WindowTooSmall = ({ rerender }) => {
     window.localStorage.ignoreWindowSize = true
     rerender()
   }
-  const windowTooSmall = window.screen.availWidth >= MIN_WIDTH
-  if (windowTooSmall) {
+  const canGrowWindow = window.screen.availWidth >= MIN_WIDTH
+  if (canGrowWindow) {
     const listener = () => {
       if (window.innerWidth >= MIN_WIDTH) {
         window.removeEventListener('resize', listener)
@@ -36,7 +36,7 @@ const WindowTooSmall = ({ rerender }) => {
   }
   return (
     <div className={classes.root}>
-      {windowTooSmall ?
+      {canGrowWindow ?
         <div>
           <h1>Your browser window is too small for Concepts.</h1>
           <p>Please resize your browser window.</p>
