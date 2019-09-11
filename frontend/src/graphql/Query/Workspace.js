@@ -56,6 +56,9 @@ query workspaceById($id: ID!) {
   workspaceById(id: $id) {
     id
     name
+    asTemplate {
+      id
+    }
     courses {
       id
       name

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation } from 'react-apollo-hooks'
 import {
   TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText
 } from '@material-ui/core'
@@ -65,7 +65,7 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
 
 const stepField = ['name', 'description', 'tags']
 
-const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
+const MergeDialog = ({ workspace, courseId, conceptIds, open, close }) => {
   const [state, setState] = useState({
     step: 0,
     name: null,
@@ -74,17 +74,11 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     tags: null
   })
 
-  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
-    variables: {
-      id: workspaceId
-    }
-  })
-
   const doMerge = useMutation(MERGE_CONCEPTS, {
     refetchQueries: [{
       query: WORKSPACE_BY_ID,
       variables: {
-        id: workspaceId
+        id: workspace.id
       }
     }]
   })
@@ -100,7 +94,7 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     } else {
       doMerge({
         variables: {
-          workspaceId,
+          workspaceId: workspace.id,
           courseId,
           conceptIds: Array.from(conceptIds),
           ...state,
@@ -110,10 +104,9 @@ const MergeDialog = ({ workspaceId, courseId, conceptIds, open, close }) => {
     }
   }
 
-  const concepts = conceptIds && workspaceQuery.data.workspaceById &&
-    workspaceQuery.data.workspaceById
-      .courses.flatMap(course => course.concepts)
-      .filter(concept => conceptIds.has(concept.id))
+  const concepts = conceptIds && workspace
+    .courses.flatMap(course => course.concepts)
+    .filter(concept => conceptIds.has(concept.id))
 
   return (
     <Dialog open={open} onClose={close} fullWidth maxWidth='sm'>

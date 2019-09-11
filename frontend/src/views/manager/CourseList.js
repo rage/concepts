@@ -60,18 +60,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const CourseList = ({
-  courses, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
+  workspace, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
 }) => {
   const classes = useStyles()
   const listRef = useRef()
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
 
+  const isTemplate = Boolean(workspace.asTemplate && workspace.asTemplate.id)
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader title='Courses' />
       <List ref={listRef} className={classes.list}>{
-        courses.map(course => (
+        workspace.courses.map(course => (
           <ListItem
             className={course.id === focusedCourseId ? classes.listItemActive :
               editing && editing !== course.id ? classes.listItemDisabled : null}
@@ -134,7 +136,7 @@ const CourseList = ({
       <CreateCourse submit={async args => {
         await createCourse(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
-      }} />
+      }} defaultOfficial={isTemplate} />
     </Card>
   )
 }
