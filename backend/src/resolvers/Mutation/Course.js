@@ -4,16 +4,20 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
 const CourseQueries = {
-  async createCourse(root, { name, workspaceId, official, tags }, context) {
+  async createCourse(root, { name, workspaceId, official, frozen, tags }, context) {
     await checkAccess(context, {
-      minimumRole: official ? Role.STAFF : Role.GUEST,
+      minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
+
+    if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
+
     return context.prisma.createCourse({
       name: name,
       official: Boolean(belongsToTemplate || official),
+      frozen: Boolean(frozen),
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
       tags: { create: tags }
@@ -27,7 +31,7 @@ const CourseQueries = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const toDelete = await context.prisma.conceptLink({ id })
+    const toDelete = await context.prisma.course({ id })
     if (toDelete.frozen) throw new ForbiddenError('This course is frozen')
     await context.prisma.deleteManyCourseLinks({
       OR: [
@@ -60,11 +64,13 @@ const CourseQueries = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldTags = await context.prisma.course({ id }).tags()
 
-    const tagsToDelete = oldTags
-      .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
-      .map(oldTag => ({ id: oldTag.id }))
+    const tagsToDelete = tags
+      ? oldTags.filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
+        .map(oldTag => ({ id: oldTag.id }))
+      : []
     const tagsToCreate = tags
-      .filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
+      ? tags.filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
+      : []
 
     const data = {
       tags: {

@@ -189,7 +189,7 @@ const WorkspaceMutations = {
           id: makeNewId(course.id),
           name: course.name,
           official: course.official,
-          frozen: course.frozen,
+          frozen: true,
           createdBy: { connect: { id: course.createdBy.id } },
           sourceCourse: { connect: { id: course.id } },
           concepts: {
@@ -198,7 +198,7 @@ const WorkspaceMutations = {
               name: concept.name,
               description: concept.description,
               official: concept.official,
-              frozen: concept.frozen,
+              frozen: true,
               createdBy: { connect: { id: concept.createdBy.id } },
               workspace: { connect: { id: workspaceId } },
               sourceConcept: { connect: { id: concept.id } }

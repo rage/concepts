@@ -97,8 +97,8 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
     history.push(`${urlPrefix}/${projectId}/${newPage}`)
   }
 
-  const isOwner = (projectQuery.data.projectById
-    && projectQuery.data.projectById.participants.find(pcp => pcp.user.id === user.id) || {}
+  const isOwner = ((projectQuery.data.projectById
+    && projectQuery.data.projectById.participants.find(pcp => pcp.user.id === user.id)) || {}
   ).privilege === 'OWNER'
 
   return (

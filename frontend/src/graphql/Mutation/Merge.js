@@ -19,6 +19,7 @@ mutation mergeConcepts($workspaceId: ID!, $courseId: ID!, $conceptIds: [ID!]!, $
     name
     description
     official
+    frozen
     tags {
       id
       name

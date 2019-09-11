@@ -71,6 +71,7 @@ const PrerequisiteCourse = withRouter(({
   const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
+  const [{ user }] = useLoginStateValue()
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget)
@@ -127,7 +128,9 @@ const PrerequisiteCourse = withRouter(({
   }
   return (
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
-      <ListItem ref={checkboxRef} divider button onClick={onClick} className={classes.listItem}>
+      <ListItem
+        ref={checkboxRef} divider button onClick={onClick}
+      >
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
@@ -135,6 +138,7 @@ const PrerequisiteCourse = withRouter(({
             aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
             aria-haspopup='true'
             onClick={handleMenuOpen}
+            disabled={(course.frozen && user.role !== 'STAFF')}
           >
             <MoreVertIcon />
           </IconButton>
@@ -146,9 +150,10 @@ const PrerequisiteCourse = withRouter(({
           >
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name, course.official, course.tags)
+              openEditCourseDialog(course.id, course.name, course.official,
+                course.frozen, course.tags)
             }}>Edit</MenuItem>
-            <MenuItem onClick={deleteCourse}>Delete</MenuItem>
+            {!course.frozen && <MenuItem onClick={deleteCourse}>Delete</MenuItem>}
           </Menu>
         </ListItemSecondaryAction>
       </ListItem>

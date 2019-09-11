@@ -180,7 +180,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         workspaceId={workspaceQuery.data.workspaceById.id}
       />
       <PrerequisiteContainer
-        courses={prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from)}
         courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
         courseId={courseQuery.data.courseById.id}
         focusedConceptIds={focusedConceptIds}

@@ -5,28 +5,45 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
   createCourseLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official) {
     id
     official
+    frozen
     from {
       id
       name
       official
+      frozen
+      tags {
+        id
+        name
+        type
+        priority
+      }
       concepts {
         id
         name
         description
         official
+        frozen
         courses {
           id
         }
+        tags {
+          id
+          name
+          type
+          priority
+        }
         linksToConcept {
-            official
+          id
+          official
+          frozen
+          from {
             id
-            from {
-              id
-            }
+          }
         }
         linksFromConcept {
-          official
           id
+          official
+          frozen
           to {
             id
           }
@@ -35,6 +52,16 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
     }
   }
 }
+`
+
+const UPDATE_COURSE_LINK = gql`
+mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean) {
+  updateCourseLink(id: $id, official: $official, frozen: $frozen) {
+    id
+    official
+    frozen
+  }
+} 
 `
 
 const DELETE_COURSE_LINK = gql`
@@ -47,5 +74,6 @@ mutation deleteCourseLink($id: ID!) {
 
 export {
   CREATE_COURSE_LINK,
-  DELETE_COURSE_LINK
+  DELETE_COURSE_LINK,
+  UPDATE_COURSE_LINK
 }

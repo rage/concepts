@@ -5,9 +5,7 @@ import {
   ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Fade
 } from '@material-ui/core'
 import {
-  MoreVert as MoreVertIcon,
-  ArrowLeft as ArrowLeftIcon,
-  ArrowRight as ArrowRightIcon
+  MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon
 } from '@material-ui/icons'
 import Tooltip from '@material-ui/core/Tooltip'
 
@@ -144,8 +142,8 @@ const Concept = ({
 
   const handleEditConcept = () => {
     handleMenuClose()
-    openEditConceptDialog(concept.id, concept.name,
-      concept.description, concept.tags, concept.official)
+    openEditConceptDialog(concept.id, concept.name, concept.description,
+      concept.tags, concept.official, concept.frozen)
   }
 
   const hasLinkToAddingLink = addingLink && (isActive
@@ -189,23 +187,21 @@ const Concept = ({
           {concept.name}
         </ListItemText>
         <ListItemSecondaryAction>
-          {
-            loggedIn ?
-              <IconButton
-                aria-owns={state.anchorEl ? 'simple-menu' : undefined}
-                aria-haspopup='true'
-                onClick={handleMenuOpen}
-              >
-                <MoreVertIcon />
-              </IconButton> : null
-          }
+          <IconButton
+            aria-owns={state.anchorEl ? 'simple-menu' : undefined}
+            aria-haspopup='true'
+            onClick={handleMenuOpen}
+            disabled={!loggedIn || (concept.frozen && user.role !== 'STAFF')}
+          >
+            <MoreVertIcon />
+          </IconButton>
           <Menu
             anchorEl={state.anchorEl}
             open={Boolean(state.anchorEl)}
             onClose={handleMenuClose}
           >
             <MenuItem onClick={handleEditConcept}>Edit</MenuItem>
-            <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>
+            {!concept.frozen && <MenuItem onClick={handleDeleteConcept}>Delete</MenuItem>}
           </Menu>
           {!isActive && <IconButton
             buttonRef={connectionRef}

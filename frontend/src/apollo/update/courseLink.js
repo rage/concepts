@@ -23,6 +23,26 @@ const createCourseLinkUpdate = (workspaceId, activeCourseId) =>
     }
   }
 
+const updateCourseLinkUpdate = (workspaceId, activeCourseId) =>
+  (store, response) => {
+    const dataInStore = store.readQuery({
+      query: COURSE_PREREQUISITES,
+      variables: { courseId: activeCourseId, workspaceId }
+    })
+    const updatedCourseLink = response.data.updateCourseLink
+    const dataInStoreCopy = { ...dataInStore }
+    const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
+    if (includedIn(courseLinks, updatedCourseLink)) {
+      dataInStoreCopy.courseAndPrerequisites.linksToCourse = courseLinks.map(link =>
+        link.id === updatedCourseLink.id ? { ...link, ...updatedCourseLink } : link)
+      client.writeQuery({
+        query: COURSE_PREREQUISITES,
+        variables: { courseId: activeCourseId, workspaceId },
+        data: dataInStoreCopy
+      })
+    }
+  }
+
 const deleteCourseLinkUpdate = (workspaceId, activeCourseId) =>
   (store, response) => {
     const dataInStore = store.readQuery({
@@ -45,5 +65,6 @@ const deleteCourseLinkUpdate = (workspaceId, activeCourseId) =>
 
 export {
   createCourseLinkUpdate,
-  deleteCourseLinkUpdate
+  deleteCourseLinkUpdate,
+  updateCourseLinkUpdate
 }
