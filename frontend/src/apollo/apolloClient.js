@@ -1,4 +1,5 @@
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
+import { savingIndicator } from '../components/NavBar'
 
 let requestsInFlight = 0
 
@@ -38,14 +39,14 @@ const client = new ApolloClient({
   fetch: async (resource, init) => {
     const isMutation = init.headers['X-Concepts-IsMutation'] === 'true'
     if (isMutation) {
-      if (requestsInFlight === 0) {
-        document.getElementById('saving-indicator').innerText = 'Saving...'
+      if (requestsInFlight === 0 && savingIndicator.current) {
+        savingIndicator.current.innerText = 'Saving...'
       }
       requestsInFlight++
       const result = await fetch(resource, init)
       requestsInFlight--
-      if (requestsInFlight === 0) {
-        document.getElementById('saving-indicator').innerText = 'All changes saved.'
+      if (requestsInFlight === 0 && savingIndicator.current) {
+        savingIndicator.current.innerText = 'All changes saved.'
       }
       return result
     } else {

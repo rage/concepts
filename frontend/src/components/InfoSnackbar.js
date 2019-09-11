@@ -50,9 +50,6 @@ const InfoSnackbar = () => {
       ClickAwayListenerProps={{ onClickAway: () => null }}
       autoHideDuration={4000}
       className={classes.snackbar}
-      ContentProps={{
-        'aria-describedby': 'message-id'
-      }}
     >
       <SnackbarContent className={classes.error}
         action={[
@@ -66,7 +63,7 @@ const InfoSnackbar = () => {
           </IconButton>
         ]}
         message={
-          <span className={classes.message} id='error-message-id'>
+          <span className={classes.message}>
             <ErrorIcon className={classes.errorIcon} />
             {error}
           </span>}
@@ -78,9 +75,6 @@ const InfoSnackbar = () => {
       ClickAwayListenerProps={{ onClickAway: () => null }}
       autoHideDuration={4000}
       className={classes.snackbar}
-      ContentProps={{
-        'aria-describedby': 'message-id'
-      }}
     >
       <SnackbarContent className={classes.notification}
         action={[
@@ -94,7 +88,7 @@ const InfoSnackbar = () => {
           </IconButton>
         ]}
         message={
-          <span className={classes.message} id='notification-message-id'>
+          <span className={classes.message}>
             <InfoIcon className={classes.errorIcon} />
             {notification}
           </span>}

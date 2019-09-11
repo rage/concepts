@@ -137,7 +137,6 @@ const PrerequisiteCourse = withRouter(({
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
           <IconButton
-            aria-owns={anchorEl ? 'prerequisite-course-menu' : undefined}
             aria-haspopup='true'
             onClick={handleMenuOpen}
             disabled={(course.frozen && user.role !== 'STAFF')}
@@ -145,7 +144,6 @@ const PrerequisiteCourse = withRouter(({
             <MoreVertIcon />
           </IconButton>
           <Menu
-            id='prerequisite-course-menu'
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
@@ -214,7 +212,6 @@ const CourseTray = ({
     >
       <TextField
         margin='dense'
-        id='description'
         label='Filter'
         type='text'
         name='filter'

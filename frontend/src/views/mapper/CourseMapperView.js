@@ -150,10 +150,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     prereqQuery.data.courseAndPrerequisites.linksToCourse.map(link => link.from.id))
 
   return <>
-    <div
-      id='course-view'
-      className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}
-    >
+    <div className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>
       <DividerWithText
         gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
       />
@@ -235,7 +232,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
     }} />
     <Menu
-      id='concept-link-menu'
       anchorEl={conceptLinkMenuRef.current}
       anchorOrigin={{
         vertical: 'top',

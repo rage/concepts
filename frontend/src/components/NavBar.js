@@ -14,6 +14,8 @@ import { useLoadingBar } from './LoadingBar'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />
 
+export const savingIndicator = React.createRef()
+
 const useStyles = makeStyles(() => ({
   root: {
     gridArea: 'navbar',
@@ -26,10 +28,11 @@ const useStyles = makeStyles(() => ({
   savingIndicator: {
     fontSize: '.6em',
     color: 'rgba(255, 255, 255, 0.6)',
-    '&:not(.logged-in)': {
+    '&:not($loggedIn)': {
       display: 'none'
     }
-  }
+  },
+  loggedIn: {}
 }))
 
 const parseWorkspacePath = (workspaceId, path, prefix) => {
@@ -305,8 +308,8 @@ const NavBar = ({ location }) => {
             })}
           </Breadcrumbs>
           <div
-            id='saving-indicator'
-            className={`${classes.savingIndicator} ${loggedIn ? 'logged-in' : ''}`} />
+            ref={savingIndicator}
+            className={`${classes.savingIndicator} ${loggedIn ? classes.loggedIn : ''}`} />
           <AuthenticationIcon />
         </Toolbar>
       </AppBar>

@@ -91,7 +91,6 @@ const CreateCourseForm = ({ workspaceId, history, urlPrefix }) => {
             margin='normal'
             required
             fullWidth
-            id='name'
             label='Name of the course'
             name='name'
             autoComplete='name'
