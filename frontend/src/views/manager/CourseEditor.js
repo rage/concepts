@@ -328,7 +328,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
     })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ ...initialState })
+      setInput({ ...initialState, ...defaultValues })
     }
   }
 

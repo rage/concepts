@@ -89,10 +89,7 @@ const CourseList = ({
                   updateCourse({ id: course.id, ...args })
                 }}
                 cancel={() => setEditing(null)}
-                defaultName={course.name}
-                defaultOfficial={course.official}
-                defaultFrozen={course.frozen}
-                defaultTags={course.tags}
+                defaultValues={course}
                 action='Save'
               />
             </> : <>
@@ -136,22 +133,28 @@ const CourseList = ({
       <CreateCourse submit={async args => {
         await createCourse(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
-      }} defaultOfficial={isTemplate} />
+      }} defaultValues={{ official: isTemplate }} />
     </Card>
   )
 }
 
+const initialState = {
+  name: '',
+  official: undefined,
+  frozen: undefined,
+  tags: []
+}
+
 const CreateCourse = ({
-  submit, defaultName, defaultOfficial, defaultFrozen, defaultTags, action = 'Create', cancel
+  submit, defaultValues, action = 'Create', cancel
 }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
-    name: defaultName || '',
-    official: Boolean(defaultOfficial),
-    frozen: Boolean(defaultFrozen),
-    tags: backendToSelect(defaultTags)
+    ...initialState,
+    ...defaultValues,
+    tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
   const [themeInput, setThemeInput] = useState('')
 
@@ -160,7 +163,7 @@ const CreateCourse = ({
     submit({ ...input, tags: selectToBackend(input.tags) })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({ name: '', tags: [], official: false, frozen: false })
+      setInput({ ...initialState, ...defaultValues })
       setThemeInput('')
     }
   }
