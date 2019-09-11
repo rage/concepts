@@ -5,14 +5,7 @@ export const MessageStateContext = createContext('')
 
 const loginReducers = {
   login: (state, { data }) => ({ ...state, loggedIn: true, user: data }),
-  logout: state => ({ ...state, loggedIn: false, user: {} }),
-  setUserGuideProgress: (state, { data }) => ({
-    ...state,
-    user: {
-      ...state.user,
-      ...data
-    }
-  })
+  logout: state => ({ ...state, loggedIn: false, user: {} })
 }
 
 const loginReducer = (state, action) => loginReducers[action.type](state, action)
