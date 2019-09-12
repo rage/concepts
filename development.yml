@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  frontend:
+    image: concepts_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - 8080:3000
+    environment:
+      PROXY: http://backend:4000
+    volumes:
+      - ./frontend:/concepts/frontend
+      - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
+    depends_on:
+      - backend
+  backend:
+    image: concepts_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    restart: always
+    environment:
+      ENDPOINT: http://prisma:4466
+      SECRET: WZIpatNAZYbR7iGd6V6OhuBsxNkNAZoFBLt7ZaWU2D4mBJYqLY
+      PRISMA_MANAGEMENT_API_JWT_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
+    volumes:
+      - ./backend:/concepts/backend
+    depends_on:
+      - prisma

@@ -1,0 +1,14 @@
+FROM node:12-alpine
+
+RUN ["npm", "install", "--global", "prisma"]
+
+VOLUME /concepts/backend
+WORKDIR /concepts/backend
+
+ENV ENVIRONMENT=development \
+    PORT=4000
+
+EXPOSE 4000
+
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["yarn && yarn watch"]

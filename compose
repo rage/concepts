@@ -1,0 +1,8 @@
+#!/bin/bash
+if [[ "$1" == "prod" ]]; then
+	docker-compose -f docker-compose.yml -f production.yml ${@:2}
+elif [[ "$1" == "dev" ]]; then
+	docker-compose -f docker-compose.yml -f development.yml ${@:2}
+else
+	docker-compose -f docker-compose.yml -f development.yml $@
+fi

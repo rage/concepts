@@ -1,0 +1,9 @@
+FROM node:12-alpine
+
+VOLUME /concepts/frontend
+WORKDIR /concepts/frontend
+
+EXPOSE 3000
+
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["yarn && yarn start"]
