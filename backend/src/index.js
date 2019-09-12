@@ -45,12 +45,12 @@ const server = new GraphQLServer({
 // Points for completions
 server.express.get('/projects/:pid/courses/:cid/progress', pointsAPI)
 
-if (process.env.ENVIRONMENT === 'production') {
-  const BUILD_PATH = path.join(__dirname, '../../frontend/build')
-  server.express.use(express.static(BUILD_PATH))
+if (process.env.ENVIRONMENT === 'production' || process.env.FRONTEND_PATH) {
+  const FRONTEND_PATH = process.env.FRONTEND_PATH || path.join(__dirname, '../../frontend/build')
+  server.express.use(express.static(FRONTEND_PATH))
 
   server.express.get('*', (req, res) => {
-    res.sendFile(path.join(BUILD_PATH, 'index.html'))
+    res.sendFile(path.join(FRONTEND_PATH, 'index.html'))
   })
 }
 
