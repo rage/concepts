@@ -20,6 +20,7 @@ export const DialogProvider = withRouter(({ children, history }) => {
     if (dialogContextValue.current.closeDialog) {
       dialogContextValue.current.closeDialog()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [])
 
   return <>

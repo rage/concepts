@@ -92,6 +92,7 @@ const ActiveCourse = ({
     if (addingLink) {
       infoBox.open(conceptLinkRef.current, 'left-start', 'DRAW_LINK_END', 0, 20)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addingLink, courseLinks])
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')

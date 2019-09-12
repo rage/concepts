@@ -26,6 +26,7 @@ const LoadingBar = ({ id, componentRef, children = null }) => {
   useEffect(() => {
     startLoading(id)
     return () => stopLoading(id)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return children

@@ -257,6 +257,7 @@ const Line = ({
       window.removeEventListener('redrawConceptLink', handleResize)
       window.removeEventListener('scroll', handleResize)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const withinEl = within ? document.getElementById(within) : document.body
@@ -274,6 +275,7 @@ const Line = ({
         withinEl.removeEventListener('mousemove', handleMouse)
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const { x, y, angle, length } = calculate()

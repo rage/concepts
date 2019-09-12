@@ -96,6 +96,7 @@ const useShareDialog = (type, title, text) => {
         }
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [existingTokenId])
 
   return (id, privilege) => {
