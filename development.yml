@@ -25,7 +25,7 @@ services:
     environment:
       ENDPOINT: http://prisma:4466
       SECRET: WZIpatNAZYbR7iGd6V6OhuBsxNkNAZoFBLt7ZaWU2D4mBJYqLY
-      PRISMA_MANAGEMENT_API_JWT_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
+      PRISMA_MANAGEMENT_API_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
     volumes:
       - ./backend:/concepts/backend
     depends_on:
