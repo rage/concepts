@@ -172,17 +172,14 @@ const TableCell = withRouter(({
 
   const conceptsLinked = fromCourse.concepts
     .map(concept => concept.linksToConcept
-      .filter(conceptLink => conceptLink.from.courses
-        .find(course => course.id === toCourse.id)
-      ).length
+      .filter(conceptLink => conceptLink.from.course.id === toCourse.id).length
     ).reduce(sum, 0)
 
   const onlyUnique = (item, index, arr) => arr.indexOf(item) === index
 
   const concepts = fromCourse.concepts
     .flatMap(concept => concept.linksToConcept
-      .filter(conceptLink => conceptLink.from.courses
-        .find(course => course.id === toCourse.id))
+      .filter(conceptLink => conceptLink.from.course.id === toCourse.id)
     )
     .map(conceptLink => conceptLink.from.name)
     .filter(onlyUnique)
@@ -250,9 +247,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       .map(fromCourse => workspaceCourseQuery.data.workspaceById.courses
         .map(toCourse => toCourse.concepts
           .map(concept => concept.linksToConcept
-            .filter(conceptLink => conceptLink.from.courses
-              .find(course => course.id === fromCourse.id)
-            ).length
+            .filter(conceptLink => conceptLink.from.course.id === fromCourse.id).length
           ).reduce(sum, 0)
         ).reduce(maxVal, 0)
       ).reduce(maxVal, 0)

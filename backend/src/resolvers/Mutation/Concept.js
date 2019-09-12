@@ -88,7 +88,7 @@ const ConceptMutations = {
       description,
       official: Boolean(official),
       frozen: Boolean(frozen),
-      courses: courseId ? { connect: [{ id: courseId }] } : undefined,
+      course: courseId ? { connect: { id: courseId } } : undefined,
       tags: { create: tags }
     })
 
@@ -162,7 +162,7 @@ const ConceptMutations = {
       fragment ConceptWithCourse on Concept {
         id
         frozen
-        courses {
+        course {
           id
         }
       }
@@ -171,7 +171,7 @@ const ConceptMutations = {
     await context.prisma.deleteConcept({ id })
     return {
       id: toDelete.id,
-      courseId: toDelete.courses[0].id
+      courseId: toDelete.course.id
     }
   }
 }

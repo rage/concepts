@@ -15,14 +15,14 @@ fragment coursesForWorkspace on Workspace {
       id
       name
       description
-      courses {
+      course {
         id
       }
       linksToConcept {
         from {
           id
           name
-          courses {
+          course {
             id
           }
         }

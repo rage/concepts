@@ -81,7 +81,7 @@ const PortMutations = {
           official: canSetOfficial && Boolean(json.projectId || concept.official),
           createdBy: { connect: { id: context.user.id } },
           workspace: { connect: { id: workspace.id } },
-          courses: { connect: [{ id: courseObj.id }] },
+          course: { connect: { id: courseObj.id } },
           tags: { create: concept.tags }
         })
       ))

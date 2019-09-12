@@ -41,7 +41,7 @@ query($id: ID!) {
               frozen
               from {
                 name
-                courses {
+                course {
                   name
                 }
               }
@@ -84,7 +84,7 @@ query($conceptIds: [ID!]!) {
       weight
       count
     }
-    courses {
+    course {
       id
     }
     workspace {
@@ -137,7 +137,7 @@ const MergeMutations = {
     const mergeLinks = (links, merged) => {
       for (const link of links) {
         const updatedLink = setDefault(merged, link.from.name, {
-          course: link.from.courses ? link.from.courses[0].name : undefined,
+          course: link.from.course ? link.from.course.name : undefined,
           weight: 0,
           count: 0
         })
@@ -308,7 +308,7 @@ const MergeMutations = {
 
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
-      courses: { connect: [{ id: courseId }] }
+      course: { connect: { id: courseId } }
     })
   }
 }

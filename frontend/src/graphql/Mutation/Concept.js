@@ -16,7 +16,7 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
       type
       priority
     }
-    courses {
+    course {
       id
     }
     linksFromConcept {
@@ -56,7 +56,7 @@ mutation createConcept($name: String!, $description: String!, $official: Boolean
       type
       priority
     }
-    courses {
+    course {
       id
     }
     linksFromConcept {

@@ -209,7 +209,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     </div>
     {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
       && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
-        concept.linksToConcept.map((link, lIdx) => courseSet.has(link.from.courses[0].id) &&
+        concept.linksToConcept.map((link, lIdx) => courseSet.has(link.from.course.id) &&
           <ConceptLink
             linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
             key={`concept-link-${link.id}`} delay={1}

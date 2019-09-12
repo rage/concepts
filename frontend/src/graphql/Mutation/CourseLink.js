@@ -23,7 +23,7 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
         description
         official
         frozen
-        courses {
+        course {
           id
         }
         tags {

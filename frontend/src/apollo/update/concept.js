@@ -8,11 +8,11 @@ const createConceptUpdate = (store, response) => {
   try {
     const addedConcept = response.data.createConcept
     const course = store.readFragment({
-      id: addedConcept.courses[0].id,
+      id: addedConcept.course.id,
       fragment: COURSE_PREREQ_FRAGMENT
     })
     store.writeFragment({
-      id: addedConcept.courses[0].id,
+      id: addedConcept.course.id,
       fragment: COURSE_PREREQ_FRAGMENT,
       data: {
         ...course,
@@ -29,7 +29,7 @@ const createConceptFromByIdUpdate = (store, response, workspaceId) => {
       variables: { id: workspaceId }
     })
     const createdConcept = response.data.createConcept
-    const courseId = createdConcept.courses[0].id
+    const courseId = createdConcept.course.id
     const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
     if (!includedIn(course.concepts, createdConcept)) {
       course.concepts = course.concepts.concat(createdConcept)
@@ -82,11 +82,11 @@ const updateConceptUpdate = (store, response) => {
   try {
     const updatedConcept = response.data.updateConcept
     const course = store.readFragment({
-      id: updatedConcept.courses[0].id,
+      id: updatedConcept.course.id,
       fragment: COURSE_PREREQ_FRAGMENT
     })
     store.writeFragment({
-      id: updatedConcept.courses[0].id,
+      id: updatedConcept.course.id,
       fragment: COURSE_PREREQ_FRAGMENT,
       data: {
         ...course,
