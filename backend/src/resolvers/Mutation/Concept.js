@@ -6,6 +6,9 @@ const { nullShield } = require('../../errors')
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (roleToInt(context.role) === roleToInt(Role.STUDENT)) {
     const sourceCourseId = (await context.prisma.course({ id: courseId }).sourceCourse() || {}).id
+    if (!sourceCourseId) {
+      return null
+    }
     const pgData = await context.prisma.$graphql(`
       query($workspaceId: ID!, $userId: ID!, $courseId: ID!) {
         workspace(where: { id: $workspaceId }) {
