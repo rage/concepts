@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  concepts:
+    image: concepts
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      ENDPOINT: http://prisma:4466
+      SECRET: WZIpatNAZYbR7iGd6V6OhuBsxNkNAZoFBLt7ZaWU2D4mBJYqLY
+      PRISMA_MANAGEMENT_API_JWT_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
+    depends_on:
+      - prisma

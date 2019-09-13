@@ -1,0 +1,8 @@
+#!/bin/bash
+if [[ "$1" == "prod" ]]; then
+	docker exec concepts_concepts_1 prisma ${@:2}
+elif [[ "$1" == "dev" ]]; then
+	docker exec concepts_backend_1 prisma ${@:2}
+else
+	docker exec concepts_backend_1 prisma $@
+fi
