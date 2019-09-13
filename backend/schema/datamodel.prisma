@@ -108,7 +108,7 @@ type Course {
   clones: [Course!]! @relation(name: "CourseClones")
   linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
-  concepts: [Concept!]! @relation(name:"ConceptCourses")
+  concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
   tags: [Tag!]!
 }
