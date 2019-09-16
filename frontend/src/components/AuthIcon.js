@@ -61,7 +61,7 @@ const AuthenticationIcon = withRouter(({ history }) => {
       onClose={handleAnchorClose}
     >
       <MenuItem>
-        Logged in as {user.role === 'GUEST' ? 'a guest' : user.username}
+        Logged in as {user.role === 'GUEST' ? 'a guest' : user.username} ({user.role.toLowerCase()})
       </MenuItem>
       {loggedIn && user.role !== 'GUEST' &&
         <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
