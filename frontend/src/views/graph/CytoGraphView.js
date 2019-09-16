@@ -247,7 +247,7 @@ const GraphView = ({ workspaceId }) => {
               target: concept.id,
               color: course.color.bg,
               courseId: course.id,
-              gradient: `${courseMap[conceptLink.from.courses[0].id].color.bg} ${course.color.bg}`
+              gradient: `${courseMap[conceptLink.from.course.id].color.bg} ${course.color.bg}`
             }
           })
         }
@@ -420,6 +420,7 @@ const GraphView = ({ workspaceId }) => {
         setError(err)
       }
     })()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (error) {

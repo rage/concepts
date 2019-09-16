@@ -26,7 +26,7 @@ mutation mergeConcepts($workspaceId: ID!, $courseId: ID!, $conceptIds: [ID!]!, $
       type
       priority
     }
-    courses {
+    course {
       id
     }
     linksFromConcept {

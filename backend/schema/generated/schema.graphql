@@ -311,7 +311,7 @@ type Concept {
   clones: [Concept!]!
   linksFromConcept: [ConceptLink!]!
   linksToConcept: [ConceptLink!]!
-  courses: [Course!]!
+  course: Course!
   resources: [Resource!]!
   workspace: Workspace!
   tags: [Tag!]!

@@ -6,6 +6,9 @@ const { nullShield } = require('../../errors')
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (roleToInt(context.role) === roleToInt(Role.STUDENT)) {
     const sourceCourseId = (await context.prisma.course({ id: courseId }).sourceCourse() || {}).id
+    if (!sourceCourseId) {
+      return null
+    }
     const pgData = await context.prisma.$graphql(`
       query($workspaceId: ID!, $userId: ID!, $courseId: ID!) {
         workspace(where: { id: $workspaceId }) {
@@ -88,7 +91,7 @@ const ConceptMutations = {
       description,
       official: Boolean(official),
       frozen: Boolean(frozen),
-      courses: courseId ? { connect: [{ id: courseId }] } : undefined,
+      course: courseId ? { connect: { id: courseId } } : undefined,
       tags: { create: tags }
     })
 
@@ -162,7 +165,7 @@ const ConceptMutations = {
       fragment ConceptWithCourse on Concept {
         id
         frozen
-        courses {
+        course {
           id
         }
       }
@@ -171,7 +174,7 @@ const ConceptMutations = {
     await context.prisma.deleteConcept({ id })
     return {
       id: toDelete.id,
-      courseId: toDelete.courses[0].id
+      courseId: toDelete.course.id
     }
   }
 }

@@ -108,7 +108,7 @@ type Course {
   clones: [Course!]! @relation(name: "CourseClones")
   linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
-  concepts: [Concept!]! @relation(name:"Courses")
+  concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
   tags: [Tag!]!
 }
@@ -136,7 +136,7 @@ type Concept {
   clones: [Concept!]! @relation(name: "ConceptClones")
   linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
   linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
-  courses: [Course!]! @relation(name: "Courses")
+  course: Course! @relation(name: "ConceptCourses")
   resources: [Resource!]!
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
   tags: [Tag!]!

@@ -4,7 +4,7 @@ module.exports = {
   Concept: makeTypeResolvers('concept', [
     'linksToConcept',
     'linksFromConcept',
-    'courses',
+    'course',
     'resources',
     'createdBy',
     'workspace',

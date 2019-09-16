@@ -39,6 +39,7 @@ const PrerequisiteContainer = ({
     } else if (courseLinks.length > 0 && !addingLink && !activeCourseHasPrereqConcepts) {
       infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCourse.concepts, addingLink, courseLinks])
 
   return <>

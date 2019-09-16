@@ -42,7 +42,7 @@ query courseById($id: ID!) {
         type
         priority
       }
-      courses {
+      course {
         id
       }
       linksFromConcept {
@@ -58,7 +58,7 @@ query courseById($id: ID!) {
         official
         frozen
         from {
-          courses {
+          course {
             id
           }
           id
@@ -94,7 +94,7 @@ fragment courseAndConcepts on Course {
         type
         priority
       }
-      courses {
+      course {
         id
       }
       linksFromConcept {

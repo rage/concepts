@@ -88,9 +88,11 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     if (activeConceptHasLinks && focusedConceptIds.length > 0) {
       infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseTrayOpen, focusedConceptIds, courseQuery])
 
   // Closes infoBox when leaving the page
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => infoBox.close, [])
 
   const handleMenuOpen = (event, linkId) => {
@@ -209,7 +211,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     </div>
     {courseQuery.data.courseById && prereqQuery.data.courseAndPrerequisites
       && courseQuery.data.courseById.concepts.map((concept, cIdx) => (
-        concept.linksToConcept.map((link, lIdx) => courseSet.has(link.from.courses[0].id) &&
+        concept.linksToConcept.map((link, lIdx) => courseSet.has(link.from.course.id) &&
           <ConceptLink
             linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
             key={`concept-link-${link.id}`} delay={1}

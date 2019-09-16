@@ -26,14 +26,14 @@ mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
       description
       official
       frozen
-      courses {
+      course {
         id
       }
       linksToConcept {
         from {
           id
           name
-          courses {
+          course {
             id
           }
         }
@@ -69,14 +69,14 @@ mutation updateCourse($id: ID!, $name: String!, $official: Boolean,
         type
         priority
       }
-      courses {
+      course {
         id
       }
       linksToConcept {
         from {
           id
           name
-          courses {
+          course {
             id
           }
         }

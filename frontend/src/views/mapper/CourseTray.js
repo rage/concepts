@@ -187,6 +187,7 @@ const CourseTray = ({
     } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
       infoBox.open(checkboxRef.current, 'right-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseTrayOpen, courses, courseLinks])
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {

@@ -150,10 +150,16 @@ const WorkspaceMutations = {
         }
       })
     }
-    return context.prisma.updateWorkspace({
+    const args = {
       where: { id },
-      data: { name, mainCourse: { connect: { id: courseId } } }
-    })
+      data: { name }
+    }
+    if (courseId === null) {
+      args.data.mainCourse = { disconnect: true }
+    } else if (courseId !== undefined) {
+      args.data.mainCourse = { connect: { id: courseId } }
+    }
+    return context.prisma.updateWorkspace(args)
   },
   async cloneTemplateWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })

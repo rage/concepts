@@ -277,7 +277,7 @@ type Concept {
   clones(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   linksFromConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   linksToConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
-  courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  course: Course!
   resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
   workspace: Workspace!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -301,15 +301,15 @@ input ConceptCreateInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
   count: Int
 }
 
-input ConceptCreateManyWithoutCoursesInput {
-  create: [ConceptCreateWithoutCoursesInput!]
+input ConceptCreateManyWithoutCourseInput {
+  create: [ConceptCreateWithoutCourseInput!]
   connect: [ConceptWhereUniqueInput!]
 }
 
@@ -353,14 +353,14 @@ input ConceptCreateWithoutClonesInput {
   sourceConcept: ConceptCreateOneWithoutClonesInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
   count: Int
 }
 
-input ConceptCreateWithoutCoursesInput {
+input ConceptCreateWithoutCourseInput {
   id: ID
   name: String!
   description: String
@@ -387,7 +387,7 @@ input ConceptCreateWithoutLinksFromConceptInput {
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
@@ -404,7 +404,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
@@ -422,7 +422,7 @@ input ConceptCreateWithoutResourcesInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
   count: Int
@@ -438,7 +438,7 @@ input ConceptCreateWithoutSourceConceptInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   resources: ResourceCreateManyWithoutConceptInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   tags: TagCreateManyInput
@@ -456,7 +456,7 @@ input ConceptCreateWithoutWorkspaceInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  courses: CourseCreateManyWithoutConceptsInput
+  course: CourseCreateOneWithoutConceptsInput!
   resources: ResourceCreateManyWithoutConceptInput
   tags: TagCreateManyInput
   count: Int
@@ -918,7 +918,7 @@ input ConceptUpdateInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
@@ -941,14 +941,14 @@ input ConceptUpdateManyMutationInput {
   count: Int
 }
 
-input ConceptUpdateManyWithoutCoursesInput {
-  create: [ConceptCreateWithoutCoursesInput!]
+input ConceptUpdateManyWithoutCourseInput {
+  create: [ConceptCreateWithoutCourseInput!]
   delete: [ConceptWhereUniqueInput!]
   connect: [ConceptWhereUniqueInput!]
   set: [ConceptWhereUniqueInput!]
   disconnect: [ConceptWhereUniqueInput!]
-  update: [ConceptUpdateWithWhereUniqueWithoutCoursesInput!]
-  upsert: [ConceptUpsertWithWhereUniqueWithoutCoursesInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutCourseInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutCourseInput!]
   deleteMany: [ConceptScalarWhereInput!]
   updateMany: [ConceptUpdateManyWithWhereNestedInput!]
 }
@@ -1021,14 +1021,14 @@ input ConceptUpdateWithoutClonesDataInput {
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
   count: Int
 }
 
-input ConceptUpdateWithoutCoursesDataInput {
+input ConceptUpdateWithoutCourseDataInput {
   name: String
   description: String
   official: Boolean
@@ -1053,7 +1053,7 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
@@ -1069,7 +1069,7 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
@@ -1086,7 +1086,7 @@ input ConceptUpdateWithoutResourcesDataInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
   count: Int
@@ -1101,7 +1101,7 @@ input ConceptUpdateWithoutSourceConceptDataInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   tags: TagUpdateManyInput
@@ -1118,15 +1118,15 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  courses: CourseUpdateManyWithoutConceptsInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
   resources: ResourceUpdateManyWithoutConceptInput
   tags: TagUpdateManyInput
   count: Int
 }
 
-input ConceptUpdateWithWhereUniqueWithoutCoursesInput {
+input ConceptUpdateWithWhereUniqueWithoutCourseInput {
   where: ConceptWhereUniqueInput!
-  data: ConceptUpdateWithoutCoursesDataInput!
+  data: ConceptUpdateWithoutCourseDataInput!
 }
 
 input ConceptUpdateWithWhereUniqueWithoutSourceConceptInput {
@@ -1159,10 +1159,10 @@ input ConceptUpsertWithoutResourcesInput {
   create: ConceptCreateWithoutResourcesInput!
 }
 
-input ConceptUpsertWithWhereUniqueWithoutCoursesInput {
+input ConceptUpsertWithWhereUniqueWithoutCourseInput {
   where: ConceptWhereUniqueInput!
-  update: ConceptUpdateWithoutCoursesDataInput!
-  create: ConceptCreateWithoutCoursesInput!
+  update: ConceptUpdateWithoutCourseDataInput!
+  create: ConceptCreateWithoutCourseInput!
 }
 
 input ConceptUpsertWithWhereUniqueWithoutSourceConceptInput {
@@ -1235,9 +1235,7 @@ input ConceptWhereInput {
   linksToConcept_every: ConceptLinkWhereInput
   linksToConcept_some: ConceptLinkWhereInput
   linksToConcept_none: ConceptLinkWhereInput
-  courses_every: CourseWhereInput
-  courses_some: CourseWhereInput
-  courses_none: CourseWhereInput
+  course: CourseWhereInput
   resources_every: ResourceWhereInput
   resources_some: ResourceWhereInput
   resources_none: ResourceWhereInput
@@ -1293,14 +1291,9 @@ input CourseCreateInput {
   clones: CourseCreateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
-  concepts: ConceptCreateManyWithoutCoursesInput
+  concepts: ConceptCreateManyWithoutCourseInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
-}
-
-input CourseCreateManyWithoutConceptsInput {
-  create: [CourseCreateWithoutConceptsInput!]
-  connect: [CourseWhereUniqueInput!]
 }
 
 input CourseCreateManyWithoutSourceCourseInput {
@@ -1323,6 +1316,11 @@ input CourseCreateOneWithoutClonesInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseCreateOneWithoutConceptsInput {
+  create: CourseCreateWithoutConceptsInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseCreateOneWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   connect: CourseWhereUniqueInput
@@ -1342,7 +1340,7 @@ input CourseCreateWithoutClonesInput {
   sourceCourse: CourseCreateOneWithoutClonesInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
-  concepts: ConceptCreateManyWithoutCoursesInput
+  concepts: ConceptCreateManyWithoutCourseInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1370,7 +1368,7 @@ input CourseCreateWithoutLinksFromCourseInput {
   sourceCourse: CourseCreateOneWithoutClonesInput
   clones: CourseCreateManyWithoutSourceCourseInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
-  concepts: ConceptCreateManyWithoutCoursesInput
+  concepts: ConceptCreateManyWithoutCourseInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1384,7 +1382,7 @@ input CourseCreateWithoutLinksToCourseInput {
   sourceCourse: CourseCreateOneWithoutClonesInput
   clones: CourseCreateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
-  concepts: ConceptCreateManyWithoutCoursesInput
+  concepts: ConceptCreateManyWithoutCourseInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1398,7 +1396,7 @@ input CourseCreateWithoutSourceCourseInput {
   clones: CourseCreateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
-  concepts: ConceptCreateManyWithoutCoursesInput
+  concepts: ConceptCreateManyWithoutCourseInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1413,7 +1411,7 @@ input CourseCreateWithoutWorkspaceInput {
   clones: CourseCreateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
-  concepts: ConceptCreateManyWithoutCoursesInput
+  concepts: ConceptCreateManyWithoutCourseInput
   tags: TagCreateManyInput
 }
 
@@ -1844,7 +1842,7 @@ input CourseUpdateDataInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1858,7 +1856,7 @@ input CourseUpdateInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1873,18 +1871,6 @@ input CourseUpdateManyMutationInput {
   name: String
   official: Boolean
   frozen: Boolean
-}
-
-input CourseUpdateManyWithoutConceptsInput {
-  create: [CourseCreateWithoutConceptsInput!]
-  delete: [CourseWhereUniqueInput!]
-  connect: [CourseWhereUniqueInput!]
-  set: [CourseWhereUniqueInput!]
-  disconnect: [CourseWhereUniqueInput!]
-  update: [CourseUpdateWithWhereUniqueWithoutConceptsInput!]
-  upsert: [CourseUpsertWithWhereUniqueWithoutConceptsInput!]
-  deleteMany: [CourseScalarWhereInput!]
-  updateMany: [CourseUpdateManyWithWhereNestedInput!]
 }
 
 input CourseUpdateManyWithoutSourceCourseInput {
@@ -1932,6 +1918,13 @@ input CourseUpdateOneRequiredInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseUpdateOneRequiredWithoutConceptsInput {
+  create: CourseCreateWithoutConceptsInput
+  update: CourseUpdateWithoutConceptsDataInput
+  upsert: CourseUpsertWithoutConceptsInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseUpdateOneRequiredWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   update: CourseUpdateWithoutLinksFromCourseDataInput
@@ -1963,7 +1956,7 @@ input CourseUpdateWithoutClonesDataInput {
   sourceCourse: CourseUpdateOneWithoutClonesInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1989,7 +1982,7 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
   sourceCourse: CourseUpdateOneWithoutClonesInput
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -2002,7 +1995,7 @@ input CourseUpdateWithoutLinksToCourseDataInput {
   sourceCourse: CourseUpdateOneWithoutClonesInput
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -2015,7 +2008,7 @@ input CourseUpdateWithoutSourceCourseDataInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -2029,13 +2022,8 @@ input CourseUpdateWithoutWorkspaceDataInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
-  concepts: ConceptUpdateManyWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   tags: TagUpdateManyInput
-}
-
-input CourseUpdateWithWhereUniqueWithoutConceptsInput {
-  where: CourseWhereUniqueInput!
-  data: CourseUpdateWithoutConceptsDataInput!
 }
 
 input CourseUpdateWithWhereUniqueWithoutSourceCourseInput {
@@ -2058,6 +2046,11 @@ input CourseUpsertWithoutClonesInput {
   create: CourseCreateWithoutClonesInput!
 }
 
+input CourseUpsertWithoutConceptsInput {
+  update: CourseUpdateWithoutConceptsDataInput!
+  create: CourseCreateWithoutConceptsInput!
+}
+
 input CourseUpsertWithoutLinksFromCourseInput {
   update: CourseUpdateWithoutLinksFromCourseDataInput!
   create: CourseCreateWithoutLinksFromCourseInput!
@@ -2066,12 +2059,6 @@ input CourseUpsertWithoutLinksFromCourseInput {
 input CourseUpsertWithoutLinksToCourseInput {
   update: CourseUpdateWithoutLinksToCourseDataInput!
   create: CourseCreateWithoutLinksToCourseInput!
-}
-
-input CourseUpsertWithWhereUniqueWithoutConceptsInput {
-  where: CourseWhereUniqueInput!
-  update: CourseUpdateWithoutConceptsDataInput!
-  create: CourseCreateWithoutConceptsInput!
 }
 
 input CourseUpsertWithWhereUniqueWithoutSourceCourseInput {
