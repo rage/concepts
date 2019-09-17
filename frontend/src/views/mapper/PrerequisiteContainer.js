@@ -29,7 +29,6 @@ const PrerequisiteContainer = ({
   const classes = useStyles()
   const infoBox = useInfoBox()
   const connectionRef = useRef()
-  const createConceptRef = useRef()
 
   /* FIXME
   useEffect(() => {
@@ -59,7 +58,7 @@ const PrerequisiteContainer = ({
                 courseLink={link}
                 connectionRef={index === 0 ? connectionRef : undefined}
                 createConceptRef={(index === 0 && link.from.concepts.length === 0)
-                  ? createConceptRef : undefined}
+                  ? infoBox.current.ref('mapper', 'CREATE_CONCEPT_PREREQ') : undefined}
                 focusedConceptIds={focusedConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}

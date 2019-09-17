@@ -72,6 +72,9 @@ const useStyles = makeStyles(theme => ({
   button: {
     color: 'white',
     borderColor: 'white'
+  },
+  invisible: {
+    visibility: 'hidden'
   }
 }))
 
@@ -120,19 +123,25 @@ const InfoBox = ({ contextRef }) => {
       return step && step.ref && step.ref.current && step.ref.current.offsetParent
     },
     get hasNext() {
-      return local.isValidStep(state.index + 1)
+      return currentView && userGuide.views[currentView].length > state.index + 1
     },
     get hasPrev() {
-      return state.index > 0 && local.isValidStep(state.index - 1)
+      return state.index > 0
+    },
+    get canMoveNext() {
+      return local.isValidStep(state.index + 1)
+    },
+    get canMovePrev() {
+      return this.hasPrev && local.isValidStep(state.index - 1)
     },
     showNext() {
-      if (!state.open || !local.hasNext) {
+      if (!state.open || !local.canMoveNext) {
         return
       }
       contextRef.current.show(userGuide.views[currentView][state.index + 1])
     },
     showPrev() {
-      if (!state.open || !local.hasPrev) {
+      if (!state.open || !local.canMovePrev) {
         return
       }
       contextRef.current.show(userGuide.views[currentView][state.index - 1])
@@ -241,12 +250,14 @@ const InfoBox = ({ contextRef }) => {
           </Button>
           <div className={classes.navigation}>
             <IconButton
-              className={classes.button} onClick={local.showPrev} disabled={!local.hasPrev}
+              className={`${classes.button} ${!local.hasPrev ? classes.invisible : ''}`}
+              onClick={local.showPrev} disabled={!local.canMovePrev}
             >
               <PrevIcon />
             </IconButton>
             <IconButton
-              className={classes.button} onClick={local.showNext} disabled={!local.hasNext}
+              className={`${classes.button} ${!local.hasNext ? classes.invisible : ''}`}
+              onClick={local.showNext} disabled={!local.canMoveNext}
             >
               <NextIcon />
             </IconButton>
