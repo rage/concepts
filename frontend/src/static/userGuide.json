@@ -1,7 +1,8 @@
 {
   "defaults": {
     "alignment": 0,
-    "separation": 20
+    "separation": 20,
+    "padding": 5
   },
   "views": {
     "mapper": [{

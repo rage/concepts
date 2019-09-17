@@ -39,11 +39,12 @@ const useStyles = makeStyles(() => ({
 
 const FocusOverlayContext = createContext(null)
 
-const FocusOverlay = ({ children, padding = 5 }) => {
+const FocusOverlay = ({ children }) => {
   const [state, setState] = useState({
     enableTransition: false,
     fadeout: null,
-    element: null
+    element: null,
+    padding: 5
   })
   const classes = useStyles()
 
@@ -57,10 +58,10 @@ const FocusOverlay = ({ children, padding = 5 }) => {
     if (!rect) {
       return
     }
-    const y = rect.top - padding,
-      x = rect.left - padding,
-      yEnd = rect.bottom + padding,
-      xEnd = rect.right + padding
+    const y = rect.top - state.padding,
+      x = rect.left - state.padding,
+      yEnd = rect.bottom + state.padding,
+      xEnd = rect.right + state.padding
     box.current.style.top = `${y}px`
     box.current.style.left = `${x}px`
     box.current.style.height = `${yEnd - y}px`
@@ -77,14 +78,15 @@ const FocusOverlay = ({ children, padding = 5 }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.element])
 
-  const open = elem => {
+  const open = (elem, padding = 5) => {
     if (state.fadeout) {
       clearTimeout(state.fadeout)
     }
     setState({
       enableTransition: state.element !== null,
       element: elem,
-      fadeout: null
+      fadeout: null,
+      padding
     })
   }
 
@@ -95,11 +97,13 @@ const FocusOverlay = ({ children, padding = 5 }) => {
     setState({
       enableTransition: false,
       element: state.element,
+      padding: state.padding,
       fadeout: setTimeout(() => {
         setState({
           enableTransition: false,
           fadeout: null,
-          element: null
+          element: null,
+          padding: 5
         })
       }, 500)
     })

@@ -153,14 +153,15 @@ const InfoBox = ({ contextRef }) => {
       if (state.fadeout) {
         clearTimeout(state.fadeout)
       }
-      overlay.open(info.ref.current)
-      currentStep.current = info.index
-      setState({
-        enableTransition: open,
-        open: true,
+      const newState = {
+        ...info,
         ...userGuide.defaults,
-        ...info
-      })
+        enableTransition: open,
+        open: true
+      }
+      overlay.open(newState.ref.current, newState.padding)
+      currentStep.current = newState.index
+      setState(newState)
     },
     get canOpen() {
       return Boolean(currentView)
