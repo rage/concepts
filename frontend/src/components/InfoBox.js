@@ -213,12 +213,10 @@ const InfoBox = ({ contextRef }) => {
     }
   }
 
-  const { title, description, open, offset, placement, fadeout, enableTransition } = state
-  const POPPER_MODIFIERS = {
-    offset: {
-      offset: offset ? `${offset.alignment}, ${offset.separation}` : '0px, 0px'
-    }
-  }
+  const {
+    title, description, open, alignment, separation, placement, fadeout, enableTransition
+  } = state
+  const POPPER_MODIFIERS = { offset: { offset: `${alignment}, ${separation}` } }
 
   return (
     <Popper

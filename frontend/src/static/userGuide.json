@@ -1,7 +1,7 @@
 {
   "defaults": {
     "alignment": 0,
-    "separation": 50
+    "separation": 20
   },
   "views": {
     "mapper": [{
@@ -28,8 +28,7 @@
       "id": "CREATE_CONCEPT_PREREQ",
       "title": "Add a concept to the new course",
       "description": "Add a concept to the newly created prerequisite course.",
-      "placement": "right-start",
-      "separation": 20
+      "placement": "right-start"
     }, {
       "id": "DRAW_LINK_START",
       "title": "Start drawing a link to a prerequisite",
