@@ -120,7 +120,10 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
-    setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 0)
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('redrawConceptLink'))
+      infoBox.current.redrawIfOpen('mapper', 'OPEN_COURSE_TRAY')
+    }, 0)
   }
 
   if (workspaceQuery.error) {

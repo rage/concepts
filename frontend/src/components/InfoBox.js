@@ -101,6 +101,7 @@ userGuide.viewMaps = Object.fromEntries(
 
 const InfoBox = ({ contextRef }) => {
   const [currentView, setCurrentView] = useState(null)
+  const currentStep = useRef(0)
   const [state, setState] = useState({
     open: false
   })
@@ -108,16 +109,21 @@ const InfoBox = ({ contextRef }) => {
   const overlay = useFocusOverlay()
 
   const [redrawIndex, setRedrawIndex] = useState(0)
-  const redraw = () => setRedrawIndex(redrawIndex+1)
+  const redraw = () => setRedrawIndex(redrawIndex + 1)
 
   const local = {
+    isValidStep(stepIndex) {
+      if (!currentView || userGuide.views[currentView].length <= stepIndex) {
+        return false
+      }
+      const step = userGuide.views[currentView][stepIndex]
+      return step && step.ref && step.ref.current && step.ref.current.offsetParent
+    },
     get hasNext() {
-      return currentView && userGuide.views[currentView].length > state.index + 1
-        && Boolean(userGuide.views[currentView][state.index + 1].ref)
-        && Boolean(userGuide.views[currentView][state.index + 1].ref.current)
+      return local.isValidStep(state.index + 1)
     },
     get hasPrev() {
-      return state.index > 0
+      return state.index > 0 && local.isValidStep(state.index - 1)
     },
     showNext() {
       if (!state.open || !local.hasNext) {
@@ -134,12 +140,12 @@ const InfoBox = ({ contextRef }) => {
   }
 
   contextRef.current = {
-    view: currentView,
     show(info) {
       if (state.fadeout) {
         clearTimeout(state.fadeout)
       }
       overlay.open(info.ref.current)
+      currentStep.current = info.index
       setState({
         enableTransition: open,
         open: true,
@@ -148,10 +154,13 @@ const InfoBox = ({ contextRef }) => {
       })
     },
     get canOpen() {
-      return Boolean(contextRef.current.view)
+      return Boolean(currentView)
     },
     open() {
-      contextRef.current.show(userGuide.views[contextRef.current.view][0])
+      if (!local.isValidStep(currentStep.current)) {
+        currentStep.current = 0
+      }
+      contextRef.current.show(userGuide.views[currentView][currentStep.current])
     },
     close() {
       if (state.fadeout || !state.open) {
@@ -166,14 +175,14 @@ const InfoBox = ({ contextRef }) => {
       overlay.close()
     },
     setView(view) {
-      if (contextRef.current.view !== view) {
+      if (currentView !== view) {
         contextRef.current.close()
-        contextRef.current.view = view
+        currentStep.current = 0
         setCurrentView(view)
       }
     },
     unsetView(view) {
-      if (contextRef.current.view === view) {
+      if (currentView === view) {
         contextRef.current.setView(null)
       }
     },
@@ -185,6 +194,12 @@ const InfoBox = ({ contextRef }) => {
       return elem => {
         step.ref.current = elem
         redraw()
+      }
+    },
+    redrawIfOpen(view, id) {
+      if (currentView === view && state.id === id) {
+        redraw()
+        overlay.update()
       }
     }
   }
