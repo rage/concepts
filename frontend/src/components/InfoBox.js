@@ -107,10 +107,14 @@ const InfoBox = ({ contextRef }) => {
   const classes = useStyles()
   const overlay = useFocusOverlay()
 
+  const [redrawIndex, setRedrawIndex] = useState(0)
+  const redraw = () => setRedrawIndex(redrawIndex+1)
+
   const local = {
     get hasNext() {
       return currentView && userGuide.views[currentView].length > state.index + 1
         && Boolean(userGuide.views[currentView][state.index + 1].ref)
+        && Boolean(userGuide.views[currentView][state.index + 1].ref.current)
     },
     get hasPrev() {
       return state.index > 0
@@ -178,7 +182,10 @@ const InfoBox = ({ contextRef }) => {
       if (!step.ref) {
         step.ref = React.createRef()
       }
-      return step.ref
+      return elem => {
+        step.ref.current = elem
+        redraw()
+      }
     }
   }
 
