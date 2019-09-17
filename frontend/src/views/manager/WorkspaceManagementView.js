@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography, Paper } from '@material-ui/core'
@@ -13,6 +13,7 @@ import {
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import LoadingBar from '../../components/LoadingBar'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -68,6 +69,17 @@ const useStyles = makeStyles(() => ({
 
 const WorkspaceManagementView = ({ workspaceId }) => {
   const classes = useStyles()
+
+  const infoBox = useInfoBox()
+
+  useEffect(() => {
+    console.log('INFOBOX MANAGER START')
+    infoBox.current.setView('manager')
+    return () => {
+      console.log('INFOBOX MANAGER END')
+      infoBox.current.unsetView('manager')
+    }
+  })
 
   const [, messageDispatch] = useMessageStateValue()
 

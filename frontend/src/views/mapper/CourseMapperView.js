@@ -54,11 +54,19 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const [addingLink, setAddingLink] = useState(null)
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
   const conceptLinkMenuRef = useRef()
-  const trayFabRef = useRef()
   const conceptConnectionRef = useRef()
   const [{ loggedIn }] = useLoginStateValue()
 
   const infoBox = useInfoBox()
+
+  useEffect(() => {
+    console.log('INFOBOX MAPPER START')
+    infoBox.current.setView('mapper')
+    return () => {
+      console.log('INFOBOX MAPPER END')
+      infoBox.current.unsetView('mapper')
+    }
+  }, [infoBox])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -75,25 +83,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const updateCourse = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
   })
-
-  useEffect(() => {
-    const conceptsExist = courseQuery.data.courseById
-      && courseQuery.data.courseById.concepts.length === 1
-    const activeConceptHasLinks = courseQuery.data.courseById
-      && courseQuery.data.courseById.concepts.find(concept => concept.linksToConcept.length > 0
-        && focusedConceptIds.includes(concept.id))
-    if (!courseTrayOpen && conceptsExist) {
-      infoBox.open(trayFabRef.current, 'right-start', 'OPEN_COURSE_TRAY', 0, 50)
-    }
-    if (activeConceptHasLinks && focusedConceptIds.length > 0) {
-      infoBox.open(conceptConnectionRef.current, 'right-start', 'DELETE_LINK', 0, 50)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseTrayOpen, focusedConceptIds, courseQuery])
-
-  // Closes infoBox when leaving the page
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => infoBox.close, [])
 
   const handleMenuOpen = (event, linkId) => {
     event.preventDefault()
@@ -118,7 +107,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         id: conceptLinkMenu.linkId
       }
     })
-    infoBox.close()
     setConceptLinkMenu(null)
   }
 
@@ -159,7 +147,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       {
         showFab && loggedIn ?
           <Button
-            ref={trayFabRef}
+            ref={infoBox.current.ref('mapper', 'OPEN_COURSE_TRAY')}
             style={{
               gridArea: 'trayButton',
               width: '48px',

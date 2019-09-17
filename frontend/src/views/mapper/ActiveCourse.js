@@ -80,6 +80,7 @@ const ActiveCourse = ({
   const infoBox = useInfoBox()
   const { user, loggedIn } = useLoginStateValue()[0]
 
+  /* FIXME
   useEffect(() => {
     const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
     if (hasLinks && focusedConceptIds.length === 0) {
@@ -93,12 +94,11 @@ const ActiveCourse = ({
       infoBox.open(conceptLinkRef.current, 'left-start', 'DRAW_LINK_END', 0, 20)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addingLink, courseLinks])
+  }, [addingLink, courseLinks])*/
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
 
-  const createButtonRef = useRef()
   const conceptLinkRef = useRef()
   const activeConceptRef = useRef()
 
@@ -155,7 +155,7 @@ const ActiveCourse = ({
           onClick={() => openCreateConceptDialog(course.id)}
           variant='contained'
           color='secondary'
-          ref={createButtonRef}
+          ref={infoBox.current.ref('mapper', 'CREATE_CONCEPT_TARGET')}
         >
           Add concept
         </Button> : null

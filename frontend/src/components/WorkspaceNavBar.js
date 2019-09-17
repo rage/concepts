@@ -8,7 +8,7 @@ import {
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
-  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon
+  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon
 } from '@material-ui/icons'
 
 import client from '../apollo/apolloClient'
@@ -17,6 +17,7 @@ import { DELETE_WORKSPACE } from '../graphql/Mutation'
 import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../store'
 import { useShareDialog } from '../dialogs/sharing'
+import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles({
   root: {
@@ -63,6 +64,8 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
   const { user } = useLoginStateValue()[0]
   const messageDispatch = useMessageStateValue()[1]
   const [menuAnchor, setMenuAnchor] = useState(null)
+
+  const infoBox = useInfoBox()
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -144,47 +147,54 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
             <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
           }
         </BottomNavigation>
-        <IconButton
-          onClick={evt => setMenuAnchor(evt.currentTarget)}
-          className={classes.menuButton}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}>
-          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-            <ListItemIcon>
-              <CloudDownloadIcon />
-            </ListItemIcon>
-            Export
-          </MenuItem>
-          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-            <ListItemIcon>
-              <ShareIcon />
-            </ListItemIcon>
-            Share link
-          </MenuItem>
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-            <ListItemIcon>
-              <EditIcon />
-            </ListItemIcon>
-            Edit
-          </MenuItem>
-        </Menu>
+        <div>
+          <IconButton
+            className={classes.menuButton} onClick={infoBox.current.open}
+          >
+            <HelpIcon />
+          </IconButton>
+          <IconButton
+            onClick={evt => setMenuAnchor(evt.currentTarget)}
+            className={classes.menuButton}
+          >
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}>
+            <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+              <ListItemIcon>
+                <CloudDownloadIcon />
+              </ListItemIcon>
+              Export
+            </MenuItem>
+            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              Share link
+            </MenuItem>
+            <MenuItem aria-label='Delete' onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+            <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              Edit
+            </MenuItem>
+          </Menu>
+        </div>
       </Paper>
     </>
   )

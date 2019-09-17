@@ -9,7 +9,7 @@ import App from './App'
 import client from './apollo/apolloClient'
 import { LoginStateProvider, MessagingStateProvider } from './store'
 import FocusOverlay from './components/FocusOverlay'
-import InfoBox from './components/InfoBox'
+import InfoBoxProvider from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
 import { LoadingProvider } from './components/LoadingBar'
@@ -32,11 +32,11 @@ const ConceptsWrapper = () => {
               <InfoSnackbar />
               <DialogProvider>
                 <FocusOverlay>
-                  <InfoBox>
+                  <InfoBoxProvider>
                     <LoadingProvider>
                       <App />
                     </LoadingProvider>
-                  </InfoBox>
+                  </InfoBoxProvider>
                 </FocusOverlay>
               </DialogProvider>
             </LoginStateProvider>

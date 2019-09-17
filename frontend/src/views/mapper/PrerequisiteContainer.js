@@ -31,6 +31,7 @@ const PrerequisiteContainer = ({
   const connectionRef = useRef()
   const createConceptRef = useRef()
 
+  /* FIXME
   useEffect(() => {
     const activeCourseHasPrereqConcepts = activeCourse.concepts.find(concept =>
       concept.linksToConcept.length > 0)
@@ -40,7 +41,7 @@ const PrerequisiteContainer = ({
       infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCourse.concepts, addingLink, courseLinks])
+  }, [activeCourse.concepts, addingLink, courseLinks])*/
 
   return <>
     <DividerWithText

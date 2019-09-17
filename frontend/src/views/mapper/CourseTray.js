@@ -180,6 +180,7 @@ const CourseTray = ({
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
   const openCreateCourseDialog = useCreateCourseDialog(workspaceId, user.role === 'STAFF')
 
+  /* FIXME
   useEffect(() => {
     const enoughCourses = courses && courses.length === 1
     if (courseTrayOpen && enoughCourses) {
@@ -188,7 +189,7 @@ const CourseTray = ({
       infoBox.open(checkboxRef.current, 'right-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseTrayOpen, courses, courseLinks])
+  }, [courseTrayOpen, courses, courseLinks])*/
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
     update: cache.createCourseLinkUpdate(workspaceId, activeCourseId)
