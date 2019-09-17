@@ -1,8 +1,9 @@
 import React, { useRef, useState, createContext, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper, Typography, IconButton, Popper, Button } from '@material-ui/core'
+import { Paper, Typography, IconButton, Popper } from '@material-ui/core'
 import {
-  InfoOutlined as InfoIcon, NavigateNext as NextIcon, NavigateBefore as PrevIcon, Close as CloseIcon
+  InfoOutlined as InfoIcon, NavigateNext as NextIcon, NavigateBefore as PrevIcon,
+  Close as CloseIcon, OndemandVideo as VideoIcon
 } from '@material-ui/icons'
 
 import { useFocusOverlay } from './FocusOverlay'
@@ -244,9 +245,9 @@ const InfoBox = ({ contextRef }) => {
           {description}
         </Typography>
         <div className={classes.infoFooter}>
-          <Button size='small' className={classes.button} onClick={() => alert('Not implemented')}>
-            Show video
-          </Button>
+          <IconButton className={classes.button} onClick={() => alert('Not implemented')}>
+            <VideoIcon />
+          </IconButton>
           <div className={classes.navigation}>
             <IconButton
               className={`${classes.button} ${!local.hasPrev ? classes.invisible : ''}`}
