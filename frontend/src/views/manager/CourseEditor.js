@@ -13,6 +13,7 @@ import { useLoginStateValue } from '../../store'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
+import groupConcepts from './ConceptGroup'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -93,7 +94,8 @@ const sortingOptions = {
   ALPHABETICAL_ASC: 'Alphabetical (A-Z)',
   ALPHABETICAL_DESC: 'Alphabetical (Z-A)',
   CREATION_ASC: 'Creation date (oldest first)',
-  CREATION_DESC: 'Creation date (newest first)'
+  CREATION_DESC: 'Creation date (newest first)',
+  GROUP_BY: 'Group by name'
 }
 
 const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteConcept }) => {
@@ -212,37 +214,38 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         workspace={workspace} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       /> }
-      <List ref={listRef} className={classes.list}>{
-        sort(course.concepts).map(concept => {
-          if (conceptFilter.length === 0 ||
+      <List ref={listRef} className={classes.list}>
+        {
+          sortMethod != 'GROUP_BY' ? sort(course.concepts).map(concept => {
+            if (conceptFilter.length === 0 ||
               concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
-            return (<Tooltip
-              key={concept.id}
-              placement='top'
-              classes={{
-                tooltip: classes.tooltip,
-                popper: classes.popper
-              }}
-              TransitionComponent={Fade}
-              title={editing !== concept.id ?
-                (concept.description || 'No description available') : ''}
-            >
-              <ListItem
-                divider key={concept.id}
-                classes={{ divider: classes.listItemContainer }}
-                className={editing && editing !== concept.id ? classes.listItemDisabled : null}
+              return (<Tooltip
+                key={concept.id}
+                placement='top'
+                classes={{
+                  tooltip: classes.tooltip,
+                  popper: classes.popper
+                }}
+                TransitionComponent={Fade}
+                title={editing !== concept.id ?
+                  (concept.description || 'No description available') : ''}
               >
-                {editing === concept.id ? (
-                  <CreateConcept
-                    submit={args => {
-                      setEditing(null)
-                      updateConcept({ id: concept.id, ...args })
-                    }}
-                    cancel={() => setEditing(null)}
-                    defaultValues={concept}
-                    action='Save'
-                  />
-                ) : <>
+                <ListItem
+                  divider key={concept.id}
+                  classes={{ divider: classes.listItemContainer }}
+                  className={editing && editing !== concept.id ? classes.listItemDisabled : null}
+                >
+                  {editing === concept.id ? (
+                    <CreateConcept
+                      submit={args => {
+                        setEditing(null)
+                        updateConcept({ id: concept.id, ...args })
+                      }}
+                      cancel={() => setEditing(null)}
+                      defaultValues={concept}
+                      action='Save'
+                    />
+                  ) : <>
                 <ListItemText className={classes.conceptBody}>
                   <Typography variant='h6' className={classes.conceptName}>
                     {concept.name}
@@ -285,13 +288,13 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
                   </>}
                 </ListItemSecondaryAction>
               </>}
-              </ListItem>
-            </Tooltip>)
-          } else {
-            return null
-          }
-        })
-      }</List>
+                </ListItem>
+              </Tooltip>)
+            } else {
+              return null
+            }
+          }) : <div> TODO: Groups </div>
+        } </List>
       <CreateConcept submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
