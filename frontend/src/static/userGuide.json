@@ -12,19 +12,24 @@
     }, {
       "id": "OPEN_COURSE_TRAY",
       "title": "Open course tray",
-      "description": "Click the floating arrow button to open the course tray. The course tray lets you choose courses that are prerequisites for the current course."
+      "description": "Click the floating arrow button to open the course tray. The course tray lets you choose courses that are prerequisites for the current course.",
+      "placement": "right-start"
     }, {
       "id": "CREATE_COURSE",
       "title": "Create another course",
-      "description": "Create a new course that is a prerequisite for the course you created first."
+      "description": "Create a new course that is a prerequisite for the course you created first.",
+      "placement": "right-end"
     }, {
       "id": "ADD_COURSE_AS_PREREQ",
       "title": "Mark a course as a prerequisite",
-      "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray."
+      "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray.",
+      "placement": "right-end"
     }, {
       "id": "CREATE_CONCEPT_PREREQ",
       "title": "Add a concept to the new course",
-      "description": "Add a concept to the newly created prerequisite course."
+      "description": "Add a concept to the newly created prerequisite course.",
+      "placement": "right-start",
+      "separation": 20
     }, {
       "id": "DRAW_LINK_START",
       "title": "Start drawing a link to a prerequisite",
