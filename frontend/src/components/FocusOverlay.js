@@ -167,7 +167,7 @@ const FocusOverlay = ({ contextRef }) => {
   )
 }
 
-export const FocusOverlayProvider = ({ children }) => {
+const FocusOverlayProvider = ({ children }) => {
   const focusOverlayContextValue = useRef({
     box: null
   })
