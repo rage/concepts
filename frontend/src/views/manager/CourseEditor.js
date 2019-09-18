@@ -102,7 +102,8 @@ const Concept = ({
   concept, user,
   editing, setEditing,
   updateConcept, deleteConcept,
-  merging, toggleMergingConcept
+  merging, toggleMergingConcept,
+  divider = true
 }) => {
   const classes = useStyles()
   return (
@@ -118,7 +119,7 @@ const Concept = ({
         (concept.description || 'No description available') : ''}
     >
       <ListItem
-        divider
+        divider={divider}
         key={concept.id}
         classes={{ divider: classes.listItemContainer }}
         className={editing && editing !== concept.id ? classes.listItemDisabled : null}
@@ -190,7 +191,7 @@ const ConceptGroup = ({
   const listRef = useRef()
 
   return (
-    <List divider ref={listRef}>
+    <List ref={listRef}>
       {
         concepts.map(concept => (
           <Concept concept={concept}
@@ -201,6 +202,7 @@ const ConceptGroup = ({
             merging={merging}
             setEditing={setEditing}
             toggleMergingConcept={toggleMergingConcept}
+            divider={false}
           />
         ))
       }
