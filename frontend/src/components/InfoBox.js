@@ -1,6 +1,8 @@
 import React, { useRef, useState, createContext, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Paper, Typography, IconButton, Popper } from '@material-ui/core'
+import {
+  Paper, Typography, IconButton, Popper, DialogActions, Dialog, DialogContent, Button
+} from '@material-ui/core'
 import {
   InfoOutlined as InfoIcon, NavigateNext as NextIcon, NavigateBefore as PrevIcon,
   Close as CloseIcon, OndemandVideo as VideoIcon
@@ -105,6 +107,7 @@ userGuide.viewMaps = Object.fromEntries(
 
 const InfoBox = ({ contextRef }) => {
   const [currentView, setCurrentView] = useState(null)
+  const [currentVideo, setCurrentVideo] = useState({ open: false })
   const currentStep = useRef(0)
   const [state, setState] = useState({
     open: false
@@ -114,6 +117,11 @@ const InfoBox = ({ contextRef }) => {
 
   const [redrawIndex, setRedrawIndex] = useState(0)
   const redraw = () => setRedrawIndex(redrawIndex + 1)
+
+  const closeVideo = () => {
+    setCurrentVideo({ ...currentVideo, open: false })
+    setTimeout(() => setCurrentVideo({ open: false }), 500)
+  }
 
   const local = {
     isValidStep(stepIndex) {
@@ -216,11 +224,11 @@ const InfoBox = ({ contextRef }) => {
   }
 
   const {
-    title, description, open, alignment, separation, placement, fadeout, enableTransition
+    title, description, video, open, alignment, separation, placement, fadeout, enableTransition
   } = state
   const POPPER_MODIFIERS = { offset: { offset: `${alignment}, ${separation}` } }
 
-  return (
+  return <>
     <Popper
       open={open}
       anchorEl={open && overlay.box && overlay.box.current ? overlay.box.current : undefined}
@@ -245,7 +253,10 @@ const InfoBox = ({ contextRef }) => {
           {description}
         </Typography>
         <div className={classes.infoFooter}>
-          <IconButton className={classes.button} onClick={() => alert('Not implemented')}>
+          <IconButton
+            className={`${classes.button} ${!video ? classes.invisible : ''}`}
+            onClick={() => setCurrentVideo({ open: true, source: video })}
+          >
             <VideoIcon />
           </IconButton>
           <div className={classes.navigation}>
@@ -265,7 +276,19 @@ const InfoBox = ({ contextRef }) => {
         </div>
       </Paper>
     </Popper>
-  )
+    <Dialog maxWidth='xl' open={Boolean(currentVideo.open)} onClose={closeVideo}>
+      <DialogContent>
+        {currentVideo.source && <video controls autoPlay muted width='100%' height='100%'>
+          <source src={currentVideo.source} type='video/webm' />
+        </video>}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeVideo} color='primary' variant='outlined'>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  </>
 }
 
 export const useInfoBox = () => useContext(InfoBoxContext)

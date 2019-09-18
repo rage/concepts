@@ -9,27 +9,32 @@
       "id": "CREATE_CONCEPT_TARGET",
       "title": "Add a concept",
       "description": "Click \"ADD CONCEPT\" to add a concept for your new course.",
-      "placement": "left-end"
+      "placement": "left-end",
+      "video": "/guide/mapper/new-concept-active-course.webm"
     }, {
       "id": "OPEN_COURSE_TRAY",
       "title": "Open course tray",
-      "description": "Click the floating arrow button to open the course tray. The course tray lets you choose courses that are prerequisites for the current course.",
-      "placement": "right-start"
+      "description": "Click the floating arrow button to open or close the course tray. The course tray lets you choose courses that are prerequisites for the current course.",
+      "placement": "right-start",
+      "video": "/guide/mapper/open-course-tray.webm"
     }, {
       "id": "CREATE_COURSE",
       "title": "Create another course",
       "description": "Create a new course that is a prerequisite for the course you created first.",
-      "placement": "right-end"
+      "placement": "right-end",
+      "video": "/guide/mapper/new-course.webm"
     }, {
       "id": "ADD_COURSE_AS_PREREQ",
       "title": "Mark a course as a prerequisite",
       "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray.",
-      "placement": "right-end"
+      "placement": "right-end",
+      "video": "/guide/mapper/add-course-as-prereq.webm"
     }, {
       "id": "CREATE_CONCEPT_PREREQ",
       "title": "Add a concept to the new course",
       "description": "Add a concept to the newly created prerequisite course.",
-      "placement": "right-start"
+      "placement": "right-start",
+      "video": "/guide/mapper/new-concept-prereq-course.webm"
     }, {
       "id": "DRAW_LINK_START",
       "title": "Start drawing a link to a prerequisite",
@@ -54,6 +59,7 @@
       "id": "SWITCH_VIEW_HEATMAP",
       "title": "Switch to the heatmap view",
       "description": "The heatmap view lets you see how strongly courses are connected by showing the number of concept links as a heat map."
-    }]
+    }],
+    "manager": []
   }
 }
