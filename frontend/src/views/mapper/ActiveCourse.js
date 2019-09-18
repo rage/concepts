@@ -73,7 +73,6 @@ const ActiveCourse = ({
   addingLink,
   setAddingLink,
   toggleFocus,
-  courseLinks,
   urlPrefix
 }) => {
   const classes = useStyles()

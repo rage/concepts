@@ -230,8 +230,13 @@ const InfoBox = ({ contextRef }) => {
 
   return <>
     <Popper
-      open={open}
-      anchorEl={open && overlay.box && overlay.box.current ? overlay.box.current : undefined}
+      open={Boolean(open && overlay.box && overlay.box.current)}
+      // This makes a warning that says "Failed prop type: Material-UI: the `anchorEl` prop provided
+      // to the component is invalid.". The warning happens because the overlay box doesn't exist in
+      // the DOM yet when this is rendered.
+      // It could be bypassed by adding a setTimeout(..., 0) after opening the overlay box, but that
+      // causes other fun bugs, such as the info box jumping around when moving.
+      anchorEl={(open && overlay.box && overlay.box.current) ? overlay.box.current : undefined}
       placement={placement}
       modifiers={POPPER_MODIFIERS}
       className={`${classes.popper} ${enableTransition ? classes.enableTransition : ''}

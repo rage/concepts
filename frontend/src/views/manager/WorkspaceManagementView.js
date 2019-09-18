@@ -73,12 +73,8 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   const infoBox = useInfoBox()
 
   useEffect(() => {
-    console.log('INFOBOX MANAGER START')
     infoBox.current.setView('manager')
-    return () => {
-      console.log('INFOBOX MANAGER END')
-      infoBox.current.unsetView('manager')
-    }
+    return () => infoBox.current.unsetView('manager')
   })
 
   const [, messageDispatch] = useMessageStateValue()

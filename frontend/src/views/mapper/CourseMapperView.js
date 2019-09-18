@@ -60,12 +60,8 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const infoBox = useInfoBox()
 
   useEffect(() => {
-    console.log('INFOBOX MAPPER START')
     infoBox.current.setView('mapper')
-    return () => {
-      console.log('INFOBOX MAPPER END')
-      infoBox.current.unsetView('mapper')
-    }
+    return () => infoBox.current.unsetView('mapper')
   }, [infoBox])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -181,7 +177,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         setAddingLink={setAddingLink}
         toggleFocus={toggleFocus}
         courseTrayOpen={courseTrayOpen}
-        activeCourse={courseQuery.data.courseById}
         workspaceId={workspaceQuery.data.workspaceById.id}
         urlPrefix={urlPrefix}
       />
@@ -195,7 +190,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         setAddingLink={setAddingLink}
         toggleFocus={toggleFocus}
         courseTrayOpen={courseTrayOpen}
-        courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
         workspaceId={workspaceQuery.data.workspaceById.id}
         urlPrefix={urlPrefix}
       />

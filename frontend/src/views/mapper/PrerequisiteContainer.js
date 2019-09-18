@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Course from './Course'
@@ -23,7 +23,6 @@ const PrerequisiteContainer = ({
   toggleFocus,
   workspaceId,
   courseId,
-  activeCourse,
   urlPrefix
 }) => {
   const classes = useStyles()
