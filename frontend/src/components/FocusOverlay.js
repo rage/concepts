@@ -20,11 +20,27 @@ const useStyles = makeStyles(() => ({
     },
     '&.hidden': {
       display: 'none'
-    }
+    },
+
+    clipPath: 'polygon(' +
+      '0                          0,' +
+      '0                          100%,' +
+      'var(--focus-overlay-x)     100%,' +
+      'var(--focus-overlay-x)     var(--focus-overlay-y),' +
+      'var(--focus-overlay-x-end) var(--focus-overlay-y),' +
+      'var(--focus-overlay-x-end) var(--focus-overlay-y-end),' +
+      'var(--focus-overlay-x)     var(--focus-overlay-y-end),' +
+      'var(--focus-overlay-x)     100%,' +
+      '100%                       100%,' +
+      '100%                       0)'
   },
 
   box: {
-    position: 'fixed'
+    position: 'fixed',
+    left: 'var(--focus-overlay-x)',
+    top: 'var(--focus-overlay-y)',
+    width: 'calc(var(--focus-overlay-x-end) - var(--focus-overlay-x))',
+    height: 'calc(var(--focus-overlay-y-end) - var(--focus-overlay-y))'
   },
 
   '@keyframes fadein': {
@@ -50,25 +66,19 @@ const FocusOverlay = ({ children }) => {
 
   const overlay = useRef()
   const box = useRef()
+
   const update = () => {
-    if (!state.element || !overlay.current || !box.current) {
+    if (!state.element || !overlay.current) {
       return
     }
     const rect = state.element.getBoundingClientRect()
     if (!rect) {
       return
     }
-    const y = rect.top - state.padding,
-      x = rect.left - state.padding,
-      yEnd = rect.bottom + state.padding,
-      xEnd = rect.right + state.padding
-    box.current.style.top = `${y}px`
-    box.current.style.left = `${x}px`
-    box.current.style.height = `${yEnd - y}px`
-    box.current.style.width = `${xEnd - x}px`
-    overlay.current.style.clipPath =
-      `polygon(0 0, 0 100%,  ${x}px 100%,  ${x}px ${y}px,  ${xEnd}px ${y}px,
-               ${xEnd}px ${yEnd}px,  ${x}px ${yEnd}px, ${x}px 100%,  100% 100%, 100% 0)`
+    overlay.current.style.setProperty('--focus-overlay-x', `${rect.left - state.padding}px`)
+    overlay.current.style.setProperty('--focus-overlay-y', `${rect.top - state.padding}px`)
+    overlay.current.style.setProperty('--focus-overlay-x-end', `${rect.right + state.padding}px`)
+    overlay.current.style.setProperty('--focus-overlay-y-end', `${rect.bottom + state.padding}px`)
   }
 
   useEffect(() => {
