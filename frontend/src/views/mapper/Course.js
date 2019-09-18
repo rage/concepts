@@ -2,11 +2,7 @@ import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
-import {
-  Edit as EditIcon,
-  Lock as LockedIcon,
-  LockOpen as LockOpenIcon
-} from '@material-ui/icons'
+import { Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon } from '@material-ui/icons'
 import { useMutation } from 'react-apollo-hooks'
 
 import { Concept } from './concept'
@@ -93,7 +89,7 @@ const Course = ({
 
   useEffect(() => {
     infoBox.redrawIfOpen('mapper', 'CREATE_CONCEPT_PREREQ')
-  }, [course.concepts])
+  }, [infoBox, course.concepts])
 
   return (
     <Card elevation={0} className={classes.root}>
