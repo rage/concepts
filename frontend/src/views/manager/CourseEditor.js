@@ -98,6 +98,116 @@ const sortingOptions = {
   GROUP_BY: 'Group by name'
 }
 
+const Concept = ({
+  concept, user,
+  editing, setEditing,
+  updateConcept, deleteConcept,
+  merging, toggleMergingConcept
+}) => {
+  const classes = useStyles()
+  return (
+    <Tooltip
+      key={concept.id}
+      placement='top'
+      classes={{
+        tooltip: classes.tooltip,
+        popper: classes.popper
+      }}
+      TransitionComponent={Fade}
+      title={editing !== concept.id ?
+        (concept.description || 'No description available') : ''}
+    >
+      <ListItem
+        divider
+        key={concept.id}
+        classes={{ divider: classes.listItemContainer }}
+        className={editing && editing !== concept.id ? classes.listItemDisabled : null}
+      >
+        {editing === concept.id ? (
+          <CreateConcept
+            submit={args => {
+              setEditing(null)
+              updateConcept({ id: concept.id, ...args })
+            }}
+            cancel={() => setEditing(null)}
+            defaultValues={concept}
+            action='Save'
+          />
+        ) : <>
+                <ListItemText className={classes.conceptBody}>
+                  <Typography variant='h6' className={classes.conceptName}>
+                    {concept.name}
+                  </Typography>
+                </ListItemText>
+                <ListItemSecondaryAction>
+                  {merging ? (
+                    <Checkbox
+                      checked={merging.has(concept.id)}
+                      onClick={() => toggleMergingConcept(concept.id)}
+                      color='primary'
+                    />
+                  ) : <>
+                  {concept.frozen && user.role !== 'STAFF' && (
+                    <IconButton disabled classes={{ root: classes.lockIcon }}>
+                      <LockIcon />
+                    </IconButton>
+                  )}
+                  {!concept.frozen &&
+                    <IconButton
+                      color={editing ? 'inherit' : undefined}
+                      aria-label='Delete' onClick={() => {
+                        const msg = `Are you sure you want to delete the concept ${concept.name}?`
+                        if (window.confirm(msg)) {
+                          deleteConcept(concept.id)
+                        }
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  }
+                  {(!concept.frozen || user.role === 'STAFF') &&
+                    <IconButton
+                      color={editing ? 'inherit' : undefined} aria-label='Edit'
+                      onClick={() => setEditing(concept.id)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  }
+                  </>}
+                </ListItemSecondaryAction>
+              </>}
+      </ListItem>
+    </Tooltip>
+  )
+}
+
+const ConceptGroup = ({
+  concepts, user,
+  editing, setEditing,
+  updateConcept, deleteConcept,
+  merging, toggleMergingConcept
+}) => {
+  const listRef = useRef()
+
+  return (
+    <List divider ref={listRef}>
+      {
+        concepts.map(concept => (
+          <Concept concept={concept}
+            user={user}
+            editing={editing}
+            deleteConcept={deleteConcept}
+            updateConcept={updateConcept}
+            merging={merging}
+            setEditing={setEditing}
+            toggleMergingConcept={toggleMergingConcept}
+          />
+        ))
+      }
+    </List>
+  )
+}
+
 const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
@@ -219,81 +329,34 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
           sortMethod != 'GROUP_BY' ? sort(course.concepts).map(concept => {
             if (conceptFilter.length === 0 ||
               concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
-              return (<Tooltip
-                key={concept.id}
-                placement='top'
-                classes={{
-                  tooltip: classes.tooltip,
-                  popper: classes.popper
-                }}
-                TransitionComponent={Fade}
-                title={editing !== concept.id ?
-                  (concept.description || 'No description available') : ''}
-              >
-                <ListItem
-                  divider key={concept.id}
-                  classes={{ divider: classes.listItemContainer }}
-                  className={editing && editing !== concept.id ? classes.listItemDisabled : null}
-                >
-                  {editing === concept.id ? (
-                    <CreateConcept
-                      submit={args => {
-                        setEditing(null)
-                        updateConcept({ id: concept.id, ...args })
-                      }}
-                      cancel={() => setEditing(null)}
-                      defaultValues={concept}
-                      action='Save'
-                    />
-                  ) : <>
-                <ListItemText className={classes.conceptBody}>
-                  <Typography variant='h6' className={classes.conceptName}>
-                    {concept.name}
-                  </Typography>
-                </ListItemText>
-                <ListItemSecondaryAction>
-                  {merging ? (
-                    <Checkbox
-                      checked={merging.has(concept.id)}
-                      onClick={() => toggleMergingConcept(concept.id)}
-                      color='primary'
-                    />
-                  ) : <>
-                  {concept.frozen && user.role !== 'STAFF' && (
-                    <IconButton disabled classes={{ root: classes.lockIcon }}>
-                      <LockIcon />
-                    </IconButton>
-                  )}
-                  {!concept.frozen &&
-                    <IconButton
-                      color={editing ? 'inherit' : undefined}
-                      aria-label='Delete' onClick={() => {
-                        const msg = `Are you sure you want to delete the concept ${concept.name}?`
-                        if (window.confirm(msg)) {
-                          deleteConcept(concept.id)
-                        }
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                  {(!concept.frozen || user.role === 'STAFF') &&
-                    <IconButton
-                      color={editing ? 'inherit' : undefined} aria-label='Edit'
-                      onClick={() => setEditing(concept.id)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  }
-                  </>}
-                </ListItemSecondaryAction>
-              </>}
-                </ListItem>
-              </Tooltip>)
+              return <Concept concept={concept}
+                user={user}
+                editing={editing}
+                deleteConcept={deleteConcept}
+                updateConcept={updateConcept}
+                merging={merging}
+                setEditing={setEditing}
+                toggleMergingConcept={toggleMergingConcept}
+              />
             } else {
               return null
             }
-          }) : <div> TODO: Groups </div>
+          }) : <div>
+            {
+              groupConcepts(course.concepts).map(group => (
+                <ConceptGroup
+                  concepts={group}
+                  user={user}
+                  editing={editing}
+                  deleteConcept={deleteConcept}
+                  updateConcept={updateConcept}
+                  merging={merging}
+                  setEditing={setEditing}
+                  toggleMergingConcept={toggleMergingConcept}
+                />
+              ))
+            }
+          </div>
         } </List>
       <CreateConcept submit={async args => {
         await createConcept(args)
