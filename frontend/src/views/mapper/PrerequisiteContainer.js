@@ -56,7 +56,7 @@ const PrerequisiteContainer = ({
                 key={link.id}
                 courseLink={link}
                 connectionRef={index === 0 ? connectionRef : undefined}
-                createConceptRef={(index === 0 && link.from.concepts.length === 0)
+                createConceptRef={index === 0
                   ? infoBox.current.ref('mapper', 'CREATE_CONCEPT_PREREQ') : undefined}
                 focusedConceptIds={focusedConceptIds}
                 addingLink={addingLink}

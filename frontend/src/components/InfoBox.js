@@ -217,6 +217,7 @@ const InfoBox = ({ contextRef }) => {
     },
     redrawIfOpen(view, id) {
       if (currentView === view && state.id === id) {
+        console.log('Redrawing infobox because', view, id, 'is open')
         redraw()
         overlay.update()
       }
