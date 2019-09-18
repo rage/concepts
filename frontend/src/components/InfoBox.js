@@ -138,7 +138,7 @@ const InfoBox = ({ contextRef }) => {
         return false
       }
       const step = userGuide.views[currentView][stepIndex]
-      return step && step.ref && step.ref.current && step.ref.current.offsetParent
+      return step && step.ref && step.ref.offsetParent
     },
     get hasNext() {
       return currentView && userGuide.views[currentView].length > state.index + 1
@@ -178,8 +178,8 @@ const InfoBox = ({ contextRef }) => {
         open: true
       }
       overlay.open(
-        newState.ref.current,
-        newState.secondaryRef ? newState.secondaryRef.current : null,
+        newState.ref,
+        newState.secondaryRef || null,
         newState.padding)
       currentStep.current = newState.index
       setState(newState)
@@ -216,21 +216,15 @@ const InfoBox = ({ contextRef }) => {
     },
     ref(view, id) {
       const step = userGuide.viewMaps[view][id]
-      if (!step.ref) {
-        step.ref = React.createRef()
-      }
       return elem => {
-        step.ref.current = elem
+        step.ref = elem
         redraw()
       }
     },
     secondaryRef(view, id) {
       const step = userGuide.viewMaps[view][id]
-      if (!step.secondaryRef) {
-        step.secondaryRef = React.createRef()
-      }
       return elem => {
-        step.secondaryRef.current = elem
+        step.secondaryRef = elem
         redraw()
       }
     },
