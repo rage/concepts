@@ -92,7 +92,7 @@ const Course = ({
   const infoBox = useInfoBox()
 
   useEffect(() => {
-    infoBox.current.redrawIfOpen('mapper', 'CREATE_CONCEPT_PREREQ')
+    infoBox.redrawIfOpen('mapper', 'CREATE_CONCEPT_PREREQ')
   }, [course.concepts])
 
   return (

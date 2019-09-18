@@ -126,7 +126,7 @@ const ActiveCourse = ({
         {course.concepts.map((concept, index) =>
           <Concept
             conceptLinkRef={index === 0
-              ? infoBox.current.secondaryRef('mapper', 'DRAW_LINK') : undefined}
+              ? infoBox.secondaryRef('mapper', 'DRAW_LINK') : undefined}
             activeConceptRef={index === 0 ? activeConceptRef : undefined}
             isActive
             concept={concept}
@@ -147,7 +147,7 @@ const ActiveCourse = ({
           onClick={() => openCreateConceptDialog(course.id)}
           variant='contained'
           color='secondary'
-          ref={infoBox.current.ref('mapper', 'CREATE_CONCEPT_TARGET')}
+          ref={infoBox.ref('mapper', 'CREATE_CONCEPT_TARGET')}
         >
           Add concept
         </Button> : null

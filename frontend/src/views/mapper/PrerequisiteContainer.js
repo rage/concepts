@@ -42,9 +42,9 @@ const PrerequisiteContainer = ({
               <Course
                 key={link.id}
                 courseLink={link}
-                connectionRef={index === 0 ? infoBox.current.ref('mapper', 'DRAW_LINK') : undefined}
+                connectionRef={index === 0 ? infoBox.ref('mapper', 'DRAW_LINK') : undefined}
                 createConceptRef={index === 0
-                  ? infoBox.current.ref('mapper', 'CREATE_CONCEPT_PREREQ') : undefined}
+                  ? infoBox.ref('mapper', 'CREATE_CONCEPT_PREREQ') : undefined}
                 focusedConceptIds={focusedConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}

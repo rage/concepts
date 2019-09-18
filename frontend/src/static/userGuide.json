@@ -40,7 +40,8 @@
       "title": "Draw a link from a prerequisite",
       "description": "Click a right-pointing triangle to start drawing a link, then click another triangle to create the link.",
       "video": "/guide/mapper/draw-link.webm"
-    }, {
+    }],
+    "TODO": [{
       "id": "FOCUS_CONCEPT",
       "title": "Focus a concept",
       "description": "Click on a concept to focus it and highlight links from it."

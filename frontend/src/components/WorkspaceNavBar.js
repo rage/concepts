@@ -149,7 +149,7 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
         </BottomNavigation>
         <div>
           <IconButton
-            className={classes.menuButton} onClick={infoBox.current.open}
+            className={classes.menuButton} onClick={infoBox.open}
           >
             <HelpIcon />
           </IconButton>

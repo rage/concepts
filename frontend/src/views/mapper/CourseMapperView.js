@@ -60,8 +60,8 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const infoBox = useInfoBox()
 
   useEffect(() => {
-    infoBox.current.setView('mapper')
-    return () => infoBox.current.unsetView('mapper')
+    infoBox.setView('mapper')
+    return () => infoBox.unsetView('mapper')
   }, [infoBox])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -118,7 +118,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     setCourseTrayOpen(!courseTrayOpen)
     setTimeout(() => {
       window.dispatchEvent(new CustomEvent('redrawConceptLink'))
-      infoBox.current.redrawIfOpen('mapper', 'OPEN_COURSE_TRAY')
+      infoBox.redrawIfOpen('mapper', 'OPEN_COURSE_TRAY')
     }, 0)
   }
 
@@ -146,7 +146,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       {
         showFab && loggedIn ?
           <Button
-            ref={infoBox.current.ref('mapper', 'OPEN_COURSE_TRAY')}
+            ref={infoBox.ref('mapper', 'OPEN_COURSE_TRAY')}
             style={{
               gridArea: 'trayButton',
               width: '48px',

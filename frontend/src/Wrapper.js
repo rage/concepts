@@ -8,7 +8,7 @@ import MomentUtils from '@date-io/moment'
 import App from './App'
 import client from './apollo/apolloClient'
 import { LoginStateProvider, MessagingStateProvider } from './store'
-import FocusOverlay from './components/FocusOverlay'
+import FocusOverlayProvider from './components/FocusOverlay'
 import InfoBoxProvider from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
@@ -31,13 +31,13 @@ const ConceptsWrapper = () => {
               <CssBaseline />
               <InfoSnackbar />
               <DialogProvider>
-                <FocusOverlay>
+                <FocusOverlayProvider>
                   <InfoBoxProvider>
                     <LoadingProvider>
                       <App />
                     </LoadingProvider>
                   </InfoBoxProvider>
-                </FocusOverlay>
+                </FocusOverlayProvider>
               </DialogProvider>
             </LoginStateProvider>
           </MessagingStateProvider>

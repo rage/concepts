@@ -220,7 +220,7 @@ const CourseTray = ({
               <PrerequisiteCourse
                 key={course.id}
                 course={course}
-                checkboxRef={index === 1 && infoBox.current.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
+                checkboxRef={index === 1 && infoBox.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
                 activeCourseId={activeCourseId}
                 createCourseLink={createCourseLink}
                 deleteCourseLink={deleteCourseLink}
@@ -236,7 +236,7 @@ const CourseTray = ({
         </List>
       }
       <Button
-        ref={infoBox.current.ref('mapper', 'CREATE_COURSE')}
+        ref={infoBox.ref('mapper', 'CREATE_COURSE')}
         onClick={openCreateCourseDialog}
         className={classes.button}
         variant='contained'
