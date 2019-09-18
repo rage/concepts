@@ -11,14 +11,14 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     zIndex: 100,
     animation: '$fadein .5s',
-    '&.fadeout': {
+    '&$fadeout': {
       opacity: 0,
       transition: 'opacity .5s ease-out'
     },
-    '&.enableTransition': {
+    '&$enableTransition': {
       transition: 'clip-path .5s linear'
     },
-    '&.hidden': {
+    '&$hidden': {
       display: 'none'
     },
 
@@ -32,8 +32,32 @@ const useStyles = makeStyles(() => ({
       'var(--focus-overlay-x)     var(--focus-overlay-y-end),' +
       'var(--focus-overlay-x)     100%,' +
       '100%                       100%,' +
-      '100%                       0)'
+      '100%                       0)',
+
+    '&$multi': {
+      clipPath: 'polygon(' +
+        '0                           0,' +
+        '0                           100%,' +
+        'var(--focus-overlay-x)      100%,' +
+        'var(--focus-overlay-x)      var(--focus-overlay-y),' +
+        'var(--focus-overlay-x-end)  var(--focus-overlay-y),' +
+        'var(--focus-overlay-x-end)  var(--focus-overlay-y-end),' +
+        'var(--focus-overlay-x)      var(--focus-overlay-y-end),' +
+        'var(--focus-overlay-x)      100%,' +
+        'var(--focus-overlay2-x)     100%,' +
+        'var(--focus-overlay2-x)     var(--focus-overlay2-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay2-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay2-x)     var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay2-x)     100%,' +
+        '100%                        100%,' +
+        '100%                        0)'
+    }
   },
+  fadeout: {},
+  enableTransition: {},
+  hidden: {},
+  multi: {},
 
   box: {
     position: 'fixed',
@@ -60,6 +84,7 @@ const FocusOverlay = ({ children }) => {
     enableTransition: false,
     fadeout: null,
     element: null,
+    element2: null,
     padding: 5
   })
   const classes = useStyles()
@@ -75,10 +100,23 @@ const FocusOverlay = ({ children }) => {
     if (!rect) {
       return
     }
-    overlay.current.style.setProperty('--focus-overlay-x', `${rect.left - state.padding}px`)
-    overlay.current.style.setProperty('--focus-overlay-y', `${rect.top - state.padding}px`)
-    overlay.current.style.setProperty('--focus-overlay-x-end', `${rect.right + state.padding}px`)
-    overlay.current.style.setProperty('--focus-overlay-y-end', `${rect.bottom + state.padding}px`)
+    const set = args => Object.entries(args).forEach(([key, value]) =>
+      overlay.current.style.setProperty(`--${key}`, value))
+    set({
+      'focus-overlay-x': `${rect.left - state.padding}px`,
+      'focus-overlay-y': `${rect.top - state.padding}px`,
+      'focus-overlay-x-end': `${rect.right + state.padding}px`,
+      'focus-overlay-y-end': `${rect.bottom + state.padding}px`
+    })
+    if (state.element2) {
+      const rect2 = state.element2.getBoundingClientRect()
+      set({
+        'focus-overlay2-x': `${rect2.left - state.padding}px`,
+        'focus-overlay2-y': `${rect2.top - state.padding}px`,
+        'focus-overlay2-x-end': `${rect2.right + state.padding}px`,
+        'focus-overlay2-y-end': `${rect2.bottom + state.padding}px`
+      })
+    }
   }
 
   useEffect(() => {
@@ -88,13 +126,14 @@ const FocusOverlay = ({ children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.element])
 
-  const open = (elem, padding = 5) => {
+  const open = (elem, elem2, padding = 5) => {
     if (state.fadeout) {
       clearTimeout(state.fadeout)
     }
     setState({
       enableTransition: state.element !== null,
       element: elem,
+      element2: elem2,
       fadeout: null,
       padding
     })
@@ -105,14 +144,14 @@ const FocusOverlay = ({ children }) => {
       return
     }
     setState({
+      ...state,
       enableTransition: false,
-      element: state.element,
-      padding: state.padding,
       fadeout: setTimeout(() => {
         setState({
           enableTransition: false,
           fadeout: null,
           element: null,
+          element2: null,
           padding: 5
         })
       }, 500)
@@ -123,9 +162,10 @@ const FocusOverlay = ({ children }) => {
     <FocusOverlayContext.Provider value={{ box, open, close, update }}>
       {children}
     </FocusOverlayContext.Provider>
-    <div ref={overlay} className={`${classes.root} ${state.element ? '' : 'hidden'}
-                                   ${state.fadeout ? 'fadeout' : ''}
-                                   ${state.enableTransition ? 'enableTransition' : ''}`}>
+    <div ref={overlay} className={`${classes.root} ${state.element ? '' : classes.hidden}
+                                   ${state.element2 ? classes.multi : ''}
+                                   ${state.fadeout ? classes.fadeout : ''}
+                                   ${state.enableTransition ? classes.enableTransition : ''}`}>
       <div ref={box} className={classes.box} />
     </div>
   </>

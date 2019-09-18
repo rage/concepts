@@ -36,13 +36,10 @@
       "placement": "right-start",
       "video": "/guide/mapper/new-concept-prereq-course.webm"
     }, {
-      "id": "DRAW_LINK_START",
-      "title": "Start drawing a link to a prerequisite",
-      "description": "Click a right-pointing triangle to start drawing a link to a prerequisite concept."
-    }, {
-      "id": "DRAW_LINK_END",
-      "title": "Link to a prerequisite concept",
-      "description": "Click a left-pointing triangle to create the link."
+      "id": "DRAW_LINK",
+      "title": "Draw a link from a prerequisite",
+      "description": "Click a right-pointing triangle to start drawing a link, then click another triangle to create the link.",
+      "video": "/guide/mapper/draw-link.webm"
     }, {
       "id": "FOCUS_CONCEPT",
       "title": "Focus a concept",

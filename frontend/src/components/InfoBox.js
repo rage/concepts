@@ -168,7 +168,10 @@ const InfoBox = ({ contextRef }) => {
         enableTransition: open,
         open: true
       }
-      overlay.open(newState.ref.current, newState.padding)
+      overlay.open(
+        newState.ref.current,
+        newState.secondaryRef ? newState.secondaryRef.current : null,
+        newState.padding)
       currentStep.current = newState.index
       setState(newState)
     },
@@ -215,9 +218,18 @@ const InfoBox = ({ contextRef }) => {
         redraw()
       }
     },
+    secondaryRef(view, id) {
+      const step = userGuide.viewMaps[view][id]
+      if (!step.secondaryRef) {
+        step.secondaryRef = React.createRef()
+      }
+      return elem => {
+        step.secondaryRef.current = elem
+        redraw()
+      }
+    },
     redrawIfOpen(view, id) {
       if (currentView === view && state.id === id) {
-        console.log('Redrawing infobox because', view, id, 'is open')
         redraw()
         overlay.update()
       }

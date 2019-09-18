@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Course from './Course'
@@ -27,19 +27,6 @@ const PrerequisiteContainer = ({
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
-  const connectionRef = useRef()
-
-  /* FIXME
-  useEffect(() => {
-    const activeCourseHasPrereqConcepts = activeCourse.concepts.find(concept =>
-      concept.linksToConcept.length > 0)
-    if (courseLinks.length === 1 && courseLinks[0].from.concepts.length === 0) {
-      infoBox.open(createConceptRef.current, 'right-start', 'CREATE_CONCEPT_PREREQ', 0, 20)
-    } else if (courseLinks.length > 0 && !addingLink && !activeCourseHasPrereqConcepts) {
-      infoBox.open(connectionRef.current, 'right-start', 'DRAW_LINK_START', 0, 20)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCourse.concepts, addingLink, courseLinks])*/
 
   return <>
     <DividerWithText
@@ -55,7 +42,7 @@ const PrerequisiteContainer = ({
               <Course
                 key={link.id}
                 courseLink={link}
-                connectionRef={index === 0 ? connectionRef : undefined}
+                connectionRef={index === 0 ? infoBox.current.ref('mapper', 'DRAW_LINK') : undefined}
                 createConceptRef={index === 0
                   ? infoBox.current.ref('mapper', 'CREATE_CONCEPT_PREREQ') : undefined}
                 focusedConceptIds={focusedConceptIds}

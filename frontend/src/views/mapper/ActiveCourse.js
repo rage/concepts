@@ -85,20 +85,12 @@ const ActiveCourse = ({
     if (hasLinks && focusedConceptIds.length === 0) {
       infoBox.open(activeConceptRef.current, 'left-start', 'FOCUS_CONCEPT', 0, 50)
     }
-    if (hasLinks) return
-    if (course.concepts.length === 0) {
-      infoBox.open(createButtonRef.current, 'left-end', 'CREATE_CONCEPT_TARGET', 0, 50)
-    }
-    if (addingLink) {
-      infoBox.open(conceptLinkRef.current, 'left-start', 'DRAW_LINK_END', 0, 20)
-    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addingLink, courseLinks])*/
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
 
-  const conceptLinkRef = useRef()
   const activeConceptRef = useRef()
 
   return <>
@@ -133,7 +125,8 @@ const ActiveCourse = ({
       <List className={classes.list}>
         {course.concepts.map((concept, index) =>
           <Concept
-            conceptLinkRef={index === 0 ? conceptLinkRef : undefined}
+            conceptLinkRef={index === 0
+              ? infoBox.current.secondaryRef('mapper', 'DRAW_LINK') : undefined}
             activeConceptRef={index === 0 ? activeConceptRef : undefined}
             isActive
             concept={concept}
