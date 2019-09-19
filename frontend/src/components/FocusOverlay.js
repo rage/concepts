@@ -141,7 +141,7 @@ const FocusOverlay = ({ contextRef }) => {
         })
       }
     },
-    open(elem, elem2, extend, padding = 5) {
+    open(elem, elem2, extend = false, padding = 5) {
       if (state.fadeout) {
         clearTimeout(state.fadeout)
       }

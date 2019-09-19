@@ -180,6 +180,7 @@ const InfoBox = ({ contextRef }) => {
       overlay.open(
         newState.ref,
         newState.secondaryRef || null,
+        newState.secondaryRefExtend,
         newState.padding)
       currentStep.current = newState.index
       setState(newState)
