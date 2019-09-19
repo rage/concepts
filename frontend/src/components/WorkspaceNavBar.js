@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
@@ -18,6 +17,7 @@ import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../store'
 import { useShareDialog } from '../dialogs/sharing'
 import { useInfoBox } from './InfoBox'
+import useRouter from '../useRouter'
 
 const useStyles = makeStyles({
   root: {
@@ -59,10 +59,11 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
   downloadFile(queryResponse.data.exportData, `${workspaceName}.json`)
 }
 
-const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) => {
+const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
-  const { user } = useLoginStateValue()[0]
-  const messageDispatch = useMessageStateValue()[1]
+  const { history } = useRouter()
+  const [{ user }] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
 
   const infoBox = useInfoBox()
@@ -200,4 +201,4 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
   )
 }
 
-export default withRouter(WorkspaceNavBar)
+export default WorkspaceNavBar

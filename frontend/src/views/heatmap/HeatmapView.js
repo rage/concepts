@@ -1,5 +1,4 @@
 import React, { useEffect, forwardRef } from 'react'
-import { withRouter } from 'react-router-dom'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'

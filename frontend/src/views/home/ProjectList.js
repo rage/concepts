@@ -1,6 +1,5 @@
 import React from 'react'
 import { useMutation } from 'react-apollo-hooks'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton
@@ -11,6 +10,7 @@ import { useMessageStateValue } from '../../store'
 import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/project'
 import { DELETE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,8 +33,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ProjectList = ({ history, projects }) => {
+const ProjectList = ({ projects }) => {
   const classes = useStyles()
+  const { history } = useRouter()
 
   const [, messageDispatch] = useMessageStateValue()
 
@@ -105,4 +106,4 @@ const ProjectList = ({ history, projects }) => {
   )
 }
 
-export default withRouter(ProjectList)
+export default ProjectList

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -9,6 +8,7 @@ import {
 import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { useLoginStateValue } from '../../store'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -40,8 +40,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const LoginView = ({ history, location }) => {
+const LoginView = () => {
   const classes = useStyles()
+  const { history, location } = useRouter()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -181,4 +183,4 @@ const LoginView = ({ history, location }) => {
   )
 }
 
-export default withRouter(LoginView)
+export default LoginView

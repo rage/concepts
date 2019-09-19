@@ -8,13 +8,13 @@ import {
 import {
   MoreVert as MoreVertIcon
 } from '@material-ui/icons'
-import { withRouter } from 'react-router-dom'
 
 import cache from '../../apollo/update'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const PrerequisiteCourse = withRouter(({
+const PrerequisiteCourse = ({
   isPrerequisite,
   getLinkToDelete,
   course,
@@ -65,14 +65,16 @@ const PrerequisiteCourse = withRouter(({
   createCourseLink,
   deleteCourseLink,
   openEditCourseDialog,
-  history,
   courses,
   urlPrefix
 }) => {
-  const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null)
+  const { history } = useRouter()
+
+  const [, messageDispatch] = useMessageStateValue()
   const [{ user }] = useLoginStateValue()
+
+  const [anchorEl, setAnchorEl] = useState(null)
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget)
@@ -159,7 +161,7 @@ const PrerequisiteCourse = withRouter(({
       </ListItem>
     </Tooltip>
   )
-})
+}
 
 const CourseTray = ({
   courseTrayOpen,

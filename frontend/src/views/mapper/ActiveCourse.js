@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button, Paper, Select, MenuItem, InputBase, List, IconButton
@@ -12,6 +11,7 @@ import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,7 +66,6 @@ const useStyles = makeStyles(theme => ({
 const ActiveCourse = ({
   course,
   courses,
-  history,
   workspaceId,
   focusedConceptIds,
   onClick,
@@ -76,17 +75,9 @@ const ActiveCourse = ({
   urlPrefix
 }) => {
   const classes = useStyles()
+  const { history } = useRouter()
   const infoBox = useInfoBox()
-  const { user, loggedIn } = useLoginStateValue()[0]
-
-  /* FIXME
-  useEffect(() => {
-    const hasLinks = course.concepts.find(concept => concept.linksToConcept.length > 0)
-    if (hasLinks && focusedConceptIds.length === 0) {
-      infoBox.open(activeConceptRef.current, 'left-start', 'FOCUS_CONCEPT', 0, 50)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addingLink, courseLinks])*/
+  const [{ user, loggedIn }] = useLoginStateValue()
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
@@ -156,4 +147,4 @@ const ActiveCourse = ({
   </>
 }
 
-export default withRouter(ActiveCourse)
+export default ActiveCourse

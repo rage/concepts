@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import {
   List, ListItem, ListItemText, Typography, Button, Container, Paper, TextField, Divider
 } from '@material-ui/core'
@@ -12,6 +11,7 @@ import { useMessageStateValue } from '../../store'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import generateName from '../../lib/generateName'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,12 +42,13 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const CloneView = ({ history, token, peek, projectId }) => {
+const CloneView = ({ token, peek, projectId }) => {
+  const classes = useStyles()
+  const { history } = useRouter()
+
   const [loading, setLoading] = useState(false)
   const [, messageDispatch] = useMessageStateValue()
   const [name, setName] = useState(generateName())
-
-  const classes = useStyles()
 
   const peekTemplate = useQuery(PEEK_ACTIVE_TEMPLATE, {
     skip: Boolean(token),
@@ -189,4 +190,4 @@ const CloneView = ({ history, token, peek, projectId }) => {
   )
 }
 
-export default withRouter(CloneView)
+export default CloneView

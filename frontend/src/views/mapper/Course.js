@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
 import { Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon } from '@material-ui/icons'
@@ -12,6 +11,7 @@ import { useEditCourseDialog } from '../../dialogs/course'
 import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,13 +59,15 @@ const Course = ({
   setAddingLink,
   toggleFocus,
   focusedConceptIds,
-  history,
   workspaceId,
   urlPrefix
 }) => {
-  const { user, loggedIn } = useLoginStateValue()[0]
   const classes = useStyles()
+  const { history } = useRouter()
+
+  const [{ user, loggedIn }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
+
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
   const course = courseLink.from
@@ -151,4 +153,4 @@ const Course = ({
   )
 }
 
-export default withRouter(Course)
+export default Course

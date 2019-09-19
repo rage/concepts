@@ -1,12 +1,13 @@
 import React, { useRef, createContext, useContext, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
 
 import Dialog from './Dialog'
+import useRouter from '../useRouter'
 
 export const DialogContext = createContext({})
 export const useDialog = () => useContext(DialogContext)
 
-export const DialogProvider = withRouter(({ children, history }) => {
+export const DialogProvider = ({ children }) => {
+  const { history } = useRouter()
   const dialogContextValue = useRef({})
 
   const dialogContextProxy = {
@@ -29,4 +30,4 @@ export const DialogProvider = withRouter(({ children, history }) => {
     </DialogContext.Provider>
     <Dialog contextRef={dialogContextValue} />
   </>
-})
+}

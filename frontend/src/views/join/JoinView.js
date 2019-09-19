@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import {
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button
 } from '@material-ui/core'
@@ -12,8 +12,11 @@ import {
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import CloneView from '../project/CloneView'
 import LoadingBar from '../../components/LoadingBar'
+import useRouter from '../../useRouter'
 
-const JoinView = ({ history, token }) => {
+const JoinView = ({ token }) => {
+  const { history } = useRouter()
+
   const [loading, setLoading] = useState(false)
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
@@ -107,4 +110,4 @@ const JoinView = ({ history, token }) => {
   </>)
 }
 
-export default withRouter(JoinView)
+export default JoinView
