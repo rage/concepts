@@ -343,9 +343,11 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
             } else {
               return null
             }
-          }) : <div>
-            {
-              groupConcepts(course.concepts).map(group => (
+          }) :
+            <div>
+              {
+                groupConcepts(course.concepts).map((group, idx, array) => (
+                <>
                 <ConceptGroup
                   concepts={group}
                   user={user}
@@ -356,9 +358,11 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
                   setEditing={setEditing}
                   toggleMergingConcept={toggleMergingConcept}
                 />
-              ))
-            }
-          </div>
+                { array.length - 1 !== idx && <hr /> }
+                </>
+                ))
+              }
+            </div>
         } </List>
       <CreateConcept submit={async args => {
         await createConcept(args)
