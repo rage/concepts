@@ -33,7 +33,7 @@
       "id": "CREATE_CONCEPT_PREREQ",
       "title": "Add a concept to the new course",
       "description": "Add a concept to the newly created prerequisite course.",
-      "placement": "right-start",
+      "placement": "right-end",
       "video": "/guide/mapper/new-concept-prereq-course.webm"
     }, {
       "id": "DRAW_LINK",

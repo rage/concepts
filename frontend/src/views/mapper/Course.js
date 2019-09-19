@@ -135,7 +135,7 @@ const Course = ({
         {
           loggedIn ?
             <Button
-              className={classes.button}
+              className={`${classes.button} focusOverlayScrollParent`}
               onClick={() => openCreateConceptDialog(course.id)}
               variant='contained'
               color='primary'

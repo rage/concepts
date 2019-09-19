@@ -129,6 +129,10 @@ const FocusOverlay = ({ contextRef }) => {
       if (state.fadeout) {
         clearTimeout(state.fadeout)
       }
+      const sp = elem.closest('.focusOverlayScrollParent')
+      if (sp) {
+        sp.scrollIntoView(false)
+      }
       setState({
         enableTransition: state.element !== null,
         element: elem,
