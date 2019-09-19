@@ -96,10 +96,10 @@ const InfoBoxProvider = ({ children }) => {
   }
 
   return <>
+    <InfoBox contextRef={infoBoxContextValue} />
     <InfoBoxContext.Provider value={infoBoxContextProxy}>
       {children}
     </InfoBoxContext.Provider>
-    <InfoBox contextRef={infoBoxContextValue} />
   </>
 }
 
@@ -186,7 +186,26 @@ const InfoBox = ({ contextRef }) => {
     },
     open() {
       if (!local.isValidStep(currentStep.current)) {
-        currentStep.current = 0
+        const start = currentStep.current
+        for (let step = start - 1; step >= 0; step--) {
+          if (local.isValidStep(step)) {
+            currentStep.current = step
+            break
+          }
+        }
+        if (currentStep.current === start) {
+          console.log(userGuide, currentView)
+          for (let step = start + 1; step <= userGuide.views[currentView].length; step++) {
+            if (local.isValidStep(step)) {
+              currentStep.current = step
+              break
+            }
+          }
+        }
+        if (currentStep.current === start) {
+          window.alert('User guide not available in this view')
+          return
+        }
       }
       contextRef.current.show(userGuide.views[currentView][currentStep.current])
     },
@@ -216,6 +235,9 @@ const InfoBox = ({ contextRef }) => {
     },
     ref(view, id) {
       const step = userGuide.viewMaps[view][id]
+      if (!step) {
+        throw new Error(`Unknown step ${view}/${id}`)
+      }
       return elem => {
         step.ref = elem
         redraw()

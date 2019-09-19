@@ -58,6 +58,32 @@
       "title": "Switch to the heatmap view",
       "description": "The heatmap view lets you see how strongly courses are connected by showing the number of concept links as a heat map."
     }],
-    "manager": []
+    "manager": [],
+    "graph": [{
+      "id": "COURSE_FILTER",
+      "title": "Course filtering",
+      "description": "This list lets you show and hide specific courses in the graph. It also shows the course color that concepts are colored with.",
+      "placement": "left-start"
+    }, {
+      "id": "ZOOM",
+      "title": "Zoom",
+      "description": "This slider can be used to zoom in and out of the graph. You can also use your mouse wheel to zoom.",
+      "placement": "right-start"
+    }, {
+      "id": "SWITCH_TO_COURSES",
+      "title": "Switch to course view",
+      "description": "The default view is the concept graph, but this button lets you switch to the course graph. The same button in the course graph will switch back to the concept graph.",
+      "placement": "bottom-start"
+    }, {
+      "id": "RESET_LAYOUT",
+      "title": "Reset layout",
+      "description": "This button resets the graph layout. If you hide or show courses in the course filter list, you can click this to fix the layout.",
+      "placement": "bottom"
+    }, {
+      "id": "RESET_ZOOM",
+      "title": "Reset zoom",
+      "description": "This button resets the zoom to the original level.",
+      "placement": "bottom"
+    }]
   }
 }
