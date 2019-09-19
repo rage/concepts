@@ -194,7 +194,6 @@ const InfoBox = ({ contextRef }) => {
           }
         }
         if (currentStep.current === start) {
-          console.log(userGuide, currentView)
           for (let step = start + 1; step <= userGuide.views[currentView].length; step++) {
             if (local.isValidStep(step)) {
               currentStep.current = step
