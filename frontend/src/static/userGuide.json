@@ -2,7 +2,9 @@
   "defaults": {
     "alignment": 0,
     "separation": 20,
-    "padding": 5
+    "padding": 5,
+    "placement": "bottom",
+    "video": null
   },
   "views": {
     "mapper": [{
@@ -39,6 +41,7 @@
       "id": "DRAW_LINK",
       "title": "Draw a link from a prerequisite",
       "description": "Click a right-pointing triangle to start drawing a link, then click another triangle to create the link.",
+      "placement": "bottom",
       "video": "/guide/mapper/draw-link.webm"
     }],
     "TODO": [{
@@ -58,7 +61,9 @@
       "title": "Switch to the heatmap view",
       "description": "The heatmap view lets you see how strongly courses are connected by showing the number of concept links as a heat map."
     }],
+
     "manager": [],
+
     "graph": [{
       "id": "COURSE_FILTER",
       "title": "Course filtering",
@@ -85,6 +90,7 @@
       "description": "This button resets the zoom to the original level.",
       "placement": "bottom"
     }],
+
     "heatmap": [{
       "id": "PREREQUISITE",
       "title": "Prerequisite courses",
