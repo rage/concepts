@@ -84,6 +84,22 @@
       "title": "Reset zoom",
       "description": "This button resets the zoom to the original level.",
       "placement": "bottom"
+    }],
+    "heatmap": [{
+      "id": "PREREQUISITE",
+      "title": "Prerequisite courses",
+      "description": "The columns are prerequisite courses",
+      "placement": "bottom-start"
+    }, {
+      "id": "TARGET",
+      "title": "Target courses",
+      "description": "The rows are target courses",
+      "placement": "right-start"
+    }, {
+      "id": "CELL",
+      "title": "Course cell",
+      "description": "The color of the cells show how strong of a dependency the target course (row) has on the prerequisite course (column). When hovering over a cell, you see the list of concepts.",
+      "placement": "right-start"
     }]
   }
 }

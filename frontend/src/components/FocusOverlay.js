@@ -34,6 +34,20 @@ const useStyles = makeStyles(() => ({
       '100%                       100%,' +
       '100%                       0)',
 
+    '&$multi$extend': {
+      clipPath: 'polygon(' +
+        '0                           0,' +
+        '0                           100%,' +
+        'var(--focus-overlay-x)      100%,' +
+        'var(--focus-overlay-x)      var(--focus-overlay-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay-x)      var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay-x)      100%,' +
+        '100%                        100%,' +
+        '100%                        0)'
+    },
+
     '&$multi': {
       clipPath: 'polygon(' +
         '0                           0,' +
@@ -57,6 +71,7 @@ const useStyles = makeStyles(() => ({
   fadeout: {},
   enableTransition: {},
   hidden: {},
+  extend: {},
   multi: {},
 
   box: {
@@ -85,6 +100,7 @@ const FocusOverlay = ({ contextRef }) => {
     fadeout: null,
     element: null,
     element2: null,
+    extend: false,
     padding: 5
   })
   const classes = useStyles()
@@ -125,7 +141,7 @@ const FocusOverlay = ({ contextRef }) => {
         })
       }
     },
-    open(elem, elem2, padding = 5) {
+    open(elem, elem2, extend, padding = 5) {
       if (state.fadeout) {
         clearTimeout(state.fadeout)
       }
@@ -137,6 +153,7 @@ const FocusOverlay = ({ contextRef }) => {
         enableTransition: state.element !== null,
         element: elem,
         element2: elem2,
+        extend,
         fadeout: null,
         padding
       })
@@ -154,6 +171,7 @@ const FocusOverlay = ({ contextRef }) => {
             fadeout: null,
             element: null,
             element2: null,
+            extend: false,
             padding: 5
           })
         }, 500)
@@ -164,6 +182,7 @@ const FocusOverlay = ({ contextRef }) => {
   return (
     <div ref={overlay} className={`${classes.root} ${state.element ? '' : classes.hidden}
                                    ${state.element2 ? classes.multi : ''}
+                                   ${state.extend ? classes.extend : ''}
                                    ${state.fadeout ? classes.fadeout : ''}
                                    ${state.enableTransition ? classes.enableTransition : ''}`}>
       <div ref={elem => contextRef.current.box = elem} className={classes.box} />

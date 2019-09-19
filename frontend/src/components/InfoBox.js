@@ -243,8 +243,9 @@ const InfoBox = ({ contextRef }) => {
         redraw()
       }
     },
-    secondaryRef(view, id) {
+    secondaryRef(view, id, extend = false) {
       const step = userGuide.viewMaps[view][id]
+      step.secondaryRefExtend = extend
       return elem => {
         step.secondaryRef = elem
         redraw()
