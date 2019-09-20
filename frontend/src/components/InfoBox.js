@@ -172,8 +172,8 @@ const InfoBox = ({ contextRef }) => {
         clearTimeout(state.fadeout)
       }
       const newState = {
-        ...info,
         ...userGuide.defaults,
+        ...info,
         enableTransition: open,
         open: true
       }
