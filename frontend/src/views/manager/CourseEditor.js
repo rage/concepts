@@ -144,7 +144,7 @@ const Concept = ({
 
             <ListItemSecondaryAction>
               {merging ? (
-                <Checkboxc
+                <Checkbox
                   checked={merging.has(concept.id)}
                   onClick={() => toggleMergingConcept(concept.id)}
                   color='primary'
