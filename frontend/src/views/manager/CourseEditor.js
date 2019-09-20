@@ -134,20 +134,22 @@ const Concept = ({
             defaultValues={concept}
             action='Save'
           />
-        ) : <>
-                <ListItemText className={classes.conceptBody}>
-                  <Typography variant='h6' className={classes.conceptName}>
-                    {concept.name}
-                  </Typography>
-                </ListItemText>
-                <ListItemSecondaryAction>
-                  {merging ? (
-                    <Checkbox
-                      checked={merging.has(concept.id)}
-                      onClick={() => toggleMergingConcept(concept.id)}
-                      color='primary'
-                    />
-                  ) : <>
+        ) :
+          <>
+            <ListItemText className={classes.conceptBody}>
+              <Typography variant='h6' className={classes.conceptName}>
+                {concept.name}
+              </Typography>
+            </ListItemText>
+
+            <ListItemSecondaryAction>
+              {merging ? (
+                <Checkboxc
+                  checked={merging.has(concept.id)}
+                  onClick={() => toggleMergingConcept(concept.id)}
+                  color='primary'
+                />
+              ) : <>
                   {concept.frozen && user.role !== 'STAFF' && (
                     <IconButton disabled classes={{ root: classes.lockIcon }}>
                       <LockIcon />
@@ -174,8 +176,9 @@ const Concept = ({
                       <EditIcon />
                     </IconButton>
                   }
-                  </>}
-                </ListItemSecondaryAction>
+                </>
+              }
+            </ListItemSecondaryAction>
               </>}
       </ListItem>
     </Tooltip>
@@ -187,28 +190,24 @@ const ConceptGroup = ({
   editing, setEditing,
   updateConcept, deleteConcept,
   merging, toggleMergingConcept
-}) => {
-  const listRef = useRef()
-
-  return (
-    <List ref={listRef}>
-      {
-        concepts.map(concept => (
-          <Concept concept={concept}
-            user={user}
-            editing={editing}
-            deleteConcept={deleteConcept}
-            updateConcept={updateConcept}
-            merging={merging}
-            setEditing={setEditing}
-            toggleMergingConcept={toggleMergingConcept}
-            divider={false}
-          />
-        ))
-      }
-    </List>
-  )
-}
+}) => (
+  <List>
+    {
+      concepts.map(concept => (
+        <Concept concept={concept}
+          user={user}
+          editing={editing}
+          deleteConcept={deleteConcept}
+          updateConcept={updateConcept}
+          merging={merging}
+          setEditing={setEditing}
+          toggleMergingConcept={toggleMergingConcept}
+          divider={false}
+        />
+      ))
+    }
+  </List>
+)
 
 const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
@@ -328,7 +327,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
       /> }
       <List ref={listRef} className={classes.list}>
         {
-          sortMethod != 'GROUP_BY' ? sort(course.concepts).map(concept => {
+          sortMethod !== 'GROUP_BY' ? sort(course.concepts).map(concept => {
             if (conceptFilter.length === 0 ||
               concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
               return <Concept concept={concept}
@@ -340,11 +339,9 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
                 setEditing={setEditing}
                 toggleMergingConcept={toggleMergingConcept}
               />
-            } else {
-              return null
             }
           }) :
-            <div>
+            <>
               {
                 groupConcepts(course.concepts).map((group, idx, array) => (
                 <>
@@ -362,7 +359,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
                 </>
                 ))
               }
-            </div>
+            </>
         } </List>
       <CreateConcept submit={async args => {
         await createConcept(args)
