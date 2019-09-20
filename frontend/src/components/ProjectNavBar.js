@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
@@ -15,6 +14,7 @@ import { DELETE_PROJECT } from '../graphql/Mutation'
 import { useMessageStateValue, useLoginStateValue } from '../store'
 import { useShareDialog } from '../dialogs/sharing'
 import useEditProjectDialog from '../dialogs/project/useEditProjectDialog'
+import useRouter from '../useRouter'
 
 const useStyles = makeStyles({
   root: {
@@ -40,8 +40,9 @@ const deletionMsg = `Are you sure you want to delete this project?
 This action is IRREVERSIBLE!
 Consider your actions.`
 
-const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
+const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   const classes = useStyles()
+  const { history } = useRouter()
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
@@ -124,50 +125,48 @@ const ProjectNavBar = ({ history, page, projectId, urlPrefix }) => {
             icon={<GroupIcon />}
           />}
         </BottomNavigation>
-        {user.role === 'STAFF' && <>
-          <IconButton
-            onClick={evt => setMenuAnchor(evt.currentTarget)}
-            className={classes.menuButton}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}>
-            {
-              projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
-                p.user.id === user.id && p.privilege === 'OWNER') &&
-              <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-                <ListItemIcon>
-                  <ShareIcon />
-                </ListItemIcon>
-                Share link
-              </MenuItem>
-            }
-            <MenuItem aria-label='Delete' onClick={handleDelete}>
+        <IconButton
+          onClick={evt => setMenuAnchor(evt.currentTarget)}
+          className={classes.menuButton}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}>
+          {
+            projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
+              p.user.id === user.id && p.privilege === 'OWNER') &&
+            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
               <ListItemIcon>
-                <DeleteIcon />
+                <ShareIcon />
               </ListItemIcon>
-              Delete
+              Share link
             </MenuItem>
-            <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              Edit
-            </MenuItem>
-          </Menu>
-        </>}
+          }
+          <MenuItem aria-label='Delete' onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            Delete
+          </MenuItem>
+          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            Edit
+          </MenuItem>
+        </Menu>
       </Paper>
     </>
   )
 }
 
-export default withRouter(ProjectNavBar)
+export default ProjectNavBar

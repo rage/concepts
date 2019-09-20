@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -8,13 +8,13 @@ import {
 import {
   MoreVert as MoreVertIcon
 } from '@material-ui/icons'
-import { withRouter } from 'react-router-dom'
 
 import cache from '../../apollo/update'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const PrerequisiteCourse = withRouter(({
+const PrerequisiteCourse = ({
   isPrerequisite,
   getLinkToDelete,
   course,
@@ -65,14 +65,16 @@ const PrerequisiteCourse = withRouter(({
   createCourseLink,
   deleteCourseLink,
   openEditCourseDialog,
-  history,
   courses,
   urlPrefix
 }) => {
-  const messageDispatch = useMessageStateValue()[1]
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null)
+  const { history } = useRouter()
+
+  const [, messageDispatch] = useMessageStateValue()
   const [{ user }] = useLoginStateValue()
+
+  const [anchorEl, setAnchorEl] = useState(null)
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget)
@@ -159,7 +161,7 @@ const PrerequisiteCourse = withRouter(({
       </ListItem>
     </Tooltip>
   )
-})
+}
 
 const CourseTray = ({
   courseTrayOpen,
@@ -173,22 +175,10 @@ const CourseTray = ({
 
   const classes = useStyles()
   const infoBox = useInfoBox()
-  const createButtonRef = useRef()
-  const checkboxRef = useRef()
   const [{ user }] = useLoginStateValue()
 
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
   const openCreateCourseDialog = useCreateCourseDialog(workspaceId, user.role === 'STAFF')
-
-  useEffect(() => {
-    const enoughCourses = courses && courses.length === 1
-    if (courseTrayOpen && enoughCourses) {
-      infoBox.open(createButtonRef.current, 'right-end', 'CREATE_COURSE', 0, 50)
-    } else if (courseTrayOpen && courses.length > 1 && courseLinks.length === 0) {
-      infoBox.open(checkboxRef.current, 'right-start', 'ADD_COURSE_AS_PREREQ', 0, 50)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseTrayOpen, courses, courseLinks])
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
     update: cache.createCourseLinkUpdate(workspaceId, activeCourseId)
@@ -232,7 +222,7 @@ const CourseTray = ({
               <PrerequisiteCourse
                 key={course.id}
                 course={course}
-                checkboxRef={index === 1 && checkboxRef}
+                checkboxRef={index === 1 && infoBox.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
                 activeCourseId={activeCourseId}
                 createCourseLink={createCourseLink}
                 deleteCourseLink={deleteCourseLink}
@@ -248,7 +238,7 @@ const CourseTray = ({
         </List>
       }
       <Button
-        ref={createButtonRef}
+        ref={infoBox.ref('mapper', 'CREATE_COURSE')}
         onClick={openCreateCourseDialog}
         className={classes.button}
         variant='contained'

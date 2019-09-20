@@ -1,57 +1,99 @@
 {
-  "CREATE_CONCEPT_TARGET": {
-    "index": 1,
-    "title": "Add a concept",
-    "description": "Click \"ADD CONCEPT\" to add a concept for your new course."
+  "defaults": {
+    "alignment": 0,
+    "separation": 20,
+    "padding": 5,
+    "placement": "bottom",
+    "video": null
   },
-  "OPEN_COURSE_TRAY": {
-    "index": 2,
-    "title": "Open course tray",
-    "description": "Click the floating arrow button to open the course tray. The course tray lets you choose courses that are prerequisites for the current course."
-  },
-  "CREATE_COURSE": {
-    "index": 3,
-    "title": "Create another course",
-    "description": "Create a new course that is a prerequisite for the course you created first."
-  },
-  "ADD_COURSE_AS_PREREQ": {
-    "index": 4,
-    "title": "Mark a course as a prerequisite",
-    "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray."
-  },
-  "CREATE_CONCEPT_PREREQ": {
-    "index": 5,
-    "title": "Add a concept to the new course",
-    "description": "Add a concept to the newly created prerequisite course."
-  },
-  "DRAW_LINK_START": {
-    "index": 6,
-    "title": "Start drawing a link to a prerequisite",
-    "description": "Click a right-pointing triangle to start drawing a link to a prerequisite concept."
-  },
-  "DRAW_LINK_END": {
-    "index": 7,
-    "title": "Link to a prerequisite concept",
-    "description": "Click a left-pointing triangle to create the link."
-  },
-  "FOCUS_CONCEPT": {
-    "index": 8,
-    "title": "Focus a concept",
-    "description": "Click on a concept to focus it and highlight links from it."
-  },
-  "DELETE_LINK": {
-    "index": 9,
-    "title": "Delete a link between concepts",
-    "description": "Click the link and click \"DELETE\" in the context menu to delete the link."
-  },
-  "SWITCH_VIEW_GRAPH": {
-    "index": 10,
-    "title": "Switch to the graph view",
-    "description": "The graph view is a read-only view of your workspace, with all the courses and links."
-  },
-  "SWITCH_VIEW_HEATMAP": {
-    "index": 11,
-    "title": "Switch to the heatmap view",
-    "description": "The heatmap view lets you see how strongly courses are connected by showing the number of concept links as a heat map."
+  "views": {
+    "mapper": [{
+      "id": "CREATE_CONCEPT_TARGET",
+      "title": "Add a concept",
+      "description": "Click \"ADD CONCEPT\" to add a concept for your new course.",
+      "placement": "left-end",
+      "video": "/guide/mapper/new-concept-active-course.webm"
+    }, {
+      "id": "OPEN_COURSE_TRAY",
+      "title": "Open course tray",
+      "description": "Click the floating arrow button to open or close the course tray. The course tray lets you choose courses that are prerequisites for the current course.",
+      "placement": "right-start",
+      "video": "/guide/mapper/open-course-tray.webm"
+    }, {
+      "id": "CREATE_COURSE",
+      "title": "Create another course",
+      "description": "Create a new course that is a prerequisite for the course you created first.",
+      "placement": "right-end",
+      "video": "/guide/mapper/new-course.webm"
+    }, {
+      "id": "ADD_COURSE_AS_PREREQ",
+      "title": "Mark a course as a prerequisite",
+      "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray.",
+      "placement": "right-end",
+      "video": "/guide/mapper/add-course-as-prereq.webm"
+    }, {
+      "id": "CREATE_CONCEPT_PREREQ",
+      "title": "Add a concept to the new course",
+      "description": "Add a concept to the newly created prerequisite course.",
+      "placement": "right-end",
+      "video": "/guide/mapper/new-concept-prereq-course.webm"
+    }, {
+      "id": "DRAW_LINK",
+      "title": "Draw a link from a prerequisite",
+      "description": "Click a right-pointing triangle to start drawing a link, then click another triangle to create the link.",
+      "placement": "bottom",
+      "video": "/guide/mapper/draw-link.webm"
+    }, {
+      "id": "FOCUS_CONCEPT",
+      "title": "Focus a concept",
+      "description": "Click on a concept to focus it and highlight links from it. When links are highlighted, you can click them to open its context menu to delete it.",
+      "video": "/guide/mapper/focus-concept-delete-link.webm"
+    }],
+
+    "manager": [],
+
+    "graph": [{
+      "id": "COURSE_FILTER",
+      "title": "Course filtering",
+      "description": "This list lets you show and hide specific courses in the graph. It also shows the course color that concepts are colored with.",
+      "placement": "left-start"
+    }, {
+      "id": "ZOOM",
+      "title": "Zoom",
+      "description": "This slider can be used to zoom in and out of the graph. You can also use your mouse wheel to zoom.",
+      "placement": "right-start"
+    }, {
+      "id": "SWITCH_TO_COURSES",
+      "title": "Switch to course view",
+      "description": "The default view is the concept graph, but this button lets you switch to the course graph. The same button in the course graph will switch back to the concept graph.",
+      "placement": "bottom-start"
+    }, {
+      "id": "RESET_LAYOUT",
+      "title": "Reset layout",
+      "description": "This button resets the graph layout. If you hide or show courses in the course filter list, you can click this to fix the layout.",
+      "placement": "bottom"
+    }, {
+      "id": "RESET_ZOOM",
+      "title": "Reset zoom",
+      "description": "This button resets the zoom to the original level.",
+      "placement": "bottom"
+    }],
+
+    "heatmap": [{
+      "id": "PREREQUISITE",
+      "title": "Prerequisite courses",
+      "description": "The columns are prerequisite courses",
+      "placement": "bottom-start"
+    }, {
+      "id": "TARGET",
+      "title": "Target courses",
+      "description": "The rows are target courses",
+      "placement": "right-start"
+    }, {
+      "id": "CELL",
+      "title": "Course cell",
+      "description": "The color of the cells show how strong of a dependency the target course (row) has on the prerequisite course (column). When hovering over a cell, you see the list of concepts.",
+      "placement": "right-start"
+    }]
   }
 }

@@ -1,5 +1,4 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React, { useEffect, forwardRef } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { pink } from '@material-ui/core/colors'
@@ -8,6 +7,8 @@ import { Paper, Typography, Tooltip } from '@material-ui/core'
 import { WORKSPACE_COURSES_AND_CONCEPTS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
+import { useInfoBox } from '../../components/InfoBox'
+import useRouter from '../../useRouter'
 
 const cellDimension = {
   width: 50,
@@ -149,11 +150,11 @@ const BlankHeaderCell = () => {
   )
 }
 
-const HeaderCell = ({ title }) => {
+const HeaderCell = forwardRef(({ title }, ref) => {
   const classes = useStyles()
 
   return (
-    <th title={title} className={classes.headerCell}>
+    <th ref={ref} title={title} className={classes.headerCell}>
       <div>
         <div>
           <div className={classes.headerOverflow}>
@@ -163,11 +164,12 @@ const HeaderCell = ({ title }) => {
       </div>
     </th>
   )
-}
+})
 
-const TableCell = withRouter(({
-  toCourse, fromCourse, maxGradVal, workspaceId, history, urlPrefix
-}) => {
+const TableCell = forwardRef(({
+  toCourse, fromCourse, maxGradVal, workspaceId, urlPrefix
+}, ref) => {
+  const { history } = useRouter()
   const classes = useStyles()
 
   const conceptsLinked = fromCourse.concepts
@@ -195,7 +197,7 @@ const TableCell = withRouter(({
   }
 
   return (
-    <td key={`table-${toCourse.id}-${fromCourse.id}`}>
+    <td ref={ref} key={`table-${toCourse.id}-${fromCourse.id}`}>
       { concepts.length > 0 ?
         <Tooltip
           placement='right'
@@ -232,6 +234,13 @@ const sum = (a, b) => a + b
 const HeatmapView = ({ workspaceId, urlPrefix }) => {
   const classes = useStyles()
 
+  const infoBox = useInfoBox()
+
+  useEffect(() => {
+    infoBox.setView('heatmap')
+    return () => infoBox.unsetView('heatmap')
+  }, [infoBox])
+
   const workspaceCourseQuery = useQuery(WORKSPACE_COURSES_AND_CONCEPTS, {
     variables: { id: workspaceId }
   })
@@ -264,27 +273,48 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
                 <thead>
                   <tr>
                     <BlankHeaderCell />
-                    {workspaceCourseQuery.data.workspaceById.courses.map(course => (
-                      <HeaderCell key={course.id} title={course.name} />
+                    {workspaceCourseQuery.data.workspaceById.courses.map((course, index) => (
+                      <HeaderCell
+                        key={course.id} title={course.name}
+                        ref={
+                          index === 0
+                            ? infoBox.ref('heatmap', 'PREREQUISITE')
+                            : index === workspaceCourseQuery.data.workspaceById.courses.length - 1
+                              ? infoBox.secondaryRef('heatmap', 'PREREQUISITE', true)
+                              : undefined
+                        }
+                      />
                     ))}
                   </tr>
                 </thead>
 
                 <tbody>
                   {
-                    workspaceCourseQuery.data.workspaceById.courses.map(fromCourse => (
+                    workspaceCourseQuery.data.workspaceById.courses.map((fromCourse, index) => (
                       <tr key={`${fromCourse.id}`}>
-                        <th title={fromCourse.name} className={classes.sideHeaderCell}>
+                        <th
+                          title={fromCourse.name} className={classes.sideHeaderCell}
+                          ref={
+                            index === 0
+                              ? infoBox.ref('heatmap', 'TARGET')
+                              : index === workspaceCourseQuery.data.workspaceById.courses.length - 1
+                                ? infoBox.secondaryRef('heatmap', 'TARGET', true)
+                                : undefined
+                          }
+                        >
                           <div className={classes.headerOverflow}>
                             {fromCourse.name}
                           </div>
                         </th>
                         {
-                          workspaceCourseQuery.data.workspaceById.courses.map(toCourse => (
+                          workspaceCourseQuery.data.workspaceById.courses.map((toCourse, cInd) => (
                             <TableCell
                               workspaceId={workspaceId} maxGradVal={maxGradVal}
                               key={`${fromCourse.id}-${toCourse.id}`} fromCourse={fromCourse}
-                              toCourse={toCourse} urlPrefix={urlPrefix} />
+                              toCourse={toCourse} urlPrefix={urlPrefix}
+                              ref={index === 0 && cInd === 0
+                                ? infoBox.ref('heatmap', 'CELL') : undefined}
+                            />
                           ))
                         }
                       </tr>

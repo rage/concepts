@@ -11,20 +11,75 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     zIndex: 100,
     animation: '$fadein .5s',
-    '&.fadeout': {
+    '&$fadeout': {
       opacity: 0,
       transition: 'opacity .5s ease-out'
     },
-    '&.enableTransition': {
+    '&$enableTransition': {
       transition: 'clip-path .5s linear'
     },
-    '&.hidden': {
+    '&$hidden': {
       display: 'none'
+    },
+
+    clipPath: 'polygon(' +
+      '0                          0,' +
+      '0                          100%,' +
+      'var(--focus-overlay-x)     100%,' +
+      'var(--focus-overlay-x)     var(--focus-overlay-y),' +
+      'var(--focus-overlay-x-end) var(--focus-overlay-y),' +
+      'var(--focus-overlay-x-end) var(--focus-overlay-y-end),' +
+      'var(--focus-overlay-x)     var(--focus-overlay-y-end),' +
+      'var(--focus-overlay-x)     100%,' +
+      '100%                       100%,' +
+      '100%                       0)',
+
+    '&$multi$extend': {
+      clipPath: 'polygon(' +
+        '0                           0,' +
+        '0                           100%,' +
+        'var(--focus-overlay-x)      100%,' +
+        'var(--focus-overlay-x)      var(--focus-overlay-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay-x)      var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay-x)      100%,' +
+        '100%                        100%,' +
+        '100%                        0)'
+    },
+
+    '&$multi': {
+      clipPath: 'polygon(' +
+        '0                           0,' +
+        '0                           100%,' +
+        'var(--focus-overlay-x)      100%,' +
+        'var(--focus-overlay-x)      var(--focus-overlay-y),' +
+        'var(--focus-overlay-x-end)  var(--focus-overlay-y),' +
+        'var(--focus-overlay-x-end)  var(--focus-overlay-y-end),' +
+        'var(--focus-overlay-x)      var(--focus-overlay-y-end),' +
+        'var(--focus-overlay-x)      100%,' +
+        'var(--focus-overlay2-x)     100%,' +
+        'var(--focus-overlay2-x)     var(--focus-overlay2-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay2-y),' +
+        'var(--focus-overlay2-x-end) var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay2-x)     var(--focus-overlay2-y-end),' +
+        'var(--focus-overlay2-x)     100%,' +
+        '100%                        100%,' +
+        '100%                        0)'
     }
   },
+  fadeout: {},
+  enableTransition: {},
+  hidden: {},
+  extend: {},
+  multi: {},
 
   box: {
-    position: 'fixed'
+    position: 'fixed',
+    left: 'var(--focus-overlay-x)',
+    top: 'var(--focus-overlay-y)',
+    width: 'calc(var(--focus-overlay-x-end) - var(--focus-overlay-x))',
+    height: 'calc(var(--focus-overlay-y-end) - var(--focus-overlay-y))'
   },
 
   '@keyframes fadein': {
@@ -39,84 +94,122 @@ const useStyles = makeStyles(() => ({
 
 const FocusOverlayContext = createContext(null)
 
-const FocusOverlay = ({ children, padding = 5 }) => {
+const FocusOverlay = ({ contextRef }) => {
   const [state, setState] = useState({
     enableTransition: false,
     fadeout: null,
-    element: null
+    element: null,
+    element2: null,
+    extend: false,
+    padding: 5
   })
   const classes = useStyles()
 
   const overlay = useRef()
-  const box = useRef()
-  const update = () => {
-    if (!state.element || !overlay.current || !box.current) {
-      return
-    }
-    const rect = state.element.getBoundingClientRect()
-    if (!rect) {
-      return
-    }
-    const y = rect.top - padding,
-      x = rect.left - padding,
-      yEnd = rect.bottom + padding,
-      xEnd = rect.right + padding
-    box.current.style.top = `${y}px`
-    box.current.style.left = `${x}px`
-    box.current.style.height = `${yEnd - y}px`
-    box.current.style.width = `${xEnd - x}px`
-    overlay.current.style.clipPath =
-      `polygon(0 0, 0 100%,  ${x}px 100%,  ${x}px ${y}px,  ${xEnd}px ${y}px,
-               ${xEnd}px ${yEnd}px,  ${x}px ${yEnd}px, ${x}px 100%,  100% 100%, 100% 0)`
-  }
 
   useEffect(() => {
+    const update = contextRef.current.update
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.element])
+  }, [state.element, contextRef])
 
-  const open = elem => {
-    if (state.fadeout) {
-      clearTimeout(state.fadeout)
+  contextRef.current = {
+    update() {
+      if (!state.element || !overlay.current) {
+        return
+      }
+      const rect = state.element.getBoundingClientRect()
+      if (!rect) {
+        return
+      }
+      const set = args => Object.entries(args).forEach(([key, value]) =>
+        overlay.current.style.setProperty(`--${key}`, value))
+      set({
+        'focus-overlay-x': `${rect.left - state.padding}px`,
+        'focus-overlay-y': `${rect.top - state.padding}px`,
+        'focus-overlay-x-end': `${rect.right + state.padding}px`,
+        'focus-overlay-y-end': `${rect.bottom + state.padding}px`
+      })
+      if (state.element2) {
+        const rect2 = state.element2.getBoundingClientRect()
+        set({
+          'focus-overlay2-x': `${rect2.left - state.padding}px`,
+          'focus-overlay2-y': `${rect2.top - state.padding}px`,
+          'focus-overlay2-x-end': `${rect2.right + state.padding}px`,
+          'focus-overlay2-y-end': `${rect2.bottom + state.padding}px`
+        })
+      }
+    },
+    open(elem, elem2, extend = false, padding = 5) {
+      if (state.fadeout) {
+        clearTimeout(state.fadeout)
+      }
+      const sp = elem.closest('.focusOverlayScrollParent')
+      if (sp) {
+        sp.scrollIntoView(false)
+      }
+      setState({
+        enableTransition: state.element !== null,
+        element: elem,
+        element2: elem2,
+        extend,
+        fadeout: null,
+        padding
+      })
+    },
+    close() {
+      if (state.fadeout) {
+        return
+      }
+      setState({
+        ...state,
+        enableTransition: false,
+        fadeout: setTimeout(() => {
+          setState({
+            enableTransition: false,
+            fadeout: null,
+            element: null,
+            element2: null,
+            extend: false,
+            padding: 5
+          })
+        }, 500)
+      })
     }
-    setState({
-      enableTransition: state.element !== null,
-      element: elem,
-      fadeout: null
-    })
   }
 
-  const close = () => {
-    if (state.fadeout) {
-      return
-    }
-    setState({
-      enableTransition: false,
-      element: state.element,
-      fadeout: setTimeout(() => {
-        setState({
-          enableTransition: false,
-          fadeout: null,
-          element: null
-        })
-      }, 500)
-    })
+  return (
+    <div ref={overlay} className={`${classes.root} ${state.element ? '' : classes.hidden}
+                                   ${state.element2 ? classes.multi : ''}
+                                   ${state.extend ? classes.extend : ''}
+                                   ${state.fadeout ? classes.fadeout : ''}
+                                   ${state.enableTransition ? classes.enableTransition : ''}`}>
+      <div ref={elem => contextRef.current.box = elem} className={classes.box} />
+    </div>
+  )
+}
+
+const FocusOverlayProvider = ({ children }) => {
+  const focusOverlayContextValue = useRef({
+    box: null
+  })
+
+  const focusOverlayContextProxy = {
+    update: (...args) => focusOverlayContextValue.current.update(...args),
+    open: (...args) => focusOverlayContextValue.current.open(...args),
+    close: (...args) => focusOverlayContextValue.current.close(...args),
+    get box() { return focusOverlayContextValue.current.box }
   }
 
   return <>
-    <FocusOverlayContext.Provider value={{ box, open, close }}>
+    <FocusOverlayContext.Provider value={focusOverlayContextProxy}>
       {children}
     </FocusOverlayContext.Provider>
-    <div ref={overlay} className={`${classes.root} ${state.element ? '' : 'hidden'}
-                                   ${state.fadeout ? 'fadeout' : ''}
-                                   ${state.enableTransition ? 'enableTransition' : ''}`}>
-      <div ref={box} className={classes.box} />
-    </div>
+    <FocusOverlay contextRef={focusOverlayContextValue} />
   </>
 }
 
 export const useFocusOverlay = () => useContext(FocusOverlayContext)
 
-export default FocusOverlay
+export default FocusOverlayProvider

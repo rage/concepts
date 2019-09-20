@@ -15,6 +15,7 @@ import client from '../../apollo/apolloClient'
 import colors from './hexcolors'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
+import { useInfoBox } from '../../components/InfoBox'
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -423,6 +424,13 @@ const GraphView = ({ workspaceId }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const infoBox = useInfoBox()
+
+  useEffect(() => {
+    infoBox.setView('graph')
+    return () => infoBox.unsetView('graph')
+  }, [infoBox])
+
   if (error) {
     return <NotFoundView message='Workspace not found' />
   }
@@ -433,13 +441,22 @@ const GraphView = ({ workspaceId }) => {
     </div>
     <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
       <div className={classes.buttonWrapper}>
-        <Button className={classes.button} variant='outlined' color='primary' onClick={toggleMode}>
+        <Button
+          className={classes.button} variant='outlined' color='primary' onClick={toggleMode}
+          ref={infoBox.ref('graph', 'SWITCH_TO_COURSES')}
+        >
           Switch to {nextMode}
         </Button>
-        <Button className={classes.button} variant='outlined' color='primary' onClick={resetLayout}>
+        <Button
+          className={classes.button} variant='outlined' color='primary' onClick={resetLayout}
+          ref={infoBox.ref('graph', 'RESET_LAYOUT')}
+        >
           Reset layout
         </Button>
-        <Button className={classes.button} variant='outlined' color='primary' onClick={resetZoom}>
+        <Button
+          className={classes.button} variant='outlined' color='primary' onClick={resetZoom}
+          ref={infoBox.ref('graph', 'RESET_ZOOM')}
+        >
           Reset zoom
         </Button>
       </div>
@@ -452,10 +469,12 @@ const GraphView = ({ workspaceId }) => {
               x: state.current.network.width() / 2,
               y: state.current.network.height() / 2
             }
-          })} />
+          })}
+          ref={infoBox.ref('graph', 'ZOOM')}
+        />
       </div>
       {state.current.courseLegend && nextMode === 'courses' &&
-        <div className={classes.legendWrapper}>
+        <div className={classes.legendWrapper} ref={infoBox.ref('graph', 'COURSE_FILTER')}>
           <FormControl>
             <FormLabel component='legend'>Courses</FormLabel>
             <FormGroup>

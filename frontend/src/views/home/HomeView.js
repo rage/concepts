@@ -1,12 +1,12 @@
 import React from 'react'
 import { useMutation } from 'react-apollo-hooks'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Grid, Typography, Container } from '@material-ui/core'
 
 import { useLoginStateValue } from '../../store'
 import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import UserViewContent from './UserViewContent'
+import useRouter from '../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -20,9 +20,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const HomeView = ({ history }) => {
+const HomeView = () => {
   const classes = useStyles()
+  const { history } = useRouter()
+
   const [{ loggedIn, user }, dispatch] = useLoginStateValue()
+
   const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const createGuestAccount = async () => {
@@ -75,4 +78,4 @@ const HomeView = ({ history }) => {
   )
 }
 
-export default withRouter(HomeView)
+export default HomeView

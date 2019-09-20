@@ -170,6 +170,7 @@ const Concept = ({
         button
         onClick={() => toggleFocus(concept.id)}
         className={classes.listItem}
+        classes={{ container: 'focusOverlayScrollParent' }}
         ref={activeConceptRef}
       >
         {isActive && <ListItemIcon>

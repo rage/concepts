@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
   Menu, MenuItem, ListItemIcon
@@ -13,6 +12,7 @@ import {
 
 import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../store'
+import useRouter from '../useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,11 +56,12 @@ const TYPE_NAMES = {
 }
 
 const BaseWorkspaceList = ({
-  history, type, workspaces, activeTemplate, projectId, urlPrefix,
+  type, workspaces, activeTemplate, projectId, urlPrefix,
   openCreateDialog, openEditDialog, openShareDialog, cardHeaderAction, cardHeaderTitle,
   deleteWorkspace, setActiveTemplate, style
 }) => {
   const classes = useStyles()
+  const { history } = useRouter()
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
 
@@ -253,4 +254,4 @@ This will change which template is cloned by users.`)
   )
 }
 
-export default withRouter(BaseWorkspaceList)
+export default BaseWorkspaceList

@@ -20,7 +20,7 @@ import ProjectNavBar from './components/ProjectNavBar'
 import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
 import PointGroupsView from './views/project/PointGroupsView'
-import MembersView from './views/manager/MembersView'
+import MembersView from './views/members/MembersView'
 
 const useStyles = makeStyles(() => ({
   root: {

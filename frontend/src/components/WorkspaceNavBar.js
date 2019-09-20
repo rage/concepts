@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
@@ -8,7 +7,7 @@ import {
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
-  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon
+  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon
 } from '@material-ui/icons'
 
 import client from '../apollo/apolloClient'
@@ -17,6 +16,8 @@ import { DELETE_WORKSPACE } from '../graphql/Mutation'
 import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../store'
 import { useShareDialog } from '../dialogs/sharing'
+import { useInfoBox } from './InfoBox'
+import useRouter from '../useRouter'
 
 const useStyles = makeStyles({
   root: {
@@ -58,11 +59,14 @@ export const exportWorkspace = async (workspaceId, workspaceName) => {
   downloadFile(queryResponse.data.exportData, `${workspaceName}.json`)
 }
 
-const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) => {
+const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
-  const { user } = useLoginStateValue()[0]
-  const messageDispatch = useMessageStateValue()[1]
+  const { history } = useRouter()
+  const [{ user }] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
+
+  const infoBox = useInfoBox()
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -144,7 +148,12 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
             <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
           }
         </BottomNavigation>
-        {user.role === 'STAFF' && <>
+        <div>
+          <IconButton
+            className={classes.menuButton} onClick={infoBox.open}
+          >
+            <HelpIcon />
+          </IconButton>
           <IconButton
             onClick={evt => setMenuAnchor(evt.currentTarget)}
             className={classes.menuButton}
@@ -186,10 +195,10 @@ const WorkspaceNavBar = ({ history, page, workspaceId, courseId, urlPrefix }) =>
               Edit
             </MenuItem>
           </Menu>
-        </>}
+        </div>
       </Paper>
     </>
   )
 }
 
-export default withRouter(WorkspaceNavBar)
+export default WorkspaceNavBar

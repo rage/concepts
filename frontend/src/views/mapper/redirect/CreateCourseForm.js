@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Container, Button, TextField, Typography, FormHelperText } from '@material-ui/core'
 
 import { CREATE_COURSE } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
+import useRouter from '../../../useRouter'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -28,8 +28,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const CreateCourseForm = ({ workspaceId, history, urlPrefix }) => {
+const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
   const classes = useStyles()
+  const { history } = useRouter()
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
 
@@ -116,4 +117,4 @@ const CreateCourseForm = ({ workspaceId, history, urlPrefix }) => {
   )
 }
 
-export default withRouter(CreateCourseForm)
+export default CreateCourseForm

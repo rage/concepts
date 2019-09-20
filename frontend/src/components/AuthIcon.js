@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
 import { Button, IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 
 import { signOut } from '../lib/authentication'
 import { useLoginStateValue } from '../store'
+import useRouter from '../useRouter'
 
-const AuthenticationIcon = withRouter(({ history }) => {
+const AuthenticationIcon = () => {
+  const { history } = useRouter()
   const [{ loggedIn, user }, dispatch] = useLoginStateValue()
   const [anchorElement, setAnchorElement] = useState(null)
   const anchorElementOpen = Boolean(anchorElement)
@@ -73,6 +74,6 @@ const AuthenticationIcon = withRouter(({ history }) => {
       Login
     </Button>
   )
-})
+}
 
 export default AuthenticationIcon
