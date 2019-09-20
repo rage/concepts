@@ -134,80 +134,54 @@ const Concept = ({
             defaultValues={concept}
             action='Save'
           />
-        ) :
-          <>
-            <ListItemText className={classes.conceptBody}>
-              <Typography variant='h6' className={classes.conceptName}>
-                {concept.name}
-              </Typography>
-            </ListItemText>
+        ) : <>
+          <ListItemText className={classes.conceptBody}>
+            <Typography variant='h6' className={classes.conceptName}>
+              {concept.name}
+            </Typography>
+          </ListItemText>
 
-            <ListItemSecondaryAction>
-              {merging ? (
-                <Checkbox
-                  checked={merging.has(concept.id)}
-                  onClick={() => toggleMergingConcept(concept.id)}
-                  color='primary'
-                />
-              ) : <>
-                  {concept.frozen && user.role !== 'STAFF' && (
-                    <IconButton disabled classes={{ root: classes.lockIcon }}>
-                      <LockIcon />
-                    </IconButton>
-                  )}
-                  {!concept.frozen &&
-                    <IconButton
-                      color={editing ? 'inherit' : undefined}
-                      aria-label='Delete' onClick={() => {
-                        const msg = `Are you sure you want to delete the concept ${concept.name}?`
-                        if (window.confirm(msg)) {
-                          deleteConcept(concept.id)
-                        }
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                  {(!concept.frozen || user.role === 'STAFF') &&
-                    <IconButton
-                      color={editing ? 'inherit' : undefined} aria-label='Edit'
-                      onClick={() => setEditing(concept.id)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  }
-                </>
+          <ListItemSecondaryAction>
+            {merging ? (
+              <Checkbox
+                checked={merging.has(concept.id)}
+                onClick={() => toggleMergingConcept(concept.id)}
+                color='primary'
+              />
+            ) : <>
+              {concept.frozen && user.role !== 'STAFF' && (
+                <IconButton disabled classes={{ root: classes.lockIcon }}>
+                  <LockIcon />
+                </IconButton>
+              )}
+              {!concept.frozen &&
+                <IconButton
+                  color={editing ? 'inherit' : undefined}
+                  aria-label='Delete' onClick={() => {
+                    const msg = `Are you sure you want to delete the concept ${concept.name}?`
+                    if (window.confirm(msg)) {
+                      deleteConcept(concept.id)
+                    }
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
               }
-            </ListItemSecondaryAction>
-              </>}
+              {(!concept.frozen || user.role === 'STAFF') &&
+                <IconButton
+                  color={editing ? 'inherit' : undefined} aria-label='Edit'
+                  onClick={() => setEditing(concept.id)}
+                >
+                  <EditIcon />
+                </IconButton>
+              }
+            </>}
+          </ListItemSecondaryAction>
+        </>}
       </ListItem>
     </Tooltip>
   )
 }
-
-const ConceptGroup = ({
-  concepts, user,
-  editing, setEditing,
-  updateConcept, deleteConcept,
-  merging, toggleMergingConcept
-}) => (
-  <List>
-    {
-      concepts.map(concept => (
-        <Concept concept={concept}
-          user={user}
-          editing={editing}
-          deleteConcept={deleteConcept}
-          updateConcept={updateConcept}
-          merging={merging}
-          setEditing={setEditing}
-          toggleMergingConcept={toggleMergingConcept}
-          divider={false}
-        />
-      ))
-    }
-  </List>
-)
 
 const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
@@ -280,6 +254,10 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
     }
   }
 
+  const conceptFilterLowerCase = conceptFilter.toLowerCase()
+  const includeConcept = concept => conceptFilter.length === 0
+    || concept.name.toLowerCase().includes(conceptFilterLowerCase)
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -304,7 +282,8 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
           label='Filter concepts'
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
-          className={classes.filterText} />
+          className={classes.filterText}
+        />
         <TextField
           select
           variant='outlined'
@@ -325,42 +304,36 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         workspace={workspace} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       /> }
-      <List ref={listRef} className={classes.list}>
-        {
-          sortMethod !== 'GROUP_BY' ? sort(course.concepts).map(concept => {
-            if (conceptFilter.length === 0 ||
-              concept.name.toLowerCase().includes(conceptFilter.toLowerCase())) {
-              return <Concept concept={concept}
-                user={user}
-                editing={editing}
-                deleteConcept={deleteConcept}
-                updateConcept={updateConcept}
-                merging={merging}
-                setEditing={setEditing}
-                toggleMergingConcept={toggleMergingConcept}
-              />
-            }
-          }) :
-            <>
-              {
-                groupConcepts(course.concepts).map((group, idx, array) => (
-                <>
-                <ConceptGroup
-                  concepts={group}
-                  user={user}
-                  editing={editing}
-                  deleteConcept={deleteConcept}
-                  updateConcept={updateConcept}
-                  merging={merging}
-                  setEditing={setEditing}
-                  toggleMergingConcept={toggleMergingConcept}
-                />
-                { array.length - 1 !== idx && <hr /> }
-                </>
-                ))
-              }
-            </>
-        } </List>
+      <List ref={listRef} className={classes.list}>{
+        sortMethod !== 'GROUP_BY' ? sort(course.concepts).map(concept => includeConcept(concept) &&
+          <Concept
+            key={concept.id}
+            concept={concept}
+            user={user}
+            editing={editing}
+            deleteConcept={deleteConcept}
+            updateConcept={updateConcept}
+            merging={merging}
+            setEditing={setEditing}
+            toggleMergingConcept={toggleMergingConcept}
+          />
+        ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
+          group.map(concept => includeConcept(concept) &&
+            <Concept
+              key={concept.id}
+              concept={concept}
+              user={user}
+              editing={editing}
+              deleteConcept={deleteConcept}
+              updateConcept={updateConcept}
+              merging={merging}
+              setEditing={setEditing}
+              toggleMergingConcept={toggleMergingConcept}
+              divider={false}
+            />
+          ).concat(index < array.length - 1 ? [<hr key={index} />] : [])
+        )
+      }</List>
       <CreateConcept submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
@@ -460,35 +433,34 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           Cancel
         </Button>
       }
-      { user.role === 'STAFF' && <>
-          <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={input.official}
-                  onChange={evt => setInput({ ...input, official: evt.target.checked })}
-                  value='official'
-                  color='primary'
-                />
-              }
-              label='Official'
-            />
-          </FormControl>
-          <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={input.frozen}
-                  onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
-                  value='frozen'
-                  color='primary'
-                />
-              }
-              label='Frozen'
-            />
-          </FormControl>
-        </>
-      }
+      {user.role === 'STAFF' && <>
+        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.official}
+                onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                value='official'
+                color='primary'
+              />
+            }
+            label='Official'
+          />
+        </FormControl>
+        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={input.frozen}
+                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
+                value='frozen'
+                color='primary'
+              />
+            }
+            label='Frozen'
+          />
+        </FormControl>
+      </>}
     </form>
   )
 }

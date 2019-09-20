@@ -1,23 +1,22 @@
 import lev from 'fast-levenshtein'
 
-/**
- * Group concepts
- * @param {concept} Array containing concepts in groups
- */
-const groupConcepts = (conceptList) => {
+const MAGIC_NUMBER = 0.6
+
+const groupConcepts = (concepts) => {
   const result = []
   const used = []
-  for (var i = 0; i < conceptList.length; i++) {
+  let resultIndex = 0
+  for (let i = 0; i < concepts.length; i++) {
     if (used[i]) continue
-    const treshold = conceptList[i].name.length * 0.6
-    const list = []
-    for (var j = i; j < conceptList.length; j++) {
-      if (!used[j] && lev.get(conceptList[i].name, conceptList[j].name) < treshold) {
+    const threshold = concepts[i].name.length * MAGIC_NUMBER
+    result[resultIndex] = []
+    for (let j = i; j < concepts.length; j++) {
+      if (!used[j] && lev.get(concepts[i].name, concepts[j].name) < threshold) {
         used[j] = true
-        list.push(conceptList[j])
+        result[resultIndex].push(concepts[j])
       }
     }
-    result.push(list)
+    resultIndex++
   }
   return result
 }
