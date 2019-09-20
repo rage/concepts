@@ -82,8 +82,6 @@ const ActiveCourse = ({
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
 
-  const activeConceptRef = useRef()
-
   return <>
     <DividerWithText
       content='Editing course'
@@ -118,7 +116,7 @@ const ActiveCourse = ({
           <Concept
             conceptLinkRef={index === 0
               ? infoBox.secondaryRef('mapper', 'DRAW_LINK') : undefined}
-            activeConceptRef={index === 0 ? activeConceptRef : undefined}
+            activeConceptRef={index === 0 ? infoBox.ref('mapper', 'FOCUS_CONCEPT') : undefined}
             isActive
             concept={concept}
             key={concept.id}
