@@ -44,20 +44,25 @@
       }
     }
   },
+  "title": "User guide",
+  "description": "Step info for a info popper + overlay focus box based user guide system.",
   "required": ["defaults", "views"],
   "properties": {
     "$schema": {
       "type": "string"
     },
     "defaults": {
-      "$ref": "#/definitions/step"
+      "$ref": "#/definitions/step",
+      "description": "The default values for every step."
     },
     "views": {
       "type": "object",
+      "description": "A single view, containing multiple steps.",
       "additionalProperties": {
         "type": "array",
         "items": {
-          "$ref": "#/definitions/step"
+          "$ref": "#/definitions/step",
+          "description": "The data of this step."
         }
       }
     }
