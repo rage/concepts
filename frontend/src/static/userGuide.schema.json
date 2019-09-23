@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "step": {
+      "type": "object",
+      "required": ["id", "title", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The internal ID for the guide step."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the step shown to the user."
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the step shown to the user."
+        },
+        "alignment": {
+          "type": "integer"
+        },
+        "separation": {
+          "type": "integer"
+        },
+        "padding": {
+          "type": "integer"
+        },
+        "placement": {
+          "type": "string",
+          "description": "The preferred location for the info box popper. If the popper doesn't fit in the preferred location, it will find a better place automatically.",
+          "enum": [
+            "auto", "auto-start", "auto-end", "top", "top-start", "top-end", "right", "right-start", "right-end",
+            "bottom", "bottom-start", "bottom-end", "left", "left-start", "left-end"
+          ]
+        },
+        "video": {
+          "type": "string",
+          "description": "The (relative) URL to the WebM video file to show in the step."
+        }
+      }
+    }
+  },
+  "title": "User guide",
+  "description": "Step info for a info popper + overlay focus box based user guide system.",
+  "required": ["defaults", "views"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "defaults": {
+      "$ref": "#/definitions/step",
+      "description": "The default values for every step."
+    },
+    "views": {
+      "type": "object",
+      "description": "A single view, containing multiple steps.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/step",
+          "description": "The data of this step."
+        }
+      }
+    }
+  }
+}

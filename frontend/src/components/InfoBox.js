@@ -247,12 +247,16 @@ const InfoBox = ({ contextRef }) => {
       const step = userGuide.viewMaps[view][id]
       step.secondaryRefExtend = extend
       return elem => {
+        const changed = elem !== step.secondaryRef
         step.secondaryRef = elem
         redraw()
+        if (changed && currentView === view && state.id === id) {
+          overlay.update(step.secondaryRef, step.secondaryRefExtend)
+        }
       }
     },
-    redrawIfOpen(view, id) {
-      if (currentView === view && state.id === id) {
+    redrawIfOpen(view, ...ids) {
+      if (currentView === view && ids.includes(state.id)) {
         redraw()
         overlay.update()
       }

@@ -115,7 +115,7 @@ const FocusOverlay = ({ contextRef }) => {
   }, [state.element, contextRef])
 
   contextRef.current = {
-    update() {
+    update(replaceSecondary = false, replaceSecondaryExtend = null) {
       if (!state.element || !overlay.current) {
         return
       }
@@ -131,8 +131,17 @@ const FocusOverlay = ({ contextRef }) => {
         'focus-overlay-x-end': `${rect.right + state.padding}px`,
         'focus-overlay-y-end': `${rect.bottom + state.padding}px`
       })
-      if (state.element2) {
-        const rect2 = state.element2.getBoundingClientRect()
+      let secondary = state.element2
+      if (replaceSecondary !== false) {
+        secondary = replaceSecondary
+        setState({
+          ...state,
+          element2: replaceSecondary,
+          extend: replaceSecondaryExtend === null ? state.extend : replaceSecondaryExtend
+        })
+      }
+      if (secondary) {
+        const rect2 = secondary.getBoundingClientRect()
         set({
           'focus-overlay2-x': `${rect2.left - state.padding}px`,
           'focus-overlay2-y': `${rect2.top - state.padding}px`,
