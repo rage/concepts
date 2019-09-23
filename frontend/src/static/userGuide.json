@@ -112,7 +112,9 @@
       "title": "Go to workspace",
       "description": "Click the workspace in the list to access the workspace. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
       "placement": "bottom-end"
-    }, {
+    }],
+
+    "home-TODO": [{
       "id": "CREATE_PROJECT",
       "title": "Create a project",
       "description": "Click the \"+\"-icon to create a new project for collaborative mapping.",
