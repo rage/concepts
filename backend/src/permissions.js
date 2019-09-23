@@ -23,7 +23,15 @@ class Role {
   }
 
   static fromString(str, defaultValue = Role.VISITOR) {
-    return Role.nameMap.get(str) || defaultValue
+    return Role.nameMap.get(str.toUpperCase()) || defaultValue
+  }
+
+  static parse(val, defaultValue = Privilege.NONE) {
+    if (typeof val === 'number') {
+      return Privilege.fromInt(val, defaultValue)
+    } else {
+      return Privilege.fromString(val, defaultValue)
+    }
   }
 }
 
@@ -55,11 +63,21 @@ class Privilege {
   }
 
   static fromChar(char, defaultValue = Privilege.NONE) {
-    return Privilege.charMap.get(char) || defaultValue
+    return Privilege.charMap.get(char.toLowerCase()) || defaultValue
   }
 
   static fromString(str, defaultValue = Privilege.NONE) {
-    return Privilege.nameMap.get(str) || defaultValue
+    return Privilege.nameMap.get(str.toUpperCase()) || defaultValue
+  }
+
+  static parse(val, defaultValue = Privilege.NONE) {
+    if (typeof val === 'number') {
+      return Privilege.fromInt(val, defaultValue)
+    } else if (val.length === 1) {
+      return Privilege.fromChar(val, defaultValue)
+    } else {
+      return Privilege.fromString(val, defaultValue)
+    }
   }
 }
 

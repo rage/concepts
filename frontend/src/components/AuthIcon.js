@@ -3,6 +3,7 @@ import { Button, IconButton, Menu, MenuItem } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 
 import { signOut } from '../lib/authentication'
+import { Role } from '../lib/permissions'
 import { useLoginStateValue } from '../store'
 import useRouter from '../useRouter'
 
@@ -62,9 +63,10 @@ const AuthenticationIcon = () => {
       onClose={handleAnchorClose}
     >
       <MenuItem>
-        Logged in as {user.role === 'GUEST' ? 'a guest' : user.username} ({user.role.toLowerCase()})
+        Logged in as {user.role === Role.GUEST
+          ? 'a guest' : user.username} ({user.role.toLowerCase()})
       </MenuItem>
-      {loggedIn && user.role !== 'GUEST' &&
+      {loggedIn && user.role >= Role.STUDENT &&
         <MenuItem onClick={navigateToPorting}>Import data</MenuItem>
       }
       <MenuItem onClick={logout}>Logout</MenuItem>

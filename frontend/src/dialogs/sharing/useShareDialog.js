@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 
+import { Privilege } from '../../lib/permissions'
 import {
   CREATE_SHARE_LINK, DELETE_SHARE_LINK, CREATE_PROJECT_SHARE_LINK
 } from '../../graphql/Mutation'
@@ -51,7 +52,7 @@ const useShareDialog = (type, title, text) => {
 
   const target = targetQuery.data ? targetQuery.data[`${type}ById`] : null
   const existingToken = target && target.tokens
-    .find(token => token.privilege === shareState.privilege)
+    .find(token => Privilege.fromString(token.privilege) === shareState.privilege)
   const existingTokenId = existingToken && existingToken.id
 
   if (!text) {
