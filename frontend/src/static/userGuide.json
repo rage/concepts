@@ -146,6 +146,31 @@
       "title": "Course cell",
       "description": "The color of the cells show how strong of a dependency the target course (row) has on the prerequisite course (column). When hovering over a cell, you see the list of concepts.",
       "placement": "right-start"
+    }],
+
+    "home": [{
+      "id": "CREATE_WORKSPACE",
+      "title": "Create a workspace",
+      "description": "Click the \"+\" to create a new workspace for working on mapping.",
+      "placement": "bottom-end"
+    }, {
+      "id": "WORKSPACE_ACTIONS",
+      "title": "Workspace actions",
+      "description": "Click the \"more\" icon to show actions you may take on the workspace.",
+      "placement": "bottom-end"
+    }, 
+    {
+      "id": "GOTO_WORKSPACE",
+      "title": "Go to workspace",
+      "description": "Click the workspace in the list to access the workspace. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
+      "placement": "bottom-end"
+    }],
+
+    "home-TODO": [{
+      "id": "CREATE_PROJECT",
+      "title": "Create a project",
+      "description": "Click the \"+\"-icon to create a new project for collaborative mapping.",
+      "placement": "bottom-end"
     }]
   }
 }

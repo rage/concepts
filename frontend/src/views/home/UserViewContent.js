@@ -1,11 +1,15 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import {
+  makeStyles, IconButton
+} from '@material-ui/core'
 import { useQuery } from 'react-apollo-hooks'
+import { HelpOutline as HelpIcon } from '@material-ui/icons'
 
 import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
 import WorkspaceList from './WorkspaceList'
 import ProjectList from './ProjectList'
 import LoadingBar from '../../components/LoadingBar'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -26,6 +30,11 @@ const useStyles = makeStyles(() => ({
         width: 'calc(100% - 32px)'
       }
     }
+  },
+  helpButton: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20
   }
 }))
 
@@ -37,6 +46,12 @@ const UserViewContent = ({ user }) => {
   })
 
   const classes = useStyles()
+  const infoBox = useInfoBox()
+
+  useEffect(() => {
+    infoBox.setView('home')
+    return () => infoBox.unsetView('home')
+  }, [infoBox])
 
   if (!workspaceQuery.data.workspacesForUser ||
       (user.role === 'STAFF' && !projectQuery.data.projectsForUser)) {
@@ -53,6 +68,9 @@ const UserViewContent = ({ user }) => {
       {user.role === 'STAFF' &&
         <ProjectList projects={projectQuery.data.projectsForUser.map(p => p.project)} />
       }
+      <IconButton className={classes.helpButton} onClick={infoBox.open}>
+        <HelpIcon />
+      </IconButton>
     </div>
   )
 }

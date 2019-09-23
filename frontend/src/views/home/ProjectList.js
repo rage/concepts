@@ -72,7 +72,9 @@ const ProjectList = ({ projects }) => {
     <Card elevation={0} className={classes.root}>
       <CardHeader
         action={
-          <IconButton aria-label='Add' onClick={openCreateProjectDialog}>
+          <IconButton aria-label='Add'
+            onClick={openCreateProjectDialog}
+          >
             <AddIcon />
           </IconButton>
         }

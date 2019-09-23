@@ -13,6 +13,7 @@ import {
 import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../store'
 import useRouter from '../useRouter'
+import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -64,6 +65,7 @@ const BaseWorkspaceList = ({
   const { history } = useRouter()
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
+  const infoBox = useInfoBox()
 
   const handleCreateOpen = () => {
     handleMenuClose()
@@ -71,7 +73,11 @@ const BaseWorkspaceList = ({
   }
 
   cardHeaderAction = cardHeaderAction || (
-    <IconButton aria-label='Add' onClick={handleCreateOpen}>
+    <IconButton
+      aria-label='Add'
+      onClick={handleCreateOpen}
+      ref={type === TYPE_MAIN ? infoBox.ref('home', 'CREATE_WORKSPACE') : undefined}
+    >
       <AddIcon />
     </IconButton>
   )
@@ -171,11 +177,15 @@ This will change which template is cloned by users.`)
     <Card elevation={0} className={classes.root} style={style}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
       <List dense={false} className={classes.list}>{
-        workspaces.map(workspace => (
+        workspaces.map((workspace, index) => (
           <ListItem
             className={activeTemplate && workspace.id === activeTemplate.id
               ? classes.templateActive : ''}
-            button key={workspace.id} onClick={() => handleNavigateManager(workspace.id)}
+            button
+            key={workspace.id}
+            onClick={() => handleNavigateManager(workspace.id)}
+            ref={type === TYPE_MAIN && index === 0
+              ? infoBox.ref('home', 'GOTO_WORKSPACE') : undefined}
           >
             <ListItemText
               primary={
@@ -188,7 +198,11 @@ This will change which template is cloned by users.`)
             />
 
             <ListItemSecondaryAction>
-              <IconButton onClick={evt => handleMenuOpen(workspace, evt)} aria-haspopup='true'>
+              <IconButton
+                onClick={evt => handleMenuOpen(workspace, evt)}
+                aria-haspopup='true'
+                ref={index === 0 ? infoBox.ref('home', 'WORKSPACE_ACTIONS') : undefined}
+              >
                 <MoreVertIcon />
               </IconButton>
             </ListItemSecondaryAction>
