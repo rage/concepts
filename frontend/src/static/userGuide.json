@@ -1,10 +1,14 @@
 {
+  "$schema": "userGuide.schema.json",
   "defaults": {
+    "id": "",
+    "description": "",
+    "title": "",
     "alignment": 0,
     "separation": 20,
     "padding": 5,
     "placement": "bottom",
-    "video": null
+    "video": ""
   },
   "views": {
     "mapper": [{
