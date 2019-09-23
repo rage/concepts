@@ -193,7 +193,7 @@ const MergeMutations = {
       sourceTemplate: { connect: { id: templateId } },
       participants: {
         create: [{
-          privilege: Privilege.OWNER,
+          privilege: Privilege.OWNER.toString(),
           user: { connect: { id: context.user.id } }
         }]
       },

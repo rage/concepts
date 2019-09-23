@@ -9,7 +9,7 @@ const ProjectMutations = {
       name: args.name,
       participants: {
         create: [{
-          privilege: 'OWNER',
+          privilege: Privilege.OWNER.toString(),
           user: { connect: { id: context.user.id } }
         }]
       }

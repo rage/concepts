@@ -1,12 +1,12 @@
 class Role {
-  static VISITOR = new Role('VISITOR', 0)
-  static GUEST = new Role('GUEST', 1)
-  static STAFF = new Role('STAFF', 2)
-  static STUDENT = new Role('STUDENT', 3)
-  static ADMIN = new Role('ADMIN', 4)
-
   static nameMap = new Map()
   static levelMap = new Map()
+
+  static VISITOR = new Role('VISITOR', 0)
+  static GUEST = new Role('GUEST', 1)
+  static STUDENT = new Role('STUDENT', 2)
+  static STAFF = new Role('STAFF', 3)
+  static ADMIN = new Role('ADMIN', 4)
 
   constructor(name, level) {
     this.name = name
@@ -18,25 +18,25 @@ class Role {
   toString() { return this.name }
   valueOf() { return this.level }
 
-  static fromInt(int) {
-    return Role.levelMap.get(int) || Role.VISITOR
+  static fromInt(int, defaultValue = Role.VISITOR) {
+    return Role.levelMap.get(int) || defaultValue
   }
 
-  static fromString(str) {
-    return Role.nameMap.get(str) || Role.VISITOR
+  static fromString(str, defaultValue = Role.VISITOR) {
+    return Role.nameMap.get(str) || defaultValue
   }
 }
 
 class Privilege {
-  static NONE = new Privilege('NONE', 0)
-  static CLONE = new Privilege('CLONE', 0)
-  static READ = new Privilege('READ', 0)
-  static EDIT = new Privilege('EDIT', 0)
-  static OWNER = new Privilege('OWNER', 0)
-
   static nameMap = new Map()
   static charMap = new Map()
   static levelMap = new Map()
+
+  static NONE = new Privilege('NONE', 0)
+  static CLONE = new Privilege('CLONE', 1)
+  static READ = new Privilege('READ', 2)
+  static EDIT = new Privilege('EDIT', 3)
+  static OWNER = new Privilege('OWNER', 4)
 
   constructor(name, level) {
     this.name = name
@@ -50,16 +50,16 @@ class Privilege {
   toString() { return this.name }
   valueOf() { return this.level }
 
-  static fromInt(int) {
-    return Privilege.levelMap.get(int) || Privilege.NONE
+  static fromInt(int, defaultValue = Privilege.NONE) {
+    return Privilege.levelMap.get(int) || defaultValue
   }
 
-  static fromChar(char) {
-    return Privilege.charMap.get(char) || Privilege.NONE
+  static fromChar(char, defaultValue = Privilege.NONE) {
+    return Privilege.charMap.get(char) || defaultValue
   }
 
-  static fromString(str) {
-    return Privilege.nameMap.get(str) || Privilege.NONE
+  static fromString(str, defaultValue = Privilege.NONE) {
+    return Privilege.nameMap.get(str) || defaultValue
   }
 }
 

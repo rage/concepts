@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { AuthenticationError } = require('apollo-server-core')
 
-const { Role } = require('../../accessControl')
+const { Role, Privilege } = require('../../permissions')
 const mockWorkspace = require('../../static/mockWorkspace')
 const tmc = require('../../TMCAuthentication')
 const makeSecret = require('../../secret')
@@ -16,7 +16,7 @@ const makeMockWorkspaceForUser = async (context, userId) => {
     name: templateWorkspace.name,
     participants: {
       create: [{
-        privilege: 'OWNER',
+        privilege: Privilege.OWNER.toString(),
         user: {
           connect: { id: userId }
         }

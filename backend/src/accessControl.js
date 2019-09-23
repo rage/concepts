@@ -60,7 +60,7 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
     throw new NotFoundError(type)
   }
 
-  if (readPrivilege(resp[type]).level >= minimumPrivilege.level) {
+  if (readPrivilege(resp[type]) >= minimumPrivilege) {
     return true
   } else if (type === 'workspace') {
     const proRes = await ctx.prisma.$graphql(projectPrivilegeQuery, {
@@ -68,9 +68,9 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
       userId: ctx.user.id
     })
 
-    return readPrivilege(proRes.workspace.sourceProject).level >= minimumPrivilege.level
-      || readPrivilege(proRes.workspace.asTemplate).level >= minimumPrivilege.level
-      || readPrivilege(proRes.workspace.asMerge).level >= minimumPrivilege.level
+    return readPrivilege(proRes.workspace.sourceProject) >= minimumPrivilege
+      || readPrivilege(proRes.workspace.asTemplate) >= minimumPrivilege
+      || readPrivilege(proRes.workspace.asMerge) >= minimumPrivilege
   } else {
     return false
   }
@@ -81,7 +81,7 @@ const checkAccess = async (ctx, {
   minimumPrivilege = null,
   workspaceId, projectId
 }) => {
-  if (minimumRole !== null && ctx.role.value < minimumRole.value) {
+  if (minimumRole !== null && ctx.role < minimumRole) {
     throw new ForbiddenError('Access denied')
   }
   if (minimumPrivilege !== null) {

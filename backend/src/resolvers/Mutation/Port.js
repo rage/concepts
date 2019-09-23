@@ -55,7 +55,7 @@ const PortMutations = {
         name: json.workspace,
         participants: {
           create: [{
-            privilege: 'OWNER',
+            privilege: Privilege.OWNER.toString(),
             user: { connect: { id: context.user.id } }
           }]
         }
