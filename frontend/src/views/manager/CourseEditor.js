@@ -434,7 +434,12 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
             window.selectRef = elem
           }
         }}
-        onMenuOpen={() => setTimeout(() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(selectRef.current.menuListRef), 0)}
+        onMenuOpen={() => {
+          setTimeout(() => {
+            const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)
+            func(selectRef.current.menuListRef)
+          }, 0)
+        }}
         onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(null)}
         isMulti
         placeholder='Select tags...'
@@ -443,7 +448,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
-        ref={action === 'Create' && infoBox.ref('manager', 'CREATE_CONCEPT_SUBMIT')}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_SUBMIT') : undefined}
         className={classes.submit}
       >
         {action}
