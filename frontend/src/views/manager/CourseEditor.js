@@ -14,6 +14,7 @@ import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
 import groupConcepts from './ConceptGroup'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -185,6 +186,7 @@ const Concept = ({
 
 const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteConcept }) => {
   const classes = useStyles()
+  const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
   const listRef = useRef()
   const [editing, setEditing] = useState(null)
@@ -337,6 +339,9 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
       <CreateConcept submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
+        infoBox.redrawIfOpen('manager',
+          'CREATE_CONCEPT_NAME', 'CREATE_CONCEPT_DESCRIPTION', 'CREATE_CONCEPT_TAGS',
+          'CREATE_CONCEPT_SUBMIT')
       }} defaultValues={{ official: isTemplate }} />
     </Card>
   )
@@ -353,6 +358,7 @@ const initialState = {
 
 const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }) => {
   const classes = useStyles()
+  const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
@@ -382,6 +388,8 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
 
+  const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_CONCEPT_TAGS')
+  const selectRef = useRef(null)
   return (
     <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
@@ -394,6 +402,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         value={input.name}
         fullWidth
         inputRef={nameRef}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_NAME') : undefined}
         autoFocus={action !== 'Create'}
         onChange={onChange}
       />
@@ -405,6 +414,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         label='Concept description'
         type='text'
         value={input.description}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_DESCRIPTION') : undefined}
         fullWidth
         onChange={onChange}
       />
@@ -417,6 +427,15 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         styles={tagSelectStyles}
         options={Object.values(TaxonomyTags)}
         value={input.tags}
+        ref={elem => {
+          if (action === 'Create' && elem && elem.select && elem.select.select) {
+            infoBoxSelectRef(elem.select.select.controlRef)
+            selectRef.current = elem.select.select
+            window.selectRef = elem
+          }
+        }}
+        onMenuOpen={() => setTimeout(() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(selectRef.current.menuListRef), 0)}
+        onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(null)}
         isMulti
         placeholder='Select tags...'
         menuPlacement='auto'
@@ -424,6 +443,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
+        ref={action === 'Create' && infoBox.ref('manager', 'CREATE_CONCEPT_SUBMIT')}
         className={classes.submit}
       >
         {action}

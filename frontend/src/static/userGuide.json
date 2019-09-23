@@ -50,7 +50,47 @@
       "video": "/guide/mapper/focus-concept-delete-link.webm"
     }],
 
-    "manager": [],
+    "manager": [{
+      "id": "CREATE_COURSE_NAME",
+      "title": "New course",
+      "description": "Enter the name for a new course.",
+      "placement": "right-end"
+    }, {
+      "id": "CREATE_COURSE_THEMES",
+      "title": "New course",
+      "description": "Enter themes for the new course. Type a theme and then press ENTER or TAB to finish it.",
+      "placement": "right-end"
+    }, {
+      "id": "CREATE_COURSE_SUBMIT",
+      "title": "New course",
+      "description": "Finally, click \"CREATE\" to create the course.",
+      "placement": "right-end"
+    }, {
+      "id": "FOCUS_COURSE",
+      "title": "Open a course",
+      "description": "Click a course to view and manage its concepts.",
+      "placement": "right-end"
+    }, {
+      "id": "CREATE_CONCEPT_NAME",
+      "title": "New concept",
+      "description": "Enter the name for a new concept.",
+      "placement": "left-end"
+    }, {
+      "id": "CREATE_CONCEPT_DESCRIPTION",
+      "title": "New concept",
+      "description": "Enter a description for the new concept.",
+      "placement": "left-end"
+    }, {
+      "id": "CREATE_CONCEPT_TAGS",
+      "title": "New concept",
+      "description": "Enter tags for the new course.",
+      "placement": "left-end"
+    }, {
+      "id": "CREATE_CONCEPT_SUBMIT",
+      "title": "New concept",
+      "description": "Finally, click \"CREATE\" to create the concept.",
+      "placement": "left-end"
+    }],
 
     "graph": [{
       "id": "COURSE_FILTER",

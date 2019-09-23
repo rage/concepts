@@ -11,6 +11,7 @@ import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -63,6 +64,7 @@ const CourseList = ({
   workspace, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
 }) => {
   const classes = useStyles()
+  const infoBox = useInfoBox()
   const listRef = useRef()
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
@@ -73,12 +75,13 @@ const CourseList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader title='Courses' />
       <List ref={listRef} className={classes.list}>{
-        workspace.courses.map(course => (
+        workspace.courses.map((course, index) => (
           <ListItem
             className={course.id === focusedCourseId ? classes.listItemActive :
               editing && editing !== course.id ? classes.listItemDisabled : null}
             button={editing !== course.id}
             classes={{ button: classes.courseButton }}
+            ref={index === 0 ? infoBox.ref('manager', 'FOCUS_COURSE') : undefined}
             key={course.id}
             onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
           >
@@ -133,6 +136,8 @@ const CourseList = ({
       <CreateCourse submit={async args => {
         await createCourse(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
+        infoBox.redrawIfOpen('manager',
+          'CREATE_COURSE_NAME', 'CREATE_COURSE_THEMES', 'CREATE_COURSE_SUBMIT')
       }} defaultValues={{ official: isTemplate }} />
     </Card>
   )
@@ -149,6 +154,7 @@ const CreateCourse = ({
   submit, defaultValues, action = 'Create', cancel
 }) => {
   const classes = useStyles()
+  const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
   const nameRef = useRef()
   const [input, setInput] = useState({
@@ -186,6 +192,7 @@ const CreateCourse = ({
     }
   }
 
+  const selectRef = infoBox.ref('manager', 'CREATE_COURSE_THEMES')
   return (
     <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
@@ -198,6 +205,7 @@ const CreateCourse = ({
         value={input.name}
         fullWidth
         inputRef={nameRef}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_NAME') : undefined}
         autoFocus={action !== 'Create'}
         onChange={evt => setInput({ ...input, name: evt.target.value })}
       />
@@ -210,6 +218,8 @@ const CreateCourse = ({
         onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
         value={input.tags}
+        ref={elem => action === 'Create' && elem && elem.select && elem.select.select
+          && selectRef(elem.select.select.controlRef)}
         isMulti
         menuPlacement='auto'
         placeholder='Themes...'
@@ -219,6 +229,7 @@ const CreateCourse = ({
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_SUBMIT') : undefined}
         className={classes.submit}
       >
         {action}
@@ -228,7 +239,7 @@ const CreateCourse = ({
           Cancel
         </Button>
       }
-      { user.role === 'STAFF' && <>
+      {user.role === 'STAFF' && <>
         <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={
@@ -255,8 +266,7 @@ const CreateCourse = ({
             label='Frozen'
           />
         </FormControl>
-        </>
-      }
+      </>}
     </form>
   )
 }
