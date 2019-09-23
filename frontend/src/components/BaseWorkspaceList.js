@@ -10,7 +10,7 @@ import {
   RadioButtonChecked, RadioButtonUnchecked
 } from '@material-ui/icons'
 
-import { Role, Privilege } from '../lib/permissions'
+import { Privilege } from '../lib/permissions'
 import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../store'
 import useRouter from '../useRouter'

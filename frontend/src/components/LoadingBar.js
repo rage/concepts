@@ -28,7 +28,7 @@ const LoadingBar = ({ id, componentRef, children = null }) => {
   useEffect(() => {
     startLoading(id)
     return () => stopLoading(id)
-  }, [startLoading, stopLoading])
+  }, [id, startLoading, stopLoading])
 
   return children
 }
