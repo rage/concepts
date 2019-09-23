@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 
+import { Privilege } from '../../lib/permissions'
 import { useShareDialog } from '../../dialogs/sharing'
 import BaseWorkspaceList, { TYPE_USER } from '../../components/BaseWorkspaceList'
 
@@ -15,7 +16,7 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
     <Button
       style={{ margin: '6px' }}
       variant='outlined' color='primary'
-      onClick={() => openShareDialog(projectId, 'CLONE')}
+      onClick={() => openShareDialog(projectId, Privilege.CLONE)}
       disabled={!activeTemplate}
     >
       Invite students

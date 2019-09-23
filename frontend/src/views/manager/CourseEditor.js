@@ -7,6 +7,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon, Lock as LockIcon } from '@material-ui/icons'
 import Select from 'react-select/creatable'
 
+import { Role } from '../../lib/permissions'
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
@@ -150,7 +151,7 @@ const Concept = ({
                 color='primary'
               />
             ) : <>
-              {concept.frozen && user.role !== 'STAFF' && (
+              {concept.frozen && user.role < Role.STAFF && (
                 <IconButton disabled classes={{ root: classes.lockIcon }}>
                   <LockIcon />
                 </IconButton>
@@ -168,7 +169,7 @@ const Concept = ({
                   <DeleteIcon />
                 </IconButton>
               }
-              {(!concept.frozen || user.role === 'STAFF') &&
+              {(!concept.frozen || user.role >= Role.STAFF) &&
                 <IconButton
                   color={editing ? 'inherit' : undefined} aria-label='Edit'
                   onClick={() => setEditing(concept.id)}
@@ -266,7 +267,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         classes={{ title: classes.header, content: classes.headerContent }}
         title={`Concepts of ${course.name}`}
         action={
-          user.role === 'STAFF'
+          user.role >= Role.STAFF
             ? (merging ? [
               cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
               cardHeaderButton('Cancel', () => stopMerging())
@@ -458,7 +459,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           Cancel
         </Button>
       }
-      {user.role === 'STAFF' && <>
+      {user.role >= Role.STAFF && <>
         <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={

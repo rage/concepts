@@ -4,6 +4,7 @@ import { Button, Card, CardHeader, CardContent, List, IconButton } from '@materi
 import { Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon } from '@material-ui/icons'
 import { useMutation } from 'react-apollo-hooks'
 
+import { Role } from '../../lib/permissions'
 import { Concept } from './concept'
 import { useLoginStateValue, useMessageStateValue } from '../../store'
 import { useCreateConceptDialog } from '../../dialogs/concept'
@@ -68,8 +69,8 @@ const Course = ({
   const [{ user, loggedIn }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
-  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
+  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
   const course = courseLink.from
   const updateCourseLink = useMutation(UPDATE_COURSE_LINK, {
     update: cache.updateCourseLinkUpdate(workspaceId, activeCourseId)
@@ -101,15 +102,15 @@ const Course = ({
           <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
         }
         action={<>
-          {(user.role === 'STAFF' || courseLink.frozen) &&
+          {(user.role >= Role.STAFF || courseLink.frozen) &&
             <IconButton
-              disabled={user.role !== 'STAFF'}
+              disabled={user.role < Role.STAFF}
               onClick={() => setCourseLinkFrozen(!courseLink.frozen)}
             >
               {courseLink.frozen ? <LockedIcon /> : <LockOpenIcon />}
             </IconButton>
           }
-          <IconButton disabled={!loggedIn || (course.frozen && user.role !== 'STAFF')}
+          <IconButton disabled={!loggedIn || (course.frozen && user.role < Role.STAFF)}
             onClick={() => openEditCourseDialog(course.id, course.name,
               course.official, course.frozen)}>
             <EditIcon />

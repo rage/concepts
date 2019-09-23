@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
+import { Privilege, Role } from '../../lib/permissions'
 import { USE_SHARE_LINK } from '../../graphql/Mutation'
 import {
   WORKSPACES_FOR_USER, PEEK_SHARE_LINK, PEEK_SHARE_LINK_HACK, PROJECTS_FOR_USER
@@ -22,11 +23,11 @@ const JoinView = ({ token }) => {
   const [, messageDispatch] = useMessageStateValue()
 
   const type = token[0] === 'w' ? 'workspace' : 'project'
-  const privilege = token[1] === 'c' ? 'clone' : 'other'
+  const privilege = Privilege.fromToken(token)
 
   const refetchQueries = type === 'workspace'
     ? [{ query: WORKSPACES_FOR_USER }]
-    : (privilege !== 'clone'
+    : (user.role >= Role.STAFF && privilege !== Privilege.CLONE
       ? [{ query: PROJECTS_FOR_USER }]
       : [])
 
@@ -34,9 +35,12 @@ const JoinView = ({ token }) => {
     refetchQueries
   })
 
-  const peek = useQuery(privilege === 'clone' ? PEEK_SHARE_LINK_HACK : PEEK_SHARE_LINK, {
-    variables: { token }
-  })
+  const peek = useQuery(
+    privilege === Privilege.CLONE ? PEEK_SHARE_LINK_HACK : PEEK_SHARE_LINK,
+    {
+      variables: { token }
+    }
+  )
 
   const handleClose = () => history.push('/')
 
@@ -45,7 +49,8 @@ const JoinView = ({ token }) => {
     joinShareLink({
       variables: { token }
     }).then(resp => {
-      if (resp.data.useToken.privilege === 'CLONE' && type === 'project') {
+      if (Privilege.fromString(resp.data.useToken.privilege) === Privilege.CLONE
+        && type === 'project') {
         history.push(`/projects/${resp.data.useToken.project.id}/clone`)
       } else {
         history.push(type === 'workspace'
@@ -85,11 +90,11 @@ const JoinView = ({ token }) => {
   if (participant) {
     const path = type === 'workspace'
       ? `/workspaces/${peek.data.peekToken.id}/manager`
-      : (privilege === 'clone'
+      : (privilege === Privilege.CLONE
         ? `/projects/${peek.data.peekToken.id}/clone`
         : `/projects/${peek.data.peekToken.id}/overview`)
     return <Redirect to={path} />
-  } else if (privilege === 'clone') {
+  } else if (privilege === Privilege.CLONE) {
     return <CloneView token={token} peek={peek} />
   }
 

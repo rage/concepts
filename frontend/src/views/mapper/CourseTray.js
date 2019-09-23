@@ -9,6 +9,7 @@ import {
   MoreVert as MoreVertIcon
 } from '@material-ui/icons'
 
+import { Role } from '../../lib/permissions'
 import cache from '../../apollo/update'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
@@ -141,7 +142,7 @@ const PrerequisiteCourse = ({
           <IconButton
             aria-haspopup='true'
             onClick={handleMenuOpen}
-            disabled={(course.frozen && user.role !== 'STAFF')}
+            disabled={(course.frozen && user.role < Role.STAFF)}
           >
             <MoreVertIcon />
           </IconButton>
@@ -177,8 +178,8 @@ const CourseTray = ({
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
 
-  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
-  const openCreateCourseDialog = useCreateCourseDialog(workspaceId, user.role === 'STAFF')
+  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
+  const openCreateCourseDialog = useCreateCourseDialog(workspaceId, user.role >= Role.STAFF)
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
     update: cache.createCourseLinkUpdate(workspaceId, activeCourseId)

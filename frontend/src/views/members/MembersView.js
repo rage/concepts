@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
+import { Privilege } from '../../lib/permissions'
 import {
   PROJECT_BY_ID, PROJECT_BY_ID_MEMBER_INFO, WORKSPACE_BY_ID, WORKSPACE_BY_ID_MEMBER_INFO
 } from '../../graphql/Query'
@@ -34,13 +35,13 @@ Type.PRIVILEGE = {
       onChange={evt => setState({ ...state, [col.field]: evt.target.value })}
       margin='none'
     >
-      <MenuItem value='CLONE'>Clone</MenuItem>
-      <MenuItem value='VIEW'>View</MenuItem>
-      <MenuItem value='EDIT'>Edit</MenuItem>
-      <MenuItem value='OWNER'>Owner</MenuItem>
+      <MenuItem value={Privilege.CLONE.toString()}>Clone</MenuItem>
+      <MenuItem value={Privilege.READ.toString()}>Read</MenuItem>
+      <MenuItem value={Privilege.EDIT.toString()}>Edit</MenuItem>
+      <MenuItem value={Privilege.OWNER.toString()}>Owner</MenuItem>
     </TextField>
   ),
-  defaultValue: 'EDIT'
+  defaultValue: Privilege.EDIT.toString()
 }
 
 Type.SHARE_TOKEN = {
@@ -72,8 +73,8 @@ const MembersView = ({ projectId, workspaceId }) => {
 
   const memberQuery = useQuery(memberQueryType, {
     variables: { id },
-    skip: !mainData || (mainData.participants
-      .find(pcp => pcp.user.id === user.id) || {}).privilege !== 'OWNER'
+    skip: !mainData || Privilege.fromString((mainData.participants
+      .find(pcp => pcp.user.id === user.id) || {}).privilege) !== Privilege.OWNER
   })
 
   const memberData = memberQuery.data && memberQuery.data[`${type}MemberInfo`]

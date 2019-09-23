@@ -19,11 +19,11 @@ class Role {
   valueOf() { return this.level }
 
   static fromInt(int, defaultValue = Role.VISITOR) {
-    return int && Role.levelMap.get(int) || defaultValue
+    return (int && Role.levelMap.get(int)) || defaultValue
   }
 
   static fromString(str, defaultValue = Role.VISITOR) {
-    return str && Role.nameMap.get(str.toUpperCase()) || defaultValue
+    return (str && Role.nameMap.get(str.toUpperCase())) || defaultValue
   }
 
   static parse(val, defaultValue = Privilege.NONE) {
@@ -59,15 +59,19 @@ class Privilege {
   valueOf() { return this.level }
 
   static fromInt(int, defaultValue = Privilege.NONE) {
-    return int && Privilege.levelMap.get(int) || defaultValue
+    return (int && Privilege.levelMap.get(int)) || defaultValue
   }
 
   static fromChar(char, defaultValue = Privilege.NONE) {
-    return char && Privilege.charMap.get(char.toLowerCase()) || defaultValue
+    return (char && Privilege.charMap.get(char.toLowerCase())) || defaultValue
+  }
+
+  static fromToken(token, defaultValue = Privilege.NONE) {
+    return (token && Privilege.fromChar(token[1], defaultValue)) || defaultValue
   }
 
   static fromString(str, defaultValue = Privilege.NONE) {
-    return str && Privilege.nameMap.get(str.toUpperCase()) || defaultValue
+    return (str && Privilege.nameMap.get(str.toUpperCase())) || defaultValue
   }
 
   static parse(val, defaultValue = Privilege.NONE) {

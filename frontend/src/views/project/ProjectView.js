@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery } from 'react-apollo-hooks'
 import { Typography, Button } from '@material-ui/core'
 
+import { Privilege } from '../../lib/permissions'
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import UserWorkspaceList from './UserWorkspaceList'
 import { useShareDialog } from '../../dialogs/sharing'
@@ -75,7 +76,7 @@ const ProjectView = ({ projectId }) => {
   }
 
   const showToolbar = projectQuery.data.projectById.participants.find(participant =>
-    participant.user.id === user.id && participant.privilege === 'OWNER'
+    participant.user.id === user.id && participant.privilege === Privilege.OWNER
   )
 
   return (
@@ -88,7 +89,7 @@ const ProjectView = ({ projectId }) => {
           <span className={classes.toolbar}>
             <Button
               color='primary' variant='contained'
-              onClick={() => openShareProjectDialog(projectId, 'EDIT')}
+              onClick={() => openShareProjectDialog(projectId, Privilege.EDIT)}
             >
               Share project
             </Button>
