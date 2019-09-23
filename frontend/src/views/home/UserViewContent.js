@@ -68,11 +68,9 @@ const UserViewContent = ({ user }) => {
       {user.role === 'STAFF' &&
         <ProjectList projects={projectQuery.data.projectsForUser.map(p => p.project)} />
       }
-      <div>
-        <IconButton className={classes.helpButton} onClick={infoBox.open}>
-          <HelpIcon />
-        </IconButton>
-      </div>
+      <IconButton className={classes.helpButton} onClick={infoBox.open}>
+        <HelpIcon />
+      </IconButton>
     </div>
   )
 }
