@@ -104,7 +104,13 @@
     }, {
       "id": "WORKSPACE_ACTIONS",
       "title": "Workspace actions",
-      "description": "Click the \"more\"-icon to show actions you may take on the workspace.",
+      "description": "Click the \"more\" icon to show actions you may take on the workspace.",
+      "placement": "bottom-end"
+    }, 
+    {
+      "id": "GOTO_WORKSPACE",
+      "title": "Go to workspace",
+      "description": "Click the workspace in the list to access the workspace. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
       "placement": "bottom-end"
     }, {
       "id": "CREATE_PROJECT",

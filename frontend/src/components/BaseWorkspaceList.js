@@ -184,6 +184,8 @@ This will change which template is cloned by users.`)
             button
             key={workspace.id}
             onClick={() => handleNavigateManager(workspace.id)}
+            ref={type === TYPE_MAIN && index === 0
+              ? infoBox.ref('home', 'GOTO_WORKSPACE') : undefined}
           >
             <ListItemText
               primary={
