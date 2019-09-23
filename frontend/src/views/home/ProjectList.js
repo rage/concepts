@@ -11,6 +11,7 @@ import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/proj
 import { DELETE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'
 import useRouter from '../../useRouter'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 const ProjectList = ({ projects }) => {
   const classes = useStyles()
   const { history } = useRouter()
+  const infoBox = useInfoBox()
 
   const [, messageDispatch] = useMessageStateValue()
 
@@ -72,7 +74,10 @@ const ProjectList = ({ projects }) => {
     <Card elevation={0} className={classes.root}>
       <CardHeader
         action={
-          <IconButton aria-label='Add' onClick={openCreateProjectDialog}>
+          <IconButton aria-label='Add'
+            onClick={openCreateProjectDialog}
+            ref={infoBox.ref('home', 'CREATE_PROJECT')}
+          >
             <AddIcon />
           </IconButton>
         }
