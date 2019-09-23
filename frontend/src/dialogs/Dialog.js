@@ -90,6 +90,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
+  contextRef.current.inputState = inputState
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,

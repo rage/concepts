@@ -3,6 +3,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { CREATE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
+import WorkspaceCreationActions from './WorkspaceCreationActions'
 
 const useCreateWorkspaceDialog = projectId => {
   const { openDialog } = useDialog()
@@ -24,7 +25,8 @@ const useCreateWorkspaceDialog = projectId => {
     title: 'Create workspace',
     content: [
       'Workspaces work as a sandbox for you to create and connect concepts with each other.'
-    ]
+    ],
+    CustomActions: WorkspaceCreationActions
   })
 }
 
