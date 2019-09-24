@@ -102,35 +102,33 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
     fileReader.readAsText(event.target.files[0])
   }
 
-  return (
-    <>
-      <Button
-        color='primary'
-        component='label'
-        label='Import'
-        disabled={loading}
-      >
-        Import
-        <input type='file' onChange={openFile} accept='.json,application/json' hidden />
-      </Button>
-      <Typography
-        variant='subtitle2'
-        style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}
-      >
-        {fileName}
-      </Typography>
-      <Button onClick={ctx.closeDialog} disabled={loading} color='primary'>
-        Cancel
-      </Button>
-      <Button
-        onClick={handlePort}
-        disabled={submitDisabled || loading}
-        color='primary'
-      >
-        {!loading ? 'Create' : <CircularProgress size={20} />}
-      </Button>
-    </>
-  )
+  return <>
+    <Button
+      color='primary'
+      component='label'
+      label='Import'
+      disabled={loading}
+    >
+      Import
+      <input type='file' onChange={openFile} accept='.json,application/json' hidden />
+    </Button>
+    <Typography
+      variant='subtitle2'
+      style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}
+    >
+      {fileName}
+    </Typography>
+    <Button onClick={ctx.closeDialog} disabled={loading} color='primary'>
+      Cancel
+    </Button>
+    <Button
+      onClick={handlePort}
+      disabled={submitDisabled || loading}
+      color='primary'
+    >
+      {!loading ? 'Create' : <CircularProgress size={20} />}
+    </Button>
+  </>
 }
 
 export default WorkspaceCreationActions
