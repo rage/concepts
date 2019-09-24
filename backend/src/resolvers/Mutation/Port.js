@@ -1,6 +1,6 @@
 const Ajv = require('ajv')
 
-const { checkAccess, Role, Privilege, roleToInt } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 const schema = require('../../static/port.schema')
 
 const validateData = Ajv().compile(schema)
@@ -9,7 +9,7 @@ const PortMutations = {
   async importData(root, { data }, context) {
     await checkAccess(context, { minimumRole: Role.STUDENT })
     let json
-    const canSetOfficial = roleToInt(context.role) >= roleToInt(Role.STAFF)
+    const canSetOfficial = context.role >= Role.STAFF
 
     try {
       json = JSON.parse(data)
@@ -55,7 +55,7 @@ const PortMutations = {
         name: json.workspace,
         participants: {
           create: [{
-            privilege: 'OWNER',
+            privilege: Privilege.OWNER.toString(),
             user: { connect: { id: context.user.id } }
           }]
         }

@@ -5,6 +5,7 @@ import {
 import { useQuery } from 'react-apollo-hooks'
 import { HelpOutline as HelpIcon } from '@material-ui/icons'
 
+import { Role } from '../../lib/permissions'
 import { WORKSPACES_FOR_USER, PROJECTS_FOR_USER } from '../../graphql/Query'
 import WorkspaceList from './WorkspaceList'
 import ProjectList from './ProjectList'
@@ -42,7 +43,7 @@ const UserViewContent = ({ user }) => {
   const workspaceQuery = useQuery(WORKSPACES_FOR_USER)
 
   const projectQuery = useQuery(PROJECTS_FOR_USER, {
-    skip: user.role !== 'STAFF'
+    skip: user.role < Role.STAFF
   })
 
   const classes = useStyles()
@@ -54,7 +55,7 @@ const UserViewContent = ({ user }) => {
   }, [infoBox])
 
   if (!workspaceQuery.data.workspacesForUser ||
-      (user.role === 'STAFF' && !projectQuery.data.projectsForUser)) {
+      (user.role >= Role.STAFF && !projectQuery.data.projectsForUser)) {
     return <LoadingBar id='main-view' />
   }
 
@@ -65,7 +66,7 @@ const UserViewContent = ({ user }) => {
           .filter(workspace => !workspace.asTemplate)}
         urlPrefix='/workspaces'
       />
-      {user.role === 'STAFF' &&
+      {user.role >= Role.STAFF &&
         <ProjectList projects={projectQuery.data.projectsForUser.map(p => p.project)} />
       }
       <IconButton className={classes.helpButton} onClick={infoBox.open}>

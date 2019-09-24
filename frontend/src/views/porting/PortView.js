@@ -329,12 +329,11 @@ const PortView = () => {
                   <em>None</em>
                 </MenuItem>
                 {
-                  projectsQuery.data.projectsForUser && projectsQuery.data.projectsForUser
-                    .map(p => (
-                      <MenuItem key={p.project.id} value={p.project.id}>
-                        {p.project.name}
-                      </MenuItem>)
-                    )
+                  projectsQuery.data.projectsForUser?.map(p => (
+                    <MenuItem key={p.project.id} value={p.project.id}>
+                      {p.project.name}
+                    </MenuItem>)
+                  )
                 }
               </Select>
             </FormControl>

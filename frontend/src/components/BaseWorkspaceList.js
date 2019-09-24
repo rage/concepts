@@ -10,6 +10,7 @@ import {
   RadioButtonChecked, RadioButtonUnchecked
 } from '@material-ui/icons'
 
+import { Privilege } from '../lib/permissions'
 import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../store'
 import useRouter from '../useRouter'
@@ -116,7 +117,7 @@ const BaseWorkspaceList = ({
 
   const handleShareOpen = () => {
     handleMenuClose()
-    openShareDialog(menu.workspace.id, 'EDIT')
+    openShareDialog(menu.workspace.id, Privilege.EDIT)
   }
 
   const handleDelete = async () => {
@@ -194,7 +195,7 @@ This will change which template is cloned by users.`)
                 </Typography>
               }
               secondary={type === TYPE_USER && workspace.participants
-                .find(p => p.privilege === 'OWNER').user.id}
+                .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER).user.id}
             />
 
             <ListItemSecondaryAction>

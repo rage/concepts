@@ -10,6 +10,7 @@ import {
   MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon
 } from '@material-ui/icons'
 
+import { Privilege } from '../lib/permissions'
 import client from '../apollo/apolloClient'
 import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
 import { DELETE_WORKSPACE } from '../graphql/Mutation'
@@ -88,7 +89,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
 
   const handleShareOpen = () => {
     setMenuAnchor(null)
-    openShareWorkspaceDialog(workspaceId, 'EDIT')
+    openShareWorkspaceDialog(workspaceId, Privilege.EDIT)
   }
 
   const handleDelete = () => {
@@ -129,16 +130,14 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
-  const isOwner = ((workspaceQuery.data.workspaceById
+  const isOwner = Privilege.fromString(((workspaceQuery.data.workspaceById
     && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id)) || {}
-  ).privilege === 'OWNER'
+  ).privilege) === Privilege.OWNER
 
   return (
     <>
       <Paper className={classes.root} square>
-        { /* Placeholder so flex would align navbar at center*/
-          user.role === 'STAFF' && <div className={classes.leftPlaceholder} />
-        }
+        <div className={classes.leftPlaceholder} />
         <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
           <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
           <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />

@@ -9,6 +9,7 @@ import {
   MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon
 } from '@material-ui/icons'
 
+import { Privilege } from '../lib/permissions'
 import { PROJECT_BY_ID, PROJECTS_FOR_USER } from '../graphql/Query'
 import { DELETE_PROJECT } from '../graphql/Mutation'
 import { useMessageStateValue, useLoginStateValue } from '../store'
@@ -67,7 +68,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
 
   const handleShareOpen = () => {
     setMenuAnchor(null)
-    openShareProjectDialog(projectId, 'EDIT')
+    openShareProjectDialog(projectId, Privilege.EDIT)
   }
 
   const handleDelete = () => {
@@ -98,16 +99,14 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
     history.push(`${urlPrefix}/${projectId}/${newPage}`)
   }
 
-  const isOwner = ((projectQuery.data.projectById
+  const isOwner = Privilege.fromString(((projectQuery.data.projectById
     && projectQuery.data.projectById.participants.find(pcp => pcp.user.id === user.id)) || {}
-  ).privilege === 'OWNER'
+  ).privilege) === Privilege.OWNER
 
   return (
     <>
       <Paper className={classes.root} square>
-        { /* Placeholder so flex would align navbar at center*/
-          user.role === 'STAFF' && <div className={classes.leftPlaceholder} />
-        }
+        <div className={classes.leftPlaceholder} />
         <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
           <BottomNavigationAction
             value='overview'
@@ -143,7 +142,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
           }}>
           {
             projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
-              p.user.id === user.id && p.privilege === 'OWNER') &&
+              p.user.id === user.id && Privilege.fromString(p.privilege) === Privilege.OWNER) &&
             <MenuItem aria-label='Share link' onClick={handleShareOpen}>
               <ListItemIcon>
                 <ShareIcon />

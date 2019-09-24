@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
+import { Role } from '../lib/permissions'
 import AuthenticationIcon from './AuthIcon'
 import { PROJECT_BY_ID, WORKSPACE_BY_ID, COURSE_BY_ID } from '../graphql/Query'
 import { useLoginStateValue } from '../store'
@@ -218,7 +219,7 @@ const NavBar = ({ location }) => {
   const { workspaceId, projectId, courseId } = Object.assign({}, ...path)
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
-    skip: !loggedIn || user.role !== 'STAFF' || !projectId,
+    skip: !loggedIn || user.role < Role.STAFF || !projectId,
     variables: {
       id: projectId
     }

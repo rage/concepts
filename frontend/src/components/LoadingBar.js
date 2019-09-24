@@ -4,11 +4,13 @@ export const LoadingContext = createContext(null)
 
 export const LoadingProvider = ({ children }) => {
   const provider = useRef(null)
-  const startLoading = (...args) => provider.current.startLoading(...args)
-  const stopLoading = (...args) => provider.current.stopLoading(...args)
-  const setProvider = newProvider => provider.current = newProvider
+  const value = {
+    startLoading: (...args) => provider.current.startLoading(...args),
+    stopLoading: (...args) => provider.current.stopLoading(...args),
+    setProvider: newProvider => provider.current = newProvider
+  }
   return (
-    <LoadingContext.Provider value={{ startLoading, stopLoading, setProvider }}>
+    <LoadingContext.Provider value={value}>
       {children}
     </LoadingContext.Provider>
   )
@@ -26,8 +28,7 @@ const LoadingBar = ({ id, componentRef, children = null }) => {
   useEffect(() => {
     startLoading(id)
     return () => stopLoading(id)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [id, startLoading, stopLoading])
 
   return children
 }

@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core'
 import { Edit as EditIcon } from '@material-ui/icons'
 
+import { Role } from '../../lib/permissions'
 import { Concept } from './concept'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
@@ -79,8 +80,8 @@ const ActiveCourse = ({
   const infoBox = useInfoBox()
   const [{ user, loggedIn }] = useLoginStateValue()
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role === 'STAFF')
-  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role === 'STAFF')
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
+  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
 
   return <>
     <DividerWithText
@@ -104,7 +105,7 @@ const ActiveCourse = ({
           <IconButton
             onClick={() => openEditCourseDialog(course.id, course.name, course.official,
               course.frozen, course.tags)}
-            disabled={(course.frozen && user.role !== 'STAFF')}
+            disabled={(course.frozen && user.role < Role.STAFF)}
           >
             <EditIcon />
           </IconButton>

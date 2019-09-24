@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
+import { Role } from './lib/permissions'
+
 export const LoginStateContext = createContext(false)
 export const MessageStateContext = createContext('')
 
+const fixRole = user => ({ ...user, role: Role.fromString(user.role) })
+
 const loginReducers = {
-  login: (state, { data }) => ({ ...state, loggedIn: true, user: data }),
+  login: (state, { data }) => ({ ...state, loggedIn: true, user: fixRole(data) }),
   logout: state => ({ ...state, loggedIn: false, user: {} })
 }
 
@@ -12,7 +16,7 @@ const loginReducer = (state, action) => loginReducers[action.type](state, action
 
 let user
 try {
-  user = JSON.parse(window.localStorage.currentUser).user
+  user = fixRole(JSON.parse(window.localStorage.currentUser).user)
 } catch (error) {}
 const loggedIn = Boolean(user)
 

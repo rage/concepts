@@ -7,6 +7,7 @@ import {
 import Select from 'react-select/creatable'
 import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
+import { Role } from '../../lib/permissions'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
@@ -69,7 +70,7 @@ const CourseList = ({
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
 
-  const isTemplate = Boolean(workspace.asTemplate && workspace.asTemplate.id)
+  const isTemplate = Boolean(workspace.asTemplate?.id)
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -100,7 +101,7 @@ const CourseList = ({
                 <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
               } />
               <ListItemSecondaryAction>
-                {course.frozen && user.role !== 'STAFF' && (
+                {course.frozen && user.role < Role.STAFF && (
                   <IconButton disabled classes={{ root: classes.lockIcon }}>
                     <LockIcon />
                   </IconButton>
@@ -118,7 +119,7 @@ const CourseList = ({
                     <DeleteIcon />
                   </IconButton>
                 }
-                {(!course.frozen || user.role === 'STAFF') &&
+                {(!course.frozen || user.role >= Role.STAFF) &&
                   <IconButton
                     color={editing ? 'inherit' : undefined} aria-label='Edit' onClick={evt => {
                       evt.stopPropagation()
@@ -218,8 +219,7 @@ const CreateCourse = ({
         onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
         value={input.tags}
-        ref={elem => action === 'Create' && elem && elem.select && elem.select.select
-          && selectRef(elem.select.select.controlRef)}
+        ref={elem => action === 'Create' && selectRef(elem?.select?.select?.controlRef)}
         isMulti
         menuPlacement='auto'
         placeholder='Themes...'
@@ -239,7 +239,7 @@ const CreateCourse = ({
           Cancel
         </Button>
       }
-      {user.role === 'STAFF' && <>
+      {user.role >= Role.STAFF && <>
         <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={

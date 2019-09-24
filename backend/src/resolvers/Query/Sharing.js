@@ -1,6 +1,6 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege, privilegeToInt } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 
 const cloneTokenProjectQuery = `
 query($id: ID!, $userId: ID!) {
@@ -34,6 +34,7 @@ const SharingQueries = {
     } else {
       throw Error('invalid share token')
     }
+    privilege = Privilege.fromString(privilege)
     if (privilege === Privilege.CLONE && id[0] === 'p') {
       const data = await context.prisma.$graphql(cloneTokenProjectQuery, {
         id,
@@ -47,7 +48,7 @@ const SharingQueries = {
         participants: data.projectToken.project.participants
       }
     }
-    if (privilegeToInt(privilege) < privilegeToInt(Privilege.READ)) {
+    if (privilege < Privilege.READ) {
       throw new ForbiddenError('Token does not allow reading')
     }
 

@@ -67,7 +67,7 @@ const WorkspaceMutations = {
       } : null,
       participants: {
         create: [{
-          privilege: 'OWNER',
+          privilege: Privilege.OWNER.toString(),
           user: {
             connect: { id: context.user.id }
           }
@@ -107,7 +107,7 @@ const WorkspaceMutations = {
       },
       participants: {
         create: [{
-          privilege: 'OWNER',
+          privilege: Privilege.OWNER.toString(),
           user: {
             connect: { id: context.user.id }
           }
@@ -172,7 +172,7 @@ const WorkspaceMutations = {
     const templateWorkspace = result.project.activeTemplate
     const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
 
-    const createdWorkspace = await context.prisma.createWorkspace({
+    return await context.prisma.createWorkspace({
       id: workspaceId,
       name,
       sourceProject: {
@@ -183,7 +183,7 @@ const WorkspaceMutations = {
       },
       participants: {
         create: [{
-          privilege: 'OWNER',
+          privilege: Privilege.OWNER.toString(),
           user: {
             connect: { id: context.user.id }
           }
@@ -234,8 +234,6 @@ const WorkspaceMutations = {
         }))
       }
     })
-
-    return createdWorkspace
   }
 }
 

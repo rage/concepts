@@ -1,3 +1,4 @@
+import { Privilege } from '../../lib/permissions'
 import client from '../apolloClient'
 import {
   WORKSPACES_FOR_USER,
@@ -19,14 +20,14 @@ const jsonPortUpdate = () =>
       if (data.workspacesForUser.map(p => p.workspace.id).includes(updatedWorkspace.id)) {
         data.workspacesForUser.map(p =>
           p.workspace.id !== updatedWorkspace.id ? p : {
-            privilege: p.privilege || 'OWNER',
+            privilege: p.privilege || Privilege.OWNER.toString(),
             updatedWorkspace,
             __typename: 'WorkspaceParticipant'
           }
         )
       } else {
         data.workspacesForUser.push({
-          privilege: 'OWNER',
+          privilege: Privilege.OWNER.toString(),
           workspace: updatedWorkspace,
           __typename: 'WorkspaceParticipant'
         })

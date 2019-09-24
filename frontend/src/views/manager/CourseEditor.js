@@ -7,6 +7,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon, Lock as LockIcon } from '@material-ui/icons'
 import Select from 'react-select/creatable'
 
+import { Role } from '../../lib/permissions'
 import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
@@ -150,7 +151,7 @@ const Concept = ({
                 color='primary'
               />
             ) : <>
-              {concept.frozen && user.role !== 'STAFF' && (
+              {concept.frozen && user.role < Role.STAFF && (
                 <IconButton disabled classes={{ root: classes.lockIcon }}>
                   <LockIcon />
                 </IconButton>
@@ -168,7 +169,7 @@ const Concept = ({
                   <DeleteIcon />
                 </IconButton>
               }
-              {(!concept.frozen || user.role === 'STAFF') &&
+              {(!concept.frozen || user.role >= Role.STAFF) &&
                 <IconButton
                   color={editing ? 'inherit' : undefined} aria-label='Edit'
                   onClick={() => setEditing(concept.id)}
@@ -197,7 +198,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
 
   const [sortMethod, setSortMethod] = useState('CREATION_ASC')
 
-  const isTemplate = Boolean(workspace.asTemplate && workspace.asTemplate.id)
+  const isTemplate = Boolean(workspace.asTemplate?.id)
 
   const startMerging = () => {
     setEditing(null)
@@ -266,7 +267,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         classes={{ title: classes.header, content: classes.headerContent }}
         title={`Concepts of ${course.name}`}
         action={
-          user.role === 'STAFF'
+          user.role >= Role.STAFF
             ? (merging ? [
               cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
               cardHeaderButton('Cancel', () => stopMerging())
@@ -428,15 +429,14 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
         options={Object.values(TaxonomyTags)}
         value={input.tags}
         ref={elem => {
-          if (action === 'Create' && elem && elem.select && elem.select.select) {
+          if (action === 'Create' && elem?.select?.select) {
             infoBoxSelectRef(elem.select.select.controlRef)
             selectRef.current = elem.select.select
-            window.selectRef = elem
           }
         }}
         onMenuOpen={() => {
           setTimeout(() => {
-            const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)
+            const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS')
             func(selectRef.current.menuListRef)
           }, 0)
         }}
@@ -458,7 +458,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           Cancel
         </Button>
       }
-      {user.role === 'STAFF' && <>
+      {user.role >= Role.STAFF && <>
         <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
           <FormControlLabel
             control={

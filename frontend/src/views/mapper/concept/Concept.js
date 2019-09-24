@@ -9,6 +9,7 @@ import {
 } from '@material-ui/icons'
 import Tooltip from '@material-ui/core/Tooltip'
 
+import { Role } from '../../../lib/permissions'
 import {
   DELETE_CONCEPT,
   CREATE_CONCEPT_LINK
@@ -77,7 +78,7 @@ const Concept = ({
   const [, messageDispatch] = useMessageStateValue()
   const [{ user, loggedIn }] = useLoginStateValue()
 
-  const openEditConceptDialog = useEditConceptDialog(user.role === 'STAFF')
+  const openEditConceptDialog = useEditConceptDialog(user.role >= Role.STAFF)
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
@@ -190,7 +191,7 @@ const Concept = ({
           <IconButton
             aria-haspopup='true'
             onClick={handleMenuOpen}
-            disabled={!loggedIn || (concept.frozen && user.role !== 'STAFF')}
+            disabled={!loggedIn || (concept.frozen && user.role < Role.STAFF)}
           >
             <MoreVertIcon />
           </IconButton>

@@ -41,19 +41,7 @@ const getUser = async (token, context, prisma) => {
     context.role = Role.GUEST
   } else {
     context.user = user
-    switch (user.role) {
-    case 'ADMIN':
-      context.role = Role.ADMIN
-      break
-    case 'STUDENT':
-      context.role = Role.STUDENT
-      break
-    case 'STAFF':
-      context.role = Role.STAFF
-      break
-    default:
-      context.role = Role.GUEST
-    }
+    context.role = Role.fromString(user.role, Role.GUEST)
   }
 
   // Update last activity of the user

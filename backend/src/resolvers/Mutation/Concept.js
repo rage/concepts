@@ -1,10 +1,10 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege, roleToInt } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
 const findPointGroups = async (workspaceId, courseId, context) => {
-  if (roleToInt(context.role) === roleToInt(Role.STUDENT)) {
+  if (context.role === Role.STUDENT) {
     const sourceCourseId = (await context.prisma.course({ id: courseId }).sourceCourse() || {}).id
     if (!sourceCourseId) {
       return null
