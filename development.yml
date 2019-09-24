@@ -15,6 +15,7 @@ services:
     volumes:
       - ./frontend:/concepts/frontend
       - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
+      - ./backend/src/permissions.js:/concepts/backend/src/permissions.js
     depends_on:
       - backend
     deploy:
@@ -34,7 +35,6 @@ services:
       PRISMA_MANAGEMENT_API_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
     volumes:
       - ./backend:/concepts/backend
-      - ./frontend/src/lib/permissions.js:/concepts/frontend/src/lib/permissions.js
     depends_on:
       - prisma
     deploy:
