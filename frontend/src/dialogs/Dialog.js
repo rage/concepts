@@ -90,6 +90,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
+  contextRef.current.inputState = inputState
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
@@ -125,6 +126,9 @@ const Dialog = ({ contextRef }) => {
     })
   }
   const onChange = evt => setInputState({ ...inputState, [evt.target.name]: evt.target.value })
+
+  const requiredMissing = Boolean(state.fields.find(field =>
+    !inputState[field.name] && field.required))
 
   const { CustomActions } = state
   return (
@@ -211,7 +215,8 @@ const Dialog = ({ contextRef }) => {
             CustomActions ?
               <CustomActions
                 ctx={contextRef.current} handleSubmit={handleSubmit}
-                submitDisabled={state.submitDisabled} {...state.customActionsProps}
+                submitDisabled={state.submitDisabled} requiredMissing={requiredMissing}
+                {...state.customActionsProps}
               />
               :
               <>
@@ -220,7 +225,7 @@ const Dialog = ({ contextRef }) => {
                 </Button>
                 <Button
                   type='submit'
-                  disabled={state.submitDisabled}
+                  disabled={state.submitDisabled || requiredMissing}
                   color='primary'
                 >
                   {state.actionText}

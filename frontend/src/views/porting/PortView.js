@@ -15,6 +15,7 @@ import {
 } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import cache from '../../apollo/update'
+import { getPortErrorMessage } from '../../lib/errorParse'
 
 const useStyles = makeStyles(theme => ({
   jsonField: {
@@ -178,23 +179,6 @@ const PortView = () => {
     }
   }
 
-  const getErrorMessage = error => {
-    switch (error.keyword) {
-    case 'required':
-      return error.message
-    case 'additionalProperties':
-      return `Unknown property '${error.params.additionalProperty}'`
-    case 'type':
-      return `${error.dataPath.replace('.', '')} ${error.message}`
-    case 'oneOf':
-      return 'must have either workspace or workspaceId'
-    case 'minLength':
-      return `${error.dataPath.replace('.', '')} must not be empty if set`
-    default:
-      return `Unknown error: ${error.message}`
-    }
-  }
-
   const openFile = (event) => {
     event.preventDefault()
     if (event.target.files.length === 0) return
@@ -257,7 +241,7 @@ const PortView = () => {
     if (!validateData(jsonData)) {
       messageDispatch({
         type: 'setError',
-        data: getErrorMessage(validateData.errors[0])
+        data: getPortErrorMessage(validateData.errors[0])
       })
       return
     }
