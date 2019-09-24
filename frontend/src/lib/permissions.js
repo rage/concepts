@@ -1,4 +1,37 @@
-class Role {
+class Permission {
+  constructor(name, level) {
+    this.name = name
+    this.level = level
+  }
+
+  toString() {
+    return this.name
+  }
+
+  toLowerCase() {
+    return this.name.toLowerCase()
+  }
+
+  toUpperCase() {
+    return this.name.toUpperCase()
+  }
+
+  valueOf() {
+    return this.level
+  }
+
+  [Symbol.toPrimitive](hint) {
+    switch (hint) {
+    case 'number':
+      return this.level
+    case 'string':
+    default:
+      return this.name
+    }
+  }
+}
+
+class Role extends Permission {
   static nameMap = new Map()
   static levelMap = new Map()
 
@@ -9,14 +42,10 @@ class Role {
   static ADMIN = new Role('ADMIN', 4)
 
   constructor(name, level) {
-    this.name = name
-    this.level = level
+    super(name, level)
     Role.nameMap.set(this.name, this)
     Role.levelMap.set(this.level, this)
   }
-
-  toString() { return this.name }
-  valueOf() { return this.level }
 
   static fromInt(int, defaultValue = Role.VISITOR) {
     return (int && Role.levelMap.get(int)) || defaultValue
@@ -26,16 +55,18 @@ class Role {
     return (str && Role.nameMap.get(str.toUpperCase())) || defaultValue
   }
 
-  static parse(val, defaultValue = Privilege.NONE) {
-    if (typeof val === 'number') {
-      return Privilege.fromInt(val, defaultValue)
+  static parse(val, defaultValue = Role.VISITOR) {
+    if (val instanceof Role) {
+      return val
+    } else if (typeof val === 'number') {
+      return Role.fromInt(val, defaultValue)
     } else {
-      return Privilege.fromString(val, defaultValue)
+      return Role.fromString(val, defaultValue)
     }
   }
 }
 
-class Privilege {
+class Privilege extends Permission {
   static nameMap = new Map()
   static charMap = new Map()
   static levelMap = new Map()
@@ -47,16 +78,12 @@ class Privilege {
   static OWNER = new Privilege('OWNER', 4)
 
   constructor(name, level) {
-    this.name = name
+    super(name, level)
     this.char = name.substr(0, 1).toLowerCase()
-    this.level = level
     Privilege.nameMap.set(this.name, this)
     Privilege.charMap.set(this.char, this)
     Privilege.levelMap.set(this.level, this)
   }
-
-  toString() { return this.name }
-  valueOf() { return this.level }
 
   static fromInt(int, defaultValue = Privilege.NONE) {
     return (int && Privilege.levelMap.get(int)) || defaultValue
@@ -75,7 +102,9 @@ class Privilege {
   }
 
   static parse(val, defaultValue = Privilege.NONE) {
-    if (typeof val === 'number') {
+    if (val instanceof Privilege) {
+      return val
+    } else if (typeof val === 'number') {
       return Privilege.fromInt(val, defaultValue)
     } else if (val.length === 1) {
       return Privilege.fromChar(val, defaultValue)
