@@ -85,7 +85,7 @@ const AuthenticationMutations = {
     if (!user) {
       const userData = {
         tmcId,
-        role: (userDetails && userDetails.administrator) ? Role.ADMIN : Role.STUDENT
+        role: ((userDetails && userDetails.administrator) ? Role.ADMIN : Role.STUDENT).toString()
       }
       const createdUser = await context.prisma.createUser(userData)
       const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
