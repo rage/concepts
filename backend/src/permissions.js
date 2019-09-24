@@ -48,11 +48,11 @@ export class Role extends Permission {
   }
 
   static fromInt(int, defaultValue = Role.VISITOR) {
-    return (int && Role.levelMap.get(int)) || defaultValue
+    return Role.levelMap.get(int) || defaultValue
   }
 
   static fromString(str, defaultValue = Role.VISITOR) {
-    return (str && Role.nameMap.get(str.toUpperCase())) || defaultValue
+    return Role.nameMap.get(str?.toUpperCase()) || defaultValue
   }
 
   static parse(val, defaultValue = Role.VISITOR) {
@@ -86,19 +86,19 @@ export class Privilege extends Permission {
   }
 
   static fromInt(int, defaultValue = Privilege.NONE) {
-    return (int && Privilege.levelMap.get(int)) || defaultValue
+    return Privilege.levelMap.get(int) || defaultValue
   }
 
   static fromChar(char, defaultValue = Privilege.NONE) {
-    return (char && Privilege.charMap.get(char.toLowerCase())) || defaultValue
+    return Privilege.charMap.get(char?.toLowerCase()) || defaultValue
   }
 
   static fromToken(token, defaultValue = Privilege.NONE) {
-    return (token && Privilege.fromChar(token[1], defaultValue)) || defaultValue
+    return Privilege.fromChar(token?.[1], defaultValue)
   }
 
   static fromString(str, defaultValue = Privilege.NONE) {
-    return (str && Privilege.nameMap.get(str.toUpperCase())) || defaultValue
+    return Privilege.nameMap.get(str?.toUpperCase()) || defaultValue
   }
 
   static parse(val, defaultValue = Privilege.NONE) {
@@ -114,4 +114,4 @@ export class Privilege extends Permission {
   }
 }
 
-export const readPrivilege = ws => Privilege.fromString(ws && ws.participants[0] && ws.participants[0].privilege)
+export const readPrivilege = ws => Privilege.fromString(ws?.participants?.[0]?.privilege)
