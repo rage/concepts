@@ -111,7 +111,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
         disabled={loading}
       >
         Import
-        <input type='file' onChange={openFile} allow='.json,application/json' hidden />
+        <input type='file' onChange={openFile} accept='.json,application/json' hidden />
       </Button>
       <Typography
         variant='subtitle2'
