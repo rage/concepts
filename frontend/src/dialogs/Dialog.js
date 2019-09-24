@@ -88,6 +88,8 @@ const Dialog = ({ contextRef }) => {
   const setCheckboxValue = key =>
     key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
+  const requiredMissing = state.fields.find(field => !inputState[field.name] && field.required)
+
   contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
   contextRef.current.inputState = inputState
@@ -221,7 +223,7 @@ const Dialog = ({ contextRef }) => {
                 </Button>
                 <Button
                   type='submit'
-                  disabled={state.submitDisabled}
+                  disabled={state.submitDisabled || requiredMissing}
                   color='primary'
                 >
                   {state.actionText}
