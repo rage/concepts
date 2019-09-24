@@ -1,6 +1,7 @@
 FROM node:12-alpine AS builder
 
-COPY . /concepts
+COPY /concepts/backend /concepts/backend
+COPY /concepts/frontend /concepts/frontend
 RUN cd /concepts/frontend && yarn --prod && yarn build
 RUN cd /concepts/backend && yarn && yarn build
 
