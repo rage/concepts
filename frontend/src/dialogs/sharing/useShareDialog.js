@@ -82,7 +82,7 @@ const useShareDialog = (type, title, text) => {
     await createShareLink({
       variables: {
         [`${type}Id`]: shareState.id,
-        privilege: shareState.privilege
+        privilege: shareState.privilege.toString()
       }
     })
   }
