@@ -10,7 +10,7 @@ const getTokenFrom = request => {
 }
 
 const convertPointGroup = ({ name, completions: [completion], maxPoints, pointsPerConcept }) => {
-  const nPoints = Math.min(maxPoints, ((completion || {}).conceptAmount || 0) * pointsPerConcept)
+  const nPoints = Math.min(maxPoints, (completion?.conceptAmount || 0) * pointsPerConcept)
 
   return {
     group: name,
@@ -50,9 +50,7 @@ const pointsAPI = async (req, res) => {
       }
     }
   `, { pid, cid, tmcId })
-  return res.json(
-    (data.project && data.project.activeTemplate && data.project.activeTemplate.pointGroups || [])
-      .map(convertPointGroup))
+  return res.json(data.project?.activeTemplate?.pointGroups?.map(convertPointGroup) || [])
 }
 
 module.exports = pointsAPI

@@ -4,21 +4,10 @@ const { makeTypeResolvers } = require('./typeutil')
 const checkID = (obj, info, suffix = '') => {
   if (obj.__typename) {
     return obj.__typename
-  }
-  if (info.variableValues.id) {
-    if (info.variableValues.id[0] === 'w') {
-      return 'Workspace' + suffix
-    } else if (info.variableValues.id[0] === 'p') {
-      return 'Project' + suffix
-    }
-  }
-
-  if (info.variableValues.token) {
-    if (info.variableValues.token[0] === 'w') {
-      return 'Workspace' + suffix
-    } else if (info.variableValues.token[0] === 'p') {
-      return 'Project' + suffix
-    }
+  } else if (info.variableValues.id?.[0] === 'w' || info.variableValues.token?.[0] === 'w') {
+    return 'Workspace' + suffix
+  } else if (info.variableValues.id?.[0] === 'p' || info.variableValues.token?.[0] === 'p') {
+    return 'Project' + suffix
   }
   return null
 }

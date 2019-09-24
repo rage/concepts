@@ -102,7 +102,7 @@ const PortMutations = {
 
     await Promise.all(courses.map(async (course, idx) => {
       // Link course prerequisites
-      await Promise.all((course.prerequisites || []).map(async prerequisiteCourse =>
+      await Promise.all(course?.prerequisites?.map(async prerequisiteCourse =>
         context.prisma.createCourseLink({
           to: { connect: { id: courseData[idx].id } },
           from: { connect: { id: courseDictionary[prerequisiteCourse.name].id } },
@@ -110,7 +110,7 @@ const PortMutations = {
           createdBy: { connect: { id: context.user.id } },
           official: canSetOfficial && Boolean(json.projectId || prerequisiteCourse.official)
         })
-      ))
+      ) || [])
       // Link concept prerequisite
       for (const concept of course.concepts) {
         for (const prerequisiteConcept of concept.prerequisites || []) {

@@ -35,17 +35,16 @@ const findPointGroups = async (workspaceId, courseId, context) => {
         }
       }
     `, { workspaceId, userId: context.user.id, courseId: sourceCourseId })
-    if (!pgData || !pgData.workspace || !pgData.workspace.sourceTemplate
-      || !pgData.workspace.sourceTemplate.pointGroups || !pgData.workspace.sourceTemplate.mainCourse
-    ) {
+    const sourceTemplate = pgData?.workspace?.sourceTemplate
+    if (!sourceTemplate?.pointGroups || !sourceTemplate?.mainCourse) {
       return null
     }
-    const mainCourseId = pgData.workspace.sourceTemplate.mainCourse.id
+    const mainCourseId = sourceTemplate.mainCourse.id
     if (sourceCourseId !== mainCourseId) {
       return null
     }
     const currentTime = new Date().getTime()
-    return pgData.workspace.sourceTemplate.pointGroups.filter(
+    return sourceTemplate.pointGroups.filter(
       group => group.course.id === mainCourseId
         && new Date(group.startDate).getTime() <= currentTime
         && new Date(group.endDate).getTime() >= currentTime)
