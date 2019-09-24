@@ -114,6 +114,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
         <input type='file' onChange={openFile} allow='text/*' hidden />
       </Button>
       <Typography variant='subtitle1'>{fileName}</Typography>
+      <div style={{ flex: 1 }} />
       <Button onClick={ctx.closeDialog} disabled={loading} color='primary'>
         Cancel
       </Button>
