@@ -3,6 +3,7 @@ import { useMutation } from 'react-apollo-hooks'
 import { CREATE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
+import WorkspaceCreationActions from '../workspace/WorkspaceCreationActions'
 
 const useCreateTemplateDialog = projectId => {
   const { openDialog } = useDialog()
@@ -26,7 +27,9 @@ const useCreateTemplateDialog = projectId => {
       `
 Templates are workspaces, which will be cloned by users for their own mapping. 
 User workspaces can later be merged.`
-    ]
+    ],
+    CustomActions: WorkspaceCreationActions,
+    customActionsProps: { projectId }
   })
 }
 

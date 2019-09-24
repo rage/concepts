@@ -1,7 +1,8 @@
 import client from '../apolloClient'
 import {
   WORKSPACES_FOR_USER,
-  COURSES_BY_WORKSPACE
+  COURSES_BY_WORKSPACE,
+  PROJECT_BY_ID
 } from '../../graphql/Query'
 
 const includedIn = (set, object) =>
@@ -58,6 +59,32 @@ const jsonPortUpdate = () =>
     } catch (e) {}
   }
 
+const jsonTemplatePortUpdate = (projectId) =>
+  (store, response) => {
+    try {
+      const updatedWorkspace = response.data.importData
+      if (updatedWorkspace.asTemplate) {
+        const project = store.readQuery({
+          query: PROJECT_BY_ID,
+          variables: {
+            id: projectId
+          }
+        })
+        if (!project.projectById.templates.includes(updatedWorkspace.id)) {
+          project.projectById.templates.push(updatedWorkspace)
+        }
+        client.writeQuery({
+          query: PROJECT_BY_ID,
+          variables: {
+            id: projectId
+          },
+          data: project
+        })
+      }
+    } catch (e) {}
+  }
+
 export {
-  jsonPortUpdate
+  jsonPortUpdate,
+  jsonTemplatePortUpdate
 }

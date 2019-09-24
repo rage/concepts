@@ -5,27 +5,28 @@ import { useMutation } from 'react-apollo-hooks'
 
 import cache from '../../apollo/update'
 import schema from '../../static/port.schema'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue } from '../../store'
 import { IMPORT_DATA } from '../../graphql/Mutation'
 import { getPortErrorMessage } from '../../lib/errorParse'
 
 const ajv = Ajv()
 const validateData = ajv.compile(schema)
 
-const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled }) => {
+const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId }) => {
   const [, messageDispatch] = useMessageStateValue()
   const [data, setData] = useState(null)
   const [fileName, setFileName] = useState('')
   const [loading, setLoading] = useState(false)
-  const [{ user }] = useLoginStateValue()
 
   const dataPortingMutation = useMutation(IMPORT_DATA, {
-    update: cache.jsonPortUpdate(user.id)
+    update: projectId
+      ? cache.jsonTemplatePortUpdate(projectId)
+      : cache.jsonPortUpdate()
   })
 
   const handlePort = event => {
     event.preventDefault()
-    if (data !== '') {
+    if (data) {
       sendData(data)
     } else {
       handleSubmit(true)
@@ -35,9 +36,13 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled }) => {
   const addStateDataToJSON = (jsonData) => {
     if (ctx.inputState.name !== '') {
       jsonData.workspace = ctx.inputState.name
-      delete jsonData.workspaceId
+    }
+    if (projectId) {
+      jsonData.projectId = projectId
+    } else {
       delete jsonData.projectId
     }
+    delete jsonData.workspaceId
   }
 
   const sendData = async (data) => {
@@ -105,7 +110,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled }) => {
         label='Import'
         disabled={loading}
       >
-              Import
+        Import
         <input type='file' onChange={openFile} allow='text/*' hidden />
       </Button>
       <Typography variant='subtitle1'>{fileName}</Typography>

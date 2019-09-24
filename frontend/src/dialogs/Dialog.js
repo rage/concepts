@@ -88,8 +88,6 @@ const Dialog = ({ contextRef }) => {
   const setCheckboxValue = key =>
     key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
-  const requiredMissing = state.fields.find(field => !inputState[field.name] && field.required)
-
   contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
   contextRef.current.inputState = inputState
@@ -128,6 +126,9 @@ const Dialog = ({ contextRef }) => {
     })
   }
   const onChange = evt => setInputState({ ...inputState, [evt.target.name]: evt.target.value })
+
+  const requiredMissing = Boolean(state.fields.find(field =>
+    !inputState[field.name] && field.required))
 
   const { CustomActions } = state
   return (
@@ -214,7 +215,8 @@ const Dialog = ({ contextRef }) => {
             CustomActions ?
               <CustomActions
                 ctx={contextRef.current} handleSubmit={handleSubmit}
-                submitDisabled={state.submitDisabled} {...state.customActionsProps}
+                submitDisabled={state.submitDisabled} requiredMissing={requiredMissing}
+                {...state.customActionsProps}
               />
               :
               <>
