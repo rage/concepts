@@ -251,8 +251,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     return <LoadingBar id='heatmap-view' />
   }
 
-  const maxGradVal = workspaceCourseQuery.data.workspaceById ?
-    workspaceCourseQuery.data.workspaceById.courses
+  const maxGradVal = workspaceCourseQuery.data.workspaceById?.courses
       .map(fromCourse => workspaceCourseQuery.data.workspaceById.courses
         .map(toCourse => toCourse.concepts
           .map(concept => concept.linksToConcept
@@ -260,7 +259,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
           ).reduce(sum, 0)
         ).reduce(maxVal, 0)
       ).reduce(maxVal, 0)
-    : null
+    || null
 
   return (
     <div className={classes.paperWrapperHorizontal}><div className={classes.paperWrapperVertical}>
