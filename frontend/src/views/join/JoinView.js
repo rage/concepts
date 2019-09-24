@@ -86,6 +86,10 @@ const JoinView = ({ token }) => {
     )
   }
 
+  if (privilege === Privilege.CLONE) {
+    return <CloneView token={token} peek={peek} />
+  }
+
   const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
   if (participant) {
     const path = type === 'workspace'
@@ -94,8 +98,6 @@ const JoinView = ({ token }) => {
         ? `/projects/${peek.data.peekToken.id}/clone`
         : `/projects/${peek.data.peekToken.id}/overview`)
     return <Redirect to={path} />
-  } else if (privilege === Privilege.CLONE) {
-    return <CloneView token={token} peek={peek} />
   }
 
   return dialog(<>

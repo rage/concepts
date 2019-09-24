@@ -56,11 +56,9 @@ const CloneView = ({ token, peek, projectId }) => {
   })
 
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: Boolean(token) || !(peekTemplate.data && peekTemplate.data.limitedProjectById &&
-      peekTemplate.data.limitedProjectById.activeTemplateId),
+    skip: Boolean(token) || !(peekTemplate.data?.limitedProjectById?.activeTemplateId),
     variables: {
-      sourceId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
-        peekTemplate.data.limitedProjectById.activeTemplateId : undefined
+      sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
     }
   })
 
@@ -70,8 +68,7 @@ const CloneView = ({ token, peek, projectId }) => {
     refetchQueries: !token ? [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE,
       variables: {
-        sourceId: (peekTemplate.data && peekTemplate.data.limitedProjectById) ?
-          peekTemplate.data.limitedProjectById.activeTemplateId : undefined
+        sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
       }
     }] : []
   })
@@ -81,6 +78,7 @@ const CloneView = ({ token, peek, projectId }) => {
   }
 
   const handleCreate = async () => {
+    setLoading(true)
     if (peek) {
       try {
         const res = await joinShareLink({
@@ -99,7 +97,6 @@ const CloneView = ({ token, peek, projectId }) => {
       alert('Workspaces need a name!')
       return
     }
-    setLoading(true)
     try {
       const res = await cloneTemplate({
         variables: {
@@ -126,12 +123,8 @@ const CloneView = ({ token, peek, projectId }) => {
   const peekData = peekTemplate.data ? peekTemplate.data.limitedProjectById
     : peek.data.peekShareLink
 
-  const inputDisabled = Boolean((peekData && !peekData.activeTemplateId)
-    || loading
-    || (workspace.data
-      && workspace.data.workspaceBySourceTemplate
-      && workspace.data.workspaceBySourceTemplate.id)
-  )
+  const inputDisabled = Boolean(peekData && !peekData.activeTemplateId)
+    || loading || Boolean(workspace.data?.workspaceBySourceTemplate?.id)
 
   return (
     <Container component='main' maxWidth='xs'>
