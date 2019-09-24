@@ -7,8 +7,7 @@ const updateActiveTemplate = (projectId) =>
       query: PROJECT_BY_ID,
       variables: { id: projectId }
     })
-    const newActiveTemplate = response.data.setActiveTemplate.activeTemplate
-    dataInStore.projectById.activeTemplate = newActiveTemplate
+    dataInStore.projectById.activeTemplate = response.data.setActiveTemplate.activeTemplate
     client.writeQuery({
       query: PROJECT_BY_ID,
       variables: { id: projectId },

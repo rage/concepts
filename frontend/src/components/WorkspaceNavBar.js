@@ -130,73 +130,71 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
-  const isOwner = Privilege.fromString(((workspaceQuery.data.workspaceById
-    && workspaceQuery.data.workspaceById.participants.find(pcp => pcp.user.id === user.id)) || {}
-  ).privilege) === Privilege.OWNER
+  const isOwner = Privilege.fromString(
+    workspaceQuery.data.workspaceById?.participants.find(pcp => pcp.user.id === user.id)?.privilege
+  ) === Privilege.OWNER
 
   return (
-    <>
-      <Paper className={classes.root} square>
-        <div className={classes.leftPlaceholder} />
-        <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
-          <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
-          <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
-          <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
-          <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
-          {isOwner &&
-            <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
-          }
-        </BottomNavigation>
-        <div>
-          <IconButton
-            className={classes.menuButton} onClick={infoBox.open}
-          >
-            <HelpIcon />
-          </IconButton>
-          <IconButton
-            onClick={evt => setMenuAnchor(evt.currentTarget)}
-            className={classes.menuButton}
-          >
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right'
-            }}>
-            <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
-              <ListItemIcon>
-                <CloudDownloadIcon />
-              </ListItemIcon>
-              Export
-            </MenuItem>
-            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-              <ListItemIcon>
-                <ShareIcon />
-              </ListItemIcon>
-              Share link
-            </MenuItem>
-            <MenuItem aria-label='Delete' onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteIcon />
-              </ListItemIcon>
-              Delete
-            </MenuItem>
-            <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-              <ListItemIcon>
-                <EditIcon />
-              </ListItemIcon>
-              Edit
-            </MenuItem>
-          </Menu>
-        </div>
-      </Paper>
-    </>
+    <Paper className={classes.root} square>
+      <div className={classes.leftPlaceholder} />
+      <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
+        <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
+        <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
+        <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
+        <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
+        {isOwner &&
+          <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
+        }
+      </BottomNavigation>
+      <div>
+        <IconButton
+          className={classes.menuButton} onClick={infoBox.open}
+        >
+          <HelpIcon />
+        </IconButton>
+        <IconButton
+          onClick={evt => setMenuAnchor(evt.currentTarget)}
+          className={classes.menuButton}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}>
+          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+            <ListItemIcon>
+              <CloudDownloadIcon />
+            </ListItemIcon>
+            Export
+          </MenuItem>
+          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+            <ListItemIcon>
+              <ShareIcon />
+            </ListItemIcon>
+            Share link
+          </MenuItem>
+          <MenuItem aria-label='Delete' onClick={handleDelete}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            Delete
+          </MenuItem>
+          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            Edit
+          </MenuItem>
+        </Menu>
+      </div>
+    </Paper>
   )
 }
 

@@ -180,8 +180,7 @@ This will change which template is cloned by users.`)
       <List dense={false} className={classes.list}>{
         workspaces.map((workspace, index) => (
           <ListItem
-            className={activeTemplate && workspace.id === activeTemplate.id
-              ? classes.templateActive : ''}
+            className={workspace.id === activeTemplate?.id ? classes.templateActive : ''}
             button
             key={workspace.id}
             onClick={() => handleNavigateManager(workspace.id)}

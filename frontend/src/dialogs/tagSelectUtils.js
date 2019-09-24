@@ -12,14 +12,14 @@ export const backendToSelect = tags => tags ? tags.map(tag =>
     }
 ) : []
 
-export const selectToBackend = tags => tags ? tags.map(tag => ({
+export const selectToBackend = tags => tags?.map(tag => ({
   type: tag.type,
   name: tag.value
-})) : []
+})) || []
 
 export const tagSelectStyles = {
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    if (!data || !data.color) {
+    if (!data?.color) {
       return styles
     }
     const color = chroma(data.color)
@@ -48,7 +48,7 @@ export const tagSelectStyles = {
     }
   },
   multiValue: (styles, { data }) => {
-    if (!data || !data.color) {
+    if (!data?.color) {
       return styles
     }
     const color = chroma(data.color)
