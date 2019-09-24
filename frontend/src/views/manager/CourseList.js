@@ -70,7 +70,7 @@ const CourseList = ({
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
 
-  const isTemplate = Boolean(workspace.asTemplate && workspace.asTemplate.id)
+  const isTemplate = Boolean(workspace.asTemplate?.id)
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -219,8 +219,7 @@ const CreateCourse = ({
         onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
         value={input.tags}
-        ref={elem => action === 'Create' && elem && elem.select && elem.select.select
-          && selectRef(elem.select.select.controlRef)}
+        ref={elem => action === 'Create' && selectRef(elem?.select?.select?.controlRef)}
         isMulti
         menuPlacement='auto'
         placeholder='Themes...'
