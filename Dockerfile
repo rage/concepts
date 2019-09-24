@@ -8,6 +8,8 @@ FROM node:12-alpine
 
 COPY --from=builder /concepts/frontend/build /concepts/frontend
 COPY --from=builder /concepts/backend/dist /concepts/backend
+COPY /concepts/backend/package.json /concepts/backend/package.json
+COPY /concepts/backend/prisma.yml /concepts/backend/prisma.yml
 
 WORKDIR /concepts/backend
 
