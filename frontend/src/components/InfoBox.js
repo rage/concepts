@@ -10,7 +10,7 @@ import {
 
 import { Role } from '../lib/permissions'
 import { useFocusOverlay } from './FocusOverlay'
-import userGuideUnfiltered from '../static/userGuide'
+import userGuide from '../static/userGuide'
 import { useLoginStateValue } from '../store'
 
 const useStyles = makeStyles(theme => ({
@@ -105,10 +105,8 @@ const InfoBoxProvider = ({ children }) => {
   </>
 }
 
-for (const view of Object.values(userGuideUnfiltered.views)) {
-  let index = 0
+for (const view of Object.values(userGuide.views)) {
   for (const step of view) {
-    step.index = index++
     step.minimumRole = Role.fromString(step.minimumRole)
   }
 }
@@ -116,22 +114,28 @@ for (const view of Object.values(userGuideUnfiltered.views)) {
 const mapObject = (obj, func) => Object.fromEntries(Object.entries(obj)
   .map(([k, v], ...args) => [k, func(v, ...args)]))
 
-const mapViews = views => mapObject(views, view =>
-  Object.fromEntries(view.map(item => [item.id, item])))
+userGuide.originalViews = userGuide.views
+userGuide.viewMaps = mapObject(userGuide.views,
+  view => Object.fromEntries(view.map(item => [item.id, item])))
 
-const userGuideForRole = new Map()
+let userGuideFilter = undefined
 
-const getUserGuide = role => {
-  if (!userGuideForRole.has(role)) {
-    const guide = {
-      defaults: userGuideUnfiltered.defaults,
-      views: mapObject(userGuideUnfiltered.views,
-        view => view.filter(step => step.minimumRole <= role))
-    }
-    guide.viewMaps = mapViews(guide.views)
-    userGuideForRole.set(role, guide)
+const filterUserGuide = role => {
+  if (userGuideFilter === role) {
+    return
   }
-  return userGuideForRole.get(role)
+
+  userGuide.views = mapObject(userGuide.originalViews,
+    view => view.filter(step => step.minimumRole <= role))
+
+  for (const view of Object.values(userGuide.views)) {
+    let index = 0
+    for (const step of view) {
+      step.index = index++
+    }
+  }
+
+  userGuideFilter = role
 }
 
 const InfoBox = ({ contextRef }) => {
@@ -144,7 +148,7 @@ const InfoBox = ({ contextRef }) => {
   const classes = useStyles()
   const overlay = useFocusOverlay()
   const [{ user }] = useLoginStateValue()
-  const userGuide = getUserGuide(user?.role || Role.VISITOR)
+  filterUserGuide(user?.role || Role.VISITOR)
   const currentUserGuide = currentView ? userGuide.views[currentView] : null
 
   const [redrawIndex, setRedrawIndex] = useState(0)
