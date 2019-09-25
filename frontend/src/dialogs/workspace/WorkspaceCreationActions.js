@@ -7,7 +7,7 @@ import cache from '../../apollo/update'
 import schema from '../../static/port.schema'
 import { useMessageStateValue } from '../../store'
 import { IMPORT_DATA } from '../../graphql/Mutation'
-import { getPortErrorMessage } from '../../lib/errorParse'
+import { getImportErrorMessage } from '../../lib/errorParse'
 
 const ajv = Ajv()
 const validateData = ajv.compile(schema)
@@ -61,7 +61,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
     if (!validateData(jsonData)) {
       messageDispatch({
         type: 'setError',
-        data: getPortErrorMessage(validateData.errors[0])
+        data: getImportErrorMessage(validateData.errors[0])
       })
       return
     }

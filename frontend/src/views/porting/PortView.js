@@ -15,7 +15,7 @@ import {
 } from '../../graphql/Query'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import cache from '../../apollo/update'
-import { getPortErrorMessage } from '../../lib/errorParse'
+import { getImportErrorMessage } from '../../lib/errorParse'
 
 const useStyles = makeStyles(theme => ({
   jsonField: {
@@ -241,7 +241,7 @@ const PortView = () => {
     if (!validateData(jsonData)) {
       messageDispatch({
         type: 'setError',
-        data: getPortErrorMessage(validateData.errors[0])
+        data: getImportErrorMessage(validateData.errors[0])
       })
       return
     }
