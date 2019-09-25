@@ -108,7 +108,7 @@ const FocusOverlay = ({ contextRef }) => {
   const overlay = useRef()
 
   useEffect(() => {
-    const update = contextRef.current.update
+    const update = () => contextRef.current.update()
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)

@@ -105,7 +105,8 @@ const Concept = ({
   editing, setEditing,
   updateConcept, deleteConcept,
   merging, toggleMergingConcept,
-  divider = true
+  divider = true,
+  checkboxRef
 }) => {
   const classes = useStyles()
   return (
@@ -148,6 +149,7 @@ const Concept = ({
               <Checkbox
                 checked={merging.has(concept.id)}
                 onClick={() => toggleMergingConcept(concept.id)}
+                ref={checkboxRef}
                 color='primary'
               />
             ) : <>
@@ -230,10 +232,11 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
     closeMergeDialog()
   }, [course])
 
-  const cardHeaderButton = (text, onClick, disabled = false) => (
+  const cardHeaderButton = (text, ref, onClick, disabled = false) => (
     <Button
       key={text}
       style={{ margin: '6px' }}
+      ref={ref}
       variant='outlined' color='primary'
       onClick={!disabled ? onClick : undefined}
       disabled={disabled}
@@ -269,10 +272,13 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         action={
           user.role >= Role.STAFF
             ? (merging ? [
-              cardHeaderButton('Merge…', () => openMergeDialog(), merging.size < 2),
-              cardHeaderButton('Cancel', () => stopMerging())
+              cardHeaderButton('Merge…', infoBox.ref('manager', 'FINISH_MERGE'),
+                () => openMergeDialog(), merging.size < 2),
+              cardHeaderButton('Cancel', infoBox.secondaryRef('manager', 'FINISH_MERGE'),
+                () => stopMerging())
             ] : [
-              cardHeaderButton('Start merge', () => startMerging(), course.concepts.length < 2)
+              cardHeaderButton('Start merge', infoBox.ref('manager', 'START_MERGE'),
+                () => startMerging(), course.concepts.length < 2)
             ])
             : null
         }
@@ -283,6 +289,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
           variant='outlined'
           margin='dense'
           label='Filter concepts'
+          ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
@@ -292,6 +299,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
           variant='outlined'
           margin='dense'
           label='Sort by'
+          ref={infoBox.ref('manager', 'SORT_CONCEPTS')}
           value={sortMethod}
           onChange={evt => {
             setSortMethod(evt.target.value)
@@ -308,10 +316,10 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
-        sortMethod !== 'GROUP_BY' ? sort(course.concepts).map(concept => includeConcept(concept) &&
+        sortMethod !== 'GROUP_BY' ? sort(course.concepts).map((c, i) => includeConcept(c) &&
           <Concept
-            key={concept.id}
-            concept={concept}
+            key={c.id}
+            concept={c}
             user={user}
             editing={editing}
             deleteConcept={deleteConcept}
@@ -319,9 +327,12 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
             merging={merging}
             setEditing={setEditing}
             toggleMergingConcept={toggleMergingConcept}
+            checkboxRef={i === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+              : i === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+                : undefined}
           />
         ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
-          group.map(concept => includeConcept(concept) &&
+          group.map((concept, conceptIndex) => includeConcept(concept) &&
             <Concept
               key={concept.id}
               concept={concept}
@@ -333,6 +344,9 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
               setEditing={setEditing}
               toggleMergingConcept={toggleMergingConcept}
               divider={false}
+              checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+                : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+                  : undefined}
             />
           ).concat(index < array.length - 1 ? [<hr key={index} />] : [])
         )

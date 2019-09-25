@@ -113,13 +113,13 @@
       "id": "CREATE_CONCEPT_FROZEN",
       "title": "New concept",
       "description": "\"Frozen\" means the concept can't be modified or deleted. Only staff members can un-freeze concepts.",
-      "placement": "right-end",
+      "placement": "left-end",
       "minimumRole": "STAFF"
     }, {
       "id": "CREATE_CONCEPT_OFFICIAL",
       "title": "New concept",
       "description": "\"Official\" is metadata indicating the concept came from the template. It is automatically set to true for all concepts in a template when a student clones the template.",
-      "placement": "right-end",
+      "placement": "left-end",
       "minimumRole": "STAFF"
     }, {
       "id": "CREATE_CONCEPT_SUBMIT",
@@ -127,6 +127,33 @@
       "description": "Finally, click \"CREATE\" to create the concept.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
+    }, {
+      "id": "FILTER_CONCEPTS",
+      "title": "Filter concepts",
+      "description": "The filter bar can be used to search for a concept by its name.",
+      "placement": "bottom"
+    }, {
+      "id": "SORT_CONCEPTS",
+      "title": "Sort concepts",
+      "description": "You can change how concepts are sorted here.",
+      "placement": "bottom-end"
+    }, {
+      "id": "START_MERGE",
+      "title": "Merge concepts",
+      "description": "After merging students' workspaces, you can merge two or more concepts. This is useful if the student workspaces had the same concept with slightly different wording.",
+      "placement": "bottom-end",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "SELECT_MERGE_CONCEPTS",
+      "title": "Select concepts",
+      "description": "Select the concepts to merge by clicking the checkboxes that appear.",
+      "placement": "left",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "FINISH_MERGE",
+      "title": "Finish merging",
+      "description": "To finish the merge, click the \"Merge…\" button. Alternatively, click cancel to stop without merging.",
+      "placement": "bottom-end"
     }],
 
     "graph": [{
