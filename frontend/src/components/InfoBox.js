@@ -8,8 +8,10 @@ import {
   Close as CloseIcon, OndemandVideo as VideoIcon
 } from '@material-ui/icons'
 
+import { Role } from '../lib/permissions'
 import { useFocusOverlay } from './FocusOverlay'
-import userGuide from '../static/userGuide'
+import userGuideUnfiltered from '../static/userGuide'
+import { useLoginStateValue } from '../store'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -103,16 +105,34 @@ const InfoBoxProvider = ({ children }) => {
   </>
 }
 
-Object.values(userGuide.views)
-  .forEach(view => view
-    .forEach((step, index) =>
-      step.index = index))
+for (const view of Object.values(userGuideUnfiltered.views)) {
+  let index = 0
+  for (const step of view) {
+    step.index = index++
+    step.minimumRole = Role.fromString(step.minimumRole)
+  }
+}
 
-userGuide.viewMaps = Object.fromEntries(
-  Object.entries(userGuide.views).map(([view, parts]) => [
-    view, Object.fromEntries(parts.map(item => [item.id, item]))
-  ])
-)
+const mapObject = (obj, func) => Object.fromEntries(Object.entries(obj)
+  .map(([k, v], ...args) => [k, func(v, ...args)]))
+
+const mapViews = views => mapObject(views, view =>
+  Object.fromEntries(view.map(item => [item.id, item])))
+
+const userGuideForRole = new Map()
+
+const getUserGuide = role => {
+  if (!userGuideForRole.has(role)) {
+    const guide = {
+      defaults: userGuideUnfiltered.defaults,
+      views: mapObject(userGuideUnfiltered.views,
+        view => view.filter(step => step.minimumRole <= role))
+    }
+    guide.viewMaps = mapViews(guide.views)
+    userGuideForRole.set(role, guide)
+  }
+  return userGuideForRole.get(role)
+}
 
 const InfoBox = ({ contextRef }) => {
   const [currentView, setCurrentView] = useState(null)
@@ -123,6 +143,9 @@ const InfoBox = ({ contextRef }) => {
   })
   const classes = useStyles()
   const overlay = useFocusOverlay()
+  const [{ user }] = useLoginStateValue()
+  const userGuide = getUserGuide(user?.role || Role.VISITOR)
+  const currentUserGuide = currentView ? userGuide.views[currentView] : null
 
   const [redrawIndex, setRedrawIndex] = useState(0)
   const redraw = () => setRedrawIndex(redrawIndex + 1)
@@ -134,14 +157,10 @@ const InfoBox = ({ contextRef }) => {
 
   const local = {
     isValidStep(stepIndex) {
-      if (!currentView || userGuide.views[currentView].length <= stepIndex) {
-        return false
-      }
-      const step = userGuide.views[currentView][stepIndex]
-      return step && step.ref && step.ref.offsetParent
+      return Boolean(currentUserGuide?.[stepIndex]?.ref?.offsetParent)
     },
     get hasNext() {
-      return currentView && userGuide.views[currentView].length > state.index + 1
+      return currentUserGuide?.length > state.index + 1
     },
     get hasPrev() {
       return state.index > 0
@@ -156,13 +175,13 @@ const InfoBox = ({ contextRef }) => {
       if (!state.open || !local.canMoveNext) {
         return
       }
-      contextRef.current.show(userGuide.views[currentView][state.index + 1])
+      contextRef.current.show(currentUserGuide[state.index + 1])
     },
     showPrev() {
       if (!state.open || !local.canMovePrev) {
         return
       }
-      contextRef.current.show(userGuide.views[currentView][state.index - 1])
+      contextRef.current.show(currentUserGuide[state.index - 1])
     }
   }
 
@@ -186,6 +205,9 @@ const InfoBox = ({ contextRef }) => {
       setState(newState)
     },
     open() {
+      if (!currentUserGuide) {
+        window.alert('User guide not available in this view')
+      }
       if (!local.isValidStep(currentStep.current)) {
         const start = currentStep.current
         for (let step = start - 1; step >= 0; step--) {
@@ -195,7 +217,7 @@ const InfoBox = ({ contextRef }) => {
           }
         }
         if (currentStep.current === start) {
-          for (let step = start + 1; step <= userGuide.views[currentView].length; step++) {
+          for (let step = start + 1; step <= currentUserGuide.length; step++) {
             if (local.isValidStep(step)) {
               currentStep.current = step
               break
@@ -207,7 +229,7 @@ const InfoBox = ({ contextRef }) => {
           return
         }
       }
-      contextRef.current.show(userGuide.views[currentView][currentStep.current])
+      contextRef.current.show(currentUserGuide[currentStep.current])
     },
     close() {
       if (state.fadeout || !state.open) {

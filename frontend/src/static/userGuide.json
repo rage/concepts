@@ -8,7 +8,8 @@
     "separation": 20,
     "padding": 5,
     "placement": "bottom",
-    "video": ""
+    "video": "",
+    "minimumRole": "VISITOR"
   },
   "views": {
     "mapper": [{
@@ -67,6 +68,18 @@
       "placement": "right-end",
       "video": "/guide/manager/new-course.webm"
     }, {
+      "id": "CREATE_COURSE_FROZEN",
+      "title": "New course",
+      "description": "\"Frozen\" means the course can't be modified or deleted, but new concepts can still be added. Only staff members can un-freeze courses.",
+      "placement": "right-end",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "CREATE_COURSE_OFFICIAL",
+      "title": "New course",
+      "description": "\"Official\" is metadata indicating the course came from the template. It is automatically set to true for all concepts in a template when a student clones the template.",
+      "placement": "right-end",
+      "minimumRole": "STAFF"
+    }, {
       "id": "CREATE_COURSE_SUBMIT",
       "title": "New course",
       "description": "Finally, click \"CREATE\" to create the course.",
@@ -96,6 +109,18 @@
       "description": "Enter tags for the new course.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
+    }, {
+      "id": "CREATE_CONCEPT_FROZEN",
+      "title": "New concept",
+      "description": "\"Frozen\" means the concept can't be modified or deleted. Only staff members can un-freeze concepts.",
+      "placement": "right-end",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "CREATE_CONCEPT_OFFICIAL",
+      "title": "New concept",
+      "description": "\"Official\" is metadata indicating the concept came from the template. It is automatically set to true for all concepts in a template when a student clones the template.",
+      "placement": "right-end",
+      "minimumRole": "STAFF"
     }, {
       "id": "CREATE_CONCEPT_SUBMIT",
       "title": "New concept",
@@ -158,8 +183,7 @@
       "title": "Workspace actions",
       "description": "Click the \"more\" icon to show actions you may take on the workspace.",
       "placement": "bottom-end"
-    }, 
-    {
+    }, {
       "id": "GOTO_WORKSPACE",
       "title": "Go to workspace",
       "description": "Click the workspace in the list to access the workspace. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
