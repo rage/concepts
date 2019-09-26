@@ -12,9 +12,7 @@ const makeTypeResolver = (type, field) => {
           return await field.insufficientPrivilegeValue(root, args, context) || null
         }
         return await context.prisma[field.type || type](
-          field.args
-            ? field.args(root, args, context)
-            : { id: root.id }
+          field.args?.(root, args, context) || { id: root.id }
         )[field.name]()
       }
     })

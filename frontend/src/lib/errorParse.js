@@ -1,4 +1,4 @@
-const getPortErrorMessage = error => {
+const getImportErrorMessage = error => {
   switch (error.keyword) {
   case 'required':
     return error.message
@@ -15,4 +15,4 @@ const getPortErrorMessage = error => {
   }
 }
 
-export { getPortErrorMessage }
+export { getImportErrorMessage }

@@ -40,8 +40,7 @@ const WorkspaceQueries = {
     const res = await context.prisma.$graphql(workspaceBySourceTemplateQuery, {
       id: sourceId, userId: context.user.id
     })
-    return res.user.workspaceParticipations[0] &&
-      res.user.workspaceParticipations[0].workspace
+    return res.user.workspaceParticipations?.[0]?.workspace
   },
   async workspaceMemberInfo(root, { id }, context) {
     await checkAccess(context, { workspaceId: id, minimumPrivilege: Privilege.OWNER })

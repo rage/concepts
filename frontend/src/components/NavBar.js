@@ -37,10 +37,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const parseWorkspacePath = (workspaceId, path, prefix) => {
-  if (path.length === 0) {
-    return []
-  }
-  switch (path[0]) {
+  switch (path?.[0]) {
   case 'mapper':
     return [{
       type: 'course',
@@ -74,7 +71,7 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
 }
 
 const parseProjectPath = (projectId, path, prefix) => {
-  switch (path[0]) {
+  switch (path?.[0]) {
   case 'overview':
     return [{
       name: 'Overview',
@@ -125,7 +122,7 @@ const parseProjectPath = (projectId, path, prefix) => {
 }
 
 const parsePath = (path) => {
-  switch (path[0]) {
+  switch (path?.[0]) {
   case '':
     return parsePath(path.slice(1))
   case 'porting':

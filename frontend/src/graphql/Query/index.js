@@ -1,6 +1,5 @@
 export * from './Course'
 export * from './Workspace'
 export * from './Sharing'
-export * from './User'
 export * from './Project'
 export * from './Port'

@@ -31,7 +31,7 @@ const getUser = async (token, context, prisma) => {
   }
 
   let user = null
-  if (decodedToken && decodedToken.id) {
+  if (decodedToken?.id) {
     user = await prisma.user({ id: decodedToken.id })
   } else {
     throw new AuthenticationError('Invalid token: No ID found')

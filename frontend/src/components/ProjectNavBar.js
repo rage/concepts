@@ -99,72 +99,70 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
     history.push(`${urlPrefix}/${projectId}/${newPage}`)
   }
 
-  const isOwner = Privilege.fromString(((projectQuery.data.projectById
-    && projectQuery.data.projectById.participants.find(pcp => pcp.user.id === user.id)) || {}
-  ).privilege) === Privilege.OWNER
+  const isOwner = Privilege.fromString(
+    projectQuery.data.projectById?.participants.find(pcp => pcp.user.id === user.id)?.privilege
+  ) === Privilege.OWNER
 
   return (
-    <>
-      <Paper className={classes.root} square>
-        <div className={classes.leftPlaceholder} />
-        <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
-          <BottomNavigationAction
-            value='overview'
-            label='Project overview'
-            icon={<ShuffleIcon />}
-          />
-          <BottomNavigationAction
-            value='points'
-            label='Points'
-            icon={<TimelapseIcon />}
-          />
-          {isOwner && <BottomNavigationAction
-            value='members'
-            label='Members'
-            icon={<GroupIcon />}
-          />}
-        </BottomNavigation>
-        <IconButton
-          onClick={evt => setMenuAnchor(evt.currentTarget)}
-          className={classes.menuButton}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}>
-          {
-            projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
-              p.user.id === user.id && Privilege.fromString(p.privilege) === Privilege.OWNER) &&
-            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-              <ListItemIcon>
-                <ShareIcon />
-              </ListItemIcon>
-              Share link
-            </MenuItem>
-          }
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
+    <Paper className={classes.root} square>
+      <div className={classes.leftPlaceholder} />
+      <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
+        <BottomNavigationAction
+          value='overview'
+          label='Project overview'
+          icon={<ShuffleIcon />}
+        />
+        <BottomNavigationAction
+          value='points'
+          label='Points'
+          icon={<TimelapseIcon />}
+        />
+        {isOwner && <BottomNavigationAction
+          value='members'
+          label='Members'
+          icon={<GroupIcon />}
+        />}
+      </BottomNavigation>
+      <IconButton
+        onClick={evt => setMenuAnchor(evt.currentTarget)}
+        className={classes.menuButton}
+      >
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}>
+        {
+          projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
+            p.user.id === user.id && Privilege.fromString(p.privilege) === Privilege.OWNER) &&
+          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>
-              <DeleteIcon />
+              <ShareIcon />
             </ListItemIcon>
-            Delete
+            Share link
           </MenuItem>
-          <MenuItem aria-label='Edit' onClick={handleEditOpen}>
-            <ListItemIcon>
-              <EditIcon />
-            </ListItemIcon>
-            Edit
-          </MenuItem>
-        </Menu>
-      </Paper>
-    </>
+        }
+        <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon />
+          </ListItemIcon>
+          Delete
+        </MenuItem>
+        <MenuItem aria-label='Edit' onClick={handleEditOpen}>
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          Edit
+        </MenuItem>
+      </Menu>
+    </Paper>
   )
 }
 

@@ -1,8 +1,7 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 
-const checkScalars = (startDate, endDate, maxPoints,
-  pointsPerConcept) => {
+const checkScalars = (startDate, endDate, maxPoints, pointsPerConcept) => {
   const startDateObj = new Date(startDate)
   const endDateObj = new Date(endDate)
 
@@ -26,8 +25,7 @@ const PointGroupMutations = {
       workspaceId
     })
 
-    checkScalars(startDate, endDate, maxPoints,
-      pointsPerConcept)
+    checkScalars(startDate, endDate, maxPoints, pointsPerConcept)
 
     return await context.prisma.createPointGroup({
       name,

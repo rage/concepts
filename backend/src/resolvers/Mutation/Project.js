@@ -44,7 +44,7 @@ const ProjectMutations = {
     })
 
     const activeTemplate = await context.prisma.project({ id: args.projectId }).activeTemplate()
-    if (activeTemplate && activeTemplate.id === args.workspaceId) {
+    if (activeTemplate?.id === args.workspaceId) {
       throw new ForbiddenError('Access denied')
     }
 

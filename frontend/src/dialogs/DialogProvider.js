@@ -17,12 +17,10 @@ export const DialogProvider = ({ children }) => {
     setSubmitDisabled: (...args) => dialogContextValue.current.setSubmitDisabled(...args)
   }
 
-  useEffect(() => history.listen(() => {
-    if (dialogContextValue.current.closeDialog) {
-      dialogContextValue.current.closeDialog()
-    }
+  useEffect(() =>
+    history.listen(() => dialogContextValue.current.closeDialog?.()),
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [])
+  [])
 
   return <>
     <DialogContext.Provider value={dialogContextProxy}>

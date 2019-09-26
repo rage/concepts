@@ -119,7 +119,7 @@ const WorkspaceMutations = {
     const activeTemplate = await context.prisma.workspace({
       id
     }).asTemplate().activeTemplate()
-    if (activeTemplate && activeTemplate.id === id) {
+    if (activeTemplate?.id === id) {
       throw new Error('Active template cannot be removed.')
     }
     await checkAccess(context, {
