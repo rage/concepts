@@ -316,10 +316,11 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         open={mergeDialogOpen.open}
       /> }
       <List ref={listRef} className={classes.list}>{
-        sortMethod !== 'GROUP_BY' ? sort(course.concepts).map((c, i) => includeConcept(c) &&
+        sortMethod !== 'GROUP_BY' ? sort(course.concepts).map((concept, conceptIndex) =>
+          includeConcept(concept) &&
           <Concept
-            key={c.id}
-            concept={c}
+            key={concept.id}
+            concept={concept}
             user={user}
             editing={editing}
             deleteConcept={deleteConcept}
@@ -327,8 +328,8 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
             merging={merging}
             setEditing={setEditing}
             toggleMergingConcept={toggleMergingConcept}
-            checkboxRef={i === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-              : i === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+            checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+              : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                 : undefined}
           />
         ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
