@@ -240,7 +240,10 @@ const CreateCourse = ({
         </Button>
       }
       {user.role >= Role.STAFF && <>
-        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+        <FormControl
+          ref={action === 'Create' && infoBox.ref('manager', 'CREATE_COURSE_OFFICIAL')}
+          style={{ verticalAlign: 'middle', marginLeft: '12px' }}
+        >
           <FormControlLabel
             control={
               <Checkbox
@@ -253,7 +256,10 @@ const CreateCourse = ({
             label='Official'
           />
         </FormControl>
-        <FormControl style={{ verticalAlign: 'middle', marginLeft: '12px' }}>
+        <FormControl
+          ref={action === 'Create' && infoBox.ref('manager', 'CREATE_COURSE_FROZEN')}
+          style={{ verticalAlign: 'middle', marginLeft: '12px' }}
+        >
           <FormControlLabel
             control={
               <Checkbox

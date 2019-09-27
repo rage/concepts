@@ -55,6 +55,7 @@ const Course = ({
   courseLink,
   connectionRef,
   createConceptRef,
+  prereqFreezeRef,
   activeCourseId,
   addingLink,
   setAddingLink,
@@ -98,7 +99,7 @@ const Course = ({
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
-        className={classes.cardHeader}
+        className={`${classes.cardHeader} focusOverlayScrollParent`}
         title={
           <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
         }
@@ -107,6 +108,7 @@ const Course = ({
             <IconButton
               disabled={user.role < Role.STAFF}
               onClick={() => setCourseLinkFrozen(!courseLink.frozen)}
+              ref={prereqFreezeRef}
             >
               {courseLink.frozen ? <LockedIcon /> : <LockOpenIcon />}
             </IconButton>

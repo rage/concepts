@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
-import {
-  makeStyles, IconButton
-} from '@material-ui/core'
+import { makeStyles, IconButton } from '@material-ui/core'
 import { useQuery } from 'react-apollo-hooks'
 import { HelpOutline as HelpIcon } from '@material-ui/icons'
 

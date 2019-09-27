@@ -1,5 +1,5 @@
 {
-  "$schema": "userGuide.schema.json",
+  "$schema": "./userGuide.schema.json",
   "defaults": {
     "id": "",
     "description": "",
@@ -8,7 +8,8 @@
     "separation": 20,
     "padding": 5,
     "placement": "bottom",
-    "video": ""
+    "video": "",
+    "minimumRole": "VISITOR"
   },
   "views": {
     "mapper": [{
@@ -35,6 +36,12 @@
       "description": "Add a course to the prerequisites of the current course by clicking the checkbox next to the course name in the course tray.",
       "placement": "right-end",
       "video": "/guide/mapper/add-course-as-prereq.webm"
+    }, {
+      "id": "FREEZE_PREREQ_COURSE",
+      "title": "Freeze prerequisite",
+      "description": "Similarly to freezing courses and concepts, you can freeze a prerequisite to prevent the link between the courses from being removed.",
+      "placement": "bottom",
+      "minimumRole": "STAFF"
     }, {
       "id": "CREATE_CONCEPT_PREREQ",
       "title": "Add a concept to the new course",
@@ -67,6 +74,18 @@
       "placement": "right-end",
       "video": "/guide/manager/new-course.webm"
     }, {
+      "id": "CREATE_COURSE_FROZEN",
+      "title": "New course",
+      "description": "\"Frozen\" means the course can't be modified or deleted, but new concepts can still be added. Only staff members can un-freeze courses.",
+      "placement": "right-end",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "CREATE_COURSE_OFFICIAL",
+      "title": "New course",
+      "description": "\"Official\" is metadata indicating the course came from the template. It is automatically set to true for all concepts in a template when a student clones the template.",
+      "placement": "right-end",
+      "minimumRole": "STAFF"
+    }, {
       "id": "CREATE_COURSE_SUBMIT",
       "title": "New course",
       "description": "Finally, click \"CREATE\" to create the course.",
@@ -97,11 +116,50 @@
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
     }, {
+      "id": "CREATE_CONCEPT_FROZEN",
+      "title": "New concept",
+      "description": "\"Frozen\" means the concept can't be modified or deleted. Only staff members can un-freeze concepts.",
+      "placement": "left-end",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "CREATE_CONCEPT_OFFICIAL",
+      "title": "New concept",
+      "description": "\"Official\" is metadata indicating the concept came from the template. It is automatically set to true for all concepts in a template when a student clones the template.",
+      "placement": "left-end",
+      "minimumRole": "STAFF"
+    }, {
       "id": "CREATE_CONCEPT_SUBMIT",
       "title": "New concept",
       "description": "Finally, click \"CREATE\" to create the concept.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
+    }, {
+      "id": "FILTER_CONCEPTS",
+      "title": "Filter concepts",
+      "description": "The filter bar can be used to search for a concept by its name.",
+      "placement": "bottom"
+    }, {
+      "id": "SORT_CONCEPTS",
+      "title": "Sort concepts",
+      "description": "You can change how concepts are sorted here.",
+      "placement": "bottom-end"
+    }, {
+      "id": "START_MERGE",
+      "title": "Merge concepts",
+      "description": "After merging students' workspaces, you can merge two or more concepts. This is useful if the student workspaces had the same concept with slightly different wording.",
+      "placement": "bottom-end",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "SELECT_MERGE_CONCEPTS",
+      "title": "Select concepts",
+      "description": "Select the concepts to merge by clicking the checkboxes that appear.",
+      "placement": "left",
+      "minimumRole": "STAFF"
+    }, {
+      "id": "FINISH_MERGE",
+      "title": "Finish merging",
+      "description": "To finish the merge, click the \"Merge…\" button. Alternatively, click cancel to stop without merging.",
+      "placement": "bottom-end"
     }],
 
     "graph": [{
@@ -158,18 +216,63 @@
       "title": "Workspace actions",
       "description": "Click the \"more\" icon to show actions you may take on the workspace.",
       "placement": "bottom-end"
-    }, 
-    {
+    }, {
       "id": "GOTO_WORKSPACE",
       "title": "Go to workspace",
-      "description": "Click the workspace in the list to access the workspace. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
+      "description": "Click the workspace in the list to access it. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
       "placement": "bottom-end"
-    }],
-
-    "home-TODO": [{
+    }, {
       "id": "CREATE_PROJECT",
       "title": "Create a project",
       "description": "Click the \"+\"-icon to create a new project for collaborative mapping.",
+      "placement": "bottom-end",
+      "minimumRole": "STAFF"
+    }],
+
+    "project": [{
+      "id": "CREATE_TEMPLATE",
+      "title": "Create a template workspace",
+      "description": "Click the \"+\" to create a new template for working on mapping.",
+      "placement": "bottom-end"
+    }, {
+      "id": "TEMPLATE_ACTIONS",
+      "title": "Template actions",
+      "description": "Click the \"more\" icon to show actions you may take on the template. To be able to invite student you need to set a template as active. Only the currently active template will be cloned by students.",
+      "placement": "bottom-end"
+    }, {
+      "id": "GOTO_TEMPLATE",
+      "title": "Go to template",
+      "description": "Click the template workspace in the list to access it. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
+      "placement": "bottom-end"
+    }, {
+      "id": "INVITE_STUDENTS",
+      "title": "Invite student to contribute",
+      "description": "Click the \"Invite students\" button to be able to generate a shareable link for students. The currently active template will be cloned to invited students, however they will not be able to modify any of the predefined courses, concepts or links.",
+      "placement": "bottom-end"
+    }, {
+      "id": "WORKSPACE_ACTIONS",
+      "title": "User workspace actions",
+      "description": "Click the \"more\" icon to show actions you may take on the workspace.",
+      "placement": "bottom-end"
+    }, {
+      "id": "GOTO_USER_WORKSPACE",
+      "title": "Checkout a user's workspace",
+      "description": "Click the workspace in the list to access it.",
+      "placement": "bottom-end"
+    }, {
+      "id": "MERGE_USER_WORKSPACES",
+      "title": "Merge user workspaces",
+      "description": "Click the \"Merge\" button to merge the user workspaces cloned from the currently active template. The merge tries to combine concepts and links when possible, but the workspace will need cleanup. This can easily be done from the workspace manager view.",
+      "placement": "bottom-end"
+    }, {
+      "id": "MERGE_ACTIONS",
+      "title": "Merge actions",
+      "description": "Click the \"more\" icon to show actions you may take on the merge.",
+      "placement": "bottom-end"
+    }, {
+      "id": "GOTO_MERGE",
+      "title": "Go to merge",
+      "description": "Click the merge workspace in the list to access it. It is like any other workspace.",
       "placement": "bottom-end"
     }]
   }

@@ -40,6 +40,11 @@
         "video": {
           "type": "string",
           "description": "The (relative) URL to the WebM video file to show in the step."
+        },
+        "minimumRole": {
+          "type": "string",
+          "description": "The minimum role to show this step to. Used for guide steps for staff-only buttons.",
+          "enum": ["VISITOR", "GUEST", "STUDENT", "STAFF", "ADMIN"]
         }
       }
     }
