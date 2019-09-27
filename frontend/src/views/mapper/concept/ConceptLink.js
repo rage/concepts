@@ -147,21 +147,18 @@ export default class ConceptLink extends Component {
   }
 }
 
-const useLineStyles = makeStyles({
-  linetoPlaceholder: {
+const useStyles = makeStyles({
+  placeholder: {
     display: 'none'
   },
-  linetoHover: {
+  hover: {
     '&:hover': {
       backgroundColor: 'rgba(245, 0, 87, 0.25)'
     }
   },
-  linetoWrapper: {
-    '&:not($linetoActive)': {
+  wrapper: {
+    '&:not($activeWrapper)': {
       pointerEvents: 'none'
-    },
-    '&$linetoActive:before': {
-      borderRightColor: 'red'
     },
     '&:before': {
       content: '""',
@@ -177,22 +174,26 @@ const useLineStyles = makeStyles({
       marginTop: '-7px'
     }
   },
-  linetoLine: {
+  line: {
     position: 'absolute',
     pointerEvents: 'none',
-    borderTop: '3px solid rgba(117, 117, 117, 0.15)',
-    '&$linetoActive': {
-      borderTopColor: '#f50057'
-    }
+    borderTop: '3px solid rgba(117, 117, 117, 0.15)'
   },
-  linetoActive: {}
+  activeLine: {
+    borderTopColor: '#f50057'
+  },
+  activeWrapper: {
+    '&:before': {
+      borderRightColor: 'red'
+    }
+  }
 })
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within = '', refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, linkId
+  active, attributes, linkId, classes: propClasses
 }) => {
-  const classes = useLineStyles()
+  const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
 
   const dyn = useRef({ x: null, y: null })
@@ -320,24 +321,19 @@ const Line = ({
   // React component is removed. This is because we manually
   // move the rendered DOM element after creation.
   return (
-    <div
-      className={classes.linetoPlaceholder} data-link-from={from} data-link-to={to} {...attributes}
-    >
+    <div className={classes.placeholder} data-link-from={from} data-link-to={to} {...attributes}>
       <div
-        className={`${classes.linetoWrapper} ${active && !followMouse ? classes.linetoActive : ''}`}
+        className={`${classes.wrapper} ${active && !followMouse ? classes.activeWrapper : ''}`}
         ref={elCallback} style={wrapperStyle}
       >
         {(active && !followMouse) &&
           <div
-            style={hoverAreaStyle} className={classes.linetoHover}
+            style={hoverAreaStyle} className={classes.hover}
             onContextMenu={evt => onContextMenu(evt, linkId)}
             onClick={evt => onContextMenu(evt, linkId)}
           />
         }
-        <div
-          style={innerStyle}
-          className={`${classes.linetoLine} ${active ? classes.linetoActive : ''}`}
-        />
+        <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`} />
       </div>
     </div>
   )

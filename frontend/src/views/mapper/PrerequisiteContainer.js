@@ -20,6 +20,7 @@ const PrerequisiteContainer = ({
   focusedConceptIds,
   addingLink,
   setAddingLink,
+  flashLink,
   toggleFocus,
   workspaceId,
   courseId,
@@ -50,6 +51,7 @@ const PrerequisiteContainer = ({
                 focusedConceptIds={focusedConceptIds}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
+                flashLink={flashLink}
                 toggleFocus={toggleFocus}
                 activeCourseId={courseId}
                 workspaceId={workspaceId}

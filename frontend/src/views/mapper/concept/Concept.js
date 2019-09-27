@@ -68,6 +68,7 @@ const Concept = ({
   toggleFocus,
   addingLink,
   setAddingLink,
+  flashLink,
   connectionRef,
   conceptLinkRef,
   activeConceptRef
@@ -90,19 +91,32 @@ const Concept = ({
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
 
-  const onClick = evt => {
-    if (addingLink) {
-      if (addingLink.type !== ownType) {
-        createConceptLink({
+  // TODO make this into a library function and use it, we have the same situation in other places
+  const noPropagation = func => (evt, ...args) => {
+    evt.stopPropagation()
+    func(evt, ...args)
+  }
+
+  const onClick = noPropagation(async () => {
+    if (addingLink?.type === ownType) {
+      // We could support creating link from prerequisite to prerequisite,
+      // but it's not very intuitive, so we don't.
+      setAddingLink(null)
+    } else if (addingLink) {
+      try {
+        const resp = await createConceptLink({
           variables: {
             to: isActive ? concept.id : addingLink.id,
             from: isActive ? addingLink.id : concept.id,
             workspaceId
           }
-        }).catch(() => messageDispatch({
+        })
+        flashLink(resp.data.createConceptLink)
+      } catch (err) {
+        messageDispatch({
           type: 'setError',
           data: 'Access denied'
-        }))
+        })
       }
       setAddingLink(null)
     } else {
@@ -111,33 +125,28 @@ const Concept = ({
         type: ownType
       })
     }
-    evt.stopPropagation()
-  }
+  })
 
-  const handleMenuOpen = (event) => {
-    setState({ anchorEl: event.currentTarget })
-  }
-
-  const handleMenuClose = () => {
-    setState({ anchorEl: null })
-  }
+  const handleMenuOpen = evt => setState({ anchorEl: evt.currentTarget })
+  const handleMenuClose = () => setState({ anchorEl: null })
 
   const handleDeleteConcept = async () => {
-    const willDelete = window.confirm('Are you sure about this?')
+    const willDelete = window.confirm(`Are you sure you want to delete ${concept.name}?`)
     handleMenuClose()
-    if (willDelete) {
-      try {
-        await deleteConcept({
-          variables: {
-            id: concept.id
-          }
-        })
-      } catch (err) {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
-      }
+    if (!willDelete) {
+      return
+    }
+    try {
+      await deleteConcept({
+        variables: {
+          id: concept.id
+        }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
     }
   }
 
@@ -154,7 +163,7 @@ const Concept = ({
   const addingLinkIsOpposite = addingLink && addingLink.type !== ownType
 
   const linkButtonColor = ((addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
-    || (!addingLink && focusedConceptIds.includes(concept.id)))
+    || (!addingLink && focusedConceptIds.has(concept.id)))
     ? 'secondary' : undefined
 
   return (
