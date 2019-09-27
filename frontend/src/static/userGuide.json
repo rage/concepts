@@ -1,5 +1,5 @@
 {
-  "$schema": "userGuide.schema.json",
+  "$schema": "./userGuide.schema.json",
   "defaults": {
     "id": "",
     "description": "",
@@ -219,14 +219,60 @@
     }, {
       "id": "GOTO_WORKSPACE",
       "title": "Go to workspace",
-      "description": "Click the workspace in the list to access the workspace. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
+      "description": "Click the workspace in the list to access it. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
       "placement": "bottom-end"
-    }],
-
-    "home-TODO": [{
+    }, {
       "id": "CREATE_PROJECT",
       "title": "Create a project",
       "description": "Click the \"+\"-icon to create a new project for collaborative mapping.",
+      "placement": "bottom-end",
+      "minimumRole": "STAFF"
+    }],
+
+    "project": [{
+      "id": "CREATE_TEMPLATE",
+      "title": "Create a template workspace",
+      "description": "Click the \"+\" to create a new template for working on mapping.",
+      "placement": "bottom-end"
+    }, {
+      "id": "TEMPLATE_ACTIONS",
+      "title": "Template actions",
+      "description": "Click the \"more\" icon to show actions you may take on the template. To be able to invite student you need to set a template as active. Only the currently active template will be cloned by students.",
+      "placement": "bottom-end"
+    }, {
+      "id": "GOTO_TEMPLATE",
+      "title": "Go to template",
+      "description": "Click the template workspace in the list to access it. By default this brings you to the \"workspace manager\" view. Other views can be accessed from the \"more\"-menu or from the bottom navbar of the workspace view.",
+      "placement": "bottom-end"
+    }, {
+      "id": "INVITE_STUDENTS",
+      "title": "Invite student to contribute",
+      "description": "Click the \"Invite students\" button to be able to generate a shareable link for students. The currently active template will be cloned to invited students, however they will not be able to modify any of the predefined courses, concepts or links.",
+      "placement": "bottom-end"
+    }, {
+      "id": "WORKSPACE_ACTIONS",
+      "title": "User workspace actions",
+      "description": "Click the \"more\" icon to show actions you may take on the workspace.",
+      "placement": "bottom-end"
+    }, {
+      "id": "GOTO_USER_WORKSPACE",
+      "title": "Checkout a user's workspace",
+      "description": "Click the workspace in the list to access it.",
+      "placement": "bottom-end"
+    }, {
+      "id": "MERGE_USER_WORKSPACES",
+      "title": "Merge user workspaces",
+      "description": "Click the \"Merge\" button to merge the user workspaces cloned from the currently active template. The merge tries to combine concepts and links when possible, but the workspace will need cleanup. This can easily be done from the workspace manager view.",
+      "placement": "bottom-end"
+    }, {
+      "id": "MERGE_ACTIONS",
+      "title": "Merge actions",
+      "description": "Click the \"more\" icon to show actions you may take on the merge.",
+      "placement": "bottom-end"
+    }, {
+      "id": "GOTO_MERGE",
+      "title": "Go to merge",
+      "description": "Click the merge workspace in the list to access it. It is like any other workspace.",
       "placement": "bottom-end"
     }]
   }

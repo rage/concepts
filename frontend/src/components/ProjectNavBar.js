@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon, Group as GroupIcon,
-  MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon
+  MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon, HelpOutline as HelpIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -16,6 +16,7 @@ import { useMessageStateValue, useLoginStateValue } from '../store'
 import { useShareDialog } from '../dialogs/sharing'
 import useEditProjectDialog from '../dialogs/project/useEditProjectDialog'
 import useRouter from '../useRouter'
+import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles({
   root: {
@@ -47,6 +48,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
+  const infoBox = useInfoBox()
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
@@ -123,6 +125,11 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
           icon={<GroupIcon />}
         />}
       </BottomNavigation>
+      <IconButton
+        className={classes.menuButton} onClick={infoBox.open}
+      >
+        <HelpIcon />
+      </IconButton>
       <IconButton
         onClick={evt => setMenuAnchor(evt.currentTarget)}
         className={classes.menuButton}

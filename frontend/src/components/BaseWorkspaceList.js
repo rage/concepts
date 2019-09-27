@@ -73,11 +73,50 @@ const BaseWorkspaceList = ({
     openCreateDialog()
   }
 
+  const cardHeaderActionGuide = () => {
+    switch (type) {
+    case TYPE_MAIN:
+      return infoBox.ref('home', 'CREATE_WORKSPACE')
+    case TYPE_TEMPLATE:
+      return infoBox.ref('project', 'CREATE_TEMPLATE')
+    case TYPE_USER:
+      return infoBox.ref('project', 'INVITE_STUDENTS')
+    case TYPE_MERGE:
+      return infoBox.ref('project', 'MERGE_USER_WORKSPACES')
+    }
+  }
+
+  const workspaceActionGuide = () => {
+    switch (type) {
+    case TYPE_MAIN:
+      return infoBox.ref('home', 'WORKSPACE_ACTIONS')
+    case TYPE_TEMPLATE:
+      return infoBox.ref('project', 'TEMPLATE_ACTIONS')
+    case TYPE_USER:
+      return infoBox.ref('project', 'WORKSPACE_ACTIONS')
+    case TYPE_MERGE:
+      return infoBox.ref('project', 'MERGE_ACTIONS')
+    }
+  }
+
+  const gotoGuide = () => {
+    switch (type) {
+    case TYPE_MAIN:
+      return infoBox.ref('home', 'GOTO_WORKSPACE')
+    case TYPE_TEMPLATE:
+      return infoBox.ref('project', 'GOTO_TEMPLATE')
+    case TYPE_USER:
+      return infoBox.ref('project', 'GOTO_USER_WORKSPACE')
+    case TYPE_MERGE:
+      return infoBox.ref('project', 'GOTO_MERGE')
+    }
+  }
+
   cardHeaderAction = cardHeaderAction || (
     <IconButton
       aria-label='Add'
       onClick={handleCreateOpen}
-      ref={type === TYPE_MAIN ? infoBox.ref('home', 'CREATE_WORKSPACE') : undefined}
+      ref={cardHeaderActionGuide()}
     >
       <AddIcon />
     </IconButton>
@@ -184,8 +223,8 @@ This will change which template is cloned by users.`)
             button
             key={workspace.id}
             onClick={() => handleNavigateManager(workspace.id)}
-            ref={type === TYPE_MAIN && index === 0
-              ? infoBox.ref('home', 'GOTO_WORKSPACE') : undefined}
+            ref={index === 0
+              ? gotoGuide() : undefined}
           >
             <ListItemText
               primary={
@@ -201,7 +240,7 @@ This will change which template is cloned by users.`)
               <IconButton
                 onClick={evt => handleMenuOpen(workspace, evt)}
                 aria-haspopup='true'
-                ref={index === 0 ? infoBox.ref('home', 'WORKSPACE_ACTIONS') : undefined}
+                ref={index === 0 ? workspaceActionGuide() : undefined}
               >
                 <MoreVertIcon />
               </IconButton>

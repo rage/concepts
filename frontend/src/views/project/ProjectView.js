@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery } from 'react-apollo-hooks'
 import { Typography, Button } from '@material-ui/core'
@@ -12,6 +12,7 @@ import TemplateList from './TemplateList'
 import MergeList from './MergeList'
 import { useLoginStateValue } from '../../store'
 import LoadingBar from '../../components/LoadingBar'
+import { useInfoBox } from '../../components/InfoBox'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -64,10 +65,16 @@ const ProjectView = ({ projectId }) => {
   const classes = useStyles()
   const openShareProjectDialog = useShareDialog('project')
   const [{ user }] = useLoginStateValue()
+  const infoBox = useInfoBox()
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
   })
+
+  useEffect(() => {
+    infoBox.setView('project')
+    return () => infoBox.unsetView('project')
+  }, [infoBox])
 
   if (projectQuery.loading) {
     return <LoadingBar id='project-view' />
