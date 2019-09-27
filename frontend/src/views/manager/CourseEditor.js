@@ -475,7 +475,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
       }
       {user.role >= Role.STAFF && <>
         <FormControl
-          ref={action === 'Create' && infoBox.ref('manager', 'CREATE_CONCEPT_OFFICIAL')}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_OFFICIAL') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
@@ -491,7 +491,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           />
         </FormControl>
         <FormControl
-          ref={action === 'Create' && infoBox.ref('manager', 'CREATE_CONCEPT_FROZEN')}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_FROZEN') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
