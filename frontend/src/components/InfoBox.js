@@ -211,6 +211,7 @@ const InfoBox = ({ contextRef }) => {
     open() {
       if (!currentUserGuide) {
         window.alert('User guide not available in this view')
+        return
       }
       if (!local.isValidStep(currentStep.current)) {
         const start = currentStep.current
