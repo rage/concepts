@@ -4,8 +4,10 @@ import { Button } from '@material-ui/core'
 import { Privilege } from '../../lib/permissions'
 import { useShareDialog } from '../../dialogs/sharing'
 import BaseWorkspaceList, { TYPE_USER } from '../../components/BaseWorkspaceList'
+import { useInfoBox } from '../../components/InfoBox'
 
 const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefix }) => {
+  const infoBox = useInfoBox()
   const openShareDialog = useShareDialog(
     'project',
     'Invite students',
@@ -18,6 +20,7 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
       variant='outlined' color='primary'
       onClick={() => openShareDialog(projectId, Privilege.CLONE)}
       disabled={!activeTemplate}
+      ref={infoBox.ref('project', 'INVITE_STUDENTS')}
     >
       Invite students
     </Button>

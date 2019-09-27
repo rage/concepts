@@ -7,8 +7,10 @@ import { DELETE_WORKSPACE, MERGE_PROJECT } from '../../graphql/Mutation'
 import { useShareDialog } from '../../dialogs/sharing'
 import { useEditWorkspaceDialog } from '../../dialogs/workspace'
 import BaseWorkspaceList, { TYPE_MERGE } from '../../components/BaseWorkspaceList'
+import { useInfoBox } from '../../components/InfoBox'
 
 const MergeList = ({ mergeWorkspaces, projectId, activeTemplate, urlPrefix }) => {
+  const infoBox = useInfoBox()
   const openEditDialog = useEditWorkspaceDialog()
   const openShareDialog = useShareDialog('workspace')
   const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
@@ -30,6 +32,7 @@ const MergeList = ({ mergeWorkspaces, projectId, activeTemplate, urlPrefix }) =>
       variant='outlined' color='primary'
       onClick={() => merge({ variables: { projectId } })}
       disabled={!activeTemplate}
+      ref={infoBox.ref('project', 'MERGE_USER_WORKSPACES')}
     >
       New merge
     </Button>

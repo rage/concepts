@@ -80,9 +80,9 @@ const BaseWorkspaceList = ({
     case TYPE_TEMPLATE:
       return infoBox.ref('project', 'CREATE_TEMPLATE')
     case TYPE_USER:
-      return infoBox.ref('project', 'INVITE_STUDENTS')
+      throw Error('This cardHeaderAction is specified in UserWorkspaceList.js')
     case TYPE_MERGE:
-      return infoBox.ref('project', 'MERGE_USER_WORKSPACES')
+      throw Error('This cardHeaderAction is specified in MergeList.js')
     }
   }
 
@@ -272,7 +272,7 @@ This will change which template is cloned by users.`)
             <ListItemIcon>
               <ShareIcon />
             </ListItemIcon>
-          Share link
+            Share link
           </MenuItem>
         }
         {type !== TYPE_USER && type === TYPE_TEMPLATE &&
