@@ -72,6 +72,7 @@ const ActiveCourse = ({
   onClick,
   addingLink,
   setAddingLink,
+  flashLink,
   toggleFocus,
   urlPrefix
 }) => {
@@ -124,6 +125,7 @@ const ActiveCourse = ({
             focusedConceptIds={focusedConceptIds}
             addingLink={addingLink}
             setAddingLink={setAddingLink}
+            flashLink={flashLink}
             toggleFocus={toggleFocus}
             activeCourseId={course.id}
             workspaceId={workspaceId}

@@ -44,18 +44,48 @@ const useStyles = makeStyles(() => ({
       }
     }
   },
-  courseTrayOpen: {}
+  courseTrayOpen: {},
+  conceptLinkFlash: {
+    animation: '$flash 3s'
+  },
+  '@keyframes flash': {
+    '0%': { borderTopColor: '#f50057' },
+    '25%': { borderTopColor: '#f50057' },
+    '100%': { borderTopColor: 'rgba(117, 117, 117, 0.15)' }
+  },
+  conceptLinkWrapperFlash: {
+    '&:before': {
+      animation: '$flashWrapper 3s'
+    }
+  },
+  '@keyframes flashWrapper': {
+    '0%': { borderRightColor: 'red' },
+    '25%': { borderRightColor: 'red' },
+    '100%': { borderRightColor: '#eaeaea' }
+  }
 }))
 
 const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   const classes = useStyles()
-  const [focusedConceptIds, setFocusedConceptIds] = useState([])
+  const [focusedConceptIds, setFocusedConceptIds] = useState(new Set())
   const [courseTrayOpen, setCourseTrayOpen] = useState(false)
   const [addingLink, setAddingLink] = useState(null)
+  const [flashingLink, setFlashingLink] = useState(null)
+  const flashLinkTimeout = useRef(0)
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
   const conceptLinkMenuRef = useRef()
   const conceptConnectionRef = useRef()
   const [{ loggedIn }] = useLoginStateValue()
+
+  const flashLink = link => {
+    if (focusedConceptIds.has(link.to.id) || focusedConceptIds.has(link.from.id)) {
+      // Don't flash, link is active
+      return
+    }
+    setFlashingLink(link.id)
+    clearTimeout(flashLinkTimeout.current)
+    flashLinkTimeout.current = setTimeout(() => setFlashingLink(null), 3000)
+  }
 
   const infoBox = useInfoBox()
 
@@ -107,11 +137,13 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   }
 
   const toggleFocus = id => {
-    const currentlyFocused = focusedConceptIds.includes(id)
-    setFocusedConceptIds(currentlyFocused ?
-      focusedConceptIds.filter(conceptId => conceptId !== id) :
-      focusedConceptIds.concat(id)
-    )
+    const newFocusedConceptIds = new Set(focusedConceptIds)
+    if (newFocusedConceptIds.has(id)) {
+      newFocusedConceptIds.delete(id)
+    } else {
+      newFocusedConceptIds.add(id)
+    }
+    setFocusedConceptIds(newFocusedConceptIds)
   }
 
   const handleTrayToggle = () => {
@@ -175,6 +207,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         focusedConceptIds={focusedConceptIds}
         addingLink={addingLink}
         setAddingLink={setAddingLink}
+        flashLink={flashLink}
         toggleFocus={toggleFocus}
         courseTrayOpen={courseTrayOpen}
         workspaceId={workspaceQuery.data.workspaceById.id}
@@ -188,6 +221,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         focusedConceptIds={focusedConceptIds}
         addingLink={addingLink}
         setAddingLink={setAddingLink}
+        flashLink={flashLink}
         toggleFocus={toggleFocus}
         courseTrayOpen={courseTrayOpen}
         workspaceId={workspaceQuery.data.workspaceById.id}
@@ -200,13 +234,21 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
           <ConceptLink
             linkRef={(cIdx === 0 && lIdx === 0) ? conceptConnectionRef : undefined}
             key={`concept-link-${link.id}`} delay={1}
-            active={!addingLink && (
-              focusedConceptIds.includes(concept.id) || focusedConceptIds.includes(link.from.id)
-            )}
+            active={flashingLink === link.id || (!addingLink && (
+              focusedConceptIds.has(concept.id) || focusedConceptIds.has(link.from.id)
+            ))}
             linkId={link.id}
             from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
             fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
             posOffsets={{ x0: -5, x1: +6 }}
+            classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)
+              && !focusedConceptIds.has(link.from.id)
+              ? {
+                line: classes.conceptLinkFlash,
+                wrapper: classes.conceptLinkWrapperFlash
+              }
+              : {}
+            }
           />
         )
       ))

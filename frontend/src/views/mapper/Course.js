@@ -58,6 +58,7 @@ const Course = ({
   activeCourseId,
   addingLink,
   setAddingLink,
+  flashLink,
   toggleFocus,
   focusedConceptIds,
   workspaceId,
@@ -128,6 +129,7 @@ const Course = ({
               connectionRef={index === 0 ? connectionRef : undefined}
               addingLink={addingLink}
               setAddingLink={setAddingLink}
+              flashLink={flashLink}
               toggleFocus={toggleFocus}
               focusedConceptIds={focusedConceptIds}
               activeCourseId={activeCourseId}
