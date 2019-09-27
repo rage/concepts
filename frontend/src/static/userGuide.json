@@ -37,6 +37,12 @@
       "placement": "right-end",
       "video": "/guide/mapper/add-course-as-prereq.webm"
     }, {
+      "id": "FREEZE_PREREQ_COURSE",
+      "title": "Freeze prerequisite",
+      "description": "Similarly to freezing courses and concepts, you can freeze a prerequisite to prevent the link between the courses from being removed.",
+      "placement": "bottom",
+      "minimumRole": "STAFF"
+    }, {
       "id": "CREATE_CONCEPT_PREREQ",
       "title": "Add a concept to the new course",
       "description": "Add a concept to the newly created prerequisite course.",
