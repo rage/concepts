@@ -86,17 +86,15 @@ const CourseList = ({
             key={course.id}
             onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
           >
-            {editing === course.id ? <>
-              <CreateCourse
-                submit={args => {
-                  setEditing(null)
-                  updateCourse({ id: course.id, ...args })
-                }}
-                cancel={() => setEditing(null)}
-                defaultValues={course}
-                action='Save'
-              />
-            </> : <>
+            {editing === course.id ? <CreateCourse
+              submit={args => {
+                setEditing(null)
+                updateCourse({ id: course.id, ...args })
+              }}
+              cancel={() => setEditing(null)}
+              defaultValues={course}
+              action='Save'
+            /> : <>
               <ListItemText primary={
                 <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
               } />
@@ -241,7 +239,7 @@ const CreateCourse = ({
       }
       {user.role >= Role.STAFF && <>
         <FormControl
-          ref={action === 'Create' && infoBox.ref('manager', 'CREATE_COURSE_OFFICIAL')}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_OFFICIAL') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
@@ -257,7 +255,7 @@ const CreateCourse = ({
           />
         </FormControl>
         <FormControl
-          ref={action === 'Create' && infoBox.ref('manager', 'CREATE_COURSE_FROZEN')}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_FROZEN') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
