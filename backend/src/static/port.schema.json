@@ -1,5 +1,35 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "tags": {
+      "type": "array",
+      "description": "List of tags",
+      "items": {
+        "type":"object",
+        "description": "Tag",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the tag"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the tag",
+            "default": "custom"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the tag for ordering",
+            "default": 0
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
   "type": "object",
   "oneOf": [
     {
@@ -44,6 +74,12 @@
       ],
       "minLength": 1
     },
+    "courseTags": {
+      "$ref": "#/definitions/tags"
+    },
+    "conceptTags": {
+      "$ref": "#/definitions/tags"
+    },
     "courses": {
       "type": "array",
       "description": "List of courses in workspace",
@@ -73,17 +109,7 @@
             ]
           },
           "tags": {
-            "type": "array",
-            "description": "List of tags",
-            "items": {
-              "type":"object",
-              "description": "Tag",
-              "required": [
-                "name",
-                "type"
-              ]
-            },
-            "additionalProperties": false
+            "$ref": "#/definitions/tags"
           },
           "prerequisites": {
             "type": "array",
@@ -136,17 +162,7 @@
                   "minLength": 1
                 },
                 "tags": {
-                  "type": "array",
-                  "description": "List of tags",
-                  "items": {
-                    "type":"object",
-                    "description": "Tag",
-                    "required": [
-                      "name",
-                      "type"
-                    ]
-                  },
-                  "additionalProperties": false
+                  "$ref": "#/definitions/tags"
                 },
                 "official": {
                   "type": "boolean",
