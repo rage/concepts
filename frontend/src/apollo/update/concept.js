@@ -59,7 +59,7 @@ const deleteConceptUpdate = (store, response) => {
         concepts: course.concepts.filter(c => c.id !== deletedConcept.id)
       }
     })
-  } catch (error) {
+  } catch (e) {
     console.error('deleteConceptUpdate', e)
   }
 }
