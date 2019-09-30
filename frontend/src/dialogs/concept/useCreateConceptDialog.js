@@ -14,7 +14,7 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
   })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
-    update: cache.createConceptUpdate
+    update: cache.createConceptUpdate(workspaceId)
   })
 
   return courseId => openDialog({

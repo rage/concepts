@@ -15,13 +15,18 @@ const createCourseUpdate = (workspaceId) =>
       const addedCourse = response.data.createCourse
       if (!includedIn(dataInStore.workspaceById.courses, addedCourse)) {
         dataInStore.workspaceById.courses.push(addedCourse)
-        client.writeQuery({
-          query: WORKSPACE_BY_ID,
-          variables: { id: workspaceId },
-          data: dataInStore
-        })
       }
-    } catch (e) { }
+      const ws = dataInStore.workspaceById
+      ws.courseTags = ws.courseTags.concat(
+        addedCourse.tags.filter(tag => !ws.courseTags.find(ctag => ctag.id === tag.id)))
+      client.writeQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId },
+        data: dataInStore
+      })
+    } catch (e) {
+      console.error('createCourseUpdate', e)
+    }
   }
 
 const updateCourseUpdate = (workspaceId) =>
@@ -33,16 +38,20 @@ const updateCourseUpdate = (workspaceId) =>
         variables: { id: workspaceId }
       })
       const updatedCourse = response.data.updateCourse
-      if (includedIn(dataInStore.workspaceById.courses, updatedCourse)) {
-        dataInStore.workspaceById.courses = dataInStore.workspaceById.courses
+      const ws = dataInStore.workspaceById
+      if (includedIn(ws.courses, updatedCourse)) {
+        ws.courses = ws.courses
           .map(course => course.id === updatedCourse.id ? { ...course, ...updatedCourse } : course)
-        client.writeQuery({
-          query: WORKSPACE_BY_ID,
-          variables: { id: workspaceId },
-          data: dataInStore
-        })
       }
+      ws.courseTags = ws.courseTags.concat(
+        updatedCourse.tags.filter(tag => !ws.courseTags.find(ctag => ctag.id === tag.id)))
+      client.writeQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId },
+        data: dataInStore
+      })
     } catch (e) {
+      console.error('updateCourseUpdate', e)
     }
   }
 
@@ -55,9 +64,9 @@ const deleteCourseUpdate = (workspaceId, activeCourseId) =>
         variables: { id: workspaceId }
       })
       const deletedCourse = response.data.deleteCourse
-      if (includedIn(dataInStore.workspaceById.courses, deletedCourse)) {
-        dataInStore.workspaceById.courses = dataInStore.workspaceById.courses
-          .filter(course => course.id !== deletedCourse.id)
+      const ws = dataInStore.workspaceById
+      if (includedIn(ws.courses, deletedCourse)) {
+        ws.courses = ws.courses.filter(course => course.id !== deletedCourse.id)
         client.writeQuery({
           query: WORKSPACE_BY_ID,
           variables: { id: workspaceId },
@@ -82,7 +91,9 @@ const deleteCourseUpdate = (workspaceId, activeCourseId) =>
           data: dataInStore
         })
       }
-    } catch (e) { }
+    } catch (e) {
+      console.error('deleteCourseUpdate', e)
+    }
   }
 
 export {

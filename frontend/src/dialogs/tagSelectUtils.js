@@ -1,5 +1,6 @@
 import chroma from 'chroma-js'
 
+// TODO add more colors
 const colors = ['purple', 'blue', 'darkturquoise', 'green', 'orange', 'maroon']
 
 // eslint-disable-next-line no-extend-native

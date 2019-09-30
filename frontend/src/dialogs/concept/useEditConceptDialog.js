@@ -14,7 +14,7 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
   })
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: cache.updateConceptUpdate
+    update: cache.updateConceptUpdate(workspaceId)
   })
 
   return (conceptId, name, description, tags, official, frozen) => openDialog({
