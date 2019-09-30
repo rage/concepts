@@ -203,7 +203,6 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
 
   const isTemplate = Boolean(workspace.asTemplate?.id)
   const conceptTags = backendToSelect(workspace.conceptTags)
-  console.log(workspace, conceptTags)
 
   const startMerging = () => {
     setEditing(null)

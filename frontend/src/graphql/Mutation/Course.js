@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost'
 
 const CREATE_COURSE = gql`
 mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
-                      $frozen: Boolean, $tags: [TagCreateInput!]) {
+                      $frozen: Boolean, $tags: [TagInput!]) {
   createCourse(name: $name, workspaceId: $workspaceId, official: $official,
                frozen: $frozen, tags: $tags) {
     id

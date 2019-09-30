@@ -1,7 +1,8 @@
-const { ForbiddenError } = require('apollo-server-core')
+import { ForbiddenError } from 'apollo-server-core'
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullShield } = require('../../errors')
+import { checkAccess, Role, Privilege } from '../../accessControl'
+import { nullShield } from '../../errors'
+import { createMissingTags, filterTags } from './tagUtils'
 
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, frozen, tags }, context) {
@@ -19,7 +20,7 @@ const CourseQueries = {
       frozen: Boolean(frozen),
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
-      tags: { create: tags }
+      tags: { connect: await createMissingTags(tags, workspaceId, context, 'courseTags') }
     })
   },
 
@@ -63,19 +64,8 @@ const CourseQueries = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldTags = await context.prisma.course({ id }).tags()
 
-    const tagsToDelete = tags
-      ? oldTags.filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
-        .map(oldTag => ({ id: oldTag.id }))
-      : []
-    const tagsToCreate = tags
-      ? tags.filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
-      : []
-
     const data = {
-      tags: {
-        delete: tagsToDelete,
-        create: tagsToCreate
-      },
+      tags: await filterTags(tags, oldTags, workspaceId, context, 'courseTags'),
       official: Boolean(official),
       frozen: Boolean(frozen)
     }

@@ -2,6 +2,7 @@ import chroma from 'chroma-js'
 
 const colors = ['purple', 'blue', 'darkturquoise', 'green', 'orange', 'maroon']
 
+// eslint-disable-next-line no-extend-native
 String.prototype.hashCode = function() {
   let hash = 0
   for (let i = 0; i < this.length; i++)
@@ -13,12 +14,14 @@ export const backendToSelect = tags => tags ? tags.map(tag => ({
   value: tag.name,
   label: tag.name,
   type: tag.type,
-  color: colors[((tag.name.hashCode() % colors.length) + colors.length) % colors.length]
+  color: colors[((tag.name.hashCode() % colors.length) + colors.length) % colors.length],
+  id: tag.id
 })) : []
 
 export const selectToBackend = tags => tags?.map(tag => ({
   type: tag.type,
-  name: tag.value
+  name: tag.value,
+  id: tag.id
 })) || []
 
 export const tagSelectStyles = {
