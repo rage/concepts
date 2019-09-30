@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost'
 
 const UPDATE_CONCEPT = gql`
 mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean, 
-                       $frozen: Boolean, $tags: [TagUpdateInput!]) {
+                       $frozen: Boolean, $tags: [TagInput!]) {
   updateConcept(id: $id, name: $name, description: $description, 
                 official: $official, frozen: $frozen,  tags: $tags) {
     id

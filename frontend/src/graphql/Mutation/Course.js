@@ -45,7 +45,7 @@ mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
 
 const UPDATE_COURSE = gql`
 mutation updateCourse($id: ID!, $name: String!, $official: Boolean,
-                      $frozen: Boolean, $tags: [TagUpdateInput!]) {
+                      $frozen: Boolean, $tags: [TagInput!]) {
   updateCourse(id: $id, name: $name, official: $official, frozen: $frozen, tags: $tags) {
     id
     name
