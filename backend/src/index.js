@@ -22,6 +22,20 @@ const resolvers = {
   Mutation: {
     ...mutations
   },
+  Subscription: {
+    concepts: {
+      subscribe: (parent, args, ctx, info) => {
+        return ctx.db.subscription.concept(
+          {
+            where: {
+              mutation_in: ['CREATED', 'UPDATED'],
+            },
+          },
+          info
+        )
+      }
+    }
+  },
   ...types
 }
 

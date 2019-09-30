@@ -5,6 +5,8 @@ secret: $(env:SECRET)
 generate:
   - generator: javascript-client
     output: ./schema/generated/prisma-client/
+  - generator: graphql-schema
+    output: ./schema/generated/prisma-client/prisma.graphql
 
 hooks:
   post-deploy:

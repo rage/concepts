@@ -1,3 +1,5 @@
+# import ConceptSubscriptionPayload from "./prisma-client/prisma.graphql"
+
 type Query {
   # Authentication
   allUsers: [User!]!
@@ -110,6 +112,10 @@ type Mutation {
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
   mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagCreateInput!]): Concept!
+}
+
+type Subscription {
+  concepts(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
