@@ -8,7 +8,6 @@ import { Edit as EditIcon, Delete as DeleteIcon, Lock as LockIcon } from '@mater
 import Select from 'react-select/creatable'
 
 import { Role } from '../../lib/permissions'
-import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 import MergeDialog from './MergeDialog'
 import { useLoginStateValue } from '../../store'
 import {
@@ -106,7 +105,8 @@ const Concept = ({
   updateConcept, deleteConcept,
   merging, toggleMergingConcept,
   divider = true,
-  checkboxRef
+  checkboxRef,
+  conceptTags
 }) => {
   const classes = useStyles()
   return (
@@ -136,6 +136,7 @@ const Concept = ({
             cancel={() => setEditing(null)}
             defaultValues={concept}
             action='Save'
+            tagOptions={conceptTags}
           />
         ) : <>
           <ListItemText className={classes.conceptBody}>
@@ -201,6 +202,8 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
   const [sortMethod, setSortMethod] = useState('CREATION_ASC')
 
   const isTemplate = Boolean(workspace.asTemplate?.id)
+  const conceptTags = backendToSelect(workspace.conceptTags)
+  console.log(workspace, conceptTags)
 
   const startMerging = () => {
     setEditing(null)
@@ -331,6 +334,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
             checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
               : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                 : undefined}
+            conceptTags={conceptTags}
           />
         ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
           group.map((concept, conceptIndex) => includeConcept(concept) &&
@@ -348,6 +352,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
               checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
                 : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                   : undefined}
+              conceptTags={conceptTags}
             />
           ).concat(index < array.length - 1 ? [<hr key={index} />] : [])
         )
@@ -358,7 +363,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         infoBox.redrawIfOpen('manager',
           'CREATE_CONCEPT_NAME', 'CREATE_CONCEPT_DESCRIPTION', 'CREATE_CONCEPT_TAGS',
           'CREATE_CONCEPT_SUBMIT')
-      }} defaultValues={{ official: isTemplate }} />
+      }} defaultValues={{ official: isTemplate }} tagOptions={conceptTags} />
     </Card>
   )
 }
@@ -372,7 +377,7 @@ const initialState = {
   frozen: undefined
 }
 
-const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }) => {
+const CreateConcept = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -441,7 +446,7 @@ const CreateConcept = ({ submit, defaultValues = {}, action = 'Create', cancel }
           tags: [...input.tags, onTagCreate(newOption)]
         })}
         styles={tagSelectStyles}
-        options={Object.values(TaxonomyTags)}
+        options={tagOptions}
         value={input.tags}
         ref={elem => {
           if (action === 'Create' && elem?.select?.select) {

@@ -227,6 +227,8 @@ type Workspace {
   tokens: [WorkspaceToken!]!
   mainCourse: Course
   pointGroups: [PointGroup!]!
+  courseTags: [Tag!]
+  conceptTags: [Tag!]
 }
 
 type WorkspaceParticipant {

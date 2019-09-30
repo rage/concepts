@@ -1,11 +1,17 @@
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation, useQuery } from 'react-apollo-hooks'
 
 import { CREATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
-import { selectToBackend } from '../tagSelectUtils'
+import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
+import { WORKSPACE_BY_ID } from '../../graphql/Query'
+
 const useCreateCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
+
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
+    variables: { id: workspaceId }
+  })
 
   const createCourse = useMutation(CREATE_COURSE, {
     update: cache.createCourseUpdate(workspaceId)
@@ -37,16 +43,10 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       type: 'checkbox',
       hidden: !isStaff
     }, {
-      type: 'select',
       name: 'tags',
-      isMultiSelect: true,
-      menuIsOpen: false,
       label: 'Themes...',
-      components: {
-        DropdownIndicator: null
-      },
-      valueMutator: selectToBackend,
-      values: []
+      ...tagSelectProps(),
+      values: backendToSelect(workspaceQuery.data.workspaceById.courseTags)
     }]
   })
 }

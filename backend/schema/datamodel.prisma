@@ -52,8 +52,8 @@ type Workspace {
   tokens: [WorkspaceToken!]! @relation(name: "WorkspaceAccessToken", onDelete: CASCADE)
   mainCourse: Course @relation(link: INLINE, name: "MainCourse")
   pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup")
-  courseTags: [Tag!]!
-  conceptTags: [Tag!]!
+  courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
+  conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
 }
 
 type WorkspaceParticipant {

@@ -57,6 +57,32 @@ query($id : ID!) {
 }
 `
 
+const bloom = [{
+  name: 'REMEMBER',
+  type: 'bloom',
+  priority: 0
+}, {
+  name: 'UNDERSTAND',
+  type: 'bloom',
+  priority: 100
+}, {
+  name: 'APPLY',
+  type: 'bloom',
+  priority: 200
+}, {
+  name: 'ANALYZE',
+  type: 'bloom',
+  priority: 300
+}, {
+  name: 'EVALUATE',
+  type: 'bloom',
+  priority: 400
+}, {
+  name: 'CREATE',
+  type: 'bloom',
+  priority: 500
+}]
+
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
@@ -72,6 +98,9 @@ const WorkspaceMutations = {
             connect: { id: context.user.id }
           }
         }]
+      },
+      conceptTags: {
+        create: bloom
       }
     })
   },
@@ -104,6 +133,9 @@ const WorkspaceMutations = {
       name,
       asTemplate: {
         connect: { id: projectId }
+      },
+      conceptTags: {
+        create: bloom
       },
       participants: {
         create: [{
