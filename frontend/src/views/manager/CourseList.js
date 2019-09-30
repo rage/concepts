@@ -212,9 +212,6 @@ const CreateCourse = ({
       />
       <Select
         onChange={selected => setInput({ ...input, tags: selected || [] })}
-        components={{
-          DropdownIndicator: null
-        }}
         onKeyDown={handleKeyDownSelect}
         onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
