@@ -1,7 +1,8 @@
 import chroma from 'chroma-js'
 
 // TODO add more colors
-const colors = ['purple', 'blue', 'darkturquoise', 'green', 'orange', 'maroon']
+const colors = ['purple', 'blue', 'darkturquoise', 'green', 'orange', 'maroon', 
+'red', 'purple', 'indigo', 'darkGreen', 'brown', 'grey']
 
 // eslint-disable-next-line no-extend-native
 String.prototype.hashCode = function() {
