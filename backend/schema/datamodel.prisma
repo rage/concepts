@@ -52,6 +52,8 @@ type Workspace {
   tokens: [WorkspaceToken!]! @relation(name: "WorkspaceAccessToken", onDelete: CASCADE)
   mainCourse: Course @relation(link: INLINE, name: "MainCourse")
   pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup")
+  courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
+  conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
 }
 
 type WorkspaceParticipant {
@@ -166,7 +168,7 @@ type Completion {
 type Tag {
   id: ID! @id
   name: String!
-  type: String! @default(value: "common")
+  type: String! @default(value: "custom")
   priority: Int! @default(value: 0)
 }
 

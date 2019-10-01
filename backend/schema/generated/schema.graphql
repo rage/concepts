@@ -51,14 +51,14 @@ type Mutation {
   login(tmcToken: String!): AuthPayload
   createGuest: AuthPayload
   # Course mutations
-  createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagCreateInput!]): Course
+  createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
   deleteCourse(id: ID!): Course
-  updateCourse(id: ID!, name: String!, official: Boolean, frozen: Boolean, tags: [TagUpdateInput!]): Course
+  updateCourse(id: ID!, name: String!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagCreateInput!]): Concept
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
   deleteConcept(id: ID!): DeletedConcept
-  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagUpdateInput!]): Concept
+  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
@@ -109,7 +109,7 @@ type Mutation {
 
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
-  mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagCreateInput!]): Concept!
+  mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
@@ -143,13 +143,7 @@ type AuthPayload {
   user: User!
 }
 
-input TagCreateInput {
-  name: String!
-  type: String
-  priority: Int
-}
-
-input TagUpdateInput {
+input TagInput {
   id: ID
   name: String!
   type: String
@@ -227,6 +221,8 @@ type Workspace {
   tokens: [WorkspaceToken!]!
   mainCourse: Course
   pointGroups: [PointGroup!]!
+  courseTags: [Tag!]
+  conceptTags: [Tag!]
 }
 
 type WorkspaceParticipant {

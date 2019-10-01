@@ -89,12 +89,11 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
   const createConcept = useMutation(CREATE_CONCEPT, {
-    update: (store, response) => {
-      cache.createConceptUpdate(store, response)
-      cache.createConceptFromByIdUpdate(store, response, workspaceId)
-    }
+    update: cache.createConceptUpdate(workspaceId)
   })
-  const updateConcept = useMutation(UPDATE_CONCEPT, { update: cache.updateConceptUpdate })
+  const updateConcept = useMutation(UPDATE_CONCEPT, {
+    update: cache.updateConceptUpdate(workspaceId)
+  })
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: (store, response) => {
       cache.deleteConceptUpdate(store, response)

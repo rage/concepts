@@ -1,16 +1,20 @@
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation, useQuery } from 'react-apollo-hooks'
 
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
-import TaxonomyTags from './TaxonomyTags'
-import tagSelectProps from '../tagSelectUtils'
+import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
+import { WORKSPACE_BY_ID } from '../../graphql/Query'
 
-const useEditConceptDialog = isStaff => {
+const useEditConceptDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
 
+  const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
+    variables: { id: workspaceId }
+  })
+
   const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: cache.updateConceptUpdate
+    update: cache.updateConceptUpdate(workspaceId)
   })
 
   return (conceptId, name, description, tags, official, frozen) => openDialog({
@@ -48,7 +52,7 @@ const useEditConceptDialog = isStaff => {
       name: 'tags',
       label: 'Select tags...',
       ...tagSelectProps(tags),
-      values: Object.values(TaxonomyTags)
+      values: backendToSelect(workspaceQuery.data.workspaceById.conceptTags)
     }]
   })
 }

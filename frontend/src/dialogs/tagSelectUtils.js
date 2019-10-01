@@ -1,20 +1,29 @@
 import chroma from 'chroma-js'
 
-import TaxonomyTags from './concept/TaxonomyTags'
+// TODO add more colors
+const colors = ['purple', 'blue', 'darkturquoise', 'green', 'orange', 'maroon', 
+'red', 'purple', 'indigo', 'darkGreen', 'brown', 'grey']
 
-export const backendToSelect = tags => tags ? tags.map(tag =>
-  tag.type === 'bloom' && tag.name in TaxonomyTags
-    ? TaxonomyTags[tag.name]
-    : {
-      value: tag.name,
-      label: tag.name,
-      type: 'custom'
-    }
-) : []
+// eslint-disable-next-line no-extend-native
+String.prototype.hashCode = function() {
+  let hash = 0
+  for (let i = 0; i < this.length; i++)
+    hash = (((hash << 5) - hash) + this.charCodeAt(i)) | 0
+  return hash
+}
+
+export const backendToSelect = tags => tags ? tags.map(tag => ({
+  value: tag.name,
+  label: tag.name,
+  type: tag.type,
+  color: colors[((tag.name.hashCode() % colors.length) + colors.length) % colors.length],
+  id: tag.id
+})) : []
 
 export const selectToBackend = tags => tags?.map(tag => ({
   type: tag.type,
-  name: tag.value
+  name: tag.value,
+  id: tag.id
 })) || []
 
 export const tagSelectStyles = {

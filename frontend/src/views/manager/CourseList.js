@@ -71,6 +71,7 @@ const CourseList = ({
   const [{ user }] = useLoginStateValue()
 
   const isTemplate = Boolean(workspace.asTemplate?.id)
+  const courseTags = backendToSelect(workspace.courseTags)
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -93,6 +94,7 @@ const CourseList = ({
               }}
               cancel={() => setEditing(null)}
               defaultValues={course}
+              tagOptions={courseTags}
               action='Save'
             /> : <>
               <ListItemText primary={
@@ -137,7 +139,7 @@ const CourseList = ({
         listRef.current.scrollTop = listRef.current.scrollHeight
         infoBox.redrawIfOpen('manager',
           'CREATE_COURSE_NAME', 'CREATE_COURSE_THEMES', 'CREATE_COURSE_SUBMIT')
-      }} defaultValues={{ official: isTemplate }} />
+      }} defaultValues={{ official: isTemplate }} tagOptions={courseTags} />
     </Card>
   )
 }
@@ -150,7 +152,7 @@ const initialState = {
 }
 
 const CreateCourse = ({
-  submit, defaultValues, action = 'Create', cancel
+  submit, defaultValues, tagOptions, action = 'Create', cancel
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -210,18 +212,15 @@ const CreateCourse = ({
       />
       <Select
         onChange={selected => setInput({ ...input, tags: selected || [] })}
-        components={{
-          DropdownIndicator: null
-        }}
         onKeyDown={handleKeyDownSelect}
         onInputChange={value => setThemeInput(value)}
         styles={tagSelectStyles}
         value={input.tags}
+        options={tagOptions}
         ref={elem => action === 'Create' && selectRef(elem?.select?.select?.controlRef)}
         isMulti
         menuPlacement='auto'
         placeholder='Themes...'
-        menuIsOpen={false}
         menuPortalTarget={document.body}
         inputValue={themeInput}
       />

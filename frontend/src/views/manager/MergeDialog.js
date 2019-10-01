@@ -10,9 +10,8 @@ import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
-import TaxonomyTags from '../../dialogs/concept/TaxonomyTags'
 
-const MergeDialogContent = ({ state, setState, concepts }) => {
+const MergeDialogContent = ({ state, setState, concepts, conceptTags }) => {
   if (!concepts) {
     return null
   }
@@ -51,7 +50,7 @@ const MergeDialogContent = ({ state, setState, concepts }) => {
           tags: [...state.tags, onTagCreate(newOption)]
         })}
         styles={tagSelectStyles}
-        options={Object.values(TaxonomyTags)}
+        options={conceptTags}
         value={state.tags}
         isMulti
         menuPlacement='auto'
@@ -108,12 +107,16 @@ const MergeDialog = ({ workspace, courseId, conceptIds, open, close }) => {
     .courses.flatMap(course => course.concepts)
     .filter(concept => conceptIds.has(concept.id))
 
+  const conceptTags = backendToSelect(workspace.conceptTags)
+
   return (
     <Dialog open={open} onClose={close} fullWidth maxWidth='sm'>
       <DialogTitle>Merge concepts</DialogTitle>
       <form onSubmit={submit}>
         <DialogContent>
-          <MergeDialogContent state={state} setState={setState} concepts={concepts} />
+          <MergeDialogContent
+            state={state} setState={setState} concepts={concepts} conceptTags={conceptTags}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={state.step <= 0 ? close : back} color='primary'>
