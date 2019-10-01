@@ -456,7 +456,7 @@ const CreateConcept = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         onMenuOpen={() => {
           setTimeout(() => {
             const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS')
-            func(selectRef.current.menuListRef)
+            func(selectRef.current?.menuListRef)
           }, 0)
         }}
         onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(null)}
