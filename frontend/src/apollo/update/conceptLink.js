@@ -1,39 +1,39 @@
 import client from '../apolloClient'
 import {
   COURSE_PREREQUISITES,
-  COURSE_BY_ID
+  LINKS_IN_COURSE
 } from '../../graphql/Query'
 
 const createConceptLinkUpdate = (courseId, workspaceId) =>
   (store, response) => {
     try {
-      const prereq = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        }
-      })
+      // const prereq = store.readQuery({
+      //   query: COURSE_PREREQUISITES,
+      //   variables: {
+      //     courseId,
+      //     workspaceId
+      //   }
+      // })
       const createdConceptLink = response.data.createConceptLink
-
-      prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-        const concept = courseLink.from.concepts
-          .find(concept => concept.id === createdConceptLink.from.id)
-        if (concept) {
-          concept.linksFromConcept.push(createdConceptLink)
-        }
-      })
-      client.writeQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        },
-        data: prereq
-      })
+      //
+      // prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
+      //   const concept = courseLink.from.concepts
+      //     .find(concept => concept.id === createdConceptLink.from.id)
+      //   if (concept) {
+      //     concept.linksFromConcept.push(createdConceptLink)
+      //   }
+      // })
+      // client.writeQuery({
+      //   query: COURSE_PREREQUISITES,
+      //   variables: {
+      //     courseId,
+      //     workspaceId
+      //   },
+      //   data: prereq
+      // })
 
       const course = store.readQuery({
-        query: COURSE_BY_ID,
+        query: LINKS_IN_COURSE,
         variables: {
           id: courseId
         }
@@ -42,11 +42,12 @@ const createConceptLinkUpdate = (courseId, workspaceId) =>
       const concept = course.courseById.concepts
         .find(concept => concept.id === createdConceptLink.to.id)
       if (concept) {
+        console.log(createdConceptLink)
         concept.linksToConcept.push(createdConceptLink)
       }
 
       client.writeQuery({
-        query: COURSE_BY_ID,
+        query: LINKS_IN_COURSE,
         variables: {
           id: courseId
         },
@@ -85,7 +86,7 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) =>
       })
 
       const course = store.readQuery({
-        query: COURSE_BY_ID,
+        query: LINKS_IN_COURSE,
         variables: {
           id: courseId
         }
@@ -97,7 +98,7 @@ const deleteConceptLinkUpdate = (courseId, workspaceId) =>
       })
 
       client.writeQuery({
-        query: COURSE_BY_ID,
+        query: LINKS_IN_COURSE,
         variables: {
           id: courseId
         },

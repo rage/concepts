@@ -156,9 +156,9 @@ const Concept = ({
       concept.tags, concept.official, concept.frozen)
   }
 
-  const hasLinkToAddingLink = addingLink && (isActive
+  const hasLinkToAddingLink = addingLink /* FIXME && (isActive
     ? concept.linksToConcept.find(link => link.from.id === addingLink.id) !== undefined
-    : concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined)
+    : concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined)*/
 
   const addingLinkIsOpposite = addingLink && addingLink.type !== ownType
 

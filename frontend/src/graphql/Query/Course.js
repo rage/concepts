@@ -45,28 +45,30 @@ query courseById($id: ID!) {
       course {
         id
       }
-      linksFromConcept {
+    }
+  }
+}
+`
+
+const LINKS_IN_COURSE = gql`
+  query linksInCourse($id: ID!) {
+    courseById(id: $id) {
+      concepts {
         id
-        official
-        frozen
-        to {
+        linksToConcept {
           id
-        }
-      }
-      linksToConcept {
-        id
-        official
-        frozen
-        from {
-          course {
+          official
+          frozen
+          from {
+            course {
+              id
+            }
             id
           }
-          id
         }
       }
     }
   }
-}
 `
 
 const COURSE_PREREQ_FRAGMENT = gql`
@@ -143,5 +145,6 @@ export {
   COURSES_BY_WORKSPACE,
   COURSE_BY_ID,
   COURSE_PREREQUISITES,
-  COURSE_PREREQ_FRAGMENT
+  COURSE_PREREQ_FRAGMENT,
+  LINKS_IN_COURSE
 }

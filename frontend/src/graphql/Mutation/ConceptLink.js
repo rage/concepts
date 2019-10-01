@@ -11,6 +11,9 @@ mutation createConceptLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: B
     }
     from {
       id
+      course {
+        id
+      }
     }
   }
 }
