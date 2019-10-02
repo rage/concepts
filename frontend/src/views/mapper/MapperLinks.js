@@ -59,7 +59,7 @@ const MapperLinks = ({
   const conceptLinkMenuRef = useRef()
 
   const linkQuery = useQuery(LINKS_IN_COURSE, {
-    variables: { courseId: courseId }
+    variables: { courseId }
   })
 
   return <div style={{ display: 'contents' }}>

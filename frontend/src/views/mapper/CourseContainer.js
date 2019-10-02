@@ -4,15 +4,11 @@ import { useMutation } from 'react-apollo-hooks'
 import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
-import NotFoundView from '../error/NotFoundView'
-import LoadingBar from '../../components/LoadingBar'
 import PrerequisiteContainer from './PrerequisiteContainer'
 import ActiveCourse from './ActiveCourse'
 import MapperLinks from './MapperLinks'
 
-const CourseContainer = ({
-  courseId, workspaceId, urlPrefix, workspaceQuery, prereqQuery, courseQuery, courseTrayOpen
-}) => {
+const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTrayOpen }) => {
   const [focusedConceptIds, setFocusedConceptIds] = useState(new Set())
   const [addingLink, setAddingLink] = useState(null)
   const [flashingLink, setFlashingLink] = useState(null)
@@ -37,7 +33,7 @@ const CourseContainer = ({
   }, [infoBox])
 
   const updateCourse = useMutation(UPDATE_COURSE, {
-    update: cache.updateCourseUpdate(workspaceId)
+    update: cache.updateCourseUpdate(workspace.id)
   })
 
   const handleMenuOpen = (event, linkId) => {
@@ -50,7 +46,7 @@ const CourseContainer = ({
   }
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: cache.deleteConceptLinkUpdate(courseId)
+    update: cache.deleteConceptLinkUpdate(course.id)
   })
 
   const handleMenuClose = () => {
@@ -76,35 +72,25 @@ const CourseContainer = ({
     setFocusedConceptIds(newFocusedConceptIds)
   }
 
-  if (workspaceQuery.error) {
-    return <NotFoundView message='Workspace not found' />
-  } else if (courseQuery.error) {
-    return <NotFoundView message='Course not found' />
-  } else if (!prereqQuery.data.courseAndPrerequisites || !courseQuery.data.courseById
-    || !workspaceQuery.data.workspaceById) {
-    return <LoadingBar id='course-view' />
-  }
-
-  const courseSet = new Set(prereqQuery.data.courseAndPrerequisites?.linksToCourse
-    .map(link => link.from.id))
+  const courseSet = new Set(courseLinks.map(link => link.from.id))
 
   return <>
     <PrerequisiteContainer
-      courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-      courseId={courseQuery.data.courseById.id}
+      courseLinks={courseLinks}
+      courseId={course.id}
       focusedConceptIds={focusedConceptIds}
       addingLink={addingLink}
       setAddingLink={setAddingLink}
       flashLink={flashLink}
       toggleFocus={toggleFocus}
       courseTrayOpen={courseTrayOpen}
-      workspaceId={workspaceQuery.data.workspaceById.id}
+      workspaceId={workspace.id}
       urlPrefix={urlPrefix}
     />
     <ActiveCourse
       onClick={() => setAddingLink(null)}
-      course={courseQuery.data.courseById}
-      courses={workspaceQuery.data.workspaceById.courses}
+      course={course}
+      courses={workspace.courses}
       updateCourse={updateCourse}
       focusedConceptIds={focusedConceptIds}
       addingLink={addingLink}
@@ -112,11 +98,11 @@ const CourseContainer = ({
       flashLink={flashLink}
       toggleFocus={toggleFocus}
       courseTrayOpen={courseTrayOpen}
-      workspaceId={workspaceQuery.data.workspaceById.id}
+      workspaceId={workspace.id}
       urlPrefix={urlPrefix}
     />
     <MapperLinks
-      flashingLink={flashingLink} addingLink={addingLink} courseId={courseId}
+      flashingLink={flashingLink} addingLink={addingLink} courseId={course.id}
       focusedConceptIds={focusedConceptIds} conceptLinkMenu={conceptLinkMenu} courseSet={courseSet}
       handleMenuOpen={handleMenuOpen} handleMenuClose={handleMenuClose} deleteLink={deleteLink}
     />

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import React, { useState, useEffect } from 'react'
+import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core'
 import {
@@ -7,17 +7,11 @@ import {
 } from '@material-ui/icons'
 
 import { WORKSPACE_BY_ID, COURSE_BY_ID, COURSE_PREREQUISITES } from '../../graphql/Query'
-import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
-import { useLoginStateValue } from '../../store'
-import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
 import NotFoundView from '../error/NotFoundView'
 import DividerWithText from '../../components/DividerWithText'
 import LoadingBar from '../../components/LoadingBar'
-import PrerequisiteContainer from './PrerequisiteContainer'
 import CourseTray from './CourseTray'
-import ActiveCourse from './ActiveCourse'
-import MapperLinks from './MapperLinks'
 import CourseContainer from './CourseContainer'
 
 const useStyles = makeStyles(() => ({
@@ -88,6 +82,10 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     return <LoadingBar id='course-view' />
   }
 
+  const courseLinks = prereqQuery.data.courseAndPrerequisites?.linksToCourse
+  const course = courseQuery.data.courseById
+  const workspace = workspaceQuery.data.workspaceById
+
   return <>
     <div className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>
       <DividerWithText
@@ -110,16 +108,14 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         {courseTrayOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
       </Button>
       {courseTrayOpen && <CourseTray
-        activeCourseId={courseQuery.data.courseById.id}
-        courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-        courses={workspaceQuery.data.workspaceById.courses}
-        workspaceId={workspaceQuery.data.workspaceById.id}
+        activeCourseId={course.id}
+        courseLinks={courseLinks}
+        workspace={workspace}
         urlPrefix={urlPrefix}
       />}
       <CourseContainer
-        courseId={courseId} workspaceId={workspaceId} urlPrefix={urlPrefix}
-        workspaceQuery={workspaceQuery} prereqQuery={prereqQuery} courseQuery={courseQuery}
-        courseTrayOpen={courseTrayOpen}
+        urlPrefix={urlPrefix} courseTrayOpen={courseTrayOpen}
+        workspace={workspace} course={course} courseLinks={courseLinks}
       />
     </div>
   </>

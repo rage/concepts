@@ -58,11 +58,10 @@ const PrerequisiteCourse = ({
   course,
   checkboxRef,
   activeCourseId,
-  workspaceId,
+  workspace,
   createCourseLink,
   deleteCourseLink,
   openEditCourseDialog,
-  courses,
   urlPrefix
 }) => {
   const classes = useStyles()
@@ -82,7 +81,7 @@ const PrerequisiteCourse = ({
   }
 
   const deleteCourseMutation = useMutation(DELETE_COURSE, {
-    update: cache.deleteCourseUpdate(workspaceId, activeCourseId)
+    update: cache.deleteCourseUpdate(workspace.id, activeCourseId)
   })
 
   const deleteCourse = () => {
@@ -94,12 +93,12 @@ const PrerequisiteCourse = ({
             id: course.id
           }
         }).then(() => {
-          if (activeCourseId === course.id) {
-            if (courses.length > 1) {
-              const nextCourse = courses.find(c => c.id !== course.id)
-              history.push(`${urlPrefix}/${workspaceId}/mapper/${nextCourse.id}`)
+          if (activeCourseId === workspace.course.id) {
+            if (workspace.courses.length > 1) {
+              const nextCourse = workspace.courses.find(c => c.id !== course.id)
+              history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
             } else {
-              history.push(`${urlPrefix}/${workspaceId}/mapper`)
+              history.push(`${urlPrefix}/${workspace.id}/mapper`)
             }
           }
         })
@@ -116,7 +115,7 @@ const PrerequisiteCourse = ({
         })
       } else {
         await createCourseLink({
-          variables: { to: activeCourseId, from: course.id, workspaceId: workspaceId }
+          variables: { to: activeCourseId, from: course.id, workspaceId: workspace.id }
         })
       }
       setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 0)
@@ -159,28 +158,22 @@ const PrerequisiteCourse = ({
   )
 }
 
-const CourseTray = ({
-  activeCourseId,
-  workspaceId,
-  courseLinks,
-  courses,
-  urlPrefix
-}) => {
+const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
   const [filterKeyword, setFilterKeyword] = useState('')
 
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
 
-  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
-  const openCreateCourseDialog = useCreateCourseDialog(workspaceId, user.role >= Role.STAFF)
+  const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
+  const openCreateCourseDialog = useCreateCourseDialog(workspace.id, user.role >= Role.STAFF)
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
-    update: cache.createCourseLinkUpdate(workspaceId, activeCourseId)
+    update: cache.createCourseLinkUpdate(workspace.id, activeCourseId)
   })
 
   const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
-    update: cache.deleteCourseLinkUpdate(workspaceId, activeCourseId)
+    update: cache.deleteCourseLinkUpdate(workspace.id, activeCourseId)
   })
 
   const handleKeywordInput = (e) => {
@@ -206,30 +199,26 @@ const CourseTray = ({
         onChange={handleKeywordInput}
       />
 
-      {
-        courses &&
-        <List disablePadding className={classes.list}>
-          {courses
-            .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
-            .map((course, index) =>
-              <PrerequisiteCourse
-                key={course.id}
-                course={course}
-                checkboxRef={index === 1 && infoBox.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
-                activeCourseId={activeCourseId}
-                createCourseLink={createCourseLink}
-                deleteCourseLink={deleteCourseLink}
-                isPrerequisite={isPrerequisite(course)}
-                getLinkToDelete={getLinkToDelete}
-                workspaceId={workspaceId}
-                openEditCourseDialog={openEditCourseDialog}
-                courses={courses}
-                urlPrefix={urlPrefix}
-              />
-            )
-          }
-        </List>
-      }
+      <List disablePadding className={classes.list}>
+        {workspace.courses
+          .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
+          .map((course, index) =>
+            <PrerequisiteCourse
+              key={course.id}
+              course={course}
+              checkboxRef={index === 1 && infoBox.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
+              activeCourseId={activeCourseId}
+              createCourseLink={createCourseLink}
+              deleteCourseLink={deleteCourseLink}
+              isPrerequisite={isPrerequisite(course)}
+              getLinkToDelete={getLinkToDelete}
+              openEditCourseDialog={openEditCourseDialog}
+              workspace={workspace}
+              urlPrefix={urlPrefix}
+            />
+          )
+        }
+      </List>
       <Button
         ref={infoBox.ref('mapper', 'CREATE_COURSE')}
         onClick={openCreateCourseDialog}
