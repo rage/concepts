@@ -21,7 +21,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
   const dataPortingMutation = useMutation(IMPORT_DATA, {
     update: projectId
       ? cache.jsonTemplatePortUpdate(projectId)
-      : cache.jsonPortUpdate()
+      : cache.jsonPortUpdate
   })
 
   const handlePort = event => {

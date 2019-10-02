@@ -5,9 +5,8 @@ mutation createGuest {
   createGuest {
     token
     user {
-      id,
+      id
       role
-      guideProgress
     }
   }
 }
@@ -20,7 +19,6 @@ mutation authenticateUser($tmcToken: String!) {
     user {
       id
       role
-      guideProgress
     }
   }
 }

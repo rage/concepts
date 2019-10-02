@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost'
 
 const CREATE_CONCEPT_LINK = gql`
 mutation createConceptLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean) {
-  createConceptLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official) {
+  createConceptLink(to: $to, from: $from, workspaceId: $workspaceId, official: $official) {
     id
     official
     frozen

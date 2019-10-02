@@ -118,7 +118,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   }
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: cache.deleteConceptLinkUpdate(courseId, workspaceId)
+    update: cache.deleteConceptLinkUpdate(courseId)
   })
 
   const handleMenuClose = () => {

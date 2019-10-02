@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -82,7 +83,7 @@ const Concept = ({
   const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
+    update: cache.createConceptLinkUpdate(activeCourseId)
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
@@ -111,14 +112,21 @@ const Concept = ({
             workspaceId
           }
         })
-        flashLink(resp.data.createConceptLink)
+        // FIXME https://github.com/facebook/react/issues/10231#issuecomment-316644950
+        // CourseMapperView re-render can take 100ms+, so we force-batch these updates.
+        // If/when React starts batching them automatically and removes unstable_batchedUpdates,
+        // this needs to be changed too.
+        ReactDOM.unstable_batchedUpdates(() => {
+          flashLink(resp.data.createConceptLink)
+          setAddingLink(null)
+        })
       } catch (err) {
+        setAddingLink(null)
         messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })
       }
-      setAddingLink(null)
     } else {
       setAddingLink({
         id: concept.id,

@@ -7,7 +7,6 @@ type User {
   workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser")
   projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser")
   createdAt: DateTime! @createdAt
-  guideProgress: Int! @default(value: 0)
   lastActivity: DateTime
 }
 

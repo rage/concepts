@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 import { makeStyles, Menu, MenuItem } from '@material-ui/core'
 
 import { ConceptLink } from './concept'
@@ -58,12 +58,12 @@ const MapperLinks = ({
   const classes = useStyles()
   const conceptLinkMenuRef = useRef()
 
-  const courseQuery = useQuery(LINKS_IN_COURSE, {
-    variables: { id: courseId }
+  const linkQuery = useQuery(LINKS_IN_COURSE, {
+    variables: { courseId: courseId }
   })
 
   return <>
-    {courseQuery.data.courseById?.concepts.map(concept => (
+    {linkQuery.data.linksInCourse?.concepts.map(concept => (
       concept.linksToConcept.map(link => courseSet.has(link.from.course.id) &&
         <ConceptLink
           key={`concept-link-${link.id}`} delay={1}

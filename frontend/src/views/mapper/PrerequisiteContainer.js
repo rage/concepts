@@ -36,9 +36,9 @@ const PrerequisiteContainer = ({
       margin='0px 8px 0px 16px'
     />
     {
-      courseLinks && courseLinks.length !== 0 ?
+      courseLinks?.length > 0 ?
         <div onClick={() => setAddingLink(null)} className={classes.root}>
-          {courseLinks && <Masonry courseTrayOpen={courseTrayOpen}>
+          <Masonry courseTrayOpen={courseTrayOpen}>
             {courseLinks.map((link, index) =>
               <Course
                 key={link.id}
@@ -58,7 +58,7 @@ const PrerequisiteContainer = ({
                 urlPrefix={urlPrefix}
               />
             )}
-          </Masonry>}
+          </Masonry>
         </div>
         :
         null

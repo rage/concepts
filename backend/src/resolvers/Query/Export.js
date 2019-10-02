@@ -2,10 +2,8 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { NotFoundError } = require('../../errors')
 
 const exportQuery = `
-query($id : ID!) {
-  workspace(where: {
-    id: $id
-  }) {
+query($id: ID!) {
+  workspace(where: { id: $id }) {
     workspaceId: id
     workspace: name
     courseTags {

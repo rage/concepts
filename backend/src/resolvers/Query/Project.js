@@ -14,7 +14,7 @@ query($id: ID!) {
 
 const ProjectQueries = {
   async allProjects(root, args, context) {
-    await checkAccess(context, { minimumRole: Role.STAFF })
+    await checkAccess(context, { minimumRole: Role.ADMIN })
     return await context.prisma.projects()
   },
   async limitedProjectById(root, args, context) {
