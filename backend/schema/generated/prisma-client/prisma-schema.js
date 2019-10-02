@@ -4141,7 +4141,6 @@ type User {
   workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   createdAt: DateTime!
-  guideProgress: Int!
   lastActivity: DateTime
 }
 
@@ -4157,7 +4156,6 @@ input UserCreateInput {
   role: Role!
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4181,7 +4179,6 @@ input UserCreateWithoutProjectParticipationsInput {
   tmcId: Int
   role: Role!
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4190,7 +4187,6 @@ input UserCreateWithoutWorkspaceParticipationsInput {
   tmcId: Int
   role: Role!
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4208,8 +4204,6 @@ enum UserOrderByInput {
   role_DESC
   createdAt_ASC
   createdAt_DESC
-  guideProgress_ASC
-  guideProgress_DESC
   lastActivity_ASC
   lastActivity_DESC
 }
@@ -4219,7 +4213,6 @@ type UserPreviousValues {
   tmcId: Int
   role: Role!
   createdAt: DateTime!
-  guideProgress: Int!
   lastActivity: DateTime
 }
 
@@ -4246,7 +4239,6 @@ input UserUpdateDataInput {
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4255,14 +4247,12 @@ input UserUpdateInput {
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
 input UserUpdateManyMutationInput {
   tmcId: Int
   role: Role
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4291,7 +4281,6 @@ input UserUpdateWithoutProjectParticipationsDataInput {
   tmcId: Int
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4299,7 +4288,6 @@ input UserUpdateWithoutWorkspaceParticipationsDataInput {
   tmcId: Int
   role: Role
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
-  guideProgress: Int
   lastActivity: DateTime
 }
 
@@ -4359,14 +4347,6 @@ input UserWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
-  guideProgress: Int
-  guideProgress_not: Int
-  guideProgress_in: [Int!]
-  guideProgress_not_in: [Int!]
-  guideProgress_lt: Int
-  guideProgress_lte: Int
-  guideProgress_gt: Int
-  guideProgress_gte: Int
   lastActivity: DateTime
   lastActivity_not: DateTime
   lastActivity_in: [DateTime!]

@@ -5,42 +5,24 @@ type Query {
   allUsers: [User!]!
   userById(id: ID!): User!
 
-  # Workspace queries
-  allWorkspaces: [Workspace!]!
-  workspaceById(id: ID!): Workspace
-  workspacesForUser: [WorkspaceParticipant!]!
-
   # Project queries
   allProjects: [Project!]!
+  projectsForUser: [ProjectParticipant!]!
   projectById(id: ID!): Project
   limitedProjectById(id: ID!): LimitedProject
-  projectsForUser: [ProjectParticipant!]!
+
+  # Workspace queries
+  allWorkspaces: [Workspace!]!
+  workspacesForUser: [WorkspaceParticipant!]!
+  workspaceById(id: ID!): Workspace
+  workspaceBySourceTemplate(sourceId: ID!): Workspace
 
   # Course queries
-  allCourses: [Course!]!
   courseById(id: ID!): Course
-  coursesByWorkspace(workspaceId: ID!): [Course!]!
-  courseAndPrerequisites(courseId: ID!): Course
-
-  # Course link queries
-  allCourseLinks: [CourseLink!]!
-  linksToCourse(id: ID!): [CourseLink!]!
-  linksFromCourse(id: ID!): [CourseLink!]!
-
-  # Concept queries
-  allConcepts: [Concept!]!
-  conceptById(id: ID!): Concept
-
-  # Concept link queries
-  allConceptLinks: [ConceptLink!]!
-  linksToConcept(id: ID!): [ConceptLink!]!
-  linksFromConcept(id: ID!): [ConceptLink!]!
+  conceptsByCourse(id: ID!): [Concept!]!
 
   # Porting queries
   exportData(workspaceId: ID!): String!
-
-  # Project
-  workspaceBySourceTemplate(sourceId: ID!): Workspace
 
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace
@@ -52,6 +34,7 @@ type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload
   createGuest: AuthPayload
+
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
   deleteCourse(id: ID!): Course
@@ -97,9 +80,6 @@ type Mutation {
 
   # Porting mutations
   importData(data: String!): Workspace
-
-  # User mutations
-  updateUser(id: ID!, guideProgress: Int!): User
 
   # Sharing
   createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
@@ -182,7 +162,6 @@ type User {
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!
-  guideProgress: Int!
   lastActivity: DateTime
 }
 
