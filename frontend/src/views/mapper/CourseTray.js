@@ -140,11 +140,7 @@ const PrerequisiteCourse = ({
           >
             <MoreVertIcon />
           </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <MenuItem onClick={() => {
               handleMenuClose()
               openEditCourseDialog(course.id, course.name, course.official,

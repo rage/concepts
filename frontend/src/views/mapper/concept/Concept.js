@@ -11,10 +11,7 @@ import {
 import Tooltip from '@material-ui/core/Tooltip'
 
 import { Role } from '../../../lib/permissions'
-import {
-  DELETE_CONCEPT,
-  CREATE_CONCEPT_LINK
-} from '../../../graphql/Mutation'
+import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
