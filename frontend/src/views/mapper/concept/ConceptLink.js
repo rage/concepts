@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
 
+const container = document.getElementById("link-container")
+
 // TODO turn this into a functional component
 export default class ConceptLink extends Component {
   constructor(props) {
@@ -190,7 +192,7 @@ const useStyles = makeStyles({
 })
 
 const Line = ({
-  x0, y0, x1, y1, from, to, followMouse, within = '', refreshPoints, onContextMenu, linkRef, zIndex,
+  x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
   active, attributes, linkId, classes: propClasses
 }) => {
   const classes = useStyles({ classes: propClasses })
@@ -261,19 +263,19 @@ const Line = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const withinEl = within ? document.getElementById(within) : document.body
+  within = within || container
 
   // componentDidMount
   useLayoutEffect(() => {
-    withinEl.appendChild(el.current)
+    within.appendChild(el.current)
     if (followMouse) {
-      withinEl.addEventListener('mousemove', handleMouse)
+      within.addEventListener('mousemove', handleMouse)
     }
     // componentWillUnmount
     return () => {
-      withinEl.removeChild(el.current)
+      within.removeChild(el.current)
       if (followMouse) {
-        withinEl.removeEventListener('mousemove', handleMouse)
+        within.removeEventListener('mousemove', handleMouse)
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

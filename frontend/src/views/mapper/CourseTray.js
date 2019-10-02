@@ -127,6 +127,7 @@ const PrerequisiteCourse = ({
       })
     }
   }
+
   return (
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
       <ListItem ref={checkboxRef} divider button onClick={onClick}>

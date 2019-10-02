@@ -62,7 +62,7 @@ const MapperLinks = ({
     variables: { courseId: courseId }
   })
 
-  return <>
+  return <div style={{ display: 'contents' }}>
     {linkQuery.data.linksInCourse?.concepts.map(concept => (
       concept.linksToConcept.map(link => courseSet.has(link.from.course.id) &&
         <ConceptLink
@@ -108,11 +108,11 @@ const MapperLinks = ({
       <MenuItem onClick={deleteLink}>Delete link</MenuItem>
     </Menu>
     {addingLink && <ConceptLink
-      key='concept-link-creating' active
+      active within={document.body} // This needs to be directly in body to work
       from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
       followMouse posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
     />}
-  </>
+  </div>
 }
 
 export default MapperLinks
