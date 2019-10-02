@@ -112,8 +112,6 @@ const App = () => {
   const [{ loggedIn }] = useLoginStateValue()
   const classes = useStyles()
 
-  console.log('App rerendered')
-
   return <div className={classes.root}>
     <Route render={({ location }) => <NavBar location={location} />} />
 
