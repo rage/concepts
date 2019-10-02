@@ -193,13 +193,13 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
             {courseTrayOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </Button> : null
       }
-      <CourseTray
+      {courseTrayOpen && <CourseTray
         activeCourseId={courseQuery.data.courseById.id}
         courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
-        courseTrayOpen={courseTrayOpen}
         courses={workspaceQuery.data.workspaceById.courses}
         workspaceId={workspaceQuery.data.workspaceById.id}
-      />
+        urlPrefix={urlPrefix}
+      />}
       <PrerequisiteContainer
         courseLinks={prereqQuery.data.courseAndPrerequisites.linksToCourse}
         courseId={courseQuery.data.courseById.id}

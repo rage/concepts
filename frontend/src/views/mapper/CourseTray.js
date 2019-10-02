@@ -24,13 +24,9 @@ const useStyles = makeStyles(theme => ({
     boxSizing: 'border-box',
     borderRadius: '0 0 4px 0',
     flexDirection: 'column',
-    display: 'none',
-    '&$courseTrayOpen': {
-      display: 'flex',
-      gridArea: 'courseTray'
-    }
+    display: 'flex',
+    gridArea: 'courseTray'
   },
-  courseTrayOpen: {},
   title: {
     paddingBottom: '0px',
     maxWidth: 'calc(100% - 64px)',
@@ -133,9 +129,7 @@ const PrerequisiteCourse = ({
   }
   return (
     <Tooltip title='Add course as prerequisite' enterDelay={500} leaveDelay={400} placement='right'>
-      <ListItem
-        ref={checkboxRef} divider button onClick={onClick}
-      >
+      <ListItem ref={checkboxRef} divider button onClick={onClick}>
         <ListItemText className={classes.courseName}>{course.name}</ListItemText>
         <ListItemSecondaryAction>
           <Checkbox checked={isPrerequisite} onClick={onClick} color='primary' />
@@ -165,7 +159,6 @@ const PrerequisiteCourse = ({
 }
 
 const CourseTray = ({
-  courseTrayOpen,
   activeCourseId,
   workspaceId,
   courseLinks,
@@ -199,9 +192,7 @@ const CourseTray = ({
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
   return (
-    <Paper
-      elevation={0} className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}
-    >
+    <Paper elevation={0} className={classes.root}>
       <TextField
         margin='dense'
         label='Filter'
