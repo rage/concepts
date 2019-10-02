@@ -83,6 +83,8 @@ const BaseWorkspaceList = ({
       throw Error('This cardHeaderAction is specified in UserWorkspaceList.js')
     case TYPE_MERGE:
       throw Error('This cardHeaderAction is specified in MergeList.js')
+    default:
+      throw Error(`Invalid type ${type}`)
     }
   }
 
@@ -96,6 +98,8 @@ const BaseWorkspaceList = ({
       return infoBox.ref('project', 'WORKSPACE_ACTIONS')
     case TYPE_MERGE:
       return infoBox.ref('project', 'MERGE_ACTIONS')
+    default:
+      throw Error(`Invalid type ${type}`)
     }
   }
 
@@ -109,6 +113,8 @@ const BaseWorkspaceList = ({
       return infoBox.ref('project', 'GOTO_USER_WORKSPACE')
     case TYPE_MERGE:
       return infoBox.ref('project', 'GOTO_MERGE')
+    default:
+      throw Error(`Invalid type ${type}`)
     }
   }
 

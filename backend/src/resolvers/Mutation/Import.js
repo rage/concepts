@@ -58,7 +58,9 @@ const PortMutations = {
             privilege: Privilege.OWNER.toString(),
             user: { connect: { id: context.user.id } }
           }]
-        }
+        },
+        courseTags: { create: json.courseTags },
+        conceptTags: { create: json.conceptTags }
       })
     }
 

@@ -1,7 +1,8 @@
-const { ForbiddenError } = require('apollo-server-core')
+import { ForbiddenError } from 'apollo-server-core'
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullShield } = require('../../errors')
+import { checkAccess, Role, Privilege } from '../../accessControl'
+import { nullShield } from '../../errors'
+import { createMissingTags, filterTags } from './tagUtils'
 
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (context.role === Role.STUDENT) {
@@ -91,7 +92,7 @@ const ConceptMutations = {
       official: Boolean(official),
       frozen: Boolean(frozen),
       course: courseId ? { connect: { id: courseId } } : undefined,
-      tags: { create: tags }
+      tags: { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
     })
 
     if (createdConcept) {
@@ -126,17 +127,8 @@ const ConceptMutations = {
     const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
     const oldTags = await context.prisma.concept({ id }).tags()
 
-    const tagsToDelete = oldTags
-      .filter(oldTag => !tags.find(tag => tag.id === oldTag.id))
-      .map(oldTag => ({ id: oldTag.id }))
-    const tagsToCreate = tags
-      .filter(tag => !oldTags.find(oldTag => oldTag.id === tag.id))
-
     const data = {
-      tags: {
-        delete: tagsToDelete,
-        create: tagsToCreate
-      },
+      tags: await filterTags(tags, oldTags, workspaceId, context, 'conceptTags'),
       official: Boolean(official),
       frozen: Boolean(frozen)
     }

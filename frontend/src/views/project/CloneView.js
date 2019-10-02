@@ -12,6 +12,7 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import generateName from '../../lib/generateName'
 import useRouter from '../../useRouter'
+import { noDefault } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,7 +57,7 @@ const CloneView = ({ token, peek, projectId }) => {
   })
 
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: Boolean(token) || !(peekTemplate.data?.limitedProjectById?.activeTemplateId),
+    skip: Boolean(token) || !peekTemplate.data?.limitedProjectById?.activeTemplateId,
     variables: {
       sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
     }
@@ -128,7 +129,7 @@ const CloneView = ({ token, peek, projectId }) => {
 
   return (
     <Container component='main' maxWidth='xs'>
-      <form onSubmit={evt => {evt.preventDefault(); return handleCreate()}}>
+      <form onSubmit={noDefault(handleCreate)}>
         <TextField
           disabled={inputDisabled}
           variant='outlined'

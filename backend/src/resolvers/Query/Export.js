@@ -2,12 +2,20 @@ const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { NotFoundError } = require('../../errors')
 
 const exportQuery = `
-query($id : ID!) {
-  workspace(where: {
-    id: $id
-  }) {
+query($id: ID!) {
+  workspace(where: { id: $id }) {
     workspaceId: id
     workspace: name
+    courseTags {
+      name
+      type
+      priority
+    }
+    conceptTags {
+      name
+      type
+      priority
+    }
     courses {
       name
       official
@@ -15,7 +23,7 @@ query($id : ID!) {
         name
         description
         official
-        prerequisites: linksToConcept {
+        linksToConcept {
           official
           from {
             name
@@ -24,13 +32,15 @@ query($id : ID!) {
         tags {
           name
           type
+          priority
         }
       }
       tags {
         name
         type
+        priority
       }
-      prerequisites: linksToCourse {
+      linksToCourse {
         official
         from {
           name
@@ -62,13 +72,13 @@ const PortQueries = {
     // Create json from workspace
     return JSON.stringify({
       ...result.workspace,
-      courses: result.workspace.courses.map(({ concepts, prerequisites, ...course }) => ({
+      courses: result.workspace.courses.map(({ concepts, linksToCourse, ...course }) => ({
         ...course,
-        concepts: concepts.map(({ prerequisites, ...concept }) => ({
+        concepts: concepts.map(({ linksToConcept, ...concept }) => ({
           ...concept,
-          prerequisites: prerequisites.map(prereqMap)
+          prerequisites: linksToConcept.map(prereqMap)
         })),
-        prerequisites: prerequisites.map(prereqMap)
+        prerequisites: linksToCourse.map(prereqMap)
       }))
     })
   }

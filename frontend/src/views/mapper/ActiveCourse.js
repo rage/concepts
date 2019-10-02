@@ -98,9 +98,9 @@ const ActiveCourse = ({
           input={<InputBase classes={{ root: classes.title }} />}
           onChange={evt => history.push(`${urlPrefix}/${workspaceId}/mapper/${evt.target.value}`)}
         >
-          {courses ? courses.map(course => (
+          {courses ? courses.map(course =>
             <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-          )) : <MenuItem value={course.id}>{course.name}</MenuItem>}
+          ) : <MenuItem value={course.id}>{course.name}</MenuItem>}
         </Select>
         <div className={classes.titleEditWrapper}>
           <IconButton

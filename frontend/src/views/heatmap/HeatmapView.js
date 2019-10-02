@@ -188,7 +188,7 @@ const TableCell = forwardRef(({
 
   const mapToGrad = (amount) => {
     const colorStrength = ['#ebedf0', ...Object.values(pink).slice(0, 9)]
-    const val = (8 / maxGradVal) * (amount)
+    const val = (8 / maxGradVal) * amount
     return colorStrength[Math.ceil(val)]
   }
 
@@ -207,7 +207,7 @@ const TableCell = forwardRef(({
           }}
           title={<ul style={{ marginLeft: '-20px', marginRight: '5px' }}>
             {concepts.map(concept =>
-              (<li key={`typo-${concept}`}>{concept}</li>))}
+              <li key={`typo-${concept}`}>{concept}</li>)}
           </ul>
           }
         >

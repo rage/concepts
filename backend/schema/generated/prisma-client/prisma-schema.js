@@ -4401,6 +4401,8 @@ type Workspace {
   tokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken!]
   mainCourse: Course
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup!]
+  courseTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  conceptTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
 }
 
 type WorkspaceConnection {
@@ -4425,6 +4427,8 @@ input WorkspaceCreateInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateManyWithoutAsMergeInput {
@@ -4507,6 +4511,8 @@ input WorkspaceCreateWithoutAsMergeInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutAsTemplateInput {
@@ -4524,6 +4530,8 @@ input WorkspaceCreateWithoutAsTemplateInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutClonesInput {
@@ -4541,6 +4549,8 @@ input WorkspaceCreateWithoutClonesInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutConceptLinksInput {
@@ -4558,6 +4568,8 @@ input WorkspaceCreateWithoutConceptLinksInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutConceptsInput {
@@ -4575,6 +4587,8 @@ input WorkspaceCreateWithoutConceptsInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutCourseLinksInput {
@@ -4592,6 +4606,8 @@ input WorkspaceCreateWithoutCourseLinksInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutCoursesInput {
@@ -4609,6 +4625,8 @@ input WorkspaceCreateWithoutCoursesInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutParticipantsInput {
@@ -4626,6 +4644,8 @@ input WorkspaceCreateWithoutParticipantsInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutPointGroupsInput {
@@ -4643,6 +4663,8 @@ input WorkspaceCreateWithoutPointGroupsInput {
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutSourceProjectInput {
@@ -4660,6 +4682,8 @@ input WorkspaceCreateWithoutSourceProjectInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutSourceTemplateInput {
@@ -4677,6 +4701,8 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 input WorkspaceCreateWithoutTokensInput {
@@ -4694,6 +4720,8 @@ input WorkspaceCreateWithoutTokensInput {
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
 }
 
 type WorkspaceEdge {
@@ -5250,6 +5278,8 @@ input WorkspaceUpdateDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateInput {
@@ -5267,6 +5297,8 @@ input WorkspaceUpdateInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateManyDataInput {
@@ -5411,6 +5443,8 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutAsTemplateDataInput {
@@ -5427,6 +5461,8 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutClonesDataInput {
@@ -5443,6 +5479,8 @@ input WorkspaceUpdateWithoutClonesDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutConceptLinksDataInput {
@@ -5459,6 +5497,8 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutConceptsDataInput {
@@ -5475,6 +5515,8 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutCourseLinksDataInput {
@@ -5491,6 +5533,8 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutCoursesDataInput {
@@ -5507,6 +5551,8 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutParticipantsDataInput {
@@ -5523,6 +5569,8 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutPointGroupsDataInput {
@@ -5539,6 +5587,8 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutSourceProjectDataInput {
@@ -5555,6 +5605,8 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutSourceTemplateDataInput {
@@ -5571,6 +5623,8 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithoutTokensDataInput {
@@ -5587,6 +5641,8 @@ input WorkspaceUpdateWithoutTokensDataInput {
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
 }
 
 input WorkspaceUpdateWithWhereUniqueWithoutAsMergeInput {
@@ -5736,6 +5792,12 @@ input WorkspaceWhereInput {
   pointGroups_every: PointGroupWhereInput
   pointGroups_some: PointGroupWhereInput
   pointGroups_none: PointGroupWhereInput
+  courseTags_every: TagWhereInput
+  courseTags_some: TagWhereInput
+  courseTags_none: TagWhereInput
+  conceptTags_every: TagWhereInput
+  conceptTags_some: TagWhereInput
+  conceptTags_none: TagWhereInput
   AND: [WorkspaceWhereInput!]
   OR: [WorkspaceWhereInput!]
   NOT: [WorkspaceWhereInput!]

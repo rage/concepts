@@ -11,7 +11,7 @@ mutation mergeProject($projectId: ID!) {
 // TODO move merge concept return data into fragment with create concept data?
 const MERGE_CONCEPTS = gql`
 mutation mergeConcepts($workspaceId: ID!, $courseId: ID!, $conceptIds: [ID!]!, $name: String,
-                       $description: String, $official: Boolean, $tags: [TagCreateInput!]) {
+                       $description: String, $official: Boolean, $tags: [TagInput!]) {
   mergeConcepts(workspaceId: $workspaceId, courseId: $courseId, conceptIds: $conceptIds,
                 name: $name, description: $description, official: $official, tags: $tags) {
     __typename

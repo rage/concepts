@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -10,13 +11,11 @@ import {
 import Tooltip from '@material-ui/core/Tooltip'
 
 import { Role } from '../../../lib/permissions'
-import {
-  DELETE_CONCEPT,
-  CREATE_CONCEPT_LINK
-} from '../../../graphql/Mutation'
+import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
+import { noPropagation } from '../../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -79,10 +78,10 @@ const Concept = ({
   const [, messageDispatch] = useMessageStateValue()
   const [{ user, loggedIn }] = useLoginStateValue()
 
-  const openEditConceptDialog = useEditConceptDialog(user.role >= Role.STAFF)
+  const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: cache.createConceptLinkUpdate(activeCourseId, workspaceId)
+    update: cache.createConceptLinkUpdate(activeCourseId)
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
@@ -90,12 +89,6 @@ const Concept = ({
   })
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
-
-  // TODO make this into a library function and use it, we have the same situation in other places
-  const noPropagation = func => (evt, ...args) => {
-    evt.stopPropagation()
-    func(evt, ...args)
-  }
 
   const onClick = noPropagation(async () => {
     if (addingLink?.type === ownType) {
@@ -111,14 +104,21 @@ const Concept = ({
             workspaceId
           }
         })
-        flashLink(resp.data.createConceptLink)
+        // FIXME https://github.com/facebook/react/issues/10231#issuecomment-316644950
+        // CourseMapperView re-render can take 100ms+, so we force-batch these updates.
+        // If/when React starts batching them automatically and removes unstable_batchedUpdates,
+        // this needs to be changed too.
+        ReactDOM.unstable_batchedUpdates(() => {
+          flashLink(resp.data.createConceptLink)
+          setAddingLink(null)
+        })
       } catch (err) {
+        setAddingLink(null)
         messageDispatch({
           type: 'setError',
           data: 'Access denied'
         })
       }
-      setAddingLink(null)
     } else {
       setAddingLink({
         id: concept.id,
@@ -156,14 +156,14 @@ const Concept = ({
       concept.tags, concept.official, concept.frozen)
   }
 
-  const hasLinkToAddingLink = addingLink && (isActive
+  const hasLinkToAddingLink = addingLink /* FIXME && (isActive
     ? concept.linksToConcept.find(link => link.from.id === addingLink.id) !== undefined
-    : concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined)
+    : concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined)*/
 
   const addingLinkIsOpposite = addingLink && addingLink.type !== ownType
 
-  const linkButtonColor = ((addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
-    || (!addingLink && focusedConceptIds.has(concept.id)))
+  const linkButtonColor = (addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    || (!addingLink && focusedConceptIds.has(concept.id))
     ? 'secondary' : undefined
 
   return (

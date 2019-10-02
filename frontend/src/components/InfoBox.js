@@ -303,7 +303,7 @@ const InfoBox = ({ contextRef }) => {
       // the DOM yet when this is rendered.
       // It could be bypassed by adding a setTimeout(..., 0) after opening the overlay box, but that
       // causes other fun bugs, such as the info box jumping around when moving.
-      anchorEl={(open && overlay.box) ? overlay.box : undefined}
+      anchorEl={open && overlay.box ? overlay.box : undefined}
       placement={placement}
       modifiers={POPPER_MODIFIERS}
       className={`${classes.popper} ${enableTransition ? classes.enableTransition : ''}
