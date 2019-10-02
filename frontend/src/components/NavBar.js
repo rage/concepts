@@ -160,10 +160,10 @@ const parsePath = (path) => {
   }
 }
 
-const parseLocation = location => ([
+const parseLocation = location => [
   { name: 'Home', link: '/' },
   ...parsePath(location.pathname.split('/'))
-])
+]
 
 const pathItemId = item => item.link || item.name
 

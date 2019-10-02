@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
 
-const container = document.getElementById("link-container")
+const container = document.getElementById('link-container')
 
 // TODO turn this into a functional component
 export default class ConceptLink extends Component {
@@ -134,10 +134,10 @@ export default class ConceptLink extends Component {
       const fromBox = fromRef.current.getBoundingClientRect()
       const toBox = toRef.current.getBoundingClientRect()
 
-      const x0 = fromBox.x + fromBox.width * this.fromAnchor.x + window.pageXOffset + offset.x0
-      const y0 = fromBox.y + fromBox.height * this.fromAnchor.y + window.pageYOffset + offset.y0
-      const x1 = toBox.x + toBox.width * this.toAnchor.x + window.pageXOffset + offset.x1
-      const y1 = toBox.y + toBox.height * this.toAnchor.y + window.pageYOffset + offset.y1
+      const x0 = fromBox.x + (fromBox.width * this.fromAnchor.x) + window.pageXOffset + offset.x0
+      const y0 = fromBox.y + (fromBox.height * this.fromAnchor.y) + window.pageYOffset + offset.y0
+      const x1 = toBox.x + (toBox.width * this.toAnchor.x) + window.pageXOffset + offset.x1
+      const y1 = toBox.y + (toBox.height * this.toAnchor.y) + window.pageYOffset + offset.y1
 
       return { x0, y0, x1, y1 }
     }
@@ -206,7 +206,7 @@ const Line = ({
     const dy = (dyn.current.y || y1) - y0
     const dx = (dyn.current.x || x1) - x0
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
-    const length = Math.sqrt(dx * dx + dy * dy)
+    const length = Math.sqrt((dx * dx) + (dy * dy))
     return { x: x0, y: y0, angle, length }
   }
 
@@ -313,7 +313,7 @@ const Line = ({
   const hoverAreaStyle = {
     ...commonStyle,
     position: 'relative',
-    width: `${length - hoverAreaOffset * 2}px`,
+    width: `${length - (hoverAreaOffset * 2)}px`,
     height: `${hoverAreaWidth}px`,
     color: 'transparent',
     transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth / 2)}px)`

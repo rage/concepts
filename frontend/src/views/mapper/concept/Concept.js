@@ -167,8 +167,8 @@ const Concept = ({
 
   const addingLinkIsOpposite = addingLink && addingLink.type !== ownType
 
-  const linkButtonColor = ((addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
-    || (!addingLink && focusedConceptIds.has(concept.id)))
+  const linkButtonColor = (addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
+    || (!addingLink && focusedConceptIds.has(concept.id))
     ? 'secondary' : undefined
 
   return (

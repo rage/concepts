@@ -56,7 +56,7 @@ const CloneView = ({ token, peek, projectId }) => {
   })
 
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: Boolean(token) || !(peekTemplate.data?.limitedProjectById?.activeTemplateId),
+    skip: Boolean(token) || !peekTemplate.data?.limitedProjectById?.activeTemplateId,
     variables: {
       sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
     }

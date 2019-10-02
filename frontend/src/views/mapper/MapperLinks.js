@@ -63,7 +63,7 @@ const MapperLinks = ({
   })
 
   return <div style={{ display: 'contents' }}>
-    {linkQuery.data.linksInCourse?.concepts.map(concept => (
+    {linkQuery.data.linksInCourse?.concepts.map(concept =>
       concept.linksToConcept.map(link => courseSet.has(link.from.course.id) &&
         <ConceptLink
           key={`concept-link-${link.id}`} delay={1}
@@ -84,7 +84,7 @@ const MapperLinks = ({
           }
         />
       )
-    ))}
+    )}
     <div ref={conceptLinkMenuRef} style={{
       position: 'absolute',
       width: '1px',

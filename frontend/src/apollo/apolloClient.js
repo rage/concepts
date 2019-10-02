@@ -47,6 +47,7 @@ const client = new ApolloClient({
       const result = await fetch(resource, init)
       requestsInFlight--
       if (requestsInFlight === 0 && savingIndicator.current) {
+        // eslint-disable-next-line require-atomic-updates
         savingIndicator.current.innerText = 'All changes saved.'
       }
       return result
