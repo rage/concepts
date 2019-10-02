@@ -1,22 +1,5 @@
 import { gql } from 'apollo-boost'
 
-const COURSES_BY_WORKSPACE = gql`
-query coursesByWorkspace($workspaceId: ID!) {
-  coursesByWorkspace(workspaceId: $workspaceId) {
-    id
-    name
-    official
-    frozen
-    tags {
-      id
-      name
-      type
-      priority
-    }
-  }
-}
-`
-
 const COURSE_BY_ID = gql`
 query courseById($id: ID!) {
   courseById(id: $id) {
@@ -45,14 +28,17 @@ query courseById($id: ID!) {
       course {
         id
       }
-      linksFromConcept {
-        id
-        official
-        frozen
-        to {
-          id
-        }
-      }
+    }
+  }
+}
+`
+
+const LINKS_IN_COURSE = gql`
+query linksInCourse($courseId: ID!) {
+  linksInCourse: courseById(id: $courseId) {
+    id
+    concepts {
+      id
       linksToConcept {
         id
         official
@@ -71,9 +57,21 @@ query courseById($id: ID!) {
 
 const COURSE_PREREQ_FRAGMENT = gql`
 fragment courseAndConcepts on Course {
-    __typename
+  __typename
+  id
+  name
+  official
+  frozen
+  tags {
     id
     name
+    type
+    priority
+  }
+  concepts {
+    id
+    name
+    description
     official
     frozen
     tags {
@@ -82,44 +80,16 @@ fragment courseAndConcepts on Course {
       type
       priority
     }
-    concepts {
+    course {
       id
-      name
-      description
-      official
-      frozen
-      tags {
-        id
-        name
-        type
-        priority
-      }
-      course {
-        id
-      }
-      linksFromConcept {
-        id
-        official
-        frozen
-        to {
-          id
-        }
-      }
-      linksToConcept {
-        id
-        official
-        frozen
-        from {
-          id
-        }
-      }
     }
   }
+}
 `
 
 const COURSE_PREREQUISITES = gql`
 query courseAndPrerequisites($courseId: ID!) {
-  courseAndPrerequisites(courseId: $courseId) {
+  courseAndPrerequisites: courseById(id: $courseId) {
     id
     name
     official
@@ -140,8 +110,8 @@ ${COURSE_PREREQ_FRAGMENT}
 `
 
 export {
-  COURSES_BY_WORKSPACE,
   COURSE_BY_ID,
   COURSE_PREREQUISITES,
-  COURSE_PREREQ_FRAGMENT
+  COURSE_PREREQ_FRAGMENT,
+  LINKS_IN_COURSE
 }

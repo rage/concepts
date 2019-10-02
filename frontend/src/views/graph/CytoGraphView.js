@@ -123,8 +123,10 @@ const sliderMaxLog = Math.log(5)
 
 const sliderScale = (sliderMaxLog - sliderMinLog) / (sliderMaxLinear - sliderMinLinear)
 
-const linearToLog = position => Math.exp(sliderMinLog + sliderScale * (position - sliderMinLinear))
-const logToLinear = value => (Math.log(value) - sliderMinLog) / sliderScale + sliderMinLinear
+const linearToLog = position =>
+  Math.exp(sliderMinLog + (sliderScale * (position - sliderMinLinear)))
+const logToLinear = value =>
+  ((Math.log(value) - sliderMinLog) / sliderScale) + sliderMinLinear
 
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()

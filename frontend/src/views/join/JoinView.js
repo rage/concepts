@@ -27,9 +27,9 @@ const JoinView = ({ token }) => {
 
   const refetchQueries = type === 'workspace'
     ? [{ query: WORKSPACES_FOR_USER }]
-    : (user.role >= Role.STAFF && privilege !== Privilege.CLONE
+    : user.role >= Role.STAFF && privilege !== Privilege.CLONE
       ? [{ query: PROJECTS_FOR_USER }]
-      : [])
+      : []
 
   const joinShareLink = useMutation(USE_SHARE_LINK, {
     refetchQueries
@@ -94,9 +94,9 @@ const JoinView = ({ token }) => {
   if (participant) {
     const path = type === 'workspace'
       ? `/workspaces/${peek.data.peekToken.id}/manager`
-      : (privilege === Privilege.CLONE
+      : privilege === Privilege.CLONE
         ? `/projects/${peek.data.peekToken.id}/clone`
-        : `/projects/${peek.data.peekToken.id}/overview`)
+        : `/projects/${peek.data.peekToken.id}/overview`
     return <Redirect to={path} />
   }
 

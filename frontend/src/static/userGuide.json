@@ -210,7 +210,8 @@
       "id": "CREATE_WORKSPACE",
       "title": "Create a workspace",
       "description": "Click the \"+\" to create a new workspace for working on mapping.",
-      "placement": "bottom-end"
+      "placement": "bottom-end",
+      "video": "/guide/home/create-workspace.webm"
     }, {
       "id": "WORKSPACE_ACTIONS",
       "title": "Workspace actions",

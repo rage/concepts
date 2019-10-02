@@ -171,6 +171,17 @@
         "multiline": true,
         "consistent": true
       }
+    ],
+    "no-mixed-operators": [
+      "error"
+    ],
+    "no-extra-parens": [
+      "error",
+      "all",
+      {
+        "ignoreJSX": "multi-line",
+        "nestedBinaryExpressions": false
+      }
     ]
   }
 }

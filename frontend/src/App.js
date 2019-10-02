@@ -38,9 +38,9 @@ const useStyles = makeStyles(() => ({
 const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid`} render={({ match }) =>
     <Redirect to={`${prefix}/${match.params.wid}/manager`} />} />
-  <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) => (
+  <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) =>
     <HeatmapView urlPrefix={prefix} workspaceId={match.params.wid} />
-  )} />
+  } />
   <Route exact path={`${prefix}/:wid/manager`} render={({ match }) =>
     <WorkspaceManagementView urlPrefix={prefix} workspaceId={match.params.wid} />} />
   <Route

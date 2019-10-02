@@ -119,7 +119,7 @@ const Concept = ({
       }}
       TransitionComponent={Fade}
       title={editing !== concept.id ?
-        (concept.description || 'No description available') : ''}
+        concept.description || 'No description available' : ''}
     >
       <ListItem
         divider={divider}
@@ -273,7 +273,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
         title={`Concepts of ${course.name}`}
         action={
           user.role >= Role.STAFF
-            ? (merging ? [
+            ? merging ? [
               cardHeaderButton('Merge…', infoBox.ref('manager', 'FINISH_MERGE'),
                 () => openMergeDialog(), merging.size < 2),
               cardHeaderButton('Cancel', infoBox.secondaryRef('manager', 'FINISH_MERGE'),
@@ -281,7 +281,7 @@ const CourseEditor = ({ workspace, course, createConcept, updateConcept, deleteC
             ] : [
               cardHeaderButton('Start merge', infoBox.ref('manager', 'START_MERGE'),
                 () => startMerging(), course.concepts.length < 2)
-            ])
+            ]
             : null
         }
       />

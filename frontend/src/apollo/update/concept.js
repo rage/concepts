@@ -19,7 +19,9 @@ const createConceptUpdate = workspaceId => (store, response) => {
         concepts: [...course.concepts, addedConcept]
       }
     })
-  } catch (error) { }
+  } catch (e) {
+    console.error('createConceptUpdate', e)
+  }
 
   try {
     const dataInStore = store.readQuery({
@@ -99,7 +101,9 @@ const updateConceptUpdate = workspaceId => (store, response) => {
         concepts: course.concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c)
       }
     })
-  } catch (error) { }
+  } catch (e) {
+    console.error('updateConceptUpdate', e)
+  }
 
   try {
     const dataInStore = store.readQuery({

@@ -6,8 +6,7 @@ const conceptLink = require('./ConceptLink')
 const workspace = require('./Workspace')
 const sharing = require('./Sharing')
 const project = require('./Project')
-const port = require('./Port')
-const user = require('./User')
+const port = require('./Import')
 const merge = require('./Merge')
 const pointGroup = require('./PointGroup')
 
@@ -21,7 +20,6 @@ module.exports = {
   ...sharing,
   ...project,
   ...port,
-  ...user,
   ...merge,
   ...pointGroup
 }

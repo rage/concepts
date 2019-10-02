@@ -8,9 +8,7 @@ const makeSecret = require('../../secret')
 
 const workspaceDataForMerge = `
 query($id: ID!) {
-  project(where: {
-    id: $id
-  }) {
+  project(where: { id: $id }) {
     activeTemplate {
       id
       name
@@ -56,9 +54,7 @@ query($id: ID!) {
 
 const conceptDataForMerge = `
 query($conceptIds: [ID!]!) {
-  concepts(where: {
-    id_in: $conceptIds
-  }) {
+  concepts(where: { id_in: $conceptIds }) {
     id
     name
     description

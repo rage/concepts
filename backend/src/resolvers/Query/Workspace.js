@@ -16,7 +16,7 @@ query($id: ID!, $userId: ID!) {
 
 const WorkspaceQueries = {
   async allWorkspaces(root, args, context) {
-    await checkAccess(context, { minimumRole: Role.STAFF })
+    await checkAccess(context, { minimumRole: Role.ADMIN })
     return await context.prisma.workspaces()
   },
   async workspaceById(root, args, context) {

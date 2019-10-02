@@ -85,7 +85,7 @@ const checkAccess = async (ctx, {
     throw new ForbiddenError('Access denied')
   }
   if (minimumPrivilege !== null) {
-    if (!(await checkPrivilegeInt(ctx, { minimumPrivilege, workspaceId, projectId }))) {
+    if (!await checkPrivilegeInt(ctx, { minimumPrivilege, workspaceId, projectId })) {
       throw new ForbiddenError('Access denied')
     }
   }

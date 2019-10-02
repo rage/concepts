@@ -13,6 +13,7 @@ import {
 } from '../../dialogs/tagSelectUtils'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
+import { noPropagation } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -121,10 +122,8 @@ const CourseList = ({
                 }
                 {(!course.frozen || user.role >= Role.STAFF) &&
                   <IconButton
-                    color={editing ? 'inherit' : undefined} aria-label='Edit' onClick={evt => {
-                      evt.stopPropagation()
-                      setEditing(course.id)
-                    }}
+                    color={editing ? 'inherit' : undefined} aria-label='Edit'
+                    onClick={noPropagation(() => setEditing(course.id))}
                   >
                     <EditIcon />
                   </IconButton>

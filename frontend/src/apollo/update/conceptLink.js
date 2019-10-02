@@ -1,109 +1,55 @@
 import client from '../apolloClient'
-import {
-  COURSE_PREREQUISITES,
-  COURSE_BY_ID
-} from '../../graphql/Query'
+import { LINKS_IN_COURSE } from '../../graphql/Query'
 
-const createConceptLinkUpdate = (courseId, workspaceId) =>
+const createConceptLinkUpdate = courseId =>
   (store, response) => {
     try {
-      const prereq = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        }
-      })
       const createdConceptLink = response.data.createConceptLink
 
-      prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-        const concept = courseLink.from.concepts
-          .find(concept => concept.id === createdConceptLink.from.id)
-        if (concept) {
-          concept.linksFromConcept.push(createdConceptLink)
-        }
-      })
-      client.writeQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        },
-        data: prereq
-      })
-
       const course = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: courseId
-        }
+        query: LINKS_IN_COURSE,
+        variables: { courseId }
       })
 
-      const concept = course.courseById.concepts
+      const concept = course.linksInCourse.concepts
         .find(concept => concept.id === createdConceptLink.to.id)
       if (concept) {
         concept.linksToConcept.push(createdConceptLink)
       }
 
       client.writeQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: courseId
-        },
+        query: LINKS_IN_COURSE,
+        variables: { courseId },
         data: course
       })
-    } catch (err) {}
+    } catch (e) {
+      console.error('createConceptLinkUpdate', e)
+    }
   }
 
-const deleteConceptLinkUpdate = (courseId, workspaceId) =>
+const deleteConceptLinkUpdate = courseId =>
   (store, response) => {
     try {
-      const prereq = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        }
-      })
-
       const deletedConceptLink = response.data.deleteConceptLink
 
-      prereq.courseAndPrerequisites.linksToCourse.forEach(courseLink => {
-        courseLink.from.concepts.forEach(concept => {
-          concept.linksFromConcept = concept.linksFromConcept
-            .filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
-        })
-      })
-
-      client.writeQuery({
-        query: COURSE_PREREQUISITES,
-        variables: {
-          courseId,
-          workspaceId
-        },
-        data: prereq
-      })
-
       const course = store.readQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: courseId
-        }
+        query: LINKS_IN_COURSE,
+        variables: { courseId }
       })
 
-      course.courseById.concepts.forEach(concept => {
+      course.linksInCourse.concepts.forEach(concept => {
         concept.linksToConcept = concept.linksToConcept
           .filter(conceptLink => conceptLink.id !== deletedConceptLink.id)
       })
 
       client.writeQuery({
-        query: COURSE_BY_ID,
-        variables: {
-          id: courseId
-        },
+        query: LINKS_IN_COURSE,
+        variables: { courseId },
         data: course
       })
-    } catch (err) {}
+    } catch (e) {
+      console.error('deleteConceptLinkUpdate', e)
+    }
   }
 
 export {
