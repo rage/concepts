@@ -6,6 +6,7 @@ import {
 import Select from 'react-select/creatable'
 
 import { useMessageStateValue } from '../store'
+import { noDefault } from '../lib/eventMiddleware'
 
 const blankState = () => ({
   open: false,
@@ -25,10 +26,7 @@ const OptionalForm = ({ enable, onSubmit, children }) => {
   if (!enable) {
     return children
   }
-  return <form onSubmit={evt => {
-    evt.preventDefault()
-    return onSubmit(evt)
-  }}>
+  return <form onSubmit={noDefault(onSubmit)}>
     {children}
   </form>
 }

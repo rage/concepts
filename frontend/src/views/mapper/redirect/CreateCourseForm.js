@@ -6,6 +6,7 @@ import { Container, Button, TextField, Typography, FormHelperText } from '@mater
 import { CREATE_COURSE } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import useRouter from '../../../useRouter'
+import { noDefault } from '../../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -38,23 +39,13 @@ const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
     update: cache.createCourseUpdate(workspaceId)
   })
 
-  const createDefaultCourse = evt => {
-    evt.preventDefault()
-    const courseName = name.trim()
-    if (courseName === '') {
-      window.alert('Course needs a name!')
-      return
-    }
-    createDefaultCourseAsync(courseName)
-  }
-
-  const createDefaultCourseAsync = async courseName => {
+  const createDefaultCourse = async () => {
     // Create course
     let courseRes
     try {
       courseRes = await createCourse({
         variables: {
-          name: courseName,
+          name: name.trim(),
           workspaceId
         }
       })
@@ -85,7 +76,7 @@ const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
           Create course
         </Typography>
 
-        <form className={classes.form} onSubmit={createDefaultCourse}>
+        <form className={classes.form} onSubmit={noDefault(createDefaultCourse)}>
           <TextField
             error={error}
             variant='outlined'
@@ -108,6 +99,7 @@ const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
             variant='contained'
             color='primary'
             className={classes.submit}
+            disabled={name.trim().length === 0}
           >
             Create
           </Button>

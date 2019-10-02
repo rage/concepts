@@ -15,6 +15,7 @@ import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
+import { noPropagation } from '../../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -88,12 +89,6 @@ const Concept = ({
   })
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
-
-  // TODO make this into a library function and use it, we have the same situation in other places
-  const noPropagation = func => (evt, ...args) => {
-    evt.stopPropagation()
-    func(evt, ...args)
-  }
 
   const onClick = noPropagation(async () => {
     if (addingLink?.type === ownType) {
