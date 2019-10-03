@@ -4,7 +4,7 @@ require('dotenv').config({
   path: path.resolve(__dirname, `../config/${process.env.ENVIRONMENT}.env`)
 })
 
-const { GraphQLServer } = require('graphql-yoga')
+const { GraphQLServer, PubSub } = require('graphql-yoga')
 const express = require('express')
 
 const { prisma } = require('../schema/generated/prisma-client')
@@ -46,11 +46,13 @@ const options = {
   formatError: logError
 }
 
+const pubsub = new PubSub()
 const server = new GraphQLServer({
   typeDefs: './schema/generated/schema.graphql',
   resolvers,
   context: req => ({
     prisma,
+    pubsub,
     ...req
   }),
   middlewares: [authenticate]
