@@ -2,9 +2,9 @@ const crypto = require('crypto')
 
 const { ForbiddenError } = require('apollo-server-core')
 
-const { Role, Privilege, checkAccess } = require('../../accessControl')
-const { NotFoundError } = require('../../errors')
-const makeSecret = require('../../secret')
+const { Role, Privilege, checkAccess } = require('../../util/accessControl')
+const { NotFoundError } = require('../../util/errors')
+const makeSecret = require('../../util/secret')
 
 const workspaceDataForMerge = `
 query($id: ID!) {

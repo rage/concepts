@@ -1,7 +1,7 @@
 import { ForbiddenError } from 'apollo-server-core'
 
-import { checkAccess, Role, Privilege } from '../../accessControl'
-import { nullShield } from '../../errors'
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
 
 const findPointGroups = async (workspaceId, courseId, context) => {

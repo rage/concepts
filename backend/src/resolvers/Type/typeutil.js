@@ -1,4 +1,4 @@
-const { checkPrivilege } = require('../../accessControl')
+const { checkPrivilege } = require('../../util/accessControl')
 
 const makeTypeResolver = (type, field) => {
   // We return Object.values({...}) instead of an array

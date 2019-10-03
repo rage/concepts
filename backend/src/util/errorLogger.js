@@ -1,5 +1,5 @@
-const queries = require('./resolvers/Query')
-const mutations = require('./resolvers/Mutation')
+const queries = require('../resolvers/Query')
+const mutations = require('../resolvers/Mutation')
 
 const ERROR_COLOR = '\x1b[31m'
 const STRING_COLOR = '\x1b[32m'

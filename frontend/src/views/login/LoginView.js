@@ -9,6 +9,7 @@ import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { useLoginStateValue } from '../../store'
 import useRouter from '../../useRouter'
+import { ReactComponent as HakaIcon } from '../../static/haka.svg'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -30,6 +31,11 @@ const useStyles = makeStyles(theme => ({
   guestButton: {
     marginTop: theme.spacing(0.5)
   },
+  hakaButton: {
+    width: '100%',
+    margin: theme.spacing(3, 0),
+    display: 'block'
+  },
   buttonProgress: {
     color: 'white',
     position: 'absolute',
@@ -39,6 +45,10 @@ const useStyles = makeStyles(theme => ({
     marginLeft: -12
   }
 }))
+
+const HAKA_URL = 'https://testsp.funet.fi/shibboleth/WAYF' +
+  '?entityID=https://concepts.cs.helsinki.fi' +
+  '&return=https://concepts.cs.helsinki.fi/api/login'
 
 const LoginView = () => {
   const classes = useStyles()
@@ -137,13 +147,7 @@ const LoginView = () => {
             value={password}
           />
           <FormHelperText error={error}>
-            {
-              error ?
-                <span>
-                  Invalid username or password.
-                </span>
-                : null
-            }
+            {error ? 'Invalid username or password.' : null}
           </FormHelperText>
           <div className={classes.wrapper}>
             <Button
@@ -160,6 +164,12 @@ const LoginView = () => {
             }
           </div>
         </form>
+      </div>
+      <Divider />
+      <div className={classes.wrapper}>
+        <a className={classes.hakaButton} href={HAKA_URL}>
+          <HakaIcon />
+        </a>
       </div>
       {showGuestButton && <>
         <Divider />

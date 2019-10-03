@@ -9,11 +9,12 @@ const express = require('express')
 
 const { prisma } = require('../schema/generated/prisma-client')
 const { authenticate } = require('./middleware/authentication')
-const { logError } = require('./errorLogger')
+const { logError } = require('./util/errorLogger')
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
 const types = require('./resolvers/Type')
-const pointsAPI = require('./pointsAPI')
+const pointsAPI = require('./controllers/pointsAPI')
+// const { loginAPIRedirect, loginAPIAssert } = require('./controllers/loginAPI')
 
 const resolvers = {
   Query: {
@@ -44,6 +45,9 @@ const server = new GraphQLServer({
 
 // Points for completions
 server.express.get('/projects/:pid/courses/:cid/progress', pointsAPI)
+
+// server.express.get('/api/login', loginAPIRedirect)
+// server.express.post('/api/login/assert', loginAPIAssert)
 
 if (process.env.ENVIRONMENT === 'production' || process.env.FRONTEND_PATH) {
   const FRONTEND_PATH = process.env.FRONTEND_PATH || path.join(__dirname, '../../frontend/build')

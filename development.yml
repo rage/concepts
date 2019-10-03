@@ -15,7 +15,7 @@ services:
     volumes:
       - ./frontend:/concepts/frontend
       - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
-      - ./backend/src/permissions.js:/concepts/backend/src/permissions.js
+      - ./backend/src/util/permissions.js:/concepts/backend/src/util/permissions.js
     depends_on:
       - backend
     deploy:

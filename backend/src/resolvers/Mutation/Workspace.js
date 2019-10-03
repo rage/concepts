@@ -1,5 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const makeSecret = require('../../secret')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
+const makeSecret = require('../../util/secret')
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
