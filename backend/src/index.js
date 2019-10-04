@@ -42,6 +42,7 @@ const resolvers = {
 const options = {
   endpoint: '/graphql',
   playground: '/playground',
+  subscriptions: '/graphql',
   port: process.env.PORT || 4000,
   formatError: logError
 }
