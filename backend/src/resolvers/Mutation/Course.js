@@ -81,4 +81,4 @@ const CourseQueries = {
   }
 }
 
-module.exports = CourseQueries
+export default CourseQueries

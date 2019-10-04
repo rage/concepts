@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Container, Button, TextField, Typography, FormHelperText, CircularProgress, Divider
 } from '@material-ui/core'
+import qs from 'qs'
 
 import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import { signIn, isSignedIn } from '../../lib/authentication'
@@ -54,6 +55,10 @@ const LoginView = () => {
   const classes = useStyles()
   const { history, location } = useRouter()
 
+  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
+
+  const [, dispatch] = useLoginStateValue()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -61,9 +66,21 @@ const LoginView = () => {
   const [loading, setLoading] = useState(false)
   const [loadingGuest, setLoadingGuest] = useState(false)
 
-  const dispatch = useLoginStateValue()[1]
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
+
+  if (location.hash?.length > 1) {
+    const query = qs.parse(location.hash.substr(1))
+    if (query.token) {
+      window.localStorage.currentUser = JSON.stringify(query)
+      dispatch({
+        type: 'login',
+        data: query.user
+      })
+      history.push(nextPath)
+      return null
+    }
+  }
 
   const authenticate = (event) => {
     event.preventDefault()
@@ -83,8 +100,6 @@ const LoginView = () => {
       }
     })
   }
-
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const createGuestAccount = async () => {
     const result = await createGuestMutation()

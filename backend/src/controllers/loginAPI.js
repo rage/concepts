@@ -3,6 +3,10 @@ import fs from 'fs'
 import { DOMParser, XMLSerializer } from 'xmldom'
 import * as samlify from 'samlify'
 import axios from 'axios'
+import qs from 'qs'
+
+import { prisma } from '../../schema/generated/prisma-client'
+import { signOrCreateUser } from '../resolvers/Mutation/Authentication'
 
 // FIXME un-hardcode this
 // const METADATA_URL = 'https://haka.funet.fi/metadata/haka-metadata.xml'
@@ -67,20 +71,29 @@ export const loginAPIRedirect = async (req, res) => {
   }
 }
 
-// FIXME un-hardcode this
-export const responseUrl = token => `https://concepts.local/login/${token}`
+// FIXME un-hardcode these
+const loginFail = 'https://concepts.local/login/fail'
+export const responseUrl = (data) => `https://concepts.local/login#${qs.stringify(data)}`
+
+const eduPersonPrincipalName = 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6'
+const funetEduPersonEPPNTimeStamp = 'urn:oid:1.3.6.1.4.1.16161.1.1.24'
+const displayName = 'urn:oid:2.16.840.1.113730.3.1.241'
 
 export const loginAPIAssert = async (req, res) => {
   try {
     const response = await sp.parseLoginResponse(idp, 'post', req)
-    console.log('sp parseresponse /assert: ', response)
-    //const token = await signToken(response)
-    const token = 'foo'
-    console.log('signed token? : ', token)
-    if (!token) {
-      return res.redirect(responseUrl())
+    const {
+      [eduPersonPrincipalName]: principalName,
+      [funetEduPersonEPPNTimeStamp]: timestamp,
+      [displayName]: dn
+    } = response.extract.attributes
+    const hakaId = timestamp ? `${timestamp}:${principalName}` : principalName
+    const data = await signOrCreateUser({ hakaId }, {}, prisma)
+    if (!data) {
+      return res.redirect(loginFail)
     }
-    return res.redirect(responseUrl(token))
+    data.user.username = dn
+    return res.redirect(responseUrl(data))
   } catch (error) {
     console.log(error)
   }

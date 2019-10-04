@@ -170,4 +170,4 @@ const ConceptMutations = {
   }
 }
 
-module.exports = ConceptMutations
+export default ConceptMutations

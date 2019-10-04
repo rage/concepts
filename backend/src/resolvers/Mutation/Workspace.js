@@ -1,5 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../util/accessControl')
-const makeSecret = require('../../util/secret')
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import makeSecret from '../../util/secret'
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
@@ -57,7 +57,7 @@ query($id : ID!) {
 }
 `
 
-const bloom = [{
+export const bloom = [{
   name: 'REMEMBER',
   type: 'bloom',
   priority: 0
@@ -269,4 +269,4 @@ const WorkspaceMutations = {
   }
 }
 
-module.exports = WorkspaceMutations
+export default WorkspaceMutations
