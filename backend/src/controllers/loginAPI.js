@@ -4,6 +4,7 @@ import { DOMParser, XMLSerializer } from 'xmldom'
 import * as samlify from 'samlify'
 import axios from 'axios'
 
+// FIXME un-hardcode this
 // const METADATA_URL = 'https://haka.funet.fi/metadata/haka-metadata.xml'
 const METADATA_URL = 'https://haka.funet.fi/metadata/haka_test_metadata_signed.xml'
 
@@ -16,14 +17,21 @@ export const getMetadata = async () => {
   }
 }
 
+// FIXME this is apparently insecure for some reason
+samlify.setSchemaValidator({
+  validate: async () => 'skipped'
+})
+
 const sp = samlify.ServiceProvider({
   metadata: fs.readFileSync('./saml/metadata.xml'),
   encPrivateKey: fs.readFileSync('./saml/privatekey.pem'),
   privateKey: fs.readFileSync('./saml/privatekey.pem'),
   loginNameIDFormat: 'transient'
 })
+// FIXME this is some hack I added for the test server, shouldn't be used in production
 sp.entityMeta.isAuthnRequestSigned = () => idp.entityMeta.isWantAuthnRequestsSigned()
 
+// FIXME having this in a global variable seems very bad
 let idp
 
 export const loginAPIRedirect = async (req, res) => {
@@ -56,8 +64,10 @@ export const loginAPIRedirect = async (req, res) => {
     return res.redirect(context)
   } catch (e) {
     console.log('login failed, error: ', e)
-  }}
+  }
+}
 
+// FIXME un-hardcode this
 export const responseUrl = token => `https://concepts.local/login/${token}`
 
 export const loginAPIAssert = async (req, res) => {
@@ -65,13 +75,12 @@ export const loginAPIAssert = async (req, res) => {
     const response = await sp.parseLoginResponse(idp, 'post', req)
     console.log('sp parseresponse /assert: ', response)
     //const token = await signToken(response)
-    const token = "foo"
-    //console.log('signed token? : ', token)
+    const token = 'foo'
+    console.log('signed token? : ', token)
     if (!token) {
-      res.redirect(responseUrl())
-      return
+      return res.redirect(responseUrl())
     }
-    res.redirect(responseUrl(token))
+    return res.redirect(responseUrl(token))
   } catch (error) {
     console.log(error)
   }

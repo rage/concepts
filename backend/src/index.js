@@ -47,6 +47,7 @@ const server = new GraphQLServer({
 server.express.get('/projects/:pid/courses/:cid/progress', pointsAPI)
 
 // SAML API for Haka login
+server.express.use(express.urlencoded())
 server.express.get('/api/login', loginAPIRedirect)
 server.express.post('/api/login/assert', loginAPIAssert)
 server.express.post('/api/login/metadata', loginAPIMetadata)
