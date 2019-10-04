@@ -10,13 +10,17 @@
     "ajv": "^6.10.0",
     "apollo-server-core": "^2.6.2",
     "axios": "^0.19.0",
+    "cookie-parser": "^1.4.4",
     "dotenv": "^8.0.0",
+    "express": "^4.17.1",
     "graphql-yoga": "^1.17.4",
     "jsonwebtoken": "^8.5.1",
     "prisma-client-lib": "^1.30.4",
     "qs": "^6.9.0",
     "samlify": "^2.6.1",
-    "tmc-client-js": "^0.0.9"
+    "tmc-client-js": "^0.0.9",
+    "xml-crypto": "^1.4.0",
+    "xmldom": "^0.1.27"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
