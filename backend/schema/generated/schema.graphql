@@ -95,7 +95,7 @@ type Mutation {
 }
 
 type Subscription {
-  concepts(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
+  conceptCreated: Concept!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject

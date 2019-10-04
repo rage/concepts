@@ -101,6 +101,7 @@ const ConceptMutations = {
         await updatePointGroups(pointGroups, context)
       }
     }
+    context.pubsub.publish('CONCEPT_CREATED', { conceptCreated: createdConcept })
     return createdConcept
   },
 

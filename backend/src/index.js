@@ -12,6 +12,7 @@ const { authenticate } = require('./middleware/authentication')
 const { logError } = require('./errorLogger')
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
+const subscriptions = require('./resolvers/Subscription')
 const types = require('./resolvers/Type')
 const pointsAPI = require('./pointsAPI')
 
@@ -23,18 +24,7 @@ const resolvers = {
     ...mutations
   },
   Subscription: {
-    concepts: {
-      subscribe: (parent, args, ctx, info) => {
-        return ctx.db.subscription.concept(
-          {
-            where: {
-              mutation_in: ['CREATED', 'UPDATED'],
-            },
-          },
-          info
-        )
-      }
-    }
+    ...subscriptions
   },
   ...types
 }
