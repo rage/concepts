@@ -99,6 +99,23 @@ type Subscription {
   conceptCreated: Concept!
   conceptUpdated: Concept!
   conceptDeleted: Concept!
+
+  # ConceptLinks subscriptions
+  conceptLinkCreated: ConceptLink!
+  conceptLinkDeleted: ConceptLink!
+
+  # Courses subscriptions
+  courseCreated: Course!
+  courseUpdated: Course!
+  courseDeleted: Course!
+
+  # CoursesLinks subscriptions
+  courseLinkCreated: CourseLink!
+  courseLinkDeleted: CourseLink!
+
+  # Workspaces subscriptions
+  workspaceCreated: Workspace!
+  workspaceDeleted: Workspace!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject

@@ -2,6 +2,7 @@ const { ForbiddenError } = require('apollo-server-core')
 
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
+const { pubsub } = require('../Subscription/config')
 
 const CourseQueries = {
   async createCourseLink(root, { workspaceId, official, from, to }, context) {
