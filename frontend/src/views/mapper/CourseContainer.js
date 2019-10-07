@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
@@ -8,14 +8,16 @@ import PrerequisiteContainer from './PrerequisiteContainer'
 import ActiveCourse from './ActiveCourse'
 import MapperLinks from './MapperLinks'
 
-const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTrayOpen }) => {
+const CourseContainer = ({
+  urlPrefix, workspace, course, courseLinkMap, courseLinks, courseTrayOpen
+}) => {
   const [focusedConceptIds, setFocusedConceptIds] = useState(new Set())
   const [addingLink, setAddingLink] = useState(null)
   const [flashingLink, setFlashingLink] = useState(null)
   const flashLinkTimeout = useRef(0)
   const [conceptLinkMenu, setConceptLinkMenu] = useState(null)
 
-  const flashLink = link => {
+  const flashLink = useCallback(link => {
     if (focusedConceptIds.has(link.to.id) || focusedConceptIds.has(link.from.id)) {
       // Don't flash, link is active
       return
@@ -23,7 +25,7 @@ const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTray
     setFlashingLink(link.id)
     clearTimeout(flashLinkTimeout.current)
     flashLinkTimeout.current = setTimeout(() => setFlashingLink(null), 3000)
-  }
+  }, [focusedConceptIds, flashLinkTimeout])
 
   const infoBox = useInfoBox()
 
@@ -62,7 +64,7 @@ const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTray
     setConceptLinkMenu(null)
   }
 
-  const toggleFocus = id => {
+  const toggleFocus = useCallback(id => {
     const newFocusedConceptIds = new Set(focusedConceptIds)
     if (newFocusedConceptIds.has(id)) {
       newFocusedConceptIds.delete(id)
@@ -70,9 +72,7 @@ const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTray
       newFocusedConceptIds.add(id)
     }
     setFocusedConceptIds(newFocusedConceptIds)
-  }
-
-  const courseSet = new Set(courseLinks.map(link => link.from.id))
+  }, [focusedConceptIds])
 
   return <>
     <PrerequisiteContainer
@@ -88,7 +88,6 @@ const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTray
       urlPrefix={urlPrefix}
     />
     <ActiveCourse
-      onClick={() => setAddingLink(null)}
       course={course}
       courses={workspace.courses}
       updateCourse={updateCourse}
@@ -103,8 +102,9 @@ const CourseContainer = ({ urlPrefix, workspace, course, courseLinks, courseTray
     />
     <MapperLinks
       flashingLink={flashingLink} addingLink={addingLink} courseId={course.id}
-      focusedConceptIds={focusedConceptIds} conceptLinkMenu={conceptLinkMenu} courseSet={courseSet}
-      handleMenuOpen={handleMenuOpen} handleMenuClose={handleMenuClose} deleteLink={deleteLink}
+      focusedConceptIds={focusedConceptIds} conceptLinkMenu={conceptLinkMenu}
+      courseLinkMap={courseLinkMap} handleMenuOpen={handleMenuOpen}
+      handleMenuClose={handleMenuClose} deleteLink={deleteLink}
     />
   </>
 }
