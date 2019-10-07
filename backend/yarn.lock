@@ -14,6 +14,13 @@
   resolved "https://registry.yarnpkg.com/@apollographql/graphql-playground-html/-/graphql-playground-html-1.6.24.tgz#3ce939cb127fb8aaa3ffc1e90dff9b8af9f2e3dc"
   integrity sha512-8GqG48m1XqyXh4mIZrtB5xOhUwSsh1WsrrsaZQOEYYql3YN9DEu9OOSg0ILzXHZo/h2Q74777YE4YzlArQzQEQ==
 
+"@authenio/samlify-node-xmllint@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@authenio/samlify-node-xmllint/-/samlify-node-xmllint-1.0.1.tgz#325659eed8b561fcdc2a15e187b8f052fbb7c172"
+  integrity sha512-ULJAd1i8H4FKP7vzi3yNVNapcb+FqsHTkwja8eTQek64dtU3QwFG4AXZNYG9qIaSPLn7GqjLU2ASqCubFMEqng==
+  dependencies:
+    node-xmllint "^1.0.0"
+
 "@authenio/xml-encryption@^0.11.3":
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/@authenio/xml-encryption/-/xml-encryption-0.11.3.tgz#35379a8a87bbed3f34907a0359e8e1c30ce24bdd"
@@ -3668,6 +3675,11 @@ node-rsa@^1.0.5:
   integrity sha512-v42495lozKpuQmrcIzld9ds/Tn7pwjuh0BHSHnhPrKkAVSyTAyrZodFLFafOfWiUKamLt4lgWdngP8W/LzCm2w==
   dependencies:
     asn1 "^0.2.4"
+
+node-xmllint@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-xmllint/-/node-xmllint-1.0.0.tgz#f680457eb0166a3d06996f1242d34d47000fe55b"
+  integrity sha1-9oBFfrAWaj0GmW8SQtNNRwAP5Vs=
 
 nodemon@^1.19.0:
   version "1.19.1"

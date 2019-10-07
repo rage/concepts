@@ -18,7 +18,7 @@ export const loginAPIRedirect = async (req, res) => {
   try {
     const { entityID } = req.query
     const idp = await getIDP(entityID)
-    // FIXME this is some hack I added for the test server, shouldn't be used in production
+    // FIXME this is somewhat hacky and might be bad, not sure
     sp.entityMeta.isAuthnRequestSigned = () => idp.entityMeta.isWantAuthnRequestsSigned()
     const { context } = sp.createLoginRequest(idp, 'redirect')
     res.cookie(idpCookie, entityID)
