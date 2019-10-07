@@ -1,8 +1,8 @@
+const { pubsub } = require('./config')
+
 const ConceptSubscriptions = {
   conceptCreated: {
-    subscribe: (parent, args, { pubsub }) => {
-      return pubsub.asyncIterator(['CONCEPT_CREATED'])
-    }
+    subscribe: () => pubsub.asyncIterator('CONCEPT_CREATED')
   }
 }
 

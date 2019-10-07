@@ -4,7 +4,7 @@ require('dotenv').config({
   path: path.resolve(__dirname, `../config/${process.env.ENVIRONMENT}.env`)
 })
 
-const { GraphQLServer, PubSub } = require('graphql-yoga')
+const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
 
 const { prisma } = require('../schema/generated/prisma-client')
@@ -15,6 +15,7 @@ const mutations = require('./resolvers/Mutation')
 const subscriptions = require('./resolvers/Subscription')
 const types = require('./resolvers/Type')
 const pointsAPI = require('./pointsAPI')
+const { pubsub } = require('./resolvers/Subscription/config')
 
 const resolvers = {
   Query: {
@@ -37,7 +38,6 @@ const options = {
   formatError: logError
 }
 
-const pubsub = new PubSub()
 const server = new GraphQLServer({
   typeDefs: './schema/generated/schema.graphql',
   resolvers,

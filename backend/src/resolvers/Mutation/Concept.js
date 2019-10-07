@@ -3,6 +3,7 @@ import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../accessControl'
 import { nullShield } from '../../errors'
 import { createMissingTags, filterTags } from './tagUtils'
+import { pubsub } from '../Subscription/config'
 
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (context.role === Role.STUDENT) {
@@ -101,7 +102,7 @@ const ConceptMutations = {
         await updatePointGroups(pointGroups, context)
       }
     }
-    context.pubsub.publish('CONCEPT_CREATED', { conceptCreated: createdConcept })
+    pubsub.publish('CONCEPT_CREATED', { conceptCreated: createdConcept })
     return createdConcept
   },
 
