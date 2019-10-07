@@ -47,9 +47,8 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const HAKA_URL = 'https://testsp.funet.fi/shibboleth/WAYF' +
-  '?entityID=https://concepts.cs.helsinki.fi' +
-  '&return=https://concepts.cs.helsinki.fi/api/login'
+// eslint-disable-next-line no-undef
+const HAKA_URL = process.env.REACT_APP_HAKA_URL
 
 const LoginView = () => {
   const classes = useStyles()
@@ -180,12 +179,14 @@ const LoginView = () => {
           </div>
         </form>
       </div>
-      <Divider />
-      <div className={classes.wrapper}>
-        <a className={classes.hakaButton} href={HAKA_URL}>
-          <HakaIcon />
-        </a>
-      </div>
+      {HAKA_URL && <>
+        <Divider />
+        <div className={classes.wrapper}>
+          <a className={classes.hakaButton} href={HAKA_URL}>
+            <HakaIcon />
+          </a>
+        </div>
+      </>}
       {showGuestButton && <>
         <Divider />
         <div className={classes.wrapper}>

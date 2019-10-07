@@ -8,10 +8,7 @@ import axios from 'axios'
 
 const SAML_DIR = process.env.SAML_DIR || './saml'
 
-// FIXME un-hardcode this
-// const METADATA_URL = 'https://haka.funet.fi/metadata/haka-metadata.xml'
-const METADATA_URL = process.env.SAML_METADATA_URL ||
-  'https://haka.funet.fi/metadata/haka_test_metadata_signed.xml'
+const METADATA_URL = process.env.SAML_METADATA_URL
 const IDP_METADATA_KEY = new FileKeyInfo(process.env.SAML_METADATA_CERT_PATH
   || path.join(SAML_DIR, 'haka.crt'))
 
