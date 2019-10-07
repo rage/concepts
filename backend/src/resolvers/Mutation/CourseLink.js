@@ -19,13 +19,15 @@ const CourseQueries = {
       ]
     })
     if (linkExists) return null
-    return await context.prisma.createCourseLink({
+    const createdCourseLink =  context.prisma.createCourseLink({
       to: { connect: { id: to } },
       from: { connect: { id: from } },
       official: Boolean(official),
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } }
     })
+    pubsub.publish('COURSE_LINK_CREATED', {courseLinkCreated: createdCourseLink})
+    return createdCourseLink
   },
   async updateCourseLink(root, { id, frozen, official }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.courseLink({ id }).workspace())
@@ -37,10 +39,12 @@ const CourseQueries = {
     const oldLink = await context.prisma.courseLink({ id })
     if (oldLink.frozen && frozen !== false) throw new ForbiddenError('This link is frozen')
 
-    return await context.prisma.updateCourseLink({
+    const updatedCourseLink = await context.prisma.updateCourseLink({
       where: { id },
       data: { frozen, official }
     })
+    pubsub.publish('COURSE_LINK_UPDATED', { courseLinkUpdated: updatedCourseLink })
+    return updatedCourseLink
   },
   async deleteCourseLink(root, { id }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.courseLink({ id }).workspace())
@@ -51,7 +55,10 @@ const CourseQueries = {
     })
     const toDelete = await context.prisma.courseLink({ id })
     if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
-    return await context.prisma.deleteCourseLink({ id })
+    const deletedCourseLink = await context.prisma.deleteCourseLink({ id })
+    pubsub.publish('COURSE_LINK_DELETED', {courseLinkDeleted: deletedCourseLink})
+
+    return deletedCourseLink
   }
 }
 

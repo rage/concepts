@@ -111,6 +111,7 @@ type Subscription {
 
   # CoursesLinks subscriptions
   courseLinkCreated: CourseLink!
+  courseLinkUpdated: CourseLink!
   courseLinkDeleted: CourseLink!
 
   # Workspaces subscriptions
