@@ -4,6 +4,8 @@ import { checkAccess, Role, Privilege } from '../../accessControl'
 import { nullShield } from '../../errors'
 import { createMissingTags, filterTags } from './tagUtils'
 
+import { pubsub } from '../Subscription/config'
+
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, frozen, tags }, context) {
     await checkAccess(context, {
@@ -14,7 +16,7 @@ const CourseQueries = {
 
     if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
 
-    return context.prisma.createCourse({
+    const newCourse = context.prisma.createCourse({
       name: name,
       official: Boolean(official),
       frozen: Boolean(frozen),
@@ -22,6 +24,9 @@ const CourseQueries = {
       workspace: { connect: { id: workspaceId } },
       tags: { connect: await createMissingTags(tags, workspaceId, context, 'courseTags') }
     })
+
+    pubsub.publish('COURSE_CREATED', { courseCreated: newCourse})
+    return newCourse
   },
 
   async deleteCourse(root, { id }, context) {
@@ -39,7 +44,9 @@ const CourseQueries = {
         { to: { id } }
       ]
     })
-    return await context.prisma.deleteCourse({ id })
+    const deletedCourse = await context.prisma.deleteCourse({ id })
+    pubsub.publish('COURSE_DELETED', {courseDeleted: deletedCourse})
+    return deletedCourse
   },
 
   async updateCourse(root, { id, name, official, frozen, tags }, context) {
@@ -73,7 +80,7 @@ const CourseQueries = {
       if (!belongsToTemplate && name !== oldCourse.name) data.official = false
       data.name = name
     }
-
+    pubsub.publish('COURSE_UPDATED', {courseUpdated: {...data, id }})
     return await context.prisma.updateCourse({
       where: { id },
       data
