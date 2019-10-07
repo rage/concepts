@@ -45,6 +45,7 @@ const logError = error => {
     errorMessage += ` Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   }
   console.error(errorMessage)
+  console.log(error)
 
   return error
 }
