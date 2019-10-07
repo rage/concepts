@@ -17,8 +17,27 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
     update: cache.createCourseUpdate(workspaceId)
   })
 
+  const randomString = () => Math.random().toString(36)
+  const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
+
+  const createOptimisticResponse = ({ name, official, frozen, tags }) => ({
+    __typename: 'Mutation',
+    createCourse: {
+      __typename: 'Course',
+      id: generateTempId(),
+      name,
+      official,
+      frozen,
+      tags: tags.map(tag => ({ ...tag, __typename: 'Tag' })),
+      linksToCourse: [],
+      concepts: [],
+      linksToConcept: []
+    }
+  })
+
   return () => openDialog({
     mutation: createCourse,
+    createOptimisticResponse,
     type: 'Course',
     requiredVariables: {
       workspaceId,

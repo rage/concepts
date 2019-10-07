@@ -17,8 +17,36 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
     update: cache.createConceptUpdate(workspaceId)
   })
 
+  const randomString = () => Math.random().toString(36)
+  const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
+
+  const createOptimisticResponse = ({ courseId, name, official, frozen, description, tags }) => ({
+    __typename: 'Mutation',
+    createConcept: {
+      __typename: 'Concept',
+      id: generateTempId(),
+      name,
+      description,
+      official,
+      frozen,
+      course: {
+        __typename: 'Course',
+        id: courseId
+      },
+      tags: tags.map(tag => ({
+        ...tag, __typename: 'Tag',
+        id: tag.id | generateTempId(),
+        priority: tag.priority | 0
+      })),
+      linksFromConcept: [],
+      concepts: [],
+      linksToConcept: []
+    }
+  })
+
   return courseId => openDialog({
     mutation: createConcept,
+    createOptimisticResponse: (args) => createOptimisticResponse({ ...args, courseId }),
     type: 'Concept',
     requiredVariables: {
       workspaceId,

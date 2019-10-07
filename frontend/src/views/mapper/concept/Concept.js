@@ -90,6 +90,9 @@ const Concept = ({
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
 
+  const randomString = () => Math.random().toString(36)
+  const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
+
   const onClick = noPropagation(async () => {
     if (addingLink?.type === ownType) {
       // We could support creating link from prerequisite to prerequisite,
@@ -102,6 +105,27 @@ const Concept = ({
             to: isActive ? concept.id : addingLink.id,
             from: isActive ? addingLink.id : concept.id,
             workspaceId
+          },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createConceptLink: {
+              __typename: 'ConceptLink',
+              id: generateTempId(),
+              official: false,
+              frozen: false,
+              to: {
+                __typename: 'Concept',
+                id: isActive ? concept.id : addingLink.id
+              },
+              from: {
+                __typename: 'Concept',
+                id: isActive ? addingLink.id : concept.id,
+                course: {
+                  __typename: 'Course',
+                  id: isActive ? addingLink.courseId : activeCourseId
+                }
+              }
+            }
           }
         })
         // FIXME https://github.com/facebook/react/issues/10231#issuecomment-316644950
@@ -122,6 +146,7 @@ const Concept = ({
     } else {
       setAddingLink({
         id: concept.id,
+        courseId: concept.course.id,
         type: ownType
       })
     }
