@@ -141,6 +141,7 @@ const ConceptMutations = {
       data.name = name
     }
 
+    pubsub.publish('CONCEPT_UPDATED', { conceptUpdated: {...data, id}} )
     return await context.prisma.updateConcept({
       where: { id },
       data
@@ -163,6 +164,7 @@ const ConceptMutations = {
         }
       }
     `)
+    pubsub.publish('CONCEPT_DELETED', { conceptDeleted: toDelete })
     if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
     await context.prisma.deleteConcept({ id })
     return {

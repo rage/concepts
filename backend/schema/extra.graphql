@@ -95,7 +95,10 @@ type Mutation {
 }
 
 type Subscription {
+  # Concept subscriptions
   conceptCreated: Concept!
+  conceptUpdated: Concept!
+  conceptDeleted: Concept!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
