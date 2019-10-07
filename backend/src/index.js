@@ -43,7 +43,6 @@ const server = new GraphQLServer({
   resolvers,
   context: req => ({
     prisma,
-    pubsub,
     ...req
   }),
   middlewares: [authenticate]
