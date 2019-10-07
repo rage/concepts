@@ -16,6 +16,10 @@ const IDP_METADATA_KEY = new FileKeyInfo(process.env.SAML_METADATA_CERT_PATH
 const signaturePath = "/*/*[local-name(.)='Signature' and namespace-uri(.)='http://www.w3.org/2000/09/xmldsig#']"
 
 const fetchIDPs = async () => {
+  if (!METADATA_URL) {
+    console.error('Identity provider metadata URL not set')
+    return null
+  }
   let metadata
 
   const metaFile = path.join(SAML_DIR, 'haka-meta.xml')
