@@ -1,4 +1,4 @@
-const { PubSub } = require('graphql-yoga')
+const { PubSub } = require('graphql-subscriptions')
 
 const pubsub = new PubSub()
 
