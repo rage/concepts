@@ -36,6 +36,7 @@ services:
       PRISMA_MANAGEMENT_API_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
       #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka_test_metadata_signed.xml
       #SAML_DIR: /concepts/backend/saml
+      #SAML_FINISH_URL: https://concepts.cs.helsinki.fi/login
     volumes:
       - ./backend:/concepts/backend
     depends_on:

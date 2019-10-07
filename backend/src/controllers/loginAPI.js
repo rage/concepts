@@ -5,9 +5,8 @@ import { signOrCreateUser } from '../resolvers/Mutation/Authentication'
 import sp from '../saml/serviceProvider'
 import getIDP from '../saml/identityProvider'
 
-// FIXME un-hardcode these
-const loginFail = 'https://concepts.local/login/fail'
-export const responseUrl = (data) => `https://concepts.local/login#${qs.stringify(data)}`
+const loginFail = `${process.env.SAML_FINISH_URL}/fail`
+export const responseUrl = (data) => `${process.env.SAML_FINISH_URL}#${qs.stringify(data)}`
 
 const eduPersonPrincipalName = 'urn:oid:1.3.6.1.4.1.5923.1.1.1.6'
 const funetEduPersonEPPNTimeStamp = 'urn:oid:1.3.6.1.4.1.16161.1.1.24'
