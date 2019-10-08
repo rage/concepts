@@ -56,8 +56,10 @@ const CloneView = ({ token, peek, projectId }) => {
     variables: { id: projectId }
   })
 
+  const skip = !projectId || !peekTemplate.data?.limitedProjectById?.activeTemplateId
+
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: !projectId || !peekTemplate.data?.limitedProjectById?.activeTemplateId,
+    skip,
     variables: {
       sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
     }
@@ -66,7 +68,7 @@ const CloneView = ({ token, peek, projectId }) => {
   const joinShareLink = useMutation(USE_SHARE_LINK)
 
   const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
-    refetchQueries: !projectId ? [{
+    refetchQueries: !skip ? [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE,
       variables: {
         sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
