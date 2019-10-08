@@ -80,7 +80,7 @@ const CloneView = ({ token, peek, projectId }) => {
 
   const handleCreate = async () => {
     setLoading(true)
-    if (peek) {
+    if (!projectId) {
       try {
         const res = await joinShareLink({
           variables: { token }
