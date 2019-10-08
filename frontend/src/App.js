@@ -125,20 +125,13 @@ const App = () => {
       <PrivateRoute
         exact path='/join/:token' redirectPath='/login' condition={loggedIn}
         render={({ match: { params: { token } } }) => <JoinView token={token} />} />
-
-      <Route path='/workspaces' render={() => workspaceRouter('/workspaces')} />
-      <Route
-        path='/projects/:id/workspaces'
-        render={({ match: { url } }) => workspaceRouter(url)} />
-      <Route
-        path='/projects/:id/templates'
-        render={({ match: { url } }) => workspaceRouter(url)} />
-      <Route
-        path='/projects/:id/merges'
-        render={({ match: { url } }) => workspaceRouter(url)} />
-
-      <PrivateRoute path='/projects' redirectPath='/login' condition={loggedIn}
+      <PrivateRoute
+        path='/workspaces' redirectPath='/login' condition={loggedIn}
+        render={() => workspaceRouter('/workspaces')} />
+      <PrivateRoute
+        path='/projects' redirectPath='/login' condition={loggedIn}
         render={() => projectRouter('/projects')} />
+
       <Route render={() => <NotFoundView />} />
     </Switch>
   </div>
