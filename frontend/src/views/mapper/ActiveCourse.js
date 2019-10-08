@@ -69,7 +69,6 @@ const ActiveCourse = ({
   courses,
   workspaceId,
   focusedConceptIds,
-  onClick,
   addingLink,
   setAddingLink,
   flashLink,
@@ -79,7 +78,7 @@ const ActiveCourse = ({
   const classes = useStyles()
   const { history } = useRouter()
   const infoBox = useInfoBox()
-  const [{ user, loggedIn }] = useLoginStateValue()
+  const [{ user }] = useLoginStateValue()
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
@@ -90,7 +89,7 @@ const ActiveCourse = ({
       gridArea='activeHeader'
       margin='0px 8px 0px 8px'
     />
-    <Paper onClick={onClick} elevation={0} className={classes.root}>
+    <Paper onClick={() => setAddingLink(null)} elevation={0} className={classes.root}>
       <div title={course.name} className={classes.header}>
         <Select
           value={course.id}
@@ -133,19 +132,17 @@ const ActiveCourse = ({
         )}
       </List>
 
-      {loggedIn ?
-        <Button
-          className={classes.button}
-          onClick={() => openCreateConceptDialog(course.id)}
-          variant='contained'
-          color='secondary'
-          ref={infoBox.ref('mapper', 'CREATE_CONCEPT_TARGET')}
-        >
-          Add concept
-        </Button> : null
-      }
+      <Button
+        className={classes.button}
+        onClick={() => openCreateConceptDialog(course.id)}
+        variant='contained'
+        color='secondary'
+        ref={infoBox.ref('mapper', 'CREATE_CONCEPT_TARGET')}
+      >
+        Add concept
+      </Button>
     </Paper>
   </>
 }
 
-export default ActiveCourse
+export default React.memo(ActiveCourse)
