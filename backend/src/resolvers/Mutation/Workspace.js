@@ -1,5 +1,6 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const makeSecret = require('../../secret')
+const { pubsub } = require('../Subscription/config')
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
@@ -86,7 +87,7 @@ const bloom = [{
 const WorkspaceMutations = {
   async createWorkspace(root, args, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
-    return await context.prisma.createWorkspace({
+    const newWorkspace = await context.prisma.createWorkspace({
       name: args.name,
       sourceProject: args.projectId !== undefined ? {
         connect: { id: args.projectId }
@@ -103,6 +104,8 @@ const WorkspaceMutations = {
         create: bloom
       }
     })
+    pubsub.publish('WORKSPACE_CREATED', {workspaceCreated: newWorkspace})
+    return newWorkspace
   },
   async deleteWorkspace(root, { id }, context) {
     const asTemplate = await context.prisma.workspace({ id }).asTemplate()
@@ -114,7 +117,9 @@ const WorkspaceMutations = {
       minimumPrivilege: Privilege.OWNER,
       workspaceId: id
     })
-    return context.prisma.deleteWorkspace({ id })
+    const deletedWorkspace = context.prisma.deleteWorkspace({ id })
+    pubsub.publish('WORKSPACE_DELETED', {workspaceDeleted: deletedWorkspace})
+    return deletedWorkspace
   },
   async updateWorkspace(root, { id, name }, context) {
     await checkAccess(context, {
@@ -122,6 +127,7 @@ const WorkspaceMutations = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId: id
     })
+    pubsub.publish('WORKSPACE_UPDATED', {workspaceUpdated: {...data, id}})
     return context.prisma.updateWorkspace({
       where: { id },
       data: { name }
@@ -204,7 +210,7 @@ const WorkspaceMutations = {
     const templateWorkspace = result.project.activeTemplate
     const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
 
-    return await context.prisma.createWorkspace({
+    const newClonedWorkspace =  await context.prisma.createWorkspace({
       id: workspaceId,
       name,
       sourceProject: {
@@ -266,6 +272,8 @@ const WorkspaceMutations = {
         }))
       }
     })
+    pubsub.publish('WORKSPACE_CREATED', { createdWorkspace: newClonedWorkspace})
+    return newClonedWorkspace
   }
 }
 

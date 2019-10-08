@@ -116,6 +116,7 @@ type Subscription {
 
   # Workspaces subscriptions
   workspaceCreated: Workspace!
+  workspaceUpdated: Workspace!
   workspaceDeleted: Workspace!
 }
 
