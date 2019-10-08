@@ -3,6 +3,11 @@ const { ForbiddenError } = require('apollo-server-core')
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
 const { pubsub } = require('../Subscription/config')
+const { 
+  COURSE_LINK_CREATED, 
+  COURSE_LINK_UPDATED, 
+  COURSE_LINK_DELETED 
+} = require('../Subscription/config/channels')
 
 const CourseQueries = {
   async createCourseLink(root, { workspaceId, official, from, to }, context) {
@@ -26,7 +31,7 @@ const CourseQueries = {
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } }
     })
-    pubsub.publish('COURSE_LINK_CREATED', {courseLinkCreated: createdCourseLink})
+    pubsub.publish(COURSE_LINK_CREATED, {courseLinkCreated: createdCourseLink})
     return createdCourseLink
   },
   async updateCourseLink(root, { id, frozen, official }, context) {
@@ -43,7 +48,7 @@ const CourseQueries = {
       where: { id },
       data: { frozen, official }
     })
-    pubsub.publish('COURSE_LINK_UPDATED', { courseLinkUpdated: updatedCourseLink })
+    pubsub.publish(COURSE_LINK_UPDATED, { courseLinkUpdated: updatedCourseLink })
     return updatedCourseLink
   },
   async deleteCourseLink(root, { id }, context) {
@@ -56,7 +61,7 @@ const CourseQueries = {
     const toDelete = await context.prisma.courseLink({ id })
     if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
     const deletedCourseLink = await context.prisma.deleteCourseLink({ id })
-    pubsub.publish('COURSE_LINK_DELETED', {courseLinkDeleted: deletedCourseLink})
+    pubsub.publish(COURSE_LINK_DELETED, {courseLinkDeleted: deletedCourseLink})
 
     return deletedCourseLink
   }

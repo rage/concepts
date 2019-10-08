@@ -1,7 +1,5 @@
 const { pubsub } = require('./config')
-
-const CONCEPT_LINK_CREATED = 'CONCEPT_LINK_CREATED'
-const CONCEPT_LINK_DELETED = 'CONCEPT_LINK_DELETED'
+const { CONCEPT_LINK_CREATED, CONCEPT_LINK_DELETED } = require('./config/channels')
 
 const ConceptLinkSubscriptions = {
   conceptLinkCreated: {

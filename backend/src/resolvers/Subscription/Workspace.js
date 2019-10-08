@@ -1,8 +1,5 @@
 const { pubsub } = require('./config')
-
-const WORKSPACE_CREATED = 'WORKSPACE_CREATED'
-const WORKSPACE_UPDATED = 'WORKSPACE_UPDATED'
-const WORKSPACE_DELETED = 'WORKSPACE_DELETED'
+const { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } = require('./config/channels')
 
 const WorkspaceSubscriptions = {
   workspaceCreated: {

@@ -1,6 +1,11 @@
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const makeSecret = require('../../secret')
 const { pubsub } = require('../Subscription/config')
+const {
+  WORKSPACE_CREATED, 
+  WORKSPACE_UPDATED, 
+  WORKSPACE_DELETED 
+} = require('../Subscription/config/channels')
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
@@ -104,7 +109,7 @@ const WorkspaceMutations = {
         create: bloom
       }
     })
-    pubsub.publish('WORKSPACE_CREATED', {workspaceCreated: newWorkspace})
+    pubsub.publish(WORKSPACE_CREATED, {workspaceCreated: newWorkspace})
     return newWorkspace
   },
   async deleteWorkspace(root, { id }, context) {
@@ -118,7 +123,7 @@ const WorkspaceMutations = {
       workspaceId: id
     })
     const deletedWorkspace = context.prisma.deleteWorkspace({ id })
-    pubsub.publish('WORKSPACE_DELETED', {workspaceDeleted: deletedWorkspace})
+    pubsub.publish(WORKSPACE_DELETED, {workspaceDeleted: deletedWorkspace})
     return deletedWorkspace
   },
   async updateWorkspace(root, { id, name }, context) {
@@ -127,7 +132,7 @@ const WorkspaceMutations = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId: id
     })
-    pubsub.publish('WORKSPACE_UPDATED', {workspaceUpdated: {...data, id}})
+    pubsub.publish(WORKSPACE_UPDATED, {workspaceUpdated: {...data, id}})
     return context.prisma.updateWorkspace({
       where: { id },
       data: { name }

@@ -1,8 +1,5 @@
 const { pubsub } = require('./config')
-
-const COURSE_LINK_CREATED = 'COURSE_LINK_CREATED'
-const COURSE_LINK_UPDATED = 'COURSE_LINK_UPDATED'
-const COURSE_LINK_DELETED = 'COURSE_LINK_DELETED'
+const { COURSE_LINK_CREATED, COURSE_LINK_UPDATED, COURSE_LINK_DELETED } = require('./config/channels')
 
 const CourseLinkSubscriptions = {
   courseLinkCreated: {

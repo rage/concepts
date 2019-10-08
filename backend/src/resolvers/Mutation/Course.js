@@ -5,6 +5,11 @@ import { nullShield } from '../../errors'
 import { createMissingTags, filterTags } from './tagUtils'
 
 import { pubsub } from '../Subscription/config'
+const { 
+  COURSE_CREATED, 
+  COURSE_UPDATED, 
+  COURSE_DELETED 
+} = require('../Subscription/config/channels')
 
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, frozen, tags }, context) {
@@ -25,7 +30,7 @@ const CourseQueries = {
       tags: { connect: await createMissingTags(tags, workspaceId, context, 'courseTags') }
     })
 
-    pubsub.publish('COURSE_CREATED', { courseCreated: newCourse})
+    pubsub.publish(COURSE_CREATED, { courseCreated: newCourse})
     return newCourse
   },
 
@@ -45,7 +50,7 @@ const CourseQueries = {
       ]
     })
     const deletedCourse = await context.prisma.deleteCourse({ id })
-    pubsub.publish('COURSE_DELETED', {courseDeleted: deletedCourse})
+    pubsub.publish(COURSE_DELETED, {courseDeleted: deletedCourse})
     return deletedCourse
   },
 
@@ -80,7 +85,7 @@ const CourseQueries = {
       if (!belongsToTemplate && name !== oldCourse.name) data.official = false
       data.name = name
     }
-    pubsub.publish('COURSE_UPDATED', {courseUpdated: {...data, id }})
+    pubsub.publish(COURSE_UPDATED, {courseUpdated: {...data, id }})
     return await context.prisma.updateCourse({
       where: { id },
       data

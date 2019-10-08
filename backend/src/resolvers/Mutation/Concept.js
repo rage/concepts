@@ -4,6 +4,11 @@ import { checkAccess, Role, Privilege } from '../../accessControl'
 import { nullShield } from '../../errors'
 import { createMissingTags, filterTags } from './tagUtils'
 import { pubsub } from '../Subscription/config'
+const { 
+  CONCEPT_CREATED, 
+  CONCEPT_UPDATED, 
+  CONCEPT_DELETED 
+} = require('../Subscription/config/channels')
 
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (context.role === Role.STUDENT) {
@@ -102,7 +107,7 @@ const ConceptMutations = {
         await updatePointGroups(pointGroups, context)
       }
     }
-    pubsub.publish('CONCEPT_CREATED', { conceptCreated: createdConcept })
+    pubsub.publish(CONCEPT_CREATED, { conceptCreated: createdConcept })
     return createdConcept
   },
 
@@ -141,7 +146,7 @@ const ConceptMutations = {
       data.name = name
     }
 
-    pubsub.publish('CONCEPT_UPDATED', { conceptUpdated: {...data, id}} )
+    pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: {...data, id}} )
     return await context.prisma.updateConcept({
       where: { id },
       data
@@ -164,7 +169,7 @@ const ConceptMutations = {
         }
       }
     `)
-    pubsub.publish('CONCEPT_DELETED', { conceptDeleted: toDelete })
+    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: toDelete })
     if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
     await context.prisma.deleteConcept({ id })
     return {
