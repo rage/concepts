@@ -85,6 +85,7 @@ const CloneView = ({ token, peek, projectId }) => {
         const res = await joinShareLink({
           variables: { token }
         })
+        // eslint-disable-next-line require-atomic-updates
         projectId = res.data.useToken.project.id
       } catch (err) {
         messageDispatch({
