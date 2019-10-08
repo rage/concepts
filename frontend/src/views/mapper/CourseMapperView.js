@@ -65,6 +65,12 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     variables: { id: courseId }
   })
 
+  const courseLinks = prereqQuery.data.courseAndPrerequisites?.linksToCourse
+  const courseLinkMap = useMemo(
+    () => new Map(courseLinks?.map(link => [link.from.id, link.id])), [courseLinks])
+  const course = courseQuery.data.courseById
+  const workspace = workspaceQuery.data.workspaceById
+
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
     setTimeout(() => {
@@ -81,12 +87,6 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       || !workspaceQuery.data.workspaceById) {
     return <LoadingBar id='course-view' />
   }
-
-  const courseLinks = prereqQuery.data.courseAndPrerequisites?.linksToCourse
-  const courseLinkMap = useMemo(
-    () => new Map(courseLinks.map(link => [link.from.id, link.id])), [courseLinks])
-  const course = courseQuery.data.courseById
-  const workspace = workspaceQuery.data.workspaceById
 
   return (
     <div className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>

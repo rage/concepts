@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
 import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
