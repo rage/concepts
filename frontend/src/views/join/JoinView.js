@@ -86,11 +86,12 @@ const JoinView = ({ token }) => {
     )
   }
 
+  const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
+
   if (privilege === Privilege.CLONE) {
-    return <CloneView token={token} peek={peek} />
+    return <CloneView token={token} peek={peek} projectId={participant && peek.data.peekToken.id} />
   }
 
-  const participant = peek.data.peekToken.participants.find(pcp => pcp.user.id === user.id)
   if (participant) {
     const path = type === 'workspace'
       ? `/workspaces/${peek.data.peekToken.id}/manager`
