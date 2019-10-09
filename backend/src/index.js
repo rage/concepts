@@ -13,6 +13,7 @@ const { authenticate } = require('./middleware/authentication')
 const { logError } = require('./util/errorLogger')
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
+const subscriptions = require('./resolvers/Subscription')
 const types = require('./resolvers/Type')
 const pointsAPI = require('./controllers/pointsAPI')
 const { loginAPIRedirect, loginAPIAssert, loginAPIMetadata } = require('./controllers/loginAPI')
@@ -24,12 +25,16 @@ const resolvers = {
   Mutation: {
     ...mutations
   },
+  Subscription: {
+    ...subscriptions
+  },
   ...types
 }
 
 const options = {
   endpoint: '/graphql',
   playground: '/playground',
+  subscriptions: '/graphql',
   port: process.env.PORT || 4000,
   formatError: logError
 }

@@ -125,7 +125,7 @@ const LoginView = () => {
     <Container component='main' maxWidth='xs'>
       <div className={classes.paper}>
         <Typography component='h1' variant='h5'>
-          Sign in with TMC account
+          Sign in with <a href='https://www.mooc.fi/en/sign-up'>mooc.fi account</a>
         </Typography>
 
         <form

@@ -68,7 +68,7 @@ const Course = ({
   const classes = useStyles()
   const { history } = useRouter()
 
-  const [{ user, loggedIn }] = useLoginStateValue()
+  const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
   const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
@@ -113,7 +113,7 @@ const Course = ({
               {courseLink.frozen ? <LockedIcon /> : <LockOpenIcon />}
             </IconButton>
           }
-          <IconButton disabled={!loggedIn || (course.frozen && user.role < Role.STAFF)}
+          <IconButton disabled={course.frozen && user.role < Role.STAFF}
             onClick={() => openEditCourseDialog(course.id, course.name,
               course.official, course.frozen)}>
             <EditIcon />
@@ -139,23 +139,19 @@ const Course = ({
             />
           )}
         </List>
-        {
-          loggedIn ?
-            <Button
-              className={`${classes.button} focusOverlayScrollParent`}
-              onClick={() => openCreateConceptDialog(course.id)}
-              variant='contained'
-              color='primary'
-              ref={createConceptRef}
-            >
-              Add concept
-            </Button>
-            : null
-        }
+        <Button
+          className={`${classes.button} focusOverlayScrollParent`}
+          onClick={() => openCreateConceptDialog(course.id)}
+          variant='contained'
+          color='primary'
+          ref={createConceptRef}
+        >
+          Add concept
+        </Button>
 
       </CardContent>
     </Card>
   )
 }
 
-export default Course
+export default React.memo(Course)

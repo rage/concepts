@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core'
@@ -65,6 +65,12 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     variables: { id: courseId }
   })
 
+  const courseLinks = prereqQuery.data.courseAndPrerequisites?.linksToCourse
+  const courseLinkMap = useMemo(
+    () => new Map(courseLinks?.map(link => [link.from.id, link.id])), [courseLinks])
+  const course = courseQuery.data.courseById
+  const workspace = workspaceQuery.data.workspaceById
+
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
     setTimeout(() => {
@@ -82,11 +88,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     return <LoadingBar id='course-view' />
   }
 
-  const courseLinks = prereqQuery.data.courseAndPrerequisites?.linksToCourse
-  const course = courseQuery.data.courseById
-  const workspace = workspaceQuery.data.workspaceById
-
-  return <>
+  return (
     <div className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>
       <DividerWithText
         gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
@@ -109,16 +111,16 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
       </Button>
       {courseTrayOpen && <CourseTray
         activeCourseId={course.id}
-        courseLinks={courseLinks}
+        courseLinks={courseLinkMap}
         workspace={workspace}
         urlPrefix={urlPrefix}
       />}
       <CourseContainer
-        urlPrefix={urlPrefix} courseTrayOpen={courseTrayOpen}
+        urlPrefix={urlPrefix} courseTrayOpen={courseTrayOpen} courseLinkMap={courseLinkMap}
         workspace={workspace} course={course} courseLinks={courseLinks}
       />
     </div>
-  </>
+  )
 }
 
 export default CourseMapperView
