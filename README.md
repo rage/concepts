@@ -13,6 +13,9 @@
 
 ## Previews
 
+### Workspace manager
+![Workspace manager preview](preview-manager.png)
+
 ### Concept mapper
 ![Concept mapper preview](preview-mapper.png)
 
