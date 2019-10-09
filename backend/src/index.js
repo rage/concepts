@@ -12,8 +12,10 @@ const { authenticate } = require('./middleware/authentication')
 const { logError } = require('./errorLogger')
 const queries = require('./resolvers/Query')
 const mutations = require('./resolvers/Mutation')
+const subscriptions = require('./resolvers/Subscription')
 const types = require('./resolvers/Type')
 const pointsAPI = require('./pointsAPI')
+const { pubsub } = require('./resolvers/Subscription/config')
 
 const resolvers = {
   Query: {
@@ -22,12 +24,16 @@ const resolvers = {
   Mutation: {
     ...mutations
   },
+  Subscription: {
+    ...subscriptions
+  },
   ...types
 }
 
 const options = {
   endpoint: '/graphql',
   playground: '/playground',
+  subscriptions: '/graphql',
   port: process.env.PORT || 4000,
   formatError: logError
 }

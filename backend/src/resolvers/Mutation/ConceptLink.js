@@ -2,6 +2,11 @@ const { ForbiddenError } = require('apollo-server-core')
 
 const { checkAccess, Role, Privilege } = require('../../accessControl')
 const { nullShield } = require('../../errors')
+const { pubsub } = require('../Subscription/config')
+const { 
+  CONCEPT_LINK_CREATED, 
+  CONCEPT_LINK_DELETED 
+} = require('../Subscription/config/channels')
 
 const ConceptLink = {
   async createConceptLink(root, { official, to, from, workspaceId }, context) {
@@ -18,13 +23,15 @@ const ConceptLink = {
       ]
     })
     if (linkExists) return null
-    return await context.prisma.createConceptLink({
+    const newConceptLink =  await context.prisma.createConceptLink({
       to: { connect: { id: to } },
       from: { connect: { id: from } },
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
       official: Boolean(official)
     })
+    pubsub.publish(CONCEPT_LINK_CREATED, {conceptLinkCreated: newConceptLink})
+    return newConceptLink
   },
   async deleteConceptLink(root, args, context) {
     const { id: workspaceId } = nullShield(
@@ -36,6 +43,7 @@ const ConceptLink = {
     })
     const toDelete = await context.prisma.conceptLink({ id: args.id })
     if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
+    pubsub.publish(CONCEPT_LINK_DELETED, {conceptLinkDeleted: toDelete})
     return await context.prisma.deleteConceptLink({
       id: args.id
     })
