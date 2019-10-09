@@ -1,1 +1,1 @@
-../../../backend/src/permissions.js
+../../../backend/src/util/permissions.js

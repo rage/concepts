@@ -1,12 +1,12 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullShield } = require('../../errors')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
+const { nullShield } = require('../../util/errors')
 const { pubsub } = require('../Subscription/config')
-const { 
-  COURSE_LINK_CREATED, 
-  COURSE_LINK_UPDATED, 
-  COURSE_LINK_DELETED 
+const {
+  COURSE_LINK_CREATED,
+  COURSE_LINK_UPDATED,
+  COURSE_LINK_DELETED
 } = require('../Subscription/config/channels')
 
 const CourseQueries = {

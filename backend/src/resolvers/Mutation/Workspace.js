@@ -1,11 +1,11 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const makeSecret = require('../../secret')
-const { pubsub } = require('../Subscription/config')
-const {
-  WORKSPACE_CREATED, 
-  WORKSPACE_UPDATED, 
-  WORKSPACE_DELETED 
-} = require('../Subscription/config/channels')
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import makeSecret from '../../util/secret'
+import { pubsub } from '../Subscription/config'
+import {
+  WORKSPACE_CREATED,
+  WORKSPACE_UPDATED,
+  WORKSPACE_DELETED
+} from '../Subscription/config/channels'
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
@@ -63,7 +63,7 @@ query($id : ID!) {
 }
 `
 
-const bloom = [{
+export const bloom = [{
   name: 'REMEMBER',
   type: 'bloom',
   priority: 0
@@ -282,4 +282,4 @@ const WorkspaceMutations = {
   }
 }
 
-module.exports = WorkspaceMutations
+export default WorkspaceMutations

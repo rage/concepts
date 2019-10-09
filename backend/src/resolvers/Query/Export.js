@@ -1,5 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { NotFoundError } = require('../../errors')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
+const { NotFoundError } = require('../../util/errors')
 
 const exportQuery = `
 query($id: ID!) {

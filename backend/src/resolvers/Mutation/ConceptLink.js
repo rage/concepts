@@ -1,11 +1,11 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullShield } = require('../../errors')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
+const { nullShield } = require('../../util/errors')
 const { pubsub } = require('../Subscription/config')
-const { 
-  CONCEPT_LINK_CREATED, 
-  CONCEPT_LINK_DELETED 
+const {
+  CONCEPT_LINK_CREATED,
+  CONCEPT_LINK_DELETED
 } = require('../Subscription/config/channels')
 
 const ConceptLink = {

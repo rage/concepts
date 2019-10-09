@@ -180,6 +180,7 @@ scalar DateTime
 type User {
   id: ID!
   tmcId: Int
+  hakaId: String
   role: Role!
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!

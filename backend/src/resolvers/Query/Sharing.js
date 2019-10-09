@@ -1,6 +1,6 @@
 const { ForbiddenError } = require('apollo-server-core')
 
-const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
 
 const cloneTokenProjectQuery = `
 query($id: ID!, $userId: ID!) {

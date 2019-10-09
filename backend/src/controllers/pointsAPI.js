@@ -1,5 +1,5 @@
-const { userDetails } = require('./TMCAuthentication')
-const { prisma } = require('../schema/generated/prisma-client')
+const { userDetails } = require('../util/tmcAuthentication')
+const { prisma } = require('../../schema/generated/prisma-client')
 
 const HEADER_PREFIX = 'Bearer '.toLowerCase()
 
