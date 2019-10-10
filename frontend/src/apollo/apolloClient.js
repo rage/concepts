@@ -1,11 +1,33 @@
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
+import { split } from 'apollo-link'
+import { createHttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 
 import { savingIndicator } from '../components/NavBar'
 
 let requestsInFlight = 0
 
-const client = new ApolloClient({
+const wsLink = new WebSocketLink({
   uri: '/graphql',
+  options: { reconnect: true }
+})
+
+const httpLink = createHttpLink({
+  uri: '/graphql'
+})
+
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
+    return kind === 'OperationDefinition' && operation === 'subscription'
+  },
+  wsLink,
+  httpLink
+)
+
+const client = new ApolloClient({
+  link,
   cache: new InMemoryCache({
     dataIdFromObject: o => o.id
   }),
