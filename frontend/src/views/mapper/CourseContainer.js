@@ -75,6 +75,11 @@ const CourseContainer = ({
   }, [focusedConceptIds])
 
   return <>
+    {addingLink && <style>{`
+      .${addingLink.oppositeType}:not(.linkto-${addingLink.id}) {
+        color: #f50057;
+      }
+    `}</style>}
     <PrerequisiteContainer
       courseLinks={courseLinks}
       courseId={course.id}

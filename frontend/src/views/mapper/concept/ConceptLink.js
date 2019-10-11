@@ -133,6 +133,8 @@ export default class ConceptLink extends Component {
     return () => {
       const fromBox = fromRef.current.getBoundingClientRect()
       const toBox = toRef.current.getBoundingClientRect()
+      fromRef.current.classList.add(`linkto-${this.props.toConceptId}`)
+      toRef.current.classList.add(`linkto-${this.props.fromConceptId}`)
 
       const x0 = fromBox.x + (fromBox.width * this.fromAnchor.x) + window.pageXOffset + offset.x0
       const y0 = fromBox.y + (fromBox.height * this.fromAnchor.y) + window.pageYOffset + offset.y0
