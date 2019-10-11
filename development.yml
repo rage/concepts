@@ -12,7 +12,7 @@ services:
     environment:
       PROXY: http://backend:4000
       PRISMA_PROXY: http://prisma:4466
-#      REACT_APP_HAKA_URL: https://testsp.funet.fi/shibboleth/WAYF?entityID=https://concepts.cs.helsinki.fi&return=https://concepts.cs.helsinki.fi/api/login
+      #REACT_APP_HAKA_URL: https://testsp.funet.fi/shibboleth/WAYF?entityID=https://concepts.cs.helsinki.fi&return=https://concepts.cs.helsinki.fi/api/login
     volumes:
       - ./frontend:/concepts/frontend
       - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
