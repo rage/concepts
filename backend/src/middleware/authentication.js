@@ -6,7 +6,7 @@ const { Role } = require('../util/accessControl')
 const authenticate = async (resolve, root, args, context, info) => {
   const prisma = context.prisma
 
-  if (context.user || !context.request) {
+  if (context.user) {
     return await resolve(root, args, context, info)
   }
   const rawToken = context.request.header('Authorization')
