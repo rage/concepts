@@ -8,11 +8,16 @@ const SAML_DIR = process.env.SAML_DIR || './saml'
 
 samlify.setSchemaValidator(validator)
 
-const sp = samlify.ServiceProvider({
-  metadata: fs.readFileSync(path.join(SAML_DIR, 'metadata.xml')),
-  encPrivateKey: fs.readFileSync(path.join(SAML_DIR, 'privatekey.pem')),
-  privateKey: fs.readFileSync(path.join(SAML_DIR, 'privatekey.pem')),
-  loginNameIDFormat: 'transient'
-})
+let sp
+try {
+  sp = samlify.ServiceProvider({
+    metadata: fs.readFileSync(path.join(SAML_DIR, 'metadata.xml')),
+    encPrivateKey: fs.readFileSync(path.join(SAML_DIR, 'privatekey.pem')),
+    privateKey: fs.readFileSync(path.join(SAML_DIR, 'privatekey.pem')),
+    loginNameIDFormat: 'transient'
+  })
+} catch {
+  sp = null
+}
 
 export default sp
