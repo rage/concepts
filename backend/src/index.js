@@ -6,6 +6,7 @@ require('dotenv').config({
 
 const { GraphQLServer } = require('graphql-yoga')
 const express = require('express')
+const cors = require('cors')
 const cookieParser = require('cookie-parser')
 
 const { prisma } = require('../schema/generated/prisma-client')
@@ -50,7 +51,7 @@ const server = new GraphQLServer({
 })
 
 // Points for completions
-server.express.get('/projects/:pid/courses/:cid/progress', pointsAPI)
+server.express.get('/api/projects/:pid/courses/:cid/progress', cors(), pointsAPI)
 
 // SAML API for Haka login
 server.express.use(express.urlencoded({ extended: true }))
