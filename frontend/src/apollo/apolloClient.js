@@ -9,12 +9,12 @@ import { savingIndicator } from '../components/NavBar'
 let requestsInFlight = 0
 
 const wsLink = new WebSocketLink({
-  uri: '/graphql',
+  uri: 'ws://localhost:8080/graphql',
   options: { reconnect: true }
 })
 
 const httpLink = createHttpLink({
-  uri: '/graphql'
+  uri: 'http://localhost:8080/graphql'
 })
 
 const link = split(
