@@ -110,7 +110,7 @@ const PrerequisiteCourse = ({
     try {
       if (isPrerequisite) {
         await deleteCourseLink({
-          variables: { id: courseLinkMap.get(course) }
+          variables: { id: courseLinkMap.get(course.id) }
         })
       } else {
         await createCourseLink({
