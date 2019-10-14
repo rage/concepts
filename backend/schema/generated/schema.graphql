@@ -182,6 +182,7 @@ type User {
   id: ID!
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!

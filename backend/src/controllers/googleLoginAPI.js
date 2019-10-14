@@ -23,7 +23,7 @@ export async function verify(token) {
     })
     const payload = ticket.getPayload()
     console.log(payload)
-    return payload.sub
+    return payload
   } catch {
     return null
   }

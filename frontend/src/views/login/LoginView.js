@@ -74,6 +74,9 @@ const LoginView = () => {
   const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
   const googleLoginButton = useRef(null)
 
+  const showGuestButton = Boolean(location.state)
+  const nextPath = location.state ? location.state.from.pathname : '/'
+
   useEffect(() => {
     googleInit().then(result => setGoogleLoginEnabled(result))
   }, [])
@@ -82,7 +85,14 @@ const LoginView = () => {
     if (googleLoginButton.current) {
       gapi.signin2.render(googleLoginButton.current.id, {
         width: '100%',
-        onsuccess: googleSignedIn,
+        onsuccess: async response => {
+          const data = await googleSignedIn(response)
+          dispatch({
+            type: 'login',
+            data: data.user
+          })
+          history.push(nextPath)
+        },
         onerror: () => messageDispatch({
           type: 'setError',
           data: 'Login failed'
@@ -91,12 +101,10 @@ const LoginView = () => {
     }
   }, [googleLoginEnabled])
 
-  const showGuestButton = Boolean(location.state)
-  const nextPath = location.state ? location.state.from.pathname : '/'
-
   if (location.hash?.length > 1) {
     const query = qs.parse(location.hash.substr(1))
     if (query.token) {
+      query.type = 'HAKA'
       window.localStorage.currentUser = JSON.stringify(query)
       dispatch({
         type: 'login',

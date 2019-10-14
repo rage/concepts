@@ -38,15 +38,23 @@ async function actuallyInit() {
 }
 
 export async function signedIn(user) {
-  const profile = user.getBasicProfile()
-  console.log(profile)
-  console.log('ID: ' + profile.getId())
-  console.log('Name: ' + profile.getName())
-  console.log('Image URL: ' + profile.getImageUrl())
-  console.log('Email: ' + profile.getEmail())
-  const idToken = user.getAuthResponse().id_token
-  console.log(idToken)
-  //await apiAuthentication(idToken)
+  const resp = await apiAuthentication(user.getAuthResponse().id_token)
+  const data = resp.data.loginGoogle
+  if (data.user) {
+    data.user.username = user.getBasicProfile().getName()
+  }
+  data.type = 'GOOGLE'
+  window.localStorage.currentUser = JSON.stringify(data)
+  return data
+}
+
+export async function signOut() {
+  if (!window._googleAuthEnabled) {
+    return false
+  }
+  const auth2 = gapi.auth2.getAuthInstance()
+  await auth2.signOut()
+  return true
 }
 
 export async function apiAuthentication(idToken) {
@@ -62,6 +70,3 @@ if (window.google_inited) {
   // eslint-disable-next-line camelcase
   window._concepts_google_init = init
 }
-
-// eslint-disable-next-line camelcase
-window._concepts_google_signed_in = signedIn
