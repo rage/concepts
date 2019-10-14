@@ -93,7 +93,7 @@ const PrerequisiteCourse = ({
             id: course.id
           }
         }).then(() => {
-          if (activeCourseId === workspace.course.id) {
+          if (activeCourseId === course.id) {
             if (workspace.courses.length > 1) {
               const nextCourse = workspace.courses.find(c => c.id !== course.id)
               history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
