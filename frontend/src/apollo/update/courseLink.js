@@ -14,11 +14,15 @@ const createCourseLinkUpdate = (workspaceId, activeCourseId) =>
     const dataInStoreCopy = { ...dataInStore }
     const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
     if (!includedIn(courseLinks, addedCourseLink)) {
-      courseLinks.push(addedCourseLink)
       client.writeQuery({
         query: COURSE_PREREQUISITES,
         variables: { courseId: activeCourseId, workspaceId },
-        data: dataInStoreCopy
+        data: { ...dataInStoreCopy, 
+          courseAndPrerequisites: { 
+            ...dataInStoreCopy.courseAndPrerequisites,
+            linksToCourse: [...courseLinks, addedCourseLink]
+          }
+        }
       })
     }
   }
