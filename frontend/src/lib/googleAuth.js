@@ -2,6 +2,7 @@
 
 import client from '../apollo/apolloClient'
 import { AUTHENTICATE_GOOGLE } from '../graphql/Mutation'
+import { GET_GOOGLE_CLIENT_ID } from '../graphql/Query'
 
 window._googleAuthEnabled = null
 window._googleAuthEnabledPromise = null
@@ -25,20 +26,27 @@ export async function init() {
 }
 
 async function actuallyInit() {
-  const resp = await fetch('/api/login/google')
-  const data = await resp.json()
-  if (!data.enabled) {
+  const resp = await client.query({
+    query: GET_GOOGLE_CLIENT_ID
+  })
+  const { clientId, enabled } = resp.data.googleClientId
+  if (!enabled) {
     console.log('Google login is disabled in backend, not initializing gapi.auth2')
     return false
   }
-  delete data.enabled
   await asyncify(gapi.load, 'auth2')
-  await gapi.auth2.init(data)
+  await gapi.auth2.init({
+    // eslint-disable-next-line camelcase
+    client_id: clientId
+  })
   return true
 }
 
 export async function signedIn(user) {
-  const resp = await apiAuthentication(user.getAuthResponse().id_token)
+  const resp = await client.mutate({
+    mutation: AUTHENTICATE_GOOGLE,
+    variables: { idToken: user.getAuthResponse().id_token }
+  })
   const data = resp.data.loginGoogle
   if (data.user) {
     data.user.username = user.getBasicProfile().getName()
@@ -55,13 +63,6 @@ export async function signOut() {
   const auth2 = gapi.auth2.getAuthInstance()
   await auth2.signOut()
   return true
-}
-
-export async function apiAuthentication(idToken) {
-  return await client.mutate({
-    mutation: AUTHENTICATE_GOOGLE,
-    variables: { idToken }
-  })
 }
 
 if (window.google_inited) {

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { AuthenticationError } from 'apollo-server-core'
 
 import { Role, Privilege } from '../../util/accessControl'
-import { verify as verifyGoogle } from '../../controllers/googleLoginAPI'
+import { verify as verifyGoogle } from '../../util/googleAuth'
 import mockWorkspace from '../../static/mockWorkspace'
 import tmc from '../../util/tmcAuthentication'
 import makeSecret from '../../util/secret'

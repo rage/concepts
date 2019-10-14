@@ -4,6 +4,7 @@ type Query {
   # Authentication
   allUsers: [User!]!
   userById(id: ID!): User!
+  googleClientId: GoogleClientID
 
   # Project queries
   allProjects: [Project!]!
@@ -150,6 +151,11 @@ type DeletedConcept {
 type AuthPayload {
   token: String!
   user: User!
+}
+
+type GoogleClientID {
+  enabled: Boolean!
+  clientId: String
 }
 
 input TagInput {

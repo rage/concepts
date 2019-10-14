@@ -18,7 +18,6 @@ const subscriptions = require('./resolvers/Subscription')
 const types = require('./resolvers/Type')
 const pointsAPI = require('./controllers/pointsAPI')
 const { loginAPIRedirect, loginAPIAssert, loginAPIMetadata } = require('./controllers/loginAPI')
-const { getGoogleLoginAPI, postGoogleLoginAPI } = require('./controllers/googleLoginAPI')
 
 const resolvers = {
   Query: {
@@ -60,8 +59,6 @@ server.express.use(cookieParser())
 server.express.get('/api/login', loginAPIRedirect)
 server.express.post('/api/login/assert', loginAPIAssert)
 server.express.post('/api/login/metadata', loginAPIMetadata)
-server.express.get('/api/login/google', getGoogleLoginAPI)
-server.express.post('/api/login/google', postGoogleLoginAPI)
 
 if (process.env.ENVIRONMENT === 'production' || process.env.FRONTEND_PATH) {
   const FRONTEND_PATH = process.env.FRONTEND_PATH || path.join(__dirname, '../../frontend/build')
