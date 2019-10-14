@@ -1,14 +1,14 @@
-const authentication = require('./Authentication')
-const course = require('./Course')
-const courseLink = require('./CourseLink')
-const concept = require('./Concept')
-const conceptLink = require('./ConceptLink')
-const workspace = require('./Workspace')
-const sharing = require('./Sharing')
-const project = require('./Project')
-const port = require('./Import')
-const merge = require('./Merge')
-const pointGroup = require('./PointGroup')
+import authentication from './Authentication'
+import course from './Course'
+import courseLink from './CourseLink'
+import concept from './Concept'
+import conceptLink from './ConceptLink'
+import workspace from './Workspace'
+import sharing from './Sharing'
+import project from './Project'
+import port from './Import'
+import merge from './Merge'
+import pointGroup from './PointGroup'
 
 module.exports = {
   ...authentication,

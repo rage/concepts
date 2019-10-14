@@ -1,17 +1,18 @@
-const jwt = require('jsonwebtoken')
-const { AuthenticationError } = require('apollo-server-core')
+import jwt from 'jsonwebtoken'
+import { AuthenticationError } from 'apollo-server-core'
 
-const { Role, Privilege } = require('../../accessControl')
-const mockWorkspace = require('../../static/mockWorkspace')
-const tmc = require('../../TMCAuthentication')
-const makeSecret = require('../../secret')
+import { Role, Privilege } from '../../util/accessControl'
+import mockWorkspace from '../../static/mockWorkspace'
+import tmc from '../../util/tmcAuthentication'
+import makeSecret from '../../util/secret'
+import { bloom } from './Workspace'
 
-const makeMockWorkspaceForUser = async (context, userId) => {
+const makeMockWorkspaceForUser = async (prisma, userId) => {
   const workspaceId = makeSecret(25)
   const templateWorkspace = mockWorkspace.data.workspace
   const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
 
-  await context.prisma.createWorkspace({
+  await prisma.createWorkspace({
     id: workspaceId,
     name: templateWorkspace.name,
     participants: {
@@ -21,6 +22,9 @@ const makeMockWorkspaceForUser = async (context, userId) => {
           connect: { id: userId }
         }
       }]
+    },
+    conceptTags: {
+      create: bloom
     },
     courses: {
       create: templateWorkspace.courses.map(course => ({
@@ -55,6 +59,24 @@ const makeMockWorkspaceForUser = async (context, userId) => {
   })
 }
 
+const createUser = async (userData, prisma) => {
+  const createdUser = await prisma.createUser(userData)
+  await makeMockWorkspaceForUser(prisma, createdUser.id)
+  return createdUser
+}
+
+const signUser = user => jwt.sign({ role: user.role, id: user.id }, process.env.SECRET)
+
+const defaultCreateDetails = {
+  role: Role.STUDENT.toString()
+}
+
+export const signOrCreateUser = async (where, createDetails, prisma) => {
+  const user = await prisma.user(where)
+    || await createUser({ ...defaultCreateDetails, ...where, ...createDetails }, prisma)
+  return { user, token: signUser(user) }
+}
+
 const AuthenticationMutations = {
   async createGuest(root, args, context) {
     const guest = await context.prisma.createUser({
@@ -79,30 +101,10 @@ const AuthenticationMutations = {
       return new AuthenticationError('Invalid tmc-token')
     }
     const tmcId = userDetails.id
-    const user = await context.prisma.user({ tmcId })
-
-    // New user
-    if (!user) {
-      const userData = {
-        tmcId,
-        role: (userDetails?.administrator ? Role.ADMIN : Role.STUDENT).toString()
-      }
-      const createdUser = await context.prisma.createUser(userData)
-      const token = jwt.sign({ role: createdUser.role, id: createdUser.id }, process.env.SECRET)
-      await makeMockWorkspaceForUser(context, createdUser.id)
-      return {
-        token,
-        user: createdUser
-      }
-    }
-
-    // Existing user
-    const token = jwt.sign({ role: user.role, id: user.id }, process.env.SECRET)
-    return {
-      token,
-      user
-    }
+    return await signOrCreateUser({ tmcId }, {
+      role: (userDetails?.administrator ? Role.ADMIN : Role.STUDENT).toString()
+    }, context.prisma)
   }
 }
 
-module.exports = AuthenticationMutations
+export default AuthenticationMutations

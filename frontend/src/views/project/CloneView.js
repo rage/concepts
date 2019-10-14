@@ -52,12 +52,14 @@ const CloneView = ({ token, peek, projectId }) => {
   const [name, setName] = useState(generateName())
 
   const peekTemplate = useQuery(PEEK_ACTIVE_TEMPLATE, {
-    skip: Boolean(token),
+    skip: !projectId,
     variables: { id: projectId }
   })
 
+  const skip = !projectId || !peekTemplate.data?.limitedProjectById?.activeTemplateId
+
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
-    skip: Boolean(token) || !peekTemplate.data?.limitedProjectById?.activeTemplateId,
+    skip,
     variables: {
       sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
     }
@@ -66,7 +68,7 @@ const CloneView = ({ token, peek, projectId }) => {
   const joinShareLink = useMutation(USE_SHARE_LINK)
 
   const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
-    refetchQueries: !token ? [{
+    refetchQueries: !skip ? [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE,
       variables: {
         sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
@@ -80,11 +82,12 @@ const CloneView = ({ token, peek, projectId }) => {
 
   const handleCreate = async () => {
     setLoading(true)
-    if (peek) {
+    if (!projectId) {
       try {
         const res = await joinShareLink({
           variables: { token }
         })
+        // eslint-disable-next-line require-atomic-updates
         projectId = res.data.useToken.project.id
       } catch (err) {
         messageDispatch({

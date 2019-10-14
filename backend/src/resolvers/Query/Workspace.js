@@ -1,4 +1,4 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
 
 const workspaceBySourceTemplateQuery = `
 query($id: ID!, $userId: ID!) {

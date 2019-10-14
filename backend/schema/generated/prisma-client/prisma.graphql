@@ -1,0 +1,5810 @@
+type AggregateCompletion {
+  count: Int!
+}
+
+type AggregateConcept {
+  count: Int!
+}
+
+type AggregateConceptLink {
+  count: Int!
+}
+
+type AggregateCourse {
+  count: Int!
+}
+
+type AggregateCourseLink {
+  count: Int!
+}
+
+type AggregatePointGroup {
+  count: Int!
+}
+
+type AggregateProject {
+  count: Int!
+}
+
+type AggregateProjectParticipant {
+  count: Int!
+}
+
+type AggregateProjectToken {
+  count: Int!
+}
+
+type AggregateResource {
+  count: Int!
+}
+
+type AggregateTag {
+  count: Int!
+}
+
+type AggregateURL {
+  count: Int!
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type AggregateWorkspace {
+  count: Int!
+}
+
+type AggregateWorkspaceParticipant {
+  count: Int!
+}
+
+type AggregateWorkspaceToken {
+  count: Int!
+}
+
+type BatchPayload {
+  count: Long!
+}
+
+type Completion {
+  id: ID!
+  user: User!
+  conceptAmount: Int!
+  createdAt: DateTime!
+  pointGroup: PointGroup!
+}
+
+type CompletionConnection {
+  pageInfo: PageInfo!
+  edges: [CompletionEdge]!
+  aggregate: AggregateCompletion!
+}
+
+input CompletionCreateInput {
+  id: ID
+  user: UserCreateOneInput!
+  conceptAmount: Int
+  pointGroup: PointGroupCreateOneWithoutCompletionsInput!
+}
+
+input CompletionCreateManyWithoutPointGroupInput {
+  create: [CompletionCreateWithoutPointGroupInput!]
+  connect: [CompletionWhereUniqueInput!]
+}
+
+input CompletionCreateWithoutPointGroupInput {
+  id: ID
+  user: UserCreateOneInput!
+  conceptAmount: Int
+}
+
+type CompletionEdge {
+  node: Completion!
+  cursor: String!
+}
+
+enum CompletionOrderByInput {
+  id_ASC
+  id_DESC
+  conceptAmount_ASC
+  conceptAmount_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type CompletionPreviousValues {
+  id: ID!
+  conceptAmount: Int!
+  createdAt: DateTime!
+}
+
+input CompletionScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  conceptAmount: Int
+  conceptAmount_not: Int
+  conceptAmount_in: [Int!]
+  conceptAmount_not_in: [Int!]
+  conceptAmount_lt: Int
+  conceptAmount_lte: Int
+  conceptAmount_gt: Int
+  conceptAmount_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  AND: [CompletionScalarWhereInput!]
+  OR: [CompletionScalarWhereInput!]
+  NOT: [CompletionScalarWhereInput!]
+}
+
+type CompletionSubscriptionPayload {
+  mutation: MutationType!
+  node: Completion
+  updatedFields: [String!]
+  previousValues: CompletionPreviousValues
+}
+
+input CompletionSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CompletionWhereInput
+  AND: [CompletionSubscriptionWhereInput!]
+  OR: [CompletionSubscriptionWhereInput!]
+  NOT: [CompletionSubscriptionWhereInput!]
+}
+
+input CompletionUpdateInput {
+  user: UserUpdateOneRequiredInput
+  conceptAmount: Int
+  pointGroup: PointGroupUpdateOneRequiredWithoutCompletionsInput
+}
+
+input CompletionUpdateManyDataInput {
+  conceptAmount: Int
+}
+
+input CompletionUpdateManyMutationInput {
+  conceptAmount: Int
+}
+
+input CompletionUpdateManyWithoutPointGroupInput {
+  create: [CompletionCreateWithoutPointGroupInput!]
+  delete: [CompletionWhereUniqueInput!]
+  connect: [CompletionWhereUniqueInput!]
+  set: [CompletionWhereUniqueInput!]
+  disconnect: [CompletionWhereUniqueInput!]
+  update: [CompletionUpdateWithWhereUniqueWithoutPointGroupInput!]
+  upsert: [CompletionUpsertWithWhereUniqueWithoutPointGroupInput!]
+  deleteMany: [CompletionScalarWhereInput!]
+  updateMany: [CompletionUpdateManyWithWhereNestedInput!]
+}
+
+input CompletionUpdateManyWithWhereNestedInput {
+  where: CompletionScalarWhereInput!
+  data: CompletionUpdateManyDataInput!
+}
+
+input CompletionUpdateWithoutPointGroupDataInput {
+  user: UserUpdateOneRequiredInput
+  conceptAmount: Int
+}
+
+input CompletionUpdateWithWhereUniqueWithoutPointGroupInput {
+  where: CompletionWhereUniqueInput!
+  data: CompletionUpdateWithoutPointGroupDataInput!
+}
+
+input CompletionUpsertWithWhereUniqueWithoutPointGroupInput {
+  where: CompletionWhereUniqueInput!
+  update: CompletionUpdateWithoutPointGroupDataInput!
+  create: CompletionCreateWithoutPointGroupInput!
+}
+
+input CompletionWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  user: UserWhereInput
+  conceptAmount: Int
+  conceptAmount_not: Int
+  conceptAmount_in: [Int!]
+  conceptAmount_not_in: [Int!]
+  conceptAmount_lt: Int
+  conceptAmount_lte: Int
+  conceptAmount_gt: Int
+  conceptAmount_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  pointGroup: PointGroupWhereInput
+  AND: [CompletionWhereInput!]
+  OR: [CompletionWhereInput!]
+  NOT: [CompletionWhereInput!]
+}
+
+input CompletionWhereUniqueInput {
+  id: ID
+}
+
+type Concept {
+  id: ID!
+  name: String!
+  description: String
+  official: Boolean!
+  frozen: Boolean!
+  createdBy: User!
+  sourceConcept: Concept
+  clones(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  linksFromConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
+  linksToConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
+  course: Course!
+  resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource!]
+  workspace: Workspace!
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  count: Int!
+}
+
+type ConceptConnection {
+  pageInfo: PageInfo!
+  edges: [ConceptEdge]!
+  aggregate: AggregateConcept!
+}
+
+input ConceptCreateInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput!
+  resources: ResourceCreateManyWithoutConceptInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateManyWithoutCourseInput {
+  create: [ConceptCreateWithoutCourseInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
+input ConceptCreateManyWithoutSourceConceptInput {
+  create: [ConceptCreateWithoutSourceConceptInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
+input ConceptCreateManyWithoutWorkspaceInput {
+  create: [ConceptCreateWithoutWorkspaceInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
+input ConceptCreateOneWithoutClonesInput {
+  create: ConceptCreateWithoutClonesInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateOneWithoutLinksFromConceptInput {
+  create: ConceptCreateWithoutLinksFromConceptInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateOneWithoutLinksToConceptInput {
+  create: ConceptCreateWithoutLinksToConceptInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateOneWithoutResourcesInput {
+  create: ConceptCreateWithoutResourcesInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateWithoutClonesInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput!
+  resources: ResourceCreateManyWithoutConceptInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateWithoutCourseInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  resources: ResourceCreateManyWithoutConceptInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateWithoutLinksFromConceptInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput!
+  resources: ResourceCreateManyWithoutConceptInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateWithoutLinksToConceptInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  course: CourseCreateOneWithoutConceptsInput!
+  resources: ResourceCreateManyWithoutConceptInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateWithoutResourcesInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput!
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateWithoutSourceConceptInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput!
+  resources: ResourceCreateManyWithoutConceptInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  tags: TagCreateManyInput
+  count: Int
+}
+
+input ConceptCreateWithoutWorkspaceInput {
+  id: ID
+  name: String!
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput!
+  resources: ResourceCreateManyWithoutConceptInput
+  tags: TagCreateManyInput
+  count: Int
+}
+
+type ConceptEdge {
+  node: Concept!
+  cursor: String!
+}
+
+type ConceptLink {
+  id: ID!
+  from: Concept!
+  to: Concept!
+  official: Boolean!
+  frozen: Boolean!
+  workspace: Workspace!
+  createdBy: User!
+  weight: Int!
+  count: Int!
+}
+
+type ConceptLinkConnection {
+  pageInfo: PageInfo!
+  edges: [ConceptLinkEdge]!
+  aggregate: AggregateConceptLink!
+}
+
+input ConceptLinkCreateInput {
+  id: ID
+  from: ConceptCreateOneWithoutLinksFromConceptInput!
+  to: ConceptCreateOneWithoutLinksToConceptInput!
+  official: Boolean
+  frozen: Boolean
+  workspace: WorkspaceCreateOneWithoutConceptLinksInput!
+  createdBy: UserCreateOneInput!
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkCreateManyWithoutFromInput {
+  create: [ConceptLinkCreateWithoutFromInput!]
+  connect: [ConceptLinkWhereUniqueInput!]
+}
+
+input ConceptLinkCreateManyWithoutToInput {
+  create: [ConceptLinkCreateWithoutToInput!]
+  connect: [ConceptLinkWhereUniqueInput!]
+}
+
+input ConceptLinkCreateManyWithoutWorkspaceInput {
+  create: [ConceptLinkCreateWithoutWorkspaceInput!]
+  connect: [ConceptLinkWhereUniqueInput!]
+}
+
+input ConceptLinkCreateWithoutFromInput {
+  id: ID
+  to: ConceptCreateOneWithoutLinksToConceptInput!
+  official: Boolean
+  frozen: Boolean
+  workspace: WorkspaceCreateOneWithoutConceptLinksInput!
+  createdBy: UserCreateOneInput!
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkCreateWithoutToInput {
+  id: ID
+  from: ConceptCreateOneWithoutLinksFromConceptInput!
+  official: Boolean
+  frozen: Boolean
+  workspace: WorkspaceCreateOneWithoutConceptLinksInput!
+  createdBy: UserCreateOneInput!
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkCreateWithoutWorkspaceInput {
+  id: ID
+  from: ConceptCreateOneWithoutLinksFromConceptInput!
+  to: ConceptCreateOneWithoutLinksToConceptInput!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  weight: Int
+  count: Int
+}
+
+type ConceptLinkEdge {
+  node: ConceptLink!
+  cursor: String!
+}
+
+enum ConceptLinkOrderByInput {
+  id_ASC
+  id_DESC
+  official_ASC
+  official_DESC
+  frozen_ASC
+  frozen_DESC
+  weight_ASC
+  weight_DESC
+  count_ASC
+  count_DESC
+}
+
+type ConceptLinkPreviousValues {
+  id: ID!
+  official: Boolean!
+  frozen: Boolean!
+  weight: Int!
+  count: Int!
+}
+
+input ConceptLinkScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
+  AND: [ConceptLinkScalarWhereInput!]
+  OR: [ConceptLinkScalarWhereInput!]
+  NOT: [ConceptLinkScalarWhereInput!]
+}
+
+type ConceptLinkSubscriptionPayload {
+  mutation: MutationType!
+  node: ConceptLink
+  updatedFields: [String!]
+  previousValues: ConceptLinkPreviousValues
+}
+
+input ConceptLinkSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ConceptLinkWhereInput
+  AND: [ConceptLinkSubscriptionWhereInput!]
+  OR: [ConceptLinkSubscriptionWhereInput!]
+  NOT: [ConceptLinkSubscriptionWhereInput!]
+}
+
+input ConceptLinkUpdateInput {
+  from: ConceptUpdateOneRequiredWithoutLinksFromConceptInput
+  to: ConceptUpdateOneRequiredWithoutLinksToConceptInput
+  official: Boolean
+  frozen: Boolean
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
+  createdBy: UserUpdateOneRequiredInput
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkUpdateManyDataInput {
+  official: Boolean
+  frozen: Boolean
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkUpdateManyMutationInput {
+  official: Boolean
+  frozen: Boolean
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkUpdateManyWithoutFromInput {
+  create: [ConceptLinkCreateWithoutFromInput!]
+  delete: [ConceptLinkWhereUniqueInput!]
+  connect: [ConceptLinkWhereUniqueInput!]
+  set: [ConceptLinkWhereUniqueInput!]
+  disconnect: [ConceptLinkWhereUniqueInput!]
+  update: [ConceptLinkUpdateWithWhereUniqueWithoutFromInput!]
+  upsert: [ConceptLinkUpsertWithWhereUniqueWithoutFromInput!]
+  deleteMany: [ConceptLinkScalarWhereInput!]
+  updateMany: [ConceptLinkUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptLinkUpdateManyWithoutToInput {
+  create: [ConceptLinkCreateWithoutToInput!]
+  delete: [ConceptLinkWhereUniqueInput!]
+  connect: [ConceptLinkWhereUniqueInput!]
+  set: [ConceptLinkWhereUniqueInput!]
+  disconnect: [ConceptLinkWhereUniqueInput!]
+  update: [ConceptLinkUpdateWithWhereUniqueWithoutToInput!]
+  upsert: [ConceptLinkUpsertWithWhereUniqueWithoutToInput!]
+  deleteMany: [ConceptLinkScalarWhereInput!]
+  updateMany: [ConceptLinkUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptLinkUpdateManyWithoutWorkspaceInput {
+  create: [ConceptLinkCreateWithoutWorkspaceInput!]
+  delete: [ConceptLinkWhereUniqueInput!]
+  connect: [ConceptLinkWhereUniqueInput!]
+  set: [ConceptLinkWhereUniqueInput!]
+  disconnect: [ConceptLinkWhereUniqueInput!]
+  update: [ConceptLinkUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [ConceptLinkUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [ConceptLinkScalarWhereInput!]
+  updateMany: [ConceptLinkUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptLinkUpdateManyWithWhereNestedInput {
+  where: ConceptLinkScalarWhereInput!
+  data: ConceptLinkUpdateManyDataInput!
+}
+
+input ConceptLinkUpdateWithoutFromDataInput {
+  to: ConceptUpdateOneRequiredWithoutLinksToConceptInput
+  official: Boolean
+  frozen: Boolean
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
+  createdBy: UserUpdateOneRequiredInput
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkUpdateWithoutToDataInput {
+  from: ConceptUpdateOneRequiredWithoutLinksFromConceptInput
+  official: Boolean
+  frozen: Boolean
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
+  createdBy: UserUpdateOneRequiredInput
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkUpdateWithoutWorkspaceDataInput {
+  from: ConceptUpdateOneRequiredWithoutLinksFromConceptInput
+  to: ConceptUpdateOneRequiredWithoutLinksToConceptInput
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  weight: Int
+  count: Int
+}
+
+input ConceptLinkUpdateWithWhereUniqueWithoutFromInput {
+  where: ConceptLinkWhereUniqueInput!
+  data: ConceptLinkUpdateWithoutFromDataInput!
+}
+
+input ConceptLinkUpdateWithWhereUniqueWithoutToInput {
+  where: ConceptLinkWhereUniqueInput!
+  data: ConceptLinkUpdateWithoutToDataInput!
+}
+
+input ConceptLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: ConceptLinkWhereUniqueInput!
+  data: ConceptLinkUpdateWithoutWorkspaceDataInput!
+}
+
+input ConceptLinkUpsertWithWhereUniqueWithoutFromInput {
+  where: ConceptLinkWhereUniqueInput!
+  update: ConceptLinkUpdateWithoutFromDataInput!
+  create: ConceptLinkCreateWithoutFromInput!
+}
+
+input ConceptLinkUpsertWithWhereUniqueWithoutToInput {
+  where: ConceptLinkWhereUniqueInput!
+  update: ConceptLinkUpdateWithoutToDataInput!
+  create: ConceptLinkCreateWithoutToInput!
+}
+
+input ConceptLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: ConceptLinkWhereUniqueInput!
+  update: ConceptLinkUpdateWithoutWorkspaceDataInput!
+  create: ConceptLinkCreateWithoutWorkspaceInput!
+}
+
+input ConceptLinkWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  from: ConceptWhereInput
+  to: ConceptWhereInput
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  workspace: WorkspaceWhereInput
+  createdBy: UserWhereInput
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
+  AND: [ConceptLinkWhereInput!]
+  OR: [ConceptLinkWhereInput!]
+  NOT: [ConceptLinkWhereInput!]
+}
+
+input ConceptLinkWhereUniqueInput {
+  id: ID
+}
+
+enum ConceptOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  official_ASC
+  official_DESC
+  frozen_ASC
+  frozen_DESC
+  count_ASC
+  count_DESC
+}
+
+type ConceptPreviousValues {
+  id: ID!
+  name: String!
+  description: String
+  official: Boolean!
+  frozen: Boolean!
+  count: Int!
+}
+
+input ConceptScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
+  AND: [ConceptScalarWhereInput!]
+  OR: [ConceptScalarWhereInput!]
+  NOT: [ConceptScalarWhereInput!]
+}
+
+type ConceptSubscriptionPayload {
+  mutation: MutationType!
+  node: Concept
+  updatedFields: [String!]
+  previousValues: ConceptPreviousValues
+}
+
+input ConceptSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ConceptWhereInput
+  AND: [ConceptSubscriptionWhereInput!]
+  OR: [ConceptSubscriptionWhereInput!]
+  NOT: [ConceptSubscriptionWhereInput!]
+}
+
+input ConceptUpdateInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateManyDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  count: Int
+}
+
+input ConceptUpdateManyMutationInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  count: Int
+}
+
+input ConceptUpdateManyWithoutCourseInput {
+  create: [ConceptCreateWithoutCourseInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutCourseInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutCourseInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptUpdateManyWithoutSourceConceptInput {
+  create: [ConceptCreateWithoutSourceConceptInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutSourceConceptInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutSourceConceptInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptUpdateManyWithoutWorkspaceInput {
+  create: [ConceptCreateWithoutWorkspaceInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptUpdateManyWithWhereNestedInput {
+  where: ConceptScalarWhereInput!
+  data: ConceptUpdateManyDataInput!
+}
+
+input ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
+  create: ConceptCreateWithoutLinksFromConceptInput
+  update: ConceptUpdateWithoutLinksFromConceptDataInput
+  upsert: ConceptUpsertWithoutLinksFromConceptInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptUpdateOneRequiredWithoutLinksToConceptInput {
+  create: ConceptCreateWithoutLinksToConceptInput
+  update: ConceptUpdateWithoutLinksToConceptDataInput
+  upsert: ConceptUpsertWithoutLinksToConceptInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptUpdateOneRequiredWithoutResourcesInput {
+  create: ConceptCreateWithoutResourcesInput
+  update: ConceptUpdateWithoutResourcesDataInput
+  upsert: ConceptUpsertWithoutResourcesInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptUpdateOneWithoutClonesInput {
+  create: ConceptCreateWithoutClonesInput
+  update: ConceptUpdateWithoutClonesDataInput
+  upsert: ConceptUpsertWithoutClonesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptUpdateWithoutClonesDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithoutCourseDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithoutLinksFromConceptDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithoutLinksToConceptDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithoutResourcesDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithoutSourceConceptDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithoutWorkspaceDataInput {
+  name: String
+  description: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  resources: ResourceUpdateManyWithoutConceptInput
+  tags: TagUpdateManyInput
+  count: Int
+}
+
+input ConceptUpdateWithWhereUniqueWithoutCourseInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutCourseDataInput!
+}
+
+input ConceptUpdateWithWhereUniqueWithoutSourceConceptInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutSourceConceptDataInput!
+}
+
+input ConceptUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutWorkspaceDataInput!
+}
+
+input ConceptUpsertWithoutClonesInput {
+  update: ConceptUpdateWithoutClonesDataInput!
+  create: ConceptCreateWithoutClonesInput!
+}
+
+input ConceptUpsertWithoutLinksFromConceptInput {
+  update: ConceptUpdateWithoutLinksFromConceptDataInput!
+  create: ConceptCreateWithoutLinksFromConceptInput!
+}
+
+input ConceptUpsertWithoutLinksToConceptInput {
+  update: ConceptUpdateWithoutLinksToConceptDataInput!
+  create: ConceptCreateWithoutLinksToConceptInput!
+}
+
+input ConceptUpsertWithoutResourcesInput {
+  update: ConceptUpdateWithoutResourcesDataInput!
+  create: ConceptCreateWithoutResourcesInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutCourseInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutCourseDataInput!
+  create: ConceptCreateWithoutCourseInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutSourceConceptInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutSourceConceptDataInput!
+  create: ConceptCreateWithoutSourceConceptInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutWorkspaceDataInput!
+  create: ConceptCreateWithoutWorkspaceInput!
+}
+
+input ConceptWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  createdBy: UserWhereInput
+  sourceConcept: ConceptWhereInput
+  clones_every: ConceptWhereInput
+  clones_some: ConceptWhereInput
+  clones_none: ConceptWhereInput
+  linksFromConcept_every: ConceptLinkWhereInput
+  linksFromConcept_some: ConceptLinkWhereInput
+  linksFromConcept_none: ConceptLinkWhereInput
+  linksToConcept_every: ConceptLinkWhereInput
+  linksToConcept_some: ConceptLinkWhereInput
+  linksToConcept_none: ConceptLinkWhereInput
+  course: CourseWhereInput
+  resources_every: ResourceWhereInput
+  resources_some: ResourceWhereInput
+  resources_none: ResourceWhereInput
+  workspace: WorkspaceWhereInput
+  tags_every: TagWhereInput
+  tags_some: TagWhereInput
+  tags_none: TagWhereInput
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
+  AND: [ConceptWhereInput!]
+  OR: [ConceptWhereInput!]
+  NOT: [ConceptWhereInput!]
+}
+
+input ConceptWhereUniqueInput {
+  id: ID
+}
+
+type Course {
+  id: ID!
+  name: String!
+  official: Boolean!
+  frozen: Boolean!
+  createdBy: User!
+  sourceCourse: Course
+  clones(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  linksFromCourse(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
+  linksToCourse(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
+  concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  workspace: Workspace!
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+}
+
+type CourseConnection {
+  pageInfo: PageInfo!
+  edges: [CourseEdge]!
+  aggregate: AggregateCourse!
+}
+
+input CourseCreateInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  concepts: ConceptCreateManyWithoutCourseInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  tags: TagCreateManyInput
+}
+
+input CourseCreateManyWithoutSourceCourseInput {
+  create: [CourseCreateWithoutSourceCourseInput!]
+  connect: [CourseWhereUniqueInput!]
+}
+
+input CourseCreateManyWithoutWorkspaceInput {
+  create: [CourseCreateWithoutWorkspaceInput!]
+  connect: [CourseWhereUniqueInput!]
+}
+
+input CourseCreateOneInput {
+  create: CourseCreateInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseCreateOneWithoutClonesInput {
+  create: CourseCreateWithoutClonesInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseCreateOneWithoutConceptsInput {
+  create: CourseCreateWithoutConceptsInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseCreateOneWithoutLinksFromCourseInput {
+  create: CourseCreateWithoutLinksFromCourseInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseCreateOneWithoutLinksToCourseInput {
+  create: CourseCreateWithoutLinksToCourseInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseCreateWithoutClonesInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  concepts: ConceptCreateManyWithoutCourseInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  tags: TagCreateManyInput
+}
+
+input CourseCreateWithoutConceptsInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  tags: TagCreateManyInput
+}
+
+input CourseCreateWithoutLinksFromCourseInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  concepts: ConceptCreateManyWithoutCourseInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  tags: TagCreateManyInput
+}
+
+input CourseCreateWithoutLinksToCourseInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  concepts: ConceptCreateManyWithoutCourseInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  tags: TagCreateManyInput
+}
+
+input CourseCreateWithoutSourceCourseInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  concepts: ConceptCreateManyWithoutCourseInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  tags: TagCreateManyInput
+}
+
+input CourseCreateWithoutWorkspaceInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  concepts: ConceptCreateManyWithoutCourseInput
+  tags: TagCreateManyInput
+}
+
+type CourseEdge {
+  node: Course!
+  cursor: String!
+}
+
+type CourseLink {
+  id: ID!
+  from: Course!
+  to: Course!
+  official: Boolean!
+  frozen: Boolean!
+  createdBy: User!
+  workspace: Workspace!
+  weight: Int!
+  count: Int!
+}
+
+type CourseLinkConnection {
+  pageInfo: PageInfo!
+  edges: [CourseLinkEdge]!
+  aggregate: AggregateCourseLink!
+}
+
+input CourseLinkCreateInput {
+  id: ID
+  from: CourseCreateOneWithoutLinksFromCourseInput!
+  to: CourseCreateOneWithoutLinksToCourseInput!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  workspace: WorkspaceCreateOneWithoutCourseLinksInput!
+  weight: Int
+  count: Int
+}
+
+input CourseLinkCreateManyWithoutFromInput {
+  create: [CourseLinkCreateWithoutFromInput!]
+  connect: [CourseLinkWhereUniqueInput!]
+}
+
+input CourseLinkCreateManyWithoutToInput {
+  create: [CourseLinkCreateWithoutToInput!]
+  connect: [CourseLinkWhereUniqueInput!]
+}
+
+input CourseLinkCreateManyWithoutWorkspaceInput {
+  create: [CourseLinkCreateWithoutWorkspaceInput!]
+  connect: [CourseLinkWhereUniqueInput!]
+}
+
+input CourseLinkCreateWithoutFromInput {
+  id: ID
+  to: CourseCreateOneWithoutLinksToCourseInput!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  workspace: WorkspaceCreateOneWithoutCourseLinksInput!
+  weight: Int
+  count: Int
+}
+
+input CourseLinkCreateWithoutToInput {
+  id: ID
+  from: CourseCreateOneWithoutLinksFromCourseInput!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  workspace: WorkspaceCreateOneWithoutCourseLinksInput!
+  weight: Int
+  count: Int
+}
+
+input CourseLinkCreateWithoutWorkspaceInput {
+  id: ID
+  from: CourseCreateOneWithoutLinksFromCourseInput!
+  to: CourseCreateOneWithoutLinksToCourseInput!
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserCreateOneInput!
+  weight: Int
+  count: Int
+}
+
+type CourseLinkEdge {
+  node: CourseLink!
+  cursor: String!
+}
+
+enum CourseLinkOrderByInput {
+  id_ASC
+  id_DESC
+  official_ASC
+  official_DESC
+  frozen_ASC
+  frozen_DESC
+  weight_ASC
+  weight_DESC
+  count_ASC
+  count_DESC
+}
+
+type CourseLinkPreviousValues {
+  id: ID!
+  official: Boolean!
+  frozen: Boolean!
+  weight: Int!
+  count: Int!
+}
+
+input CourseLinkScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
+  AND: [CourseLinkScalarWhereInput!]
+  OR: [CourseLinkScalarWhereInput!]
+  NOT: [CourseLinkScalarWhereInput!]
+}
+
+type CourseLinkSubscriptionPayload {
+  mutation: MutationType!
+  node: CourseLink
+  updatedFields: [String!]
+  previousValues: CourseLinkPreviousValues
+}
+
+input CourseLinkSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CourseLinkWhereInput
+  AND: [CourseLinkSubscriptionWhereInput!]
+  OR: [CourseLinkSubscriptionWhereInput!]
+  NOT: [CourseLinkSubscriptionWhereInput!]
+}
+
+input CourseLinkUpdateInput {
+  from: CourseUpdateOneRequiredWithoutLinksFromCourseInput
+  to: CourseUpdateOneRequiredWithoutLinksToCourseInput
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
+  weight: Int
+  count: Int
+}
+
+input CourseLinkUpdateManyDataInput {
+  official: Boolean
+  frozen: Boolean
+  weight: Int
+  count: Int
+}
+
+input CourseLinkUpdateManyMutationInput {
+  official: Boolean
+  frozen: Boolean
+  weight: Int
+  count: Int
+}
+
+input CourseLinkUpdateManyWithoutFromInput {
+  create: [CourseLinkCreateWithoutFromInput!]
+  delete: [CourseLinkWhereUniqueInput!]
+  connect: [CourseLinkWhereUniqueInput!]
+  set: [CourseLinkWhereUniqueInput!]
+  disconnect: [CourseLinkWhereUniqueInput!]
+  update: [CourseLinkUpdateWithWhereUniqueWithoutFromInput!]
+  upsert: [CourseLinkUpsertWithWhereUniqueWithoutFromInput!]
+  deleteMany: [CourseLinkScalarWhereInput!]
+  updateMany: [CourseLinkUpdateManyWithWhereNestedInput!]
+}
+
+input CourseLinkUpdateManyWithoutToInput {
+  create: [CourseLinkCreateWithoutToInput!]
+  delete: [CourseLinkWhereUniqueInput!]
+  connect: [CourseLinkWhereUniqueInput!]
+  set: [CourseLinkWhereUniqueInput!]
+  disconnect: [CourseLinkWhereUniqueInput!]
+  update: [CourseLinkUpdateWithWhereUniqueWithoutToInput!]
+  upsert: [CourseLinkUpsertWithWhereUniqueWithoutToInput!]
+  deleteMany: [CourseLinkScalarWhereInput!]
+  updateMany: [CourseLinkUpdateManyWithWhereNestedInput!]
+}
+
+input CourseLinkUpdateManyWithoutWorkspaceInput {
+  create: [CourseLinkCreateWithoutWorkspaceInput!]
+  delete: [CourseLinkWhereUniqueInput!]
+  connect: [CourseLinkWhereUniqueInput!]
+  set: [CourseLinkWhereUniqueInput!]
+  disconnect: [CourseLinkWhereUniqueInput!]
+  update: [CourseLinkUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [CourseLinkUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [CourseLinkScalarWhereInput!]
+  updateMany: [CourseLinkUpdateManyWithWhereNestedInput!]
+}
+
+input CourseLinkUpdateManyWithWhereNestedInput {
+  where: CourseLinkScalarWhereInput!
+  data: CourseLinkUpdateManyDataInput!
+}
+
+input CourseLinkUpdateWithoutFromDataInput {
+  to: CourseUpdateOneRequiredWithoutLinksToCourseInput
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
+  weight: Int
+  count: Int
+}
+
+input CourseLinkUpdateWithoutToDataInput {
+  from: CourseUpdateOneRequiredWithoutLinksFromCourseInput
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
+  weight: Int
+  count: Int
+}
+
+input CourseLinkUpdateWithoutWorkspaceDataInput {
+  from: CourseUpdateOneRequiredWithoutLinksFromCourseInput
+  to: CourseUpdateOneRequiredWithoutLinksToCourseInput
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  weight: Int
+  count: Int
+}
+
+input CourseLinkUpdateWithWhereUniqueWithoutFromInput {
+  where: CourseLinkWhereUniqueInput!
+  data: CourseLinkUpdateWithoutFromDataInput!
+}
+
+input CourseLinkUpdateWithWhereUniqueWithoutToInput {
+  where: CourseLinkWhereUniqueInput!
+  data: CourseLinkUpdateWithoutToDataInput!
+}
+
+input CourseLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseLinkWhereUniqueInput!
+  data: CourseLinkUpdateWithoutWorkspaceDataInput!
+}
+
+input CourseLinkUpsertWithWhereUniqueWithoutFromInput {
+  where: CourseLinkWhereUniqueInput!
+  update: CourseLinkUpdateWithoutFromDataInput!
+  create: CourseLinkCreateWithoutFromInput!
+}
+
+input CourseLinkUpsertWithWhereUniqueWithoutToInput {
+  where: CourseLinkWhereUniqueInput!
+  update: CourseLinkUpdateWithoutToDataInput!
+  create: CourseLinkCreateWithoutToInput!
+}
+
+input CourseLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseLinkWhereUniqueInput!
+  update: CourseLinkUpdateWithoutWorkspaceDataInput!
+  create: CourseLinkCreateWithoutWorkspaceInput!
+}
+
+input CourseLinkWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  from: CourseWhereInput
+  to: CourseWhereInput
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  createdBy: UserWhereInput
+  workspace: WorkspaceWhereInput
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
+  count: Int
+  count_not: Int
+  count_in: [Int!]
+  count_not_in: [Int!]
+  count_lt: Int
+  count_lte: Int
+  count_gt: Int
+  count_gte: Int
+  AND: [CourseLinkWhereInput!]
+  OR: [CourseLinkWhereInput!]
+  NOT: [CourseLinkWhereInput!]
+}
+
+input CourseLinkWhereUniqueInput {
+  id: ID
+}
+
+enum CourseOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  official_ASC
+  official_DESC
+  frozen_ASC
+  frozen_DESC
+}
+
+type CoursePreviousValues {
+  id: ID!
+  name: String!
+  official: Boolean!
+  frozen: Boolean!
+}
+
+input CourseScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  AND: [CourseScalarWhereInput!]
+  OR: [CourseScalarWhereInput!]
+  NOT: [CourseScalarWhereInput!]
+}
+
+type CourseSubscriptionPayload {
+  mutation: MutationType!
+  node: Course
+  updatedFields: [String!]
+  previousValues: CoursePreviousValues
+}
+
+input CourseSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: CourseWhereInput
+  AND: [CourseSubscriptionWhereInput!]
+  OR: [CourseSubscriptionWhereInput!]
+  NOT: [CourseSubscriptionWhereInput!]
+}
+
+input CourseUpdateDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateManyDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+}
+
+input CourseUpdateManyMutationInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+}
+
+input CourseUpdateManyWithoutSourceCourseInput {
+  create: [CourseCreateWithoutSourceCourseInput!]
+  delete: [CourseWhereUniqueInput!]
+  connect: [CourseWhereUniqueInput!]
+  set: [CourseWhereUniqueInput!]
+  disconnect: [CourseWhereUniqueInput!]
+  update: [CourseUpdateWithWhereUniqueWithoutSourceCourseInput!]
+  upsert: [CourseUpsertWithWhereUniqueWithoutSourceCourseInput!]
+  deleteMany: [CourseScalarWhereInput!]
+  updateMany: [CourseUpdateManyWithWhereNestedInput!]
+}
+
+input CourseUpdateManyWithoutWorkspaceInput {
+  create: [CourseCreateWithoutWorkspaceInput!]
+  delete: [CourseWhereUniqueInput!]
+  connect: [CourseWhereUniqueInput!]
+  set: [CourseWhereUniqueInput!]
+  disconnect: [CourseWhereUniqueInput!]
+  update: [CourseUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [CourseUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [CourseScalarWhereInput!]
+  updateMany: [CourseUpdateManyWithWhereNestedInput!]
+}
+
+input CourseUpdateManyWithWhereNestedInput {
+  where: CourseScalarWhereInput!
+  data: CourseUpdateManyDataInput!
+}
+
+input CourseUpdateOneInput {
+  create: CourseCreateInput
+  update: CourseUpdateDataInput
+  upsert: CourseUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateOneRequiredInput {
+  create: CourseCreateInput
+  update: CourseUpdateDataInput
+  upsert: CourseUpsertNestedInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateOneRequiredWithoutConceptsInput {
+  create: CourseCreateWithoutConceptsInput
+  update: CourseUpdateWithoutConceptsDataInput
+  upsert: CourseUpsertWithoutConceptsInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateOneRequiredWithoutLinksFromCourseInput {
+  create: CourseCreateWithoutLinksFromCourseInput
+  update: CourseUpdateWithoutLinksFromCourseDataInput
+  upsert: CourseUpsertWithoutLinksFromCourseInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateOneRequiredWithoutLinksToCourseInput {
+  create: CourseCreateWithoutLinksToCourseInput
+  update: CourseUpdateWithoutLinksToCourseDataInput
+  upsert: CourseUpsertWithoutLinksToCourseInput
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateOneWithoutClonesInput {
+  create: CourseCreateWithoutClonesInput
+  update: CourseUpdateWithoutClonesDataInput
+  upsert: CourseUpsertWithoutClonesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateWithoutClonesDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateWithoutConceptsDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateWithoutLinksFromCourseDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateWithoutLinksToCourseDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateWithoutSourceCourseDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateWithoutWorkspaceDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  createdBy: UserUpdateOneRequiredInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  concepts: ConceptUpdateManyWithoutCourseInput
+  tags: TagUpdateManyInput
+}
+
+input CourseUpdateWithWhereUniqueWithoutSourceCourseInput {
+  where: CourseWhereUniqueInput!
+  data: CourseUpdateWithoutSourceCourseDataInput!
+}
+
+input CourseUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseWhereUniqueInput!
+  data: CourseUpdateWithoutWorkspaceDataInput!
+}
+
+input CourseUpsertNestedInput {
+  update: CourseUpdateDataInput!
+  create: CourseCreateInput!
+}
+
+input CourseUpsertWithoutClonesInput {
+  update: CourseUpdateWithoutClonesDataInput!
+  create: CourseCreateWithoutClonesInput!
+}
+
+input CourseUpsertWithoutConceptsInput {
+  update: CourseUpdateWithoutConceptsDataInput!
+  create: CourseCreateWithoutConceptsInput!
+}
+
+input CourseUpsertWithoutLinksFromCourseInput {
+  update: CourseUpdateWithoutLinksFromCourseDataInput!
+  create: CourseCreateWithoutLinksFromCourseInput!
+}
+
+input CourseUpsertWithoutLinksToCourseInput {
+  update: CourseUpdateWithoutLinksToCourseDataInput!
+  create: CourseCreateWithoutLinksToCourseInput!
+}
+
+input CourseUpsertWithWhereUniqueWithoutSourceCourseInput {
+  where: CourseWhereUniqueInput!
+  update: CourseUpdateWithoutSourceCourseDataInput!
+  create: CourseCreateWithoutSourceCourseInput!
+}
+
+input CourseUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: CourseWhereUniqueInput!
+  update: CourseUpdateWithoutWorkspaceDataInput!
+  create: CourseCreateWithoutWorkspaceInput!
+}
+
+input CourseWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  official: Boolean
+  official_not: Boolean
+  frozen: Boolean
+  frozen_not: Boolean
+  createdBy: UserWhereInput
+  sourceCourse: CourseWhereInput
+  clones_every: CourseWhereInput
+  clones_some: CourseWhereInput
+  clones_none: CourseWhereInput
+  linksFromCourse_every: CourseLinkWhereInput
+  linksFromCourse_some: CourseLinkWhereInput
+  linksFromCourse_none: CourseLinkWhereInput
+  linksToCourse_every: CourseLinkWhereInput
+  linksToCourse_some: CourseLinkWhereInput
+  linksToCourse_none: CourseLinkWhereInput
+  concepts_every: ConceptWhereInput
+  concepts_some: ConceptWhereInput
+  concepts_none: ConceptWhereInput
+  workspace: WorkspaceWhereInput
+  tags_every: TagWhereInput
+  tags_some: TagWhereInput
+  tags_none: TagWhereInput
+  AND: [CourseWhereInput!]
+  OR: [CourseWhereInput!]
+  NOT: [CourseWhereInput!]
+}
+
+input CourseWhereUniqueInput {
+  id: ID
+}
+
+scalar DateTime
+
+scalar Long
+
+type Mutation {
+  createCompletion(data: CompletionCreateInput!): Completion!
+  updateCompletion(data: CompletionUpdateInput!, where: CompletionWhereUniqueInput!): Completion
+  updateManyCompletions(data: CompletionUpdateManyMutationInput!, where: CompletionWhereInput): BatchPayload!
+  upsertCompletion(where: CompletionWhereUniqueInput!, create: CompletionCreateInput!, update: CompletionUpdateInput!): Completion!
+  deleteCompletion(where: CompletionWhereUniqueInput!): Completion
+  deleteManyCompletions(where: CompletionWhereInput): BatchPayload!
+  createConcept(data: ConceptCreateInput!): Concept!
+  updateConcept(data: ConceptUpdateInput!, where: ConceptWhereUniqueInput!): Concept
+  updateManyConcepts(data: ConceptUpdateManyMutationInput!, where: ConceptWhereInput): BatchPayload!
+  upsertConcept(where: ConceptWhereUniqueInput!, create: ConceptCreateInput!, update: ConceptUpdateInput!): Concept!
+  deleteConcept(where: ConceptWhereUniqueInput!): Concept
+  deleteManyConcepts(where: ConceptWhereInput): BatchPayload!
+  createConceptLink(data: ConceptLinkCreateInput!): ConceptLink!
+  updateConceptLink(data: ConceptLinkUpdateInput!, where: ConceptLinkWhereUniqueInput!): ConceptLink
+  updateManyConceptLinks(data: ConceptLinkUpdateManyMutationInput!, where: ConceptLinkWhereInput): BatchPayload!
+  upsertConceptLink(where: ConceptLinkWhereUniqueInput!, create: ConceptLinkCreateInput!, update: ConceptLinkUpdateInput!): ConceptLink!
+  deleteConceptLink(where: ConceptLinkWhereUniqueInput!): ConceptLink
+  deleteManyConceptLinks(where: ConceptLinkWhereInput): BatchPayload!
+  createCourse(data: CourseCreateInput!): Course!
+  updateCourse(data: CourseUpdateInput!, where: CourseWhereUniqueInput!): Course
+  updateManyCourses(data: CourseUpdateManyMutationInput!, where: CourseWhereInput): BatchPayload!
+  upsertCourse(where: CourseWhereUniqueInput!, create: CourseCreateInput!, update: CourseUpdateInput!): Course!
+  deleteCourse(where: CourseWhereUniqueInput!): Course
+  deleteManyCourses(where: CourseWhereInput): BatchPayload!
+  createCourseLink(data: CourseLinkCreateInput!): CourseLink!
+  updateCourseLink(data: CourseLinkUpdateInput!, where: CourseLinkWhereUniqueInput!): CourseLink
+  updateManyCourseLinks(data: CourseLinkUpdateManyMutationInput!, where: CourseLinkWhereInput): BatchPayload!
+  upsertCourseLink(where: CourseLinkWhereUniqueInput!, create: CourseLinkCreateInput!, update: CourseLinkUpdateInput!): CourseLink!
+  deleteCourseLink(where: CourseLinkWhereUniqueInput!): CourseLink
+  deleteManyCourseLinks(where: CourseLinkWhereInput): BatchPayload!
+  createPointGroup(data: PointGroupCreateInput!): PointGroup!
+  updatePointGroup(data: PointGroupUpdateInput!, where: PointGroupWhereUniqueInput!): PointGroup
+  updateManyPointGroups(data: PointGroupUpdateManyMutationInput!, where: PointGroupWhereInput): BatchPayload!
+  upsertPointGroup(where: PointGroupWhereUniqueInput!, create: PointGroupCreateInput!, update: PointGroupUpdateInput!): PointGroup!
+  deletePointGroup(where: PointGroupWhereUniqueInput!): PointGroup
+  deleteManyPointGroups(where: PointGroupWhereInput): BatchPayload!
+  createProject(data: ProjectCreateInput!): Project!
+  updateProject(data: ProjectUpdateInput!, where: ProjectWhereUniqueInput!): Project
+  updateManyProjects(data: ProjectUpdateManyMutationInput!, where: ProjectWhereInput): BatchPayload!
+  upsertProject(where: ProjectWhereUniqueInput!, create: ProjectCreateInput!, update: ProjectUpdateInput!): Project!
+  deleteProject(where: ProjectWhereUniqueInput!): Project
+  deleteManyProjects(where: ProjectWhereInput): BatchPayload!
+  createProjectParticipant(data: ProjectParticipantCreateInput!): ProjectParticipant!
+  updateProjectParticipant(data: ProjectParticipantUpdateInput!, where: ProjectParticipantWhereUniqueInput!): ProjectParticipant
+  updateManyProjectParticipants(data: ProjectParticipantUpdateManyMutationInput!, where: ProjectParticipantWhereInput): BatchPayload!
+  upsertProjectParticipant(where: ProjectParticipantWhereUniqueInput!, create: ProjectParticipantCreateInput!, update: ProjectParticipantUpdateInput!): ProjectParticipant!
+  deleteProjectParticipant(where: ProjectParticipantWhereUniqueInput!): ProjectParticipant
+  deleteManyProjectParticipants(where: ProjectParticipantWhereInput): BatchPayload!
+  createProjectToken(data: ProjectTokenCreateInput!): ProjectToken!
+  updateProjectToken(data: ProjectTokenUpdateInput!, where: ProjectTokenWhereUniqueInput!): ProjectToken
+  updateManyProjectTokens(data: ProjectTokenUpdateManyMutationInput!, where: ProjectTokenWhereInput): BatchPayload!
+  upsertProjectToken(where: ProjectTokenWhereUniqueInput!, create: ProjectTokenCreateInput!, update: ProjectTokenUpdateInput!): ProjectToken!
+  deleteProjectToken(where: ProjectTokenWhereUniqueInput!): ProjectToken
+  deleteManyProjectTokens(where: ProjectTokenWhereInput): BatchPayload!
+  createResource(data: ResourceCreateInput!): Resource!
+  updateResource(data: ResourceUpdateInput!, where: ResourceWhereUniqueInput!): Resource
+  updateManyResources(data: ResourceUpdateManyMutationInput!, where: ResourceWhereInput): BatchPayload!
+  upsertResource(where: ResourceWhereUniqueInput!, create: ResourceCreateInput!, update: ResourceUpdateInput!): Resource!
+  deleteResource(where: ResourceWhereUniqueInput!): Resource
+  deleteManyResources(where: ResourceWhereInput): BatchPayload!
+  createTag(data: TagCreateInput!): Tag!
+  updateTag(data: TagUpdateInput!, where: TagWhereUniqueInput!): Tag
+  updateManyTags(data: TagUpdateManyMutationInput!, where: TagWhereInput): BatchPayload!
+  upsertTag(where: TagWhereUniqueInput!, create: TagCreateInput!, update: TagUpdateInput!): Tag!
+  deleteTag(where: TagWhereUniqueInput!): Tag
+  deleteManyTags(where: TagWhereInput): BatchPayload!
+  createURL(data: URLCreateInput!): URL!
+  updateURL(data: URLUpdateInput!, where: URLWhereUniqueInput!): URL
+  updateManyURLs(data: URLUpdateManyMutationInput!, where: URLWhereInput): BatchPayload!
+  upsertURL(where: URLWhereUniqueInput!, create: URLCreateInput!, update: URLUpdateInput!): URL!
+  deleteURL(where: URLWhereUniqueInput!): URL
+  deleteManyURLs(where: URLWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  createWorkspace(data: WorkspaceCreateInput!): Workspace!
+  updateWorkspace(data: WorkspaceUpdateInput!, where: WorkspaceWhereUniqueInput!): Workspace
+  updateManyWorkspaces(data: WorkspaceUpdateManyMutationInput!, where: WorkspaceWhereInput): BatchPayload!
+  upsertWorkspace(where: WorkspaceWhereUniqueInput!, create: WorkspaceCreateInput!, update: WorkspaceUpdateInput!): Workspace!
+  deleteWorkspace(where: WorkspaceWhereUniqueInput!): Workspace
+  deleteManyWorkspaces(where: WorkspaceWhereInput): BatchPayload!
+  createWorkspaceParticipant(data: WorkspaceParticipantCreateInput!): WorkspaceParticipant!
+  updateWorkspaceParticipant(data: WorkspaceParticipantUpdateInput!, where: WorkspaceParticipantWhereUniqueInput!): WorkspaceParticipant
+  updateManyWorkspaceParticipants(data: WorkspaceParticipantUpdateManyMutationInput!, where: WorkspaceParticipantWhereInput): BatchPayload!
+  upsertWorkspaceParticipant(where: WorkspaceParticipantWhereUniqueInput!, create: WorkspaceParticipantCreateInput!, update: WorkspaceParticipantUpdateInput!): WorkspaceParticipant!
+  deleteWorkspaceParticipant(where: WorkspaceParticipantWhereUniqueInput!): WorkspaceParticipant
+  deleteManyWorkspaceParticipants(where: WorkspaceParticipantWhereInput): BatchPayload!
+  createWorkspaceToken(data: WorkspaceTokenCreateInput!): WorkspaceToken!
+  updateWorkspaceToken(data: WorkspaceTokenUpdateInput!, where: WorkspaceTokenWhereUniqueInput!): WorkspaceToken
+  updateManyWorkspaceTokens(data: WorkspaceTokenUpdateManyMutationInput!, where: WorkspaceTokenWhereInput): BatchPayload!
+  upsertWorkspaceToken(where: WorkspaceTokenWhereUniqueInput!, create: WorkspaceTokenCreateInput!, update: WorkspaceTokenUpdateInput!): WorkspaceToken!
+  deleteWorkspaceToken(where: WorkspaceTokenWhereUniqueInput!): WorkspaceToken
+  deleteManyWorkspaceTokens(where: WorkspaceTokenWhereInput): BatchPayload!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type PointGroup {
+  id: ID!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int!
+  workspace: Workspace!
+  course: Course!
+  pointsPerConcept: Float!
+  completions(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Completion!]
+}
+
+type PointGroupConnection {
+  pageInfo: PageInfo!
+  edges: [PointGroupEdge]!
+  aggregate: AggregatePointGroup!
+}
+
+input PointGroupCreateInput {
+  id: ID
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int
+  workspace: WorkspaceCreateOneWithoutPointGroupsInput!
+  course: CourseCreateOneInput!
+  pointsPerConcept: Float
+  completions: CompletionCreateManyWithoutPointGroupInput
+}
+
+input PointGroupCreateManyWithoutWorkspaceInput {
+  create: [PointGroupCreateWithoutWorkspaceInput!]
+  connect: [PointGroupWhereUniqueInput!]
+}
+
+input PointGroupCreateOneWithoutCompletionsInput {
+  create: PointGroupCreateWithoutCompletionsInput
+  connect: PointGroupWhereUniqueInput
+}
+
+input PointGroupCreateWithoutCompletionsInput {
+  id: ID
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int
+  workspace: WorkspaceCreateOneWithoutPointGroupsInput!
+  course: CourseCreateOneInput!
+  pointsPerConcept: Float
+}
+
+input PointGroupCreateWithoutWorkspaceInput {
+  id: ID
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int
+  course: CourseCreateOneInput!
+  pointsPerConcept: Float
+  completions: CompletionCreateManyWithoutPointGroupInput
+}
+
+type PointGroupEdge {
+  node: PointGroup!
+  cursor: String!
+}
+
+enum PointGroupOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  startDate_ASC
+  startDate_DESC
+  endDate_ASC
+  endDate_DESC
+  maxPoints_ASC
+  maxPoints_DESC
+  pointsPerConcept_ASC
+  pointsPerConcept_DESC
+}
+
+type PointGroupPreviousValues {
+  id: ID!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  maxPoints: Int!
+  pointsPerConcept: Float!
+}
+
+input PointGroupScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  startDate: DateTime
+  startDate_not: DateTime
+  startDate_in: [DateTime!]
+  startDate_not_in: [DateTime!]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  endDate: DateTime
+  endDate_not: DateTime
+  endDate_in: [DateTime!]
+  endDate_not_in: [DateTime!]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  maxPoints: Int
+  maxPoints_not: Int
+  maxPoints_in: [Int!]
+  maxPoints_not_in: [Int!]
+  maxPoints_lt: Int
+  maxPoints_lte: Int
+  maxPoints_gt: Int
+  maxPoints_gte: Int
+  pointsPerConcept: Float
+  pointsPerConcept_not: Float
+  pointsPerConcept_in: [Float!]
+  pointsPerConcept_not_in: [Float!]
+  pointsPerConcept_lt: Float
+  pointsPerConcept_lte: Float
+  pointsPerConcept_gt: Float
+  pointsPerConcept_gte: Float
+  AND: [PointGroupScalarWhereInput!]
+  OR: [PointGroupScalarWhereInput!]
+  NOT: [PointGroupScalarWhereInput!]
+}
+
+type PointGroupSubscriptionPayload {
+  mutation: MutationType!
+  node: PointGroup
+  updatedFields: [String!]
+  previousValues: PointGroupPreviousValues
+}
+
+input PointGroupSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: PointGroupWhereInput
+  AND: [PointGroupSubscriptionWhereInput!]
+  OR: [PointGroupSubscriptionWhereInput!]
+  NOT: [PointGroupSubscriptionWhereInput!]
+}
+
+input PointGroupUpdateInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  maxPoints: Int
+  workspace: WorkspaceUpdateOneRequiredWithoutPointGroupsInput
+  course: CourseUpdateOneRequiredInput
+  pointsPerConcept: Float
+  completions: CompletionUpdateManyWithoutPointGroupInput
+}
+
+input PointGroupUpdateManyDataInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  maxPoints: Int
+  pointsPerConcept: Float
+}
+
+input PointGroupUpdateManyMutationInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  maxPoints: Int
+  pointsPerConcept: Float
+}
+
+input PointGroupUpdateManyWithoutWorkspaceInput {
+  create: [PointGroupCreateWithoutWorkspaceInput!]
+  delete: [PointGroupWhereUniqueInput!]
+  connect: [PointGroupWhereUniqueInput!]
+  set: [PointGroupWhereUniqueInput!]
+  disconnect: [PointGroupWhereUniqueInput!]
+  update: [PointGroupUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [PointGroupUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [PointGroupScalarWhereInput!]
+  updateMany: [PointGroupUpdateManyWithWhereNestedInput!]
+}
+
+input PointGroupUpdateManyWithWhereNestedInput {
+  where: PointGroupScalarWhereInput!
+  data: PointGroupUpdateManyDataInput!
+}
+
+input PointGroupUpdateOneRequiredWithoutCompletionsInput {
+  create: PointGroupCreateWithoutCompletionsInput
+  update: PointGroupUpdateWithoutCompletionsDataInput
+  upsert: PointGroupUpsertWithoutCompletionsInput
+  connect: PointGroupWhereUniqueInput
+}
+
+input PointGroupUpdateWithoutCompletionsDataInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  maxPoints: Int
+  workspace: WorkspaceUpdateOneRequiredWithoutPointGroupsInput
+  course: CourseUpdateOneRequiredInput
+  pointsPerConcept: Float
+}
+
+input PointGroupUpdateWithoutWorkspaceDataInput {
+  name: String
+  startDate: DateTime
+  endDate: DateTime
+  maxPoints: Int
+  course: CourseUpdateOneRequiredInput
+  pointsPerConcept: Float
+  completions: CompletionUpdateManyWithoutPointGroupInput
+}
+
+input PointGroupUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: PointGroupWhereUniqueInput!
+  data: PointGroupUpdateWithoutWorkspaceDataInput!
+}
+
+input PointGroupUpsertWithoutCompletionsInput {
+  update: PointGroupUpdateWithoutCompletionsDataInput!
+  create: PointGroupCreateWithoutCompletionsInput!
+}
+
+input PointGroupUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: PointGroupWhereUniqueInput!
+  update: PointGroupUpdateWithoutWorkspaceDataInput!
+  create: PointGroupCreateWithoutWorkspaceInput!
+}
+
+input PointGroupWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  startDate: DateTime
+  startDate_not: DateTime
+  startDate_in: [DateTime!]
+  startDate_not_in: [DateTime!]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  endDate: DateTime
+  endDate_not: DateTime
+  endDate_in: [DateTime!]
+  endDate_not_in: [DateTime!]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  maxPoints: Int
+  maxPoints_not: Int
+  maxPoints_in: [Int!]
+  maxPoints_not_in: [Int!]
+  maxPoints_lt: Int
+  maxPoints_lte: Int
+  maxPoints_gt: Int
+  maxPoints_gte: Int
+  workspace: WorkspaceWhereInput
+  course: CourseWhereInput
+  pointsPerConcept: Float
+  pointsPerConcept_not: Float
+  pointsPerConcept_in: [Float!]
+  pointsPerConcept_not_in: [Float!]
+  pointsPerConcept_lt: Float
+  pointsPerConcept_lte: Float
+  pointsPerConcept_gt: Float
+  pointsPerConcept_gte: Float
+  completions_every: CompletionWhereInput
+  completions_some: CompletionWhereInput
+  completions_none: CompletionWhereInput
+  AND: [PointGroupWhereInput!]
+  OR: [PointGroupWhereInput!]
+  NOT: [PointGroupWhereInput!]
+}
+
+input PointGroupWhereUniqueInput {
+  id: ID
+}
+
+enum Privilege {
+  CLONE
+  VIEW
+  EDIT
+  OWNER
+}
+
+type Project {
+  id: ID!
+  name: String!
+  workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
+  activeTemplate: Workspace
+  templates(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
+  merges(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
+  participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
+  tokens(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectToken!]
+}
+
+type ProjectConnection {
+  pageInfo: PageInfo!
+  edges: [ProjectEdge]!
+  aggregate: AggregateProject!
+}
+
+input ProjectCreateInput {
+  id: ID
+  name: String!
+  workspaces: WorkspaceCreateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceCreateOneInput
+  templates: WorkspaceCreateManyWithoutAsTemplateInput
+  merges: WorkspaceCreateManyWithoutAsMergeInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
+}
+
+input ProjectCreateOneWithoutMergesInput {
+  create: ProjectCreateWithoutMergesInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutParticipantsInput {
+  create: ProjectCreateWithoutParticipantsInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutTemplatesInput {
+  create: ProjectCreateWithoutTemplatesInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutTokensInput {
+  create: ProjectCreateWithoutTokensInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateOneWithoutWorkspacesInput {
+  create: ProjectCreateWithoutWorkspacesInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectCreateWithoutMergesInput {
+  id: ID
+  name: String!
+  workspaces: WorkspaceCreateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceCreateOneInput
+  templates: WorkspaceCreateManyWithoutAsTemplateInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutParticipantsInput {
+  id: ID
+  name: String!
+  workspaces: WorkspaceCreateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceCreateOneInput
+  templates: WorkspaceCreateManyWithoutAsTemplateInput
+  merges: WorkspaceCreateManyWithoutAsMergeInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutTemplatesInput {
+  id: ID
+  name: String!
+  workspaces: WorkspaceCreateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceCreateOneInput
+  merges: WorkspaceCreateManyWithoutAsMergeInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutTokensInput {
+  id: ID
+  name: String!
+  workspaces: WorkspaceCreateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceCreateOneInput
+  templates: WorkspaceCreateManyWithoutAsTemplateInput
+  merges: WorkspaceCreateManyWithoutAsMergeInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+}
+
+input ProjectCreateWithoutWorkspacesInput {
+  id: ID
+  name: String!
+  activeTemplate: WorkspaceCreateOneInput
+  templates: WorkspaceCreateManyWithoutAsTemplateInput
+  merges: WorkspaceCreateManyWithoutAsMergeInput
+  participants: ProjectParticipantCreateManyWithoutProjectInput
+  tokens: ProjectTokenCreateManyWithoutProjectInput
+}
+
+type ProjectEdge {
+  node: Project!
+  cursor: String!
+}
+
+enum ProjectOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+}
+
+type ProjectParticipant {
+  id: ID!
+  privilege: Privilege!
+  project: Project!
+  token: ProjectToken
+  user: User!
+}
+
+type ProjectParticipantConnection {
+  pageInfo: PageInfo!
+  edges: [ProjectParticipantEdge]!
+  aggregate: AggregateProjectParticipant!
+}
+
+input ProjectParticipantCreateInput {
+  id: ID
+  privilege: Privilege!
+  project: ProjectCreateOneWithoutParticipantsInput!
+  token: ProjectTokenCreateOneWithoutParticipantsInput
+  user: UserCreateOneWithoutProjectParticipationsInput!
+}
+
+input ProjectParticipantCreateManyWithoutProjectInput {
+  create: [ProjectParticipantCreateWithoutProjectInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+}
+
+input ProjectParticipantCreateManyWithoutTokenInput {
+  create: [ProjectParticipantCreateWithoutTokenInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+}
+
+input ProjectParticipantCreateManyWithoutUserInput {
+  create: [ProjectParticipantCreateWithoutUserInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+}
+
+input ProjectParticipantCreateWithoutProjectInput {
+  id: ID
+  privilege: Privilege!
+  token: ProjectTokenCreateOneWithoutParticipantsInput
+  user: UserCreateOneWithoutProjectParticipationsInput!
+}
+
+input ProjectParticipantCreateWithoutTokenInput {
+  id: ID
+  privilege: Privilege!
+  project: ProjectCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutProjectParticipationsInput!
+}
+
+input ProjectParticipantCreateWithoutUserInput {
+  id: ID
+  privilege: Privilege!
+  project: ProjectCreateOneWithoutParticipantsInput!
+  token: ProjectTokenCreateOneWithoutParticipantsInput
+}
+
+type ProjectParticipantEdge {
+  node: ProjectParticipant!
+  cursor: String!
+}
+
+enum ProjectParticipantOrderByInput {
+  id_ASC
+  id_DESC
+  privilege_ASC
+  privilege_DESC
+}
+
+type ProjectParticipantPreviousValues {
+  id: ID!
+  privilege: Privilege!
+}
+
+input ProjectParticipantScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  AND: [ProjectParticipantScalarWhereInput!]
+  OR: [ProjectParticipantScalarWhereInput!]
+  NOT: [ProjectParticipantScalarWhereInput!]
+}
+
+type ProjectParticipantSubscriptionPayload {
+  mutation: MutationType!
+  node: ProjectParticipant
+  updatedFields: [String!]
+  previousValues: ProjectParticipantPreviousValues
+}
+
+input ProjectParticipantSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ProjectParticipantWhereInput
+  AND: [ProjectParticipantSubscriptionWhereInput!]
+  OR: [ProjectParticipantSubscriptionWhereInput!]
+  NOT: [ProjectParticipantSubscriptionWhereInput!]
+}
+
+input ProjectParticipantUpdateInput {
+  privilege: Privilege
+  project: ProjectUpdateOneRequiredWithoutParticipantsInput
+  token: ProjectTokenUpdateOneWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutProjectParticipationsInput
+}
+
+input ProjectParticipantUpdateManyDataInput {
+  privilege: Privilege
+}
+
+input ProjectParticipantUpdateManyMutationInput {
+  privilege: Privilege
+}
+
+input ProjectParticipantUpdateManyWithoutProjectInput {
+  create: [ProjectParticipantCreateWithoutProjectInput!]
+  delete: [ProjectParticipantWhereUniqueInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+  set: [ProjectParticipantWhereUniqueInput!]
+  disconnect: [ProjectParticipantWhereUniqueInput!]
+  update: [ProjectParticipantUpdateWithWhereUniqueWithoutProjectInput!]
+  upsert: [ProjectParticipantUpsertWithWhereUniqueWithoutProjectInput!]
+  deleteMany: [ProjectParticipantScalarWhereInput!]
+  updateMany: [ProjectParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectParticipantUpdateManyWithoutTokenInput {
+  create: [ProjectParticipantCreateWithoutTokenInput!]
+  delete: [ProjectParticipantWhereUniqueInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+  set: [ProjectParticipantWhereUniqueInput!]
+  disconnect: [ProjectParticipantWhereUniqueInput!]
+  update: [ProjectParticipantUpdateWithWhereUniqueWithoutTokenInput!]
+  upsert: [ProjectParticipantUpsertWithWhereUniqueWithoutTokenInput!]
+  deleteMany: [ProjectParticipantScalarWhereInput!]
+  updateMany: [ProjectParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectParticipantUpdateManyWithoutUserInput {
+  create: [ProjectParticipantCreateWithoutUserInput!]
+  delete: [ProjectParticipantWhereUniqueInput!]
+  connect: [ProjectParticipantWhereUniqueInput!]
+  set: [ProjectParticipantWhereUniqueInput!]
+  disconnect: [ProjectParticipantWhereUniqueInput!]
+  update: [ProjectParticipantUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [ProjectParticipantUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [ProjectParticipantScalarWhereInput!]
+  updateMany: [ProjectParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectParticipantUpdateManyWithWhereNestedInput {
+  where: ProjectParticipantScalarWhereInput!
+  data: ProjectParticipantUpdateManyDataInput!
+}
+
+input ProjectParticipantUpdateWithoutProjectDataInput {
+  privilege: Privilege
+  token: ProjectTokenUpdateOneWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutProjectParticipationsInput
+}
+
+input ProjectParticipantUpdateWithoutTokenDataInput {
+  privilege: Privilege
+  project: ProjectUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutProjectParticipationsInput
+}
+
+input ProjectParticipantUpdateWithoutUserDataInput {
+  privilege: Privilege
+  project: ProjectUpdateOneRequiredWithoutParticipantsInput
+  token: ProjectTokenUpdateOneWithoutParticipantsInput
+}
+
+input ProjectParticipantUpdateWithWhereUniqueWithoutProjectInput {
+  where: ProjectParticipantWhereUniqueInput!
+  data: ProjectParticipantUpdateWithoutProjectDataInput!
+}
+
+input ProjectParticipantUpdateWithWhereUniqueWithoutTokenInput {
+  where: ProjectParticipantWhereUniqueInput!
+  data: ProjectParticipantUpdateWithoutTokenDataInput!
+}
+
+input ProjectParticipantUpdateWithWhereUniqueWithoutUserInput {
+  where: ProjectParticipantWhereUniqueInput!
+  data: ProjectParticipantUpdateWithoutUserDataInput!
+}
+
+input ProjectParticipantUpsertWithWhereUniqueWithoutProjectInput {
+  where: ProjectParticipantWhereUniqueInput!
+  update: ProjectParticipantUpdateWithoutProjectDataInput!
+  create: ProjectParticipantCreateWithoutProjectInput!
+}
+
+input ProjectParticipantUpsertWithWhereUniqueWithoutTokenInput {
+  where: ProjectParticipantWhereUniqueInput!
+  update: ProjectParticipantUpdateWithoutTokenDataInput!
+  create: ProjectParticipantCreateWithoutTokenInput!
+}
+
+input ProjectParticipantUpsertWithWhereUniqueWithoutUserInput {
+  where: ProjectParticipantWhereUniqueInput!
+  update: ProjectParticipantUpdateWithoutUserDataInput!
+  create: ProjectParticipantCreateWithoutUserInput!
+}
+
+input ProjectParticipantWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  project: ProjectWhereInput
+  token: ProjectTokenWhereInput
+  user: UserWhereInput
+  AND: [ProjectParticipantWhereInput!]
+  OR: [ProjectParticipantWhereInput!]
+  NOT: [ProjectParticipantWhereInput!]
+}
+
+input ProjectParticipantWhereUniqueInput {
+  id: ID
+}
+
+type ProjectPreviousValues {
+  id: ID!
+  name: String!
+}
+
+type ProjectSubscriptionPayload {
+  mutation: MutationType!
+  node: Project
+  updatedFields: [String!]
+  previousValues: ProjectPreviousValues
+}
+
+input ProjectSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ProjectWhereInput
+  AND: [ProjectSubscriptionWhereInput!]
+  OR: [ProjectSubscriptionWhereInput!]
+  NOT: [ProjectSubscriptionWhereInput!]
+}
+
+type ProjectToken {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
+  project: Project!
+  participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
+}
+
+type ProjectTokenConnection {
+  pageInfo: PageInfo!
+  edges: [ProjectTokenEdge]!
+  aggregate: AggregateProjectToken!
+}
+
+input ProjectTokenCreateInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  project: ProjectCreateOneWithoutTokensInput!
+  participants: ProjectParticipantCreateManyWithoutTokenInput
+}
+
+input ProjectTokenCreateManyWithoutProjectInput {
+  create: [ProjectTokenCreateWithoutProjectInput!]
+  connect: [ProjectTokenWhereUniqueInput!]
+}
+
+input ProjectTokenCreateOneWithoutParticipantsInput {
+  create: ProjectTokenCreateWithoutParticipantsInput
+  connect: ProjectTokenWhereUniqueInput
+}
+
+input ProjectTokenCreateWithoutParticipantsInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  project: ProjectCreateOneWithoutTokensInput!
+}
+
+input ProjectTokenCreateWithoutProjectInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  participants: ProjectParticipantCreateManyWithoutTokenInput
+}
+
+type ProjectTokenEdge {
+  node: ProjectToken!
+  cursor: String!
+}
+
+enum ProjectTokenOrderByInput {
+  id_ASC
+  id_DESC
+  privilege_ASC
+  privilege_DESC
+  revoked_ASC
+  revoked_DESC
+}
+
+type ProjectTokenPreviousValues {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
+}
+
+input ProjectTokenScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  revoked: Boolean
+  revoked_not: Boolean
+  AND: [ProjectTokenScalarWhereInput!]
+  OR: [ProjectTokenScalarWhereInput!]
+  NOT: [ProjectTokenScalarWhereInput!]
+}
+
+type ProjectTokenSubscriptionPayload {
+  mutation: MutationType!
+  node: ProjectToken
+  updatedFields: [String!]
+  previousValues: ProjectTokenPreviousValues
+}
+
+input ProjectTokenSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ProjectTokenWhereInput
+  AND: [ProjectTokenSubscriptionWhereInput!]
+  OR: [ProjectTokenSubscriptionWhereInput!]
+  NOT: [ProjectTokenSubscriptionWhereInput!]
+}
+
+input ProjectTokenUpdateInput {
+  privilege: Privilege
+  revoked: Boolean
+  project: ProjectUpdateOneRequiredWithoutTokensInput
+  participants: ProjectParticipantUpdateManyWithoutTokenInput
+}
+
+input ProjectTokenUpdateManyDataInput {
+  privilege: Privilege
+  revoked: Boolean
+}
+
+input ProjectTokenUpdateManyMutationInput {
+  privilege: Privilege
+  revoked: Boolean
+}
+
+input ProjectTokenUpdateManyWithoutProjectInput {
+  create: [ProjectTokenCreateWithoutProjectInput!]
+  delete: [ProjectTokenWhereUniqueInput!]
+  connect: [ProjectTokenWhereUniqueInput!]
+  set: [ProjectTokenWhereUniqueInput!]
+  disconnect: [ProjectTokenWhereUniqueInput!]
+  update: [ProjectTokenUpdateWithWhereUniqueWithoutProjectInput!]
+  upsert: [ProjectTokenUpsertWithWhereUniqueWithoutProjectInput!]
+  deleteMany: [ProjectTokenScalarWhereInput!]
+  updateMany: [ProjectTokenUpdateManyWithWhereNestedInput!]
+}
+
+input ProjectTokenUpdateManyWithWhereNestedInput {
+  where: ProjectTokenScalarWhereInput!
+  data: ProjectTokenUpdateManyDataInput!
+}
+
+input ProjectTokenUpdateOneWithoutParticipantsInput {
+  create: ProjectTokenCreateWithoutParticipantsInput
+  update: ProjectTokenUpdateWithoutParticipantsDataInput
+  upsert: ProjectTokenUpsertWithoutParticipantsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ProjectTokenWhereUniqueInput
+}
+
+input ProjectTokenUpdateWithoutParticipantsDataInput {
+  privilege: Privilege
+  revoked: Boolean
+  project: ProjectUpdateOneRequiredWithoutTokensInput
+}
+
+input ProjectTokenUpdateWithoutProjectDataInput {
+  privilege: Privilege
+  revoked: Boolean
+  participants: ProjectParticipantUpdateManyWithoutTokenInput
+}
+
+input ProjectTokenUpdateWithWhereUniqueWithoutProjectInput {
+  where: ProjectTokenWhereUniqueInput!
+  data: ProjectTokenUpdateWithoutProjectDataInput!
+}
+
+input ProjectTokenUpsertWithoutParticipantsInput {
+  update: ProjectTokenUpdateWithoutParticipantsDataInput!
+  create: ProjectTokenCreateWithoutParticipantsInput!
+}
+
+input ProjectTokenUpsertWithWhereUniqueWithoutProjectInput {
+  where: ProjectTokenWhereUniqueInput!
+  update: ProjectTokenUpdateWithoutProjectDataInput!
+  create: ProjectTokenCreateWithoutProjectInput!
+}
+
+input ProjectTokenWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  revoked: Boolean
+  revoked_not: Boolean
+  project: ProjectWhereInput
+  participants_every: ProjectParticipantWhereInput
+  participants_some: ProjectParticipantWhereInput
+  participants_none: ProjectParticipantWhereInput
+  AND: [ProjectTokenWhereInput!]
+  OR: [ProjectTokenWhereInput!]
+  NOT: [ProjectTokenWhereInput!]
+}
+
+input ProjectTokenWhereUniqueInput {
+  id: ID
+}
+
+input ProjectUpdateInput {
+  name: String
+  workspaces: WorkspaceUpdateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceUpdateOneInput
+  templates: WorkspaceUpdateManyWithoutAsTemplateInput
+  merges: WorkspaceUpdateManyWithoutAsMergeInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateManyMutationInput {
+  name: String
+}
+
+input ProjectUpdateOneRequiredWithoutParticipantsInput {
+  create: ProjectCreateWithoutParticipantsInput
+  update: ProjectUpdateWithoutParticipantsDataInput
+  upsert: ProjectUpsertWithoutParticipantsInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectUpdateOneRequiredWithoutTokensInput {
+  create: ProjectCreateWithoutTokensInput
+  update: ProjectUpdateWithoutTokensDataInput
+  upsert: ProjectUpsertWithoutTokensInput
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectUpdateOneWithoutMergesInput {
+  create: ProjectCreateWithoutMergesInput
+  update: ProjectUpdateWithoutMergesDataInput
+  upsert: ProjectUpsertWithoutMergesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectUpdateOneWithoutTemplatesInput {
+  create: ProjectCreateWithoutTemplatesInput
+  update: ProjectUpdateWithoutTemplatesDataInput
+  upsert: ProjectUpsertWithoutTemplatesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectUpdateOneWithoutWorkspacesInput {
+  create: ProjectCreateWithoutWorkspacesInput
+  update: ProjectUpdateWithoutWorkspacesDataInput
+  upsert: ProjectUpsertWithoutWorkspacesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ProjectWhereUniqueInput
+}
+
+input ProjectUpdateWithoutMergesDataInput {
+  name: String
+  workspaces: WorkspaceUpdateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceUpdateOneInput
+  templates: WorkspaceUpdateManyWithoutAsTemplateInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutParticipantsDataInput {
+  name: String
+  workspaces: WorkspaceUpdateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceUpdateOneInput
+  templates: WorkspaceUpdateManyWithoutAsTemplateInput
+  merges: WorkspaceUpdateManyWithoutAsMergeInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutTemplatesDataInput {
+  name: String
+  workspaces: WorkspaceUpdateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceUpdateOneInput
+  merges: WorkspaceUpdateManyWithoutAsMergeInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutTokensDataInput {
+  name: String
+  workspaces: WorkspaceUpdateManyWithoutSourceProjectInput
+  activeTemplate: WorkspaceUpdateOneInput
+  templates: WorkspaceUpdateManyWithoutAsTemplateInput
+  merges: WorkspaceUpdateManyWithoutAsMergeInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+}
+
+input ProjectUpdateWithoutWorkspacesDataInput {
+  name: String
+  activeTemplate: WorkspaceUpdateOneInput
+  templates: WorkspaceUpdateManyWithoutAsTemplateInput
+  merges: WorkspaceUpdateManyWithoutAsMergeInput
+  participants: ProjectParticipantUpdateManyWithoutProjectInput
+  tokens: ProjectTokenUpdateManyWithoutProjectInput
+}
+
+input ProjectUpsertWithoutMergesInput {
+  update: ProjectUpdateWithoutMergesDataInput!
+  create: ProjectCreateWithoutMergesInput!
+}
+
+input ProjectUpsertWithoutParticipantsInput {
+  update: ProjectUpdateWithoutParticipantsDataInput!
+  create: ProjectCreateWithoutParticipantsInput!
+}
+
+input ProjectUpsertWithoutTemplatesInput {
+  update: ProjectUpdateWithoutTemplatesDataInput!
+  create: ProjectCreateWithoutTemplatesInput!
+}
+
+input ProjectUpsertWithoutTokensInput {
+  update: ProjectUpdateWithoutTokensDataInput!
+  create: ProjectCreateWithoutTokensInput!
+}
+
+input ProjectUpsertWithoutWorkspacesInput {
+  update: ProjectUpdateWithoutWorkspacesDataInput!
+  create: ProjectCreateWithoutWorkspacesInput!
+}
+
+input ProjectWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  workspaces_every: WorkspaceWhereInput
+  workspaces_some: WorkspaceWhereInput
+  workspaces_none: WorkspaceWhereInput
+  activeTemplate: WorkspaceWhereInput
+  templates_every: WorkspaceWhereInput
+  templates_some: WorkspaceWhereInput
+  templates_none: WorkspaceWhereInput
+  merges_every: WorkspaceWhereInput
+  merges_some: WorkspaceWhereInput
+  merges_none: WorkspaceWhereInput
+  participants_every: ProjectParticipantWhereInput
+  participants_some: ProjectParticipantWhereInput
+  participants_none: ProjectParticipantWhereInput
+  tokens_every: ProjectTokenWhereInput
+  tokens_some: ProjectTokenWhereInput
+  tokens_none: ProjectTokenWhereInput
+  AND: [ProjectWhereInput!]
+  OR: [ProjectWhereInput!]
+  NOT: [ProjectWhereInput!]
+}
+
+input ProjectWhereUniqueInput {
+  id: ID
+}
+
+type Query {
+  completion(where: CompletionWhereUniqueInput!): Completion
+  completions(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Completion]!
+  completionsConnection(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CompletionConnection!
+  concept(where: ConceptWhereUniqueInput!): Concept
+  concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept]!
+  conceptsConnection(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConceptConnection!
+  conceptLink(where: ConceptLinkWhereUniqueInput!): ConceptLink
+  conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink]!
+  conceptLinksConnection(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConceptLinkConnection!
+  course(where: CourseWhereUniqueInput!): Course
+  courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course]!
+  coursesConnection(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseConnection!
+  courseLink(where: CourseLinkWhereUniqueInput!): CourseLink
+  courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink]!
+  courseLinksConnection(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseLinkConnection!
+  pointGroup(where: PointGroupWhereUniqueInput!): PointGroup
+  pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup]!
+  pointGroupsConnection(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PointGroupConnection!
+  project(where: ProjectWhereUniqueInput!): Project
+  projects(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Project]!
+  projectsConnection(where: ProjectWhereInput, orderBy: ProjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectConnection!
+  projectParticipant(where: ProjectParticipantWhereUniqueInput!): ProjectParticipant
+  projectParticipants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant]!
+  projectParticipantsConnection(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectParticipantConnection!
+  projectToken(where: ProjectTokenWhereUniqueInput!): ProjectToken
+  projectTokens(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectToken]!
+  projectTokensConnection(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ProjectTokenConnection!
+  resource(where: ResourceWhereUniqueInput!): Resource
+  resources(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Resource]!
+  resourcesConnection(where: ResourceWhereInput, orderBy: ResourceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ResourceConnection!
+  tag(where: TagWhereUniqueInput!): Tag
+  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag]!
+  tagsConnection(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TagConnection!
+  uRL(where: URLWhereUniqueInput!): URL
+  uRLs(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL]!
+  uRLsConnection(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): URLConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  workspace(where: WorkspaceWhereUniqueInput!): Workspace
+  workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace]!
+  workspacesConnection(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceConnection!
+  workspaceParticipant(where: WorkspaceParticipantWhereUniqueInput!): WorkspaceParticipant
+  workspaceParticipants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant]!
+  workspaceParticipantsConnection(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceParticipantConnection!
+  workspaceToken(where: WorkspaceTokenWhereUniqueInput!): WorkspaceToken
+  workspaceTokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken]!
+  workspaceTokensConnection(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceTokenConnection!
+  node(id: ID!): Node
+}
+
+type Resource {
+  id: ID!
+  concept: Concept!
+  name: String!
+  description: String!
+  urls(where: URLWhereInput, orderBy: URLOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [URL!]
+}
+
+type ResourceConnection {
+  pageInfo: PageInfo!
+  edges: [ResourceEdge]!
+  aggregate: AggregateResource!
+}
+
+input ResourceCreateInput {
+  id: ID
+  concept: ConceptCreateOneWithoutResourcesInput!
+  name: String!
+  description: String!
+  urls: URLCreateManyWithoutResourceInput
+}
+
+input ResourceCreateManyWithoutConceptInput {
+  create: [ResourceCreateWithoutConceptInput!]
+  connect: [ResourceWhereUniqueInput!]
+}
+
+input ResourceCreateOneWithoutUrlsInput {
+  create: ResourceCreateWithoutUrlsInput
+  connect: ResourceWhereUniqueInput
+}
+
+input ResourceCreateWithoutConceptInput {
+  id: ID
+  name: String!
+  description: String!
+  urls: URLCreateManyWithoutResourceInput
+}
+
+input ResourceCreateWithoutUrlsInput {
+  id: ID
+  concept: ConceptCreateOneWithoutResourcesInput!
+  name: String!
+  description: String!
+}
+
+type ResourceEdge {
+  node: Resource!
+  cursor: String!
+}
+
+enum ResourceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+}
+
+type ResourcePreviousValues {
+  id: ID!
+  name: String!
+  description: String!
+}
+
+input ResourceScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  AND: [ResourceScalarWhereInput!]
+  OR: [ResourceScalarWhereInput!]
+  NOT: [ResourceScalarWhereInput!]
+}
+
+type ResourceSubscriptionPayload {
+  mutation: MutationType!
+  node: Resource
+  updatedFields: [String!]
+  previousValues: ResourcePreviousValues
+}
+
+input ResourceSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ResourceWhereInput
+  AND: [ResourceSubscriptionWhereInput!]
+  OR: [ResourceSubscriptionWhereInput!]
+  NOT: [ResourceSubscriptionWhereInput!]
+}
+
+input ResourceUpdateInput {
+  concept: ConceptUpdateOneRequiredWithoutResourcesInput
+  name: String
+  description: String
+  urls: URLUpdateManyWithoutResourceInput
+}
+
+input ResourceUpdateManyDataInput {
+  name: String
+  description: String
+}
+
+input ResourceUpdateManyMutationInput {
+  name: String
+  description: String
+}
+
+input ResourceUpdateManyWithoutConceptInput {
+  create: [ResourceCreateWithoutConceptInput!]
+  delete: [ResourceWhereUniqueInput!]
+  connect: [ResourceWhereUniqueInput!]
+  set: [ResourceWhereUniqueInput!]
+  disconnect: [ResourceWhereUniqueInput!]
+  update: [ResourceUpdateWithWhereUniqueWithoutConceptInput!]
+  upsert: [ResourceUpsertWithWhereUniqueWithoutConceptInput!]
+  deleteMany: [ResourceScalarWhereInput!]
+  updateMany: [ResourceUpdateManyWithWhereNestedInput!]
+}
+
+input ResourceUpdateManyWithWhereNestedInput {
+  where: ResourceScalarWhereInput!
+  data: ResourceUpdateManyDataInput!
+}
+
+input ResourceUpdateOneRequiredWithoutUrlsInput {
+  create: ResourceCreateWithoutUrlsInput
+  update: ResourceUpdateWithoutUrlsDataInput
+  upsert: ResourceUpsertWithoutUrlsInput
+  connect: ResourceWhereUniqueInput
+}
+
+input ResourceUpdateWithoutConceptDataInput {
+  name: String
+  description: String
+  urls: URLUpdateManyWithoutResourceInput
+}
+
+input ResourceUpdateWithoutUrlsDataInput {
+  concept: ConceptUpdateOneRequiredWithoutResourcesInput
+  name: String
+  description: String
+}
+
+input ResourceUpdateWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput!
+  data: ResourceUpdateWithoutConceptDataInput!
+}
+
+input ResourceUpsertWithoutUrlsInput {
+  update: ResourceUpdateWithoutUrlsDataInput!
+  create: ResourceCreateWithoutUrlsInput!
+}
+
+input ResourceUpsertWithWhereUniqueWithoutConceptInput {
+  where: ResourceWhereUniqueInput!
+  update: ResourceUpdateWithoutConceptDataInput!
+  create: ResourceCreateWithoutConceptInput!
+}
+
+input ResourceWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  concept: ConceptWhereInput
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  urls_every: URLWhereInput
+  urls_some: URLWhereInput
+  urls_none: URLWhereInput
+  AND: [ResourceWhereInput!]
+  OR: [ResourceWhereInput!]
+  NOT: [ResourceWhereInput!]
+}
+
+input ResourceWhereUniqueInput {
+  id: ID
+}
+
+enum Role {
+  GUEST
+  STUDENT
+  STAFF
+  ADMIN
+}
+
+type Subscription {
+  completion(where: CompletionSubscriptionWhereInput): CompletionSubscriptionPayload
+  concept(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
+  conceptLink(where: ConceptLinkSubscriptionWhereInput): ConceptLinkSubscriptionPayload
+  course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
+  courseLink(where: CourseLinkSubscriptionWhereInput): CourseLinkSubscriptionPayload
+  pointGroup(where: PointGroupSubscriptionWhereInput): PointGroupSubscriptionPayload
+  project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
+  projectParticipant(where: ProjectParticipantSubscriptionWhereInput): ProjectParticipantSubscriptionPayload
+  projectToken(where: ProjectTokenSubscriptionWhereInput): ProjectTokenSubscriptionPayload
+  resource(where: ResourceSubscriptionWhereInput): ResourceSubscriptionPayload
+  tag(where: TagSubscriptionWhereInput): TagSubscriptionPayload
+  uRL(where: URLSubscriptionWhereInput): URLSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
+  workspaceParticipant(where: WorkspaceParticipantSubscriptionWhereInput): WorkspaceParticipantSubscriptionPayload
+  workspaceToken(where: WorkspaceTokenSubscriptionWhereInput): WorkspaceTokenSubscriptionPayload
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  type: String!
+  priority: Int!
+}
+
+type TagConnection {
+  pageInfo: PageInfo!
+  edges: [TagEdge]!
+  aggregate: AggregateTag!
+}
+
+input TagCreateInput {
+  id: ID
+  name: String!
+  type: String
+  priority: Int
+}
+
+input TagCreateManyInput {
+  create: [TagCreateInput!]
+  connect: [TagWhereUniqueInput!]
+}
+
+type TagEdge {
+  node: Tag!
+  cursor: String!
+}
+
+enum TagOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  type_ASC
+  type_DESC
+  priority_ASC
+  priority_DESC
+}
+
+type TagPreviousValues {
+  id: ID!
+  name: String!
+  type: String!
+  priority: Int!
+}
+
+input TagScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  type: String
+  type_not: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_lt: String
+  type_lte: String
+  type_gt: String
+  type_gte: String
+  type_contains: String
+  type_not_contains: String
+  type_starts_with: String
+  type_not_starts_with: String
+  type_ends_with: String
+  type_not_ends_with: String
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  AND: [TagScalarWhereInput!]
+  OR: [TagScalarWhereInput!]
+  NOT: [TagScalarWhereInput!]
+}
+
+type TagSubscriptionPayload {
+  mutation: MutationType!
+  node: Tag
+  updatedFields: [String!]
+  previousValues: TagPreviousValues
+}
+
+input TagSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TagWhereInput
+  AND: [TagSubscriptionWhereInput!]
+  OR: [TagSubscriptionWhereInput!]
+  NOT: [TagSubscriptionWhereInput!]
+}
+
+input TagUpdateDataInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateManyDataInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateManyInput {
+  create: [TagCreateInput!]
+  update: [TagUpdateWithWhereUniqueNestedInput!]
+  upsert: [TagUpsertWithWhereUniqueNestedInput!]
+  delete: [TagWhereUniqueInput!]
+  connect: [TagWhereUniqueInput!]
+  set: [TagWhereUniqueInput!]
+  disconnect: [TagWhereUniqueInput!]
+  deleteMany: [TagScalarWhereInput!]
+  updateMany: [TagUpdateManyWithWhereNestedInput!]
+}
+
+input TagUpdateManyMutationInput {
+  name: String
+  type: String
+  priority: Int
+}
+
+input TagUpdateManyWithWhereNestedInput {
+  where: TagScalarWhereInput!
+  data: TagUpdateManyDataInput!
+}
+
+input TagUpdateWithWhereUniqueNestedInput {
+  where: TagWhereUniqueInput!
+  data: TagUpdateDataInput!
+}
+
+input TagUpsertWithWhereUniqueNestedInput {
+  where: TagWhereUniqueInput!
+  update: TagUpdateDataInput!
+  create: TagCreateInput!
+}
+
+input TagWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  type: String
+  type_not: String
+  type_in: [String!]
+  type_not_in: [String!]
+  type_lt: String
+  type_lte: String
+  type_gt: String
+  type_gte: String
+  type_contains: String
+  type_not_contains: String
+  type_starts_with: String
+  type_not_starts_with: String
+  type_ends_with: String
+  type_not_ends_with: String
+  priority: Int
+  priority_not: Int
+  priority_in: [Int!]
+  priority_not_in: [Int!]
+  priority_lt: Int
+  priority_lte: Int
+  priority_gt: Int
+  priority_gte: Int
+  AND: [TagWhereInput!]
+  OR: [TagWhereInput!]
+  NOT: [TagWhereInput!]
+}
+
+input TagWhereUniqueInput {
+  id: ID
+}
+
+type URL {
+  id: ID!
+  address: String!
+  resource: Resource!
+}
+
+type URLConnection {
+  pageInfo: PageInfo!
+  edges: [URLEdge]!
+  aggregate: AggregateURL!
+}
+
+input URLCreateInput {
+  id: ID
+  address: String!
+  resource: ResourceCreateOneWithoutUrlsInput!
+}
+
+input URLCreateManyWithoutResourceInput {
+  create: [URLCreateWithoutResourceInput!]
+  connect: [URLWhereUniqueInput!]
+}
+
+input URLCreateWithoutResourceInput {
+  id: ID
+  address: String!
+}
+
+type URLEdge {
+  node: URL!
+  cursor: String!
+}
+
+enum URLOrderByInput {
+  id_ASC
+  id_DESC
+  address_ASC
+  address_DESC
+}
+
+type URLPreviousValues {
+  id: ID!
+  address: String!
+}
+
+input URLScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  address: String
+  address_not: String
+  address_in: [String!]
+  address_not_in: [String!]
+  address_lt: String
+  address_lte: String
+  address_gt: String
+  address_gte: String
+  address_contains: String
+  address_not_contains: String
+  address_starts_with: String
+  address_not_starts_with: String
+  address_ends_with: String
+  address_not_ends_with: String
+  AND: [URLScalarWhereInput!]
+  OR: [URLScalarWhereInput!]
+  NOT: [URLScalarWhereInput!]
+}
+
+type URLSubscriptionPayload {
+  mutation: MutationType!
+  node: URL
+  updatedFields: [String!]
+  previousValues: URLPreviousValues
+}
+
+input URLSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: URLWhereInput
+  AND: [URLSubscriptionWhereInput!]
+  OR: [URLSubscriptionWhereInput!]
+  NOT: [URLSubscriptionWhereInput!]
+}
+
+input URLUpdateInput {
+  address: String
+  resource: ResourceUpdateOneRequiredWithoutUrlsInput
+}
+
+input URLUpdateManyDataInput {
+  address: String
+}
+
+input URLUpdateManyMutationInput {
+  address: String
+}
+
+input URLUpdateManyWithoutResourceInput {
+  create: [URLCreateWithoutResourceInput!]
+  delete: [URLWhereUniqueInput!]
+  connect: [URLWhereUniqueInput!]
+  set: [URLWhereUniqueInput!]
+  disconnect: [URLWhereUniqueInput!]
+  update: [URLUpdateWithWhereUniqueWithoutResourceInput!]
+  upsert: [URLUpsertWithWhereUniqueWithoutResourceInput!]
+  deleteMany: [URLScalarWhereInput!]
+  updateMany: [URLUpdateManyWithWhereNestedInput!]
+}
+
+input URLUpdateManyWithWhereNestedInput {
+  where: URLScalarWhereInput!
+  data: URLUpdateManyDataInput!
+}
+
+input URLUpdateWithoutResourceDataInput {
+  address: String
+}
+
+input URLUpdateWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput!
+  data: URLUpdateWithoutResourceDataInput!
+}
+
+input URLUpsertWithWhereUniqueWithoutResourceInput {
+  where: URLWhereUniqueInput!
+  update: URLUpdateWithoutResourceDataInput!
+  create: URLCreateWithoutResourceInput!
+}
+
+input URLWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  address: String
+  address_not: String
+  address_in: [String!]
+  address_not_in: [String!]
+  address_lt: String
+  address_lte: String
+  address_gt: String
+  address_gte: String
+  address_contains: String
+  address_not_contains: String
+  address_starts_with: String
+  address_not_starts_with: String
+  address_ends_with: String
+  address_not_ends_with: String
+  resource: ResourceWhereInput
+  AND: [URLWhereInput!]
+  OR: [URLWhereInput!]
+  NOT: [URLWhereInput!]
+}
+
+input URLWhereUniqueInput {
+  id: ID
+}
+
+type User {
+  id: ID!
+  tmcId: Int
+  hakaId: String
+  role: Role!
+  workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
+  projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
+  createdAt: DateTime!
+  lastActivity: DateTime
+}
+
+type UserConnection {
+  pageInfo: PageInfo!
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  id: ID
+  tmcId: Int
+  hakaId: String
+  role: Role!
+  workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
+  projectParticipations: ProjectParticipantCreateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutProjectParticipationsInput {
+  create: UserCreateWithoutProjectParticipationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutWorkspaceParticipationsInput {
+  create: UserCreateWithoutWorkspaceParticipationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutProjectParticipationsInput {
+  id: ID
+  tmcId: Int
+  hakaId: String
+  role: Role!
+  workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+input UserCreateWithoutWorkspaceParticipationsInput {
+  id: ID
+  tmcId: Int
+  hakaId: String
+  role: Role!
+  projectParticipations: ProjectParticipantCreateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+type UserEdge {
+  node: User!
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  tmcId_ASC
+  tmcId_DESC
+  hakaId_ASC
+  hakaId_DESC
+  role_ASC
+  role_DESC
+  createdAt_ASC
+  createdAt_DESC
+  lastActivity_ASC
+  lastActivity_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  tmcId: Int
+  hakaId: String
+  role: Role!
+  createdAt: DateTime!
+  lastActivity: DateTime
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+  AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
+}
+
+input UserUpdateDataInput {
+  tmcId: Int
+  hakaId: String
+  role: Role
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+input UserUpdateInput {
+  tmcId: Int
+  hakaId: String
+  role: Role
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+input UserUpdateManyMutationInput {
+  tmcId: Int
+  hakaId: String
+  role: Role
+  lastActivity: DateTime
+}
+
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutProjectParticipationsInput {
+  create: UserCreateWithoutProjectParticipationsInput
+  update: UserUpdateWithoutProjectParticipationsDataInput
+  upsert: UserUpsertWithoutProjectParticipationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutWorkspaceParticipationsInput {
+  create: UserCreateWithoutWorkspaceParticipationsInput
+  update: UserUpdateWithoutWorkspaceParticipationsDataInput
+  upsert: UserUpsertWithoutWorkspaceParticipationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutProjectParticipationsDataInput {
+  tmcId: Int
+  hakaId: String
+  role: Role
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+input UserUpdateWithoutWorkspaceParticipationsDataInput {
+  tmcId: Int
+  hakaId: String
+  role: Role
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
+  lastActivity: DateTime
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
+}
+
+input UserUpsertWithoutProjectParticipationsInput {
+  update: UserUpdateWithoutProjectParticipationsDataInput!
+  create: UserCreateWithoutProjectParticipationsInput!
+}
+
+input UserUpsertWithoutWorkspaceParticipationsInput {
+  update: UserUpdateWithoutWorkspaceParticipationsDataInput!
+  create: UserCreateWithoutWorkspaceParticipationsInput!
+}
+
+input UserWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  tmcId: Int
+  tmcId_not: Int
+  tmcId_in: [Int!]
+  tmcId_not_in: [Int!]
+  tmcId_lt: Int
+  tmcId_lte: Int
+  tmcId_gt: Int
+  tmcId_gte: Int
+  hakaId: String
+  hakaId_not: String
+  hakaId_in: [String!]
+  hakaId_not_in: [String!]
+  hakaId_lt: String
+  hakaId_lte: String
+  hakaId_gt: String
+  hakaId_gte: String
+  hakaId_contains: String
+  hakaId_not_contains: String
+  hakaId_starts_with: String
+  hakaId_not_starts_with: String
+  hakaId_ends_with: String
+  hakaId_not_ends_with: String
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
+  workspaceParticipations_every: WorkspaceParticipantWhereInput
+  workspaceParticipations_some: WorkspaceParticipantWhereInput
+  workspaceParticipations_none: WorkspaceParticipantWhereInput
+  projectParticipations_every: ProjectParticipantWhereInput
+  projectParticipations_some: ProjectParticipantWhereInput
+  projectParticipations_none: ProjectParticipantWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  lastActivity: DateTime
+  lastActivity_not: DateTime
+  lastActivity_in: [DateTime!]
+  lastActivity_not_in: [DateTime!]
+  lastActivity_lt: DateTime
+  lastActivity_lte: DateTime
+  lastActivity_gt: DateTime
+  lastActivity_gte: DateTime
+  AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  tmcId: Int
+  hakaId: String
+}
+
+type Workspace {
+  id: ID!
+  name: String!
+  sourceProject: Project
+  sourceTemplate: Workspace
+  asMerge: Project
+  asTemplate: Project
+  clones(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
+  courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
+  courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
+  participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
+  tokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken!]
+  mainCourse: Course
+  pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup!]
+  courseTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  conceptTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+}
+
+type WorkspaceConnection {
+  pageInfo: PageInfo!
+  edges: [WorkspaceEdge]!
+  aggregate: AggregateWorkspace!
+}
+
+input WorkspaceCreateInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateManyWithoutAsMergeInput {
+  create: [WorkspaceCreateWithoutAsMergeInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+}
+
+input WorkspaceCreateManyWithoutAsTemplateInput {
+  create: [WorkspaceCreateWithoutAsTemplateInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+}
+
+input WorkspaceCreateManyWithoutSourceProjectInput {
+  create: [WorkspaceCreateWithoutSourceProjectInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+}
+
+input WorkspaceCreateManyWithoutSourceTemplateInput {
+  create: [WorkspaceCreateWithoutSourceTemplateInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+}
+
+input WorkspaceCreateOneInput {
+  create: WorkspaceCreateInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutClonesInput {
+  create: WorkspaceCreateWithoutClonesInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutConceptLinksInput {
+  create: WorkspaceCreateWithoutConceptLinksInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutConceptsInput {
+  create: WorkspaceCreateWithoutConceptsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutCourseLinksInput {
+  create: WorkspaceCreateWithoutCourseLinksInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutCoursesInput {
+  create: WorkspaceCreateWithoutCoursesInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutParticipantsInput {
+  create: WorkspaceCreateWithoutParticipantsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutPointGroupsInput {
+  create: WorkspaceCreateWithoutPointGroupsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateOneWithoutTokensInput {
+  create: WorkspaceCreateWithoutTokensInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateWithoutAsMergeInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutAsTemplateInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutClonesInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutConceptLinksInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutConceptsInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutCourseLinksInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutCoursesInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutParticipantsInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutPointGroupsInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutSourceProjectInput {
+  id: ID
+  name: String!
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutSourceTemplateInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+input WorkspaceCreateWithoutTokensInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+}
+
+type WorkspaceEdge {
+  node: Workspace!
+  cursor: String!
+}
+
+enum WorkspaceOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+}
+
+type WorkspaceParticipant {
+  id: ID!
+  privilege: Privilege!
+  workspace: Workspace!
+  token: WorkspaceToken
+  user: User!
+}
+
+type WorkspaceParticipantConnection {
+  pageInfo: PageInfo!
+  edges: [WorkspaceParticipantEdge]!
+  aggregate: AggregateWorkspaceParticipant!
+}
+
+input WorkspaceParticipantCreateInput {
+  id: ID
+  privilege: Privilege!
+  workspace: WorkspaceCreateOneWithoutParticipantsInput!
+  token: WorkspaceTokenCreateOneWithoutParticipantsInput
+  user: UserCreateOneWithoutWorkspaceParticipationsInput!
+}
+
+input WorkspaceParticipantCreateManyWithoutTokenInput {
+  create: [WorkspaceParticipantCreateWithoutTokenInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+}
+
+input WorkspaceParticipantCreateManyWithoutUserInput {
+  create: [WorkspaceParticipantCreateWithoutUserInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+}
+
+input WorkspaceParticipantCreateManyWithoutWorkspaceInput {
+  create: [WorkspaceParticipantCreateWithoutWorkspaceInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+}
+
+input WorkspaceParticipantCreateWithoutTokenInput {
+  id: ID
+  privilege: Privilege!
+  workspace: WorkspaceCreateOneWithoutParticipantsInput!
+  user: UserCreateOneWithoutWorkspaceParticipationsInput!
+}
+
+input WorkspaceParticipantCreateWithoutUserInput {
+  id: ID
+  privilege: Privilege!
+  workspace: WorkspaceCreateOneWithoutParticipantsInput!
+  token: WorkspaceTokenCreateOneWithoutParticipantsInput
+}
+
+input WorkspaceParticipantCreateWithoutWorkspaceInput {
+  id: ID
+  privilege: Privilege!
+  token: WorkspaceTokenCreateOneWithoutParticipantsInput
+  user: UserCreateOneWithoutWorkspaceParticipationsInput!
+}
+
+type WorkspaceParticipantEdge {
+  node: WorkspaceParticipant!
+  cursor: String!
+}
+
+enum WorkspaceParticipantOrderByInput {
+  id_ASC
+  id_DESC
+  privilege_ASC
+  privilege_DESC
+}
+
+type WorkspaceParticipantPreviousValues {
+  id: ID!
+  privilege: Privilege!
+}
+
+input WorkspaceParticipantScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  AND: [WorkspaceParticipantScalarWhereInput!]
+  OR: [WorkspaceParticipantScalarWhereInput!]
+  NOT: [WorkspaceParticipantScalarWhereInput!]
+}
+
+type WorkspaceParticipantSubscriptionPayload {
+  mutation: MutationType!
+  node: WorkspaceParticipant
+  updatedFields: [String!]
+  previousValues: WorkspaceParticipantPreviousValues
+}
+
+input WorkspaceParticipantSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WorkspaceParticipantWhereInput
+  AND: [WorkspaceParticipantSubscriptionWhereInput!]
+  OR: [WorkspaceParticipantSubscriptionWhereInput!]
+  NOT: [WorkspaceParticipantSubscriptionWhereInput!]
+}
+
+input WorkspaceParticipantUpdateInput {
+  privilege: Privilege
+  workspace: WorkspaceUpdateOneRequiredWithoutParticipantsInput
+  token: WorkspaceTokenUpdateOneWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutWorkspaceParticipationsInput
+}
+
+input WorkspaceParticipantUpdateManyDataInput {
+  privilege: Privilege
+}
+
+input WorkspaceParticipantUpdateManyMutationInput {
+  privilege: Privilege
+}
+
+input WorkspaceParticipantUpdateManyWithoutTokenInput {
+  create: [WorkspaceParticipantCreateWithoutTokenInput!]
+  delete: [WorkspaceParticipantWhereUniqueInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+  set: [WorkspaceParticipantWhereUniqueInput!]
+  disconnect: [WorkspaceParticipantWhereUniqueInput!]
+  update: [WorkspaceParticipantUpdateWithWhereUniqueWithoutTokenInput!]
+  upsert: [WorkspaceParticipantUpsertWithWhereUniqueWithoutTokenInput!]
+  deleteMany: [WorkspaceParticipantScalarWhereInput!]
+  updateMany: [WorkspaceParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceParticipantUpdateManyWithoutUserInput {
+  create: [WorkspaceParticipantCreateWithoutUserInput!]
+  delete: [WorkspaceParticipantWhereUniqueInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+  set: [WorkspaceParticipantWhereUniqueInput!]
+  disconnect: [WorkspaceParticipantWhereUniqueInput!]
+  update: [WorkspaceParticipantUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [WorkspaceParticipantUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [WorkspaceParticipantScalarWhereInput!]
+  updateMany: [WorkspaceParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceParticipantUpdateManyWithoutWorkspaceInput {
+  create: [WorkspaceParticipantCreateWithoutWorkspaceInput!]
+  delete: [WorkspaceParticipantWhereUniqueInput!]
+  connect: [WorkspaceParticipantWhereUniqueInput!]
+  set: [WorkspaceParticipantWhereUniqueInput!]
+  disconnect: [WorkspaceParticipantWhereUniqueInput!]
+  update: [WorkspaceParticipantUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [WorkspaceParticipantUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [WorkspaceParticipantScalarWhereInput!]
+  updateMany: [WorkspaceParticipantUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceParticipantUpdateManyWithWhereNestedInput {
+  where: WorkspaceParticipantScalarWhereInput!
+  data: WorkspaceParticipantUpdateManyDataInput!
+}
+
+input WorkspaceParticipantUpdateWithoutTokenDataInput {
+  privilege: Privilege
+  workspace: WorkspaceUpdateOneRequiredWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutWorkspaceParticipationsInput
+}
+
+input WorkspaceParticipantUpdateWithoutUserDataInput {
+  privilege: Privilege
+  workspace: WorkspaceUpdateOneRequiredWithoutParticipantsInput
+  token: WorkspaceTokenUpdateOneWithoutParticipantsInput
+}
+
+input WorkspaceParticipantUpdateWithoutWorkspaceDataInput {
+  privilege: Privilege
+  token: WorkspaceTokenUpdateOneWithoutParticipantsInput
+  user: UserUpdateOneRequiredWithoutWorkspaceParticipationsInput
+}
+
+input WorkspaceParticipantUpdateWithWhereUniqueWithoutTokenInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  data: WorkspaceParticipantUpdateWithoutTokenDataInput!
+}
+
+input WorkspaceParticipantUpdateWithWhereUniqueWithoutUserInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  data: WorkspaceParticipantUpdateWithoutUserDataInput!
+}
+
+input WorkspaceParticipantUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  data: WorkspaceParticipantUpdateWithoutWorkspaceDataInput!
+}
+
+input WorkspaceParticipantUpsertWithWhereUniqueWithoutTokenInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  update: WorkspaceParticipantUpdateWithoutTokenDataInput!
+  create: WorkspaceParticipantCreateWithoutTokenInput!
+}
+
+input WorkspaceParticipantUpsertWithWhereUniqueWithoutUserInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  update: WorkspaceParticipantUpdateWithoutUserDataInput!
+  create: WorkspaceParticipantCreateWithoutUserInput!
+}
+
+input WorkspaceParticipantUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspaceParticipantWhereUniqueInput!
+  update: WorkspaceParticipantUpdateWithoutWorkspaceDataInput!
+  create: WorkspaceParticipantCreateWithoutWorkspaceInput!
+}
+
+input WorkspaceParticipantWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  workspace: WorkspaceWhereInput
+  token: WorkspaceTokenWhereInput
+  user: UserWhereInput
+  AND: [WorkspaceParticipantWhereInput!]
+  OR: [WorkspaceParticipantWhereInput!]
+  NOT: [WorkspaceParticipantWhereInput!]
+}
+
+input WorkspaceParticipantWhereUniqueInput {
+  id: ID
+}
+
+type WorkspacePreviousValues {
+  id: ID!
+  name: String!
+}
+
+input WorkspaceScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [WorkspaceScalarWhereInput!]
+  OR: [WorkspaceScalarWhereInput!]
+  NOT: [WorkspaceScalarWhereInput!]
+}
+
+type WorkspaceSubscriptionPayload {
+  mutation: MutationType!
+  node: Workspace
+  updatedFields: [String!]
+  previousValues: WorkspacePreviousValues
+}
+
+input WorkspaceSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WorkspaceWhereInput
+  AND: [WorkspaceSubscriptionWhereInput!]
+  OR: [WorkspaceSubscriptionWhereInput!]
+  NOT: [WorkspaceSubscriptionWhereInput!]
+}
+
+type WorkspaceToken {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
+  workspace: Workspace!
+  participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
+}
+
+type WorkspaceTokenConnection {
+  pageInfo: PageInfo!
+  edges: [WorkspaceTokenEdge]!
+  aggregate: AggregateWorkspaceToken!
+}
+
+input WorkspaceTokenCreateInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  workspace: WorkspaceCreateOneWithoutTokensInput!
+  participants: WorkspaceParticipantCreateManyWithoutTokenInput
+}
+
+input WorkspaceTokenCreateManyWithoutWorkspaceInput {
+  create: [WorkspaceTokenCreateWithoutWorkspaceInput!]
+  connect: [WorkspaceTokenWhereUniqueInput!]
+}
+
+input WorkspaceTokenCreateOneWithoutParticipantsInput {
+  create: WorkspaceTokenCreateWithoutParticipantsInput
+  connect: WorkspaceTokenWhereUniqueInput
+}
+
+input WorkspaceTokenCreateWithoutParticipantsInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  workspace: WorkspaceCreateOneWithoutTokensInput!
+}
+
+input WorkspaceTokenCreateWithoutWorkspaceInput {
+  id: ID
+  privilege: Privilege!
+  revoked: Boolean!
+  participants: WorkspaceParticipantCreateManyWithoutTokenInput
+}
+
+type WorkspaceTokenEdge {
+  node: WorkspaceToken!
+  cursor: String!
+}
+
+enum WorkspaceTokenOrderByInput {
+  id_ASC
+  id_DESC
+  privilege_ASC
+  privilege_DESC
+  revoked_ASC
+  revoked_DESC
+}
+
+type WorkspaceTokenPreviousValues {
+  id: ID!
+  privilege: Privilege!
+  revoked: Boolean!
+}
+
+input WorkspaceTokenScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  revoked: Boolean
+  revoked_not: Boolean
+  AND: [WorkspaceTokenScalarWhereInput!]
+  OR: [WorkspaceTokenScalarWhereInput!]
+  NOT: [WorkspaceTokenScalarWhereInput!]
+}
+
+type WorkspaceTokenSubscriptionPayload {
+  mutation: MutationType!
+  node: WorkspaceToken
+  updatedFields: [String!]
+  previousValues: WorkspaceTokenPreviousValues
+}
+
+input WorkspaceTokenSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: WorkspaceTokenWhereInput
+  AND: [WorkspaceTokenSubscriptionWhereInput!]
+  OR: [WorkspaceTokenSubscriptionWhereInput!]
+  NOT: [WorkspaceTokenSubscriptionWhereInput!]
+}
+
+input WorkspaceTokenUpdateInput {
+  privilege: Privilege
+  revoked: Boolean
+  workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
+  participants: WorkspaceParticipantUpdateManyWithoutTokenInput
+}
+
+input WorkspaceTokenUpdateManyDataInput {
+  privilege: Privilege
+  revoked: Boolean
+}
+
+input WorkspaceTokenUpdateManyMutationInput {
+  privilege: Privilege
+  revoked: Boolean
+}
+
+input WorkspaceTokenUpdateManyWithoutWorkspaceInput {
+  create: [WorkspaceTokenCreateWithoutWorkspaceInput!]
+  delete: [WorkspaceTokenWhereUniqueInput!]
+  connect: [WorkspaceTokenWhereUniqueInput!]
+  set: [WorkspaceTokenWhereUniqueInput!]
+  disconnect: [WorkspaceTokenWhereUniqueInput!]
+  update: [WorkspaceTokenUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [WorkspaceTokenUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [WorkspaceTokenScalarWhereInput!]
+  updateMany: [WorkspaceTokenUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceTokenUpdateManyWithWhereNestedInput {
+  where: WorkspaceTokenScalarWhereInput!
+  data: WorkspaceTokenUpdateManyDataInput!
+}
+
+input WorkspaceTokenUpdateOneWithoutParticipantsInput {
+  create: WorkspaceTokenCreateWithoutParticipantsInput
+  update: WorkspaceTokenUpdateWithoutParticipantsDataInput
+  upsert: WorkspaceTokenUpsertWithoutParticipantsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: WorkspaceTokenWhereUniqueInput
+}
+
+input WorkspaceTokenUpdateWithoutParticipantsDataInput {
+  privilege: Privilege
+  revoked: Boolean
+  workspace: WorkspaceUpdateOneRequiredWithoutTokensInput
+}
+
+input WorkspaceTokenUpdateWithoutWorkspaceDataInput {
+  privilege: Privilege
+  revoked: Boolean
+  participants: WorkspaceParticipantUpdateManyWithoutTokenInput
+}
+
+input WorkspaceTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspaceTokenWhereUniqueInput!
+  data: WorkspaceTokenUpdateWithoutWorkspaceDataInput!
+}
+
+input WorkspaceTokenUpsertWithoutParticipantsInput {
+  update: WorkspaceTokenUpdateWithoutParticipantsDataInput!
+  create: WorkspaceTokenCreateWithoutParticipantsInput!
+}
+
+input WorkspaceTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspaceTokenWhereUniqueInput!
+  update: WorkspaceTokenUpdateWithoutWorkspaceDataInput!
+  create: WorkspaceTokenCreateWithoutWorkspaceInput!
+}
+
+input WorkspaceTokenWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  privilege: Privilege
+  privilege_not: Privilege
+  privilege_in: [Privilege!]
+  privilege_not_in: [Privilege!]
+  revoked: Boolean
+  revoked_not: Boolean
+  workspace: WorkspaceWhereInput
+  participants_every: WorkspaceParticipantWhereInput
+  participants_some: WorkspaceParticipantWhereInput
+  participants_none: WorkspaceParticipantWhereInput
+  AND: [WorkspaceTokenWhereInput!]
+  OR: [WorkspaceTokenWhereInput!]
+  NOT: [WorkspaceTokenWhereInput!]
+}
+
+input WorkspaceTokenWhereUniqueInput {
+  id: ID
+}
+
+input WorkspaceUpdateDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateManyDataInput {
+  name: String
+}
+
+input WorkspaceUpdateManyMutationInput {
+  name: String
+}
+
+input WorkspaceUpdateManyWithoutAsMergeInput {
+  create: [WorkspaceCreateWithoutAsMergeInput!]
+  delete: [WorkspaceWhereUniqueInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+  set: [WorkspaceWhereUniqueInput!]
+  disconnect: [WorkspaceWhereUniqueInput!]
+  update: [WorkspaceUpdateWithWhereUniqueWithoutAsMergeInput!]
+  upsert: [WorkspaceUpsertWithWhereUniqueWithoutAsMergeInput!]
+  deleteMany: [WorkspaceScalarWhereInput!]
+  updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceUpdateManyWithoutAsTemplateInput {
+  create: [WorkspaceCreateWithoutAsTemplateInput!]
+  delete: [WorkspaceWhereUniqueInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+  set: [WorkspaceWhereUniqueInput!]
+  disconnect: [WorkspaceWhereUniqueInput!]
+  update: [WorkspaceUpdateWithWhereUniqueWithoutAsTemplateInput!]
+  upsert: [WorkspaceUpsertWithWhereUniqueWithoutAsTemplateInput!]
+  deleteMany: [WorkspaceScalarWhereInput!]
+  updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceUpdateManyWithoutSourceProjectInput {
+  create: [WorkspaceCreateWithoutSourceProjectInput!]
+  delete: [WorkspaceWhereUniqueInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+  set: [WorkspaceWhereUniqueInput!]
+  disconnect: [WorkspaceWhereUniqueInput!]
+  update: [WorkspaceUpdateWithWhereUniqueWithoutSourceProjectInput!]
+  upsert: [WorkspaceUpsertWithWhereUniqueWithoutSourceProjectInput!]
+  deleteMany: [WorkspaceScalarWhereInput!]
+  updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceUpdateManyWithoutSourceTemplateInput {
+  create: [WorkspaceCreateWithoutSourceTemplateInput!]
+  delete: [WorkspaceWhereUniqueInput!]
+  connect: [WorkspaceWhereUniqueInput!]
+  set: [WorkspaceWhereUniqueInput!]
+  disconnect: [WorkspaceWhereUniqueInput!]
+  update: [WorkspaceUpdateWithWhereUniqueWithoutSourceTemplateInput!]
+  upsert: [WorkspaceUpsertWithWhereUniqueWithoutSourceTemplateInput!]
+  deleteMany: [WorkspaceScalarWhereInput!]
+  updateMany: [WorkspaceUpdateManyWithWhereNestedInput!]
+}
+
+input WorkspaceUpdateManyWithWhereNestedInput {
+  where: WorkspaceScalarWhereInput!
+  data: WorkspaceUpdateManyDataInput!
+}
+
+input WorkspaceUpdateOneInput {
+  create: WorkspaceCreateInput
+  update: WorkspaceUpdateDataInput
+  upsert: WorkspaceUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutConceptLinksInput {
+  create: WorkspaceCreateWithoutConceptLinksInput
+  update: WorkspaceUpdateWithoutConceptLinksDataInput
+  upsert: WorkspaceUpsertWithoutConceptLinksInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutConceptsInput {
+  create: WorkspaceCreateWithoutConceptsInput
+  update: WorkspaceUpdateWithoutConceptsDataInput
+  upsert: WorkspaceUpsertWithoutConceptsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutCourseLinksInput {
+  create: WorkspaceCreateWithoutCourseLinksInput
+  update: WorkspaceUpdateWithoutCourseLinksDataInput
+  upsert: WorkspaceUpsertWithoutCourseLinksInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutCoursesInput {
+  create: WorkspaceCreateWithoutCoursesInput
+  update: WorkspaceUpdateWithoutCoursesDataInput
+  upsert: WorkspaceUpsertWithoutCoursesInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutParticipantsInput {
+  create: WorkspaceCreateWithoutParticipantsInput
+  update: WorkspaceUpdateWithoutParticipantsDataInput
+  upsert: WorkspaceUpsertWithoutParticipantsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutPointGroupsInput {
+  create: WorkspaceCreateWithoutPointGroupsInput
+  update: WorkspaceUpdateWithoutPointGroupsDataInput
+  upsert: WorkspaceUpsertWithoutPointGroupsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneRequiredWithoutTokensInput {
+  create: WorkspaceCreateWithoutTokensInput
+  update: WorkspaceUpdateWithoutTokensDataInput
+  upsert: WorkspaceUpsertWithoutTokensInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateOneWithoutClonesInput {
+  create: WorkspaceCreateWithoutClonesInput
+  update: WorkspaceUpdateWithoutClonesDataInput
+  upsert: WorkspaceUpsertWithoutClonesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateWithoutAsMergeDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutAsTemplateDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutClonesDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutConceptLinksDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutConceptsDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutCourseLinksDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutCoursesDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutParticipantsDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutPointGroupsDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutSourceProjectDataInput {
+  name: String
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutSourceTemplateDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithoutTokensDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+}
+
+input WorkspaceUpdateWithWhereUniqueWithoutAsMergeInput {
+  where: WorkspaceWhereUniqueInput!
+  data: WorkspaceUpdateWithoutAsMergeDataInput!
+}
+
+input WorkspaceUpdateWithWhereUniqueWithoutAsTemplateInput {
+  where: WorkspaceWhereUniqueInput!
+  data: WorkspaceUpdateWithoutAsTemplateDataInput!
+}
+
+input WorkspaceUpdateWithWhereUniqueWithoutSourceProjectInput {
+  where: WorkspaceWhereUniqueInput!
+  data: WorkspaceUpdateWithoutSourceProjectDataInput!
+}
+
+input WorkspaceUpdateWithWhereUniqueWithoutSourceTemplateInput {
+  where: WorkspaceWhereUniqueInput!
+  data: WorkspaceUpdateWithoutSourceTemplateDataInput!
+}
+
+input WorkspaceUpsertNestedInput {
+  update: WorkspaceUpdateDataInput!
+  create: WorkspaceCreateInput!
+}
+
+input WorkspaceUpsertWithoutClonesInput {
+  update: WorkspaceUpdateWithoutClonesDataInput!
+  create: WorkspaceCreateWithoutClonesInput!
+}
+
+input WorkspaceUpsertWithoutConceptLinksInput {
+  update: WorkspaceUpdateWithoutConceptLinksDataInput!
+  create: WorkspaceCreateWithoutConceptLinksInput!
+}
+
+input WorkspaceUpsertWithoutConceptsInput {
+  update: WorkspaceUpdateWithoutConceptsDataInput!
+  create: WorkspaceCreateWithoutConceptsInput!
+}
+
+input WorkspaceUpsertWithoutCourseLinksInput {
+  update: WorkspaceUpdateWithoutCourseLinksDataInput!
+  create: WorkspaceCreateWithoutCourseLinksInput!
+}
+
+input WorkspaceUpsertWithoutCoursesInput {
+  update: WorkspaceUpdateWithoutCoursesDataInput!
+  create: WorkspaceCreateWithoutCoursesInput!
+}
+
+input WorkspaceUpsertWithoutParticipantsInput {
+  update: WorkspaceUpdateWithoutParticipantsDataInput!
+  create: WorkspaceCreateWithoutParticipantsInput!
+}
+
+input WorkspaceUpsertWithoutPointGroupsInput {
+  update: WorkspaceUpdateWithoutPointGroupsDataInput!
+  create: WorkspaceCreateWithoutPointGroupsInput!
+}
+
+input WorkspaceUpsertWithoutTokensInput {
+  update: WorkspaceUpdateWithoutTokensDataInput!
+  create: WorkspaceCreateWithoutTokensInput!
+}
+
+input WorkspaceUpsertWithWhereUniqueWithoutAsMergeInput {
+  where: WorkspaceWhereUniqueInput!
+  update: WorkspaceUpdateWithoutAsMergeDataInput!
+  create: WorkspaceCreateWithoutAsMergeInput!
+}
+
+input WorkspaceUpsertWithWhereUniqueWithoutAsTemplateInput {
+  where: WorkspaceWhereUniqueInput!
+  update: WorkspaceUpdateWithoutAsTemplateDataInput!
+  create: WorkspaceCreateWithoutAsTemplateInput!
+}
+
+input WorkspaceUpsertWithWhereUniqueWithoutSourceProjectInput {
+  where: WorkspaceWhereUniqueInput!
+  update: WorkspaceUpdateWithoutSourceProjectDataInput!
+  create: WorkspaceCreateWithoutSourceProjectInput!
+}
+
+input WorkspaceUpsertWithWhereUniqueWithoutSourceTemplateInput {
+  where: WorkspaceWhereUniqueInput!
+  update: WorkspaceUpdateWithoutSourceTemplateDataInput!
+  create: WorkspaceCreateWithoutSourceTemplateInput!
+}
+
+input WorkspaceWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  sourceProject: ProjectWhereInput
+  sourceTemplate: WorkspaceWhereInput
+  asMerge: ProjectWhereInput
+  asTemplate: ProjectWhereInput
+  clones_every: WorkspaceWhereInput
+  clones_some: WorkspaceWhereInput
+  clones_none: WorkspaceWhereInput
+  courses_every: CourseWhereInput
+  courses_some: CourseWhereInput
+  courses_none: CourseWhereInput
+  concepts_every: ConceptWhereInput
+  concepts_some: ConceptWhereInput
+  concepts_none: ConceptWhereInput
+  conceptLinks_every: ConceptLinkWhereInput
+  conceptLinks_some: ConceptLinkWhereInput
+  conceptLinks_none: ConceptLinkWhereInput
+  courseLinks_every: CourseLinkWhereInput
+  courseLinks_some: CourseLinkWhereInput
+  courseLinks_none: CourseLinkWhereInput
+  participants_every: WorkspaceParticipantWhereInput
+  participants_some: WorkspaceParticipantWhereInput
+  participants_none: WorkspaceParticipantWhereInput
+  tokens_every: WorkspaceTokenWhereInput
+  tokens_some: WorkspaceTokenWhereInput
+  tokens_none: WorkspaceTokenWhereInput
+  mainCourse: CourseWhereInput
+  pointGroups_every: PointGroupWhereInput
+  pointGroups_some: PointGroupWhereInput
+  pointGroups_none: PointGroupWhereInput
+  courseTags_every: TagWhereInput
+  courseTags_some: TagWhereInput
+  courseTags_none: TagWhereInput
+  conceptTags_every: TagWhereInput
+  conceptTags_some: TagWhereInput
+  conceptTags_none: TagWhereInput
+  AND: [WorkspaceWhereInput!]
+  OR: [WorkspaceWhereInput!]
+  NOT: [WorkspaceWhereInput!]
+}
+
+input WorkspaceWhereUniqueInput {
+  id: ID
+}

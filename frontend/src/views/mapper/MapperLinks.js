@@ -52,7 +52,7 @@ const useStyles = makeStyles({
 })
 
 const MapperLinks = ({
-  courseId, flashingLink, addingLink, focusedConceptIds, conceptLinkMenu, courseSet,
+  courseId, flashingLink, addingLink, focusedConceptIds, conceptLinkMenu, courseLinkMap,
   handleMenuOpen, handleMenuClose, deleteLink
 }) => {
   const classes = useStyles()
@@ -64,7 +64,7 @@ const MapperLinks = ({
 
   return <div style={{ display: 'contents' }}>
     {linkQuery.data.linksInCourse?.concepts.map(concept =>
-      concept.linksToConcept.map(link => courseSet.has(link.from.course.id) &&
+      concept.linksToConcept.map(link => courseLinkMap.has(link.from.course.id) &&
         <ConceptLink
           key={`concept-link-${link.id}`} delay={1}
           active={flashingLink === link.id || (!addingLink && (
@@ -72,6 +72,7 @@ const MapperLinks = ({
           ))}
           linkId={link.id}
           from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
+          fromConceptId={concept.id} toConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
           posOffsets={{ x0: -5, x1: +6 }}
           classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)

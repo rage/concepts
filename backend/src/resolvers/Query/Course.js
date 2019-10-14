@@ -1,5 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../accessControl')
-const { nullShield } = require('../../errors')
+const { checkAccess, Role, Privilege } = require('../../util/accessControl')
+const { nullShield } = require('../../util/errors')
 
 const CourseQueries = {
   async courseById(root, { id }, context) {

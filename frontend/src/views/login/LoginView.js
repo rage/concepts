@@ -4,11 +4,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Container, Button, TextField, Typography, FormHelperText, CircularProgress, Divider
 } from '@material-ui/core'
+import qs from 'qs'
 
 import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import { signIn, isSignedIn } from '../../lib/authentication'
 import { useLoginStateValue } from '../../store'
 import useRouter from '../../useRouter'
+import { ReactComponent as HakaIcon } from '../../static/haka.svg'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -30,6 +32,11 @@ const useStyles = makeStyles(theme => ({
   guestButton: {
     marginTop: theme.spacing(0.5)
   },
+  hakaButton: {
+    width: '100%',
+    margin: theme.spacing(3, 0),
+    display: 'block'
+  },
   buttonProgress: {
     color: 'white',
     position: 'absolute',
@@ -40,9 +47,16 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+// eslint-disable-next-line no-undef
+const HAKA_URL = process.env.REACT_APP_HAKA_URL
+
 const LoginView = () => {
   const classes = useStyles()
   const { history, location } = useRouter()
+
+  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
+
+  const [, dispatch] = useLoginStateValue()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -51,9 +65,21 @@ const LoginView = () => {
   const [loading, setLoading] = useState(false)
   const [loadingGuest, setLoadingGuest] = useState(false)
 
-  const dispatch = useLoginStateValue()[1]
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
+
+  if (location.hash?.length > 1) {
+    const query = qs.parse(location.hash.substr(1))
+    if (query.token) {
+      window.localStorage.currentUser = JSON.stringify(query)
+      dispatch({
+        type: 'login',
+        data: query.user
+      })
+      history.push(nextPath)
+      return null
+    }
+  }
 
   const authenticate = (event) => {
     event.preventDefault()
@@ -73,8 +99,6 @@ const LoginView = () => {
       }
     })
   }
-
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const createGuestAccount = async () => {
     const result = await createGuestMutation()
@@ -101,7 +125,7 @@ const LoginView = () => {
     <Container component='main' maxWidth='xs'>
       <div className={classes.paper}>
         <Typography component='h1' variant='h5'>
-          Sign in with TMC account
+          Sign in with <a href='https://www.mooc.fi/en/sign-up'>mooc.fi account</a>
         </Typography>
 
         <form
@@ -137,13 +161,7 @@ const LoginView = () => {
             value={password}
           />
           <FormHelperText error={error}>
-            {
-              error ?
-                <span>
-                  Invalid username or password.
-                </span>
-                : null
-            }
+            {error ? 'Invalid username or password.' : null}
           </FormHelperText>
           <div className={classes.wrapper}>
             <Button
@@ -161,6 +179,14 @@ const LoginView = () => {
           </div>
         </form>
       </div>
+      {HAKA_URL && <>
+        <Divider />
+        <div className={classes.wrapper}>
+          <a className={classes.hakaButton} href={HAKA_URL}>
+            <HakaIcon />
+          </a>
+        </div>
+      </>}
       {showGuestButton && <>
         <Divider />
         <div className={classes.wrapper}>

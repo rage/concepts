@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 
 const PrerequisiteCourse = ({
   isPrerequisite,
-  getLinkToDelete,
+  courseLinkMap,
   course,
   checkboxRef,
   activeCourseId,
@@ -109,9 +109,8 @@ const PrerequisiteCourse = ({
   const onClick = async () => {
     try {
       if (isPrerequisite) {
-        const link = getLinkToDelete(course)
         await deleteCourseLink({
-          variables: { id: link.id }
+          variables: { id: courseLinkMap.get(course.id) }
         })
       } else {
         await createCourseLink({
@@ -176,9 +175,6 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
     setFilterKeyword(e.target.value)
   }
 
-  const getLinkToDelete = course => courseLinks.find(link => link.from.id === course.id)
-  const isPrerequisite = course => getLinkToDelete(course) !== undefined
-
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
   return (
@@ -206,8 +202,8 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
               activeCourseId={activeCourseId}
               createCourseLink={createCourseLink}
               deleteCourseLink={deleteCourseLink}
-              isPrerequisite={isPrerequisite(course)}
-              getLinkToDelete={getLinkToDelete}
+              isPrerequisite={courseLinks.has(course.id)}
+              courseLinkMap={courseLinks}
               openEditCourseDialog={openEditCourseDialog}
               workspace={workspace}
               urlPrefix={urlPrefix}

@@ -3,7 +3,10 @@ version: '3.7'
 services:
   concepts:
     image: concepts
-    build: .
+    build:
+      context: .
+      #args:
+      #  REACT_APP_HAKA_URL: https://haka.funet.fi/shibboleth/WAYF?entityID=https://concepts.cs.helsinki.fi&return=https://concepts.cs.helsinki.fi/api/login
     restart: always
     ports:
       - 8080:8080
@@ -11,5 +14,8 @@ services:
       ENDPOINT: http://prisma:4466
       SECRET: WZIpatNAZYbR7iGd6V6OhuBsxNkNAZoFBLt7ZaWU2D4mBJYqLY
       PRISMA_MANAGEMENT_API_JWT_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
+      BASE_URL: https://concepts.cs.helsinki.fi
+      #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka-metadata.xml
+      #SAML_DIR: /concepts/backend/saml
     depends_on:
       - prisma

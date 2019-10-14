@@ -1,4 +1,4 @@
-const { Privilege } = require('../../accessControl')
+const { Privilege } = require('../../util/accessControl')
 const { makeTypeResolvers } = require('./typeutil')
 
 const checkID = (obj, info, suffix = '') => {

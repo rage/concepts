@@ -1,4 +1,4 @@
-const { checkAccess, Role } = require('../../accessControl')
+const { checkAccess, Role } = require('../../util/accessControl')
 
 const User = {
   async allUsers(root, args, context) {

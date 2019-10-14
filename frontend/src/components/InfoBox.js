@@ -1,4 +1,4 @@
-import React, { useRef, useState, createContext, useContext } from 'react'
+import React, { useRef, useState, useCallback, createContext, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Paper, Typography, IconButton, Popper, DialogActions, Dialog, DialogContent, Button
@@ -151,8 +151,8 @@ const InfoBox = ({ contextRef }) => {
   filterUserGuide(user?.role || Role.VISITOR)
   const currentUserGuide = currentView ? userGuide.views[currentView] : null
 
-  const [redrawIndex, setRedrawIndex] = useState(0)
-  const redraw = () => setRedrawIndex(redrawIndex + 1)
+  const [, updateState] = useState()
+  const redraw = useCallback(() => updateState({}), [])
 
   const closeVideo = () => {
     setCurrentVideo({ ...currentVideo, open: false })
@@ -265,22 +265,28 @@ const InfoBox = ({ contextRef }) => {
       if (!step) {
         throw new Error(`Unknown step ${view}/${id}`)
       }
-      return elem => {
-        step.ref = elem
-        redraw()
+      if (!step.refFunc) {
+        step.refFunc = elem => {
+          step.ref = elem
+          redraw()
+        }
       }
+      return step.refFunc
     },
     secondaryRef(view, id, extend = false) {
       const step = userGuide.viewMaps[view][id]
       step.secondaryRefExtend = extend
-      return elem => {
-        const changed = elem !== step.secondaryRef
-        step.secondaryRef = elem
-        redraw()
-        if (changed && currentView === view && state.id === id) {
-          overlay.update(step.secondaryRef, step.secondaryRefExtend)
+      if (!step.secondaryRefFunc) {
+        step.secondaryRefFunc = elem => {
+          const changed = elem !== step.secondaryRef
+          step.secondaryRef = elem
+          redraw()
+          if (changed && currentView === view && state.id === id) {
+            overlay.update(step.secondaryRef, step.secondaryRefExtend)
+          }
         }
       }
+      return step.secondaryRefFunc
     },
     redrawIfOpen(view, ...ids) {
       if (currentView === view && ids.includes(state.id)) {

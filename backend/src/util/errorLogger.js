@@ -1,5 +1,5 @@
-const queries = require('./resolvers/Query')
-const mutations = require('./resolvers/Mutation')
+const queries = require('../resolvers/Query')
+const mutations = require('../resolvers/Mutation')
 
 const ERROR_COLOR = '\x1b[31m'
 const STRING_COLOR = '\x1b[32m'
@@ -45,6 +45,7 @@ const logError = error => {
     errorMessage += ` Message: ${ERROR_COLOR}'${errorData.message}'${RESET_COLOR}`
   }
   console.error(errorMessage)
+  console.log(error)
 
   return error
 }

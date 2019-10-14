@@ -867,6 +867,8 @@ export type UserOrderByInput =
   | "id_DESC"
   | "tmcId_ASC"
   | "tmcId_DESC"
+  | "hakaId_ASC"
+  | "hakaId_DESC"
   | "role_ASC"
   | "role_DESC"
   | "createdAt_ASC"
@@ -1110,6 +1112,20 @@ export interface UserWhereInput {
   tmcId_lte?: Maybe<Int>;
   tmcId_gt?: Maybe<Int>;
   tmcId_gte?: Maybe<Int>;
+  hakaId?: Maybe<String>;
+  hakaId_not?: Maybe<String>;
+  hakaId_in?: Maybe<String[] | String>;
+  hakaId_not_in?: Maybe<String[] | String>;
+  hakaId_lt?: Maybe<String>;
+  hakaId_lte?: Maybe<String>;
+  hakaId_gt?: Maybe<String>;
+  hakaId_gte?: Maybe<String>;
+  hakaId_contains?: Maybe<String>;
+  hakaId_not_contains?: Maybe<String>;
+  hakaId_starts_with?: Maybe<String>;
+  hakaId_not_starts_with?: Maybe<String>;
+  hakaId_ends_with?: Maybe<String>;
+  hakaId_not_ends_with?: Maybe<String>;
   role?: Maybe<Role>;
   role_not?: Maybe<Role>;
   role_in?: Maybe<Role[] | Role>;
@@ -1693,6 +1709,7 @@ export type URLWhereUniqueInput = AtLeastOne<{
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
 }>;
 
 export type WorkspaceWhereUniqueInput = AtLeastOne<{
@@ -1722,6 +1739,7 @@ export interface UserCreateOneInput {
 export interface UserCreateInput {
   id?: Maybe<ID_Input>;
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role: Role;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantCreateManyWithoutUserInput
@@ -2491,6 +2509,7 @@ export interface UserCreateOneWithoutWorkspaceParticipationsInput {
 export interface UserCreateWithoutWorkspaceParticipationsInput {
   id?: Maybe<ID_Input>;
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role: Role;
   projectParticipations?: Maybe<ProjectParticipantCreateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
@@ -2632,6 +2651,7 @@ export interface UserCreateOneWithoutProjectParticipationsInput {
 export interface UserCreateWithoutProjectParticipationsInput {
   id?: Maybe<ID_Input>;
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role: Role;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantCreateManyWithoutUserInput
@@ -2810,6 +2830,7 @@ export interface UserUpdateOneRequiredInput {
 
 export interface UserUpdateDataInput {
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role?: Maybe<Role>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantUpdateManyWithoutUserInput
@@ -4606,6 +4627,7 @@ export interface UserUpdateOneRequiredWithoutWorkspaceParticipationsInput {
 
 export interface UserUpdateWithoutWorkspaceParticipationsDataInput {
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role?: Maybe<Role>;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
@@ -5052,6 +5074,7 @@ export interface UserUpdateOneRequiredWithoutProjectParticipationsInput {
 
 export interface UserUpdateWithoutProjectParticipationsDataInput {
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role?: Maybe<Role>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantUpdateManyWithoutUserInput
@@ -5954,6 +5977,7 @@ export interface URLUpdateManyMutationInput {
 
 export interface UserUpdateInput {
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role?: Maybe<Role>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantUpdateManyWithoutUserInput
@@ -5964,6 +5988,7 @@ export interface UserUpdateInput {
 
 export interface UserUpdateManyMutationInput {
   tmcId?: Maybe<Int>;
+  hakaId?: Maybe<String>;
   role?: Maybe<Role>;
   lastActivity?: Maybe<DateTimeInput>;
 }
@@ -6314,6 +6339,7 @@ export interface CompletionNullablePromise
 export interface User {
   id: ID_Output;
   tmcId?: Int;
+  hakaId?: String;
   role: Role;
   createdAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
@@ -6322,6 +6348,7 @@ export interface User {
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
   tmcId: () => Promise<Int>;
+  hakaId: () => Promise<String>;
   role: () => Promise<Role>;
   workspaceParticipations: <
     T = FragmentableArray<WorkspaceParticipant>
@@ -6352,6 +6379,7 @@ export interface UserSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   tmcId: () => Promise<AsyncIterator<Int>>;
+  hakaId: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
   workspaceParticipations: <
     T = Promise<AsyncIterator<WorkspaceParticipantSubscription>>
@@ -6384,6 +6412,7 @@ export interface UserNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   tmcId: () => Promise<Int>;
+  hakaId: () => Promise<String>;
   role: () => Promise<Role>;
   workspaceParticipations: <
     T = FragmentableArray<WorkspaceParticipant>
@@ -9271,6 +9300,7 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   tmcId?: Int;
+  hakaId?: String;
   role: Role;
   createdAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
@@ -9281,6 +9311,7 @@ export interface UserPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   tmcId: () => Promise<Int>;
+  hakaId: () => Promise<String>;
   role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
@@ -9291,6 +9322,7 @@ export interface UserPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   tmcId: () => Promise<AsyncIterator<Int>>;
+  hakaId: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;

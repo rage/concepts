@@ -20,6 +20,7 @@
     "fast-levenshtein": "^2.0.6",
     "graphql": "^14.3.0",
     "moment": "^2.24.0",
+    "qs": "^6.9.0",
     "react": "^16.8.6",
     "react-apollo-hooks": "^0.4.5",
     "react-app-rewired": "^2.1.3",

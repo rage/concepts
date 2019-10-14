@@ -1,3 +1,5 @@
+# import ConceptSubscriptionPayload from "./prisma-client/prisma.graphql"
+
 type Query {
   # Authentication
   allUsers: [User!]!
@@ -92,6 +94,32 @@ type Mutation {
   mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 }
 
+type Subscription {
+  # Concept subscriptions
+  conceptCreated: Concept!
+  conceptUpdated: Concept!
+  conceptDeleted: Concept!
+
+  # ConceptLinks subscriptions
+  conceptLinkCreated: ConceptLink!
+  conceptLinkDeleted: ConceptLink!
+
+  # Courses subscriptions
+  courseCreated: Course!
+  courseUpdated: Course!
+  courseDeleted: Course!
+
+  # CoursesLinks subscriptions
+  courseLinkCreated: CourseLink!
+  courseLinkUpdated: CourseLink!
+  courseLinkDeleted: CourseLink!
+
+  # Workspaces subscriptions
+  workspaceCreated: Workspace!
+  workspaceUpdated: Workspace!
+  workspaceDeleted: Workspace!
+}
+
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
@@ -152,6 +180,7 @@ scalar DateTime
 type User {
   id: ID!
   tmcId: Int
+  hakaId: String
   role: Role!
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!

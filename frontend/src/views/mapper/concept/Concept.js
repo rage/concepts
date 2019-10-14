@@ -89,12 +89,13 @@ const Concept = ({
   })
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
+  const oppositeType = isActive ? 'concept-circle' : 'concept-circle-active'
 
   const randomString = () => Math.random().toString(36)
   const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
 
   const onClick = noPropagation(async () => {
-    if (addingLink?.type === ownType) {
+    if (addingLink ?.type === ownType) {
       // We could support creating link from prerequisite to prerequisite,
       // but it's not very intuitive, so we don't.
       setAddingLink(null)
@@ -147,7 +148,8 @@ const Concept = ({
       setAddingLink({
         id: concept.id,
         courseId: concept.course.id,
-        type: ownType
+        type: ownType,
+        oppositeType
       })
     }
   })
@@ -181,15 +183,7 @@ const Concept = ({
       concept.tags, concept.official, concept.frozen)
   }
 
-  const hasLinkToAddingLink = addingLink /* FIXME && (isActive
-    ? concept.linksToConcept.find(link => link.from.id === addingLink.id) !== undefined
-    : concept.linksFromConcept.find(link => link.to.id === addingLink.id) !== undefined)*/
-
-  const addingLinkIsOpposite = addingLink && addingLink.type !== ownType
-
-  const linkButtonColor = (addingLink && !hasLinkToAddingLink && addingLinkIsOpposite)
-    || (!addingLink && focusedConceptIds.has(concept.id))
-    ? 'secondary' : undefined
+  const linkButtonColor = !addingLink && focusedConceptIds.has(concept.id) ? 'secondary' : undefined
 
   return (
     <Tooltip
@@ -215,7 +209,7 @@ const Concept = ({
           >
             <ArrowLeftIcon
               viewBox='7 7 10 10' id={`concept-circle-active-${concept.id}`}
-              color={linkButtonColor} />
+              className='concept-circle-active' color={linkButtonColor} />
           </IconButton>
         </ListItemIcon>}
         <ListItemText className={classes.conceptName}>
@@ -244,7 +238,7 @@ const Concept = ({
           >
             <ArrowRightIcon
               viewBox='7 7 10 10' id={`concept-circle-${concept.id}`}
-              color={linkButtonColor}
+              className='concept-circle' color={linkButtonColor}
             />
           </IconButton>}
         </ListItemSecondaryAction>
