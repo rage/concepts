@@ -4,6 +4,7 @@ type Query {
   # Authentication
   allUsers: [User!]!
   userById(id: ID!): User!
+  googleClientId: GoogleClientID
 
   # Project queries
   allProjects: [Project!]!
@@ -33,6 +34,7 @@ type Query {
 type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload
+  loginGoogle(idToken: String!): AuthPayload
   createGuest: AuthPayload
 
   # Course mutations
@@ -149,6 +151,11 @@ type DeletedConcept {
 type AuthPayload {
   token: String!
   user: User!
+}
+
+type GoogleClientID {
+  enabled: Boolean!
+  clientId: String
 }
 
 input TagInput {
