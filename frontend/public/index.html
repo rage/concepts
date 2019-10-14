@@ -13,5 +13,16 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <div id="link-container"></div>
+    <script>
+      // The main code might not have loaded, so we have this wrapper instead
+      function _concepts_google_init_wrapper() {
+        if (!window._concepts_google_init) {
+          window.google_inited = true
+        } else {
+          window._concepts_google_init()
+        }
+      }
+    </script>
+    <script src="https://apis.google.com/js/platform.js?onload=_concepts_google_init_wrapper" async defer></script>
   </body>
 </html>

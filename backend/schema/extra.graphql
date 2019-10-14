@@ -33,6 +33,7 @@ type Query {
 type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload
+  loginGoogle(idToken: String!): AuthPayload
   createGuest: AuthPayload
 
   # Course mutations

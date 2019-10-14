@@ -104,6 +104,9 @@ const AuthenticationMutations = {
     return await signOrCreateUser({ tmcId }, {
       role: (userDetails?.administrator ? Role.ADMIN : Role.STUDENT).toString()
     }, context.prisma)
+  },
+  async loginGoogle(root, args, context) {
+
   }
 }
 
