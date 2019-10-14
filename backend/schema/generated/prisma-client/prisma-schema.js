@@ -4138,6 +4138,7 @@ type User {
   id: ID!
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
   workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
@@ -4155,6 +4156,7 @@ input UserCreateInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
@@ -4180,6 +4182,7 @@ input UserCreateWithoutProjectParticipationsInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
@@ -4189,6 +4192,7 @@ input UserCreateWithoutWorkspaceParticipationsInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
@@ -4206,6 +4210,8 @@ enum UserOrderByInput {
   tmcId_DESC
   hakaId_ASC
   hakaId_DESC
+  googleId_ASC
+  googleId_DESC
   role_ASC
   role_DESC
   createdAt_ASC
@@ -4218,6 +4224,7 @@ type UserPreviousValues {
   id: ID!
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
   createdAt: DateTime!
   lastActivity: DateTime
@@ -4244,6 +4251,7 @@ input UserSubscriptionWhereInput {
 input UserUpdateDataInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
@@ -4253,6 +4261,7 @@ input UserUpdateDataInput {
 input UserUpdateInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
@@ -4262,6 +4271,7 @@ input UserUpdateInput {
 input UserUpdateManyMutationInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
   lastActivity: DateTime
 }
@@ -4290,6 +4300,7 @@ input UserUpdateOneRequiredWithoutWorkspaceParticipationsInput {
 input UserUpdateWithoutProjectParticipationsDataInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
@@ -4298,6 +4309,7 @@ input UserUpdateWithoutProjectParticipationsDataInput {
 input UserUpdateWithoutWorkspaceParticipationsDataInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
@@ -4355,6 +4367,20 @@ input UserWhereInput {
   hakaId_not_starts_with: String
   hakaId_ends_with: String
   hakaId_not_ends_with: String
+  googleId: String
+  googleId_not: String
+  googleId_in: [String!]
+  googleId_not_in: [String!]
+  googleId_lt: String
+  googleId_lte: String
+  googleId_gt: String
+  googleId_gte: String
+  googleId_contains: String
+  googleId_not_contains: String
+  googleId_starts_with: String
+  googleId_not_starts_with: String
+  googleId_ends_with: String
+  googleId_not_ends_with: String
   role: Role
   role_not: Role
   role_in: [Role!]
@@ -4390,6 +4416,7 @@ input UserWhereUniqueInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
 }
 
 type Workspace {

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import { AuthenticationError } from 'apollo-server-core'
 
 import { Role, Privilege } from '../../util/accessControl'
+import { verify as verifyGoogle } from '../../util/googleAuth'
 import mockWorkspace from '../../static/mockWorkspace'
 import tmc from '../../util/tmcAuthentication'
 import makeSecret from '../../util/secret'
@@ -104,6 +105,15 @@ const AuthenticationMutations = {
     return await signOrCreateUser({ tmcId }, {
       role: (userDetails?.administrator ? Role.ADMIN : Role.STUDENT).toString()
     }, context.prisma)
+  },
+  async loginGoogle(root, args, context) {
+    let data
+    try {
+      data = await verifyGoogle(args.idToken)
+    } catch {
+      return new AuthenticationError('Invalid Google token')
+    }
+    return await signOrCreateUser({ googleId: data.sub }, {}, context.prisma)
   }
 }
 

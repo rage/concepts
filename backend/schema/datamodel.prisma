@@ -4,6 +4,7 @@ type User {
   id: ID! @id
   tmcId: Int @unique
   hakaId: String @unique
+  googleId: String @unique
   role: Role!
   workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser")
   projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser")

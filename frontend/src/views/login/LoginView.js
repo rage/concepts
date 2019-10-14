@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* global gapi */
+import React, { useLayoutEffect, useState, useRef, useEffect } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -8,7 +9,8 @@ import qs from 'qs'
 
 import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
 import { signIn, isSignedIn } from '../../lib/authentication'
-import { useLoginStateValue } from '../../store'
+import { signedIn as googleSignedIn, init as googleInit } from '../../lib/googleAuth'
+import { useLoginStateValue, useMessageStateValue } from '../../store'
 import useRouter from '../../useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
 
@@ -21,7 +23,10 @@ const useStyles = makeStyles(theme => ({
   },
   wrapper: {
     position: 'relative',
-    margin: theme.spacing(1, 0)
+    margin: theme.spacing(1, 0),
+    '& > .abcRioButton': {
+      width: '100% !important'
+    }
   },
   form: {
     marginTop: theme.spacing(1)
@@ -57,6 +62,7 @@ const LoginView = () => {
   const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const [, dispatch] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -65,12 +71,41 @@ const LoginView = () => {
   const [loading, setLoading] = useState(false)
   const [loadingGuest, setLoadingGuest] = useState(false)
 
+  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
+  const googleLoginButton = useRef(null)
+
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
+
+  useEffect(() => {
+    googleInit().then(result => setGoogleLoginEnabled(result))
+  }, [])
+
+  useLayoutEffect(() => {
+    if (googleLoginButton.current) {
+      gapi.signin2.render(googleLoginButton.current.id, {
+        width: '100%',
+        onsuccess: async response => {
+          const data = await googleSignedIn(response)
+          dispatch({
+            type: 'login',
+            data: data.user
+          })
+          history.push(nextPath)
+        },
+        onerror: () => messageDispatch({
+          type: 'setError',
+          data: 'Login failed'
+        })
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleLoginEnabled])
 
   if (location.hash?.length > 1) {
     const query = qs.parse(location.hash.substr(1))
     if (query.token) {
+      query.type = 'HAKA'
       window.localStorage.currentUser = JSON.stringify(query)
       dispatch({
         type: 'login',
@@ -186,6 +221,10 @@ const LoginView = () => {
             <HakaIcon />
           </a>
         </div>
+      </>}
+      {googleLoginEnabled && <>
+        <Divider />
+        <div className={classes.wrapper} ref={googleLoginButton} id='google-login-button' />
       </>}
       {showGuestButton && <>
         <Divider />

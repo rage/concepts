@@ -2,6 +2,7 @@ import TmcClient from 'tmc-client-js'
 
 import client from '../apollo/apolloClient'
 import { AUTHENTICATE } from '../graphql/Mutation'
+import { signOut as googleSignOut } from './googleAuth'
 
 const clientId = 'd985b05c840a5474ccbbd78a2039397c4764aad96f2ec3e4a551be408a987d5a'
 const tmcSecret = '8d30681d6f72f2dd45ee74fd3556f2e97bd28dea6f2d4ac2358b69738de1229b'
@@ -16,14 +17,22 @@ export const signIn = async ({ email, password }) => {
   if (data.user) {
     data.user.username = res.username
   }
+  data.type = 'TMC'
   window.localStorage.currentUser = JSON.stringify(data)
   return data
 }
 
 export const signOut = async () => {
   await client.clearStore()
-  tmcClient.unauthenticate()
+  const { type } = JSON.parse(window.localStorage.currentUser || '{}')
   window.localStorage.clear()
+  if (type === 'TMC') {
+    tmcClient.unauthenticate()
+  } else if (type === 'GOOGLE') {
+    await googleSignOut()
+  } else if (type === 'HAKA') {
+    // TODO Single-Sign-Out
+  }
 }
 
 export async function apiAuthentication(accessToken) {
