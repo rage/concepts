@@ -99,6 +99,7 @@ const LoginView = () => {
         })
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [googleLoginEnabled])
 
   if (location.hash?.length > 1) {
