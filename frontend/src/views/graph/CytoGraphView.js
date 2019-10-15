@@ -437,7 +437,7 @@ const GraphView = ({ workspaceId }) => {
     return <NotFoundView message='Workspace not found' />
   }
 
-  return <div className={classes.root}>
+  return <main className={classes.root}>
     <div className={classes.graph} ref={graphRef}>
       {!state.current.network && <LoadingBar id='graph-view' componentRef={loadingRef} />}
     </div>
@@ -497,7 +497,7 @@ const GraphView = ({ workspaceId }) => {
         </div>
       }
     </div>
-  </div>
+  </main>
 }
 
 export default GraphView

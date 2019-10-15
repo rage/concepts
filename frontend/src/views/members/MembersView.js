@@ -103,7 +103,7 @@ const MembersView = ({ projectId, workspaceId }) => {
     `${user.name || user.email || user.username || user.id} (${user.role.toLowerCase()})`
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       <EditableTable
         title='Members'
         columns={columns}
@@ -120,7 +120,7 @@ const MembersView = ({ projectId, workspaceId }) => {
           variables: { id, privilege, type: type.toUpperCase() }
         })).data.updateParticipant}
       />
-    </div>
+    </main>
   )
 }
 

@@ -119,7 +119,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   }
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       <Typography className={classes.header} variant='h4'>
         Workspace: {workspace.name}
       </Typography>
@@ -150,7 +150,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
           /> : <Paper elevation={0} />
         }
       </div>
-    </div>
+    </main>
   )
 }
 

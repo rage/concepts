@@ -40,14 +40,6 @@ const AuthenticationIcon = () => {
   }
 
   return loggedIn ? <>
-    <IconButton
-      aria-label='Account of current user'
-      aria-haspopup='true'
-      onClick={handleMenu}
-      color='inherit'
-    >
-      <AccountCircle />
-    </IconButton>
     <Menu
       anchorEl={anchorElement}
       anchorOrigin={{

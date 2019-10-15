@@ -135,7 +135,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   ) === Privilege.OWNER
 
   return (
-    <Paper className={classes.root} square>
+    <Paper component='footer' className={classes.root} square>
       <div className={classes.leftPlaceholder} />
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
         <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />

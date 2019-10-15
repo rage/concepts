@@ -49,7 +49,7 @@ const HomeView = () => {
   }
 
   return (
-    <div className={classes.heroContent}>
+    <main className={classes.heroContent}>
       <Container maxWidth='sm'>
         <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
           Concepts
@@ -74,7 +74,7 @@ const HomeView = () => {
           </Grid>
         </div>
       </Container>
-    </div>
+    </main>
   )
 }
 
