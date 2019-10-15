@@ -31,8 +31,8 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
       tags: tags.map(tag => ({
         ...tag,
         __typename: 'Tag',
-        id: tag.id | generateTempId(),
-        priority: tag.priority | 0
+        id: tag.id || generateTempId(),
+        priority: tag.priority || 0
       }))
     }
   })

@@ -95,7 +95,7 @@ const Concept = ({
   const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
 
   const onClick = noPropagation(async () => {
-    if (addingLink ?.type === ownType) {
+    if (addingLink?.type === ownType) {
       // We could support creating link from prerequisite to prerequisite,
       // but it's not very intuitive, so we don't.
       setAddingLink(null)
