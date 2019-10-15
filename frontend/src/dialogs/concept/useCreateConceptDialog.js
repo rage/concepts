@@ -32,7 +32,8 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
         id: courseId
       },
       tags: tags.map(tag => ({
-        ...tag, __typename: 'Tag',
+        ...tag,
+        __typename: 'Tag',
         id: tag.id | generateTempId(),
         priority: tag.priority | 0
       })),

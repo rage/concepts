@@ -179,8 +179,7 @@ const Concept = ({
 
   const handleEditConcept = () => {
     handleMenuClose()
-    openEditConceptDialog(concept.id, concept.name, concept.description,
-      concept.tags, concept.official, concept.frozen)
+    openEditConceptDialog(concept)
   }
 
   const linkButtonColor = !addingLink && focusedConceptIds.has(concept.id) ? 'secondary' : undefined
