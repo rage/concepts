@@ -103,8 +103,7 @@ const ActiveCourse = ({
         </Select>
         <div className={classes.titleEditWrapper}>
           <IconButton
-            onClick={() => openEditCourseDialog(course.id, course.name, course.official,
-              course.frozen, course.tags)}
+            onClick={() => openEditCourseDialog(course)}
             disabled={(course.frozen && user.role < Role.STAFF)}
           >
             <EditIcon />

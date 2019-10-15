@@ -5,6 +5,7 @@ import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
+import generateTempId from '../../lib/generateTempId'
 
 const useCreateCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -17,9 +18,6 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
     update: cache.createCourseUpdate(workspaceId)
   })
 
-  const randomString = () => Math.random().toString(36)
-  const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
-
   const createOptimisticResponse = ({ name, official, frozen, tags }) => ({
     __typename: 'Mutation',
     createCourse: {
@@ -30,8 +28,7 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       frozen,
       tags: tags.map(tag => ({ ...tag, __typename: 'Tag' })),
       linksToCourse: [],
-      concepts: [],
-      linksToConcept: []
+      concepts: []
     }
   })
 

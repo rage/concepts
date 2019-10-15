@@ -91,6 +91,13 @@ const PrerequisiteCourse = ({
         deleteCourseMutation({
           variables: {
             id: course.id
+          },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            deleteCourse: {
+              __typename: 'Course',
+              id: course.id
+            }
           }
         }).then(() => {
           if (activeCourseId === workspace.course.id) {
@@ -142,8 +149,7 @@ const PrerequisiteCourse = ({
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name, course.official,
-                course.frozen, course.tags)
+              openEditCourseDialog(course)
             }}>Edit</MenuItem>
             {!course.frozen && <MenuItem onClick={deleteCourse}>Delete</MenuItem>}
           </Menu>

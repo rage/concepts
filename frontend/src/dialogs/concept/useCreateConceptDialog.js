@@ -5,6 +5,7 @@ import { useDialog } from '../DialogProvider'
 import cache from '../../apollo/update'
 import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
+import generateTempId from '../../lib/generateTempId'
 
 const useCreateConceptDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -16,9 +17,6 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
-
-  const randomString = () => Math.random().toString(36)
-  const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
 
   const createOptimisticResponse = ({ courseId, name, official, frozen, description, tags }) => ({
     __typename: 'Mutation',
@@ -39,14 +37,13 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
         priority: tag.priority | 0
       })),
       linksFromConcept: [],
-      concepts: [],
       linksToConcept: []
     }
   })
 
   return courseId => openDialog({
     mutation: createConcept,
-    createOptimisticResponse: (args) => createOptimisticResponse({ ...args, courseId }),
+    createOptimisticResponse,
     type: 'Concept',
     requiredVariables: {
       workspaceId,
