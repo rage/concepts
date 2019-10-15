@@ -16,6 +16,7 @@ import cache from '../../../apollo/update'
 import { useMessageStateValue, useLoginStateValue } from '../../../store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 import { noPropagation } from '../../../lib/eventMiddleware'
+import generateTempId from '../../../lib/generateTempId'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -90,9 +91,6 @@ const Concept = ({
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
   const oppositeType = isActive ? 'concept-circle' : 'concept-circle-active'
-
-  const randomString = () => Math.random().toString(36)
-  const generateTempId = () => randomString().substring(2, 15) + randomString().substring(2, 15)
 
   const onClick = noPropagation(async () => {
     if (addingLink?.type === ownType) {
