@@ -57,31 +57,6 @@ mutation updateCourse($id: ID!, $name: String!, $official: Boolean,
       type
       priority
     }
-    concepts {
-      id
-      name
-      description
-      official
-      frozen
-      tags {
-        id
-        name
-        type
-        priority
-      }
-      course {
-        id
-      }
-      linksToConcept {
-        from {
-          id
-          name
-          course {
-            id
-          }
-        }
-      }
-    }
   }
 }
 `

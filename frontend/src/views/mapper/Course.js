@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: '0px'
   },
   title: {
-    overflowWrap: 'break-word',
+    overflowWrap: 'anywhere',
     hyphens: 'auto',
     '&:hover': {
       textDecoration: 'underline',
@@ -114,8 +114,7 @@ const Course = ({
             </IconButton>
           }
           <IconButton disabled={course.frozen && user.role < Role.STAFF}
-            onClick={() => openEditCourseDialog(course.id, course.name,
-              course.official, course.frozen)}>
+            onClick={() => openEditCourseDialog(course)}>
             <EditIcon />
           </IconButton>
           </>
