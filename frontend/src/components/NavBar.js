@@ -315,14 +315,14 @@ const NavBar = ({ location }) => {
             ref={savingIndicator}
             className={`${classes.savingIndicator} ${loggedIn ? classes.loggedIn : ''}`} />
 
-          <IconButton
+          {loggedIn && <IconButton
             aria-label='Account of current user'
             aria-haspopup='true'
-            onClick={() => history.push(loggedIn ? '/user' : '/login')}
+            onClick={() => history.push('/user')}
             color='inherit'
           >
-            {loggedIn ? <AccountCircle /> : 'Log in'}
-          </IconButton>
+            <AccountCircle />
+          </IconButton>}
         </Toolbar>
       </AppBar>
       {loading && <LinearProgress color='secondary' />}
