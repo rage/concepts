@@ -6,6 +6,7 @@ import { verify as verifyGoogle } from '../../util/googleAuth'
 import mockWorkspace from '../../static/mockWorkspace'
 import tmc from '../../util/tmcAuthentication'
 import makeSecret from '../../util/secret'
+import { parseToken } from '../../middleware/authentication'
 import { bloom } from './Workspace'
 
 const makeMockWorkspaceForUser = async (prisma, userId) => {
@@ -78,6 +79,36 @@ export const signOrCreateUser = async (where, createDetails, prisma) => {
   return { user, token: signUser(user) }
 }
 
+const getData = async (prisma, type, titleType, id) => new Map(
+  (await prisma
+    .user({ id })[`${type}Participations`]()
+    .$fragment(`
+        fragment ${titleType}Id on ${titleType}Participant {
+          ${type} {
+            id
+          }
+          id
+        }
+      `)
+  ).map(pcp => [pcp[type].id, pcp.id])
+)
+
+const mergeData = async (prisma, oldUserId, curUserId, type) => {
+  const titleType = type.substr(0, 1).toUpperCase() + type.substr(1).toUpperCase()
+  const oldData = await getData(prisma, type, titleType, oldUserId)
+  const existingData = await getData(prisma, type, titleType, curUserId)
+  for (const existing of existingData.keys()) {
+    oldData.delete(existing)
+  }
+  await prisma[`update${titleType}Participant`]({
+    // eslint-disable-next-line camelcase
+    where: { id_in: oldData.values() },
+    data: {
+      user: { connect: { id: curUserId } }
+    }
+  })
+}
+
 const AuthenticationMutations = {
   async createGuest(root, args, context) {
     const guest = await context.prisma.createUser({
@@ -114,6 +145,30 @@ const AuthenticationMutations = {
       return new AuthenticationError('Invalid Google token')
     }
     return await signOrCreateUser({ googleId: data.sub }, {}, context.prisma)
+  },
+  async mergeUser(root, args, context) {
+    if (!context.user) {
+      return new AuthenticationError('Must be logged in')
+    }
+    const oldUserId = parseToken(args.accessToken)
+    const curUserId = context.user.id
+
+    const oldRole = Role.fromString(await context.prisma.user({ id: oldUserId }).role())
+    const curRole = Role.fromString(await context.prisma.user({ id: curUserId }).role())
+    console.log(`max(${oldRole}, ${curRole}) = ${oldRole > curRole ? oldRole : curRole}`)
+    await context.prisma.updateUser({
+      where: { id: curUserId },
+      data: {
+        role: oldRole > curRole ? oldRole : curRole
+      }
+    })
+
+    await mergeData(context.prisma, oldUserId, curUserId, 'workspace')
+    await mergeData(context.prisma, oldUserId, curUserId, 'project')
+
+    await context.prisma.deleteUser({
+      id: oldUserId
+    })
   }
 }
 
