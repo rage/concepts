@@ -12,6 +12,7 @@ const blankState = () => ({
   open: false,
   submitDisabled: false,
   mutation: null,
+  createOptimisticResponse: null,
   requiredVariables: [],
   actionText: '',
   fields: [],
@@ -48,7 +49,7 @@ const Dialog = ({ contextRef }) => {
     }, 250)
   }
 
-  const handleSubmit = (close) => {
+  const handleSubmit = async (close) => {
     if (state.submitDisabled) return
     const variables = {}
     for (const key of state.fields) {
@@ -72,17 +73,26 @@ const Dialog = ({ contextRef }) => {
       else variables[key.name] = data
     }
     setSubmitDisabled(true)
-    state.mutation({ variables: { ...state.requiredVariables, ...variables } })
-      .catch(() => {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
+
+    const closeFnc = close ? closeDialog : () => setSubmitDisabled(false)
+    const mutationArgs = {
+      variables: { ...state.requiredVariables, ...variables },
+      optimisticResponse: state.createOptimisticResponse ? state.createOptimisticResponse({
+        ...state.requiredVariables, ...variables
+      }) : undefined
+    }
+    if (state.createOptimisticResponse) closeFnc()
+    try {
+      await state.mutation(mutationArgs)
+    } catch (e) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
       })
-      .finally(close
-        ? closeDialog
-        : () => setSubmitDisabled(false))
+    }
+    if (!state.createOptimisticResponse) closeFnc()
   }
+
   const setCheckboxValue = key =>
     key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
@@ -92,7 +102,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
-    customActionsProps, type
+    customActionsProps, type, createOptimisticResponse
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
@@ -103,6 +113,7 @@ const Dialog = ({ contextRef }) => {
       open: true,
       submitDisabled: false,
       mutation,
+      createOptimisticResponse,
       requiredVariables,
       actionText,
       fields: fields

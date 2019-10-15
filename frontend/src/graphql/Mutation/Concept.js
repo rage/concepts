@@ -19,22 +19,6 @@ mutation updateConcept($id: ID!, $name:String, $description: String, $official: 
     course {
       id
     }
-    linksFromConcept {
-      id
-      official
-      frozen
-      to {
-        id
-      }
-    }
-    linksToConcept {
-      id
-      official
-      frozen
-      from {
-        id
-      }
-    }
   }
 }
 `

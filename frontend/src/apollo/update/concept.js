@@ -98,7 +98,8 @@ const updateConceptUpdate = workspaceId => (store, response) => {
       fragment: COURSE_PREREQ_FRAGMENT,
       data: {
         ...course,
-        concepts: course.concepts.map(c => c.id === updatedConcept.id ? updatedConcept : c)
+        concepts: course.concepts.map(c =>
+          c.id === updatedConcept.id ? { ...c, updatedConcept } : c)
       }
     })
   } catch (e) {

@@ -17,13 +17,23 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     update: cache.updateCourseUpdate(workspaceId)
   })
 
-  return (courseId, name, official, frozen, tags) => openDialog({
+  const createOptimisticResponse = ({ name, official, frozen, tags, id }) => ({
+    __typename: 'Mutation',
+    updateCourse: {
+      __typename: 'Course',
+      id,
+      name,
+      official,
+      frozen,
+      tags: tags.map(tag => ({ ...tag, __typename: 'Tag' }))
+    }
+  })
+
+  return ({ id, name, official, frozen, tags }) => openDialog({
     mutation: updateCourse,
+    createOptimisticResponse,
     type: 'Course',
-    requiredVariables: {
-      id: courseId,
-      official: false
-    },
+    requiredVariables: { id, official: false },
     actionText: 'Save',
     title: 'Edit course',
     content: [
