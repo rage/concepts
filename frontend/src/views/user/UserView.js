@@ -69,28 +69,20 @@ const ConnectButton = ({ disabled, loading, onClick, connected }) => {
   )
 }
 
-const JSONValue = ({ value }) => {
-  if (value === null) {
-    return 'null'
-  } else if (typeof value === 'object') {
-    return <JSONObject data={value} />
-  }
-  return JSON.stringify(value) || null
-}
-
-const JSONObject = ({ data, className }) => {
-  if (!data) {
-    return null
-  }
-  return <table className={className}>
+const JSONObject = ({ data, className }) => (
+  <table className={className}>
     <tbody>
-      {Object.entries(data).map(([key, value]) => <tr>
+      {Object.entries(data).map(([key, value]) => <tr key={key}>
         <th>"{key}":</th>
-        <td><JSONValue value={value} /></td>
+        <td>
+          {value !== null && typeof value === 'object'
+            ? <JSONObject data={value} />
+            : JSON.stringify(value)}
+        </td>
       </tr>)}
     </tbody>
   </table>
-}
+)
 
 const UserView = () => {
   const classes = useStyles()
