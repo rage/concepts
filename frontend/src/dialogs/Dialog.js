@@ -20,7 +20,8 @@ const blankState = () => ({
   content: [],
   CustomActions: null,
   customActionsProps: null,
-  type: ''
+  type: '',
+  promise: null
 })
 
 const OptionalForm = ({ enable, onSubmit, children }) => {
@@ -42,6 +43,9 @@ const Dialog = ({ contextRef }) => {
 
   const closeDialog = () => {
     clearTimeout(stateChange.current)
+    if (state.promise && !state.promise.fulfilled) {
+      state.promise.resolve(null)
+    }
     setState({ ...state, open: false })
     stateChange.current = setTimeout(() => {
       setState(blankState())
@@ -49,7 +53,27 @@ const Dialog = ({ contextRef }) => {
     }, 250)
   }
 
-  const handleSubmit = async (close) => {
+  const mutate = async (variables, closeFunc) => {
+    const mutationArgs = {
+      variables: { ...state.requiredVariables, ...variables },
+      optimisticResponse: state?.createOptimisticResponse({
+        ...state.requiredVariables, ...variables
+      }) || undefined
+    }
+    const hasOptimisticResponse = Boolean(state.createOptimisticResponse)
+    if (hasOptimisticResponse) closeFunc()
+    try {
+      await state.mutation(mutationArgs)
+    } catch (e) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+    }
+    if (!hasOptimisticResponse) closeFunc()
+  }
+
+  const handleSubmit = async close => {
     if (state.submitDisabled) return
     const variables = {}
     for (const key of state.fields) {
@@ -73,24 +97,13 @@ const Dialog = ({ contextRef }) => {
       else variables[key.name] = data
     }
     setSubmitDisabled(true)
-
-    const closeFnc = close ? closeDialog : () => setSubmitDisabled(false)
-    const mutationArgs = {
-      variables: { ...state.requiredVariables, ...variables },
-      optimisticResponse: state.createOptimisticResponse ? state.createOptimisticResponse({
-        ...state.requiredVariables, ...variables
-      }) : undefined
+    const closeFunc = close ? closeDialog : () => setSubmitDisabled(false)
+    if (state.mutation) {
+      await mutate(variables, closeFunc)
+    } else {
+      closeFunc()
     }
-    if (state.createOptimisticResponse) closeFnc()
-    try {
-      await state.mutation(mutationArgs)
-    } catch (e) {
-      messageDispatch({
-        type: 'setError',
-        data: 'Access denied'
-      })
-    }
-    if (!state.createOptimisticResponse) closeFnc()
+    state.promise.resolve(variables)
   }
 
   const setCheckboxValue = key =>
@@ -109,6 +122,15 @@ const Dialog = ({ contextRef }) => {
       setInputState(Object.fromEntries(fields.map(key =>
         [key.name, key.type === 'checkbox' ? setCheckboxValue(key) : key.defaultValue || ''])))
     }
+    let _resolve, _reject
+    const promise = new Promise((resolve, reject) => {
+      _resolve = resolve
+      _reject = reject
+    })
+    promise.fulfilled = false
+    promise.resolve = _resolve
+    promise.reject = _reject
+    promise.finally(() => promise.fulfilled = true)
     setState({
       open: true,
       submitDisabled: false,
@@ -124,8 +146,10 @@ const Dialog = ({ contextRef }) => {
       content: content || [],
       CustomActions,
       customActionsProps,
-      type
+      type,
+      promise
     })
+    return promise
   }
 
   contextRef.current.updateDialog = ({ ...data }) => {
@@ -162,7 +186,7 @@ const Dialog = ({ contextRef }) => {
                   margin='dense'
                   name={field.name}
                   label={field.name[0].toUpperCase() + field.name.substr(1)}
-                  type='text'
+                  type={field.textfieldType || 'text'}
                   rows={2}
                   rowsMax={10}
                   value={inputState[field.name]}

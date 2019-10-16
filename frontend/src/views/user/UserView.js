@@ -10,6 +10,7 @@ import useRouter from '../../useRouter'
 import { signIn as googleSignIn } from '../../lib/googleAuth'
 import { DISCONNECT_AUTH, MERGE_USER } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
+import { useLoginDialog } from '../../dialogs/authentication'
 
 const useStyles = makeStyles({
   wrapper: {
@@ -54,6 +55,17 @@ const useStyles = makeStyles({
   },
   extraInternalinfo: {
     marginTop: '8px'
+  },
+  buttonWrapper: {
+    position: 'relative'
+  },
+  buttonProgress: {
+    color: 'white',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
   }
 })
 
@@ -107,16 +119,17 @@ const UserView = () => {
   const [data, dispatch] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
+  const openLoginDialog = useLoginDialog()
+
   const [loading, setLoading] = useState(null)
 
+  const disconnectAuth = useMutation(DISCONNECT_AUTH)
   const mergeUser = useMutation(MERGE_USER, {
     refetchQueries: data.user.role >= Role.STAFF ? [
       { type: WORKSPACES_FOR_USER },
       { type: PROJECTS_FOR_USER }
     ] : [{ type: WORKSPACES_FOR_USER }]
   })
-
-  const disconnectAuth = useMutation(DISCONNECT_AUTH)
 
   const tmcData = JSON.parse(window.localStorage['tmc.user'] || 'null')
   const googleData = JSON.parse(window.localStorage['google.user'] || 'null')
@@ -183,7 +196,14 @@ const UserView = () => {
     if (data.user.tmcId) {
       await disconnect('mooc.fi', 'TMC')
     } else {
-      const data = await tmcSignIn()
+      const credentials = await openLoginDialog()
+      if (!credentials) {
+        console.log('Login cancelled')
+        setLoading(null)
+        // Login cancelled
+        return
+      }
+      const data = await tmcSignIn(credentials)
       await connectToken(data.token, 'mooc.fi', data.displayname)
     }
     setLoading(null)
