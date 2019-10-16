@@ -45,7 +45,7 @@ export const loginAPIAssert = async (req, res) => {
     if (!data) {
       return res.redirect(loginFail)
     }
-    data.user.username = dn
+    data.displayname = dn
     return res.redirect(responseUrl(data))
   } catch (err) {
     console.log('login assert error:', err)

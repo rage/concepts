@@ -9,7 +9,7 @@ import useRouter from '../useRouter'
 
 const AuthenticationIcon = () => {
   const { history } = useRouter()
-  const [{ loggedIn, user }, dispatch] = useLoginStateValue()
+  const [{ loggedIn, user, displayname }, dispatch] = useLoginStateValue()
   const [anchorElement, setAnchorElement] = useState(null)
   const anchorElementOpen = Boolean(anchorElement)
 
@@ -56,7 +56,7 @@ const AuthenticationIcon = () => {
     >
       <MenuItem>
         Logged in as {user.role === Role.GUEST
-          ? 'a guest' : user.username} ({user.role.toLowerCase()})
+          ? 'a guest' : displayname} ({user.role.toLowerCase()})
       </MenuItem>
       {loggedIn && user.role >= Role.STUDENT &&
         <MenuItem onClick={navigateToPorting}>Import data</MenuItem>

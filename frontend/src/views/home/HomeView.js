@@ -31,10 +31,12 @@ const HomeView = () => {
   const createGuestAccount = async () => {
     const result = await createGuestMutation()
     const userData = result.data.createGuest
+    userData.type = 'GUEST'
     window.localStorage.currentUser = JSON.stringify(userData)
     await dispatch({
       type: 'login',
-      data: userData.user
+      data: userData.user,
+      authType: userData.type
     })
   }
 

@@ -1,39 +1,43 @@
 import { gql } from 'apollo-boost'
 
+const AUTH_FRAGMENT = gql`
+fragment AuthInfo on AuthPayload {
+  token
+  user {
+    id
+    tmcId
+    googleId
+    hakaId
+    role
+  }
+}
+`
+
 const CREATE_GUEST_ACCOUNT = gql`
 mutation createGuest {
   createGuest {
-    token
-    user {
-      id
-      role
-    }
+    ...AuthInfo
   }
 }
+${AUTH_FRAGMENT}
 `
 
 const AUTHENTICATE = gql`
 mutation authenticateUser($tmcToken: String!) {
   login(tmcToken: $tmcToken) {
-    token
-    user {
-      id
-      role
-    }
+    ...AuthInfo
   }
 }
+${AUTH_FRAGMENT}
 `
 
 const AUTHENTICATE_GOOGLE = gql`
 mutation authenticateGoogleUser($idToken: String!) {
   loginGoogle(idToken: $idToken) {
-    token
-    user {
-      id
-      role
-    }
+    ...AuthInfo
   }
 }
+${AUTH_FRAGMENT}
 `
 
 const MERGE_USER = gql`

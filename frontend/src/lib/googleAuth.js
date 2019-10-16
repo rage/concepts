@@ -35,34 +35,41 @@ async function actuallyInit() {
     return false
   }
   await asyncify(gapi.load, 'auth2')
-  await gapi.auth2.init({
-    // eslint-disable-next-line camelcase
-    client_id: clientId
-  })
-  return true
+  return clientId
 }
 
-export async function signedIn(user) {
-  const resp = await client.mutate({
-    mutation: AUTHENTICATE_GOOGLE,
-    variables: { idToken: user.getAuthResponse().id_token }
+export async function signIn() {
+  const clientId = await init()
+  const googleResp = await asyncify(gapi.auth2.authorize, {
+    // eslint-disable-next-line camelcase
+    client_id: clientId,
+    // eslint-disable-next-line camelcase
+    response_type: 'id_token permission',
+    scope: 'email profile openid'
   })
-  const data = resp.data.loginGoogle
-  if (data.user) {
-    data.user.username = user.getBasicProfile().getName()
+  if (googleResp.error) {
+    throw new Error(googleResp.error)
+  }
+  const backendResp = await client.mutate({
+    mutation: AUTHENTICATE_GOOGLE,
+    variables: { idToken: googleResp.id_token }
+  })
+
+  const data = backendResp.data.loginGoogle
+  try {
+    const userDataResp = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
+      headers: {
+        Authorization: `${googleResp.token_type} ${googleResp.access_token}`
+      }
+    })
+    const userData = await userDataResp.json()
+    data.displayname = userData.name || userData.email
+  } catch (err) {
+    console.error('Failed to fetch Google profile info:', err)
   }
   data.type = 'GOOGLE'
   window.localStorage.currentUser = JSON.stringify(data)
   return data
-}
-
-export async function signOut() {
-  if (!window._googleAuthEnabled) {
-    return false
-  }
-  const auth2 = gapi.auth2.getAuthInstance()
-  await auth2.signOut()
-  return true
 }
 
 if (window.google_inited) {

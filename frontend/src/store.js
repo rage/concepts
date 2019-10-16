@@ -5,23 +5,30 @@ import { Role } from './lib/permissions'
 export const LoginStateContext = createContext(false)
 export const MessageStateContext = createContext('')
 
-const fixRole = user => ({ ...user, role: Role.fromString(user.role) })
-
 const loginReducers = {
-  login: (state, { data }) => ({ ...state, loggedIn: true, user: fixRole(data) }),
-  logout: state => ({ ...state, loggedIn: false, user: {} })
+  login: (state, { data: user, authType: type, displayname }) => ({
+    ...state,
+    loggedIn: true,
+    type,
+    displayname,
+    user: { ...user, role: Role.fromString(user.role) }
+  }),
+  logout: state => ({ ...state, loggedIn: false, displayname: null, type: null, user: {} })
 }
 
 const loginReducer = (state, action) => loginReducers[action.type](state, action)
 
-let user
+let userData
 try {
-  user = fixRole(JSON.parse(window.localStorage.currentUser).user)
-} catch (error) {}
-const loggedIn = Boolean(user)
+  userData = JSON.parse(window.localStorage.currentUser)
+  userData.user.role = Role.fromString(userData.user.role)
+} catch (error) {
+  userData = {}
+}
+userData.loggedIn = Boolean(userData.user)
 
 export const LoginStateProvider = ({ children }) => (
-  <LoginStateContext.Provider value={useReducer(loginReducer, { user, loggedIn })}>
+  <LoginStateContext.Provider value={useReducer(loginReducer, userData)}>
     {children}
   </LoginStateContext.Provider>
 )
