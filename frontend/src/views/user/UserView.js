@@ -126,9 +126,9 @@ const UserView = () => {
   const disconnectAuth = useMutation(DISCONNECT_AUTH)
   const mergeUser = useMutation(MERGE_USER, {
     refetchQueries: data.user.role >= Role.STAFF ? [
-      { type: WORKSPACES_FOR_USER },
-      { type: PROJECTS_FOR_USER }
-    ] : [{ type: WORKSPACES_FOR_USER }]
+      { query: WORKSPACES_FOR_USER },
+      { query: PROJECTS_FOR_USER }
+    ] : [{ query: WORKSPACES_FOR_USER }]
   })
 
   const tmcData = JSON.parse(window.localStorage['tmc.user'] || 'null')
@@ -200,11 +200,9 @@ const UserView = () => {
       try {
         credentials = await openLoginDialog()
       } catch (err) {
-        console.log('Login cancelled:', err)
         setLoading(null)
         return
       }
-      console.log('Got credentials', credentials)
       const data = await tmcSignIn(credentials)
       await connectToken(data.token, 'mooc.fi', data.displayname)
     }

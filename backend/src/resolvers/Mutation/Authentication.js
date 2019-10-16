@@ -157,16 +157,24 @@ const AuthenticationMutations = {
     await mergeData(context.prisma, oldUserId, curUserId, 'workspace')
     await mergeData(context.prisma, oldUserId, curUserId, 'project')
 
-    const maybeOldUser = await context.prisma.deleteUser({ id: oldUserId })
-    console.log(maybeOldUser)
-
     const oldUser = await context.prisma.user({ id: oldUserId })
-    console.log(oldUser)
     const curUser = await context.prisma.user({ id: curUserId })
-    console.log(curUser)
+
+    // TODO this leaves a partly orphaned user, we should instead replace ALL references to the
+    //      user with the new user and then delete this user.
+    await context.prisma.updateUser({
+      where: {
+        id: oldUserId
+      },
+      data: {
+        tmcId: null,
+        hakaId: null,
+        googleId: null
+      }
+    })
+
     const oldRole = Role.fromString(oldUser.role)
     const curRole = Role.fromString(curUser.role)
-    console.log(`max(${oldRole}, ${curRole}) = ${oldRole > curRole ? oldRole : curRole}`)
     return await context.prisma.updateUser({
       where: { id: curUserId },
       data: {

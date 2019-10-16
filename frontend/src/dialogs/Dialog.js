@@ -42,6 +42,10 @@ const Dialog = ({ contextRef }) => {
   const setSubmitDisabled = submitDisabled => setState({ ...state, submitDisabled })
 
   const closeDialog = () => {
+    if (!state.promise) {
+      // This means we're not open at all
+      return
+    }
     clearTimeout(stateChange.current)
     state.promise.reject(new Error('Dialog closed'))
     setState({ ...state, open: false })
