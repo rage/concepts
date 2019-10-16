@@ -6,14 +6,19 @@ export const LoginStateContext = createContext(false)
 export const MessageStateContext = createContext('')
 
 const loginReducers = {
-  login: (state, { data: user, authType: type, displayname }) => ({
-    ...state,
-    loggedIn: true,
-    type,
-    displayname,
-    user: { ...user, role: Role.fromString(user.role) }
-  }),
-  logout: state => ({ ...state, loggedIn: false, displayname: null, type: null, user: {} })
+  login: (state, { data }) => {
+    window.localStorage.currentUser = JSON.stringify(data)
+    return {
+      loggedIn: true,
+      ...data,
+      user: { ...data.user, role: Role.fromString(data.user.role) }
+    }
+  },
+  update: (state, { user }) => {
+    window.localStorage.currentUser = JSON.stringify({ ...state, user })
+    return { ...state, user }
+  },
+  logout: () => ({ loggedIn: false, displayname: null, type: null, user: {} })
 }
 
 const loginReducer = (state, action) => loginReducers[action.type](state, action)

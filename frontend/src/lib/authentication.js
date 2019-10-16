@@ -10,8 +10,6 @@ const tmcClient = new TmcClient(clientId, tmcSecret)
 // eslint-disable-next-line no-undef
 export const HAKA_URL = process.env.REACT_APP_HAKA_URL
 
-export const isSignedIn = () => Boolean(window.localStorage.currentUser)
-
 export const signIn = async ({ email, password }) => {
   const res = await tmcClient.authenticate({ username: email, password })
   const apiResponse = await apiAuthentication(res.accessToken)
@@ -20,7 +18,6 @@ export const signIn = async ({ email, password }) => {
     data.displayname = res.username
   }
   data.type = 'TMC'
-  window.localStorage.currentUser = JSON.stringify(data)
   return data
 }
 

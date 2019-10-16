@@ -56,6 +56,7 @@ export async function signIn() {
   })
 
   const data = backendResp.data.loginGoogle
+
   try {
     const userDataResp = await fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json', {
       headers: {
@@ -64,11 +65,11 @@ export async function signIn() {
     })
     const userData = await userDataResp.json()
     data.displayname = userData.name || userData.email
+    window.localStorage['google.user'] = JSON.stringify(userData)
   } catch (err) {
     console.error('Failed to fetch Google profile info:', err)
   }
   data.type = 'GOOGLE'
-  window.localStorage.currentUser = JSON.stringify(data)
   return data
 }
 

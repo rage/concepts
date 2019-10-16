@@ -6,8 +6,8 @@ import {
 } from '@material-ui/core'
 import qs from 'qs'
 
-import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
-import { HAKA_URL, signIn as tmcSignIn, isSignedIn } from '../../lib/authentication'
+import { CREATE_GUEST_ACCOUNT, MERGE_USER } from '../../graphql/Mutation'
+import { HAKA_URL, signIn as tmcSignIn } from '../../lib/authentication'
 import { signIn as googleSignIn, init as googleInit } from '../../lib/googleAuth'
 import { useLoginStateValue, useMessageStateValue } from '../../store'
 import useRouter from '../../useRouter'
@@ -79,17 +79,19 @@ const LoginView = () => {
     googleInit().then(result => setGoogleLoginEnabled(Boolean(result)))
   }, [])
 
+  const mergeUser = useMutation(MERGE_USER)
+
   if (location.hash?.length > 1) {
-    const query = qs.parse(location.hash.substr(1))
-    if (query.token) {
-      query.type = 'HAKA'
-      window.localStorage.currentUser = JSON.stringify(query)
-      dispatch({
-        type: 'login',
-        data: query.user,
-        displayname: query.displayname,
-        authType: query.type
-      })
+    const data = qs.parse(location.hash.substr(1))
+    if (window.localStorage.connectHaka) {
+      mergeUser({
+        accessToken: data.token
+      }).then(() => history.push('/user'))
+      return null
+    }
+    if (data.token) {
+      data.type = 'HAKA'
+      dispatch({ type: 'login', data })
       history.push(nextPath)
       return null
     }
@@ -99,12 +101,8 @@ const LoginView = () => {
     setLoadingGoogle(true)
     try {
       const data = await googleSignIn()
-      dispatch({
-        type: 'login',
-        data: data.user,
-        displayname: data.displayname,
-        authType: data.type
-      })
+      dispatch({ type: 'login', data })
+      history.push(nextPath)
     } catch (err) {
       console.error(err)
       messageDispatch({
@@ -113,21 +111,14 @@ const LoginView = () => {
       })
     }
     setLoadingGoogle(false)
-    if (isSignedIn()) {
-      history.push(nextPath)
-    }
   }
 
   const authenticate = noDefault(async () => {
     setLoadingTMC(true)
     try {
-      const resp = await tmcSignIn({ email, password })
-      dispatch({
-        type: 'login',
-        data: resp.user,
-        displayname: resp.displayname,
-        authType: resp.type
-      })
+      const data = await tmcSignIn({ email, password })
+      dispatch({ type: 'login', data })
+      history.push(nextPath)
     } catch {
       setError(true)
       setTimeout(() => {
@@ -135,33 +126,21 @@ const LoginView = () => {
       }, 4000)
     }
     setLoadingTMC(false)
-    if (isSignedIn()) {
-      history.push(nextPath)
-    }
   })
 
-  const createGuestAccount = async () => {
-    const result = await createGuestMutation()
-    const userData = result.data.createGuest
-    userData.type = 'GUEST'
-    window.localStorage.currentUser = JSON.stringify(userData)
-    await dispatch({
-      type: 'login',
-      data: userData.user,
-      authType: userData.type
-    })
-  }
-
-  const continueAsGuest = evt => {
-    evt.preventDefault()
+  const createGuestAccount = noDefault(async () => {
     setLoadingGuest(true)
-    createGuestAccount().then(() => {
-      setLoadingGuest(false)
-      if (isSignedIn()) {
-        history.push(nextPath)
-      }
-    })
-  }
+    try {
+      const result = await createGuestMutation()
+      const data = result.data.createGuest
+      data.type = 'GUEST'
+      await dispatch({ type: 'login', data })
+      history.push(nextPath)
+    } catch {
+      messageDispatch({ type: 'setError', data: 'Failed to create guest account' })
+    }
+    setLoadingGuest(false)
+  })
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -252,7 +231,7 @@ const LoginView = () => {
             fullWidth
             variant='contained'
             color='primary'
-            onClick={!loading ? continueAsGuest : () => { }}
+            onClick={!loading ? createGuestAccount : () => { }}
           >
             {!loadingGuest ? 'Continue as guest' : '\u00A0'}
           </Button>

@@ -146,20 +146,25 @@ const AuthenticationMutations = {
     }
     return await signOrCreateUser({ googleId: data.sub }, {}, context.prisma)
   },
-  async mergeUser(root, args, context) {
+  async mergeUser(root, { accessToken }, context) {
     if (!context.user) {
       return new AuthenticationError('Must be logged in')
     }
-    const oldUserId = parseToken(args.accessToken)
+    const oldUserId = parseToken(accessToken)
     const curUserId = context.user.id
 
-    const oldRole = Role.fromString(await context.prisma.user({ id: oldUserId }).role())
-    const curRole = Role.fromString(await context.prisma.user({ id: curUserId }).role())
+    const oldUser = await context.prisma.user({ id: oldUserId })
+    let curUser = await context.prisma.user({ id: curUserId })
+    const oldRole = Role.fromString(oldUser.role)
+    const curRole = Role.fromString(curUser.role)
     console.log(`max(${oldRole}, ${curRole}) = ${oldRole > curRole ? oldRole : curRole}`)
-    await context.prisma.updateUser({
+    curUser = await context.prisma.updateUser({
       where: { id: curUserId },
       data: {
-        role: oldRole > curRole ? oldRole : curRole
+        role: oldRole > curRole ? oldRole : curRole,
+        tmcId: curUser.tmcId || oldUser.tmcId,
+        hakaId: curUser.hakaId || oldUser.hakaId,
+        googleId: curUser.googleId || oldUser.googleId
       }
     })
 
@@ -168,6 +173,26 @@ const AuthenticationMutations = {
 
     await context.prisma.deleteUser({
       id: oldUserId
+    })
+    return await curUser
+  },
+  async disconnectAuth(root, { authType }, context) {
+    if (!context.user) {
+      return new AuthenticationError('Must be logged in')
+    }
+
+    const data = {}
+    if (authType === 'TMC') {
+      data.tmcId = null
+    } else if (data.authType === 'HAKA') {
+      data.hakaId = null
+    } else if (data.authType === 'GOOGLE') {
+      data.googleId = null
+    }
+
+    return await context.prisma.updateUser({
+      where: { id: context.user.id },
+      data
     })
   }
 }

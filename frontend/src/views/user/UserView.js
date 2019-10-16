@@ -1,16 +1,32 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, CircularProgress, Container, Typography } from '@material-ui/core'
+import { Button, CircularProgress, Typography } from '@material-ui/core'
+import { useMutation } from 'react-apollo-hooks'
 
-import { useLoginStateValue } from '../../store'
-import { HAKA_URL, signOut } from '../../lib/authentication'
+import { useLoginStateValue, useMessageStateValue } from '../../store'
+import { Role } from '../../lib/permissions'
+import { HAKA_URL, signOut, signIn as tmcSignIn } from '../../lib/authentication'
 import useRouter from '../../useRouter'
+import { signIn as googleSignIn } from '../../lib/googleAuth'
+import { DISCONNECT_AUTH, MERGE_USER } from '../../graphql/Mutation'
+import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
 
 const useStyles = makeStyles({
+  wrapper: {
+    width: '100%',
+    overflowY: 'auto'
+  },
   root: {
     '& > *': {
       margin: '16px 0'
-    }
+    },
+    width: '100%',
+    maxWidth: '700px',
+    margin: '0 auto',
+    '@media screen and (max-width: 732px)': {
+      width: 'calc(100% - 32px)'
+    },
+    overflowY: 'auto'
   },
   connectionTable: {
     width: '100%',
@@ -36,7 +52,7 @@ const useStyles = makeStyles({
       textAlign: 'left'
     }
   },
-  tmcInfo: {
+  extraInternalinfo: {
     marginTop: '8px'
   }
 })
@@ -73,7 +89,7 @@ const JSONObject = ({ data, className }) => (
   <table className={className}>
     <tbody>
       {Object.entries(data).map(([key, value]) => <tr key={key}>
-        <th>"{key}":</th>
+        <th nowrap='true'>"{key}":</th>
         <td>
           {value !== null && typeof value === 'object'
             ? <JSONObject data={value} />
@@ -89,14 +105,25 @@ const UserView = () => {
   const { history } = useRouter()
 
   const [data, dispatch] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
+
   const [loading, setLoading] = useState(null)
+
+  const mergeUser = useMutation(MERGE_USER, {
+    refetchQueries: data.user.role >= Role.STAFF ? [
+      { type: WORKSPACES_FOR_USER },
+      { type: PROJECTS_FOR_USER }
+    ] : [{ type: WORKSPACES_FOR_USER }]
+  })
+
+  const disconnectAuth = useMutation(DISCONNECT_AUTH)
+
   const tmcData = JSON.parse(window.localStorage['tmc.user'] || 'null')
+  const googleData = JSON.parse(window.localStorage['google.user'] || 'null')
 
   const logout = async () => {
     await signOut()
-    dispatch({
-      type: 'logout'
-    })
+    dispatch({ type: 'logout' })
     history.push('/')
   }
 
@@ -107,102 +134,161 @@ const UserView = () => {
     window.alert('Not yet implemented')
   }
 
+  const connectToken = async (accessToken, type, displayname) => {
+    try {
+      const resp = await mergeUser({
+        variables: { accessToken }
+      })
+      dispatch({
+        type: 'update',
+        user: resp.data.mergeUser
+      })
+      messageDispatch({
+        type: 'setNotification',
+        data: `Successfully connected ${type} account ${displayname}`
+      })
+    } catch (err) {
+      console.error(err)
+      messageDispatch({
+        type: 'setError',
+        data: `Failed to connected ${type} account ${displayname}`
+      })
+    }
+  }
+
+  const disconnect = async authType => {
+    try {
+      const resp = await disconnectAuth({
+        variables: { authType }
+      })
+      dispatch({
+        type: 'update',
+        user: resp.data.disconnectAuth
+      })
+      messageDispatch({
+        type: 'setNotification',
+        data: `Successfully disconnected ${type} from your Concepts account`
+      })
+    } catch (err) {
+      console.error(err)
+      messageDispatch({
+        type: 'setError',
+        data: `Failed to disconnect ${type}`
+      })
+    }
+  }
+
   const connectTMC = async () => {
     setLoading('tmc')
-
+    const data = await tmcSignIn()
+    await connectToken(data.token, 'mooc.fi', data.displayname)
+    setLoading(null)
   }
 
   const connectHaka = async () => {
-    setLoading('haka')
-
+    window.localStorage.connectHaka = true
+    window.location.href = HAKA_URL
   }
 
   const connectGoogle = async () => {
     setLoading('google')
-
+    const data = await googleSignIn()
+    await connectToken(data.token)
+    setLoading(null)
   }
 
-  return <Container className={classes.root} component='main' maxWidth='sm'>
-    <Typography variant='h6' component='h6'>
-      Currently signed in
-      as {fancyTypeName[data.type](data.displayname, data.user.role)}
-    </Typography>
+  return <div className={classes.wrapper}>
+    <main className={classes.root}>
+      <Typography variant='h6' component='h6'>
+        Currently signed in
+        as {fancyTypeName[data.type](data.displayname, data.user.role)}
+      </Typography>
 
-    <table className={classes.connectionTable} cellSpacing={0}>
-      <thead>
-        <tr>
-          <th>Service</th>
-          <th>Account ID</th>
-          <th>Connect</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Concepts</th>
-          <td>{data.user.id}</td>
-          <td>N/A</td>
-        </tr>
-        <tr>
-          <th>mooc.fi</th>
-          <td>{data.user.tmcId || 'Not connected'}</td>
-          <td>
-            <ConnectButton
-              disabled={Boolean(loading)}
-              loading={loading === 'tmc'}
-              connected={Boolean(data.user.tmcId)}
-              onClick={connectTMC}
-            />
-          </td>
-        </tr>
-        {HAKA_URL && <tr>
-          <th>Haka</th>
-          <td>{data.user.hakaId || 'Not connected'}</td>
-          <td>
-            <ConnectButton
-              disabled={Boolean(loading)}
-              loading={loading === 'haka'}
-              connected={Boolean(data.user.hakaId)}
-              onClick={connectHaka}
-            />
-          </td>
-        </tr>}
-        <tr>
-          <th>Google</th>
-          <td>{data.user.googleId || 'Not connected'}</td>
-          <td>
-            <ConnectButton
-              disabled={Boolean(loading)}
-              loading={loading === 'google'}
-              connected={Boolean(data.user.googleId)}
-              onClick={connectGoogle}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <details className={classes.internalInfo}>
-      <summary>Internal user info</summary>
-      <JSONObject className={classes.jsonObject} data={data} />
+      <table className={classes.connectionTable} cellSpacing={0}>
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Account ID</th>
+            <th>Connect</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Concepts</th>
+            <td>{data.user.id}</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <th>mooc.fi</th>
+            <td>{data.user.tmcId || 'Not connected'}</td>
+            <td>
+              <ConnectButton
+                disabled={Boolean(loading)}
+                loading={loading === 'tmc'}
+                connected={Boolean(data.user.tmcId)}
+                onClick={connectTMC}
+              />
+            </td>
+          </tr>
+          {HAKA_URL && <tr>
+            <th>Haka</th>
+            <td>{data.user.hakaId || 'Not connected'}</td>
+            <td>
+              <ConnectButton
+                disabled={Boolean(loading)}
+                loading={loading === 'haka'}
+                connected={Boolean(data.user.hakaId)}
+                onClick={connectHaka}
+              />
+            </td>
+          </tr>}
+          <tr>
+            <th>Google</th>
+            <td>{data.user.googleId || 'Not connected'}</td>
+            <td>
+              <ConnectButton
+                disabled={Boolean(loading)}
+                loading={loading === 'google'}
+                connected={Boolean(data.user.googleId)}
+                onClick={connectGoogle}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <details className={classes.internalInfo}>
+        <summary>Internal user info</summary>
+        <p>
+          Only the data in the <code>user</code> object is stored on the server,
+          the rest (including your displayname) is only stored in your browser.
+        </p>
 
-      {tmcData && <details className={classes.tmcInfo}>
-        <summary>TMC user info</summary>
-        <JSONObject className={classes.jsonObject} data={tmcData} />
-      </details>}
-    </details>
+        <JSONObject className={classes.jsonObject} data={data} />
 
-    <Button
-      fullWidth variant='contained' color='primary'
-      className={classes.logoutButton} onClick={logout}
-    >
-      Log out
-    </Button>
-    <Button
-      fullWidth variant='contained' color='secondary'
-      className={classes.deleteAccountButton} onClick={deleteAccount}
-    >
-      Delete account
-    </Button>
-  </Container>
+        {tmcData && <details className={classes.extraInternalinfo}>
+          <summary>TMC user info</summary>
+          <JSONObject className={classes.jsonObject} data={tmcData} />
+        </details>}
+        {googleData && <details className={classes.extraInternalinfo}>
+          <summary>Google user info</summary>
+          <JSONObject className={classes.jsonObject} data={googleData} />
+        </details>}
+      </details>
+
+      <Button
+        fullWidth variant='contained' color='primary'
+        className={classes.logoutButton} onClick={logout}
+      >
+        Log out
+      </Button>
+      <Button
+        fullWidth variant='contained' color='secondary'
+        className={classes.deleteAccountButton} onClick={deleteAccount}
+      >
+        Delete account
+      </Button>
+    </main>
+  </div>
 }
 
 export default UserView
