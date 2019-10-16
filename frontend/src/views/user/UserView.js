@@ -156,10 +156,10 @@ const UserView = () => {
     }
   }
 
-  const disconnect = async authType => {
+  const disconnect = async (type, authType) => {
     try {
       const resp = await disconnectAuth({
-        variables: { authType }
+        variables: { authType: authType || type.toUpperCase() }
       })
       dispatch({
         type: 'update',
@@ -180,20 +180,34 @@ const UserView = () => {
 
   const connectTMC = async () => {
     setLoading('tmc')
-    const data = await tmcSignIn()
-    await connectToken(data.token, 'mooc.fi', data.displayname)
+    if (data.user.tmcId) {
+      await disconnect('mooc.fi', 'TMC')
+    } else {
+      const data = await tmcSignIn()
+      await connectToken(data.token, 'mooc.fi', data.displayname)
+    }
     setLoading(null)
   }
 
   const connectHaka = async () => {
-    window.localStorage.connectHaka = true
-    window.location.href = HAKA_URL
+    if (data.user.hakaId) {
+      setLoading('haka')
+      await disconnect('Haka')
+      setLoading('null')
+    } else {
+      window.localStorage.connectHaka = true
+      window.location.href = HAKA_URL
+    }
   }
 
   const connectGoogle = async () => {
     setLoading('google')
-    const data = await googleSignIn()
-    await connectToken(data.token)
+    if (data.user.googleId) {
+      await disconnect('Google')
+    } else {
+      const data = await googleSignIn()
+      await connectToken(data.token, 'Google', data.displayname)
+    }
     setLoading(null)
   }
 
