@@ -196,13 +196,15 @@ const UserView = () => {
     if (data.user.tmcId) {
       await disconnect('mooc.fi', 'TMC')
     } else {
-      const credentials = await openLoginDialog()
-      if (!credentials) {
-        console.log('Login cancelled')
+      let credentials
+      try {
+        credentials = await openLoginDialog()
+      } catch (err) {
+        console.log('Login cancelled:', err)
         setLoading(null)
-        // Login cancelled
         return
       }
+      console.log('Got credentials', credentials)
       const data = await tmcSignIn(credentials)
       await connectToken(data.token, 'mooc.fi', data.displayname)
     }

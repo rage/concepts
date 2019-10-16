@@ -94,19 +94,20 @@ const getData = async (prisma, type, titleType, id) => new Map(
 )
 
 const mergeData = async (prisma, oldUserId, curUserId, type) => {
-  const titleType = type.substr(0, 1).toUpperCase() + type.substr(1).toUpperCase()
+  const titleType = type.substr(0, 1).toUpperCase() + type.substr(1).toLowerCase()
   const oldData = await getData(prisma, type, titleType, oldUserId)
   const existingData = await getData(prisma, type, titleType, curUserId)
   for (const existing of existingData.keys()) {
     oldData.delete(existing)
   }
-  await prisma[`update${titleType}Participant`]({
-    // eslint-disable-next-line camelcase
-    where: { id_in: oldData.values() },
-    data: {
-      user: { connect: { id: curUserId } }
-    }
-  })
+  for (const id of oldData.values()) {
+    await prisma[`update${titleType}Participant`]({
+      where: { id },
+      data: {
+        user: { connect: { id: curUserId } }
+      }
+    })
+  }
 }
 
 const AuthenticationMutations = {
@@ -153,28 +154,28 @@ const AuthenticationMutations = {
     const oldUserId = parseToken(accessToken)
     const curUserId = context.user.id
 
+    await mergeData(context.prisma, oldUserId, curUserId, 'workspace')
+    await mergeData(context.prisma, oldUserId, curUserId, 'project')
+
+    const maybeOldUser = await context.prisma.deleteUser({ id: oldUserId })
+    console.log(maybeOldUser)
+
     const oldUser = await context.prisma.user({ id: oldUserId })
-    let curUser = await context.prisma.user({ id: curUserId })
+    console.log(oldUser)
+    const curUser = await context.prisma.user({ id: curUserId })
+    console.log(curUser)
     const oldRole = Role.fromString(oldUser.role)
     const curRole = Role.fromString(curUser.role)
     console.log(`max(${oldRole}, ${curRole}) = ${oldRole > curRole ? oldRole : curRole}`)
-    curUser = await context.prisma.updateUser({
+    return await context.prisma.updateUser({
       where: { id: curUserId },
       data: {
-        role: oldRole > curRole ? oldRole : curRole,
+        role: (oldRole > curRole ? oldRole : curRole).toString(),
         tmcId: curUser.tmcId || oldUser.tmcId,
         hakaId: curUser.hakaId || oldUser.hakaId,
         googleId: curUser.googleId || oldUser.googleId
       }
     })
-
-    await mergeData(context.prisma, oldUserId, curUserId, 'workspace')
-    await mergeData(context.prisma, oldUserId, curUserId, 'project')
-
-    await context.prisma.deleteUser({
-      id: oldUserId
-    })
-    return await curUser
   },
   async disconnectAuth(root, { authType }, context) {
     if (!context.user) {

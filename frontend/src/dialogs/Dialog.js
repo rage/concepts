@@ -43,9 +43,7 @@ const Dialog = ({ contextRef }) => {
 
   const closeDialog = () => {
     clearTimeout(stateChange.current)
-    if (state.promise && !state.promise.fulfilled) {
-      state.promise.resolve(null)
-    }
+    state.promise.reject(new Error('Dialog closed'))
     setState({ ...state, open: false })
     stateChange.current = setTimeout(() => {
       setState(blankState())
@@ -53,7 +51,7 @@ const Dialog = ({ contextRef }) => {
     }, 250)
   }
 
-  const mutate = async (variables, closeFunc) => {
+  const mutate = async variables => {
     const mutationArgs = {
       variables: { ...state.requiredVariables, ...variables },
       optimisticResponse: state?.createOptimisticResponse({
@@ -61,7 +59,7 @@ const Dialog = ({ contextRef }) => {
       }) || undefined
     }
     const hasOptimisticResponse = Boolean(state.createOptimisticResponse)
-    if (hasOptimisticResponse) closeFunc()
+    if (hasOptimisticResponse) closeDialog()
     try {
       await state.mutation(mutationArgs)
     } catch (e) {
@@ -70,10 +68,10 @@ const Dialog = ({ contextRef }) => {
         data: 'Access denied'
       })
     }
-    if (!hasOptimisticResponse) closeFunc()
+    if (!hasOptimisticResponse) closeDialog()
   }
 
-  const handleSubmit = async close => {
+  const handleSubmit = () => {
     if (state.submitDisabled) return
     const variables = {}
     for (const key of state.fields) {
@@ -96,20 +94,18 @@ const Dialog = ({ contextRef }) => {
       if (key.list) variables[key.list].push(data)
       else variables[key.name] = data
     }
-    setSubmitDisabled(true)
-    const closeFunc = close ? closeDialog : () => setSubmitDisabled(false)
-    if (state.mutation) {
-      await mutate(variables, closeFunc)
-    } else {
-      closeFunc()
-    }
     state.promise.resolve(variables)
+    if (state.mutation) {
+      setSubmitDisabled(true)
+      return mutate(variables)
+    } else {
+      closeDialog()
+    }
   }
 
   const setCheckboxValue = key =>
     key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
-  contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
   contextRef.current.inputState = inputState
 
@@ -127,10 +123,8 @@ const Dialog = ({ contextRef }) => {
       _resolve = resolve
       _reject = reject
     })
-    promise.fulfilled = false
     promise.resolve = _resolve
     promise.reject = _reject
-    promise.finally(() => promise.fulfilled = true)
     setState({
       open: true,
       submitDisabled: false,
