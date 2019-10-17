@@ -7,8 +7,7 @@ import {
 import qs from 'qs'
 
 import { CREATE_GUEST_ACCOUNT, MERGE_USER } from '../../graphql/Mutation'
-import { HAKA_URL, signIn as tmcSignIn } from '../../lib/authentication'
-import { signIn as googleSignIn, init as googleInit } from '../../lib/googleAuth'
+import Auth from '../../lib/authentication'
 import { useLoginStateValue, useMessageStateValue } from '../../store'
 import useRouter from '../../useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
@@ -72,12 +71,12 @@ const LoginView = () => {
 
   const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
 
+  useEffect(() => {
+    Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)
+  }, [])
+
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
-
-  useEffect(() => {
-    googleInit().then(result => setGoogleLoginEnabled(Boolean(result)))
-  }, [])
 
   const mergeUser = useMutation(MERGE_USER)
 
@@ -100,7 +99,7 @@ const LoginView = () => {
   const authenticateGoogle = async () => {
     setLoadingGoogle(true)
     try {
-      const data = await googleSignIn()
+      const data = await Auth.GOOGLE.signIn()
       dispatch({ type: 'login', data })
       history.push(nextPath)
     } catch (err) {
@@ -116,7 +115,7 @@ const LoginView = () => {
   const authenticate = noDefault(async () => {
     setLoadingTMC(true)
     try {
-      const data = await tmcSignIn({ email, password })
+      const data = await Auth.TMC.signIn({ email, password })
       dispatch({ type: 'login', data })
       history.push(nextPath)
     } catch {
@@ -144,7 +143,7 @@ const LoginView = () => {
 
   return (
     <Container component='main' maxWidth='xs'>
-      <div className={classes.paper}>
+      {Auth.TMC.isEnabled() && <div className={classes.paper}>
         <Typography component='h1' variant='h5'>
           Sign in with <a href='https://www.mooc.fi/en/sign-up'>mooc.fi account</a>
         </Typography>
@@ -197,11 +196,11 @@ const LoginView = () => {
             {loadingTMC && <CircularProgress size={24} className={classes.buttonProgress} />}
           </div>
         </form>
-      </div>
-      {HAKA_URL && <>
+      </div>}
+      {Auth.HAKA.isEnabled() && <>
         <Divider />
         <div className={classes.wrapper}>
-          <a className={classes.hakaButton} href={HAKA_URL}>
+          <a className={classes.hakaButton} href={Auth.HAKA.signInURL}>
             <HakaIcon />
           </a>
         </div>

@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, CircularProgress, Typography } from '@material-ui/core'
 import { useMutation } from 'react-apollo-hooks'
 
 import { useLoginStateValue, useMessageStateValue } from '../../store'
 import { Role } from '../../lib/permissions'
-import { HAKA_URL, signOut, signIn as tmcSignIn } from '../../lib/authentication'
+import Auth from '../../lib/authentication'
 import useRouter from '../../useRouter'
-import { signIn as googleSignIn } from '../../lib/googleAuth'
 import { DISCONNECT_AUTH, MERGE_USER } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { useLoginDialog } from '../../dialogs/authentication'
@@ -131,11 +130,17 @@ const UserView = () => {
     ] : [{ query: WORKSPACES_FOR_USER }]
   })
 
+  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
+
+  useEffect(() => {
+    Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)
+  }, [])
+
   const tmcData = JSON.parse(window.localStorage['tmc.user'] || 'null')
   const googleData = JSON.parse(window.localStorage['google.user'] || 'null')
 
   const logout = async () => {
-    await signOut()
+    await Auth.signOut()
     dispatch({ type: 'logout' })
     history.push('/')
   }
@@ -158,21 +163,21 @@ const UserView = () => {
       })
       messageDispatch({
         type: 'setNotification',
-        data: `Successfully connected ${type} account ${displayname}`
+        data: `Successfully connected ${type.name} account ${displayname}`
       })
     } catch (err) {
       console.error(err)
       messageDispatch({
         type: 'setError',
-        data: `Failed to connected ${type} account ${displayname}`
+        data: `Failed to connected ${type.name} account ${displayname}`
       })
     }
   }
 
-  const disconnect = async (type, authType) => {
+  const disconnect = async (type) => {
     try {
       const resp = await disconnectAuth({
-        variables: { authType: authType || type.toUpperCase() }
+        variables: { authType: type.id }
       })
       dispatch({
         type: 'update',
@@ -180,13 +185,13 @@ const UserView = () => {
       })
       messageDispatch({
         type: 'setNotification',
-        data: `Successfully disconnected ${type} from your Concepts account`
+        data: `Successfully disconnected ${type.name} from your Concepts account`
       })
     } catch (err) {
       console.error(err)
       messageDispatch({
         type: 'setError',
-        data: `Failed to disconnect ${type}`
+        data: `Failed to disconnect ${type.name}`
       })
     }
   }
@@ -194,7 +199,7 @@ const UserView = () => {
   const connectTMC = async () => {
     setLoading('tmc')
     if (data.user.tmcId) {
-      await disconnect('mooc.fi', 'TMC')
+      await disconnect(Auth.TMC)
     } else {
       let credentials
       try {
@@ -203,8 +208,8 @@ const UserView = () => {
         setLoading(null)
         return
       }
-      const data = await tmcSignIn(credentials)
-      await connectToken(data.token, 'mooc.fi', data.displayname)
+      const data = await Auth.TMC.signIn(credentials)
+      await connectToken(data.token, Auth.TMC, data.displayname)
     }
     setLoading(null)
   }
@@ -212,21 +217,21 @@ const UserView = () => {
   const connectHaka = async () => {
     if (data.user.hakaId) {
       setLoading('haka')
-      await disconnect('Haka')
+      await disconnect(Auth.HAKA)
       setLoading('null')
     } else {
       window.localStorage.connectHaka = true
-      window.location.href = HAKA_URL
+      Auth.HAKA.signIn()
     }
   }
 
   const connectGoogle = async () => {
     setLoading('google')
     if (data.user.googleId) {
-      await disconnect('Google')
+      await disconnect(Auth.GOOGLE)
     } else {
-      const data = await googleSignIn()
-      await connectToken(data.token, 'Google', data.displayname)
+      const data = await Auth.GOOGLE.signIn()
+      await connectToken(data.token, Auth.GOOGLE, data.displayname)
     }
     setLoading(null)
   }
@@ -252,7 +257,7 @@ const UserView = () => {
             <td>{data.user.id}</td>
             <td>N/A</td>
           </tr>
-          <tr>
+          {Auth.TMC.isEnabled() && <tr>
             <th>mooc.fi</th>
             <td>{data.user.tmcId || 'Not connected'}</td>
             <td>
@@ -263,8 +268,8 @@ const UserView = () => {
                 onClick={connectTMC}
               />
             </td>
-          </tr>
-          {HAKA_URL && <tr>
+          </tr>}
+          {Auth.HAKA.isEnabled() && <tr>
             <th>Haka</th>
             <td>{data.user.hakaId || 'Not connected'}</td>
             <td>
@@ -276,7 +281,7 @@ const UserView = () => {
               />
             </td>
           </tr>}
-          <tr>
+          {googleLoginEnabled && <tr>
             <th>Google</th>
             <td>{data.user.googleId || 'Not connected'}</td>
             <td>
@@ -287,7 +292,7 @@ const UserView = () => {
                 onClick={connectGoogle}
               />
             </td>
-          </tr>
+          </tr>}
         </tbody>
       </table>
       <details className={classes.internalInfo}>

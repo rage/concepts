@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Auth from './lib/authentication'
 import { useLoginStateValue } from './store'
 import NavBar from './components/NavBar'
 import WorkspaceNavBar from './components/WorkspaceNavBar'
@@ -109,8 +110,12 @@ const projectRouter = prefix => <>
 </>
 
 const App = () => {
-  const [{ loggedIn }] = useLoginStateValue()
+  const [{ loggedIn }, dispatch] = useLoginStateValue()
   const classes = useStyles()
+
+  useEffect(() => {
+    Auth.updateLocalInfo().then(dispatch).catch(err => console.error('Auth update error:', err))
+  }, [])
 
   return <div className={classes.root}>
     <Route render={({ location }) => <NavBar location={location} />} />

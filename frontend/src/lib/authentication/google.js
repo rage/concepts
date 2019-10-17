@@ -1,8 +1,8 @@
 /* global gapi */
 
-import client from '../apollo/apolloClient'
-import { AUTHENTICATE_GOOGLE } from '../graphql/Mutation'
-import { GET_GOOGLE_CLIENT_ID } from '../graphql/Query'
+import client from '../../apollo/apolloClient'
+import { AUTHENTICATE_GOOGLE } from '../../graphql/Mutation'
+import { GET_GOOGLE_CLIENT_ID } from '../../graphql/Query'
 
 window._googleAuthEnabled = null
 window._googleAuthEnabledPromise = null
@@ -12,7 +12,7 @@ const asyncify = (fn, ...args) =>
     fn(...args, (...result) =>
       resolve(...result)))
 
-export async function init() {
+async function init() {
   if (window._googleAuthEnabled !== null) {
     return window._googleAuthEnabled
   } else if (!window._googleAuthEnabledPromise) {
@@ -37,6 +37,8 @@ async function actuallyInit() {
   await asyncify(gapi.load, 'auth2')
   return clientId
 }
+
+export const isEnabled = async () => Boolean(await init())
 
 export async function signIn() {
   const clientId = await init()
@@ -71,6 +73,10 @@ export async function signIn() {
   }
   data.type = 'GOOGLE'
   return data
+}
+
+export async function signOut() {
+  // I think we don't need to do anything here
 }
 
 if (window.google_inited) {

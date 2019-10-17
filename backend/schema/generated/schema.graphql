@@ -5,6 +5,7 @@ type Query {
   allUsers: [User!]!
   userById(id: ID!): User!
   googleClientId: GoogleClientID
+  currentUser: User
 
   # Project queries
   allProjects: [Project!]!

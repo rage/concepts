@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost'
 
-const USER_FRAGMENT = gql`
+export const USER_FRAGMENT = gql`
 fragment UserInfo on User {
   id
   tmcId
