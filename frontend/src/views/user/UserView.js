@@ -213,7 +213,7 @@ const UserView = () => {
     if (data.user.hakaId) {
       setLoading('haka')
       await disconnect(Auth.HAKA)
-      setLoading('null')
+      setLoading(null)
     } else {
       window.localStorage.connectHaka = true
       Auth.HAKA.signIn()

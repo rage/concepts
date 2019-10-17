@@ -12,6 +12,7 @@ import { useLoginStateValue, useMessageStateValue } from '../../store'
 import useRouter from '../../useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
 import { noDefault } from '../../lib/eventMiddleware'
+import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -62,6 +63,7 @@ const LoginView = () => {
   const [loadingTMC, setLoadingTMC] = useState(false)
   const [loadingGuest, setLoadingGuest] = useState(false)
   const [loadingGoogle, setLoadingGoogle] = useState(false)
+  const [loadingHaka, setLoadingHaka] = useState(false)
   const loading = loadingTMC || loadingGuest || loadingGoogle
 
   const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
@@ -75,13 +77,25 @@ const LoginView = () => {
 
   const mergeUser = useMutation(MERGE_USER)
 
+  if (loadingHaka) {
+    return <LoadingBar id='login-haka' />
+  }
+
   if (location.hash?.length > 1) {
     const data = qs.parse(location.hash.substr(1))
     if (window.localStorage.connectHaka && loggedIn) {
       delete window.localStorage.connectHaka
       mergeUser({
         variables: { accessToken: data.token }
-      }).then(() => history.push('/user'))
+      }).then(() => history.push('/user'), err => {
+        console.error('Failed to merge haka account:', err)
+        setLoadingHaka(false)
+        messageDispatch({
+          type: 'setError',
+          data: 'Failed to merge account'
+        })
+      })
+      setLoadingHaka(true)
       return null
     }
     if (data.token) {
