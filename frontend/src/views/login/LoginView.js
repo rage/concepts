@@ -52,7 +52,7 @@ const LoginView = () => {
   const classes = useStyles()
   const { history, location } = useRouter()
 
-  const [, dispatch] = useLoginStateValue()
+  const [{ loggedIn }, dispatch] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
   const [email, setEmail] = useState('')
@@ -77,7 +77,8 @@ const LoginView = () => {
 
   if (location.hash?.length > 1) {
     const data = qs.parse(location.hash.substr(1))
-    if (window.localStorage.connectHaka) {
+    if (window.localStorage.connectHaka && loggedIn) {
+      delete window.localStorage.connectHaka
       mergeUser({
         accessToken: data.token
       }).then(() => history.push('/user'))

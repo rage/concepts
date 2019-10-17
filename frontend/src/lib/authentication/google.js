@@ -5,43 +5,45 @@ import { AUTHENTICATE_GOOGLE } from '../../graphql/Mutation'
 import { GET_GOOGLE_CLIENT_ID } from '../../graphql/Query'
 
 window._googleAuthEnabled = null
-window._googleAuthEnabledPromise = null
+let _resolve
+window._googleAuthEnabledPromise = new Promise(resolve => {
+  _resolve = resolve
+})
+window._googleAuthEnabledPromise.resolve = _resolve
 
 const asyncify = (fn, ...args) =>
   new Promise(resolve =>
     fn(...args, (...result) =>
       resolve(...result)))
 
-async function init() {
+async function waitForGoogle() {
   if (window._googleAuthEnabled !== null) {
     return window._googleAuthEnabled
-  } else if (!window._googleAuthEnabledPromise) {
-    window._googleAuthEnabledPromise = new Promise(resolve => {
-      const result = actuallyInit()
-      window._googleAuthEnabled = result
-      resolve(result)
-    })
   }
   return window._googleAuthEnabledPromise
 }
 
-async function actuallyInit() {
+async function init() {
   const resp = await client.query({
     query: GET_GOOGLE_CLIENT_ID
   })
   const { clientId, enabled } = resp.data.googleClientId
   if (!enabled) {
     console.log('Google login is disabled in backend, not initializing gapi.auth2')
+    window._googleAuthEnabled = false
+    window._googleAuthEnabledPromise.resolve(false)
     return false
   }
   await asyncify(gapi.load, 'auth2')
+  window._googleAuthEnabled = clientId
+  window._googleAuthEnabledPromise.resolve(clientId)
   return clientId
 }
 
-export const isEnabled = async () => Boolean(await init())
+export const isEnabled = async () => Boolean(await waitForGoogle())
 
 export async function signIn() {
-  const clientId = await init()
+  const clientId = await waitForGoogle()
   const googleResp = await asyncify(gapi.auth2.authorize, {
     // eslint-disable-next-line camelcase
     client_id: clientId,
