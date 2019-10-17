@@ -109,7 +109,7 @@ const WorkspaceMutations = {
         create: bloom
       }
     })
-    pubsub.publish(WORKSPACE_CREATED, {workspaceCreated: newWorkspace})
+    pubsub.publish(WORKSPACE_CREATED, { workspaceCreated: newWorkspace })
     return newWorkspace
   },
   async deleteWorkspace(root, { id }, context) {
@@ -123,7 +123,7 @@ const WorkspaceMutations = {
       workspaceId: id
     })
     const deletedWorkspace = context.prisma.deleteWorkspace({ id })
-    pubsub.publish(WORKSPACE_DELETED, {workspaceDeleted: deletedWorkspace})
+    pubsub.publish(WORKSPACE_DELETED, { workspaceDeleted: deletedWorkspace })
     return deletedWorkspace
   },
   async updateWorkspace(root, { id, name }, context) {
@@ -132,7 +132,7 @@ const WorkspaceMutations = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId: id
     })
-    pubsub.publish(WORKSPACE_UPDATED, {workspaceUpdated: {...data, id}})
+    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { id, name } })
     return context.prisma.updateWorkspace({
       where: { id },
       data: { name }
@@ -215,7 +215,7 @@ const WorkspaceMutations = {
     const templateWorkspace = result.project.activeTemplate
     const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
 
-    const newClonedWorkspace =  await context.prisma.createWorkspace({
+    const newClonedWorkspace = await context.prisma.createWorkspace({
       id: workspaceId,
       name,
       sourceProject: {
@@ -277,7 +277,7 @@ const WorkspaceMutations = {
         }))
       }
     })
-    pubsub.publish('WORKSPACE_CREATED', { createdWorkspace: newClonedWorkspace})
+    pubsub.publish('WORKSPACE_CREATED', { createdWorkspace: newClonedWorkspace })
     return newClonedWorkspace
   }
 }
