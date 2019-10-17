@@ -193,9 +193,9 @@ const AuthenticationMutations = {
     const data = {}
     if (authType === 'TMC') {
       data.tmcId = null
-    } else if (data.authType === 'HAKA') {
+    } else if (authType === 'HAKA') {
       data.hakaId = null
-    } else if (data.authType === 'GOOGLE') {
+    } else if (authType === 'GOOGLE') {
       data.googleId = null
     }
 
