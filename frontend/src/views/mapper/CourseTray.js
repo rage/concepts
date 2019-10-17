@@ -15,7 +15,7 @@ import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../gra
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {

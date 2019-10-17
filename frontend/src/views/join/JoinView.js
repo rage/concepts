@@ -13,7 +13,7 @@ import {
 import { useMessageStateValue, useLoginStateValue } from '../../store'
 import CloneView from '../project/CloneView'
 import LoadingBar from '../../components/LoadingBar'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const JoinView = ({ token }) => {
   const { history } = useRouter()

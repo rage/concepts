@@ -8,7 +8,7 @@ import { WORKSPACE_COURSES_AND_CONCEPTS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const cellDimension = {
   width: 50,

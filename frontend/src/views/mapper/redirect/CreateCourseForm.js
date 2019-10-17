@@ -5,7 +5,7 @@ import { Container, Button, TextField, Typography, FormHelperText } from '@mater
 
 import { CREATE_COURSE } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
-import useRouter from '../../../useRouter'
+import useRouter from '../../../lib/useRouter'
 import { noDefault } from '../../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({

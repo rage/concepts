@@ -12,7 +12,7 @@ import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../store'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {

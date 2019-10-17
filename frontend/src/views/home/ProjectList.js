@@ -10,7 +10,7 @@ import { useMessageStateValue } from '../../store'
 import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/project'
 import { DELETE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {

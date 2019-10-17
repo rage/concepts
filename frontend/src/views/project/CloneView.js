@@ -11,7 +11,7 @@ import { useMessageStateValue } from '../../store'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import generateName from '../../lib/generateName'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 import { noDefault } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({

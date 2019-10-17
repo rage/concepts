@@ -4,7 +4,7 @@ import { Button, Grid, Typography, Container } from '@material-ui/core'
 
 import { useLoginStateValue } from '../../store'
 import UserViewContent from './UserViewContent'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 import Auth from '../../lib/authentication'
 
 const useStyles = makeStyles(theme => ({

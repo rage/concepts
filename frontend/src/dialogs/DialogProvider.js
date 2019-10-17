@@ -1,7 +1,7 @@
 import React, { useRef, createContext, useContext, useEffect } from 'react'
 
 import Dialog from './Dialog'
-import useRouter from '../useRouter'
+import useRouter from '../lib/useRouter'
 
 export const DialogContext = createContext({})
 export const useDialog = () => useContext(DialogContext)

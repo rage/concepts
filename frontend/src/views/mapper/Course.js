@@ -12,7 +12,7 @@ import { useEditCourseDialog } from '../../dialogs/course'
 import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {

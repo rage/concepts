@@ -15,7 +15,7 @@ import { DELETE_PROJECT } from '../graphql/Mutation'
 import { useMessageStateValue, useLoginStateValue } from '../store'
 import { useShareDialog } from '../dialogs/sharing'
 import useEditProjectDialog from '../dialogs/project/useEditProjectDialog'
-import useRouter from '../useRouter'
+import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles({

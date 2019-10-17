@@ -13,7 +13,7 @@ import {
 import { Privilege } from '../lib/permissions'
 import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../store'
-import useRouter from '../useRouter'
+import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles(theme => ({
