@@ -13,7 +13,7 @@ import InfoBoxProvider from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
 import { LoadingProvider } from './components/LoadingBar'
-import WindowTooSmall, { MIN_WIDTH } from './WindowTooSmall'
+import WindowTooSmall, { MIN_WIDTH } from './views/WindowTooSmall'
 
 const ConceptsWrapper = () => {
   const [, rerender] = useState(false)
