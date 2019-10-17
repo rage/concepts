@@ -18,6 +18,7 @@ const fixData = data => ({
 })
 
 const loginReducers = {
+  noop: state => state,
   login: (state, { data }) => {
     window.localStorage.currentUser = JSON.stringify(data)
     return {

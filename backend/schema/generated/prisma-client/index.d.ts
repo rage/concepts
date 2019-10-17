@@ -873,6 +873,8 @@ export type UserOrderByInput =
   | "googleId_DESC"
   | "role_ASC"
   | "role_DESC"
+  | "deactivated_ASC"
+  | "deactivated_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "lastActivity_ASC"
@@ -1146,6 +1148,8 @@ export interface UserWhereInput {
   role_not?: Maybe<Role>;
   role_in?: Maybe<Role[] | Role>;
   role_not_in?: Maybe<Role[] | Role>;
+  deactivated?: Maybe<Boolean>;
+  deactivated_not?: Maybe<Boolean>;
   workspaceParticipations_every?: Maybe<WorkspaceParticipantWhereInput>;
   workspaceParticipations_some?: Maybe<WorkspaceParticipantWhereInput>;
   workspaceParticipations_none?: Maybe<WorkspaceParticipantWhereInput>;
@@ -1759,6 +1763,7 @@ export interface UserCreateInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role: Role;
+  deactivated?: Maybe<Boolean>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantCreateManyWithoutUserInput
   >;
@@ -2530,6 +2535,7 @@ export interface UserCreateWithoutWorkspaceParticipationsInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role: Role;
+  deactivated?: Maybe<Boolean>;
   projectParticipations?: Maybe<ProjectParticipantCreateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
 }
@@ -2673,6 +2679,7 @@ export interface UserCreateWithoutProjectParticipationsInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role: Role;
+  deactivated?: Maybe<Boolean>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantCreateManyWithoutUserInput
   >;
@@ -2853,6 +2860,7 @@ export interface UserUpdateDataInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role?: Maybe<Role>;
+  deactivated?: Maybe<Boolean>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantUpdateManyWithoutUserInput
   >;
@@ -4651,6 +4659,7 @@ export interface UserUpdateWithoutWorkspaceParticipationsDataInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role?: Maybe<Role>;
+  deactivated?: Maybe<Boolean>;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
 }
@@ -5099,6 +5108,7 @@ export interface UserUpdateWithoutProjectParticipationsDataInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role?: Maybe<Role>;
+  deactivated?: Maybe<Boolean>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantUpdateManyWithoutUserInput
   >;
@@ -6003,6 +6013,7 @@ export interface UserUpdateInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role?: Maybe<Role>;
+  deactivated?: Maybe<Boolean>;
   workspaceParticipations?: Maybe<
     WorkspaceParticipantUpdateManyWithoutUserInput
   >;
@@ -6015,6 +6026,7 @@ export interface UserUpdateManyMutationInput {
   hakaId?: Maybe<String>;
   googleId?: Maybe<String>;
   role?: Maybe<Role>;
+  deactivated?: Maybe<Boolean>;
   lastActivity?: Maybe<DateTimeInput>;
 }
 
@@ -6367,6 +6379,7 @@ export interface User {
   hakaId?: String;
   googleId?: String;
   role: Role;
+  deactivated: Boolean;
   createdAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
 }
@@ -6377,6 +6390,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   hakaId: () => Promise<String>;
   googleId: () => Promise<String>;
   role: () => Promise<Role>;
+  deactivated: () => Promise<Boolean>;
   workspaceParticipations: <
     T = FragmentableArray<WorkspaceParticipant>
   >(args?: {
@@ -6409,6 +6423,7 @@ export interface UserSubscription
   hakaId: () => Promise<AsyncIterator<String>>;
   googleId: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
+  deactivated: () => Promise<AsyncIterator<Boolean>>;
   workspaceParticipations: <
     T = Promise<AsyncIterator<WorkspaceParticipantSubscription>>
   >(args?: {
@@ -6443,6 +6458,7 @@ export interface UserNullablePromise
   hakaId: () => Promise<String>;
   googleId: () => Promise<String>;
   role: () => Promise<Role>;
+  deactivated: () => Promise<Boolean>;
   workspaceParticipations: <
     T = FragmentableArray<WorkspaceParticipant>
   >(args?: {
@@ -9332,6 +9348,7 @@ export interface UserPreviousValues {
   hakaId?: String;
   googleId?: String;
   role: Role;
+  deactivated: Boolean;
   createdAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
 }
@@ -9344,6 +9361,7 @@ export interface UserPreviousValuesPromise
   hakaId: () => Promise<String>;
   googleId: () => Promise<String>;
   role: () => Promise<Role>;
+  deactivated: () => Promise<Boolean>;
   createdAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
 }
@@ -9356,6 +9374,7 @@ export interface UserPreviousValuesSubscription
   hakaId: () => Promise<AsyncIterator<String>>;
   googleId: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
+  deactivated: () => Promise<AsyncIterator<Boolean>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
 }

@@ -14,7 +14,7 @@ export const authenticate = async (resolve, root, args, context, info) => {
   if (!rawToken) {
     context.role = Role.VISITOR
   } else {
-    const token = rawToken.split(' ')[1]
+    const [, token] = rawToken.split(' ')
     await getUser(token, context, prisma)
   }
 
@@ -32,20 +32,18 @@ export const parseToken = token => {
 
 const getUser = async (token, context, prisma) => {
   const id = parseToken(token)
-
-  let user = null
-  if (id) {
-    user = await prisma.user({ id })
-  } else {
-    throw new AuthenticationError('Invalid token: No ID found')
+  if (!id) {
+    throw new AuthenticationError('Invalid token: no ID found')
   }
-
+  const user = await prisma.user({ id })
   if (!user) {
-    context.role = Role.GUEST
-  } else {
-    context.user = user
-    context.role = Role.fromString(user.role, Role.GUEST)
+    throw new AuthenticationError('Invalid token: user not found')
+  } else if (user.deactivated) {
+    throw new AuthenticationError('Invalid token: user is deactivated')
   }
+
+  context.user = user
+  context.role = Role.fromString(user.role, Role.GUEST)
 
   // Update last activity of the user
   await prisma.updateUser({

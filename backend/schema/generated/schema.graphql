@@ -199,6 +199,7 @@ type User {
   hakaId: String
   googleId: String
   role: Role!
+  deactivated: Boolean!
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!

@@ -169,7 +169,8 @@ const AuthenticationMutations = {
       data: {
         tmcId: null,
         hakaId: null,
-        googleId: null
+        googleId: null,
+        deactivated: true
       }
     })
 

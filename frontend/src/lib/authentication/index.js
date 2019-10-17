@@ -36,8 +36,13 @@ class Auth {
 
   static async updateLocalInfo() {
     if (window.localStorage.currentUser) {
-      const info = await client.query({ query: GET_CURRENT_USER })
-      if (info.data.currentUser === null) {
+      let info
+      try {
+        info = await client.query({ query: GET_CURRENT_USER })
+      } catch (err) {
+        console.error('Auth check error:', err)
+      }
+      if (!info || info.data.currentUser === null) {
         await client.clearStore()
         window.localStorage.clear()
         return { type: 'logout' }
@@ -45,7 +50,7 @@ class Auth {
         return { type: 'update', user: info.data.currentUser }
       }
     }
-    throw Error('Not logged in')
+    return { type: 'noop' }
   }
 }
 
