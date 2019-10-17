@@ -6,19 +6,33 @@ import Auth from './lib/authentication'
 export const LoginStateContext = createContext(false)
 export const MessageStateContext = createContext('')
 
+const fixRole = user => ({
+  ...user,
+  role: typeof user.role === 'string' ? Role.fromString(user.role) : user.role
+})
+
+const fixData = data => ({
+  ...data,
+  type: typeof data.type === 'string' ? Auth.fromString(data.type) : data.type,
+  user: fixRole(data.user)
+})
+
 const loginReducers = {
   login: (state, { data }) => {
     window.localStorage.currentUser = JSON.stringify(data)
     return {
       loggedIn: true,
-      ...data,
-      type: Auth.fromString(data.type),
-      user: { ...data.user, role: Role.fromString(data.user.role) }
+      ...fixData(data)
     }
   },
   update: (state, { user }) => {
-    window.localStorage.currentUser = JSON.stringify({ ...state, type: state?.type?.id, user })
-    return { ...state, user }
+    window.localStorage.currentUser = JSON.stringify({
+      token: state.token,
+      displayname: state.displayname,
+      type: state.type.id,
+      user
+    })
+    return { ...state, user: fixRole(user) }
   },
   logout: () => ({ loggedIn: false, displayname: null, type: null, user: {} })
 }
@@ -27,9 +41,7 @@ const loginReducer = (state, action) => loginReducers[action.type](state, action
 
 let userData
 try {
-  userData = JSON.parse(window.localStorage.currentUser)
-  userData.user.role = Role.fromString(userData.user.role)
-  userData.type = Auth.fromString(userData.type)
+  userData = fixData(JSON.parse(window.localStorage.currentUser))
 } catch (error) {
   userData = {}
 }
