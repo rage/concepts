@@ -56,9 +56,10 @@ const Dialog = ({ contextRef }) => {
   }
 
   const mutate = async variables => {
+    console.log('Mutatingsing')
     const mutationArgs = {
       variables: { ...state.requiredVariables, ...variables },
-      optimisticResponse: state?.createOptimisticResponse({
+      optimisticResponse: state.createOptimisticResponse?.({
         ...state.requiredVariables, ...variables
       }) || undefined
     }
