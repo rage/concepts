@@ -80,7 +80,7 @@ const LoginView = () => {
     if (window.localStorage.connectHaka && loggedIn) {
       delete window.localStorage.connectHaka
       mergeUser({
-        accessToken: data.token
+        variables: { accessToken: data.token }
       }).then(() => history.push('/user'))
       return null
     }
