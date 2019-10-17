@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { IconButton, Snackbar, SnackbarContent } from '@material-ui/core'
 import { Close as CloseIcon, Error as ErrorIcon, Info as InfoIcon } from '@material-ui/icons'
 
-import { useMessageStateValue } from '../store'
+import { useMessageStateValue } from '../lib/store'
 
 const useStyles = makeStyles(theme => ({
   error: {

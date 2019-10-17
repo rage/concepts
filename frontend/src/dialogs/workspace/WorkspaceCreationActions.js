@@ -5,7 +5,7 @@ import { useMutation } from 'react-apollo-hooks'
 
 import cache from '../../apollo/update'
 import schema from '../../static/port.schema'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import { IMPORT_DATA } from '../../graphql/Mutation'
 import { getImportErrorMessage } from '../../lib/errorParse'
 

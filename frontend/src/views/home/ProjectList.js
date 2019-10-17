@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core'
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@material-ui/icons'
 
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/project'
 import { DELETE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'

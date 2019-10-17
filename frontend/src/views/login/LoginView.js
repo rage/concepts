@@ -8,7 +8,7 @@ import qs from 'qs'
 
 import { MERGE_USER } from '../../graphql/Mutation'
 import Auth from '../../lib/authentication'
-import { useLoginStateValue, useMessageStateValue } from '../../store'
+import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
 import { noDefault } from '../../lib/eventMiddleware'

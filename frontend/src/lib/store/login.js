@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-import { Role } from './lib/permissions'
-import Auth from './lib/authentication'
+import { Role } from '../../../../backend/src/util/permissions'
+import Auth from '../authentication'
 
 export const LoginStateContext = createContext(false)
-export const MessageStateContext = createContext('')
 
 const fixRole = user => ({
   ...user,
@@ -54,20 +53,4 @@ export const LoginStateProvider = ({ children }) => (
   </LoginStateContext.Provider>
 )
 
-const messageReducers = {
-  setError: (state, { data }) => ({ ...state, error: data }),
-  clearError: state => ({ ...state, error: '' }),
-  setNotification: (state, { data }) => ({ ...state, notification: data }),
-  clearNotification: state => ({ ...state, notification: '' })
-}
-
-const messageReducer = (state, action) => messageReducers[action.type](state, action)
-
-export const MessagingStateProvider = ({ children }) => (
-  <MessageStateContext.Provider value={useReducer(messageReducer, { error: '', notification: '' })}>
-    {children}
-  </MessageStateContext.Provider>
-)
-
-export const useMessageStateValue = () => useContext(MessageStateContext)
 export const useLoginStateValue = () => useContext(LoginStateContext)

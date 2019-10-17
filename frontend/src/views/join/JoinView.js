@@ -10,7 +10,7 @@ import { USE_SHARE_LINK } from '../../graphql/Mutation'
 import {
   WORKSPACES_FOR_USER, PEEK_SHARE_LINK, PEEK_SHARE_LINK_HACK, PROJECTS_FOR_USER
 } from '../../graphql/Query'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import CloneView from '../project/CloneView'
 import LoadingBar from '../../components/LoadingBar'
 import useRouter from '../../lib/useRouter'

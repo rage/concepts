@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
 
-import { useMessageStateValue } from '../store'
+import { useMessageStateValue } from '../lib/store'
 import { noDefault } from '../lib/eventMiddleware'
 
 const blankState = () => ({

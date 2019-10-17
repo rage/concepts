@@ -13,7 +13,7 @@ import { IMPORT_DATA } from '../../graphql/Mutation'
 import {
   PROJECTS_FOR_USER, WORKSPACES_FOR_USER, PROJECT_BY_ID_TEMPLATES
 } from '../../graphql/Query'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import cache from '../../apollo/update'
 import { getImportErrorMessage } from '../../lib/errorParse'
 

@@ -5,7 +5,7 @@ import { Typography, Paper } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import CourseList from './CourseList'
 import CourseEditor from './CourseEditor'
 import {

@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Auth from './lib/authentication'
-import { useLoginStateValue } from './store'
+import { useLoginStateValue } from './lib/store'
 import NavBar from './components/NavBar'
 import WorkspaceNavBar from './components/WorkspaceNavBar'
 import PrivateRoute from './components/PrivateRoute'

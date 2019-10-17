@@ -11,7 +11,7 @@ import {
 import { Role } from '../lib/permissions'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../static/userGuide'
-import { useLoginStateValue } from '../store'
+import { useLoginStateValue } from '../lib/store'
 
 const useStyles = makeStyles(theme => ({
   root: {
