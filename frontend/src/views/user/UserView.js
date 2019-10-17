@@ -125,7 +125,7 @@ const UserView = () => {
     ] : [{ query: WORKSPACES_FOR_USER }]
   })
 
-  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
+  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(window._googleAuthEnabled)
 
   useEffect(() => {
     Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)
@@ -252,42 +252,46 @@ const UserView = () => {
             <td>{data.user.id}</td>
             <td>N/A</td>
           </tr>
-          {Auth.TMC.isEnabled() && <tr>
+          <tr>
             <th>mooc.fi</th>
             <td>{data.user.tmcId || 'Not connected'}</td>
             <td>
-              <ConnectButton
+              {Auth.TMC.isEnabled() ? <ConnectButton
                 disabled={Boolean(loading)}
                 loading={loading === 'tmc'}
                 connected={Boolean(data.user.tmcId)}
                 onClick={connectTMC}
-              />
+              /> : 'Not enabled'}
             </td>
-          </tr>}
-          {Auth.HAKA.isEnabled() && <tr>
+          </tr>
+          <tr>
             <th>Haka</th>
             <td>{data.user.hakaId || 'Not connected'}</td>
             <td>
-              <ConnectButton
+              {Auth.HAKA.isEnabled() ? <ConnectButton
                 disabled={Boolean(loading)}
                 loading={loading === 'haka'}
                 connected={Boolean(data.user.hakaId)}
                 onClick={connectHaka}
-              />
+              /> : 'Not enabled'}
             </td>
-          </tr>}
-          {googleLoginEnabled && <tr>
+          </tr>
+          <tr>
             <th>Google</th>
             <td>{data.user.googleId || 'Not connected'}</td>
             <td>
-              <ConnectButton
-                disabled={Boolean(loading)}
-                loading={loading === 'google'}
-                connected={Boolean(data.user.googleId)}
-                onClick={connectGoogle}
-              />
+              {googleLoginEnabled === null
+                ? <CircularProgress size={24} />
+                : googleLoginEnabled
+                  ? <ConnectButton
+                    disabled={Boolean(loading)}
+                    loading={loading === 'google'}
+                    connected={Boolean(data.user.googleId)}
+                    onClick={connectGoogle}
+                  />
+                  : 'Not enabled'}
             </td>
-          </tr>}
+          </tr>
         </tbody>
       </table>
       <details className={classes.internalInfo}>
