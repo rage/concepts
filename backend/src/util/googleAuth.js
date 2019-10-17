@@ -4,7 +4,7 @@ try {
   metadata = require('../../google/credentials')
 
   const google = require('google-auth-library')
-  client = new google.OAuth2Client(metadata.client_id)
+  client = new google.OAuth2Client(metadata.client_id, metadata.client_secret)
 } catch (err) {
   console.error('Google auth credentials not set')
   metadata = null

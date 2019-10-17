@@ -1,8 +1,9 @@
+import { createRef } from 'react'
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
 
-import { savingIndicator } from '../components/NavBar'
-
 let requestsInFlight = 0
+
+export const savingIndicator = createRef()
 
 const client = new ApolloClient({
   uri: '/graphql',

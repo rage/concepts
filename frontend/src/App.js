@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Auth from './lib/authentication'
 import { useLoginStateValue } from './store'
 import NavBar from './components/NavBar'
 import WorkspaceNavBar from './components/WorkspaceNavBar'
 import PrivateRoute from './components/PrivateRoute'
 import CourseMapperView from './views/mapper/CourseMapperView'
-import PortView from './views/porting/PortView'
 import HomeView from './views/home/HomeView'
 import MapperRedirectView from './views/mapper/redirect/MapperRedirectView'
 import WorkspaceManagementView from './views/manager/WorkspaceManagementView'
@@ -21,6 +21,7 @@ import CloneView from './views/project/CloneView'
 import NotFoundView from './views/error/NotFoundView'
 import PointGroupsView from './views/project/PointGroupsView'
 import MembersView from './views/members/MembersView'
+import UserView from './views/user/UserView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -109,8 +110,13 @@ const projectRouter = prefix => <>
 </>
 
 const App = () => {
-  const [{ loggedIn }] = useLoginStateValue()
+  const [{ loggedIn }, dispatch] = useLoginStateValue()
   const classes = useStyles()
+
+  useEffect(() => {
+    Auth.updateLocalInfo().then(dispatch).catch(err => console.error('Auth update error:', err))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return <div className={classes.root}>
     <Route render={({ location }) => <NavBar location={location} />} />
@@ -119,9 +125,11 @@ const App = () => {
       <Route exact path='/' render={() => <HomeView />} />
 
       <Route exact path='/login' render={() => <LoginView />} />
+      <Route exact path='/login/error' render={() => <Redirect to='/login' />} />
+
       <PrivateRoute
-        exact path='/porting' redirectPath='/login' condition={loggedIn}
-        render={() => <PortView />} />
+        exact path='/user' redirectPath='/login' condition={loggedIn}
+        render={() => <UserView />} />
       <PrivateRoute
         exact path='/join/:token' redirectPath='/login' condition={loggedIn}
         render={({ match: { params: { token } } }) => <JoinView token={token} />} />

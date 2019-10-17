@@ -1,27 +1,55 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 import { Role } from './lib/permissions'
+import Auth from './lib/authentication'
 
 export const LoginStateContext = createContext(false)
 export const MessageStateContext = createContext('')
 
-const fixRole = user => ({ ...user, role: Role.fromString(user.role) })
+const fixRole = user => ({
+  ...user,
+  role: typeof user.role === 'string' ? Role.fromString(user.role) : user.role
+})
+
+const fixData = data => ({
+  ...data,
+  type: typeof data.type === 'string' ? Auth.fromString(data.type) : data.type,
+  user: fixRole(data.user)
+})
 
 const loginReducers = {
-  login: (state, { data }) => ({ ...state, loggedIn: true, user: fixRole(data) }),
-  logout: state => ({ ...state, loggedIn: false, user: {} })
+  noop: state => state,
+  login: (state, { data }) => {
+    window.localStorage.currentUser = JSON.stringify(data)
+    return {
+      loggedIn: true,
+      ...fixData(data)
+    }
+  },
+  update: (state, { user }) => {
+    window.localStorage.currentUser = JSON.stringify({
+      token: state.token,
+      displayname: state.displayname,
+      type: state.type.id,
+      user
+    })
+    return { ...state, user: fixRole(user) }
+  },
+  logout: () => ({ loggedIn: false, displayname: null, type: null, user: {} })
 }
 
 const loginReducer = (state, action) => loginReducers[action.type](state, action)
 
-let user
+let userData
 try {
-  user = fixRole(JSON.parse(window.localStorage.currentUser).user)
-} catch (error) {}
-const loggedIn = Boolean(user)
+  userData = fixData(JSON.parse(window.localStorage.currentUser))
+} catch (error) {
+  userData = {}
+}
+userData.loggedIn = Boolean(userData.user)
 
 export const LoginStateProvider = ({ children }) => (
-  <LoginStateContext.Provider value={useReducer(loginReducer, { user, loggedIn })}>
+  <LoginStateContext.Provider value={useReducer(loginReducer, userData)}>
     {children}
   </LoginStateContext.Provider>
 )

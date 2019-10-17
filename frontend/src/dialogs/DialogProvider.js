@@ -13,8 +13,7 @@ export const DialogProvider = ({ children }) => {
   const dialogContextProxy = {
     openDialog: (...args) => dialogContextValue.current.openDialog(...args),
     updateDialog: (...args) => dialogContextValue.current.updateDialog(...args),
-    closeDialog: (...args) => dialogContextValue.current.closeDialog(...args),
-    setSubmitDisabled: (...args) => dialogContextValue.current.setSubmitDisabled(...args)
+    closeDialog: (...args) => dialogContextValue.current.closeDialog(...args)
   }
 
   useEffect(() =>

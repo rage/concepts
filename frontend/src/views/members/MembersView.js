@@ -99,19 +99,19 @@ const MembersView = ({ projectId, workspaceId }) => {
     return <NotFoundView message={`${projectId ? 'Project' : 'Workspace'} not found`} />
   }
 
-  const getName = user =>
-    `${user.name || user.email || user.username || user.id} (${user.role.toLowerCase()})`
+  const getName = member =>
+    `${member.name || member.email || member.username || member.id} (${member.role.toLowerCase()})`
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       <EditableTable
         title='Members'
         columns={columns}
-        rows={(memberData || []).map(user => ({
-          name: getName(user),
-          privilege: user.privilege,
-          token: user.token || {},
-          id: user.participantId
+        rows={(memberData || []).map(member => ({
+          name: getName(member),
+          privilege: member.privilege,
+          token: member.token || {},
+          id: member.participantId
         }))}
         deleteMutation={({ id }) => deleteParticipant({
           variables: { id, type: type.toUpperCase() }
@@ -120,7 +120,7 @@ const MembersView = ({ projectId, workspaceId }) => {
           variables: { id, privilege, type: type.toUpperCase() }
         })).data.updateParticipant}
       />
-    </div>
+    </main>
   )
 }
 

@@ -89,7 +89,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
   }
 
   return (
-    <div className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>
+    <main className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>
       <DividerWithText
         gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
       />
@@ -119,7 +119,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
         urlPrefix={urlPrefix} courseTrayOpen={courseTrayOpen} courseLinkMap={courseLinkMap}
         workspace={workspace} course={course} courseLinks={courseLinks}
       />
-    </div>
+    </main>
   )
 }
 
