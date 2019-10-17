@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-import { Role } from '../../../../backend/src/util/permissions'
+import { Role } from '../permissions'
 import Auth from '../authentication'
 
 export const LoginStateContext = createContext(false)
