@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 import { Role } from './lib/permissions'
+import Auth from './lib/authentication'
 
 export const LoginStateContext = createContext(false)
 export const MessageStateContext = createContext('')
@@ -11,11 +12,12 @@ const loginReducers = {
     return {
       loggedIn: true,
       ...data,
+      type: Auth.fromString(data.type),
       user: { ...data.user, role: Role.fromString(data.user.role) }
     }
   },
   update: (state, { user }) => {
-    window.localStorage.currentUser = JSON.stringify({ ...state, user })
+    window.localStorage.currentUser = JSON.stringify({ ...state, type: state?.type?.id, user })
     return { ...state, user }
   },
   logout: () => ({ loggedIn: false, displayname: null, type: null, user: {} })
@@ -27,6 +29,7 @@ let userData
 try {
   userData = JSON.parse(window.localStorage.currentUser)
   userData.user.role = Role.fromString(userData.user.role)
+  userData.type = Auth.fromString(userData.type)
 } catch (error) {
   userData = {}
 }

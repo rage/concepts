@@ -115,6 +115,7 @@ const App = () => {
 
   useEffect(() => {
     Auth.updateLocalInfo().then(dispatch).catch(err => console.error('Auth update error:', err))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return <div className={classes.root}>

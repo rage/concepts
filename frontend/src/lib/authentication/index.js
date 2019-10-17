@@ -2,11 +2,13 @@ import client from '../../apollo/apolloClient'
 import * as tmc from './tmc'
 import * as google from './google'
 import * as haka from './haka'
+import * as guest from './guest'
 import { GET_CURRENT_USER } from '../../graphql/Query'
 
 class Auth {
   static idMap = new Map()
 
+  static GUEST = new Auth('GUEST', 'guest', guest)
   static TMC = new Auth('TMC', 'mooc.fi', tmc)
   static GOOGLE = new Auth('GOOGLE', 'Google', google)
   static HAKA = new Auth('HAKA', 'Haka', haka)

@@ -119,7 +119,7 @@ const AuthenticationMutations = {
       role: guest.role,
       id: guest.id
     }, process.env.SECRET)
-    await makeMockWorkspaceForUser(context, guest.id)
+    await makeMockWorkspaceForUser(context.prisma, guest.id)
     return {
       token,
       user: guest

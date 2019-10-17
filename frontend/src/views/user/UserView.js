@@ -68,13 +68,6 @@ const useStyles = makeStyles({
   }
 })
 
-const fancyTypeName = {
-  TMC: (name, role) => `${name} on mooc.fi (role: ${role.toLowerCase()})`,
-  GOOGLE: (name, role) => `${name} on Google (role: ${role.toLowerCase()})`,
-  HAKA: (name, role) => `${name} through Haka (role: ${role.toLowerCase()})`,
-  GUEST: () => 'a guest'
-}
-
 const ConnectButton = ({ disabled, loading, onClick, connected }) => {
   const classes = useStyles()
   return (
@@ -99,14 +92,16 @@ const ConnectButton = ({ disabled, loading, onClick, connected }) => {
 const JSONObject = ({ data, className }) => (
   <table className={className}>
     <tbody>
-      {Object.entries(data).map(([key, value]) => <tr key={key}>
-        <th nowrap='true'>"{key}":</th>
-        <td>
-          {value !== null && typeof value === 'object'
-            ? <JSONObject data={value} />
-            : JSON.stringify(value)}
-        </td>
-      </tr>)}
+      {Object.entries(data).map(([key, value]) => typeof value !== 'function' && (
+        <tr key={key}>
+          <th nowrap='true'>"{key}":</th>
+          <td>
+            {value !== null && typeof value === 'object'
+              ? <JSONObject data={value} />
+              : JSON.stringify(value)}
+          </td>
+        </tr>
+      ))}
     </tbody>
   </table>
 )
@@ -239,8 +234,8 @@ const UserView = () => {
   return <div className={classes.wrapper}>
     <main className={classes.root}>
       <Typography variant='h6' component='h6'>
-        Currently signed in
-        as {fancyTypeName[data.type](data.displayname, data.user.role)}
+        Currently signed in as {data.type === Auth.GUEST ? 'a guest'
+          : `${data.displayname} on ${data.type.name} (role: ${data.user.role})`}
       </Typography>
 
       <table className={classes.connectionTable} cellSpacing={0}>

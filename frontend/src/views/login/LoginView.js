@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core'
 import qs from 'qs'
 
-import { CREATE_GUEST_ACCOUNT, MERGE_USER } from '../../graphql/Mutation'
+import { MERGE_USER } from '../../graphql/Mutation'
 import Auth from '../../lib/authentication'
 import { useLoginStateValue, useMessageStateValue } from '../../store'
 import useRouter from '../../useRouter'
@@ -22,10 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
   wrapper: {
     position: 'relative',
-    margin: theme.spacing(1, 0),
-    '& > .abcRioButton': {
-      width: '100% !important'
-    }
+    margin: theme.spacing(1, 0)
   },
   form: {
     marginTop: theme.spacing(1)
@@ -54,8 +51,6 @@ const useStyles = makeStyles(theme => ({
 const LoginView = () => {
   const classes = useStyles()
   const { history, location } = useRouter()
-
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
 
   const [, dispatch] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
@@ -130,9 +125,7 @@ const LoginView = () => {
   const createGuestAccount = noDefault(async () => {
     setLoadingGuest(true)
     try {
-      const result = await createGuestMutation()
-      const data = result.data.createGuest
-      data.type = 'GUEST'
+      const data = await Auth.GUEST.signIn()
       await dispatch({ type: 'login', data })
       history.push(nextPath)
     } catch {
