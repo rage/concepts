@@ -2,9 +2,9 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Grid, Typography, Container } from '@material-ui/core'
 
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue } from '../../lib/store'
 import UserViewContent from './UserViewContent'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 import Auth from '../../lib/authentication'
 
 const useStyles = makeStyles(theme => ({

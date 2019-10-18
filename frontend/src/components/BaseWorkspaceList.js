@@ -12,8 +12,8 @@ import {
 
 import { Privilege } from '../lib/permissions'
 import { exportWorkspace } from './WorkspaceNavBar'
-import { useMessageStateValue } from '../store'
-import useRouter from '../useRouter'
+import { useMessageStateValue } from '../lib/store'
+import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles(theme => ({

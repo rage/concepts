@@ -3,7 +3,7 @@
   "name": "Concepts",
   "icons": [
     {
-      "src": "favicon.png",
+      "src": "/res/favicon.png",
       "sizes": "100x100",
       "type": "image/png"
     }

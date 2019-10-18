@@ -10,7 +10,7 @@ import { useShareDialog } from '../../dialogs/sharing'
 import NotFoundView from '../error/NotFoundView'
 import TemplateList from './TemplateList'
 import MergeList from './MergeList'
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue } from '../../lib/store'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 

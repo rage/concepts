@@ -6,13 +6,13 @@ import { useMutation } from 'react-apollo-hooks'
 
 import { Role } from '../../lib/permissions'
 import { Concept } from './concept'
-import { useLoginStateValue, useMessageStateValue } from '../../store'
+import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {

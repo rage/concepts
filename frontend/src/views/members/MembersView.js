@@ -10,7 +10,7 @@ import {
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import EditableTable, { Type } from '../../components/EditableTable'
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue } from '../../lib/store'
 import { DELETE_PARTICIPANT, UPDATE_PARTICIPANT } from '../../graphql/Mutation'
 
 const useStyles = makeStyles(() => ({

@@ -11,7 +11,7 @@ import { Role } from '../../lib/permissions'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import { noPropagation } from '../../lib/eventMiddleware'
 

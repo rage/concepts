@@ -17,8 +17,8 @@ import { AccountCircle, NavigateNext as NavigateNextIcon } from '@material-ui/ic
 import { savingIndicator } from '../apollo/apolloClient'
 import { Role } from '../lib/permissions'
 import { PROJECT_BY_ID, WORKSPACE_BY_ID, COURSE_BY_ID } from '../graphql/Query'
-import { useLoginStateValue } from '../store'
-import useRouter from '../useRouter'
+import { useLoginStateValue } from '../lib/store'
+import useRouter from '../lib/useRouter'
 import { useLoadingBar } from './LoadingBar'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />

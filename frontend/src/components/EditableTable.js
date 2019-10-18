@@ -10,7 +10,7 @@ import {
 import { DateTimePicker } from '@material-ui/pickers'
 import moment from 'moment'
 
-import { useMessageStateValue } from '../store'
+import { useMessageStateValue } from '../lib/store'
 
 const useStyles = makeStyles(theme => ({
   root: {
