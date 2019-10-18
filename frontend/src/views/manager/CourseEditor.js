@@ -9,7 +9,7 @@ import Select from 'react-select/creatable'
 
 import { Role } from '../../lib/permissions'
 import MergeDialog from './MergeDialog'
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue } from '../../lib/store'
 import {
   backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'

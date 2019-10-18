@@ -7,11 +7,11 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { CLONE_TEMPLATE_WORKSPACE, USE_SHARE_LINK } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import generateName from '../../lib/generateName'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 import { noDefault } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({

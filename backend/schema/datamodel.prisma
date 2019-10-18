@@ -4,9 +4,11 @@ type User {
   id: ID! @id
   tmcId: Int @unique
   hakaId: String @unique
+  googleId: String @unique
   role: Role!
-  workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser")
-  projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser")
+  deactivated: Boolean! @default(value: false)
+  workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser", onDelete: CASCADE)
+  projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser", onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   lastActivity: DateTime
 }

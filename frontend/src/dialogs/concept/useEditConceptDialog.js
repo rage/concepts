@@ -5,6 +5,7 @@ import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
+import generateTempId from '../../lib/generateTempId'
 
 const useEditConceptDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -17,13 +18,30 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
     update: cache.updateConceptUpdate(workspaceId)
   })
 
-  return (conceptId, name, description, tags, official, frozen) => openDialog({
+  const createOptimisticResponse = ({ id, name, official, frozen, description, tags, course }) => ({
+    __typename: 'Mutation',
+    updateConcept: {
+      __typename: 'Concept',
+      id,
+      name,
+      description,
+      official,
+      frozen,
+      course,
+      tags: tags.map(tag => ({
+        ...tag,
+        __typename: 'Tag',
+        id: tag.id || generateTempId(),
+        priority: tag.priority || 0
+      }))
+    }
+  })
+
+  return ({ id, name, description, tags, official, frozen, course }) => openDialog({
     mutation: updateConcept,
+    createOptimisticResponse: (args) => createOptimisticResponse({ ...args, course }),
     type: 'Concept',
-    requiredVariables: {
-      id: conceptId,
-      official: false
-    },
+    requiredVariables: { id, official: false },
     actionText: 'Save',
     title: 'Edit concept',
     fields: [{

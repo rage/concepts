@@ -13,9 +13,10 @@ import Tooltip from '@material-ui/core/Tooltip'
 import { Role } from '../../../lib/permissions'
 import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
 import cache from '../../../apollo/update'
-import { useMessageStateValue, useLoginStateValue } from '../../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../../lib/store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 import { noPropagation } from '../../../lib/eventMiddleware'
+import generateTempId from '../../../lib/generateTempId'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -103,6 +104,27 @@ const Concept = ({
             to: isActive ? concept.id : addingLink.id,
             from: isActive ? addingLink.id : concept.id,
             workspaceId
+          },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            createConceptLink: {
+              __typename: 'ConceptLink',
+              id: generateTempId(),
+              official: false,
+              frozen: false,
+              to: {
+                __typename: 'Concept',
+                id: isActive ? concept.id : addingLink.id
+              },
+              from: {
+                __typename: 'Concept',
+                id: isActive ? addingLink.id : concept.id,
+                course: {
+                  __typename: 'Course',
+                  id: isActive ? addingLink.courseId : activeCourseId
+                }
+              }
+            }
           }
         })
         // FIXME https://github.com/facebook/react/issues/10231#issuecomment-316644950
@@ -123,6 +145,7 @@ const Concept = ({
     } else {
       setAddingLink({
         id: concept.id,
+        courseId: concept.course.id,
         type: ownType,
         oppositeType
       })
@@ -154,8 +177,7 @@ const Concept = ({
 
   const handleEditConcept = () => {
     handleMenuClose()
-    openEditConceptDialog(concept.id, concept.name, concept.description,
-      concept.tags, concept.official, concept.frozen)
+    openEditConceptDialog(concept)
   }
 
   const linkButtonColor = !addingLink && focusedConceptIds.has(concept.id) ? 'secondary' : undefined

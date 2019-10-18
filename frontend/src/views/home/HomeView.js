@@ -1,12 +1,11 @@
 import React from 'react'
-import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Grid, Typography, Container } from '@material-ui/core'
 
-import { useLoginStateValue } from '../../store'
-import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
+import { useLoginStateValue } from '../../lib/store'
 import UserViewContent from './UserViewContent'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
+import Auth from '../../lib/authentication'
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -26,30 +25,17 @@ const HomeView = () => {
 
   const [{ loggedIn, user }, dispatch] = useLoginStateValue()
 
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
-
-  const createGuestAccount = async () => {
-    const result = await createGuestMutation()
-    const userData = result.data.createGuest
-    window.localStorage.currentUser = JSON.stringify(userData)
-    await dispatch({
-      type: 'login',
-      data: userData.user
-    })
-  }
-
-  const navigateToGuestWorkspace = async () => {
-    if (!loggedIn) {
-      await createGuestAccount()
-    }
-  }
-
   if (loggedIn) {
     return <UserViewContent user={user} />
   }
 
+  const createGuestAccount = async () => {
+    const data = await Auth.GUEST.signIn()
+    await dispatch({ type: 'login', data })
+  }
+
   return (
-    <div className={classes.heroContent}>
+    <main className={classes.heroContent}>
       <Container maxWidth='sm'>
         <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
           Concepts
@@ -67,14 +53,14 @@ const HomeView = () => {
               </Button>
             </Grid>
             <Grid item>
-              <Button variant='outlined' color='primary' onClick={navigateToGuestWorkspace}>
+              <Button variant='outlined' color='primary' onClick={createGuestAccount}>
                 Continue as guest
               </Button>
             </Grid>
           </Grid>
         </div>
       </Container>
-    </div>
+    </main>
   )
 }
 

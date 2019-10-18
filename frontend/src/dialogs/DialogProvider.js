@@ -1,7 +1,7 @@
 import React, { useRef, createContext, useContext, useEffect } from 'react'
 
 import Dialog from './Dialog'
-import useRouter from '../useRouter'
+import useRouter from '../lib/useRouter'
 
 export const DialogContext = createContext({})
 export const useDialog = () => useContext(DialogContext)
@@ -13,8 +13,7 @@ export const DialogProvider = ({ children }) => {
   const dialogContextProxy = {
     openDialog: (...args) => dialogContextValue.current.openDialog(...args),
     updateDialog: (...args) => dialogContextValue.current.updateDialog(...args),
-    closeDialog: (...args) => dialogContextValue.current.closeDialog(...args),
-    setSubmitDisabled: (...args) => dialogContextValue.current.setSubmitDisabled(...args)
+    closeDialog: (...args) => dialogContextValue.current.closeDialog(...args)
   }
 
   useEffect(() =>

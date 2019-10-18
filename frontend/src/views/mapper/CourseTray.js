@@ -13,9 +13,9 @@ import { Role } from '../../lib/permissions'
 import cache from '../../apollo/update'
 import { CREATE_COURSE_LINK, DELETE_COURSE_LINK, DELETE_COURSE } from '../../graphql/Mutation'
 import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course'
-import { useMessageStateValue, useLoginStateValue } from '../../store'
+import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
-import useRouter from '../../useRouter'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -91,9 +91,16 @@ const PrerequisiteCourse = ({
         deleteCourseMutation({
           variables: {
             id: course.id
+          },
+          optimisticResponse: {
+            __typename: 'Mutation',
+            deleteCourse: {
+              __typename: 'Course',
+              id: course.id
+            }
           }
         }).then(() => {
-          if (activeCourseId === workspace.course.id) {
+          if (activeCourseId === course.id) {
             if (workspace.courses.length > 1) {
               const nextCourse = workspace.courses.find(c => c.id !== course.id)
               history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
@@ -142,8 +149,7 @@ const PrerequisiteCourse = ({
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             <MenuItem onClick={() => {
               handleMenuClose()
-              openEditCourseDialog(course.id, course.name, course.official,
-                course.frozen, course.tags)
+              openEditCourseDialog(course)
             }}>Edit</MenuItem>
             {!course.frozen && <MenuItem onClick={deleteCourse}>Delete</MenuItem>}
           </Menu>

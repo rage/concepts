@@ -4,6 +4,8 @@ type Query {
   # Authentication
   allUsers: [User!]!
   userById(id: ID!): User!
+  googleClientId: GoogleClientID
+  currentUser: User
 
   # Project queries
   allProjects: [Project!]!
@@ -33,6 +35,9 @@ type Query {
 type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload
+  loginGoogle(idToken: String!): AuthPayload
+  mergeUser(accessToken: String!): User!
+  disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload
 
   # Course mutations
@@ -146,9 +151,20 @@ type DeletedConcept {
   courseId: ID!
 }
 
+enum AuthType {
+  TMC
+  HAKA
+  GOOGLE
+}
+
 type AuthPayload {
   token: String!
   user: User!
+}
+
+type GoogleClientID {
+  enabled: Boolean!
+  clientId: String
 }
 
 input TagInput {
@@ -181,7 +197,9 @@ type User {
   id: ID!
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
+  deactivated: Boolean!
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!

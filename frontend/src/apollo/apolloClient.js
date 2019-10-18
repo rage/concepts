@@ -1,10 +1,9 @@
+import { createRef } from 'react'
 import ApolloClient, { InMemoryCache } from 'apollo-boost'
 import { split } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
-
-import { savingIndicator } from '../components/NavBar'
 
 let requestsInFlight = 0
 
@@ -25,6 +24,7 @@ const link = split(
   wsLink,
   httpLink
 )
+export const savingIndicator = createRef()
 
 const client = new ApolloClient({
   link,

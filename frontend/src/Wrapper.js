@@ -7,13 +7,13 @@ import MomentUtils from '@date-io/moment'
 
 import App from './App'
 import client from './apollo/apolloClient'
-import { LoginStateProvider, MessagingStateProvider } from './store'
+import { LoginStateProvider, MessagingStateProvider } from './lib/store'
 import FocusOverlayProvider from './components/FocusOverlay'
 import InfoBoxProvider from './components/InfoBox'
 import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
 import { LoadingProvider } from './components/LoadingBar'
-import WindowTooSmall, { MIN_WIDTH } from './WindowTooSmall'
+import WindowTooSmall, { MIN_WIDTH } from './views/WindowTooSmall'
 
 const ConceptsWrapper = () => {
   const [, rerender] = useState(false)

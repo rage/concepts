@@ -10,7 +10,7 @@ import {
 } from '../../graphql/Mutation'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import EditableTable, { Type } from '../../components/EditableTable'
 
 const useStyles = makeStyles(() => ({

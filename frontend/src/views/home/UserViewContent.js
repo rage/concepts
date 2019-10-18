@@ -58,7 +58,7 @@ const UserViewContent = ({ user }) => {
   }
 
   return (
-    <div className={`${classes.root} ${user.role.toLowerCase()}`}>
+    <main className={`${classes.root} ${user.role.toLowerCase()}`}>
       <WorkspaceList
         workspaces={workspaceQuery.data.workspacesForUser.map(ws => ws.workspace)
           .filter(workspace => !workspace.asTemplate)}
@@ -70,7 +70,7 @@ const UserViewContent = ({ user }) => {
       <IconButton className={classes.helpButton} onClick={infoBox.open}>
         <HelpIcon />
       </IconButton>
-    </div>
+    </main>
   )
 }
 

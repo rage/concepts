@@ -3,19 +3,25 @@ import { useQuery } from 'react-apollo-hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  AppBar, Toolbar, Typography, Breadcrumbs, Link as MaterialLink, CircularProgress, LinearProgress
+  AppBar,
+  Toolbar,
+  Typography,
+  Breadcrumbs,
+  Link as MaterialLink,
+  CircularProgress,
+  LinearProgress,
+  IconButton
 } from '@material-ui/core'
-import { NavigateNext as NavigateNextIcon } from '@material-ui/icons'
+import { AccountCircle, NavigateNext as NavigateNextIcon } from '@material-ui/icons'
 
+import { savingIndicator } from '../apollo/apolloClient'
 import { Role } from '../lib/permissions'
-import AuthenticationIcon from './AuthIcon'
 import { PROJECT_BY_ID, WORKSPACE_BY_ID, COURSE_BY_ID } from '../graphql/Query'
-import { useLoginStateValue } from '../store'
+import { useLoginStateValue } from '../lib/store'
+import useRouter from '../lib/useRouter'
 import { useLoadingBar } from './LoadingBar'
 
 const Link = props => <MaterialLink {...props} component={RouterLink} />
-
-export const savingIndicator = React.createRef()
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -125,8 +131,6 @@ const parsePath = (path) => {
   switch (path?.[0]) {
   case '':
     return parsePath(path.slice(1))
-  case 'porting':
-    return [{ name: 'Import data' }]
   case 'login':
     return [{ name: 'Log in' }]
   case 'user':
@@ -170,6 +174,7 @@ const pathItemId = item => item.link || item.name
 const NavBar = ({ location }) => {
   const [{ loggedIn, user }] = useLoginStateValue()
   const [loading, setLoading] = useState(null)
+  const { history } = useRouter()
   const loadingCache = useRef(new Set())
   const prevLocation = useRef(location.pathname)
   const prevPath = useRef([])
@@ -264,7 +269,7 @@ const NavBar = ({ location }) => {
 
   const classes = useStyles()
   return (
-    <div className={classes.root}>
+    <nav className={classes.root}>
       <AppBar elevation={0} position='static'>
         <Toolbar variant='dense'>
           <style>{`
@@ -308,11 +313,19 @@ const NavBar = ({ location }) => {
           <div
             ref={savingIndicator}
             className={`${classes.savingIndicator} ${loggedIn ? classes.loggedIn : ''}`} />
-          <AuthenticationIcon />
+
+          {loggedIn && <IconButton
+            aria-label='Account of current user'
+            aria-haspopup='true'
+            onClick={() => history.push('/user')}
+            color='inherit'
+          >
+            <AccountCircle />
+          </IconButton>}
         </Toolbar>
       </AppBar>
       {loading && <LinearProgress color='secondary' />}
-    </div>
+    </nav>
   )
 }
 

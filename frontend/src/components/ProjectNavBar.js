@@ -12,10 +12,10 @@ import {
 import { Privilege } from '../lib/permissions'
 import { PROJECT_BY_ID, PROJECTS_FOR_USER } from '../graphql/Query'
 import { DELETE_PROJECT } from '../graphql/Mutation'
-import { useMessageStateValue, useLoginStateValue } from '../store'
+import { useMessageStateValue, useLoginStateValue } from '../lib/store'
 import { useShareDialog } from '../dialogs/sharing'
 import useEditProjectDialog from '../dialogs/project/useEditProjectDialog'
-import useRouter from '../useRouter'
+import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
 
 const useStyles = makeStyles({
@@ -106,7 +106,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   ) === Privilege.OWNER
 
   return (
-    <Paper className={classes.root} square>
+    <Paper component='footer' className={classes.root} square>
       <div className={classes.leftPlaceholder} />
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
         <BottomNavigationAction

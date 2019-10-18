@@ -5,13 +5,14 @@ import {
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
 
-import { useMessageStateValue } from '../store'
+import { useMessageStateValue } from '../lib/store'
 import { noDefault } from '../lib/eventMiddleware'
 
 const blankState = () => ({
   open: false,
   submitDisabled: false,
   mutation: null,
+  createOptimisticResponse: null,
   requiredVariables: [],
   actionText: '',
   fields: [],
@@ -19,7 +20,8 @@ const blankState = () => ({
   content: [],
   CustomActions: null,
   customActionsProps: null,
-  type: ''
+  type: '',
+  promise: null
 })
 
 const OptionalForm = ({ enable, onSubmit, children }) => {
@@ -40,7 +42,12 @@ const Dialog = ({ contextRef }) => {
   const setSubmitDisabled = submitDisabled => setState({ ...state, submitDisabled })
 
   const closeDialog = () => {
+    if (!state.promise) {
+      // This means we're not open at all
+      return
+    }
     clearTimeout(stateChange.current)
+    state.promise.reject(new Error('Dialog closed'))
     setState({ ...state, open: false })
     stateChange.current = setTimeout(() => {
       setState(blankState())
@@ -48,7 +55,27 @@ const Dialog = ({ contextRef }) => {
     }, 250)
   }
 
-  const handleSubmit = (close) => {
+  const mutate = async variables => {
+    const mutationArgs = {
+      variables: { ...state.requiredVariables, ...variables },
+      optimisticResponse: state.createOptimisticResponse?.({
+        ...state.requiredVariables, ...variables
+      }) || undefined
+    }
+    const hasOptimisticResponse = Boolean(state.createOptimisticResponse)
+    if (hasOptimisticResponse) closeDialog()
+    try {
+      await state.mutation(mutationArgs)
+    } catch (e) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
+    }
+    if (!hasOptimisticResponse) closeDialog()
+  }
+
+  const handleSubmit = () => {
     if (state.submitDisabled) return
     const variables = {}
     for (const key of state.fields) {
@@ -71,38 +98,42 @@ const Dialog = ({ contextRef }) => {
       if (key.list) variables[key.list].push(data)
       else variables[key.name] = data
     }
-    setSubmitDisabled(true)
-    state.mutation({ variables: { ...state.requiredVariables, ...variables } })
-      .catch(() => {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
-      })
-      .finally(close
-        ? closeDialog
-        : () => setSubmitDisabled(false))
+    state.promise.resolve(variables)
+    if (state.mutation) {
+      setSubmitDisabled(true)
+      return mutate(variables)
+    } else {
+      closeDialog()
+    }
   }
+
   const setCheckboxValue = key =>
     key.hasOwnProperty('defaultValue') ? key.defaultValue : false
 
-  contextRef.current.setSubmitDisabled = setSubmitDisabled
   contextRef.current.closeDialog = closeDialog
   contextRef.current.inputState = inputState
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
-    customActionsProps, type
+    customActionsProps, type, createOptimisticResponse, rejectPromise
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
       setInputState(Object.fromEntries(fields.map(key =>
         [key.name, key.type === 'checkbox' ? setCheckboxValue(key) : key.defaultValue || ''])))
     }
+    let _resolve, _reject
+    const promise = new Promise((resolve, reject) => {
+      _resolve = resolve
+      _reject = reject
+    })
+    promise.resolve = _resolve
+    promise.reject = rejectPromise ? _reject : _resolve
     setState({
       open: true,
       submitDisabled: false,
       mutation,
+      createOptimisticResponse,
       requiredVariables,
       actionText,
       fields: fields
@@ -113,8 +144,10 @@ const Dialog = ({ contextRef }) => {
       content: content || [],
       CustomActions,
       customActionsProps,
-      type
+      type,
+      promise
     })
+    return promise
   }
 
   contextRef.current.updateDialog = ({ ...data }) => {
@@ -151,7 +184,7 @@ const Dialog = ({ contextRef }) => {
                   margin='dense'
                   name={field.name}
                   label={field.name[0].toUpperCase() + field.name.substr(1)}
-                  type='text'
+                  type={field.textfieldType || 'text'}
                   rows={2}
                   rowsMax={10}
                   value={inputState[field.name]}

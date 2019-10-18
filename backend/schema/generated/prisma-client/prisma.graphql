@@ -4133,7 +4133,9 @@ type User {
   id: ID!
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
+  deactivated: Boolean!
   workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   createdAt: DateTime!
@@ -4150,7 +4152,9 @@ input UserCreateInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
+  deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
@@ -4175,7 +4179,9 @@ input UserCreateWithoutProjectParticipationsInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
+  deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
 }
@@ -4184,7 +4190,9 @@ input UserCreateWithoutWorkspaceParticipationsInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
+  deactivated: Boolean
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
 }
@@ -4201,8 +4209,12 @@ enum UserOrderByInput {
   tmcId_DESC
   hakaId_ASC
   hakaId_DESC
+  googleId_ASC
+  googleId_DESC
   role_ASC
   role_DESC
+  deactivated_ASC
+  deactivated_DESC
   createdAt_ASC
   createdAt_DESC
   lastActivity_ASC
@@ -4213,7 +4225,9 @@ type UserPreviousValues {
   id: ID!
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role!
+  deactivated: Boolean!
   createdAt: DateTime!
   lastActivity: DateTime
 }
@@ -4239,7 +4253,9 @@ input UserSubscriptionWhereInput {
 input UserUpdateDataInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
+  deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
@@ -4248,7 +4264,9 @@ input UserUpdateDataInput {
 input UserUpdateInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
+  deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
@@ -4257,7 +4275,9 @@ input UserUpdateInput {
 input UserUpdateManyMutationInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
+  deactivated: Boolean
   lastActivity: DateTime
 }
 
@@ -4285,7 +4305,9 @@ input UserUpdateOneRequiredWithoutWorkspaceParticipationsInput {
 input UserUpdateWithoutProjectParticipationsDataInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
+  deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
 }
@@ -4293,7 +4315,9 @@ input UserUpdateWithoutProjectParticipationsDataInput {
 input UserUpdateWithoutWorkspaceParticipationsDataInput {
   tmcId: Int
   hakaId: String
+  googleId: String
   role: Role
+  deactivated: Boolean
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
 }
@@ -4350,10 +4374,26 @@ input UserWhereInput {
   hakaId_not_starts_with: String
   hakaId_ends_with: String
   hakaId_not_ends_with: String
+  googleId: String
+  googleId_not: String
+  googleId_in: [String!]
+  googleId_not_in: [String!]
+  googleId_lt: String
+  googleId_lte: String
+  googleId_gt: String
+  googleId_gte: String
+  googleId_contains: String
+  googleId_not_contains: String
+  googleId_starts_with: String
+  googleId_not_starts_with: String
+  googleId_ends_with: String
+  googleId_not_ends_with: String
   role: Role
   role_not: Role
   role_in: [Role!]
   role_not_in: [Role!]
+  deactivated: Boolean
+  deactivated_not: Boolean
   workspaceParticipations_every: WorkspaceParticipantWhereInput
   workspaceParticipations_some: WorkspaceParticipantWhereInput
   workspaceParticipations_none: WorkspaceParticipantWhereInput
@@ -4385,6 +4425,7 @@ input UserWhereUniqueInput {
   id: ID
   tmcId: Int
   hakaId: String
+  googleId: String
 }
 
 type Workspace {

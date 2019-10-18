@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -6,11 +6,13 @@ import {
 } from '@material-ui/core'
 import qs from 'qs'
 
-import { CREATE_GUEST_ACCOUNT } from '../../graphql/Mutation'
-import { signIn, isSignedIn } from '../../lib/authentication'
-import { useLoginStateValue } from '../../store'
-import useRouter from '../../useRouter'
+import { MERGE_USER } from '../../graphql/Mutation'
+import Auth from '../../lib/authentication'
+import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
+import useRouter from '../../lib/useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
+import { noDefault } from '../../lib/eventMiddleware'
+import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -47,90 +49,116 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-// eslint-disable-next-line no-undef
-const HAKA_URL = process.env.REACT_APP_HAKA_URL
-
 const LoginView = () => {
   const classes = useStyles()
   const { history, location } = useRouter()
 
-  const createGuestMutation = useMutation(CREATE_GUEST_ACCOUNT)
-
-  const [, dispatch] = useLoginStateValue()
+  const [{ loggedIn }, dispatch] = useLoginStateValue()
+  const [, messageDispatch] = useMessageStateValue()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loadingTMC, setLoadingTMC] = useState(false)
   const [loadingGuest, setLoadingGuest] = useState(false)
+  const [loadingGoogle, setLoadingGoogle] = useState(false)
+  const [loadingHaka, setLoadingHaka] = useState(false)
+  const loading = loadingTMC || loadingGuest || loadingGoogle
+
+  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
+
+  useEffect(() => {
+    Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)
+  }, [])
 
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
 
+  const mergeUser = useMutation(MERGE_USER)
+
+  if (loadingHaka) {
+    return <LoadingBar id='login-haka' />
+  }
+
   if (location.hash?.length > 1) {
-    const query = qs.parse(location.hash.substr(1))
-    if (query.token) {
-      window.localStorage.currentUser = JSON.stringify(query)
-      dispatch({
-        type: 'login',
-        data: query.user
+    const data = qs.parse(location.hash.substr(1))
+    if (window.localStorage.connectHaka && loggedIn) {
+      delete window.localStorage.connectHaka
+      mergeUser({
+        variables: { accessToken: data.token }
+      }).then(() => history.push('/user'), err => {
+        console.error('Failed to merge haka account:', err)
+        setLoadingHaka(false)
+        messageDispatch({
+          type: 'setError',
+          data: 'Failed to merge account'
+        })
       })
+      setLoadingHaka(true)
+      return null
+    }
+    if (data.token) {
+      data.type = 'HAKA'
+      dispatch({ type: 'login', data })
       history.push(nextPath)
       return null
     }
   }
 
-  const authenticate = (event) => {
-    event.preventDefault()
-    setLoading(true)
-    signIn({ email, password }).then(response => dispatch({
-      type: 'login',
-      data: response.user
-    })).catch(() => {
+  const authenticateGoogle = async () => {
+    setLoadingGoogle(true)
+    try {
+      const data = await Auth.GOOGLE.signIn()
+      dispatch({ type: 'login', data })
+      history.push(nextPath)
+    } catch (err) {
+      console.error(err)
+      messageDispatch({
+        type: 'setError',
+        data: 'Google login failed'
+      })
+    }
+    setLoadingGoogle(false)
+  }
+
+  const authenticate = noDefault(async () => {
+    setLoadingTMC(true)
+    try {
+      const data = await Auth.TMC.signIn({ email, password })
+      dispatch({ type: 'login', data })
+      history.push(nextPath)
+    } catch {
       setError(true)
       setTimeout(() => {
         setError(false)
       }, 4000)
-    }).finally(() => {
-      setLoading(false)
-      if (isSignedIn()) {
-        history.push(nextPath)
-      }
-    })
-  }
+    }
+    setLoadingTMC(false)
+  })
 
-  const createGuestAccount = async () => {
-    const result = await createGuestMutation()
-    const userData = result.data.createGuest
-    window.localStorage.currentUser = JSON.stringify(userData)
-    await dispatch({
-      type: 'login',
-      data: userData.user
-    })
-  }
-
-  const continueAsGuest = evt => {
-    evt.preventDefault()
+  const createGuestAccount = noDefault(async () => {
     setLoadingGuest(true)
-    createGuestAccount().then(() => {
-      setLoadingGuest(false)
-      if (isSignedIn()) {
-        history.push(nextPath)
-      }
-    })
-  }
+    try {
+      const data = await Auth.GUEST.signIn()
+      await dispatch({ type: 'login', data })
+      history.push(nextPath)
+    } catch {
+      messageDispatch({ type: 'setError', data: 'Failed to create guest account' })
+    }
+    setLoadingGuest(false)
+  })
 
   return (
     <Container component='main' maxWidth='xs'>
-      <div className={classes.paper}>
+      {Auth.TMC.isEnabled() && <div className={classes.paper}>
         <Typography component='h1' variant='h5'>
           Sign in with <a href='https://www.mooc.fi/en/sign-up'>mooc.fi account</a>
         </Typography>
 
         <form
           className={classes.form}
-          onSubmit={!loading && !loadingGuest ? authenticate : () => { }}
+          onSubmit={!loading ? authenticate : () => { }}
           noValidate
         >
           <TextField
@@ -171,20 +199,34 @@ const LoginView = () => {
               variant='contained'
               color='primary'
             >
-              {!loading ? 'Sign In' : '\u00A0'}
+              {!loadingTMC ? 'Sign In' : '\u00A0'}
             </Button>
-            {
-              loading && <CircularProgress size={24} className={classes.buttonProgress} />
-            }
+            {loadingTMC && <CircularProgress size={24} className={classes.buttonProgress} />}
           </div>
         </form>
-      </div>
-      {HAKA_URL && <>
+      </div>}
+      {Auth.HAKA.isEnabled() && <>
         <Divider />
         <div className={classes.wrapper}>
-          <a className={classes.hakaButton} href={HAKA_URL}>
+          <a className={classes.hakaButton} href={Auth.HAKA.signInURL}>
             <HakaIcon />
           </a>
+        </div>
+      </>}
+      {googleLoginEnabled && <>
+        <Divider />
+        <div className={classes.wrapper}>
+          <Button
+            className={classes.googleButton}
+            type='button'
+            fullWidth
+            variant='contained'
+            color='primary'
+            onClick={!loading ? authenticateGoogle : () => { }}
+          >
+            {!loadingGoogle ? 'Sign In with Google' : '\u00A0'}
+          </Button>
+          {loadingGoogle && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </>}
       {showGuestButton && <>
@@ -196,13 +238,11 @@ const LoginView = () => {
             fullWidth
             variant='contained'
             color='primary'
-            onClick={!loading && !loadingGuest ? continueAsGuest : () => { }}
+            onClick={!loading ? createGuestAccount : () => { }}
           >
             {!loadingGuest ? 'Continue as guest' : '\u00A0'}
           </Button>
-          {
-            loadingGuest && <CircularProgress size={24} className={classes.buttonProgress} />
-          }
+          {loadingGuest && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
       </>}
     </Container>

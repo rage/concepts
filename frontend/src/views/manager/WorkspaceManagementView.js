@@ -5,7 +5,7 @@ import { Typography, Paper } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
-import { useMessageStateValue } from '../../store'
+import { useMessageStateValue } from '../../lib/store'
 import CourseList from './CourseList'
 import CourseEditor from './CourseEditor'
 import {
@@ -119,7 +119,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   }
 
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       <Typography className={classes.header} variant='h4'>
         Workspace: {workspace.name}
       </Typography>
@@ -150,7 +150,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
           /> : <Paper elevation={0} />
         }
       </div>
-    </div>
+    </main>
   )
 }
 

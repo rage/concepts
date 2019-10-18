@@ -15,10 +15,10 @@ import client from '../apollo/apolloClient'
 import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
 import { DELETE_WORKSPACE } from '../graphql/Mutation'
 import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
-import { useMessageStateValue, useLoginStateValue } from '../store'
+import { useMessageStateValue, useLoginStateValue } from '../lib/store'
 import { useShareDialog } from '../dialogs/sharing'
 import { useInfoBox } from './InfoBox'
-import useRouter from '../useRouter'
+import useRouter from '../lib/useRouter'
 
 const useStyles = makeStyles({
   root: {
@@ -135,7 +135,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   ) === Privilege.OWNER
 
   return (
-    <Paper className={classes.root} square>
+    <Paper component='footer' className={classes.root} square>
       <div className={classes.leftPlaceholder} />
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
         <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />

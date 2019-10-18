@@ -10,7 +10,7 @@ import { useShareDialog } from '../../dialogs/sharing'
 import NotFoundView from '../error/NotFoundView'
 import TemplateList from './TemplateList'
 import MergeList from './MergeList'
-import { useLoginStateValue } from '../../store'
+import { useLoginStateValue } from '../../lib/store'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 
@@ -87,7 +87,7 @@ const ProjectView = ({ projectId }) => {
   )
 
   return (
-    <div className={`${classes.root} ${showToolbar ? '' : classes.hideToolbar}`}>
+    <main className={`${classes.root} ${showToolbar ? '' : classes.hideToolbar}`}>
       <Typography className={classes.header} variant='h4'>
         Project: {projectQuery.data.projectById.name}
       </Typography>
@@ -102,31 +102,31 @@ const ProjectView = ({ projectId }) => {
             </Button>
           </span>
       }
-      <div className={classes.templates}>
+      <section className={classes.templates}>
         <TemplateList
           projectId={projectId}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           templateWorkspaces={projectQuery.data.projectById.templates}
           urlPrefix={`/projects/${projectId}/templates`}
         />
-      </div>
-      <div className={classes.merges}>
+      </section>
+      <section className={classes.merges}>
         <MergeList
           projectId={projectId}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           mergeWorkspaces={projectQuery.data.projectById.merges}
           urlPrefix={`/projects/${projectId}/merges`}
         />
-      </div>
-      <div className={classes.userWorkspaces}>
+      </section>
+      <section className={classes.userWorkspaces}>
         <UserWorkspaceList
           projectId={projectId}
           userWorkspaces={projectQuery.data.projectById.workspaces}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           urlPrefix={`/projects/${projectId}/workspaces`}
         />
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
 
