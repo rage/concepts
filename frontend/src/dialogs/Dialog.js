@@ -115,7 +115,7 @@ const Dialog = ({ contextRef }) => {
 
   contextRef.current.openDialog = ({
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
-    customActionsProps, type, createOptimisticResponse
+    customActionsProps, type, createOptimisticResponse, rejectPromise
   }) => {
     clearTimeout(stateChange.current)
     if (fields) {
@@ -128,7 +128,7 @@ const Dialog = ({ contextRef }) => {
       _reject = reject
     })
     promise.resolve = _resolve
-    promise.reject = _reject
+    promise.reject = rejectPromise ? _reject : _resolve
     setState({
       open: true,
       submitDisabled: false,
