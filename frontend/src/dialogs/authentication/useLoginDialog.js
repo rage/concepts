@@ -8,6 +8,7 @@ const useLoginDialog = () => {
     type: 'Concept',
     actionText: 'Log in',
     title: 'Log in with mooc.fi',
+    rejectPromise: true,
     fields: [{
       name: 'email',
       required: true
