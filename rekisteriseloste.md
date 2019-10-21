@@ -13,7 +13,7 @@ PL 68 (Pietari Kalmin katu 5)
 00014 HELSINGIN YLIOPISTO
 
 ## Rekisteriasioista vastaava henkilö
-~~Matti Luukkainen, ​ mluukkai@cs.helsinki.fi~~
+Jussi Kangasharju, jussi.kangasharju@helsinki.fi
 
 ## Henkilötietojen käsittelyn tarkoitus
 Asiakasrekisteriin tallennettuja henkilötietoja käytetään henkilön yksilöimiseen
@@ -69,7 +69,7 @@ asianmukaisella palomuurilla. Palvelimen ja käyttäjän koneen välinen
 tietoliikenne kulkee salattuna. Lisäksi rekisterinpitäjän tietoverkko ja
 laitteisto, jolla rekisteri sijaitsee, on suojattu palomuurilla ja muiden
 teknisten toimenpiteiden avulla. Henkilötietoja sisältävien aineistojen
-hävitystehdään tietoturvallisesti.
+hävitys tehdään tietoturvallisesti.
 
 ## Tarkastusoikeudet
 Asiakkaana sinulla on oikeus saada pääsy itseäsi koskeviin henkilötietoihin,
