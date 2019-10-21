@@ -11,6 +11,7 @@
     "@material-ui/icons": "^4.0.1",
     "@material-ui/pickers": "^3.2.4",
     "ajv": "^6.10.1",
+    "apollo-client": "^2.6.4",
     "apollo-link-ws": "^1.0.19",
     "chroma-js": "^2.0.4",
     "customize-cra": "^0.7.0",
