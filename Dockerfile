@@ -18,7 +18,7 @@ COPY --from=builder /concepts/backend/schema /concepts/backend/schema
 
 WORKDIR /concepts/backend
 
-RUN yarn --prod
+RUN yarn --prod && npm install --global prisma
 
 USER 1337:1337
 
