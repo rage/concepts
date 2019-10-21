@@ -19,6 +19,10 @@ PL 68 (Pietari Kalmin katu 5)
 Asiakasrekisteriin tallennettuja henkilötietoja käytetään henkilön yksilöimiseen
 käyttäjän kirjautuessa sovellukseen.
 
+Haka-kirjautumista käytettäessä tallennetaan yliopisto, käyttäjätunnus ja
+käyttäjätunnuksen myöntöpäivämäärä. Myöntöpäivämäärä tallennetaan, sillä
+käyttäjätunnuksia saatetaan kierrättää.
+
 ## Rekisterin tietosisältö
 * Yliopisto
 * Yliopiston käyttäjätunnus
@@ -36,8 +40,13 @@ Suomessa. Henkilötietojen käsittelyssä on huomioitu EU:n tietosuoja-asetuksen
 vaatimukset.
 
 ## Tietojen säännönmukaiset luovutukset
-Opiskelijan suorituksen kannalta välttämättömät yksilöintitiedot voidaan
-luovuttaa.
+Jos opiskelija suorittaa kurssitehtäviä, jossa käytetään Concepts-työkalua,
+opiskelijan kyseistä tehtävää varten luotu työtila (workspace) ja opiskelijan
+käyttäjätunniste voidaan luovuttaa oppilaitokselle pisteytystä varten.
+
+Käyttäjien luomia työtiloja voidaan myös luovuttaa tutkimustarkoituksiin muille
+yliopistoille. Tutkimustarkoituksiin ei kuitenkaan luovuteta käyttäjän
+henkilötietoja, vaan ainoastaan käyttäjän sovelluksella luomaa sisältöä.
 
 ## Tietojen siirto EU:n tai ETA:n ulkopuolelle
 Henkilötietoja ei siirretä EU:n tai ETA-alueen ulkopuolelle.
@@ -71,10 +80,10 @@ käsittelyä. Tiedot luovutetaan asiakkaalle ymmärrettävässä muodossa ja ain
 kirjallisesti.
 
 ## Oikeus vaatia tiedon korjaamista
-Rekisterinpitäjä oikaisee, poistaa tai täydentää rekisterissä olevan, käsittelyn tarkoituksen
-kannalta virheellisen, tarpeettoman, puutteellisen tai vanhentuneen henkilötiedon
-oma-aloitteisesti tai rekisteröidyn vaatimuksesta. Rekisteröidyn tulee ottaa yhteyttä
-rekisterinpitäjään tiedon korjaamiseksi.
+Rekisterinpitäjä oikaisee, poistaa tai täydentää rekisterissä olevan,
+käsittelyn tarkoituksen kannalta virheellisen, tarpeettoman, puutteellisen tai
+vanhentuneen henkilötiedon oma-aloitteisesti tai rekisteröidyn vaatimuksesta.
+Rekisteröidyn tulee ottaa yhteyttä rekisterinpitäjään tiedon korjaamiseksi.
 
 ## Muut henkilötietojen käsittelyyn liittyvät oikeudet
 Rekisteröidyllä on myös oikeus kieltää rekisterinpitäjää käsittelemästä häntä
