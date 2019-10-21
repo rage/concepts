@@ -1,7 +1,7 @@
 # Concepts rekisteri- ja tietosuojaseloste
 
 ## Rekisterin nimi
-Concepts-työkalu kurssien konseptien kartoittamiseen.
+Concepts-työkalu kurssien, konseptien ja niiden välisten yhteyksien kartoitukseen.
 
 Tallennamme ja käsittelemme käyttäjien henkilötietoja EU:n tietosuoja-asetuksen
 mukaisesti.
