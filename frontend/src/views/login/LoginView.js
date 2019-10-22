@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -7,11 +7,11 @@ import {
 import qs from 'qs'
 
 import { MERGE_USER } from '../../graphql/Mutation'
-import Auth, {useAuthState} from "../../lib/authentication"
+import Auth, { useAuthState } from '../../lib/authentication'
 import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
-import { noDefault, noReturn } from '../../lib/eventMiddleware'
+import { noDefault } from '../../lib/eventMiddleware'
 import LoadingBar from '../../components/LoadingBar'
 
 const useStyles = makeStyles(theme => ({

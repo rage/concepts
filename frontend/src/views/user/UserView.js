@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, CircularProgress, Typography } from '@material-ui/core'
 import { useMutation } from 'react-apollo-hooks'
