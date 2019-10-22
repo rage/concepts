@@ -18,6 +18,8 @@ const PrerequisiteContainer = ({
   courseTrayOpen,
   courseLinks,
   focusedConceptIds,
+  collapsedCourseIds,
+  toggleCollapse,
   addingLink,
   setAddingLink,
   flashLink,
@@ -49,6 +51,8 @@ const PrerequisiteContainer = ({
                 prereqFreezeRef={index === 0
                   ? infoBox.ref('mapper', 'FREEZE_PREREQ_COURSE') : undefined}
                 focusedConceptIds={focusedConceptIds}
+                collapsedCourseIds={collapsedCourseIds}
+                toggleCollapse={toggleCollapse}
                 addingLink={addingLink}
                 setAddingLink={setAddingLink}
                 flashLink={flashLink}

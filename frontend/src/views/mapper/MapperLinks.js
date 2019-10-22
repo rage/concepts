@@ -53,7 +53,7 @@ const useStyles = makeStyles({
 
 const MapperLinks = ({
   courseId, flashingLink, addingLink, focusedConceptIds, conceptLinkMenu, courseLinkMap,
-  handleMenuOpen, handleMenuClose, deleteLink
+  collapsedCourseIds, handleMenuOpen, handleMenuClose, deleteLink
 }) => {
   const classes = useStyles()
   const conceptLinkMenuRef = useRef()
@@ -62,9 +62,11 @@ const MapperLinks = ({
     variables: { courseId }
   })
 
+  const showLink = link => courseLinkMap.has(link.from.course.id) && !collapsedCourseIds.has(link.from.course.id)
+
   return <div style={{ display: 'contents' }}>
     {linkQuery.data.linksInCourse?.concepts.map(concept =>
-      concept.linksToConcept.map(link => courseLinkMap.has(link.from.course.id) &&
+      concept.linksToConcept.map(link => showLink(link) &&
         <ConceptLink
           key={`concept-link-${link.id}`} delay={1}
           active={flashingLink === link.id || (!addingLink && (
