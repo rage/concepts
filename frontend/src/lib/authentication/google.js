@@ -34,6 +34,8 @@ async function init() {
     window._googleAuthEnabledPromise.resolve(false)
     return false
   }
+  // This is defined in index.html
+  await window._loadGooglePlatform()
   await asyncify(gapi.load, 'auth2')
   window._googleAuthEnabled = clientId
   window._googleAuthEnabledPromise.resolve(clientId)
@@ -81,9 +83,4 @@ export async function signOut() {
   // I think we don't need to do anything here
 }
 
-if (window.google_inited) {
-  init()
-} else {
-  // eslint-disable-next-line camelcase
-  window._concepts_google_init = init
-}
+init().catch(err => console.error('Initializing Google login failed:', err))

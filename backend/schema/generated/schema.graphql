@@ -5,6 +5,7 @@ type Query {
   allUsers: [User!]!
   userById(id: ID!): User!
   googleClientId: GoogleClientID
+  hakaLoginUrl: HakaLoginURL
   currentUser: User
 
   # Project queries
@@ -165,6 +166,11 @@ type AuthPayload {
 type GoogleClientID {
   enabled: Boolean!
   clientId: String
+}
+
+type HakaLoginURL {
+  enabled: Boolean!
+  url: String
 }
 
 input TagInput {

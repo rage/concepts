@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react'
+
 import client from '../../apollo/apolloClient'
 import * as tmc from './tmc'
 import * as google from './google'
 import * as haka from './haka'
 import * as guest from './guest'
 import { GET_CURRENT_USER } from '../../graphql/Query'
+import { noReturn } from '../eventMiddleware'
 
 class Auth {
   static idMap = new Map()
@@ -23,7 +26,7 @@ class Auth {
   isEnabled = (...args) => this.api.isEnabled(...args)
   signIn = (...args) => this.api.signIn(...args)
   signOut = (...args) => this.api.signOut(...args)
-  get signInURL() { return this.api.signInURL }
+  get signInURL() { return this.api.getSignInURL() }
 
   static fromString = str => Auth.idMap.get(str)
 
@@ -51,6 +54,20 @@ class Auth {
       }
     }
     return { type: 'noop' }
+  }
+}
+
+export const useAuthState = () => {
+  const [google, setGoogleLoginEnabled] = useState(window._googleAuthEnabled)
+  useEffect(noReturn(() => Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)), [])
+
+  const [haka, setHakaLoginEnabled] = useState(window._hakaAuthEnabled)
+  useEffect(noReturn(() => Auth.HAKA.isEnabled().then(setHakaLoginEnabled)), [])
+
+  return {
+    google,
+    haka,
+    tmc: Auth.TMC.isEnabled()
   }
 }
 
