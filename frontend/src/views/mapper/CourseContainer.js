@@ -12,6 +12,7 @@ const CourseContainer = ({
   urlPrefix, workspace, course, courseLinkMap, courseLinks, courseTrayOpen
 }) => {
   const [focusedConceptIds, setFocusedConceptIds] = useState(new Set())
+  const [collapsedCourseIds, setCollapsedCourseIds] = useState(new Set())
   const [addingLink, setAddingLink] = useState(null)
   const [flashingLink, setFlashingLink] = useState(null)
   const flashLinkTimeout = useRef(0)
@@ -74,6 +75,17 @@ const CourseContainer = ({
     setFocusedConceptIds(newFocusedConceptIds)
   }, [focusedConceptIds])
 
+  const toggleCollapse = useCallback(id => {
+    const newCollapsedCourseIds = new Set(collapsedCourseIds)
+    if (newCollapsedCourseIds.has(id)) {
+      newCollapsedCourseIds.delete(id)
+    } else {
+      newCollapsedCourseIds.add(id)
+    }
+    setCollapsedCourseIds(newCollapsedCourseIds)
+    setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 0)
+  }, [collapsedCourseIds])
+
   return <>
     {addingLink && <style>{`
       .${addingLink.oppositeType}:not(.linkto-${addingLink.id}) {
@@ -84,6 +96,8 @@ const CourseContainer = ({
       courseLinks={courseLinks}
       courseId={course.id}
       focusedConceptIds={focusedConceptIds}
+      collapsedCourseIds={collapsedCourseIds}
+      toggleCollapse={toggleCollapse}
       addingLink={addingLink}
       setAddingLink={setAddingLink}
       flashLink={flashLink}
@@ -108,8 +122,8 @@ const CourseContainer = ({
     <MapperLinks
       flashingLink={flashingLink} addingLink={addingLink} courseId={course.id}
       focusedConceptIds={focusedConceptIds} conceptLinkMenu={conceptLinkMenu}
-      courseLinkMap={courseLinkMap} handleMenuOpen={handleMenuOpen}
-      handleMenuClose={handleMenuClose} deleteLink={deleteLink}
+      courseLinkMap={courseLinkMap} collapsedCourseIds={collapsedCourseIds}
+      handleMenuOpen={handleMenuOpen} handleMenuClose={handleMenuClose} deleteLink={deleteLink}
     />
   </>
 }
