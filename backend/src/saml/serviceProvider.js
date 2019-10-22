@@ -5,6 +5,7 @@ import * as samlify from 'samlify'
 import * as validator from '@authenio/samlify-node-xmllint'
 
 const SAML_DIR = process.env.SAML_DIR || './saml'
+export const HAKA_URL = process.env.HAKA_LOGIN_URL || ''
 
 samlify.setSchemaValidator(validator)
 
