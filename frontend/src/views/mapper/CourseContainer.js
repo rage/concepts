@@ -83,6 +83,7 @@ const CourseContainer = ({
       newCollapsedCourseIds.add(id)
     }
     setCollapsedCourseIds(newCollapsedCourseIds)
+    setTimeout(() => window.dispatchEvent(new CustomEvent('redrawConceptLink')), 0)
   }, [collapsedCourseIds])
 
   return <>
