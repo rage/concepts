@@ -33,7 +33,7 @@ services:
       ENDPOINT: http://prisma:4466
       SECRET: WZIpatNAZYbR7iGd6V6OhuBsxNkNAZoFBLt7ZaWU2D4mBJYqLY
       PRISMA_MANAGEMENT_API_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
-      HAKA_LOGIN_URL: https://testsp.funet.fi/shibboleth/WAYF?entityID=https://concepts.cs.helsinki.fi&return=https://concepts.cs.helsinki.fi/api/login
+      #HAKA_LOGIN_URL: https://testsp.funet.fi/shibboleth/WAYF?entityID=https://concepts.cs.helsinki.fi&return=https://concepts.cs.helsinki.fi/api/login
       #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka_test_metadata_signed.xml
       #SAML_DIR: /concepts/backend/saml
       #SAML_FINISH_URL: https://concepts.cs.helsinki.fi/login
