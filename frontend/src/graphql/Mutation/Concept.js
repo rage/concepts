@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const UPDATE_CONCEPT = gql`
 mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean, 

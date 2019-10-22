@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const CREATE_COURSE_LINK = gql`
 mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean) {

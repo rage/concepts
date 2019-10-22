@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const CREATE_SHARE_LINK = gql`
 mutation createShareLink($workspaceId: ID!, $privilege: Privilege!) {

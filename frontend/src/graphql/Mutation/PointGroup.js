@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const CREATE_POINTGROUP = gql`
 mutation createPointGroup($name: String!, $startDate: String!, $endDate: String!, $maxPoints: Int!,

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const COURSES_FOR_WORKSPACE_FRAGMENT = gql`
 fragment coursesForWorkspace on Workspace {

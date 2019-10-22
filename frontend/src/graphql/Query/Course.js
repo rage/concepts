@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const COURSE_BY_ID = gql`
 query courseById($id: ID!) {

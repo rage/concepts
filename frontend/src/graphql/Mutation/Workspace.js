@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const CREATE_WORKSPACE = gql`
 mutation createWorkspace($name: String!, $projectId: ID) {

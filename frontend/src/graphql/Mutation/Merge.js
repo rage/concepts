@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const MERGE_PROJECT = gql`
 mutation mergeProject($projectId: ID!) {

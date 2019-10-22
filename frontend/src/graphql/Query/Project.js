@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const PROJECTS_FOR_USER = gql`
 query projectsForUser {

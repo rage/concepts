@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const EXPORT_QUERY = gql`
 query exportData($workspaceId: ID!) {

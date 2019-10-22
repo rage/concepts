@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const CREATE_CONCEPT_LINK = gql`
 mutation createConceptLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean) {
