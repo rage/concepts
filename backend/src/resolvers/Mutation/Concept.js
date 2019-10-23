@@ -4,11 +4,7 @@ import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
 import { pubsub } from '../Subscription/config'
-const { 
-  CONCEPT_CREATED, 
-  CONCEPT_UPDATED, 
-  CONCEPT_DELETED 
-} = require('../Subscription/config/channels')
+import { CONCEPT_CREATED, CONCEPT_UPDATED, CONCEPT_DELETED } from '../Subscription/config/channels'
 
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (context.role === Role.STUDENT) {
@@ -107,6 +103,14 @@ const ConceptMutations = {
         await updatePointGroups(pointGroups, context)
       }
     }
+
+    await context.prisma.updateCourse({
+      where: { id: courseId },
+      data: {
+        conceptOrder: { push: createdConcept.id }
+      }
+    })
+
     pubsub.publish(CONCEPT_CREATED, { conceptCreated: createdConcept })
     return createdConcept
   },
@@ -146,11 +150,12 @@ const ConceptMutations = {
       data.name = name
     }
 
-    pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: {...data, id}} )
-    return await context.prisma.updateConcept({
+    const updateData = await context.prisma.updateConcept({
       where: { id },
       data
     })
+    pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: { ...data, id } })
+    return updateData
   },
 
   async deleteConcept(root, { id }, context) {
@@ -169,9 +174,17 @@ const ConceptMutations = {
         }
       }
     `)
-    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: toDelete })
     if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
     await context.prisma.deleteConcept({ id })
+
+    const { id: courseId } = await context.prisma.concept({ id }).course()
+    await context.prisma.updateCourse({
+      where: { id: courseId },
+      data: {
+        conceptOrder: { remove: id }
+      }
+    })
+    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: toDelete })
     return {
       id: toDelete.id,
       courseId: toDelete.course.id

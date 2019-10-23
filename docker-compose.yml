@@ -18,7 +18,7 @@ services:
     depends_on:
       - postgres
   postgres:
-    image: postgres:11
+    image: postgres:12
     restart: always
     environment:
       POSTGRES_USER: prisma

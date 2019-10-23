@@ -1,11 +1,14 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Typography, Card, CardHeader, List, ListItem, ListItemText, IconButton, ListItemSecondaryAction,
-  TextField, Button, FormControlLabel, Checkbox, FormControl
+  Typography, Card, CardHeader, ListItemText, IconButton, ListItemSecondaryAction,
+  TextField, Button, FormControlLabel, Checkbox, FormControl, CircularProgress
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
-import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
+import {
+  Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon
+} from '@material-ui/icons'
+import ReactDOM from 'react-dom'
 
 import { Role } from '../../lib/permissions'
 import {
@@ -14,6 +17,8 @@ import {
 import { useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import { noPropagation } from '../../lib/eventMiddleware'
+import arrayShift from '../../lib/arrayShift'
+import { DragHandle, SortableItem, SortableList } from '../../lib/sortableMoc'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -63,27 +68,67 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const CourseList = ({
-  workspace, setFocusedCourseId, focusedCourseId, createCourse, updateCourse, deleteCourse
+  workspace, setFocusedCourseId, focusedCourseId, updateWorkspace,
+  createCourse, updateCourse, deleteCourse
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const listRef = useRef()
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
+  const [orderedCourses, setOrderedCourses] = useState([])
+  const [dirtyOrder, setDirtyOrder] = useState(null)
+
+  useEffect(() => {
+    if (!dirtyOrder) {
+      const courses = workspace.courses.slice()
+      setOrderedCourses(workspace.courseOrder
+        .map(orderedId => courses.splice(courses
+          .findIndex(course => course.id === orderedId), 1)[0])
+        .concat(courses))
+    }
+  }, [workspace.courses, workspace.courseOrder, dirtyOrder])
 
   const isTemplate = Boolean(workspace.asTemplate?.id)
   const courseTags = backendToSelect(workspace.courseTags)
 
+  const onSortEnd = ({ oldIndex, newIndex }) =>
+    ReactDOM.unstable_batchedUpdates(() => {
+      setOrderedCourses(items => arrayShift(items, oldIndex, newIndex))
+      if (!dirtyOrder) setDirtyOrder('yes')
+    })
+
+  const saveOrder = async () => {
+    setDirtyOrder('loading')
+    await updateWorkspace({
+      id: workspace.id,
+      courseOrder: orderedCourses.map(course => course.id)
+    })
+    setDirtyOrder(null)
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
-      <CardHeader title='Courses' />
-      <List ref={listRef} className={classes.list}>{
-        workspace.courses.map((course, index) => (
-          <ListItem
+      <CardHeader
+        title='Courses'
+        action={dirtyOrder ? <>
+          <Button color='secondary' onClick={() => setDirtyOrder(null)}>Reset</Button>
+          <Button color='primary' onClick={saveOrder}>
+            {dirtyOrder === 'loading' ? <CircularProgress /> : 'Save'}
+          </Button>
+        </> : undefined}
+      />
+      <SortableList
+        ref={listRef} className={classes.list} useDragHandle lockAxis='y'
+        onSortEnd={onSortEnd}
+      >
+        {orderedCourses.map((course, index) => (
+          <SortableItem
             className={course.id === focusedCourseId ? classes.listItemActive :
               editing && editing !== course.id ? classes.listItemDisabled : null}
             button={editing !== course.id}
             classes={{ button: classes.courseButton }}
+            index={index}
             ref={index === 0 ? infoBox.ref('manager', 'FOCUS_COURSE') : undefined}
             key={course.id}
             onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
@@ -128,11 +173,12 @@ const CourseList = ({
                     <EditIcon />
                   </IconButton>
                 }
+                <DragHandle className={classes.dragHandle} />
               </ListItemSecondaryAction>
             </>}
-          </ListItem>
-        ))
-      }</List>
+          </SortableItem>
+        ))}
+      </SortableList>
       <CreateCourse submit={async args => {
         await createCourse(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
