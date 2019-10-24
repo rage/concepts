@@ -289,6 +289,7 @@ const ConceptList = ({
               checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
                 : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                   : undefined}
+              sortable={false}
               conceptTags={conceptTags}
             />
           ).concat(index < array.length - 1 ? [<hr key={index} />] : [])

@@ -1,6 +1,7 @@
 import {
-  Checkbox, Fade, IconButton, ListItemSecondaryAction, ListItemText, makeStyles, Tooltip, Typography
+  Checkbox, Fade, IconButton, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 import React from 'react'
 
@@ -47,9 +48,11 @@ const ConceptListItem = ({
   merging, toggleMergingConcept,
   divider = true,
   checkboxRef,
-  conceptTags
+  conceptTags,
+  sortable = true
 }) => {
   const classes = useStyles()
+  const ItemClass = sortable ? SortableItem : ListItem
   return (
     <Tooltip
       key={concept.id}
@@ -62,7 +65,7 @@ const ConceptListItem = ({
       title={editing !== concept.id ?
         concept.description || 'No description available' : ''}
     >
-      <SortableItem
+      <ItemClass
         divider={divider}
         key={concept.id}
         index={index}
@@ -123,10 +126,10 @@ const ConceptListItem = ({
               </IconButton>
               }
             </>}
-            <DragHandle />
+            {sortable && <DragHandle />}
           </ListItemSecondaryAction>
         </>}
-      </SortableItem>
+      </ItemClass>
     </Tooltip>
   )
 }
