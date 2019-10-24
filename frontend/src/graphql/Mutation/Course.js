@@ -20,6 +20,7 @@ mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
         id
       }
     }
+    conceptOrder
     concepts {
       id
       name
@@ -44,7 +45,7 @@ mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
 `
 
 const UPDATE_COURSE = gql`
-mutation updateCourse($id: ID!, $name: String!, $official: Boolean,
+mutation updateCourse($id: ID!, $name: String, $official: Boolean,
                       $frozen: Boolean, $tags: [TagInput!], $conceptOrder: [ID!]) {
   updateCourse(id: $id, name: $name, official: $official, frozen: $frozen, tags: $tags,
                conceptOrder: $conceptOrder) {

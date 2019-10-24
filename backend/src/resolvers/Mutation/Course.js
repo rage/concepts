@@ -16,19 +16,21 @@ const CourseQueries = {
 
     if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
 
-    const newCourse = context.prisma.createCourse({
+    const newCourse = await context.prisma.createCourse({
       name: name,
       official: Boolean(official),
       frozen: Boolean(frozen),
       createdBy: { connect: { id: context.user.id } },
+      conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       workspace: { connect: { id: workspaceId } },
       tags: { connect: await createMissingTags(tags, workspaceId, context, 'courseTags') }
     })
 
+    const courseOrder = await context.prisma.workspace({ id: workspaceId }).courseOrder()
     await context.prisma.updateWorkspace({
       where: { id: workspaceId },
       data: {
-        courseOrder: { push: newCourse.id }
+        courseOrder: { set: courseOrder.concat([newCourse.id]) }
       }
     })
 
@@ -53,12 +55,11 @@ const CourseQueries = {
     })
     const deletedCourse = await context.prisma.deleteCourse({ id })
 
+    const courseOrder = await context.prisma.workspace({ id: workspaceId }).courseOrder()
     await context.prisma.updateWorkspace({
       where: { id: workspaceId },
       data: {
-        courseOrder: {
-          delete: id
-        }
+        courseOrder: { set: courseOrder.filter(courseId => courseId !== id) }
       }
     })
 

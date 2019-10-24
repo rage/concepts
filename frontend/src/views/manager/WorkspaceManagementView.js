@@ -7,7 +7,7 @@ import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 import { useMessageStateValue } from '../../lib/store'
 import CourseList from './CourseList'
-import CourseEditor from './CourseEditor'
+import ConceptList from './ConceptList'
 import {
   CREATE_CONCEPT,
   CREATE_COURSE,
@@ -145,7 +145,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       </div>
       <div className={classes.newCourse}>
         {focusedCourse
-          ? <CourseEditor
+          ? <ConceptList
             workspace={workspaceQuery.data.workspaceById}
             course={focusedCourse}
             updateCourse={args => updateCourse({ variables: args }).catch(e)}

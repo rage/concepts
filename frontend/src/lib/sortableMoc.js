@@ -1,8 +1,8 @@
+import React from 'react'
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc'
 import { List, ListItem, ListItemIcon } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { DragHandle as DragIcon } from '@material-ui/icons'
-import React from 'react'
 
 const useStyles = makeStyles({
   dragHandle: {
@@ -19,5 +19,5 @@ export const DragHandle = SortableHandle(() => {
   </ListItemIcon>
 })
 
-export const SortableItem = SortableElement(ListItem)
-export const SortableList = SortableContainer(List)
+export const SortableItem = SortableElement(ListItem, { withRef: true })
+export const SortableList = SortableContainer(List, { withRef: true })

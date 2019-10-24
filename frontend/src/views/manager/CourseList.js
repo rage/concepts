@@ -1,24 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Typography, Card, CardHeader, ListItemText, IconButton, ListItemSecondaryAction,
-  TextField, Button, FormControlLabel, Checkbox, FormControl, CircularProgress
+  Typography, Card, CardHeader, ListItemText, IconButton, ListItemSecondaryAction, Button,
+  CircularProgress
 } from '@material-ui/core'
-import Select from 'react-select/creatable'
-import {
-  Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon
-} from '@material-ui/icons'
+import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 import ReactDOM from 'react-dom'
 
 import { Role } from '../../lib/permissions'
-import {
-  backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
-} from '../../dialogs/tagSelectUtils'
 import { useLoginStateValue } from '../../lib/store'
-import { useInfoBox } from '../../components/InfoBox'
 import { noPropagation } from '../../lib/eventMiddleware'
 import arrayShift from '../../lib/arrayShift'
 import { DragHandle, SortableItem, SortableList } from '../../lib/sortableMoc'
+import { backendToSelect } from '../../dialogs/tagSelectUtils'
+import { useInfoBox } from '../../components/InfoBox'
+import CourseEditor from './CourseEditor'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -52,18 +48,6 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
-  },
-  submit: {
-    margin: theme.spacing(1, 0)
-  },
-  cancel: {
-    margin: theme.spacing(1, 0, 1, 1)
-  },
-  textfield: {
-    margin: theme.spacing(1, 0)
-  },
-  form: {
-    width: '100%'
   }
 }))
 
@@ -83,14 +67,14 @@ const CourseList = ({
     if (!dirtyOrder) {
       const courses = workspace.courses.slice()
       setOrderedCourses(workspace.courseOrder
-        .map(orderedId => courses.splice(courses
-          .findIndex(course => course.id === orderedId), 1)[0])
+        .map(orderedId => {
+          const index = courses.findIndex(course => course.id === orderedId)
+          return index >= 0 ? courses.splice(index, 1)[0] : null
+        })
+        .filter(course => course !== null)
         .concat(courses))
     }
   }, [workspace.courses, workspace.courseOrder, dirtyOrder])
-
-  const isTemplate = Boolean(workspace.asTemplate?.id)
-  const courseTags = backendToSelect(workspace.courseTags)
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
@@ -107,13 +91,24 @@ const CourseList = ({
     setDirtyOrder(null)
   }
 
+  const isTemplate = Boolean(workspace.asTemplate?.id)
+  const courseTags = backendToSelect(workspace.courseTags)
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         title='Courses'
         action={dirtyOrder ? <>
-          <Button color='secondary' onClick={() => setDirtyOrder(null)}>Reset</Button>
-          <Button color='primary' onClick={saveOrder}>
+          <Button
+            color='secondary' onClick={() => setDirtyOrder(null)}
+            disabled={dirtyOrder === 'loading'} style={{ margin: '6px' }}
+          >
+            Reset
+          </Button>
+          <Button
+            color='primary' onClick={saveOrder} disabled={dirtyOrder === 'loading'}
+            style={{ margin: '6px' }}
+          >
             {dirtyOrder === 'loading' ? <CircularProgress /> : 'Save'}
           </Button>
         </> : undefined}
@@ -133,7 +128,7 @@ const CourseList = ({
             key={course.id}
             onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
           >
-            {editing === course.id ? <CreateCourse
+            {editing === course.id ? <CourseEditor
               submit={args => {
                 setEditing(null)
                 updateCourse({ id: course.id, ...args })
@@ -173,149 +168,21 @@ const CourseList = ({
                     <EditIcon />
                   </IconButton>
                 }
-                <DragHandle className={classes.dragHandle} />
+                <DragHandle />
               </ListItemSecondaryAction>
             </>}
           </SortableItem>
         ))}
       </SortableList>
-      <CreateCourse submit={async args => {
+      <CourseEditor submit={async args => {
         await createCourse(args)
-        listRef.current.scrollTop = listRef.current.scrollHeight
+        if (listRef.current) {
+          listRef.current.scrollTop = listRef.current.scrollHeight
+        }
         infoBox.redrawIfOpen('manager',
           'CREATE_COURSE_NAME', 'CREATE_COURSE_THEMES', 'CREATE_COURSE_SUBMIT')
       }} defaultValues={{ official: isTemplate }} tagOptions={courseTags} />
     </Card>
-  )
-}
-
-const initialState = {
-  name: '',
-  official: undefined,
-  frozen: undefined,
-  tags: []
-}
-
-const CreateCourse = ({
-  submit, defaultValues, tagOptions, action = 'Create', cancel
-}) => {
-  const classes = useStyles()
-  const infoBox = useInfoBox()
-  const [{ user }] = useLoginStateValue()
-  const nameRef = useRef()
-  const [input, setInput] = useState({
-    ...initialState,
-    ...defaultValues,
-    tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
-  })
-  const [themeInput, setThemeInput] = useState('')
-
-  const onSubmit = evt => {
-    evt.preventDefault()
-    submit({ ...input, tags: selectToBackend(input.tags) })
-    if (action === 'Create') {
-      nameRef.current.focus()
-      setInput({ ...initialState, ...defaultValues })
-      setThemeInput('')
-    }
-  }
-
-  const onKeyDown = evt => {
-    if (cancel && evt.key === 'Escape') {
-      cancel()
-    }
-  }
-
-  const handleKeyDownSelect = event => {
-    if (!themeInput) return
-    if (event.key === 'Tab' || event.key === 'Enter') {
-      setInput({
-        ...input,
-        tags: [...input.tags, onTagCreate(themeInput)]
-      })
-      setThemeInput('')
-      event.preventDefault()
-    }
-  }
-
-  const selectRef = infoBox.ref('manager', 'CREATE_COURSE_THEMES')
-  return (
-    <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
-      <TextField
-        className={classes.textfield}
-        variant='outlined'
-        margin='dense'
-        name='courseName'
-        label='Course name'
-        type='text'
-        value={input.name}
-        fullWidth
-        inputRef={nameRef}
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_NAME') : undefined}
-        autoFocus={action !== 'Create'}
-        onChange={evt => setInput({ ...input, name: evt.target.value })}
-      />
-      <Select
-        onChange={selected => setInput({ ...input, tags: selected || [] })}
-        onKeyDown={handleKeyDownSelect}
-        onInputChange={value => setThemeInput(value)}
-        styles={tagSelectStyles}
-        value={input.tags}
-        options={tagOptions}
-        ref={elem => action === 'Create' && selectRef(elem?.select?.select?.controlRef)}
-        isMulti
-        menuPlacement='auto'
-        placeholder='Themes...'
-        menuPortalTarget={document.body}
-        inputValue={themeInput}
-      />
-      <Button
-        color='primary' variant='contained' disabled={!input.name} type='submit'
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_SUBMIT') : undefined}
-        className={classes.submit}
-      >
-        {action}
-      </Button>
-      {cancel &&
-        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
-          Cancel
-        </Button>
-      }
-      {user.role >= Role.STAFF && <>
-        <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_OFFICIAL') : undefined}
-          style={{ verticalAlign: 'middle', marginLeft: '12px' }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={input.official}
-                onChange={evt => setInput({ ...input, official: evt.target.checked })}
-                value='official'
-                color='primary'
-              />
-            }
-            label='Official'
-          />
-        </FormControl>
-        <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_FROZEN') : undefined}
-          style={{ verticalAlign: 'middle', marginLeft: '12px' }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={input.frozen}
-                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
-                value='frozen'
-                color='primary'
-              />
-            }
-            label='Frozen'
-          />
-        </FormControl>
-      </>}
-    </form>
   )
 }
 

@@ -74,6 +74,9 @@ const updatePointGroups = async (pointGroups, context) => {
   }
 }
 
+const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
+  && conceptOrder[0].startsWith('__ORDER_BY__')
+
 const ConceptMutations = {
   async createConcept(root, {
     name, description, official, frozen,
@@ -104,12 +107,15 @@ const ConceptMutations = {
       }
     }
 
-    await context.prisma.updateCourse({
-      where: { id: courseId },
-      data: {
-        conceptOrder: { push: createdConcept.id }
-      }
-    })
+    const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
+    if (!isAutomaticSorting(conceptOrder)) {
+      await context.prisma.updateCourse({
+        where: { id: courseId },
+        data: {
+          conceptOrder: { set: conceptOrder.concat([createdConcept.id]) }
+        }
+      })
+    }
 
     pubsub.publish(CONCEPT_CREATED, { conceptCreated: createdConcept })
     return createdConcept
@@ -178,12 +184,15 @@ const ConceptMutations = {
     await context.prisma.deleteConcept({ id })
 
     const { id: courseId } = await context.prisma.concept({ id }).course()
-    await context.prisma.updateCourse({
-      where: { id: courseId },
-      data: {
-        conceptOrder: { remove: id }
-      }
-    })
+    const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
+    if (!isAutomaticSorting(conceptOrder)) {
+      await context.prisma.updateCourse({
+        where: { id: courseId },
+        data: {
+          conceptOrder: { set: conceptOrder.filter(conceptId => conceptId !== id) }
+        }
+      })
+    }
     pubsub.publish(CONCEPT_DELETED, { conceptDeleted: toDelete })
     return {
       id: toDelete.id,
