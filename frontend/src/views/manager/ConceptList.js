@@ -267,6 +267,7 @@ const ConceptList = ({
             updateConcept={updateConcept}
             merging={merging}
             setEditing={setEditing}
+            sortable={orderMethod === 'CUSTOM' && !course.frozen}
             toggleMergingConcept={toggleMergingConcept}
             checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
               : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')

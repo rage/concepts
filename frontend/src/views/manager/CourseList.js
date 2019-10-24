@@ -1,20 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Typography, Card, CardHeader, ListItemText, IconButton, ListItemSecondaryAction, Button,
-  CircularProgress
-} from '@material-ui/core'
-import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
+import { Card, CardHeader, Button, CircularProgress } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
-import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
-import { noPropagation } from '../../lib/eventMiddleware'
 import arrayShift from '../../lib/arrayShift'
-import { DragHandle, SortableItem, SortableList } from '../../lib/sortableMoc'
+import { SortableList } from '../../lib/sortableMoc'
 import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
+import CourseListItem from './CourseListItem'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,26 +23,6 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     overflow: 'auto'
-  },
-  listItemActive: {
-    boxShadow: `inset 3px 0px ${theme.palette.primary.dark}`
-  },
-  listItemDisabled: {
-    color: 'rgba(0, 0, 0, 0.26)'
-  },
-  lockIcon: {
-    visibility: 'hidden'
-  },
-  courseButton: {
-    paddingRight: '128px',
-    '&:hover $lockIcon': {
-      visibility: 'visible'
-    }
-  },
-  courseName: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
   }
 }))
 
@@ -118,60 +93,11 @@ const CourseList = ({
         onSortEnd={onSortEnd}
       >
         {orderedCourses.map((course, index) => (
-          <SortableItem
-            className={course.id === focusedCourseId ? classes.listItemActive :
-              editing && editing !== course.id ? classes.listItemDisabled : null}
-            button={editing !== course.id}
-            classes={{ button: classes.courseButton }}
-            index={index}
-            ref={index === 0 ? infoBox.ref('manager', 'FOCUS_COURSE') : undefined}
-            key={course.id}
-            onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
-          >
-            {editing === course.id ? <CourseEditor
-              submit={args => {
-                setEditing(null)
-                updateCourse({ id: course.id, ...args })
-              }}
-              cancel={() => setEditing(null)}
-              defaultValues={course}
-              tagOptions={courseTags}
-              action='Save'
-            /> : <>
-              <ListItemText primary={
-                <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
-              } />
-              <ListItemSecondaryAction>
-                {course.frozen && user.role < Role.STAFF && (
-                  <IconButton disabled classes={{ root: classes.lockIcon }}>
-                    <LockIcon />
-                  </IconButton>
-                )}
-                {!course.frozen &&
-                  <IconButton
-                    color={editing ? 'inherit' : undefined} aria-label='Delete' onClick={evt => {
-                      evt.stopPropagation()
-                      const msg = `Are you sure you want to delete the course ${course.name}?`
-                      if (window.confirm(msg)) {
-                        deleteCourse(course.id)
-                      }
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                }
-                {(!course.frozen || user.role >= Role.STAFF) &&
-                  <IconButton
-                    color={editing ? 'inherit' : undefined} aria-label='Edit'
-                    onClick={noPropagation(() => setEditing(course.id))}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                }
-                <DragHandle />
-              </ListItemSecondaryAction>
-            </>}
-          </SortableItem>
+          <CourseListItem
+            course={course} user={user} index={index} editing={editing} setEditing={setEditing}
+            focusedCourseId={focusedCourseId} setFocusedCourseId={setFocusedCourseId}
+            updateCourse={updateCourse} deleteCourse={deleteCourse} courseTags={courseTags}
+          />
         ))}
       </SortableList>
       <CourseEditor submit={async args => {
