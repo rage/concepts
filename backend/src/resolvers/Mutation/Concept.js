@@ -177,17 +177,17 @@ const ConceptMutations = {
         frozen
         course {
           id
+          conceptOrder
         }
       }
     `)
     if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
     await context.prisma.deleteConcept({ id })
 
-    const { id: courseId } = await context.prisma.concept({ id }).course()
-    const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
+    const conceptOrder = toDelete.course.conceptOrder
     if (!isAutomaticSorting(conceptOrder)) {
       await context.prisma.updateCourse({
-        where: { id: courseId },
+        where: { id: toDelete.course.id },
         data: {
           conceptOrder: { set: conceptOrder.filter(conceptId => conceptId !== id) }
         }
