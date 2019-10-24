@@ -47,6 +47,7 @@ type Workspace {
   asTemplate: Project @relation(name:"Templates")
   clones: [Workspace!]! @relation(name: "TemplateClones")
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
+  courseOrder: [ID!]! @scalarList(strategy:"RELATION")
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
@@ -113,6 +114,7 @@ type Course {
   linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
   concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
+  conceptOrder: [ID!]! @scalarList(strategy:"RELATION")
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
   tags: [Tag!]!
 }

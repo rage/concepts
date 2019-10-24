@@ -44,7 +44,7 @@ type Mutation {
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
   deleteCourse(id: ID!): Course
-  updateCourse(id: ID!, name: String!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
+  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course
 
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
@@ -69,7 +69,7 @@ type Mutation {
   # Workspace mutations
   createWorkspace(name: String!, projectId: ID): Workspace
   deleteWorkspace(id: ID!): Workspace
-  updateWorkspace(id: ID!, name: String!): Workspace
+  updateWorkspace(id: ID!, name: String, courseOrder: [ID!]): Workspace
 
   # Template workspace mutations
   createTemplateWorkspace(projectId: ID!, name: String!): Workspace
@@ -246,6 +246,7 @@ type Workspace {
   asTemplate: Project
   clones: [Workspace!]!
   courses: [Course!]!
+  courseOrder: [ID!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
@@ -312,6 +313,7 @@ type Course {
   linksFromCourse: [CourseLink!]!
   linksToCourse: [CourseLink!]!
   concepts: [Concept!]!
+  conceptOrder: [ID!]!
   workspace: Workspace!
   tags: [Tag!]!
 }

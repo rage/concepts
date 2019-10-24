@@ -1803,6 +1803,7 @@ export interface WorkspaceCreateWithoutParticipantsInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -1842,6 +1843,7 @@ export interface WorkspaceCreateInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -1866,6 +1868,7 @@ export interface WorkspaceCreateWithoutClonesInput {
   asMerge?: Maybe<ProjectCreateOneWithoutMergesInput>;
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -1908,6 +1911,7 @@ export interface WorkspaceCreateWithoutSourceProjectInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -1949,6 +1953,7 @@ export interface WorkspaceCreateWithoutAsMergeInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -1976,6 +1981,7 @@ export interface WorkspaceCreateWithoutSourceTemplateInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -2005,6 +2011,7 @@ export interface CourseCreateWithoutWorkspaceInput {
   linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   tags?: Maybe<TagCreateManyInput>;
 }
 
@@ -2023,6 +2030,7 @@ export interface CourseCreateWithoutClonesInput {
   linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   tags?: Maybe<TagCreateManyInput>;
 }
@@ -2060,6 +2068,7 @@ export interface CourseCreateWithoutLinksToCourseInput {
   clones?: Maybe<CourseCreateManyWithoutSourceCourseInput>;
   linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   tags?: Maybe<TagCreateManyInput>;
 }
@@ -2082,6 +2091,7 @@ export interface CourseCreateWithoutSourceCourseInput {
   linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   tags?: Maybe<TagCreateManyInput>;
 }
@@ -2119,6 +2129,7 @@ export interface CourseCreateWithoutLinksFromCourseInput {
   clones?: Maybe<CourseCreateManyWithoutSourceCourseInput>;
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   tags?: Maybe<TagCreateManyInput>;
 }
@@ -2289,8 +2300,13 @@ export interface CourseCreateWithoutConceptsInput {
   clones?: Maybe<CourseCreateManyWithoutSourceCourseInput>;
   linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   tags?: Maybe<TagCreateManyInput>;
+}
+
+export interface CourseCreateconceptOrderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
 }
 
 export interface WorkspaceCreateOneWithoutCoursesInput {
@@ -2306,6 +2322,7 @@ export interface WorkspaceCreateWithoutCoursesInput {
   asMerge?: Maybe<ProjectCreateOneWithoutMergesInput>;
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -2315,6 +2332,10 @@ export interface WorkspaceCreateWithoutCoursesInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
+}
+
+export interface WorkspaceCreatecourseOrderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
 }
 
 export interface ConceptCreateManyWithoutWorkspaceInput {
@@ -2461,6 +2482,7 @@ export interface WorkspaceCreateWithoutTokensInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -2487,6 +2509,7 @@ export interface CourseCreateInput {
   linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   tags?: Maybe<TagCreateManyInput>;
 }
@@ -2588,6 +2611,7 @@ export interface WorkspaceCreateWithoutAsTemplateInput {
   asMerge?: Maybe<ProjectCreateOneWithoutMergesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -2744,6 +2768,7 @@ export interface WorkspaceCreateWithoutConceptsInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
@@ -2768,6 +2793,7 @@ export interface WorkspaceCreateWithoutConceptLinksInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
@@ -2792,6 +2818,7 @@ export interface WorkspaceCreateWithoutCourseLinksInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
@@ -2832,6 +2859,7 @@ export interface WorkspaceCreateWithoutPointGroupsInput {
   asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
@@ -2933,6 +2961,7 @@ export interface WorkspaceUpdateWithoutParticipantsDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -2978,6 +3007,7 @@ export interface WorkspaceUpdateDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -3005,6 +3035,7 @@ export interface WorkspaceUpdateWithoutClonesDataInput {
   asMerge?: Maybe<ProjectUpdateOneWithoutMergesInput>;
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -3070,6 +3101,7 @@ export interface WorkspaceUpdateWithoutSourceProjectDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -3134,6 +3166,7 @@ export interface WorkspaceUpdateWithoutAsMergeDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -3181,6 +3214,7 @@ export interface WorkspaceUpdateWithoutSourceTemplateDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -3230,6 +3264,7 @@ export interface CourseUpdateWithoutWorkspaceDataInput {
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
 
@@ -3251,6 +3286,7 @@ export interface CourseUpdateWithoutClonesDataInput {
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
@@ -3309,6 +3345,7 @@ export interface CourseUpdateWithoutLinksToCourseDataInput {
   clones?: Maybe<CourseUpdateManyWithoutSourceCourseInput>;
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
@@ -3351,6 +3388,7 @@ export interface CourseUpdateWithoutSourceCourseDataInput {
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
@@ -3409,6 +3447,7 @@ export interface CourseUpdateWithoutLinksFromCourseDataInput {
   clones?: Maybe<CourseUpdateManyWithoutSourceCourseInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
@@ -3673,8 +3712,13 @@ export interface CourseUpdateWithoutConceptsDataInput {
   clones?: Maybe<CourseUpdateManyWithoutSourceCourseInput>;
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
+}
+
+export interface CourseUpdateconceptOrderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
 }
 
 export interface WorkspaceUpdateOneRequiredWithoutCoursesInput {
@@ -3691,6 +3735,7 @@ export interface WorkspaceUpdateWithoutCoursesDataInput {
   asMerge?: Maybe<ProjectUpdateOneWithoutMergesInput>;
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -3700,6 +3745,10 @@ export interface WorkspaceUpdateWithoutCoursesDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
+}
+
+export interface WorkspaceUpdatecourseOrderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
 }
 
 export interface ConceptUpdateManyWithoutWorkspaceInput {
@@ -4383,6 +4432,7 @@ export interface WorkspaceUpdateWithoutTokensDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -4412,6 +4462,7 @@ export interface CourseUpdateDataInput {
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
@@ -4761,6 +4812,7 @@ export interface WorkspaceUpdateWithoutAsTemplateDataInput {
   asMerge?: Maybe<ProjectUpdateOneWithoutMergesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -5008,6 +5060,7 @@ export interface WorkspaceUpdateManyWithWhereNestedInput {
 
 export interface WorkspaceUpdateManyDataInput {
   name?: Maybe<String>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
 }
 
 export interface ProjectTokenUpdateManyWithoutProjectInput {
@@ -5346,6 +5399,7 @@ export interface WorkspaceUpdateWithoutConceptsDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
@@ -5381,6 +5435,7 @@ export interface WorkspaceUpdateWithoutConceptLinksDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
@@ -5450,6 +5505,7 @@ export interface WorkspaceUpdateWithoutCourseLinksDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
@@ -5524,6 +5580,7 @@ export interface CourseUpdateManyDataInput {
   name?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
 }
 
 export interface CourseUpsertWithoutLinksToCourseInput {
@@ -5639,6 +5696,7 @@ export interface WorkspaceUpdateWithoutPointGroupsDataInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -5746,6 +5804,7 @@ export interface CourseUpdateInput {
   linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   tags?: Maybe<TagUpdateManyInput>;
 }
@@ -5754,6 +5813,7 @@ export interface CourseUpdateManyMutationInput {
   name?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
 }
 
 export interface CourseLinkCreateInput {
@@ -6038,6 +6098,7 @@ export interface WorkspaceUpdateInput {
   asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
   clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
   courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
@@ -6051,6 +6112,7 @@ export interface WorkspaceUpdateInput {
 
 export interface WorkspaceUpdateManyMutationInput {
   name?: Maybe<String>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
 }
 
 export interface WorkspaceParticipantCreateInput {
@@ -6521,6 +6583,7 @@ export interface WorkspaceParticipantNullablePromise
 export interface Workspace {
   id: ID_Output;
   name: String;
+  courseOrder: ID_Output[];
 }
 
 export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
@@ -6548,6 +6611,7 @@ export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  courseOrder: () => Promise<ID_Output[]>;
   concepts: <T = FragmentableArray<Concept>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
@@ -6650,6 +6714,7 @@ export interface WorkspaceSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  courseOrder: () => Promise<AsyncIterator<ID_Output[]>>;
   concepts: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
@@ -6754,6 +6819,7 @@ export interface WorkspaceNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  courseOrder: () => Promise<ID_Output[]>;
   concepts: <T = FragmentableArray<Concept>>(args?: {
     where?: ConceptWhereInput;
     orderBy?: ConceptOrderByInput;
@@ -7095,6 +7161,7 @@ export interface Course {
   name: String;
   official: Boolean;
   frozen: Boolean;
+  conceptOrder: ID_Output[];
 }
 
 export interface CoursePromise extends Promise<Course>, Fragmentable {
@@ -7140,6 +7207,7 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  conceptOrder: () => Promise<ID_Output[]>;
   workspace: <T = WorkspacePromise>() => T;
   tags: <T = FragmentableArray<Tag>>(args?: {
     where?: TagWhereInput;
@@ -7197,6 +7265,7 @@ export interface CourseSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  conceptOrder: () => Promise<AsyncIterator<ID_Output[]>>;
   workspace: <T = WorkspaceSubscription>() => T;
   tags: <T = Promise<AsyncIterator<TagSubscription>>>(args?: {
     where?: TagWhereInput;
@@ -7254,6 +7323,7 @@ export interface CourseNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  conceptOrder: () => Promise<ID_Output[]>;
   workspace: <T = WorkspacePromise>() => T;
   tags: <T = FragmentableArray<Tag>>(args?: {
     where?: TagWhereInput;
@@ -8912,6 +8982,7 @@ export interface CoursePreviousValues {
   name: String;
   official: Boolean;
   frozen: Boolean;
+  conceptOrder: ID_Output[];
 }
 
 export interface CoursePreviousValuesPromise
@@ -8921,6 +8992,7 @@ export interface CoursePreviousValuesPromise
   name: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
+  conceptOrder: () => Promise<ID_Output[]>;
 }
 
 export interface CoursePreviousValuesSubscription
@@ -8930,6 +9002,7 @@ export interface CoursePreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
+  conceptOrder: () => Promise<AsyncIterator<ID_Output[]>>;
 }
 
 export interface CourseLinkSubscriptionPayload {
@@ -9407,6 +9480,7 @@ export interface WorkspaceSubscriptionPayloadSubscription
 export interface WorkspacePreviousValues {
   id: ID_Output;
   name: String;
+  courseOrder: ID_Output[];
 }
 
 export interface WorkspacePreviousValuesPromise
@@ -9414,6 +9488,7 @@ export interface WorkspacePreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  courseOrder: () => Promise<ID_Output[]>;
 }
 
 export interface WorkspacePreviousValuesSubscription
@@ -9421,6 +9496,7 @@ export interface WorkspacePreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  courseOrder: () => Promise<AsyncIterator<ID_Output[]>>;
 }
 
 export interface WorkspaceParticipantSubscriptionPayload {

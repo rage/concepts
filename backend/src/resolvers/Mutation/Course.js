@@ -3,13 +3,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
-
 import { pubsub } from '../Subscription/config'
-const { 
-  COURSE_CREATED, 
-  COURSE_UPDATED, 
-  COURSE_DELETED 
-} = require('../Subscription/config/channels')
+import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/config/channels'
 
 const CourseQueries = {
   async createCourse(root, { name, workspaceId, official, frozen, tags }, context) {
@@ -21,16 +16,25 @@ const CourseQueries = {
 
     if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
 
-    const newCourse = context.prisma.createCourse({
+    const newCourse = await context.prisma.createCourse({
       name: name,
       official: Boolean(official),
       frozen: Boolean(frozen),
       createdBy: { connect: { id: context.user.id } },
+      conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       workspace: { connect: { id: workspaceId } },
       tags: { connect: await createMissingTags(tags, workspaceId, context, 'courseTags') }
     })
 
-    pubsub.publish(COURSE_CREATED, { courseCreated: newCourse})
+    const courseOrder = await context.prisma.workspace({ id: workspaceId }).courseOrder()
+    await context.prisma.updateWorkspace({
+      where: { id: workspaceId },
+      data: {
+        courseOrder: { set: courseOrder.concat([newCourse.id]) }
+      }
+    })
+
+    pubsub.publish(COURSE_CREATED, { courseCreated: newCourse })
     return newCourse
   },
 
@@ -50,11 +54,20 @@ const CourseQueries = {
       ]
     })
     const deletedCourse = await context.prisma.deleteCourse({ id })
-    pubsub.publish(COURSE_DELETED, {courseDeleted: deletedCourse})
+
+    const courseOrder = await context.prisma.workspace({ id: workspaceId }).courseOrder()
+    await context.prisma.updateWorkspace({
+      where: { id: workspaceId },
+      data: {
+        courseOrder: { set: courseOrder.filter(courseId => courseId !== id) }
+      }
+    })
+
+    pubsub.publish(COURSE_DELETED, { courseDeleted: deletedCourse })
     return deletedCourse
   },
 
-  async updateCourse(root, { id, name, official, frozen, tags }, context) {
+  async updateCourse(root, { id, name, official, frozen, tags, conceptOrder }, context) {
     const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
     await checkAccess(context, {
       minimumRole: Role.GUEST,
@@ -81,15 +94,21 @@ const CourseQueries = {
       official: Boolean(official),
       frozen: Boolean(frozen)
     }
+    if (conceptOrder !== undefined) {
+      data.conceptOrder = {
+        set: conceptOrder
+      }
+    }
     if (name !== undefined) {
       if (!belongsToTemplate && name !== oldCourse.name) data.official = false
       data.name = name
     }
-    pubsub.publish(COURSE_UPDATED, {courseUpdated: {...data, id }})
-    return await context.prisma.updateCourse({
+    const updateData = await context.prisma.updateCourse({
       where: { id },
       data
     })
+    pubsub.publish(COURSE_UPDATED, { courseUpdated: { id, ...data } })
+    return updateData
   }
 }
 

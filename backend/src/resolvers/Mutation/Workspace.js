@@ -126,16 +126,25 @@ const WorkspaceMutations = {
     pubsub.publish(WORKSPACE_DELETED, { workspaceDeleted: deletedWorkspace })
     return deletedWorkspace
   },
-  async updateWorkspace(root, { id, name }, context) {
+  async updateWorkspace(root, { id, name, courseOrder }, context) {
     await checkAccess(context, {
       minimumRole: Role.GUEST,
       minimumPrivilege: Privilege.EDIT,
       workspaceId: id
     })
-    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { id, name } })
+    const data = {}
+    if (name !== undefined) {
+      data.name = name
+    }
+    if (courseOrder !== undefined) {
+      data.courseOrder = {
+        set: courseOrder
+      }
+    }
+    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { id, ...data } })
     return context.prisma.updateWorkspace({
       where: { id },
-      data: { name }
+      data
     })
   },
   async createTemplateWorkspace(root, { name, projectId }, context) {
