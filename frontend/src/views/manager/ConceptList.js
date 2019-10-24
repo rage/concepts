@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import {Button, TextField, Card, CardHeader, MenuItem, CircularProgress} from '@material-ui/core'
+import { Button, TextField, Card, CardHeader, MenuItem, CircularProgress } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
 import { Role } from '../../lib/permissions'
@@ -110,11 +110,10 @@ const ConceptList = ({
       if (orderMethod !== 'CUSTOM') setOrderMethod('CUSTOM')
     })
 
-  const resetOrder = () =>
-    ReactDOM.unstable_batchedUpdates(() => {
-      setDirtyOrder(null)
-      setOrderMethod(defaultOrderMethod)
-    })
+  const resetOrder = () => {
+    setDirtyOrder(null)
+    setOrderMethod(defaultOrderMethod)
+  }
 
   const saveOrder = async () => {
     setDirtyOrder('loading')
@@ -160,46 +159,51 @@ const ConceptList = ({
     closeMergeDialog()
   }, [course])
 
-  const cardHeaderButton = (text, ref, onClick, disabled = false) => (
+  const CardHeaderButton = ({ children, bRef, color = 'primary', onClick, disabled = false }) => (
     <Button
-      key={text}
-      style={{ margin: '6px' }}
-      ref={ref}
-      variant='outlined' color='primary'
-      onClick={!disabled ? onClick : undefined}
+      style={{ margin: '6px' }} ref={bRef} color={color} onClick={!disabled ? onClick : () => {}}
       disabled={disabled}
     >
-      {text}
+      {children}
     </Button>
   )
 
   const cardHeaderActions = () => {
     if (dirtyOrder) {
       return <>
-        <Button
-          style={{ margin: '6px' }} color='secondary' onClick={resetOrder}
-          disabled={dirtyOrder === 'loading'}
+        <CardHeaderButton
+          color='secondary' onClick={resetOrder} disabled={dirtyOrder === 'loading'}
         >
           Reset
-        </Button>
-        <Button
-          style={{ margin: '6px' }} color='primary' onClick={saveOrder}
-          disabled={dirtyOrder === 'loading'}
-        >
+        </CardHeaderButton>
+        <CardHeaderButton onClick={saveOrder} disabled={dirtyOrder === 'loading'}>
           {dirtyOrder === 'loading' ? <CircularProgress /> : 'Save'}
-        </Button>
+        </CardHeaderButton>
       </>
     } else if (user.role >= Role.STAFF) {
       if (merging) {
-        return [
-          cardHeaderButton('Merge…', infoBox.ref('manager', 'FINISH_MERGE'),
-            () => openMergeDialog(), merging.size < 2),
-          cardHeaderButton('Cancel', infoBox.secondaryRef('manager', 'FINISH_MERGE'),
-            () => stopMerging())
-        ]
+        return <>
+          <CardHeaderButton
+            bRef={infoBox.ref('manager', 'FINISH_MERGE')}
+            onClick={openMergeDialog} disabled={merging.size < 2}
+          >
+            Merge…
+          </CardHeaderButton>
+          <CardHeaderButton
+            bRef={infoBox.secondaryRef('manager', 'FINISH_MERGE')} onClick={stopMerging}
+          >
+            Cancel
+          </CardHeaderButton>
+        </>
       }
-      return cardHeaderButton('Start merge', infoBox.ref('manager', 'START_MERGE'),
-        () => startMerging(), course.concepts.length < 2)
+      return (
+        <CardHeaderButton
+          bRef={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
+          disabled={course.concepts.length < 2}
+        >
+          Start merge
+        </CardHeaderButton>
+      )
     }
     return null
   }
