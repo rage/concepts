@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     visibility: 'hidden'
   },
   conceptBody: {
-    paddingRight: '104px'
+    paddingRight: '128px'
   },
   conceptName: {
     whiteSpace: 'nowrap',
@@ -125,8 +125,8 @@ const ConceptListItem = ({
                 <EditIcon />
               </IconButton>
               }
+              {sortable && <DragHandle />}
             </>}
-            {sortable && <DragHandle />}
           </ListItemSecondaryAction>
         </>}
       </ItemClass>

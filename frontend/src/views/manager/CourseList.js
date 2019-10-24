@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     visibility: 'hidden'
   },
   courseButton: {
-    paddingRight: '104px',
+    paddingRight: '128px',
     '&:hover $lockIcon': {
       visibility: 'visible'
     }
