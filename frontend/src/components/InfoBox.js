@@ -267,6 +267,9 @@ const InfoBox = ({ contextRef }) => {
       }
       if (!step.refFunc) {
         step.refFunc = elem => {
+          if (!(elem instanceof HTMLElement) && (elem?.node instanceof HTMLElement)) {
+            elem = elem.node
+          }
           step.ref = elem
           redraw()
         }

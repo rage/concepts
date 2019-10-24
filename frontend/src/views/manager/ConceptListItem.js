@@ -1,9 +1,12 @@
-import {
-  Checkbox, Fade, IconButton, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography
-} from '@material-ui/core'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
-import React from 'react'
+import {
+  Checkbox, Fade, IconButton, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography,
+  Menu, MenuItem, ListItemIcon
+} from '@material-ui/core'
+import {
+  Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon, MoreVert as MoreVertIcon
+} from '@material-ui/icons'
 
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import ConceptEditor from './ConceptEditor'
@@ -19,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     visibility: 'hidden'
   },
   conceptBody: {
-    paddingRight: '128px'
+    paddingRight: '80px'
   },
   conceptName: {
     whiteSpace: 'nowrap',
@@ -51,8 +54,24 @@ const ConceptListItem = ({
   conceptTags,
   sortable = true
 }) => {
+  const [menuAnchor, setMenuAnchor] = useState(null)
   const classes = useStyles()
   const ItemClass = sortable ? SortableItem : ListItem
+
+  const handleDelete = () => {
+    const msg = `Are you sure you want to delete the concept ${concept.name}?`
+    if (window.confirm(msg)) {
+      deleteConcept(concept.id)
+    }
+    closeMenu()
+  }
+  const handleEdit = () => {
+    setEditing(concept.id)
+    closeMenu()
+  }
+  const closeMenu = () => setMenuAnchor(null)
+  const openMenu = evt => setMenuAnchor(evt.currentTarget)
+
   return (
     <Tooltip
       key={concept.id}
@@ -99,32 +118,28 @@ const ConceptListItem = ({
                 color='primary'
               />
             ) : <>
-              {concept.frozen && user.role < Role.STAFF && (
+              {concept.frozen && user.role < Role.STAFF ? (
                 <IconButton disabled classes={{ root: classes.lockIcon }}>
                   <LockIcon />
                 </IconButton>
-              )}
-              {!concept.frozen &&
-              <IconButton
-                color={editing ? 'inherit' : undefined}
-                aria-label='Delete' onClick={() => {
-                  const msg = `Are you sure you want to delete the concept ${concept.name}?`
-                  if (window.confirm(msg)) {
-                    deleteConcept(concept.id)
-                  }
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
-              }
-              {(!concept.frozen || user.role >= Role.STAFF) &&
-              <IconButton
-                color={editing ? 'inherit' : undefined} aria-label='Edit'
-                onClick={() => setEditing(concept.id)}
-              >
-                <EditIcon />
-              </IconButton>
-              }
+              ) : <>
+                <IconButton onClick={openMenu}>
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
+                  <MenuItem
+                    title={concept.frozen ? 'This concept is frozen' : undefined}
+                    disabled={concept.frozen} onClick={handleDelete}
+                  >
+                    <ListItemIcon><DeleteIcon /></ListItemIcon>
+                    Delete
+                  </MenuItem>
+                  <MenuItem onClick={handleEdit}>
+                    <ListItemIcon><EditIcon /></ListItemIcon>
+                    Edit
+                  </MenuItem>
+                </Menu>
+              </>}
               {sortable && <DragHandle />}
             </>}
           </ListItemSecondaryAction>
