@@ -42,7 +42,9 @@ const authenticationLink = new ApolloLink((operation, forward) => {
 
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:8080/graphql',
-  options: { reconnect: true }
+  options: { reconnect: true, connectionParams: { 
+    token: window.localStorage.currentUser ? JSON.parse(window.localStorage.currentUser).token : ''
+  }}
 })
 
 const httpLink = createHttpLink({

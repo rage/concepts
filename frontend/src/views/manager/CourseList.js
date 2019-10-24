@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
 import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
+import { useSubscription } from 'react-apollo-hooks'
 
 import { Role } from '../../lib/permissions'
 import {
@@ -14,6 +15,7 @@ import {
 import { useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import { noPropagation } from '../../lib/eventMiddleware'
+import { COURSE_CREATED_SUBSCRIPTION } from '../../graphql/Subscription'
 
 const useStyles = makeStyles(theme => ({
   root: {

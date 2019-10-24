@@ -9,7 +9,13 @@ export const authenticate = async (resolve, root, args, context, info) => {
   if (context.user) {
     return await resolve(root, args, context, info)
   }
-  const rawToken = context.request.header('Authorization')
+
+  let rawToken
+  if (context.request === undefined) {
+    rawToken = `Bearer ${context.connection.context.token}` 
+  } else {
+    rawToken = context.request.header('Authorization')
+  }
 
   if (!rawToken) {
     context.role = Role.VISITOR

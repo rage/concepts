@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation, useSubscription } from 'react-apollo-hooks'
 import { Typography, Paper } from '@material-ui/core'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
@@ -14,6 +14,7 @@ import {
 import cache from '../../apollo/update'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
+import { COURSE_CREATED_SUBSCRIPTION } from '../../graphql/Subscription'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -71,6 +72,12 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   const classes = useStyles()
 
   const infoBox = useInfoBox()
+
+  const { courseCratedData, loading, error } = useSubscription(COURSE_CREATED_SUBSCRIPTION, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+    }
+  })
 
   useEffect(() => {
     infoBox.setView('manager')
