@@ -69,7 +69,6 @@ const CourseListItem = ({
       classes={{ button: classes.courseButton }}
       index={index}
       ref={index === 0 ? infoBox.ref('manager', 'FOCUS_COURSE') : undefined}
-      key={course.id}
       onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
     >
       {editing === course.id ? <CourseEditor

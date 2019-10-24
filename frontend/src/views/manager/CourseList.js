@@ -97,13 +97,14 @@ const CourseList = ({
             course={course} user={user} index={index} editing={editing} setEditing={setEditing}
             focusedCourseId={focusedCourseId} setFocusedCourseId={setFocusedCourseId}
             updateCourse={updateCourse} deleteCourse={deleteCourse} courseTags={courseTags}
+            key={course.id}
           />
         ))}
       </SortableList>
       <CourseEditor submit={async args => {
         await createCourse(args)
-        if (listRef.current) {
-          listRef.current.scrollTop = listRef.current.scrollHeight
+        if (listRef.current?.node) {
+          listRef.current.node.scrollTop = listRef.current.node.scrollHeight
         }
         infoBox.redrawIfOpen('manager',
           'CREATE_COURSE_NAME', 'CREATE_COURSE_THEMES', 'CREATE_COURSE_SUBMIT')
