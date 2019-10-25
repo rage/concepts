@@ -13,6 +13,7 @@ import MergeDialog from './MergeDialog'
 import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
+import { sortedConcepts } from './ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,32 +75,9 @@ const ConceptList = ({
   const [orderMethod, setOrderMethod] = useState(defaultOrderMethod)
   const [dirtyOrder, setDirtyOrder] = useState(null)
 
-  const sort = (concepts, method, order) => {
-    switch (method) {
-    case 'CUSTOM':
-      return order
-        .map(orderedId => {
-          const index = concepts.findIndex(concept => concept.id === orderedId)
-          return index >= 0 ? concepts.splice(index, 1)[0] : null
-        })
-        .filter(concept => concept !== null)
-        .concat(concepts)
-    case 'ALPHA_ASC':
-      return concepts.sort((a, b) => a.name.localeCompare(b.name, 'fi'))
-    case 'ALPHA_DESC':
-      return concepts.sort((a, b) => b.name.localeCompare(a.name, 'fi'))
-    case 'CREATION_ASC':
-      return concepts
-    case 'CREATION_DESC':
-      return concepts.reverse()
-    default:
-      return concepts
-    }
-  }
-
   useEffect(() => {
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sort(course.concepts.slice(), orderMethod, course.conceptOrder))
+      setOrderedConcepts(sortedConcepts(course, orderMethod))
     }
   }, [course.concepts, course.conceptOrder, dirtyOrder, orderMethod])
 

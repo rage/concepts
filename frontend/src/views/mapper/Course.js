@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useMemo} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
 import {
@@ -16,6 +16,7 @@ import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
+import {sortedConcepts} from '../manager/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -114,6 +115,9 @@ const Course = ({
 
   const collapsed = collapsedCourseIds.has(course.id)
 
+  const orderedConcepts = useMemo(() => sortedConcepts(course),
+    [course, course.concepts, course.conceptOrder])
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -133,8 +137,7 @@ const Course = ({
             onClick={() => openEditCourseDialog(course)}>
             <EditIcon />
           </IconButton>
-          </>
-        }>
+        </>}>
       </CardHeader>
       <Button className={classes.collapser} onClick={() => toggleCollapse(course.id)}>
         {collapsed ? <ExpandIcon /> : <CollapseIcon />}
@@ -142,7 +145,7 @@ const Course = ({
 
       {!collapsed && <CardContent className={classes.content}>
         <List className={classes.list}>
-          {course.concepts.map((concept, index) =>
+          {orderedConcepts.map((concept, index) =>
             <Concept concept={concept}
               key={concept.id}
               course={course}
