@@ -30,7 +30,7 @@ const ConceptLink = {
       workspace: { connect: { id: workspaceId } },
       official: Boolean(official)
     })
-    pubsub.publish(CONCEPT_LINK_CREATED, {conceptLinkCreated: newConceptLink})
+    pubsub.publish(CONCEPT_LINK_CREATED, {conceptLinkCreated: {...newConceptLink, workspaceId} })
     return newConceptLink
   },
   async deleteConceptLink(root, args, context) {
@@ -43,7 +43,7 @@ const ConceptLink = {
     })
     const toDelete = await context.prisma.conceptLink({ id: args.id })
     if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
-    pubsub.publish(CONCEPT_LINK_DELETED, {conceptLinkDeleted: toDelete})
+    pubsub.publish(CONCEPT_LINK_DELETED, {conceptLinkDeleted: {...toDelete, workspaceId}})
     return await context.prisma.deleteConceptLink({
       id: args.id
     })

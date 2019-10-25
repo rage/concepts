@@ -10,10 +10,16 @@ const CourseSubscriptions = {
       })
   },
   courseUpdated: {
-    subscribe: () => pubsub.asyncIterator(COURSE_UPDATED)
+    subscribe: () => withFilter(() => pubsub.asyncIterator(COURSE_UPDATED),
+      (payload, variables) => {
+        return payload.courseUpdated.workspaceId === variables.workspaceId
+      })
   },
   courseDeleted: {
-    subscribe: () => pubsub.asyncIterator(COURSE_DELETED)
+    subscribe: () => withFilter(() => pubsub.asyncIterator(COURSE_DELETED),
+      (payload, variables) => {
+        return payload.courseDeleted.workspaceId === variables.workspaceId
+      })
   }
 }
 

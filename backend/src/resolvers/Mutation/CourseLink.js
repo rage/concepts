@@ -31,7 +31,7 @@ const CourseQueries = {
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } }
     })
-    pubsub.publish(COURSE_LINK_CREATED, {courseLinkCreated: createdCourseLink})
+    pubsub.publish(COURSE_LINK_CREATED, {courseLinkCreated: {...createdCourseLink, workspaceId}})
     return createdCourseLink
   },
   async updateCourseLink(root, { id, frozen, official }, context) {
@@ -48,7 +48,7 @@ const CourseQueries = {
       where: { id },
       data: { frozen, official }
     })
-    pubsub.publish(COURSE_LINK_UPDATED, { courseLinkUpdated: updatedCourseLink })
+    pubsub.publish(COURSE_LINK_UPDATED, { courseLinkUpdated: {...updatedCourseLink, workspaceId} })
     return updatedCourseLink
   },
   async deleteCourseLink(root, { id }, context) {
@@ -61,7 +61,7 @@ const CourseQueries = {
     const toDelete = await context.prisma.courseLink({ id })
     if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
     const deletedCourseLink = await context.prisma.deleteCourseLink({ id })
-    pubsub.publish(COURSE_LINK_DELETED, {courseLinkDeleted: deletedCourseLink})
+    pubsub.publish(COURSE_LINK_DELETED, {courseLinkDeleted: {...deletedCourseLink, workspaceId}})
 
     return deletedCourseLink
   }

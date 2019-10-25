@@ -63,7 +63,7 @@ const CourseQueries = {
       }
     })
 
-    pubsub.publish(COURSE_DELETED, { courseDeleted: deletedCourse })
+    pubsub.publish(COURSE_DELETED, { courseDeleted: {...deletedCourse, workspaceId} })
     return deletedCourse
   },
 
@@ -107,7 +107,7 @@ const CourseQueries = {
       where: { id },
       data
     })
-    pubsub.publish(COURSE_UPDATED, { courseUpdated: { id, ...data } })
+    pubsub.publish(COURSE_UPDATED, { courseUpdated: { id, ...data, workspaceId } })
     return updateData
   }
 }
