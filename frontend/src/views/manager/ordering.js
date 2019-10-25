@@ -30,13 +30,13 @@ export const sortedConcepts = (course, method = null) => {
   return internalSortConcepts(concepts, method, conceptOrder)
 }
 
-const internalSortCourses = (courses, order) => order
+const internalSortCourses = (courses = [], order = [], keyCallback = course => course.id) => order
   .map(orderedId => {
-    const index = courses.findIndex(course => course.id === orderedId)
+    const index = courses.findIndex(course => keyCallback(course) === orderedId)
     return index >= 0 ? courses.splice(index, 1)[0] : null
   })
   .filter(course => course !== null)
   .concat(courses)
 
-export const sortedCourses = workspace =>
-  internalSortCourses(workspace.courses.slice(), workspace.courseOrder)
+export const sortedCourses = (workspace, keyCallback) =>
+  internalSortCourses(workspace.courses.slice(), workspace.courseOrder, keyCallback)

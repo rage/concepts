@@ -94,6 +94,7 @@ const CourseContainer = ({
     `}</style>}
     <PrerequisiteContainer
       courseLinks={courseLinks}
+      courseOrder={workspace.courseOrder}
       courseId={course.id}
       focusedConceptIds={focusedConceptIds}
       collapsedCourseIds={collapsedCourseIds}
