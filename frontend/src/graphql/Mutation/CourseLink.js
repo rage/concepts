@@ -17,6 +17,7 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
         type
         priority
       }
+      conceptOrder
       concepts {
         id
         name

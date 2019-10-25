@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -16,6 +16,7 @@ import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course
 import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
+import { sortedCourses } from '../manager/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -183,6 +184,10 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
 
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
+  const orderedCourses = useMemo(() => sortedCourses(workspace)
+    .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase)),
+  [filterKeywordLowercase, workspace, workspace.courses, workspace.courseOrder])
+
   return (
     <Paper elevation={0} className={classes.root}>
       <TextField
@@ -198,24 +203,21 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
       />
 
       <List disablePadding className={classes.list}>
-        {workspace.courses
-          .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase))
-          .map((course, index) =>
-            <PrerequisiteCourse
-              key={course.id}
-              course={course}
-              checkboxRef={index === 1 && infoBox.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
-              activeCourseId={activeCourseId}
-              createCourseLink={createCourseLink}
-              deleteCourseLink={deleteCourseLink}
-              isPrerequisite={courseLinks.has(course.id)}
-              courseLinkMap={courseLinks}
-              openEditCourseDialog={openEditCourseDialog}
-              workspace={workspace}
-              urlPrefix={urlPrefix}
-            />
-          )
-        }
+        {orderedCourses.map((course, index) =>
+          <PrerequisiteCourse
+            key={course.id}
+            course={course}
+            checkboxRef={index === 1 && infoBox.ref('mapper', 'ADD_COURSE_AS_PREREQ')}
+            activeCourseId={activeCourseId}
+            createCourseLink={createCourseLink}
+            deleteCourseLink={deleteCourseLink}
+            isPrerequisite={courseLinks.has(course.id)}
+            courseLinkMap={courseLinks}
+            openEditCourseDialog={openEditCourseDialog}
+            workspace={workspace}
+            urlPrefix={urlPrefix}
+          />
+        )}
       </List>
       <Button
         ref={infoBox.ref('mapper', 'CREATE_COURSE')}

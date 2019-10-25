@@ -10,6 +10,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
+import { sortedCourses } from './ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,16 +41,9 @@ const CourseList = ({
 
   useEffect(() => {
     if (!dirtyOrder) {
-      const courses = workspace.courses.slice()
-      setOrderedCourses(workspace.courseOrder
-        .map(orderedId => {
-          const index = courses.findIndex(course => course.id === orderedId)
-          return index >= 0 ? courses.splice(index, 1)[0] : null
-        })
-        .filter(course => course !== null)
-        .concat(courses))
+      setOrderedCourses(sortedCourses(workspace))
     }
-  }, [workspace.courses, workspace.courseOrder, dirtyOrder])
+  }, [workspace, workspace.courses, workspace.courseOrder, dirtyOrder])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
