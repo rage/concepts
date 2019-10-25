@@ -1,11 +1,11 @@
-import React, {useMemo} from 'react'
+import React, { useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Course from './Course'
 import Masonry from './Masonry'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
-import {sortedCourses} from '../manager/ordering'
+import { sortedCourses } from '../manager/ordering'
 
 const useStyles = makeStyles({
   root: {
