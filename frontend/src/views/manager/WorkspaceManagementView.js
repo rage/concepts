@@ -80,6 +80,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   const infoBox = useInfoBox()
 
   const { courseCratedData, loading, error } = useSubscription(COURSE_CREATED_SUBSCRIPTION, {
+    variables: { workspaceId },
     onSubscriptionData: ({ subscriptionData }) => {
       console.log(subscriptionData)
     }

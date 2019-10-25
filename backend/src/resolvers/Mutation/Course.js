@@ -34,7 +34,7 @@ const CourseQueries = {
       }
     })
 
-    pubsub.publish(COURSE_CREATED, { courseCreated: newCourse })
+    pubsub.publish(COURSE_CREATED, { courseCreated: {...newCourse, workspaceId } })
     return newCourse
   },
 

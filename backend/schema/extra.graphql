@@ -102,28 +102,28 @@ type Mutation {
 
 type Subscription {
   # Concept subscriptions
-  conceptCreated: Concept!
-  conceptUpdated: Concept!
-  conceptDeleted: Concept!
+  conceptCreated(workspaceId: ID!): Concept!
+  conceptUpdated(workspaceId: ID!): Concept!
+  conceptDeleted(workspaceId: ID!): Concept!
 
   # ConceptLinks subscriptions
-  conceptLinkCreated: ConceptLink!
-  conceptLinkDeleted: ConceptLink!
+  conceptLinkCreated(workspaceId: ID!): ConceptLink!
+  conceptLinkDeleted(workspaceId: ID!): ConceptLink!
 
   # Courses subscriptions
-  courseCreated: Course!
-  courseUpdated: Course!
-  courseDeleted: Course!
+  courseCreated(workspaceId: ID!): Course!
+  courseUpdated(workspaceId: ID!): Course!
+  courseDeleted(workspaceId: ID!): Course!
 
   # CoursesLinks subscriptions
-  courseLinkCreated: CourseLink!
-  courseLinkUpdated: CourseLink!
-  courseLinkDeleted: CourseLink!
+  courseLinkCreated(workspaceId: ID!): CourseLink!
+  courseLinkUpdated(workspaceId: ID!): CourseLink!
+  courseLinkDeleted(workspaceId: ID!): CourseLink!
 
   # Workspaces subscriptions
-  workspaceCreated: Workspace!
-  workspaceUpdated: Workspace!
-  workspaceDeleted: Workspace!
+  workspaceCreated(projectId: ID!): Workspace!
+  workspaceUpdated(projectId: ID!): Workspace!
+  workspaceDeleted(projectId: ID!): Workspace!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 const COURSE_CREATED_SUBSCRIPTION = gql`
-subscription {
-  courseCreated {
+subscription($workspaceId: ID!) {
+  courseCreated(workspaceId:$workspaceId) {
     id
     name
   }
@@ -10,8 +10,8 @@ subscription {
 `
 
 const COURSE_DELETED_SUBSCRIPTION = gql`
-subscription {
-  courseDeleted {
+subscription($workspaceId:ID!) {
+  courseDeleted(workspaceId:$workspaceId) {
     id
     name
   }
