@@ -7,9 +7,15 @@ import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 import { useMessageStateValue } from '../../lib/store'
 import CourseList from './CourseList'
-import CourseEditor from './CourseEditor'
+import ConceptList from './ConceptList'
 import {
-  CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
+  CREATE_CONCEPT,
+  CREATE_COURSE,
+  DELETE_CONCEPT,
+  DELETE_COURSE,
+  UPDATE_CONCEPT,
+  UPDATE_COURSE,
+  UPDATE_WORKSPACE
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import LoadingBar from '../../components/LoadingBar'
@@ -92,6 +98,9 @@ const WorkspaceManagementView = ({ workspaceId }) => {
     variables: { id: workspaceId }
   })
 
+  const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
+    update: cache.updateWorkspaceUpdate(workspaceId)
+  })
   const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
   const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
@@ -135,6 +144,7 @@ const WorkspaceManagementView = ({ workspaceId }) => {
           workspace={workspace}
           setFocusedCourseId={setFocusedCourseId}
           focusedCourseId={focusedCourseId}
+          updateWorkspace={args => updateWorkspace({ variables: args }).catch(e)}
           deleteCourse={id => deleteCourse({ variables: { id } }).catch(e)}
           updateCourse={args => updateCourse({ variables: args }).catch(e)}
           createCourse={args => createCourse({ variables: { workspaceId, ...args } }).catch(e)}
@@ -142,9 +152,10 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       </div>
       <div className={classes.newCourse}>
         {focusedCourse
-          ? <CourseEditor
+          ? <ConceptList
             workspace={workspaceQuery.data.workspaceById}
             course={focusedCourse}
+            updateCourse={args => updateCourse({ variables: args }).catch(e)}
             createConcept={args => createConcept({
               variables: {
                 workspaceId,

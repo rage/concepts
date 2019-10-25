@@ -1271,6 +1271,7 @@ type Course {
   linksFromCourse(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
   linksToCourse(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  conceptOrder: [ID!]!
   workspace: Workspace!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
 }
@@ -1279,6 +1280,10 @@ type CourseConnection {
   pageInfo: PageInfo!
   edges: [CourseEdge]!
   aggregate: AggregateCourse!
+}
+
+input CourseCreateconceptOrderInput {
+  set: [ID!]
 }
 
 input CourseCreateInput {
@@ -1292,6 +1297,7 @@ input CourseCreateInput {
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
+  conceptOrder: CourseCreateconceptOrderInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1341,6 +1347,7 @@ input CourseCreateWithoutClonesInput {
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
+  conceptOrder: CourseCreateconceptOrderInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1355,6 +1362,7 @@ input CourseCreateWithoutConceptsInput {
   clones: CourseCreateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
+  conceptOrder: CourseCreateconceptOrderInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1369,6 +1377,7 @@ input CourseCreateWithoutLinksFromCourseInput {
   clones: CourseCreateManyWithoutSourceCourseInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
+  conceptOrder: CourseCreateconceptOrderInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1383,6 +1392,7 @@ input CourseCreateWithoutLinksToCourseInput {
   clones: CourseCreateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   concepts: ConceptCreateManyWithoutCourseInput
+  conceptOrder: CourseCreateconceptOrderInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1397,6 +1407,7 @@ input CourseCreateWithoutSourceCourseInput {
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
+  conceptOrder: CourseCreateconceptOrderInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   tags: TagCreateManyInput
 }
@@ -1412,6 +1423,7 @@ input CourseCreateWithoutWorkspaceInput {
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
+  conceptOrder: CourseCreateconceptOrderInput
   tags: TagCreateManyInput
 }
 
@@ -1775,6 +1787,7 @@ type CoursePreviousValues {
   name: String!
   official: Boolean!
   frozen: Boolean!
+  conceptOrder: [ID!]!
 }
 
 input CourseScalarWhereInput {
@@ -1833,6 +1846,10 @@ input CourseSubscriptionWhereInput {
   NOT: [CourseSubscriptionWhereInput!]
 }
 
+input CourseUpdateconceptOrderInput {
+  set: [ID!]
+}
+
 input CourseUpdateDataInput {
   name: String
   official: Boolean
@@ -1843,6 +1860,7 @@ input CourseUpdateDataInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1857,6 +1875,7 @@ input CourseUpdateInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1865,12 +1884,14 @@ input CourseUpdateManyDataInput {
   name: String
   official: Boolean
   frozen: Boolean
+  conceptOrder: CourseUpdateconceptOrderInput
 }
 
 input CourseUpdateManyMutationInput {
   name: String
   official: Boolean
   frozen: Boolean
+  conceptOrder: CourseUpdateconceptOrderInput
 }
 
 input CourseUpdateManyWithoutSourceCourseInput {
@@ -1957,6 +1978,7 @@ input CourseUpdateWithoutClonesDataInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1970,6 +1992,7 @@ input CourseUpdateWithoutConceptsDataInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1983,6 +2006,7 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -1996,6 +2020,7 @@ input CourseUpdateWithoutLinksToCourseDataInput {
   clones: CourseUpdateManyWithoutSourceCourseInput
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -2009,6 +2034,7 @@ input CourseUpdateWithoutSourceCourseDataInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   tags: TagUpdateManyInput
 }
@@ -2023,6 +2049,7 @@ input CourseUpdateWithoutWorkspaceDataInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
+  conceptOrder: CourseUpdateconceptOrderInput
   tags: TagUpdateManyInput
 }
 
@@ -4442,6 +4469,7 @@ type Workspace {
   asTemplate: Project
   clones(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
+  courseOrder: [ID!]!
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
@@ -4459,6 +4487,10 @@ type WorkspaceConnection {
   aggregate: AggregateWorkspace!
 }
 
+input WorkspaceCreatecourseOrderInput {
+  set: [ID!]
+}
+
 input WorkspaceCreateInput {
   id: ID
   name: String!
@@ -4468,6 +4500,7 @@ input WorkspaceCreateInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4552,6 +4585,7 @@ input WorkspaceCreateWithoutAsMergeInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4571,6 +4605,7 @@ input WorkspaceCreateWithoutAsTemplateInput {
   asMerge: ProjectCreateOneWithoutMergesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4590,6 +4625,7 @@ input WorkspaceCreateWithoutClonesInput {
   asMerge: ProjectCreateOneWithoutMergesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4610,6 +4646,7 @@ input WorkspaceCreateWithoutConceptLinksInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -4629,6 +4666,7 @@ input WorkspaceCreateWithoutConceptsInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -4648,6 +4686,7 @@ input WorkspaceCreateWithoutCourseLinksInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -4666,6 +4705,7 @@ input WorkspaceCreateWithoutCoursesInput {
   asMerge: ProjectCreateOneWithoutMergesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4686,6 +4726,7 @@ input WorkspaceCreateWithoutParticipantsInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4705,6 +4746,7 @@ input WorkspaceCreateWithoutPointGroupsInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4723,6 +4765,7 @@ input WorkspaceCreateWithoutSourceProjectInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4742,6 +4785,7 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -4762,6 +4806,7 @@ input WorkspaceCreateWithoutTokensInput {
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
@@ -5042,6 +5087,7 @@ input WorkspaceParticipantWhereUniqueInput {
 type WorkspacePreviousValues {
   id: ID!
   name: String!
+  courseOrder: [ID!]!
 }
 
 input WorkspaceScalarWhereInput {
@@ -5311,6 +5357,10 @@ input WorkspaceTokenWhereUniqueInput {
   id: ID
 }
 
+input WorkspaceUpdatecourseOrderInput {
+  set: [ID!]
+}
+
 input WorkspaceUpdateDataInput {
   name: String
   sourceProject: ProjectUpdateOneWithoutWorkspacesInput
@@ -5319,6 +5369,7 @@ input WorkspaceUpdateDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5338,6 +5389,7 @@ input WorkspaceUpdateInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5351,10 +5403,12 @@ input WorkspaceUpdateInput {
 
 input WorkspaceUpdateManyDataInput {
   name: String
+  courseOrder: WorkspaceUpdatecourseOrderInput
 }
 
 input WorkspaceUpdateManyMutationInput {
   name: String
+  courseOrder: WorkspaceUpdatecourseOrderInput
 }
 
 input WorkspaceUpdateManyWithoutAsMergeInput {
@@ -5484,6 +5538,7 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5502,6 +5557,7 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   asMerge: ProjectUpdateOneWithoutMergesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5520,6 +5576,7 @@ input WorkspaceUpdateWithoutClonesDataInput {
   asMerge: ProjectUpdateOneWithoutMergesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5539,6 +5596,7 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -5557,6 +5615,7 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -5575,6 +5634,7 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -5592,6 +5652,7 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   asMerge: ProjectUpdateOneWithoutMergesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5611,6 +5672,7 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5629,6 +5691,7 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5646,6 +5709,7 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5664,6 +5728,7 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
@@ -5683,6 +5748,7 @@ input WorkspaceUpdateWithoutTokensDataInput {
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput

@@ -1,8 +1,5 @@
 FROM node:12-alpine AS builder
 
-ARG REACT_APP_HAKA_URL
-ENV REACT_APP_HAKA_URL=$REACT_APP_HAKA_URL
-
 COPY ./backend /concepts/backend
 COPY ./frontend /concepts/frontend
 RUN cd /concepts/frontend && yarn --prod && yarn build
@@ -18,7 +15,7 @@ COPY --from=builder /concepts/backend/schema /concepts/backend/schema
 
 WORKDIR /concepts/backend
 
-RUN yarn --prod
+RUN yarn --prod && npm install --global prisma
 
 USER 1337:1337
 

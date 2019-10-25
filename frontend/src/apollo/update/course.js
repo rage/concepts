@@ -73,12 +73,14 @@ const deleteCourseUpdate = (workspaceId, activeCourseId) =>
           data: dataInStore
         })
       }
-    } catch (e) { }
+    } catch (e) {
+      console.error('deleteCourseUpdate', e)
+    }
     // Update course prerequisites
     try {
       const dataInStore = store.readQuery({
         query: COURSE_PREREQUISITES,
-        variables: { workspaceId, courseId: activeCourseId }
+        variables: { courseId: activeCourseId }
       })
       const deletedCourse = response.data.deleteCourse
       const courseLinks = dataInStore.courseAndPrerequisites.linksToCourse

@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 const COURSES_FOR_WORKSPACE_FRAGMENT = gql`
 fragment coursesForWorkspace on Workspace {
   id
+  courseOrder
   courses {
     id
     name
@@ -11,6 +12,7 @@ fragment coursesForWorkspace on Workspace {
         id
       }
     }
+    conceptOrder
     concepts {
       id
       name
@@ -71,6 +73,7 @@ query workspaceById($id: ID!) {
       type
       priority
     }
+    courseOrder
     courses {
       id
       name
@@ -82,12 +85,16 @@ query workspaceById($id: ID!) {
         type
         priority
       }
+      conceptOrder
       concepts {
         id
         name
         description
         official
         frozen
+        course {
+          id
+        }
         tags {
           id
           name

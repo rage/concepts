@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -7,7 +7,7 @@ import {
 import qs from 'qs'
 
 import { MERGE_USER } from '../../graphql/Mutation'
-import Auth from '../../lib/authentication'
+import Auth, { useAuthState } from '../../lib/authentication'
 import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
 import { ReactComponent as HakaIcon } from '../../static/haka.svg'
@@ -66,11 +66,7 @@ const LoginView = () => {
   const [loadingHaka, setLoadingHaka] = useState(false)
   const loading = loadingTMC || loadingGuest || loadingGoogle
 
-  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(Boolean(window._googleAuthEnabled))
-
-  useEffect(() => {
-    Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)
-  }, [])
+  const { googleLoginEnabled, hakaLoginEnabled } = useAuthState()
 
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
@@ -205,7 +201,7 @@ const LoginView = () => {
           </div>
         </form>
       </div>}
-      {Auth.HAKA.isEnabled() && <>
+      {hakaLoginEnabled && <>
         <Divider />
         <div className={classes.wrapper}>
           <a className={classes.hakaButton} href={Auth.HAKA.signInURL}>

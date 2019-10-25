@@ -7,3 +7,7 @@ export const noDefault = func => (evt, ...args) => {
   evt.preventDefault()
   return func(evt, ...args)
 }
+
+export const noReturn = func => (...args) => {
+  func(...args)
+}

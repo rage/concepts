@@ -1,7 +1,7 @@
 import { createRef } from 'react'
 import ApolloClient from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { split, ApolloLink, Observable } from 'apollo-link'
+import { split, ApolloLink } from 'apollo-link'
 import { createHttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
@@ -39,12 +39,14 @@ const authenticationLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:8080/graphql',
-  options: { reconnect: true, connectionParams: { 
-    token: window.localStorage.currentUser ? JSON.parse(window.localStorage.currentUser).token : ''
-  }}
+  options: {
+    reconnect: true, connectionParams: {
+      token: window.localStorage.currentUser ?
+        JSON.parse(window.localStorage.currentUser).token : ''
+    }
+  }
 })
 
 const httpLink = createHttpLink({

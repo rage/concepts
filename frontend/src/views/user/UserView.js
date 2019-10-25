@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, CircularProgress, Typography } from '@material-ui/core'
 import { useMutation } from 'react-apollo-hooks'
 
 import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import { Role } from '../../lib/permissions'
-import Auth from '../../lib/authentication'
+import Auth, { useAuthState } from '../../lib/authentication'
 import useRouter from '../../lib/useRouter'
 import { DISCONNECT_AUTH, MERGE_USER } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
@@ -125,11 +125,7 @@ const UserView = () => {
     ] : [{ query: WORKSPACES_FOR_USER }]
   })
 
-  const [googleLoginEnabled, setGoogleLoginEnabled] = useState(window._googleAuthEnabled)
-
-  useEffect(() => {
-    Auth.GOOGLE.isEnabled().then(setGoogleLoginEnabled)
-  }, [])
+  const authMethodStatus = useAuthState()
 
   const tmcData = JSON.parse(window.localStorage['tmc.user'] || 'null')
   const googleData = JSON.parse(window.localStorage['google.user'] || 'null')
@@ -268,21 +264,25 @@ const UserView = () => {
             <th>Haka</th>
             <td>{data.user.hakaId || 'Not connected'}</td>
             <td>
-              {Auth.HAKA.isEnabled() ? <ConnectButton
-                disabled={Boolean(loading)}
-                loading={loading === 'haka'}
-                connected={Boolean(data.user.hakaId)}
-                onClick={connectHaka}
-              /> : 'Not enabled'}
+              {authMethodStatus.haka === null
+                ? <CircularProgress size={24} />
+                : authMethodStatus.haka
+                  ? <ConnectButton
+                    disabled={Boolean(loading)}
+                    loading={loading === 'haka'}
+                    connected={Boolean(data.user.hakaId)}
+                    onClick={connectHaka}
+                  />
+                  : 'Not enabled'}
             </td>
           </tr>
           <tr>
             <th>Google</th>
             <td>{data.user.googleId || 'Not connected'}</td>
             <td>
-              {googleLoginEnabled === null
+              {authMethodStatus.google === null
                 ? <CircularProgress size={24} />
-                : googleLoginEnabled
+                : authMethodStatus.google
                   ? <ConnectButton
                     disabled={Boolean(loading)}
                     loading={loading === 'google'}

@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
-import { Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon } from '@material-ui/icons'
+import {
+  Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon,
+  KeyboardArrowUp as CollapseIcon, KeyboardArrowDown as ExpandIcon
+} from '@material-ui/icons'
 import { useMutation } from 'react-apollo-hooks'
 
 import { Role } from '../../lib/permissions'
@@ -23,6 +26,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     backgroundColor: theme.palette.background.paper,
     paddingBottom: theme.spacing(2),
+    paddingTop: 0,
     position: 'relative'
   },
   cardHeader: {
@@ -48,6 +52,16 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     width: '100%'
+  },
+  collapser: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    width: '100%',
+    borderRadius: 0,
+    marginBottom: '6px'
+  },
+  content: {
+    paddingTop: 0
   }
 }))
 
@@ -62,6 +76,8 @@ const Course = ({
   flashLink,
   toggleFocus,
   focusedConceptIds,
+  collapsedCourseIds,
+  toggleCollapse,
   workspaceId,
   urlPrefix
 }) => {
@@ -96,13 +112,13 @@ const Course = ({
     infoBox.redrawIfOpen('mapper', 'CREATE_CONCEPT_PREREQ')
   }, [infoBox, course.concepts])
 
+  const collapsed = collapsedCourseIds.has(course.id)
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         className={`${classes.cardHeader} focusOverlayScrollParent`}
-        title={
-          <span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>
-        }
+        title={<span className={classes.title} onClick={(onHeaderClickHandle)}>{course.name}</span>}
         action={<>
           {(user.role >= Role.STAFF || courseLink.frozen) &&
             <IconButton
@@ -120,8 +136,11 @@ const Course = ({
           </>
         }>
       </CardHeader>
+      <Button className={classes.collapser} onClick={() => toggleCollapse(course.id)}>
+        {collapsed ? <ExpandIcon /> : <CollapseIcon />}
+      </Button>
 
-      <CardContent>
+      {!collapsed && <CardContent className={classes.content}>
         <List className={classes.list}>
           {course.concepts.map((concept, index) =>
             <Concept concept={concept}
@@ -147,8 +166,7 @@ const Course = ({
         >
           Add concept
         </Button>
-
-      </CardContent>
+      </CardContent>}
     </Card>
   )
 }

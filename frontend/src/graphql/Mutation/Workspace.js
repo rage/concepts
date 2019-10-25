@@ -10,10 +10,11 @@ mutation createWorkspace($name: String!, $projectId: ID) {
 `
 
 const UPDATE_WORKSPACE = gql`
-mutation updateWorkspace($id: ID!, $name: String!) {
-  updateWorkspace(id: $id, name: $name) {
+mutation updateWorkspace($id: ID!, $name: String, $courseOrder: [ID!]) {
+  updateWorkspace(id: $id, name: $name, courseOrder: $courseOrder) {
     id
     name
+    courseOrder
   }
 }
 `

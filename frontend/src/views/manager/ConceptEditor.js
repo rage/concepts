@@ -12,12 +12,14 @@ import useStyles from './editorStyles'
 
 const initialState = {
   name: '',
+  description: '',
+  tags: [],
+  bloomTag: '',
   official: undefined,
-  frozen: undefined,
-  tags: []
+  frozen: undefined
 }
 
-const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', cancel }) => {
+const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -27,15 +29,17 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
     ...defaultValues,
     tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
-  const [themeInput, setThemeInput] = useState('')
 
   const onSubmit = evt => {
     evt.preventDefault()
-    submit({ ...input, tags: selectToBackend(input.tags) })
+    delete input.bloomTag
+    submit({
+      ...input,
+      tags: selectToBackend(input.tags)
+    })
     if (action === 'Create') {
       nameRef.current.focus()
       setInput({ ...initialState, ...defaultValues })
-      setThemeInput('')
     }
   }
 
@@ -45,52 +49,68 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
     }
   }
 
-  const handleKeyDownSelect = event => {
-    if (!themeInput) return
-    if (event.key === 'Tab' || event.key === 'Enter') {
-      setInput({
-        ...input,
-        tags: [...input.tags, onTagCreate(themeInput)]
-      })
-      setThemeInput('')
-      event.preventDefault()
-    }
-  }
+  const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
 
-  const selectRef = infoBox.ref('manager', 'CREATE_COURSE_THEMES')
+  const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_CONCEPT_TAGS')
+  const selectRef = useRef(null)
   return (
     <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
         className={classes.textfield}
         variant='outlined'
         margin='dense'
-        name='courseName'
-        label='Course name'
+        name='name'
+        label='Concept name'
         type='text'
         value={input.name}
         fullWidth
         inputRef={nameRef}
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_NAME') : undefined}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_NAME') : undefined}
         autoFocus={action !== 'Create'}
-        onChange={evt => setInput({ ...input, name: evt.target.value })}
+        onChange={onChange}
+      />
+      <TextField
+        className={classes.textfield}
+        variant='outlined'
+        margin='dense'
+        name='description'
+        label='Concept description'
+        type='text'
+        value={input.description}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_DESCRIPTION') : undefined}
+        fullWidth
+        onChange={onChange}
       />
       <Select
         onChange={selected => setInput({ ...input, tags: selected || [] })}
-        onKeyDown={handleKeyDownSelect}
-        onInputChange={value => setThemeInput(value)}
+        onCreateOption={newOption => setInput({
+          ...input,
+          tags: [...input.tags, onTagCreate(newOption)]
+        })}
         styles={tagSelectStyles}
-        value={input.tags}
         options={tagOptions}
-        ref={elem => action === 'Create' && selectRef(elem?.select?.select?.controlRef)}
+        value={input.tags}
+        ref={elem => {
+          if (action === 'Create' && elem?.select?.select) {
+            infoBoxSelectRef(elem.select.select.controlRef)
+            selectRef.current = elem.select.select
+          }
+        }}
+        onMenuOpen={() => {
+          setTimeout(() => {
+            const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS')
+            func(selectRef.current?.menuListRef)
+          }, 0)
+        }}
+        onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(null)}
         isMulti
+        placeholder='Select tags...'
         menuPlacement='auto'
-        placeholder='Themes...'
         menuPortalTarget={document.body}
-        inputValue={themeInput}
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_SUBMIT') : undefined}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_SUBMIT') : undefined}
         className={classes.submit}
       >
         {action}
@@ -102,7 +122,7 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
       }
       {user.role >= Role.STAFF && <>
         <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_OFFICIAL') : undefined}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_OFFICIAL') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
@@ -118,7 +138,7 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
           />
         </FormControl>
         <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_FROZEN') : undefined}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_FROZEN') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
@@ -138,4 +158,4 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
   )
 }
 
-export default CourseEditor
+export default ConceptEditor
