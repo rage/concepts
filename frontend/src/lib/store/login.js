@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react'
 
 import { Role } from '../permissions'
 import Auth from '../authentication'
+import { changeSubscriptionToken } from '../../apollo/apolloClient'
 
 export const LoginStateContext = createContext(false)
 
@@ -20,6 +21,7 @@ const loginReducers = {
   noop: state => state,
   login: (state, { data }) => {
     window.localStorage.currentUser = JSON.stringify(data)
+    changeSubscriptionToken(data.token)
     return {
       loggedIn: true,
       ...fixData(data)
@@ -34,7 +36,10 @@ const loginReducers = {
     })
     return { ...state, user: fixRole(user) }
   },
-  logout: () => ({ loggedIn: false, displayname: null, type: null, user: {} })
+  logout: () => {
+    changeSubscriptionToken('')
+    return { loggedIn: false, displayname: null, type: null, user: {} }
+  }
 }
 
 const loginReducer = (state, action) => loginReducers[action.type](state, action)

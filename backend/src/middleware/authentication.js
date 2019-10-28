@@ -12,7 +12,7 @@ export const authenticate = async (resolve, root, args, context, info) => {
 
   let rawToken
   if (context.request === undefined) {
-    rawToken = `Bearer ${context.connection.context.token}` 
+    rawToken = context.connection.context.token
   } else {
     rawToken = context.request.header('Authorization')
   }
