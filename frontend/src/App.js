@@ -42,8 +42,13 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/heatmap`} render={({ match }) =>
     <HeatmapView urlPrefix={prefix} workspaceId={match.params.wid} />
   } />
-  <Route exact path={`${prefix}/:wid/manager`} render={({ match }) =>
-    <WorkspaceManagementView urlPrefix={prefix} workspaceId={match.params.wid} />} />
+  <Route
+    exact path={`${prefix}/:wid/manager/:cid?`}
+    render={({ match }) => <WorkspaceManagementView
+      urlPrefix={`${prefix}/${match.params.wid}/manager`} workspaceId={match.params.wid}
+      courseId={match.params.cid}
+    />}
+  />
   <Route
     exact path={`${prefix}/:wid/mapper`}
     render={({ match, location }) =>

@@ -20,6 +20,7 @@ import {
 import cache from '../../apollo/update'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -73,10 +74,10 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const WorkspaceManagementView = ({ workspaceId }) => {
+const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
-
   const infoBox = useInfoBox()
+  const { history } = useRouter()
 
   useEffect(() => {
     infoBox.setView('manager')
@@ -84,8 +85,6 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   }, [infoBox])
 
   const [, messageDispatch] = useMessageStateValue()
-
-  const [focusedCourseId, setFocusedCourseId] = useState(null)
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
@@ -122,9 +121,9 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   })
 
   const workspace = workspaceQuery.data.workspaceById
-  const focusedCourse = focusedCourseId && workspace.courses.find(c => c.id === focusedCourseId)
-  if (focusedCourseId && !focusedCourse) {
-    setFocusedCourseId(null)
+  const focusedCourse = courseId && workspace.courses.find(c => c.id === courseId)
+  if (courseId && !focusedCourse) {
+    history.replace(urlPrefix)
   }
 
   return (
@@ -135,8 +134,8 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       <div className={classes.courses}>
         <CourseList
           workspace={workspace}
-          setFocusedCourseId={setFocusedCourseId}
-          focusedCourseId={focusedCourseId}
+          setFocusedCourseId={courseId => history.push(`${urlPrefix}/${courseId}`)}
+          focusedCourseId={courseId}
           updateWorkspace={args => updateWorkspace({ variables: args }).catch(e)}
           deleteCourse={id => deleteCourse({ variables: { id } }).catch(e)}
           updateCourse={args => updateCourse({ variables: args }).catch(e)}
