@@ -11,14 +11,16 @@ const createConceptUpdate = workspaceId => (store, response) => {
       id: addedConcept.course.id,
       fragment: COURSE_PREREQ_FRAGMENT
     })
-    store.writeFragment({
-      id: addedConcept.course.id,
-      fragment: COURSE_PREREQ_FRAGMENT,
-      data: {
-        ...course,
-        concepts: [...course.concepts, addedConcept]
-      }
-    })
+    if (!includedIn(course.concepts, addedConcept)) {
+      store.writeFragment({
+        id: addedConcept.course.id,
+        fragment: COURSE_PREREQ_FRAGMENT,
+        data: {
+          ...course,
+          concepts: [...course.concepts, addedConcept]
+        }
+      })
+    }
   } catch (e) {
     console.error('createConceptUpdate', e)
   }

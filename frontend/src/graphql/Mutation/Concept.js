@@ -28,7 +28,6 @@ mutation createConcept($name: String!, $description: String!, $official: Boolean
                        $workspaceId: ID!, $courseId: ID, $tags: [TagInput!]) {
   createConcept(name: $name, description: $description, official: $official, frozen: $frozen,
                 workspaceId: $workspaceId, courseId: $courseId, tags:$tags) {
-    __typename
     id
     name
     description

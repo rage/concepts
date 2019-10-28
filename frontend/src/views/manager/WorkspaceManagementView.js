@@ -23,7 +23,10 @@ import { useInfoBox } from '../../components/InfoBox'
 import {
   COURSE_CREATED_SUBSCRIPTION,
   COURSE_DELETED_SUBSCRIPTION,
-  COURSE_UPDATED_SUBSCRIPTION
+  COURSE_UPDATED_SUBSCRIPTION,
+  CONCEPT_CREATED_SUBSCRIPTION,
+  CONCEPT_UPDATED_SUBSCRIPTION,
+  CONCEPT_DELETED_SUBSCRIPTION
 } from '../../graphql/Subscription'
 import client from '../../apollo/apolloClient'
 
@@ -106,6 +109,31 @@ const WorkspaceManagementView = ({ workspaceId }) => {
     onSubscriptionData: ({ subscriptionData }) => {
       const res = { data: { updateCourse: { ...subscriptionData.data.courseUpdated } } }
       cache.updateCourseUpdate(workspaceId)(client, res)
+    }
+  })
+
+  useSubscription(CONCEPT_CREATED_SUBSCRIPTION, {
+    variables: { workspaceId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      const res = { data: { createConcept: { ...subscriptionData.data.conceptCreated } } }
+      cache.createConceptUpdate(workspaceId)(client, res)
+    }
+  })
+
+  useSubscription(CONCEPT_DELETED_SUBSCRIPTION, {
+    variables: { workspaceId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      const res = { data: { deleteConcept: { ...subscriptionData.data.conceptDeleted } } }
+      cache.deleteConceptUpdate(client, res)
+      cache.deleteConceptFromByIdUpdate(client, res, workspaceId)
+    }
+  })
+
+  useSubscription(CONCEPT_UPDATED_SUBSCRIPTION, {
+    variables: { workspaceId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      const res = { data: { updateConcept: { ...subscriptionData.data.conceptUpdated } } }
+      cache.updateConceptUpdate(workspaceId)(client, res)
     }
   })
 

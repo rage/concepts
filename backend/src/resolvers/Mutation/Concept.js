@@ -193,7 +193,9 @@ const ConceptMutations = {
         }
       })
     }
-    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: { ...toDelete, workspaceId } })
+    pubsub.publish(CONCEPT_DELETED, {
+      conceptDeleted: { id: toDelete.id, courseId: toDelete.course.id, workspaceId }
+    })
     return {
       id: toDelete.id,
       courseId: toDelete.course.id
