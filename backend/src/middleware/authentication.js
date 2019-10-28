@@ -12,8 +12,10 @@ export const authenticate = async (resolve, root, args, context, info) => {
 
   let rawToken
   if (context.request === undefined) {
+    // WebSocket
     rawToken = context.connection.context.token
   } else {
+    // HTTP
     rawToken = context.request.header('Authorization')
   }
 

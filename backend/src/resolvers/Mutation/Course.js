@@ -34,7 +34,7 @@ const CourseQueries = {
       }
     })
 
-    pubsub.publish(COURSE_CREATED, { courseCreated: {...newCourse, workspaceId } })
+    pubsub.publish(COURSE_CREATED, { courseCreated: { ...newCourse, workspaceId } })
     return newCourse
   },
 
@@ -63,7 +63,7 @@ const CourseQueries = {
       }
     })
 
-    pubsub.publish(COURSE_DELETED, { courseDeleted: {...deletedCourse, workspaceId} })
+    pubsub.publish(COURSE_DELETED, { courseDeleted: { ...deletedCourse, workspaceId } })
     return deletedCourse
   },
 
@@ -107,7 +107,7 @@ const CourseQueries = {
       where: { id },
       data
     })
-    pubsub.publish(COURSE_UPDATED, { courseUpdated: { id, ...data, workspaceId } })
+    pubsub.publish(COURSE_UPDATED, { courseUpdated: { ...updateData, workspaceId } })
     return updateData
   }
 }

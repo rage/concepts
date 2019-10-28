@@ -20,9 +20,12 @@ import {
 import cache from '../../apollo/update'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
-import { COURSE_CREATED_SUBSCRIPTION } from '../../graphql/Subscription'
+import {
+  COURSE_CREATED_SUBSCRIPTION,
+  COURSE_DELETED_SUBSCRIPTION,
+  COURSE_UPDATED_SUBSCRIPTION
+} from '../../graphql/Subscription'
 import client from '../../apollo/apolloClient'
-
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -81,15 +84,28 @@ const WorkspaceManagementView = ({ workspaceId }) => {
 
   const infoBox = useInfoBox()
 
-  const { courseCreatedData, loading, error } = useSubscription(COURSE_CREATED_SUBSCRIPTION, {
+  // SUBSCRIBE
+  useSubscription(COURSE_CREATED_SUBSCRIPTION, {
     variables: { workspaceId },
     onSubscriptionData: ({ subscriptionData }) => {
-      // TODO: update cache
-
-      console.log(subscriptionData)
       const res = { data: { createCourse: { ...subscriptionData.data.courseCreated } } }
       cache.createCourseUpdate(workspaceId)(client, res)
-      
+    }
+  })
+
+  useSubscription(COURSE_DELETED_SUBSCRIPTION, {
+    variables: { workspaceId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      const res = { data: { deleteCourse: { ...subscriptionData.data.courseDeleted } } }
+      cache.deleteCourseUpdate(workspaceId)(client, res)
+    }
+  })
+
+  useSubscription(COURSE_UPDATED_SUBSCRIPTION, {
+    variables: { workspaceId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      const res = { data: { updateCourse: { ...subscriptionData.data.courseUpdated } } }
+      cache.updateCourseUpdate(workspaceId)(client, res)
     }
   })
 

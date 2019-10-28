@@ -117,7 +117,7 @@ const ConceptMutations = {
       })
     }
 
-    pubsub.publish(CONCEPT_CREATED, { conceptCreated: {...createdConcept, workspaceId} })
+    pubsub.publish(CONCEPT_CREATED, { conceptCreated: { ...createdConcept, workspaceId } })
     return createdConcept
   },
 
@@ -160,7 +160,7 @@ const ConceptMutations = {
       where: { id },
       data
     })
-    pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: { ...data, id, workspaceId } })
+    pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: { ...updateData, workspaceId } })
     return updateData
   },
 
@@ -193,7 +193,7 @@ const ConceptMutations = {
         }
       })
     }
-    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: {...toDelete, workspaceId} })
+    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: { ...toDelete, workspaceId } })
     return {
       id: toDelete.id,
       courseId: toDelete.course.id
