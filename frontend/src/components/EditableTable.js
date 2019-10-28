@@ -162,7 +162,7 @@ const EditableTable = ({
             <EditableTableRow
               key={data.id}
               data={data}
-              disabled={disabled}
+              disabled={disabled || data.disabled}
               editing={editing}
               columns={columns}
               updateMutation={updateMutation}
