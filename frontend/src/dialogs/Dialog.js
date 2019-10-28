@@ -138,7 +138,6 @@ const Dialog = ({ contextRef }) => {
       actionText,
       fields: fields
         ? fields.map(field => typeof field === 'string' ? { name: field } : field)
-          .filter(field => !field.hidden)
         : [],
       title,
       content: content || [],
@@ -175,7 +174,7 @@ const Dialog = ({ contextRef }) => {
             )
           }
           {
-            state.fields.map((field, index) => {
+            state.fields.filter(field => !field.hidden).map((field, index) => {
               if (!field.type || field.type === 'textfield') {
                 return <TextField
                   key={field.name}
