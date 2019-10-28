@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
     gridArea: 'content / content / bottom-navbar / bottom-navbar',
     overflow: 'hidden',
     margin: '6px auto 16px',
-    '&:not(.staff)': {
+    '&:not(.staff):not(.admin)': {
       gridTemplateColumns: '1fr 0 0',
       width: '720px',
       '@media screen and (max-width: 752px)': {
