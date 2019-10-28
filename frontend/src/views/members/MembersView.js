@@ -12,6 +12,7 @@ import NotFoundView from '../error/NotFoundView'
 import EditableTable, { Type } from '../../components/EditableTable'
 import { useLoginStateValue } from '../../lib/store'
 import { DELETE_PARTICIPANT, UPDATE_PARTICIPANT } from '../../graphql/Mutation'
+import useRouter from '../../lib/useRouter'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,6 +60,7 @@ const columns = [
 const MembersView = ({ projectId, workspaceId }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
+  const { history } = useRouter()
 
   const mainQueryType = projectId ? PROJECT_BY_ID : WORKSPACE_BY_ID
   const memberQueryType = projectId ? PROJECT_BY_ID_MEMBER_INFO : WORKSPACE_BY_ID_MEMBER_INFO
@@ -101,6 +103,7 @@ const MembersView = ({ projectId, workspaceId }) => {
 
   const getName = member =>
     `${member.name || member.email || member.username || member.id} (${member.role.toLowerCase()})`
+    + (member.id === user.id ? ' (you)' : '')
 
   return (
     <main className={classes.root}>
@@ -113,9 +116,19 @@ const MembersView = ({ projectId, workspaceId }) => {
           token: member.token || {},
           id: member.participantId
         }))}
-        deleteMutation={({ id }) => deleteParticipant({
-          variables: { id, type: type.toUpperCase() }
-        })}
+        deleteMutation={async ({ id }) => {
+          const data = memberData.find(member => member.participantId === id)
+          if (!window.confirm(`Are you sure you want to remove ${
+            data?.id === user.id ? 'yourself' : data?.id || id} from this project?`)) {
+            return
+          }
+          await deleteParticipant({
+            variables: { id, type: type.toUpperCase() }
+          })
+          if (data?.id === user.id) {
+            history.push('../../..')
+          }
+        }}
         updateMutation={async ({ id, privilege }) => (await updateParticipant({
           variables: { id, privilege, type: type.toUpperCase() }
         })).data.updateParticipant}
