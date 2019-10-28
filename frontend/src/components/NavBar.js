@@ -46,8 +46,11 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
   switch (path?.[0]) {
   case 'mapper':
     return [{
-      type: 'course',
       name: 'Mapper',
+      link: `${prefix}/mapper`
+    }, {
+      type: 'course',
+      name: 'Course',
       courseId: path[1],
       link: `${prefix}/mapper/${path[1]}`
     }]
@@ -55,7 +58,12 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
     return [{
       name: 'Manager',
       link: `${prefix}/manager`
-    }]
+    }].concat(path[1] ? [{
+      type: 'course',
+      name: 'Course',
+      courseId: path?.[1],
+      link: `${prefix}/manager/${path[1]}`
+    }] : [])
   case 'members':
     return [{
       name: 'Members',
