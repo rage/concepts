@@ -21,6 +21,8 @@ import cache from '../../apollo/update'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 import { COURSE_CREATED_SUBSCRIPTION } from '../../graphql/Subscription'
+import client from '../../apollo/apolloClient'
+
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -79,10 +81,15 @@ const WorkspaceManagementView = ({ workspaceId }) => {
 
   const infoBox = useInfoBox()
 
-  const { courseCratedData, loading, error } = useSubscription(COURSE_CREATED_SUBSCRIPTION, {
+  const { courseCreatedData, loading, error } = useSubscription(COURSE_CREATED_SUBSCRIPTION, {
     variables: { workspaceId },
     onSubscriptionData: ({ subscriptionData }) => {
+      // TODO: update cache
+
       console.log(subscriptionData)
+      const res = { data: { createCourse: { ...subscriptionData.data.courseCreated } } }
+      cache.createCourseUpdate(workspaceId)(client, res)
+      
     }
   })
 
