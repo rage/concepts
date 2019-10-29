@@ -55,7 +55,7 @@ const Dialog = ({ contextRef }) => {
     }, 250)
   }
 
-  const mutate = async variables => {
+  const mutate = async (variables, close) => {
     const mutationArgs = {
       variables: { ...state.requiredVariables, ...variables },
       optimisticResponse: state.createOptimisticResponse?.({
@@ -63,7 +63,8 @@ const Dialog = ({ contextRef }) => {
       }) || undefined
     }
     const hasOptimisticResponse = Boolean(state.createOptimisticResponse)
-    if (hasOptimisticResponse) closeDialog()
+    const closeFunc = close ? closeDialog : () => setSubmitDisabled(false)
+    if (hasOptimisticResponse) closeFunc()
     try {
       await state.mutation(mutationArgs)
     } catch (e) {
@@ -72,10 +73,10 @@ const Dialog = ({ contextRef }) => {
         data: 'Access denied'
       })
     }
-    if (!hasOptimisticResponse) closeDialog()
+    if (!hasOptimisticResponse) closeFunc()
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = ({ close = true }) => {
     if (state.submitDisabled) return
     const variables = {}
     for (const key of state.fields) {
@@ -101,8 +102,8 @@ const Dialog = ({ contextRef }) => {
     state.promise.resolve(variables)
     if (state.mutation) {
       setSubmitDisabled(true)
-      return mutate(variables)
-    } else {
+      return mutate(variables, close)
+    } else if (close) {
       closeDialog()
     }
   }
@@ -138,7 +139,6 @@ const Dialog = ({ contextRef }) => {
       actionText,
       fields: fields
         ? fields.map(field => typeof field === 'string' ? { name: field } : field)
-          .filter(field => !field.hidden)
         : [],
       title,
       content: content || [],
@@ -175,7 +175,7 @@ const Dialog = ({ contextRef }) => {
             )
           }
           {
-            state.fields.map((field, index) => {
+            state.fields.filter(field => !field.hidden).map((field, index) => {
               if (!field.type || field.type === 'textfield') {
                 return <TextField
                   key={field.name}

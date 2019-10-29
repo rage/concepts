@@ -3,32 +3,24 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation, useSubscription } from 'react-apollo-hooks'
 import { Typography, Paper } from '@material-ui/core'
 
-import { WORKSPACE_BY_ID } from '../../graphql/Query'
-import NotFoundView from '../error/NotFoundView'
 import { useMessageStateValue } from '../../lib/store'
-import CourseList from './CourseList'
-import ConceptList from './ConceptList'
+import useRouter from '../../lib/useRouter'
+import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import {
-  CREATE_CONCEPT,
-  CREATE_COURSE,
-  DELETE_CONCEPT,
-  DELETE_COURSE,
-  UPDATE_CONCEPT,
-  UPDATE_COURSE,
+  CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE,
   UPDATE_WORKSPACE
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
-import LoadingBar from '../../components/LoadingBar'
-import { useInfoBox } from '../../components/InfoBox'
-import {
-  COURSE_CREATED_SUBSCRIPTION,
-  COURSE_DELETED_SUBSCRIPTION,
-  COURSE_UPDATED_SUBSCRIPTION,
-  CONCEPT_CREATED_SUBSCRIPTION,
-  CONCEPT_UPDATED_SUBSCRIPTION,
-  CONCEPT_DELETED_SUBSCRIPTION
-} from '../../graphql/Subscription'
 import client from '../../apollo/apolloClient'
+import {
+  COURSE_CREATED_SUBSCRIPTION, COURSE_DELETED_SUBSCRIPTION, COURSE_UPDATED_SUBSCRIPTION,
+  CONCEPT_CREATED_SUBSCRIPTION, CONCEPT_UPDATED_SUBSCRIPTION, CONCEPT_DELETED_SUBSCRIPTION
+} from '../../graphql/Subscription'
+import { useInfoBox } from '../../components/InfoBox'
+import LoadingBar from '../../components/LoadingBar'
+import NotFoundView from '../error/NotFoundView'
+import CourseList from './CourseList'
+import ConceptList from './ConceptList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -82,10 +74,10 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const WorkspaceManagementView = ({ workspaceId }) => {
+const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
-
   const infoBox = useInfoBox()
+  const { history } = useRouter()
 
   // SUBSCRIBE
   useSubscription(COURSE_CREATED_SUBSCRIPTION, {
@@ -144,8 +136,6 @@ const WorkspaceManagementView = ({ workspaceId }) => {
 
   const [, messageDispatch] = useMessageStateValue()
 
-  const [focusedCourseId, setFocusedCourseId] = useState(null)
-
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
   })
@@ -181,9 +171,9 @@ const WorkspaceManagementView = ({ workspaceId }) => {
   })
 
   const workspace = workspaceQuery.data.workspaceById
-  const focusedCourse = focusedCourseId && workspace.courses.find(c => c.id === focusedCourseId)
-  if (focusedCourseId && !focusedCourse) {
-    setFocusedCourseId(null)
+  const focusedCourse = courseId && workspace.courses.find(c => c.id === courseId)
+  if (courseId && !focusedCourse) {
+    history.replace(urlPrefix)
   }
 
   return (
@@ -194,8 +184,8 @@ const WorkspaceManagementView = ({ workspaceId }) => {
       <div className={classes.courses}>
         <CourseList
           workspace={workspace}
-          setFocusedCourseId={setFocusedCourseId}
-          focusedCourseId={focusedCourseId}
+          setFocusedCourseId={courseId => history.push(`${urlPrefix}/${courseId}`)}
+          focusedCourseId={courseId}
           updateWorkspace={args => updateWorkspace({ variables: args }).catch(e)}
           deleteCourse={id => deleteCourse({ variables: { id } }).catch(e)}
           updateCourse={args => updateCourse({ variables: args }).catch(e)}

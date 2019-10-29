@@ -94,6 +94,7 @@ const CourseContainer = ({
     `}</style>}
     <PrerequisiteContainer
       courseLinks={courseLinks}
+      courseOrder={workspace.courseOrder}
       courseId={course.id}
       focusedConceptIds={focusedConceptIds}
       collapsedCourseIds={collapsedCourseIds}
@@ -108,7 +109,7 @@ const CourseContainer = ({
     />
     <ActiveCourse
       course={course}
-      courses={workspace.courses}
+      workspace={workspace}
       updateCourse={updateCourse}
       focusedConceptIds={focusedConceptIds}
       addingLink={addingLink}
@@ -116,7 +117,6 @@ const CourseContainer = ({
       flashLink={flashLink}
       toggleFocus={toggleFocus}
       courseTrayOpen={courseTrayOpen}
-      workspaceId={workspace.id}
       urlPrefix={urlPrefix}
     />
     <MapperLinks

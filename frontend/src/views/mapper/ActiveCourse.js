@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button, Paper, Select, MenuItem, InputBase, List, IconButton
@@ -13,6 +13,7 @@ import { useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
 import useRouter from '../../lib/useRouter'
+import { sortedConcepts, sortedCourses } from '../manager/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,8 +67,7 @@ const useStyles = makeStyles(theme => ({
 
 const ActiveCourse = ({
   course,
-  courses,
-  workspaceId,
+  workspace,
   focusedConceptIds,
   addingLink,
   setAddingLink,
@@ -80,8 +80,13 @@ const ActiveCourse = ({
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
-  const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
+  const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF)
+  const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
+
+  const orderedConcepts = useMemo(() => sortedConcepts(course),
+    [course, course.concepts, course.conceptOrder])
+  const orderedCourses = useMemo(() => sortedCourses(workspace),
+    [workspace, workspace.courses, workspace.courseOrder])
 
   return <>
     <DividerWithText
@@ -95,11 +100,11 @@ const ActiveCourse = ({
           value={course.id}
           classes={{ root: classes.titleSelect }}
           input={<InputBase classes={{ root: classes.title }} />}
-          onChange={evt => history.push(`${urlPrefix}/${workspaceId}/mapper/${evt.target.value}`)}
+          onChange={evt => history.push(`${urlPrefix}/${workspace.id}/mapper/${evt.target.value}`)}
         >
-          {courses ? courses.map(course =>
+          {orderedCourses.map(course =>
             <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-          ) : <MenuItem value={course.id}>{course.name}</MenuItem>}
+          )}
         </Select>
         <div className={classes.titleEditWrapper}>
           <IconButton
@@ -112,7 +117,7 @@ const ActiveCourse = ({
       </div>
 
       <List className={classes.list}>
-        {course.concepts.map((concept, index) =>
+        {orderedConcepts.map((concept, index) =>
           <Concept
             conceptLinkRef={index === 0
               ? infoBox.secondaryRef('mapper', 'DRAW_LINK') : undefined}
@@ -126,7 +131,7 @@ const ActiveCourse = ({
             flashLink={flashLink}
             toggleFocus={toggleFocus}
             activeCourseId={course.id}
-            workspaceId={workspaceId}
+            workspaceId={workspace.id}
           />
         )}
       </List>

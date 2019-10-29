@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Course from './Course'
 import Masonry from './Masonry'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
+import { sortedCourses } from '../manager/ordering'
 
 const useStyles = makeStyles({
   root: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles({
 const PrerequisiteContainer = ({
   courseTrayOpen,
   courseLinks,
+  courseOrder,
   focusedConceptIds,
   collapsedCourseIds,
   toggleCollapse,
@@ -31,6 +33,11 @@ const PrerequisiteContainer = ({
   const classes = useStyles()
   const infoBox = useInfoBox()
 
+  const orderedCourseLinks = useMemo(() => sortedCourses({
+    courses: courseLinks,
+    courseOrder
+  }, courseLink => courseLink.from.id), [courseLinks, courseOrder])
+
   return <>
     <DividerWithText
       gridArea='contentHeader'
@@ -41,7 +48,7 @@ const PrerequisiteContainer = ({
       courseLinks?.length > 0 ?
         <div onClick={() => setAddingLink(null)} className={classes.root}>
           <Masonry courseTrayOpen={courseTrayOpen}>
-            {courseLinks.map((link, index) =>
+            {orderedCourseLinks.map((link, index) =>
               <Course
                 key={link.id}
                 courseLink={link}
