@@ -39,8 +39,10 @@ const authenticationLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
+const { protocol, host } = window.location
+
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:8080/graphql',
+  uri: `${protocol.replace('http', 'ws')}//${host}/graphql`,
   options: {
     reconnect: true,
     connectionParams: {
@@ -59,7 +61,7 @@ export const changeSubscriptionToken = token => {
 }
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:8080/graphql',
+  uri: `${protocol}//${host}/graphql`,
   credentials: 'include',
   fetch: async (uri, options) => {
     const isMutation = options.headers['X-Concepts-IsMutation'] === 'true'
