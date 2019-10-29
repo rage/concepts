@@ -77,9 +77,9 @@ const ConceptList = ({
 
   useEffect(() => {
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sortedConcepts(course, orderMethod))
+      setOrderedConcepts(sortedConcepts(course.concepts, course.conceptOrder, orderMethod))
     }
-  }, [course, course.concepts, course.conceptOrder, dirtyOrder, orderMethod])
+  }, [course.concepts, course.conceptOrder, dirtyOrder, orderMethod])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
