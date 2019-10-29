@@ -37,6 +37,8 @@ services:
       #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka_test_metadata_signed.xml
       #SAML_DIR: /concepts/backend/saml
       #SAML_FINISH_URL: https://concepts.cs.helsinki.fi/login
+    ports:
+      - 8081:4000
     volumes:
       - ./backend:/concepts/backend
     depends_on:

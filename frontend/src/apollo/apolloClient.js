@@ -42,7 +42,7 @@ const authenticationLink = new ApolloLink((operation, forward) => {
 const { protocol, host } = window.location
 
 const wsLink = new WebSocketLink({
-  uri: `${protocol.replace('http', 'ws')}//${host}/graphql`,
+  uri: `${protocol.replace('http', 'ws')}//${host}/subscription`,
   options: {
     reconnect: true,
     connectionParams: {
