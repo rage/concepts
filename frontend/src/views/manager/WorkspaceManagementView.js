@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation, useSubscription } from 'react-apollo-hooks'
 import { Typography, Paper } from '@material-ui/core'

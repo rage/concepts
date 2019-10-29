@@ -83,10 +83,10 @@ const ActiveCourse = ({
   const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF)
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course),
-    [course, course.concepts, course.conceptOrder])
-  const orderedCourses = useMemo(() => sortedCourses(workspace),
-    [workspace, workspace.courses, workspace.courseOrder])
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts, course.conceptOrder),
+    [course.concepts, course.conceptOrder])
+  const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder),
+  [workspace.courses, workspace.courseOrder])
 
   return <>
     <DividerWithText
