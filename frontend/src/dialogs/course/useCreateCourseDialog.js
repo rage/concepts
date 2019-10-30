@@ -28,6 +28,7 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       frozen,
       tags: tags.map(tag => ({ ...tag, __typename: 'Tag' })),
       linksToCourse: [],
+      conceptOrder: [],
       concepts: []
     }
   })
