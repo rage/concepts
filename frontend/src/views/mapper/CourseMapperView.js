@@ -61,9 +61,11 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     variables: { workspaceId }
   })
 
-  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
-    variables: { workspaceId }
-  })
+  useManyUpdatingSubscriptions(
+    ['course', 'course link', 'concept', 'concept link'],
+    ['create', 'delete', 'update'],
+    { variables: { workspaceId } }
+  )
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }

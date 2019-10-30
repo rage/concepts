@@ -8,6 +8,9 @@ subscription($workspaceId: ID!) {
     frozen
     to {
       id
+      course {
+        id
+      }
     }
     from {
       id
@@ -23,6 +26,11 @@ const CONCEPT_LINK_DELETED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   conceptLinkDeleted(workspaceId: $workspaceId) {
     id
+    to {
+      course {
+        id
+      }
+    }
   }
 }
 `

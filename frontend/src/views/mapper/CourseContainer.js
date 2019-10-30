@@ -49,7 +49,7 @@ const CourseContainer = ({
   }
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
-    update: cache.deleteConceptLinkUpdate(course.id)
+    update: cache.deleteConceptLinkUpdate()
   })
 
   const handleMenuClose = () => {

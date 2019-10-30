@@ -6,6 +6,9 @@ subscription($workspaceId: ID!) {
     id
     official
     frozen
+    to {
+      id
+    }
     from {
       id
       name
@@ -61,6 +64,9 @@ subscription($workspaceId: ID!) {
     id
     official
     frozen
+    to {
+      id
+    }
   }
 }
 `
@@ -69,6 +75,9 @@ const COURSE_LINK_DELETED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   courseLinkDeleted(workspaceId: $workspaceId) {
     id
+    to {
+      id
+    }
   }
 }
 `

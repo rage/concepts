@@ -23,14 +23,14 @@ const ConceptLink = {
       ]
     })
     if (linkExists) return null
-    const newConceptLink =  await context.prisma.createConceptLink({
+    const newConceptLink = await context.prisma.createConceptLink({
       to: { connect: { id: to } },
       from: { connect: { id: from } },
       createdBy: { connect: { id: context.user.id } },
       workspace: { connect: { id: workspaceId } },
       official: Boolean(official)
     })
-    pubsub.publish(CONCEPT_LINK_CREATED, {conceptLinkCreated: {...newConceptLink, workspaceId} })
+    pubsub.publish(CONCEPT_LINK_CREATED, { conceptLinkCreated: { ...newConceptLink, workspaceId } })
     return newConceptLink
   },
   async deleteConceptLink(root, args, context) {
@@ -43,10 +43,11 @@ const ConceptLink = {
     })
     const toDelete = await context.prisma.conceptLink({ id: args.id })
     if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
-    pubsub.publish(CONCEPT_LINK_DELETED, {conceptLinkDeleted: {...toDelete, workspaceId}})
-    return await context.prisma.deleteConceptLink({
+    await context.prisma.deleteConceptLink({
       id: args.id
     })
+    pubsub.publish(CONCEPT_LINK_DELETED, { conceptLinkDeleted: { ...toDelete, workspaceId } })
+    return toDelete
   }
 }
 

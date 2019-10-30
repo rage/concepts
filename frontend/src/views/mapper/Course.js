@@ -92,7 +92,7 @@ const Course = ({
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
   const course = courseLink.from
   const updateCourseLink = useMutation(UPDATE_COURSE_LINK, {
-    update: cache.updateCourseLinkUpdate(workspaceId, activeCourseId)
+    update: cache.updateCourseLinkUpdate(workspaceId)
   })
 
   const onHeaderClickHandle = () => {
