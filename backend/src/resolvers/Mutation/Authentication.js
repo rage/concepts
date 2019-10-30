@@ -3,7 +3,7 @@ import { AuthenticationError } from 'apollo-server-core'
 
 import { Role } from '../../util/accessControl'
 import { verify as verifyGoogle } from '../../util/googleAuth'
-import tmc from '../../util/tmcAuthentication'
+import * as tmc from '../../util/tmcAuthentication'
 import { makeMockWorkspaceForUser, signOrCreateUser } from '../../util/createUser'
 import { parseToken } from '../../middleware/authentication'
 
@@ -11,13 +11,13 @@ const getData = async (prisma, type, titleType, id) => new Map(
   (await prisma
     .user({ id })[`${type}Participations`]()
     .$fragment(`
-        fragment ${titleType}Id on ${titleType}Participant {
-          ${type} {
-            id
-          }
+      fragment ${titleType}Id on ${titleType}Participant {
+        ${type} {
           id
         }
-      `)
+        id
+      }
+    `)
   ).map(pcp => [pcp[type].id, pcp.id])
 )
 

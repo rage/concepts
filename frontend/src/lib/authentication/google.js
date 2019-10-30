@@ -1,5 +1,3 @@
-/* global gapi */
-
 import client from '../../apollo/apolloClient'
 import { AUTHENTICATE_GOOGLE } from '../../graphql/Mutation'
 import { GET_GOOGLE_CLIENT_ID } from '../../graphql/Query'
@@ -36,7 +34,7 @@ async function init() {
   }
   // This is defined in index.html
   await window._loadGooglePlatform()
-  await asyncify(gapi.load, 'auth2')
+  await asyncify(window.gapi.load, 'auth2')
   window._googleAuthEnabled = clientId
   window._googleAuthEnabledPromise.resolve(clientId)
   return clientId
@@ -46,7 +44,7 @@ export const isEnabled = async () => Boolean(await waitForGoogle())
 
 export async function signIn() {
   const clientId = await waitForGoogle()
-  const googleResp = await asyncify(gapi.auth2.authorize, {
+  const googleResp = await asyncify(window.gapi.auth2.authorize, {
     // eslint-disable-next-line camelcase
     client_id: clientId,
     // eslint-disable-next-line camelcase

@@ -86,7 +86,7 @@ const ActiveCourse = ({
   const orderedConcepts = useMemo(() => sortedConcepts(course.concepts, course.conceptOrder),
     [course.concepts, course.conceptOrder])
   const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder),
-  [workspace.courses, workspace.courseOrder])
+    [workspace.courses, workspace.courseOrder])
 
   return <>
     <DividerWithText

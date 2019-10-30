@@ -6,7 +6,9 @@ import { createMissingTags, filterTags } from './tagUtils'
 import { pubsub } from '../Subscription/config'
 import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/config/channels'
 
-export const createCourse = async (root, { name, workspaceId, official, frozen, tags }, context) => {
+export const createCourse = async (root, {
+  name, workspaceId, official, frozen, tags
+}, context) => {
   await checkAccess(context, {
     minimumRole: Role.GUEST,
     minimumPrivilege: Privilege.EDIT,
@@ -66,7 +68,9 @@ export const deleteCourse = async (root, { id }, context) => {
   return deletedCourse
 }
 
-export const updateCourse = async (root, { id, name, official, frozen, tags, conceptOrder }, context) => {
+export const updateCourse = async (root, {
+  id, name, official, frozen, tags, conceptOrder
+}, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
   await checkAccess(context, {
     minimumRole: Role.GUEST,
