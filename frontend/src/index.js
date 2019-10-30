@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/browser'
 
+import './lib/titleCase'
 import ConceptsWrapper from './Wrapper'
 
 // eslint-disable-next-line no-undef

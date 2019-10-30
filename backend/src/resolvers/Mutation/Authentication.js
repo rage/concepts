@@ -94,7 +94,7 @@ const getData = async (prisma, type, titleType, id) => new Map(
 )
 
 const mergeData = async (prisma, oldUserId, curUserId, type) => {
-  const titleType = type.substr(0, 1).toUpperCase() + type.substr(1).toLowerCase()
+  const titleType = type.toTitleCase()
   const oldData = await getData(prisma, type, titleType, oldUserId)
   const existingData = await getData(prisma, type, titleType, curUserId)
   for (const existing of existingData.keys()) {

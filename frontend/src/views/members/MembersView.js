@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 Type.PRIVILEGE = {
   ...Type.TEXT,
   DisplayComponent: ({ value, ...props }) => Type.TEXT.DisplayComponent({
-    value: value.substr(0, 1) + value.substr(1).toLowerCase(),
+    value: value.toTitleCase(),
     ...props
   }),
   EditComponent: ({ col, state, setState }) => (

@@ -183,7 +183,7 @@ const Dialog = ({ contextRef }) => {
                   variant='outlined'
                   margin='dense'
                   name={field.name}
-                  label={field.name[0].toUpperCase() + field.name.substr(1)}
+                  label={field.name.toTitleCase()}
                   type={field.textfieldType || 'text'}
                   rows={2}
                   rowsMax={10}
@@ -233,7 +233,7 @@ const Dialog = ({ contextRef }) => {
                         color='primary'
                       />
                     }
-                    label={field.name[0].toUpperCase() + field.name.substr(1)}
+                    label={field.name.toTitleCase()}
                   />
                 </FormControl>
               }
