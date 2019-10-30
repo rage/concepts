@@ -16,6 +16,7 @@ services:
       - ./frontend:/concepts/frontend
       - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
       - ./backend/src/util/permissions.js:/concepts/backend/src/util/permissions.js
+      - ./backend/src/util/titleCase.js:/concepts/backend/src/util/titleCase.js
     depends_on:
       - backend
     deploy:

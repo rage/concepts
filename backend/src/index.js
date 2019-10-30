@@ -9,6 +9,7 @@ const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 
+require('./util/titleCase')
 const { prisma } = require('../schema/generated/prisma-client')
 const { authenticate } = require('./middleware/authentication')
 const { logError } = require('./util/errorLogger')
