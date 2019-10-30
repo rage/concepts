@@ -6,23 +6,23 @@ import { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } from './confi
 const WorkspaceSubscriptions = {
   projectWorkspaceCreated: {
     subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_CREATED),
-      (payload, variables) => payload.workspaceCreated.projectId === variables.projectId)
+      (payload, variables) => payload.workspaceCreated.pId === variables.projectId)
   },
   workspaceUpdated: {
     subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
-      (payload, variables) => payload.workspaceUpdated.id === variables.workspaceId)
+      (payload, variables) => payload.workspaceUpdated.workspaceId === variables.workspaceId)
   },
   workspaceDeleted: {
     subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_DELETED),
-      (payload, variables) => payload.workspaceDeleted.id === variables.workspaceId)
+      (payload, variables) => payload.workspaceDeleted.workspaceId === variables.workspaceId)
   },
   projectWorkspaceUpdated: {
     subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
-      (payload, variables) => payload.workspaceUpdated.projectId === variables.projectId)
+      (payload, variables) => payload.workspaceUpdated.pId === variables.projectId)
   },
   projectWorkspaceDeleted: {
     subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_DELETED),
-      (payload, variables) => payload.workspaceDeleted.projectId === variables.projectId)
+      (payload, variables) => payload.workspaceDeleted.pId === variables.projectId)
   }
 }
 

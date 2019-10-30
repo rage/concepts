@@ -109,7 +109,7 @@ const WorkspaceMutations = {
         create: bloom
       }
     })
-    pubsub.publish(WORKSPACE_CREATED, { workspaceCreated: { ...newWorkspace, projectId } })
+    pubsub.publish(WORKSPACE_CREATED, { workspaceCreated: { ...newWorkspace, pId: projectId } })
     return newWorkspace
   },
   async deleteWorkspace(root, { id }, context) {
@@ -123,7 +123,9 @@ const WorkspaceMutations = {
       workspaceId: id
     })
     const deletedWorkspace = context.prisma.deleteWorkspace({ id })
-    pubsub.publish(WORKSPACE_DELETED, { workspaceDeleted: deletedWorkspace })
+    pubsub.publish(WORKSPACE_DELETED, {
+      workspaceDeleted: { workspaceId: id, ...deletedWorkspace }
+    })
     return deletedWorkspace
   },
   async updateWorkspace(root, { id, name, courseOrder }, context) {
@@ -145,12 +147,12 @@ const WorkspaceMutations = {
       where: { id },
       data
     })
-    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { id, ...result } })
+    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { workspaceId: id, ...result } })
     return result
   },
   async createTemplateWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.STAFF })
-    return await context.prisma.createWorkspace({
+    const createdTemplateWorkspace = await context.prisma.createWorkspace({
       name,
       asTemplate: {
         connect: { id: projectId }
@@ -167,6 +169,9 @@ const WorkspaceMutations = {
         }]
       }
     })
+    pubsub.publish(WORKSPACE_CREATED, {
+      createdWorkspace: { pId: projectId, ...createdTemplateWorkspace }
+    })
   },
   async deleteTemplateWorkspace(root, { id }, context) {
     const activeTemplate = await context.prisma.workspace({
@@ -180,7 +185,14 @@ const WorkspaceMutations = {
       minimumPrivilege: Privilege.OWNER,
       workspaceId: id
     })
-    return context.prisma.deleteWorkspace({ id })
+    const project = await context.prisma.workspace({
+      id
+    }).asTemplate()
+    const deletedTemplateWorkspace = await context.prisma.deleteWorkspace({ id })
+    pubsub.publish(WORKSPACE_DELETED, {
+      workspaceDeleted: { pId: project.id, ...deletedTemplateWorkspace }
+    })
+    return deletedTemplateWorkspace
   },
   async updateTemplateWorkspace(root, { id, name, active, courseId }, context) {
     await checkAccess(context, {
@@ -212,7 +224,11 @@ const WorkspaceMutations = {
     } else if (courseId !== undefined) {
       args.data.mainCourse = { connect: { id: courseId } }
     }
-    return context.prisma.updateWorkspace(args)
+    const updatedTemplateWorkspace = await context.prisma.updateWorkspace(args)
+    pubsub.publish(WORKSPACE_UPDATED, {
+      workspaceUpdated: { pId: project.id, ...updatedTemplateWorkspace }
+    })
+    return updatedTemplateWorkspace
   },
   async cloneTemplateWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
@@ -287,7 +303,9 @@ const WorkspaceMutations = {
         }))
       }
     })
-    pubsub.publish('WORKSPACE_CREATED', { createdWorkspace: newClonedWorkspace })
+    pubsub.publish(WORKSPACE_CREATED, {
+      createdWorkspace: { pId: projectId, ...newClonedWorkspace }
+    })
     return newClonedWorkspace
   }
 }
