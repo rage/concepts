@@ -10,6 +10,8 @@ export const useManyUpdatingSubscriptions = (namespaces, actions, args) => {
   }
   for (const namespace of namespaces) {
     for (const action of actions) {
+      // We only pass hardcoded arrays to this method
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useUpdatingSubscription(namespace, action, args)
     }
   }
