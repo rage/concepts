@@ -1,9 +1,11 @@
-const { ForbiddenError } = require('apollo-server-core')
+import { ForbiddenError } from 'apollo-server-core'
 
-const { NotFoundError } = require('./errors')
-const { Privilege, readPrivilege, Role } = require('./permissions')
+import { NotFoundError } from './errors'
+import { readPrivilege } from './permissions'
 
-const checkUser = (ctx, userId) => {
+export { Privilege, Role } from './permissions'
+
+export const checkUser = (ctx, userId) => {
   if (ctx.user.id !== userId) {
     throw new ForbiddenError('Unauthorised user')
   }
@@ -47,7 +49,7 @@ const privilegeQueryTyped = {
   project: privilegeQuery.replace('%s', 'project')
 }
 
-const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
+export const checkPrivilege = async (ctx, { minimumPrivilege, workspaceId, projectId }) => {
   if (!workspaceId && !projectId) {
     throw Error('Invalid checkPrivilege call (missing workspace or project)')
   }
@@ -76,7 +78,7 @@ const checkPrivilegeInt = async (ctx, { minimumPrivilege, workspaceId, projectId
   }
 }
 
-const checkAccess = async (ctx, {
+export const checkAccess = async (ctx, {
   minimumRole = null,
   minimumPrivilege = null,
   workspaceId, projectId
@@ -85,14 +87,9 @@ const checkAccess = async (ctx, {
     throw new ForbiddenError('Access denied')
   }
   if (minimumPrivilege !== null) {
-    if (!await checkPrivilegeInt(ctx, { minimumPrivilege, workspaceId, projectId })) {
+    if (!await checkPrivilege(ctx, { minimumPrivilege, workspaceId, projectId })) {
       throw new ForbiddenError('Access denied')
     }
   }
   return true
-}
-
-module.exports = {
-  Role, Privilege, checkAccess, checkUser,
-  checkPrivilege: checkPrivilegeInt
 }

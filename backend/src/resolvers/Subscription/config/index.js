@@ -1,5 +1,2 @@
-const { pubsub } = require('./pubsub')
-
-module.exports = {
-  pubsub
-}
+export pubsub from './pubsub'
+export * as channels from './channels'

@@ -1,8 +1,6 @@
-const { makeTypeResolvers } = require('./typeutil')
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  WorkspaceToken: makeTypeResolvers('workspaceToken', [
-    'participants',
-    'workspace'
-  ])
-}
+export const WorkspaceToken = makeTypeResolvers('workspaceToken', [
+  'participants',
+  'workspace'
+])

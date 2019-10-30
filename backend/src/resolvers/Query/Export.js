@@ -1,5 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../util/accessControl')
-const { NotFoundError } = require('../../util/errors')
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import { NotFoundError } from '../../util/errors'
 
 const exportQuery = `
 query($id: ID!) {
@@ -51,37 +51,33 @@ query($id: ID!) {
 }
 `
 
-const PortQueries = {
-  async exportData(root, { workspaceId }, context) {
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.READ,
-      workspaceId
-    })
+export const exportData = async (root, { workspaceId }, context) => {
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.READ,
+    workspaceId
+  })
 
-    const result = await context.prisma.$graphql(exportQuery, {
-      id: workspaceId
-    })
+  const result = await context.prisma.$graphql(exportQuery, {
+    id: workspaceId
+  })
 
-    if (!result.workspace) {
-      throw new NotFoundError('workspace')
-    }
-
-    const prereqMap = ({ from, official }) => ({ name: from.name, official })
-
-    // Create json from workspace
-    return JSON.stringify({
-      ...result.workspace,
-      courses: result.workspace.courses.map(({ concepts, linksToCourse, ...course }) => ({
-        ...course,
-        concepts: concepts.map(({ linksToConcept, ...concept }) => ({
-          ...concept,
-          prerequisites: linksToConcept.map(prereqMap)
-        })),
-        prerequisites: linksToCourse.map(prereqMap)
-      }))
-    })
+  if (!result.workspace) {
+    throw new NotFoundError('workspace')
   }
-}
 
-module.exports = PortQueries
+  const prereqMap = ({ from, official }) => ({ name: from.name, official })
+
+  // Create json from workspace
+  return JSON.stringify({
+    ...result.workspace,
+    courses: result.workspace.courses.map(({ concepts, linksToCourse, ...course }) => ({
+      ...course,
+      concepts: concepts.map(({ linksToConcept, ...concept }) => ({
+        ...concept,
+        prerequisites: linksToConcept.map(prereqMap)
+      })),
+      prerequisites: linksToCourse.map(prereqMap)
+    }))
+  })
+}

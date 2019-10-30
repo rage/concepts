@@ -1,5 +1,5 @@
-const { checkAccess, Role, Privilege } = require('../../util/accessControl')
-const { nullShield } = require('../../util/errors')
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import { nullShield } from '../../util/errors'
 
 const checkScalars = (startDate, endDate, maxPoints, pointsPerConcept) => {
   const startDateObj = new Date(startDate)
@@ -14,67 +14,63 @@ const checkScalars = (startDate, endDate, maxPoints, pointsPerConcept) => {
   }
 }
 
-const PointGroupMutations = {
-  async createPointGroup(root, {
-    name, startDate, endDate, maxPoints,
-    pointsPerConcept, courseId, workspaceId
-  }, context) {
-    await checkAccess(context, {
-      minimumRole: Role.STAFF,
-      minimumPrivilege: Privilege.EDIT,
-      workspaceId
-    })
+export const createPointGroup = async (root, {
+  name, startDate, endDate, maxPoints,
+  pointsPerConcept, courseId, workspaceId
+}, context) => {
+  await checkAccess(context, {
+    minimumRole: Role.STAFF,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
 
-    checkScalars(startDate, endDate, maxPoints, pointsPerConcept)
+  checkScalars(startDate, endDate, maxPoints, pointsPerConcept)
 
-    return await context.prisma.createPointGroup({
-      name,
-      startDate,
-      endDate,
-      maxPoints,
-      pointsPerConcept,
-      workspace: { connect: { id: workspaceId } },
-      course: { connect: { id: courseId } }
-    })
-  },
-
-  async updatePointGroup(root, {
-    id, name, startDate, endDate, maxPoints,
-    pointsPerConcept
-  }, context) {
-    const { id: workspaceId } = nullShield(await context.prisma.pointGroup({ id }).workspace())
-    await checkAccess(context, {
-      minimumRole: Role.STAFF,
-      minimumPrivilege: Privilege.EDIT,
-      workspaceId
-    })
-
-    checkScalars(startDate, endDate, maxPoints,
-      pointsPerConcept)
-
-    const data = {
-      name,
-      startDate,
-      endDate,
-      maxPoints,
-      pointsPerConcept
-    }
-
-    return await context.prisma.updatePointGroup({
-      data,
-      where: { id }
-    })
-  },
-
-  async deletePointGroup(root, { id }, context) {
-    const { id: workspaceId } = nullShield(await context.prisma.pointGroup({ id }).workspace())
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.EDIT,
-      workspaceId
-    })
-    return await context.prisma.deletePointGroup({ id })
-  }
+  return await context.prisma.createPointGroup({
+    name,
+    startDate,
+    endDate,
+    maxPoints,
+    pointsPerConcept,
+    workspace: { connect: { id: workspaceId } },
+    course: { connect: { id: courseId } }
+  })
 }
 
-module.exports = PointGroupMutations
+export const updatePointGroup = async (root, {
+  id, name, startDate, endDate, maxPoints,
+  pointsPerConcept
+}, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.pointGroup({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.STAFF,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+
+  checkScalars(startDate, endDate, maxPoints,
+    pointsPerConcept)
+
+  const data = {
+    name,
+    startDate,
+    endDate,
+    maxPoints,
+    pointsPerConcept
+  }
+
+  return await context.prisma.updatePointGroup({
+    data,
+    where: { id }
+  })
+}
+
+export const deletePointGroup = async (root, { id }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.pointGroup({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+  return await context.prisma.deletePointGroup({ id })
+}

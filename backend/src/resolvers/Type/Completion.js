@@ -1,7 +1,5 @@
-const { makeTypeResolvers } = require('./typeutil')
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  Completion: makeTypeResolvers('completion', [
-    'user'
-  ])
-}
+export const Completion = makeTypeResolvers('completion', [
+  'user'
+])

@@ -1,10 +1,9 @@
+import { OAuth2Client } from 'google-auth-library'
 let metadata, client
 
 try {
   metadata = require('../../google/credentials')
-
-  const google = require('google-auth-library')
-  client = new google.OAuth2Client(metadata.client_id, metadata.client_secret)
+  client = new OAuth2Client(metadata.client_id, metadata.client_secret)
 } catch (err) {
   console.error('Google auth credentials not set')
   metadata = null

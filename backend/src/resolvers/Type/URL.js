@@ -1,7 +1,5 @@
-const { makeTypeResolvers } = require('./typeutil')
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  URL: makeTypeResolvers('uRL', [
-    'resource'
-  ])
-}
+export const URL = makeTypeResolvers('uRL', [
+  'resource'
+])

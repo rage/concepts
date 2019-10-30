@@ -1,4 +1,5 @@
-// eslint-disable-next-line no-extend-native
+/* eslint-disable no-extend-native */
+
 String.prototype.toTitleCase = function() {
   return this
     .split(' ')

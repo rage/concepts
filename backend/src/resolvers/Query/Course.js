@@ -1,16 +1,12 @@
-const { checkAccess, Role, Privilege } = require('../../util/accessControl')
-const { nullShield } = require('../../util/errors')
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import { nullShield } from '../../util/errors'
 
-const CourseQueries = {
-  async courseById(root, { id }, context) {
-    const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.READ,
-      workspaceId
-    })
-    return await context.prisma.course({ id: id })
-  }
+export const courseById = async (root, { id }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.READ,
+    workspaceId
+  })
+  return await context.prisma.course({ id: id })
 }
-
-module.exports = CourseQueries

@@ -1,8 +1,6 @@
-const { makeTypeResolvers } = require('./typeutil')
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  User: makeTypeResolvers('user', [
-    'workspaceParticipations',
-    'projectParticipations'
-  ])
-}
+export const User = makeTypeResolvers('user', [
+  'workspaceParticipations',
+  'projectParticipations'
+])

@@ -1,37 +1,17 @@
-const path = require('path')
+import path from 'path'
 
-require('dotenv').config({
-  path: path.resolve(__dirname, `../config/${process.env.ENVIRONMENT}.env`)
-})
+import { GraphQLServer } from 'graphql-yoga'
+import express from 'express'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
-const { GraphQLServer } = require('graphql-yoga')
-const express = require('express')
-const cors = require('cors')
-const cookieParser = require('cookie-parser')
-
-require('./util/titleCase')
-const { prisma } = require('../schema/generated/prisma-client')
-const { authenticate } = require('./middleware/authentication')
-const { logError } = require('./util/errorLogger')
-const queries = require('./resolvers/Query')
-const mutations = require('./resolvers/Mutation')
-const subscriptions = require('./resolvers/Subscription')
-const types = require('./resolvers/Type')
-const pointsAPI = require('./controllers/pointsAPI')
-const { loginAPIRedirect, loginAPIAssert, loginAPIMetadata } = require('./controllers/loginAPI')
-
-const resolvers = {
-  Query: {
-    ...queries
-  },
-  Mutation: {
-    ...mutations
-  },
-  Subscription: {
-    ...subscriptions
-  },
-  ...types
-}
+import './util/titleCase'
+import { prisma } from '../schema/generated/prisma-client'
+import { authenticate } from './middleware/authentication'
+import { logError } from './util/errorLogger'
+import resolvers from './resolvers'
+import pointsAPI from './controllers/pointsAPI'
+import { loginAPIRedirect, loginAPIAssert, loginAPIMetadata } from './controllers/loginAPI'
 
 const options = {
   endpoint: '/graphql',

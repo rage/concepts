@@ -1,17 +1,7 @@
-import authentication from './Authentication'
-
-const course = require('./Course')
-const workspace = require('./Workspace')
-const project = require('./Project')
-const sharing = require('./Sharing')
-const user = require('./User')
-const port = require('./Export')
-module.exports = {
-  ...authentication,
-  ...course,
-  ...workspace,
-  ...project,
-  ...sharing,
-  ...user,
-  ...port
-}
+export * from './Authentication'
+export * from './Course'
+export * from './Workspace'
+export * from './Project'
+export * from './Sharing'
+export * from './User'
+export * from './Export'
