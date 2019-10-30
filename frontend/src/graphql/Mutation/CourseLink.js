@@ -27,7 +27,7 @@ ${UPDATE_COURSE_LINK_FRAGMENT}
 const DELETE_COURSE_LINK = gql`
 mutation deleteCourseLink($id: ID!) {
   deleteCourseLink(id: $id) {
-    ...deleteCourseLinkFragment
+    ...deleteCourseLinkData
   }
 }
 ${DELETE_COURSE_LINK_FRAGMENT}
