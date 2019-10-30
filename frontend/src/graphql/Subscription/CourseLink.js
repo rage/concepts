@@ -27,7 +27,7 @@ ${UPDATE_COURSE_LINK_FRAGMENT}
 const COURSE_LINK_DELETED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   courseLinkDeleted(workspaceId: $workspaceId) {
-    ...deleteCourseLinkFragment
+    ...deleteCourseLinkData
   }
 }
 ${DELETE_COURSE_LINK_FRAGMENT}
