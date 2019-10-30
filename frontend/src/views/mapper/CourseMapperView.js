@@ -13,6 +13,10 @@ import DividerWithText from '../../components/DividerWithText'
 import LoadingBar from '../../components/LoadingBar'
 import CourseTray from './CourseTray'
 import CourseContainer from './CourseContainer'
+import {
+  useManyUpdatingSubscriptions,
+  useUpdatingSubscription
+} from '../../apollo/useUpdatingSubscription'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -52,6 +56,14 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     infoBox.setView('mapper')
     return () => infoBox.unsetView('mapper')
   }, [infoBox])
+
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId }
+  })
+
+  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
+    variables: { workspaceId }
+  })
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
