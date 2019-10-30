@@ -6,6 +6,9 @@ mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Bo
     id
     official
     frozen
+    to {
+      id
+    }
     from {
       id
       name
@@ -61,6 +64,9 @@ mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean) {
     id
     official
     frozen
+    to {
+      id
+    }
   }
 } 
 `
@@ -69,6 +75,9 @@ const DELETE_COURSE_LINK = gql`
 mutation deleteCourseLink($id: ID!) {
   deleteCourseLink(id: $id) {
     id
+    to {
+      id
+    }
   }
 }
 `

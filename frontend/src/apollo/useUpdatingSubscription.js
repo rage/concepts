@@ -18,11 +18,14 @@ export const useManyUpdatingSubscriptions = (namespaces, actions, args) => {
 }
 
 export const useUpdatingSubscription = (namespace, action, args) => {
-  const subscriptionName = `${namespace.toUpperCase()}_${action.toUpperCase()}D_SUBSCRIPTION`
+  const subName = `${namespace.toUpperSnakeCase()}_${action.toUpperSnakeCase()}D_SUBSCRIPTION`
   // eslint-disable-next-line import/namespace
-  const subscription = subscriptions[subscriptionName]
-  const subscriptionDataFieldName = `${namespace.toLowerCase()}${action.toTitleCase()}d`
-  const cacheDataFieldName = `${action.toLowerCase()}${namespace.toTitleCase()}`
+  const subscription = subscriptions[subName]
+  if (!subscription) {
+    return
+  }
+  const subscriptionDataFieldName = `${namespace.toCamelCase()}${action.toPascalCase()}d`
+  const cacheDataFieldName = `${action.toCamelCase()}${namespace.toPascalCase()}`
   let cacheUpdate = args.update
   if (!cacheUpdate) {
     cacheUpdate = cache[`${cacheDataFieldName}Update`]
@@ -30,6 +33,8 @@ export const useUpdatingSubscription = (namespace, action, args) => {
       cacheUpdate = cacheUpdate(...args.updateParams || Object.values(args.variables))
     }
   }
+  // The condition in the return earlier is also hardcoded
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useSubscription(subscription, {
     variables: args.variables,
     onSubscriptionData: ({ subscriptionData }) => {
