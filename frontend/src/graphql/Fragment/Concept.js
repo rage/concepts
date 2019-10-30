@@ -55,7 +55,7 @@ fragment updateConceptData on Concept {
 `
 
 const DELETE_CONCEPT_FRAGMENT = gql`
-fragment deleteConceptData on Concept {
+fragment deleteConceptData on DeletedConcept {
   id
   courseId
 }

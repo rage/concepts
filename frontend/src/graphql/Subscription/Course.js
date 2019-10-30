@@ -1,63 +1,26 @@
 import gql from 'graphql-tag'
 
+import {
+  CREATE_COURSE_FRAGMENT,
+  UPDATE_COURSE_FRAGMENT
+} from '../Fragment'
+
 const COURSE_CREATED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   courseCreated(workspaceId:$workspaceId) {
-    id
-    name
-    official
-    frozen
-    tags {
-      id
-      name
-      type
-      priority
-    }
-    linksToCourse {
-      from {
-        id
-      }
-    }
-    conceptOrder
-    concepts {
-      id
-      name
-      description
-      official
-      frozen
-      course {
-        id
-      }
-      linksToConcept {
-        from {
-          id
-          name
-          course {
-            id
-          }
-        }
-      }
-    }
+    ...createCourseData
   }
 }
+${CREATE_COURSE_FRAGMENT}
 `
 
 const COURSE_UPDATED_SUBSCRIPTION = gql`
 subscription($workspaceId:ID!) {
   courseUpdated(workspaceId:$workspaceId) {
-    id
-    name
-    official
-    frozen
-    conceptOrder
-    tags {
-      id
-      name
-      type
-      priority
-    }
+    ...updateCourseData
   }
 }
+${UPDATE_COURSE_FRAGMENT}
 `
 
 const COURSE_DELETED_SUBSCRIPTION = gql`

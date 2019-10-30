@@ -1,47 +1,19 @@
 import gql from 'graphql-tag'
 
+import {
+  CREATE_COURSE_FRAGMENT,
+  UPDATE_COURSE_FRAGMENT
+} from '../Fragment'
+
 const CREATE_COURSE = gql`
 mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
                       $frozen: Boolean, $tags: [TagInput!]) {
   createCourse(name: $name, workspaceId: $workspaceId, official: $official,
                frozen: $frozen, tags: $tags) {
-    id
-    name
-    official
-    frozen
-    tags {
-      id
-      name
-      type
-      priority
-    }
-    linksToCourse {
-      from {
-        id
-      }
-    }
-    conceptOrder
-    concepts {
-      id
-      name
-      description
-      official
-      frozen
-      course {
-        id
-      }
-      linksToConcept {
-        from {
-          id
-          name
-          course {
-            id
-          }
-        }
-      }
-    }
+    ...createCourseData
   }
 }
+${CREATE_COURSE_FRAGMENT}
 `
 
 const UPDATE_COURSE = gql`
@@ -49,19 +21,10 @@ mutation updateCourse($id: ID!, $name: String, $official: Boolean,
                       $frozen: Boolean, $tags: [TagInput!], $conceptOrder: [ID!]) {
   updateCourse(id: $id, name: $name, official: $official, frozen: $frozen, tags: $tags,
                conceptOrder: $conceptOrder) {
-    id
-    name
-    official
-    frozen
-    conceptOrder
-    tags {
-      id
-      name
-      type
-      priority
-    }
+    ...updateCourseData
   }
 }
+${UPDATE_COURSE_FRAGMENT}
 `
 
 const DELETE_COURSE = gql`
