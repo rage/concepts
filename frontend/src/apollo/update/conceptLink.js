@@ -37,7 +37,7 @@ const deleteConceptLinkUpdate = () =>
 
       const course = store.readQuery({
         query: LINKS_IN_COURSE,
-        variables: { courseId: deletedConceptLink.to.course.id }
+        variables: { courseId: deletedConceptLink.courseId }
       })
 
       course.linksInCourse.concepts.forEach(concept => {
@@ -47,7 +47,7 @@ const deleteConceptLinkUpdate = () =>
 
       client.writeQuery({
         query: LINKS_IN_COURSE,
-        variables: { courseId: deletedConceptLink.to.course.id },
+        variables: { courseId: deletedConceptLink.courseId },
         data: course
       })
     } catch (e) {

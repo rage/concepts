@@ -41,13 +41,15 @@ const ConceptLink = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const toDelete = await context.prisma.conceptLink({ id: args.id })
-    if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
+    const frozen = await context.prisma.conceptLink({ id: args.id }).frozen()
+    if (frozen) throw new ForbiddenError('This link is frozen')
+    const { id: courseId } = await context.prisma.conceptLink({ id: args.id }).to().course()
     await context.prisma.deleteConceptLink({
       id: args.id
     })
-    pubsub.publish(CONCEPT_LINK_DELETED, { conceptLinkDeleted: { ...toDelete, workspaceId } })
-    return toDelete
+    const data = { id: args.id, courseId }
+    pubsub.publish(CONCEPT_LINK_DELETED, { conceptLinkDeleted: { ...data, workspaceId } })
+    return data
   }
 }
 

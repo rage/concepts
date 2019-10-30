@@ -75,9 +75,7 @@ const COURSE_LINK_DELETED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   courseLinkDeleted(workspaceId: $workspaceId) {
     id
-    to {
-      id
-    }
+    courseId
   }
 }
 `

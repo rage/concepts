@@ -75,9 +75,7 @@ const DELETE_COURSE_LINK = gql`
 mutation deleteCourseLink($id: ID!) {
   deleteCourseLink(id: $id) {
     id
-    to {
-      id
-    }
+    courseId
   }
 }
 `

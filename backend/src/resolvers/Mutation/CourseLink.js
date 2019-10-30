@@ -62,13 +62,13 @@ const CourseQueries = {
       minimumPrivilege: Privilege.EDIT,
       workspaceId
     })
-    const toDelete = await context.prisma.courseLink({ id })
-    if (toDelete.frozen) throw new ForbiddenError('This link is frozen')
+    const frozen = await context.prisma.courseLink({ id }).frozen()
+    if (frozen) throw new ForbiddenError('This link is frozen')
+    const { id: courseId } = await context.prisma.courseLink({ id }).to()
     await context.prisma.deleteCourseLink({ id })
-    pubsub.publish(COURSE_LINK_DELETED, {
-      courseLinkDeleted: { ...toDelete, workspaceId }
-    })
-    return toDelete
+    const data = { id, courseId }
+    pubsub.publish(COURSE_LINK_DELETED, { courseLinkDeleted: { ...data, workspaceId } })
+    return data
   }
 }
 

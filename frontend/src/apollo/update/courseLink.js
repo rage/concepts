@@ -53,7 +53,7 @@ const deleteCourseLinkUpdate = (workspaceId) =>
     const deletedCourseLink = response.data.deleteCourseLink
     const dataInStore = store.readQuery({
       query: COURSE_PREREQUISITES,
-      variables: { courseId: deletedCourseLink.to.id, workspaceId }
+      variables: { courseId: deletedCourseLink.courseId, workspaceId }
     })
     const dataInStoreCopy = { ...dataInStore }
     const courseLinks = dataInStoreCopy.courseAndPrerequisites.linksToCourse
@@ -62,7 +62,7 @@ const deleteCourseLinkUpdate = (workspaceId) =>
         .filter(course => course.id !== deletedCourseLink.id)
       client.writeQuery({
         query: COURSE_PREREQUISITES,
-        variables: { courseId: deletedCourseLink.to.id, workspaceId },
+        variables: { courseId: deletedCourseLink.courseId, workspaceId },
         data: dataInStoreCopy
       })
     }

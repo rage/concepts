@@ -26,11 +26,7 @@ const DELETE_CONCEPT_LINK = gql`
 mutation deleteConceptLink($id: ID!) {
   deleteConceptLink(id: $id) {
     id
-    to {
-      course {
-        id
-      }
-    }
+    courseId
   }
 }
 `
