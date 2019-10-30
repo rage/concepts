@@ -239,7 +239,7 @@ This will change which template is cloned by users.`)
                 </Typography>
               }
               secondary={type === TYPE_USER && workspace.participants
-                .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER).user.id}
+                .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER)?.user?.id}
             />
 
             <ListItemSecondaryAction>
