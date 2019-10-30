@@ -86,7 +86,7 @@ const Concept = ({
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: cache.deleteConceptUpdate
+    update: cache.deleteConceptUpdate()
   })
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'

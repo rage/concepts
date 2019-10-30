@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation, useSubscription } from 'react-apollo-hooks'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography, Paper } from '@material-ui/core'
 
 import { useMessageStateValue } from '../../lib/store'
@@ -11,12 +11,10 @@ import {
   UPDATE_WORKSPACE
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
-import client from '../../apollo/apolloClient'
 import {
-  COURSE_CREATED_SUBSCRIPTION, COURSE_DELETED_SUBSCRIPTION, COURSE_UPDATED_SUBSCRIPTION,
-  CONCEPT_CREATED_SUBSCRIPTION, CONCEPT_UPDATED_SUBSCRIPTION, CONCEPT_DELETED_SUBSCRIPTION,
-  WORKSPACE_UPDATED_SUBSCRIPTION
-} from '../../graphql/Subscription'
+  useUpdatingSubscription,
+  useManyUpdatingSubscriptions
+} from '../../apollo/useUpdatingSubscription'
 import { useInfoBox } from '../../components/InfoBox'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
@@ -80,62 +78,12 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const infoBox = useInfoBox()
   const { history } = useRouter()
 
-  useSubscription(WORKSPACE_UPDATED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      console.log(subscriptionData)
-      const res = { data: { updateWorkspace: { ...subscriptionData.data.workspaceUpdated } } }
-      cache.updateWorkspaceUpdate(workspaceId)(client, res)
-    }
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId }
   })
 
-  useSubscription(COURSE_CREATED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      const res = { data: { createCourse: { ...subscriptionData.data.courseCreated } } }
-      cache.createCourseUpdate(workspaceId)(client, res)
-    }
-  })
-
-  useSubscription(COURSE_DELETED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      const res = { data: { deleteCourse: { ...subscriptionData.data.courseDeleted } } }
-      cache.deleteCourseUpdate(workspaceId)(client, res)
-    }
-  })
-
-  useSubscription(COURSE_UPDATED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      const res = { data: { updateCourse: { ...subscriptionData.data.courseUpdated } } }
-      cache.updateCourseUpdate(workspaceId)(client, res)
-    }
-  })
-
-  useSubscription(CONCEPT_CREATED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      const res = { data: { createConcept: { ...subscriptionData.data.conceptCreated } } }
-      cache.createConceptUpdate(workspaceId)(client, res)
-    }
-  })
-
-  useSubscription(CONCEPT_DELETED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      const res = { data: { deleteConcept: { ...subscriptionData.data.conceptDeleted } } }
-      cache.deleteConceptUpdate(client, res)
-      cache.deleteConceptFromByIdUpdate(client, res, workspaceId)
-    }
-  })
-
-  useSubscription(CONCEPT_UPDATED_SUBSCRIPTION, {
-    variables: { workspaceId },
-    onSubscriptionData: ({ subscriptionData }) => {
-      const res = { data: { updateConcept: { ...subscriptionData.data.conceptUpdated } } }
-      cache.updateConceptUpdate(workspaceId)(client, res)
-    }
+  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
+    variables: { workspaceId }
   })
 
   useEffect(() => {
@@ -162,10 +110,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
     update: cache.updateConceptUpdate(workspaceId)
   })
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: (store, response) => {
-      cache.deleteConceptUpdate(store, response)
-      cache.deleteConceptFromByIdUpdate(store, response, workspaceId)
-    }
+    update: cache.deleteConceptUpdate(workspaceId)
   })
 
   if (workspaceQuery.loading) {
