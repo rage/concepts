@@ -14,7 +14,8 @@ import cache from '../../apollo/update'
 import client from '../../apollo/apolloClient'
 import {
   COURSE_CREATED_SUBSCRIPTION, COURSE_DELETED_SUBSCRIPTION, COURSE_UPDATED_SUBSCRIPTION,
-  CONCEPT_CREATED_SUBSCRIPTION, CONCEPT_UPDATED_SUBSCRIPTION, CONCEPT_DELETED_SUBSCRIPTION
+  CONCEPT_CREATED_SUBSCRIPTION, CONCEPT_UPDATED_SUBSCRIPTION, CONCEPT_DELETED_SUBSCRIPTION,
+  WORKSPACE_UPDATED_SUBSCRIPTION
 } from '../../graphql/Subscription'
 import { useInfoBox } from '../../components/InfoBox'
 import LoadingBar from '../../components/LoadingBar'
@@ -79,7 +80,15 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const infoBox = useInfoBox()
   const { history } = useRouter()
 
-  // SUBSCRIBE
+  useSubscription(WORKSPACE_UPDATED_SUBSCRIPTION, {
+    variables: { workspaceId },
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+      const res = { data: { updateWorkspace: { ...subscriptionData.data.workspaceUpdated } } }
+      cache.updateWorkspaceUpdate(workspaceId)(client, res)
+    }
+  })
+
   useSubscription(COURSE_CREATED_SUBSCRIPTION, {
     variables: { workspaceId },
     onSubscriptionData: ({ subscriptionData }) => {

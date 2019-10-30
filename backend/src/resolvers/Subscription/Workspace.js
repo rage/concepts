@@ -1,21 +1,28 @@
-const { withFilter } = require('graphql-subscriptions')
-const { pubsub } = require('./config')
-const { 
-  WORKSPACE_CREATED, 
-  WORKSPACE_UPDATED, 
-  WORKSPACE_DELETED 
-} = require('./config/channels')
+import { withFilter } from 'graphql-subscriptions'
+
+import { pubsub } from './config'
+import { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } from './config/channels'
 
 const WorkspaceSubscriptions = {
-  workspaceCreated: {
+  projectWorkspaceCreated: {
     subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_CREATED),
-    (payload, variables) => payload.workspaceCreated.projectId === variables.projectId)
+      (payload, variables) => payload.workspaceCreated.projectId === variables.projectId)
   },
   workspaceUpdated: {
-    subscribe: () => pubsub.asyncIterator(WORKSPACE_UPDATED)
+    subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
+      (payload, variables) => payload.workspaceUpdated.id === variables.workspaceId)
   },
   workspaceDeleted: {
-    subscribe: () => pubsub.asyncIterator(WORKSPACE_DELETED)
+    subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_DELETED),
+      (payload, variables) => payload.workspaceDeleted.id === variables.workspaceId)
+  },
+  projectWorkspaceUpdated: {
+    subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
+      (payload, variables) => payload.workspaceUpdated.projectId === variables.projectId)
+  },
+  projectWorkspaceDeleted: {
+    subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_DELETED),
+      (payload, variables) => payload.workspaceDeleted.projectId === variables.projectId)
   }
 }
 

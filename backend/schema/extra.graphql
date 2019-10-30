@@ -121,14 +121,22 @@ type Subscription {
   courseLinkDeleted(workspaceId: ID!): CourseLink!
 
   # Workspaces subscriptions
-  workspaceCreated(projectId: ID!): Workspace!
-  workspaceUpdated(projectId: ID!): Workspace!
-  workspaceDeleted(projectId: ID!): Workspace!
+  projectWorkspaceCreated(projectId: ID!): Workspace!
+  projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
+  projectWorkspaceDeleted(projectId: ID!): Workspace!
+  workspaceUpdated(workspaceId: ID!): WorkspaceUpdate!
+  workspaceDeleted(workspaceId: ID!): Workspace!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
+
+type WorkspaceUpdate {
+  id: ID!
+  name: String
+  courseOrder: [ID!]
+}
 
 type IDAndPrivilege {
   id: ID!

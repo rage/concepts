@@ -90,7 +90,7 @@ export const bloom = [{
 }]
 
 const WorkspaceMutations = {
-  async createWorkspace(root, {name, projectId}, context) {
+  async createWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.GUEST })
     const newWorkspace = await context.prisma.createWorkspace({
       name: name,
@@ -109,7 +109,7 @@ const WorkspaceMutations = {
         create: bloom
       }
     })
-    pubsub.publish(WORKSPACE_CREATED, { workspaceCreated: {...newWorkspace, projectId } })
+    pubsub.publish(WORKSPACE_CREATED, { workspaceCreated: { ...newWorkspace, projectId } })
     return newWorkspace
   },
   async deleteWorkspace(root, { id }, context) {
@@ -141,11 +141,12 @@ const WorkspaceMutations = {
         set: courseOrder
       }
     }
-    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { id, ...data } })
-    return context.prisma.updateWorkspace({
+    const result = context.prisma.updateWorkspace({
       where: { id },
       data
     })
+    pubsub.publish(WORKSPACE_UPDATED, { workspaceUpdated: { id, ...result } })
+    return result
   },
   async createTemplateWorkspace(root, { name, projectId }, context) {
     await checkAccess(context, { minimumRole: Role.STAFF })
