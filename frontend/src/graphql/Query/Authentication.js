@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 import { USER_FRAGMENT } from '../Mutation/Authentication'
 

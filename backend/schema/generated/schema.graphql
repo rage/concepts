@@ -48,17 +48,17 @@ type Mutation {
 
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
-  deleteConcept(id: ID!): DeletedConcept
+  deleteConcept(id: ID!): DeletedCourseItem
   updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
   updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink
-  deleteCourseLink(id: ID!): CourseLink
+  deleteCourseLink(id: ID!): DeletedCourseItem
 
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
-  deleteConceptLink(id: ID!): ConceptLink
+  deleteConceptLink(id: ID!): DeletedCourseItem
 
   # Project mutations
   createProject(name: String!): Project
@@ -102,33 +102,41 @@ type Mutation {
 
 type Subscription {
   # Concept subscriptions
-  conceptCreated: Concept!
-  conceptUpdated: Concept!
-  conceptDeleted: Concept!
+  conceptCreated(workspaceId: ID!): Concept!
+  conceptUpdated(workspaceId: ID!): Concept!
+  conceptDeleted(workspaceId: ID!): DeletedCourseItem!
 
   # ConceptLinks subscriptions
-  conceptLinkCreated: ConceptLink!
-  conceptLinkDeleted: ConceptLink!
+  conceptLinkCreated(workspaceId: ID!): ConceptLink!
+  conceptLinkDeleted(workspaceId: ID!): DeletedCourseItem!
 
   # Courses subscriptions
-  courseCreated: Course!
-  courseUpdated: Course!
-  courseDeleted: Course!
+  courseCreated(workspaceId: ID!): Course!
+  courseUpdated(workspaceId: ID!): Course!
+  courseDeleted(workspaceId: ID!): Course!
 
   # CoursesLinks subscriptions
-  courseLinkCreated: CourseLink!
-  courseLinkUpdated: CourseLink!
-  courseLinkDeleted: CourseLink!
+  courseLinkCreated(workspaceId: ID!): CourseLink!
+  courseLinkUpdated(workspaceId: ID!): CourseLink!
+  courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
 
   # Workspaces subscriptions
-  workspaceCreated: Workspace!
-  workspaceUpdated: Workspace!
-  workspaceDeleted: Workspace!
+  projectWorkspaceCreated(projectId: ID!): Workspace!
+  projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
+  projectWorkspaceDeleted(projectId: ID!): Workspace!
+  workspaceUpdated(workspaceId: ID!): WorkspaceUpdate!
+  workspaceDeleted(workspaceId: ID!): Workspace!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
+
+type WorkspaceUpdate {
+  id: ID!
+  name: String
+  courseOrder: [ID!]
+}
 
 type IDAndPrivilege {
   id: ID!
@@ -147,7 +155,7 @@ type LimitedProject {
   participants: [ProjectParticipant!]!
 }
 
-type DeletedConcept {
+type DeletedCourseItem {
   id: ID!
   courseId: ID!
 }

@@ -1,16 +1,19 @@
-const { pubsub } = require('./config')
-const { CONCEPT_CREATED, CONCEPT_UPDATED, CONCEPT_DELETED } = require('./config/channels')
+import { withFilter } from 'graphql-subscriptions'
 
-const ConceptSubscriptions = {
-  conceptCreated: {
-    subscribe: () => pubsub.asyncIterator(CONCEPT_CREATED)
-  },
-  conceptUpdated: {
-    subscribe: () => pubsub.asyncIterator(CONCEPT_UPDATED)
-  },
-  conceptDeleted: {
-    subscribe: () => pubsub.asyncIterator(CONCEPT_DELETED)
-  }
+import { pubsub } from './config'
+import { CONCEPT_CREATED, CONCEPT_UPDATED, CONCEPT_DELETED } from './config/channels'
+
+export const conceptCreated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(CONCEPT_CREATED),
+    (payload, variables) => payload.conceptCreated.workspaceId === variables.workspaceId)
 }
 
-module.exports = ConceptSubscriptions
+export const conceptUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(CONCEPT_UPDATED),
+    (payload, variables) => payload.conceptUpdated.workspaceId === variables.workspaceId)
+}
+
+export const conceptDeleted = {
+  subscribe: withFilter(() => pubsub.asyncIterator(CONCEPT_DELETED),
+    (payload, variables) => payload.conceptDeleted.workspaceId === variables.workspaceId)
+}

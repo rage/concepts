@@ -1,5 +1,6 @@
-const queries = require('../resolvers/Query')
-const mutations = require('../resolvers/Mutation')
+import * as queries from '../resolvers/Query'
+import * as mutations from '../resolvers/Mutation'
+import * as subscriptions from '../resolvers/Subscription'
 
 const ERROR_COLOR = '\x1b[31m'
 const STRING_COLOR = '\x1b[32m'
@@ -14,11 +15,13 @@ const getPathType = (path) => {
     return 'Query'
   } else if (Object.keys(mutations).includes(path)) {
     return 'Mutation'
+  } else if (Object.keys(subscriptions).includes(path)) {
+    return 'Subscription'
   }
   return 'Type'
 }
 
-const logError = error => {
+export const logError = error => {
   const errorData = {
     message: error.message,
     now: new Date(Date.now()).toISOString()
@@ -49,5 +52,3 @@ const logError = error => {
 
   return error
 }
-
-module.exports = { logError }

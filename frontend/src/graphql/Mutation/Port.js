@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const IMPORT_DATA = gql`
 mutation importData($data: String!) {

@@ -41,9 +41,9 @@ const CourseList = ({
 
   useEffect(() => {
     if (!dirtyOrder) {
-      setOrderedCourses(sortedCourses(workspace))
+      setOrderedCourses(sortedCourses(workspace.courses, workspace.courseOrder))
     }
-  }, [workspace, workspace.courses, workspace.courseOrder, dirtyOrder])
+  }, [workspace.courses, workspace.courseOrder, dirtyOrder])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {

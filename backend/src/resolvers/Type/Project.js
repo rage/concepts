@@ -1,5 +1,5 @@
-const { Privilege } = require('../../util/accessControl')
-const { makeTypeResolvers } = require('./typeutil')
+import { Privilege } from '../../util/accessControl'
+import makeTypeResolvers from './typeutil'
 
 const checkID = (obj, info, suffix = '') => {
   if (obj.__typename) {
@@ -12,29 +12,28 @@ const checkID = (obj, info, suffix = '') => {
   return null
 }
 
-module.exports = {
-  Project: makeTypeResolvers('project', [
-    'participants',
-    'workspaces',
-    'templates',
-    'merges',
-    'activeTemplate',
-    {
-      name: 'tokens',
-      checkPrivilegeArgs: root => ({
-        minimumPrivilege: Privilege.OWNER,
-        projectId: root.id
-      }),
-      insufficientPrivilegeValue: () => []
-    }
-  ]),
-  ProjectOrWorkspace: {
-    __resolveType: (obj, context, info) => checkID(obj, info)
-  },
-  ProjectOrWorkspaceParticipant: {
-    __resolveType: (obj, context, info) => checkID(obj, info, 'Participant')
-  },
-  ProjectOrWorkspaceToken: {
-    __resolveType: (obj, context, info) => checkID(obj, info, 'Token')
+export const Project = makeTypeResolvers('project', [
+  'participants',
+  'workspaces',
+  'templates',
+  'merges',
+  'activeTemplate',
+  {
+    name: 'tokens',
+    checkPrivilegeArgs: root => ({
+      minimumPrivilege: Privilege.OWNER,
+      projectId: root.id
+    }),
+    insufficientPrivilegeValue: () => []
   }
+])
+
+export const ProjectOrWorkspace = {
+  __resolveType: (obj, context, info) => checkID(obj, info)
+}
+export const ProjectOrWorkspaceParticipant = {
+  __resolveType: (obj, context, info) => checkID(obj, info, 'Participant')
+}
+export const ProjectOrWorkspaceToken = {
+  __resolveType: (obj, context, info) => checkID(obj, info, 'Token')
 }

@@ -1,16 +1,19 @@
-const { pubsub } = require('./config')
-const { COURSE_LINK_CREATED, COURSE_LINK_UPDATED, COURSE_LINK_DELETED } = require('./config/channels')
+import { withFilter } from 'graphql-subscriptions'
 
-const CourseLinkSubscriptions = {
-  courseLinkCreated: {
-    subscribe: () => pubsub.asyncIterator(COURSE_LINK_CREATED)
-  },
-  courseLinkUpdated: {
-    subscribe: () => pubsub.asyncIterator(COURSE_LINK_UPDATED)
-  },
-  courseLinkDeleted: {
-    subscribe: () => pubsub.asyncIterator(COURSE_LINK_DELETED)
-  }
+import { pubsub } from './config'
+import { COURSE_LINK_CREATED, COURSE_LINK_UPDATED, COURSE_LINK_DELETED } from './config/channels'
+
+export const courseLinkCreated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(COURSE_LINK_CREATED),
+    (payload, variables) => payload.courseLinkCreated.workspaceId === variables.workspaceId)
 }
 
-module.exports  = CourseLinkSubscriptions
+export const courseLinkUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(COURSE_LINK_UPDATED),
+    (payload, variables) => payload.courseLinkUpdated.workspaceId === variables.workspaceId)
+}
+
+export const courseLinkDeleted = {
+  subscribe: withFilter(() => pubsub.asyncIterator(COURSE_LINK_DELETED),
+    (payload, variables) => payload.courseLinkDeleted.workspaceId === variables.workspaceId)
+}

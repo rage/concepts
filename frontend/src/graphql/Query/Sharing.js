@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
 const PEEK_SHARE_LINK = gql`
 query peekShareLink($token: ID!) {

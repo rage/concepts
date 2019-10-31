@@ -82,11 +82,11 @@ const Concept = ({
   const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
-    update: cache.createConceptLinkUpdate(activeCourseId)
+    update: cache.createConceptLinkUpdate()
   })
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: cache.deleteConceptUpdate
+    update: cache.deleteConceptUpdate()
   })
 
   const ownType = isActive ? 'concept-circle-active' : 'concept-circle'
@@ -114,7 +114,11 @@ const Concept = ({
               frozen: false,
               to: {
                 __typename: 'Concept',
-                id: isActive ? concept.id : addingLink.id
+                id: isActive ? concept.id : addingLink.id,
+                course: {
+                  __typename: 'Course',
+                  id: isActive ? activeCourseId : addingLink.courseId
+                }
               },
               from: {
                 __typename: 'Concept',

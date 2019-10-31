@@ -1,16 +1,29 @@
-const { pubsub } = require('./config')
-const { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } = require('./config/channels')
+import { withFilter } from 'graphql-subscriptions'
 
-const WorkspaceSubscriptions = {
-  workspaceCreated: {
-    subscribe: () => pubsub.asyncIterator(WORKSPACE_CREATED)
-  },
-  workspaceUpdated: {
-    subscribe: () => pubsub.asyncIterator(WORKSPACE_UPDATED)
-  },
-  workspaceDeleted: {
-    subscribe: () => pubsub.asyncIterator(WORKSPACE_DELETED)
-  }
+import { pubsub } from './config'
+import { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } from './config/channels'
+
+export const projectWorkspaceCreated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_CREATED),
+    (payload, variables) => payload.workspaceCreated.pId === variables.projectId)
 }
 
-module.exports = WorkspaceSubscriptions
+export const workspaceUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
+    (payload, variables) => payload.workspaceUpdated.workspaceId === variables.workspaceId)
+}
+
+export const workspaceDeleted = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_DELETED),
+    (payload, variables) => payload.workspaceDeleted.workspaceId === variables.workspaceId)
+}
+
+export const projectWorkspaceUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
+    (payload, variables) => payload.workspaceUpdated.pId === variables.projectId)
+}
+
+export const projectWorkspaceDeleted = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_DELETED),
+    (payload, variables) => payload.workspaceDeleted.pId === variables.projectId)
+}

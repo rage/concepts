@@ -76,25 +76,28 @@ const deleteCourseUpdate = (workspaceId, activeCourseId) =>
     } catch (e) {
       console.error('deleteCourseUpdate', e)
     }
-    // Update course prerequisites
-    try {
-      const dataInStore = store.readQuery({
-        query: COURSE_PREREQUISITES,
-        variables: { courseId: activeCourseId }
-      })
-      const deletedCourse = response.data.deleteCourse
-      const courseLinks = dataInStore.courseAndPrerequisites.linksToCourse
-      if (includedIn(courseLinks.map(l => l.from), deletedCourse)) {
-        dataInStore.courseAndPrerequisites.linksToCourse = courseLinks
-          .filter(link => link.from.id !== deletedCourse.id)
-        client.writeQuery({
+
+    if (activeCourseId) {
+      // Update course prerequisites
+      try {
+        const dataInStore = store.readQuery({
           query: COURSE_PREREQUISITES,
-          variables: { workspaceId, courseId: activeCourseId },
-          data: dataInStore
+          variables: { courseId: activeCourseId }
         })
+        const deletedCourse = response.data.deleteCourse
+        const courseLinks = dataInStore.courseAndPrerequisites.linksToCourse
+        if (includedIn(courseLinks.map(l => l.from), deletedCourse)) {
+          dataInStore.courseAndPrerequisites.linksToCourse = courseLinks
+            .filter(link => link.from.id !== deletedCourse.id)
+          client.writeQuery({
+            query: COURSE_PREREQUISITES,
+            variables: { workspaceId, courseId: activeCourseId },
+            data: dataInStore
+          })
+        }
+      } catch (e) {
+        console.error('deleteCourseUpdate', e)
       }
-    } catch (e) {
-      console.error('deleteCourseUpdate', e)
     }
   }
 

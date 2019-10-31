@@ -33,10 +33,8 @@ const PrerequisiteContainer = ({
   const classes = useStyles()
   const infoBox = useInfoBox()
 
-  const orderedCourseLinks = useMemo(() => sortedCourses({
-    courses: courseLinks,
-    courseOrder
-  }, courseLink => courseLink.from.id), [courseLinks, courseOrder])
+  const orderedCourseLinks = useMemo(() => sortedCourses(courseLinks, courseOrder,
+    courseLink => courseLink.from.id), [courseLinks, courseOrder])
 
   return <>
     <DividerWithText

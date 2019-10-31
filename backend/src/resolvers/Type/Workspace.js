@@ -1,34 +1,32 @@
-const { Privilege } = require('../../util/accessControl')
-const { makeTypeResolvers } = require('./typeutil')
+import { Privilege } from '../../util/accessControl'
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  Workspace: makeTypeResolvers('workspace', [
-    'participants',
-    'sourceProject',
-    'asTemplate',
-    'courses',
-    'conceptLinks',
-    'courseLinks',
-    'concepts',
-    'clones',
-    'mainCourse',
-    'courseTags',
-    'conceptTags',
-    {
-      name: 'pointGroups',
-      checkPrivilegeArgs: root => ({
-        minimumPrivilege: Privilege.EDIT,
-        workspaceId: root.id
-      }),
-      insufficientPrivilegeValue: () => []
-    },
-    {
-      name: 'tokens',
-      checkPrivilegeArgs: root => ({
-        minimumPrivilege: Privilege.OWNER,
-        workspaceId: root.id
-      }),
-      insufficientPrivilegeValue: () => []
-    }
-  ])
-}
+export const Workspace = makeTypeResolvers('workspace', [
+  'participants',
+  'sourceProject',
+  'asTemplate',
+  'courses',
+  'conceptLinks',
+  'courseLinks',
+  'concepts',
+  'clones',
+  'mainCourse',
+  'courseTags',
+  'conceptTags',
+  {
+    name: 'pointGroups',
+    checkPrivilegeArgs: root => ({
+      minimumPrivilege: Privilege.EDIT,
+      workspaceId: root.id
+    }),
+    insufficientPrivilegeValue: () => []
+  },
+  {
+    name: 'tokens',
+    checkPrivilegeArgs: root => ({
+      minimumPrivilege: Privilege.OWNER,
+      workspaceId: root.id
+    }),
+    insufficientPrivilegeValue: () => []
+  }
+])

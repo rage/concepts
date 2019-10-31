@@ -78,7 +78,7 @@ const JoinView = ({ token }) => {
   } else if (peek.error) {
     return dialog(
       <Dialog open onClose={handleClose}>
-        <DialogTitle>{type[0].toUpperCase()}{type.slice(1)} not found</DialogTitle>
+        <DialogTitle>{type.toTitleCase()} not found</DialogTitle>
         <DialogContentText>
           Please ask for a new share link.
         </DialogContentText>

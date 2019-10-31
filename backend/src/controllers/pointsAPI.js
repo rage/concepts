@@ -1,5 +1,5 @@
-const { userDetails } = require('../util/tmcAuthentication')
-const { prisma } = require('../../schema/generated/prisma-client')
+import { userDetails } from '../util/tmcAuthentication'
+import { prisma } from '../../schema/generated/prisma-client'
 
 const HEADER_PREFIX = 'Bearer '.toLowerCase()
 
@@ -53,4 +53,4 @@ const pointsAPI = async (req, res) => {
   return res.json(data.project?.activeTemplate?.pointGroups?.map(convertPointGroup) || [])
 }
 
-module.exports = pointsAPI
+export default pointsAPI

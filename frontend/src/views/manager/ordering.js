@@ -21,13 +21,11 @@ const internalSortConcepts = (concepts, method, order) => {
   }
 }
 
-export const sortedConcepts = (course, method = null) => {
-  const isOrdered = course.conceptOrder.length === 1
-    && course.conceptOrder[0].startsWith('__ORDER_BY__')
-  const concepts = course.concepts.slice()
-  const conceptOrder = course.conceptOrder
-  method = method || (isOrdered ? course.conceptOrder[0].substr('__ORDER_BY__'.length) : 'CUSTOM')
-  return internalSortConcepts(concepts, method, conceptOrder)
+export const sortedConcepts = (concepts, order, method = null) => {
+  const isOrdered = order.length === 1 && order[0].startsWith('__ORDER_BY__')
+  concepts = concepts.slice()
+  method = method || (isOrdered ? order[0].substr('__ORDER_BY__'.length) : 'CUSTOM')
+  return internalSortConcepts(concepts, method, order)
 }
 
 const internalSortCourses = (courses = [], order = [], keyCallback = course => course.id) => order
@@ -38,5 +36,5 @@ const internalSortCourses = (courses = [], order = [], keyCallback = course => c
   .filter(course => course !== null)
   .concat(courses)
 
-export const sortedCourses = (workspace, keyCallback) =>
-  internalSortCourses(workspace.courses.slice(), workspace.courseOrder, keyCallback)
+export const sortedCourses = (courses, order, keyCallback) =>
+  internalSortCourses(courses.slice(), order, keyCallback)

@@ -182,6 +182,7 @@
         "ignoreJSX": "multi-line",
         "nestedBinaryExpressions": false
       }
-    ]
+    ],
+    "require-atomic-updates": ["off"]
   }
 }

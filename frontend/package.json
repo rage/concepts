@@ -12,7 +12,13 @@
     "@material-ui/pickers": "^3.2.4",
     "@sentry/browser": "^5.7.1",
     "ajv": "^6.10.1",
-    "apollo-boost": "^0.4.0",
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.13",
+    "apollo-link-error": "^1.1.12",
+    "apollo-link-http": "^1.5.16",
+    "apollo-link-state": "^0.4.2",
+    "apollo-link-ws": "^1.0.19",
     "chroma-js": "^2.0.4",
     "customize-cra": "^0.7.0",
     "cytoscape": "^3.9.0",
@@ -20,6 +26,7 @@
     "cytoscape-popper": "^1.0.4",
     "fast-levenshtein": "^2.0.6",
     "graphql": "^14.3.0",
+    "graphql-tag": "^2.10.1",
     "moment": "^2.24.0",
     "qs": "^6.9.0",
     "react": "^16.8.6",
@@ -33,6 +40,7 @@
     "react-select": "^3.0.4",
     "react-sortable-hoc": "^1.10.1",
     "react-window": "^1.8.1",
+    "subscriptions-transport-ws": "^0.9.16",
     "tippy.js": "^4.3.5",
     "tmc-client-js": "^0.0.9"
   },
@@ -56,7 +64,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000",
+  "proxy": "http://backend:4000",
   "devDependencies": {
     "color-contrast-checker": "^1.5.0",
     "eslint-plugin-import": "^2.18.0",

@@ -1,38 +1,6 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
 
-const COURSES_FOR_WORKSPACE_FRAGMENT = gql`
-fragment coursesForWorkspace on Workspace {
-  id
-  courseOrder
-  courses {
-    id
-    name
-    linksToCourse {
-      from {
-        id
-      }
-    }
-    conceptOrder
-    concepts {
-      id
-      name
-      description
-      course {
-        id
-      }
-      linksToConcept {
-        from {
-          id
-          name
-          course {
-            id
-          }
-        }
-      }
-    }
-  }
-}
-`
+import { COURSES_FOR_WORKSPACE_FRAGMENT } from '../Fragment'
 
 const WORKSPACES_FOR_USER = gql`
 query workspacesForUser {
@@ -92,6 +60,9 @@ query workspaceById($id: ID!) {
         description
         official
         frozen
+        course {
+          id
+        }
         tags {
           id
           name

@@ -1,4 +1,4 @@
-const { checkPrivilege } = require('../../util/accessControl')
+import { checkPrivilege } from '../../util/accessControl'
 
 const makeTypeResolver = (type, field) => {
   // We return Object.values({...}) instead of an array
@@ -28,4 +28,4 @@ const makeTypeResolver = (type, field) => {
 const makeTypeResolvers = (type, fields) =>
   Object.fromEntries(fields.map(field => makeTypeResolver(type, field)))
 
-module.exports = { makeTypeResolvers }
+export default makeTypeResolvers

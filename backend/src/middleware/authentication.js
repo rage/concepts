@@ -6,10 +6,18 @@ import { Role } from '../util/accessControl'
 export const authenticate = async (resolve, root, args, context, info) => {
   const prisma = context.prisma
 
-  if (context.user || !context.request) {
+  if (context.user) {
     return await resolve(root, args, context, info)
   }
-  const rawToken = context.request.header('Authorization')
+
+  let rawToken
+  if (context.request === undefined) {
+    // WebSocket
+    rawToken = context.connection.context.token
+  } else {
+    // HTTP
+    rawToken = context.request.header('Authorization')
+  }
 
   if (!rawToken) {
     context.role = Role.VISITOR

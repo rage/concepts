@@ -5,7 +5,12 @@ const target = process.env.PROXY || require('../package.json').proxy
 const prismaTarget = process.env.PRISMA_PROXY
 
 module.exports = app => {
-  app.use(proxy('/graphql', { target, changeOrigin: true, ws: true }))
+  app.use(proxy('/graphql', { target, changeOrigin: true }))
+  app.use(proxy('/subscription', {
+    target: target.replace('http', 'ws'),
+    changeOrigin: true,
+    ws: true
+  }))
   app.use(proxy('/playground', { target, changeOrigin: true }))
   app.use(proxy('/api', { target, changeOrigin: true }))
   if (prismaTarget) {

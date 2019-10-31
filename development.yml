@@ -16,6 +16,7 @@ services:
       - ./frontend:/concepts/frontend
       - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
       - ./backend/src/util/permissions.js:/concepts/backend/src/util/permissions.js
+      - ./backend/src/util/titleCase.js:/concepts/backend/src/util/titleCase.js
     depends_on:
       - backend
     deploy:
@@ -37,6 +38,8 @@ services:
       #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka_test_metadata_signed.xml
       #SAML_DIR: /concepts/backend/saml
       #SAML_FINISH_URL: https://concepts.cs.helsinki.fi/login
+    ports:
+      - 8081:4000
     volumes:
       - ./backend:/concepts/backend
     depends_on:

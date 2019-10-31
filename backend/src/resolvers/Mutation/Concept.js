@@ -77,101 +77,102 @@ const updatePointGroups = async (pointGroups, context) => {
 const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
   && conceptOrder[0].startsWith('__ORDER_BY__')
 
-const ConceptMutations = {
-  async createConcept(root, {
-    name, description, official, frozen,
-    courseId, workspaceId, tags
-  }, context) {
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.EDIT,
-      workspaceId
-    })
+export const createConcept = async (root, {
+  name, description, official, frozen,
+  courseId, workspaceId, tags
+}, context) => {
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
 
-    if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
-    const createdConcept = await context.prisma.createConcept({
-      name,
-      createdBy: { connect: { id: context.user.id } },
-      workspace: { connect: { id: workspaceId } },
-      description,
-      official: Boolean(official),
-      frozen: Boolean(frozen),
-      course: courseId ? { connect: { id: courseId } } : undefined,
-      tags: { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
-    })
+  if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
+  const createdConcept = await context.prisma.createConcept({
+    name,
+    createdBy: { connect: { id: context.user.id } },
+    workspace: { connect: { id: workspaceId } },
+    description,
+    official: Boolean(official),
+    frozen: Boolean(frozen),
+    course: courseId ? { connect: { id: courseId } } : undefined,
+    tags: { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
+  })
 
-    if (createdConcept) {
-      const pointGroups = await findPointGroups(workspaceId, courseId, context)
-      if (pointGroups && pointGroups.length > 0) {
-        await updatePointGroups(pointGroups, context)
+  if (createdConcept) {
+    const pointGroups = await findPointGroups(workspaceId, courseId, context)
+    if (pointGroups && pointGroups.length > 0) {
+      await updatePointGroups(pointGroups, context)
+    }
+  }
+
+  const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
+  if (!isAutomaticSorting(conceptOrder)) {
+    await context.prisma.updateCourse({
+      where: { id: courseId },
+      data: {
+        conceptOrder: { set: conceptOrder.concat([createdConcept.id]) }
       }
-    }
-
-    const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
-    if (!isAutomaticSorting(conceptOrder)) {
-      await context.prisma.updateCourse({
-        where: { id: courseId },
-        data: {
-          conceptOrder: { set: conceptOrder.concat([createdConcept.id]) }
-        }
-      })
-    }
-
-    pubsub.publish(CONCEPT_CREATED, { conceptCreated: createdConcept })
-    return createdConcept
-  },
-
-  async updateConcept(root, { id, name, description, official, tags, frozen }, context) {
-    const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
-    await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.EDIT,
-      workspaceId
     })
+  }
 
-    const oldConcept = await context.prisma.concept({ id })
+  pubsub.publish(CONCEPT_CREATED, { conceptCreated: { ...createdConcept, workspaceId } })
+  return createdConcept
+}
 
-    if (oldConcept.frozen && frozen !== false)
-      throw new ForbiddenError('This concept is frozen')
-    if ((official !== undefined && official !== oldConcept.official)
+export const updateConcept = async (root, {
+  id, name, description, official, tags, frozen
+}, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+
+  const oldConcept = await context.prisma.concept({ id })
+
+  if (oldConcept.frozen && frozen !== false)
+    throw new ForbiddenError('This concept is frozen')
+  if ((official !== undefined && official !== oldConcept.official)
         || (frozen || oldConcept.frozen)) {
-      await checkAccess(context, {
-        minimumRole: Role.STAFF,
-        workspaceId
-      })
-    }
-
-    const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
-    const oldTags = await context.prisma.concept({ id }).tags()
-
-    const data = {
-      tags: await filterTags(tags, oldTags, workspaceId, context, 'conceptTags'),
-      official: Boolean(official),
-      frozen: Boolean(frozen)
-    }
-
-    if (description !== undefined) data.description = description
-    if (name !== undefined) {
-      if (!belongsToTemplate && name !== oldConcept.name) data.official = false
-      data.name = name
-    }
-
-    const updateData = await context.prisma.updateConcept({
-      where: { id },
-      data
-    })
-    pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: { ...data, id } })
-    return updateData
-  },
-
-  async deleteConcept(root, { id }, context) {
-    const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
     await checkAccess(context, {
-      minimumRole: Role.GUEST,
-      minimumPrivilege: Privilege.EDIT,
+      minimumRole: Role.STAFF,
       workspaceId
     })
-    const toDelete = await context.prisma.concept({ id }).$fragment(`
+  }
+
+  const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
+  const oldTags = await context.prisma.concept({ id }).tags()
+
+  const data = {
+    tags: await filterTags(tags, oldTags, workspaceId, context, 'conceptTags'),
+    official: Boolean(official),
+    frozen: Boolean(frozen)
+  }
+
+  if (description !== undefined) data.description = description
+  if (name !== undefined) {
+    if (!belongsToTemplate && name !== oldConcept.name) data.official = false
+    data.name = name
+  }
+
+  const updateData = await context.prisma.updateConcept({
+    where: { id },
+    data
+  })
+  pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: { ...updateData, workspaceId } })
+  return updateData
+}
+
+export const deleteConcept = async (root, { id }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+  const toDelete = await context.prisma.concept({ id }).$fragment(`
       fragment ConceptWithCourse on Concept {
         id
         frozen
@@ -181,24 +182,23 @@ const ConceptMutations = {
         }
       }
     `)
-    if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
-    await context.prisma.deleteConcept({ id })
+  if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
+  await context.prisma.deleteConcept({ id })
 
-    const conceptOrder = toDelete.course.conceptOrder
-    if (!isAutomaticSorting(conceptOrder)) {
-      await context.prisma.updateCourse({
-        where: { id: toDelete.course.id },
-        data: {
-          conceptOrder: { set: conceptOrder.filter(conceptId => conceptId !== id) }
-        }
-      })
-    }
-    pubsub.publish(CONCEPT_DELETED, { conceptDeleted: toDelete })
-    return {
-      id: toDelete.id,
-      courseId: toDelete.course.id
-    }
+  const conceptOrder = toDelete.course.conceptOrder
+  if (!isAutomaticSorting(conceptOrder)) {
+    await context.prisma.updateCourse({
+      where: { id: toDelete.course.id },
+      data: {
+        conceptOrder: { set: conceptOrder.filter(conceptId => conceptId !== id) }
+      }
+    })
+  }
+  pubsub.publish(CONCEPT_DELETED, {
+    conceptDeleted: { id: toDelete.id, courseId: toDelete.course.id, workspaceId }
+  })
+  return {
+    id: toDelete.id,
+    courseId: toDelete.course.id
   }
 }
-
-export default ConceptMutations

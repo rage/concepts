@@ -11,14 +11,16 @@ const createConceptUpdate = workspaceId => (store, response) => {
       id: addedConcept.course.id,
       fragment: COURSE_PREREQ_FRAGMENT
     })
-    store.writeFragment({
-      id: addedConcept.course.id,
-      fragment: COURSE_PREREQ_FRAGMENT,
-      data: {
-        ...course,
-        concepts: [...course.concepts, addedConcept]
-      }
-    })
+    if (!includedIn(course.concepts, addedConcept)) {
+      store.writeFragment({
+        id: addedConcept.course.id,
+        fragment: COURSE_PREREQ_FRAGMENT,
+        data: {
+          ...course,
+          concepts: [...course.concepts, addedConcept]
+        }
+      })
+    }
   } catch (e) {
     console.error('createConceptUpdate', e)
   }
@@ -46,7 +48,7 @@ const createConceptUpdate = workspaceId => (store, response) => {
   }
 }
 
-const deleteConceptUpdate = (store, response) => {
+const deleteConceptUpdate = workspaceId => (store, response) => {
   try {
     const deletedConcept = response.data.deleteConcept
     const course = store.readFragment({
@@ -64,25 +66,25 @@ const deleteConceptUpdate = (store, response) => {
   } catch (e) {
     console.error('deleteConceptUpdate', e)
   }
-}
 
-const deleteConceptFromByIdUpdate = (store, response, workspaceId) => {
-  try {
-    const dataInStore = store.readQuery({
-      query: WORKSPACE_BY_ID,
-      variables: { id: workspaceId }
-    })
-    const deletedConcept = response.data.deleteConcept
-    const courseId = deletedConcept.courseId
-    const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
-    course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
-    client.writeQuery({
-      query: WORKSPACE_BY_ID,
-      variables: { id: workspaceId },
-      data: dataInStore
-    })
-  } catch (e) {
-    console.error('deleteConceptFromByIdUpdate', e)
+  if (workspaceId) {
+    try {
+      const dataInStore = store.readQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId }
+      })
+      const deletedConcept = response.data.deleteConcept
+      const courseId = deletedConcept.courseId
+      const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
+      course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+      client.writeQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId },
+        data: dataInStore
+      })
+    } catch (e) {
+      console.error('deleteConceptFromByIdUpdate', e)
+    }
   }
 }
 
@@ -126,7 +128,6 @@ const updateConceptUpdate = workspaceId => (store, response) => {
 
 export {
   deleteConceptUpdate,
-  deleteConceptFromByIdUpdate,
   updateConceptUpdate,
   createConceptUpdate
 }

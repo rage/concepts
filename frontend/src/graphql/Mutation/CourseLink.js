@@ -1,76 +1,36 @@
-import { gql } from 'apollo-boost'
+import gql from 'graphql-tag'
+
+import {
+  CREATE_COURSE_LINK_FRAGMENT,
+  UPDATE_COURSE_LINK_FRAGMENT,
+  DELETE_COURSE_LINK_FRAGMENT
+} from '../Fragment'
 
 const CREATE_COURSE_LINK = gql`
 mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean) {
   createCourseLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official) {
-    id
-    official
-    frozen
-    from {
-      id
-      name
-      official
-      frozen
-      tags {
-        id
-        name
-        type
-        priority
-      }
-      conceptOrder
-      concepts {
-        id
-        name
-        description
-        official
-        frozen
-        course {
-          id
-        }
-        tags {
-          id
-          name
-          type
-          priority
-        }
-        linksToConcept {
-          id
-          official
-          frozen
-          from {
-            id
-          }
-        }
-        linksFromConcept {
-          id
-          official
-          frozen
-          to {
-            id
-          }
-        }
-      }
-    }
+    ...createCourseLinkData
   }
 }
+${CREATE_COURSE_LINK_FRAGMENT}
 `
 
 const UPDATE_COURSE_LINK = gql`
 mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean) {
   updateCourseLink(id: $id, official: $official, frozen: $frozen) {
-    id
-    official
-    frozen
+    ...updateCourseLinkData
   }
-} 
+}
+${UPDATE_COURSE_LINK_FRAGMENT}
 `
 
 const DELETE_COURSE_LINK = gql`
 mutation deleteCourseLink($id: ID!) {
   deleteCourseLink(id: $id) {
-    id
+    ...deleteCourseLinkData
   }
 }
+${DELETE_COURSE_LINK_FRAGMENT}
 `
 
 export {

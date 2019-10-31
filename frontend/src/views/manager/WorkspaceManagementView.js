@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { Typography, Paper } from '@material-ui/core'
 
-import { WORKSPACE_BY_ID } from '../../graphql/Query'
-import NotFoundView from '../error/NotFoundView'
 import { useMessageStateValue } from '../../lib/store'
-import CourseList from './CourseList'
-import ConceptList from './ConceptList'
+import useRouter from '../../lib/useRouter'
+import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import {
-  CREATE_CONCEPT,
-  CREATE_COURSE,
-  DELETE_CONCEPT,
-  DELETE_COURSE,
-  UPDATE_CONCEPT,
-  UPDATE_COURSE,
+  CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE,
   UPDATE_WORKSPACE
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
-import LoadingBar from '../../components/LoadingBar'
+import {
+  useUpdatingSubscription,
+  useManyUpdatingSubscriptions
+} from '../../apollo/useUpdatingSubscription'
 import { useInfoBox } from '../../components/InfoBox'
-import useRouter from '../../lib/useRouter'
+import LoadingBar from '../../components/LoadingBar'
+import NotFoundView from '../error/NotFoundView'
+import CourseList from './CourseList'
+import ConceptList from './ConceptList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -79,6 +78,14 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const infoBox = useInfoBox()
   const { history } = useRouter()
 
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId }
+  })
+
+  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
+    variables: { workspaceId }
+  })
+
   useEffect(() => {
     infoBox.setView('manager')
     return () => infoBox.unsetView('manager')
@@ -103,10 +110,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
     update: cache.updateConceptUpdate(workspaceId)
   })
   const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: (store, response) => {
-      cache.deleteConceptUpdate(store, response)
-      cache.deleteConceptFromByIdUpdate(store, response, workspaceId)
-    }
+    update: cache.deleteConceptUpdate(workspaceId)
   })
 
   if (workspaceQuery.loading) {

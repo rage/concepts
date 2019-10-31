@@ -9,6 +9,10 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
+import {
+  useManyUpdatingSubscriptions,
+  useUpdatingSubscription
+} from '../../apollo/useUpdatingSubscription'
 
 const cellDimension = {
   width: 50,
@@ -235,6 +239,16 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
   const classes = useStyles()
 
   const infoBox = useInfoBox()
+
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId }
+  })
+
+  useManyUpdatingSubscriptions(
+    ['course', 'concept', 'concept link'],
+    ['create', 'delete', 'update'],
+    { variables: { workspaceId } }
+  )
 
   useEffect(() => {
     infoBox.setView('heatmap')

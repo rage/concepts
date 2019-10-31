@@ -171,11 +171,11 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
   const openCreateCourseDialog = useCreateCourseDialog(workspace.id, user.role >= Role.STAFF)
 
   const createCourseLink = useMutation(CREATE_COURSE_LINK, {
-    update: cache.createCourseLinkUpdate(workspace.id, activeCourseId)
+    update: cache.createCourseLinkUpdate(workspace.id)
   })
 
   const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
-    update: cache.deleteCourseLinkUpdate(workspace.id, activeCourseId)
+    update: cache.deleteCourseLinkUpdate(workspace.id)
   })
 
   const handleKeywordInput = (e) => {
@@ -184,9 +184,9 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
 
   const filterKeywordLowercase = filterKeyword.toLowerCase()
 
-  const orderedCourses = useMemo(() => sortedCourses(workspace)
+  const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder)
     .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase)),
-  [filterKeywordLowercase, workspace, workspace.courses, workspace.courseOrder])
+  [filterKeywordLowercase, workspace.courses, workspace.courseOrder])
 
   return (
     <Paper elevation={0} className={classes.root}>
