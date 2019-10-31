@@ -1,0 +1,32 @@
+[
+  {
+    "name": "REMEMBER",
+    "type": "bloom",
+    "priority": 0
+  },
+  {
+    "name": "UNDERSTAND",
+    "type": "bloom",
+    "priority": 100
+  },
+  {
+    "name": "APPLY",
+    "type": "bloom",
+    "priority": 200
+  },
+  {
+    "name": "ANALYZE",
+    "type": "bloom",
+    "priority": 300
+  },
+  {
+    "name": "EVALUATE",
+    "type": "bloom",
+    "priority": 400
+  },
+  {
+    "name": "CREATE",
+    "type": "bloom",
+    "priority": 500
+  }
+]

@@ -1,10 +1,8 @@
-const { makeTypeResolvers } = require('./typeutil')
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  ConceptLink: makeTypeResolvers('conceptLink', [
-    'to',
-    'from',
-    'createdBy',
-    'workspace'
-  ])
-}
+export const ConceptLink = makeTypeResolvers('conceptLink', [
+  'to',
+  'from',
+  'createdBy',
+  'workspace'
+])

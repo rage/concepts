@@ -1,9 +1,7 @@
-const { makeTypeResolvers } = require('./typeutil')
+import makeTypeResolvers from './typeutil'
 
-module.exports = {
-  PointGroup: makeTypeResolvers('pointGroup', [
-    'workspace',
-    'course',
-    'completions'
-  ])
-}
+export const PointGroup = makeTypeResolvers('pointGroup', [
+  'workspace',
+  'course',
+  'completions'
+])

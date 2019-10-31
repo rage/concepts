@@ -1,7 +1,7 @@
 import qs from 'qs'
 
 import { prisma } from '../../schema/generated/prisma-client'
-import { signOrCreateUser } from '../resolvers/Mutation/Authentication'
+import { signOrCreateUser } from '../util/createUser'
 import sp from '../saml/serviceProvider'
 import getIDP from '../saml/identityProvider'
 

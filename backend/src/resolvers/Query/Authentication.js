@@ -1,10 +1,6 @@
 import { getClientId } from '../../util/googleAuth'
 import sp, { HAKA_URL } from '../../saml/serviceProvider'
 
-const AuthenticationQueries = {
-  googleClientId: getClientId,
-  hakaLoginUrl: () => sp ? { enabled: true, url: HAKA_URL } : { enabled: false },
-  currentUser: (root, args, context) => context.user
-}
-
-export default AuthenticationQueries
+export const googleClientId = getClientId
+export const hakaLoginUrl = () => sp ? { enabled: true, url: HAKA_URL } : { enabled: false }
+export const currentUser = (_1, _2, { user }) => user

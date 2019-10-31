@@ -62,7 +62,8 @@ const MapperLinks = ({
     variables: { courseId }
   })
 
-  const showLink = link => courseLinkMap.has(link.from.course.id) && !collapsedCourseIds.has(link.from.course.id)
+  const showLink = link => courseLinkMap.has(link.from.course.id)
+    && !collapsedCourseIds.has(link.from.course.id)
 
   return <div style={{ display: 'contents' }}>
     {linkQuery.data.linksInCourse?.concepts.map(concept =>
