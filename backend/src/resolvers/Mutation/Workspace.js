@@ -149,6 +149,7 @@ export const createTemplateWorkspace = async (root, { name, projectId }, context
   pubsub.publish(WORKSPACE_CREATED, {
     createdWorkspace: { pId: projectId, ...createdTemplateWorkspace }
   })
+  return createdTemplateWorkspace
 }
 
 export const deleteTemplateWorkspace = async (root, { id }, context) => {
