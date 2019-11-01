@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   '@keyframes flash': {
     '0%': { borderTopColor: '#f50057' },
     '25%': { borderTopColor: '#f50057' },
-    '100%': { borderTopColor: 'rgba(117, 117, 117, 0.15)' }
+    '100%': { borderTopColor: 'rgba(117, 117, 117, 0.1)' }
   },
   conceptLinkWrapperFlash: {
     '&:before': {
@@ -47,7 +47,7 @@ const useStyles = makeStyles({
   '@keyframes flashWrapper': {
     '0%': { borderRightColor: 'red' },
     '25%': { borderRightColor: 'red' },
-    '100%': { borderRightColor: '#eaeaea' }
+    '100%': { borderRightColor: '#f1f1f1' }
   }
 })
 
