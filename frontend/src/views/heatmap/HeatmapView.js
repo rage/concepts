@@ -244,8 +244,20 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     variables: { workspaceId }
   })
 
+  useUpdatingSubscription('concept link', 'create', {
+    variables: { workspaceId },
+    update: (client, response) => {
+      const { createConceptLink } = response.data
+      const store = client.readQuery({
+        query: WORKSPACE_COURSES_AND_CONCEPTS,
+        variables: { id: workspaceId }
+      })
+    }
+  })
+
+
   useManyUpdatingSubscriptions(
-    ['course', 'concept', 'concept link'],
+    ['course', 'concept'],
     ['create', 'delete', 'update'],
     { variables: { workspaceId } }
   )
