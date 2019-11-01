@@ -174,14 +174,14 @@ const useStyles = makeStyles({
 
       borderWidth: '7px',
       borderStyle: 'solid',
-      borderColor: 'transparent #eaeaea transparent transparent',
+      borderColor: 'transparent #f1f1f1 transparent transparent',
       marginTop: '-7px'
     }
   },
   line: {
     position: 'absolute',
     pointerEvents: 'none',
-    borderTop: '3px solid rgba(117, 117, 117, 0.15)'
+    borderTop: '3px solid rgba(117, 117, 117, 0.1)'
   },
   activeLine: {
     borderTopColor: '#f50057'
