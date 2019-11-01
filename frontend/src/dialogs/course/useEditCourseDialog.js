@@ -5,6 +5,7 @@ import cache from '../../apollo/update'
 import { useDialog } from '../DialogProvider'
 import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
+import generateTempId from '../../lib/generateTempId'
 
 const useEditCourseDialog = (workspaceId, isStaff) => {
   const { openDialog } = useDialog()
@@ -25,7 +26,12 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
       name,
       official,
       frozen,
-      tags: tags.map(tag => ({ ...tag, __typename: 'Tag' }))
+      tags: tags.map(tag => ({
+        ...tag,
+        id: tag.id || generateTempId(),
+        priority: tag.priority || 0,
+        __typename: 'Tag'
+      }))
     }
   })
 
