@@ -7,17 +7,22 @@ const simpleSingleSplit = (str, separator) => {
 }
 
 const parsePathPart = (obj, key) => {
-  if (obj[key] === undefined) obj[key] = {}
   const openingBracket = key.indexOf('[')
   if (openingBracket >= 0 && key.endsWith(']')) {
     if (openingBracket > 0) {
-      obj = obj[key.substr(0, openingBracket)]
+      const preKey = key.substr(0, openingBracket)
+      if (!obj.hasOwnProperty(preKey)) {
+        return undefined
+      }
+      obj = obj[preKey]
     }
     key = key.slice(openingBracket + 1, -1)
     const [path, expectedValue] = simpleSingleSplit(key, '=')
     if (expectedValue !== null) {
       return obj.find(data => get(data, path) === expectedValue)
     }
+  } else if (!obj.hasOwnProperty(key)) {
+    return undefined
   }
   return obj[key]
 }
