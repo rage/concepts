@@ -306,8 +306,9 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
         query: WORKSPACE_COURSES_AND_CONCEPTS,
         variables: { id: workspaceId }
       })
-
-      const path = `workspaceById.courses:${createConceptLink.to.course.id}.concepts:${createConceptLink.to.id}.linksToConcept`
+      const courseId = createConceptLink.to.course.id
+      const conceptId = createConceptLink.to.id
+      const path = `workspaceById.courses:${courseId}.concepts:${conceptId}.linksToConcept`
       addToDictionary(data, path, createConceptLink)
 
       client.writeQuery({
