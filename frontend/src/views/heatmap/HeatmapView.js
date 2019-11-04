@@ -279,9 +279,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       const courseId = createConceptLink.to.course.id
       const conceptId = createConceptLink.to.id
       const path = `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}].linksToConcept`
-      console.log(createConceptLink)
-      console.log(objectRecursion.push(data, path, createConceptLink))
-      console.log(data)
+      objectRecursion.push(data, path, createConceptLink)
 
       client.writeQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
