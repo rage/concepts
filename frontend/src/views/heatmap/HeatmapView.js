@@ -259,6 +259,44 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     return obj
   }
 
+  const deleteFromDictionary = (obj, path, filter_method) => {
+    const pList = path.split('.')
+    const key = pList.pop()
+    const pointer = pList.reduce((accumulator, currentValue) => {
+      if (accumulator[currentValue] === undefined) accumulator[currentValue] = {}
+      if (currentValue.includes(':')) {
+        let [value, id] = currentValue.split(":")
+        return accumulator[value].find(data => data.id === id)
+      }
+      return accumulator[currentValue]
+    }, obj)
+
+    pointer[key] = pointer[key].filter(filter_method)
+    return obj
+  }
+
+  useUpdatingSubscription('concept link', 'delete', {
+    variables: { workspaceId },
+    update: (client, response) => {
+      const { deleteConceptLink } = response.data
+      const data = client.readQuery({
+        query: WORKSPACE_COURSES_AND_CONCEPTS,
+        variables: { id: workspaceId }
+      })
+
+      const path = `workspaceById.courses:${deleteConceptLink.courseId}.concepts:${deleteConceptLink.conceptId}.linksToConcept`
+      deleteFromDictionary(data, path, data => {
+        return data.from.course.id !== deleteConceptLink.courseId
+      })
+    
+      client.writeQuery({
+        query: WORKSPACE_COURSES_AND_CONCEPTS,
+        variables: { id: workspaceId },
+        data
+      })
+    } 
+  })
+
   useUpdatingSubscription('concept link', 'create', {
     variables: { workspaceId },
     update: (client, response) => {
