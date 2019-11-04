@@ -259,7 +259,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     return obj
   }
 
-  const deleteFromDictionary = (obj, path, filter_method) => {
+  const deleteFromDictionary = (obj, path, filterMethod) => {
     const pList = path.split('.')
     const key = pList.pop()
     const pointer = pList.reduce((accumulator, currentValue) => {
@@ -271,7 +271,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       return accumulator[currentValue]
     }, obj)
 
-    pointer[key] = pointer[key].filter(filter_method)
+    pointer[key] = pointer[key].filter(filterMethod)
     return obj
   }
 
@@ -279,14 +279,15 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     variables: { workspaceId },
     update: (client, response) => {
       const { deleteConceptLink } = response.data
+      const { courseId, conceptId } = deleteConceptLink
       const data = client.readQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
         variables: { id: workspaceId }
       })
 
-      const path = `workspaceById.courses:${deleteConceptLink.courseId}.concepts:${deleteConceptLink.conceptId}.linksToConcept`
+      const path = `workspaceById.courses:${courseId}.concepts:${conceptId}.linksToConcept`
       deleteFromDictionary(data, path, data => {
-        return data.from.course.id !== deleteConceptLink.courseId
+        return data.from.course.id !== courseId
       })
     
       client.writeQuery({
