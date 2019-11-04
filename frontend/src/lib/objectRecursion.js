@@ -7,6 +7,9 @@ const simpleSingleSplit = (str, separator) => {
 }
 
 const parsePathPart = (obj, key) => {
+  if (!obj) {
+    return undefined
+  }
   const openingBracket = key.indexOf('[')
   if (openingBracket >= 0 && key.endsWith(']')) {
     if (openingBracket > 0) {
@@ -36,17 +39,21 @@ const parsePath = (obj, path) => {
 
 export const get = (obj, path) => {
   const [pointer, key] = parsePath(obj, path)
-  return pointer[key]
+  return pointer?.[key]
 }
 
 export const appendArray = (obj, path, value) => {
   const [pointer, key] = parsePath(obj, path)
-  pointer[key] = [...pointer[key], value]
+  if (pointer) {
+    pointer[key] = [...pointer[key], value]
+  }
   return obj
 }
 
 export const filterArray = (obj, path, filterMethod) => {
   const [pointer, key] = parsePath(obj, path)
-  pointer[key] = pointer[key].filter(filterMethod)
+  if (pointer) {
+    pointer[key] = pointer[key].filter(filterMethod)
+  }
   return obj
 }
