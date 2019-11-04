@@ -57,7 +57,8 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
     }
   }
 
-  const selectRef = infoBox.ref('manager', 'CREATE_COURSE_THEMES')
+  const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_COURSE_THEMES')
+  const selectRef = useRef(null)
   return (
     <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
       <TextField
@@ -81,7 +82,19 @@ const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', ca
         styles={tagSelectStyles}
         value={input.tags}
         options={tagOptions}
-        ref={elem => action === 'Create' && selectRef(elem?.select?.select?.controlRef)}
+        ref={elem => {
+          if (action === 'Create' && elem?.select?.select) {
+            infoBoxSelectRef(elem.select.select.controlRef)
+            selectRef.current = elem.select.select
+          }
+        }}
+        onMenuOpen={() => {
+          setTimeout(() => {
+            const func = infoBox.secondaryRef('manager', 'CREATE_COURSE_THEMES')
+            func(selectRef.current?.menuListRef)
+          }, 0)
+        }}
+        onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_COURSE_THEMES', true)(null)}
         isMulti
         menuPlacement='auto'
         placeholder='Themes...'
