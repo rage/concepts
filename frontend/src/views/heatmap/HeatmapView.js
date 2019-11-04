@@ -250,7 +250,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     const pointer = pList.reduce((accumulator, currentValue) => {
       if (accumulator[currentValue] === undefined) accumulator[currentValue] = {}
       if (currentValue.includes(':')) {
-        let [value, id] = currentValue.split(":")
+        const [value, id] = currentValue.split(":")
         return accumulator[value].find(data => data.id === id)
       }
       return accumulator[currentValue]
@@ -265,7 +265,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     const pointer = pList.reduce((accumulator, currentValue) => {
       if (accumulator[currentValue] === undefined) accumulator[currentValue] = {}
       if (currentValue.includes(':')) {
-        let [value, id] = currentValue.split(":")
+        const [value, id] = currentValue.split(":")
         return accumulator[value].find(data => data.id === id)
       }
       return accumulator[currentValue]

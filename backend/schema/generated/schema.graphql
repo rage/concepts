@@ -58,7 +58,7 @@ type Mutation {
 
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
-  deleteConceptLink(id: ID!): DeletedConceptLinkItem
+  deleteConceptLink(id: ID!): DeletedConceptLink
 
   # Project mutations
   createProject(name: String!): Project
@@ -108,7 +108,7 @@ type Subscription {
 
   # ConceptLinks subscriptions
   conceptLinkCreated(workspaceId: ID!): ConceptLink!
-  conceptLinkDeleted(workspaceId: ID!): DeletedConceptLinkItem!
+  conceptLinkDeleted(workspaceId: ID!): DeletedConceptLink!
 
   # Courses subscriptions
   courseCreated(workspaceId: ID!): Course!
@@ -160,7 +160,7 @@ type DeletedCourseItem {
   courseId: ID!
 }
 
-type DeletedConceptLinkItem {
+type DeletedConceptLink {
   id: ID!
   courseId: ID!
   conceptId: ID!
