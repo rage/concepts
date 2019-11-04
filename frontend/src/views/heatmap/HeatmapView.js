@@ -249,14 +249,16 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     variables: { workspaceId },
     update: (client, response) => {
       const { deleteConceptLink } = response.data
-      const { courseId, conceptId } = deleteConceptLink
+      const { id, courseId, conceptId } = deleteConceptLink
       const data = client.readQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
         variables: { id: workspaceId }
       })
 
-      const path = `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}].linksToConcept`
-      objectRecursion.filterArray(data, path, data => data.from.course.id !== courseId)
+      const obj = objectRecursion.get(data,
+        `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}]`)
+      obj.linksToConcept = obj.linksToConcept.filter(link =>
+        link.__typename !== 'DeletedConceptLink' || link.id === id)
 
       client.writeQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
@@ -277,7 +279,9 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       const courseId = createConceptLink.to.course.id
       const conceptId = createConceptLink.to.id
       const path = `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}].linksToConcept`
-      objectRecursion.appendArray(data, path, createConceptLink)
+      console.log(createConceptLink)
+      console.log(objectRecursion.push(data, path, createConceptLink))
+      console.log(data)
 
       client.writeQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,

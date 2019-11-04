@@ -1,59 +1,61 @@
 const simpleSingleSplit = (str, separator) => {
   const index = str.indexOf(separator)
   if (index === -1) {
-    return [str, null]
+    return null
   }
   return [str.slice(0, index), str.substr(index + 1)]
 }
 
-const parsePathPart = (obj, key) => {
+const splitPath = path => path.split('.').flatMap(part => {
+  if (part.endsWith(']')) {
+    const start = part.indexOf('[')
+    const subscriptPart = simpleSingleSplit(part.slice(start + 1, -1), '=')
+    if (subscriptPart) {
+      part = part.substr(0, start)
+      return part.length > 0 ? [part, subscriptPart] : [subscriptPart]
+    }
+  }
+  return [part]
+})
+
+const pathReducer = (obj, key) => {
   if (!obj) {
     return undefined
   }
-  const openingBracket = key.indexOf('[')
-  if (openingBracket >= 0 && key.endsWith(']')) {
-    if (openingBracket > 0) {
-      const preKey = key.substr(0, openingBracket)
-      if (!obj.hasOwnProperty(preKey)) {
-        return undefined
-      }
-      obj = obj[preKey]
-    }
-    key = key.slice(openingBracket + 1, -1)
-    const [path, expectedValue] = simpleSingleSplit(key, '=')
-    if (expectedValue !== null) {
-      return obj.find(data => get(data, path) === expectedValue)
-    }
-  } else if (!obj.hasOwnProperty(key)) {
-    return undefined
+  if (Array.isArray(key)) {
+    const [path, expectedValue] = key
+    return obj.find(data => get(data, path) === expectedValue)
   }
   return obj[key]
 }
 
-const parsePath = (obj, path) => {
-  const parts = path.split('.')
-  const key = parts.pop()
-  const pointer = parts.reduce(parsePathPart, obj)
-  return [pointer, key]
-}
-
-export const get = (obj, path) => {
-  const [pointer, key] = parsePath(obj, path)
-  return pointer?.[key]
-}
-
-export const appendArray = (obj, path, value) => {
-  const [pointer, key] = parsePath(obj, path)
-  if (pointer) {
-    pointer[key] = [...pointer[key], value]
+const pathRecurser = (obj, key, finalMutation) => {
+  const part = key.shift()
+  if (key.length === 0) {
+    console.log('Final mutation', obj, part)
+    return finalMutation(obj, part)
+  } else if (Array.isArray(part)) {
+    const [path, expectedValue] = part
+    const index = obj.findIndex(data => get(data, path) === expectedValue)
+    console.log('Recursing into', obj, part, 'index', index)
+    obj[index] = pathRecurser(obj[index], key, finalMutation)
+  } else {
+    console.log('Recursing into', obj, part)
+    obj[part] = pathRecurser(obj[part], key, finalMutation)
   }
   return obj
 }
 
-export const filterArray = (obj, path, filterMethod) => {
-  const [pointer, key] = parsePath(obj, path)
-  if (pointer) {
-    pointer[key] = pointer[key].filter(filterMethod)
+export const get = (obj, path) => splitPath(path).reduce(pathReducer, obj)
+
+export const push = (obj, path, value) => get(obj, path).push(value)
+
+export const del = (obj, path) => pathRecurser(obj, splitPath(path), (obj, key) => {
+  if (Array.isArray(key)) {
+    const [path, expectedValue] = key
+    obj = obj.filter(data => get(data, path) !== expectedValue)
+  } else {
+    delete obj[key]
   }
   return obj
-}
+})
