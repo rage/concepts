@@ -21,9 +21,10 @@ fragment createConceptLinkData on ConceptLink {
 `
 
 const DELETE_CONCEPT_LINK_FRAGMENT = gql`
-fragment deleteConceptLinkData on DeletedCourseItem {
+fragment deleteConceptLinkData on DeletedConceptLink {
   id
   courseId
+  conceptId
 }
 `
 

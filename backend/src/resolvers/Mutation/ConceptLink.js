@@ -41,10 +41,11 @@ export const deleteConceptLink = async (root, args, context) => {
   const frozen = await context.prisma.conceptLink({ id: args.id }).frozen()
   if (frozen) throw new ForbiddenError('This link is frozen')
   const { id: courseId } = await context.prisma.conceptLink({ id: args.id }).to().course()
+  const { id: conceptId } = await context.prisma.conceptLink({ id: args.id }).from()
   await context.prisma.deleteConceptLink({
     id: args.id
   })
-  const data = { id: args.id, courseId }
+  const data = { id: args.id, courseId, conceptId }
   pubsub.publish(CONCEPT_LINK_DELETED, { conceptLinkDeleted: { ...data, workspaceId } })
   return data
 }

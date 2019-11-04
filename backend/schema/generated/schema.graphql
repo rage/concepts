@@ -58,7 +58,7 @@ type Mutation {
 
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
-  deleteConceptLink(id: ID!): DeletedCourseItem
+  deleteConceptLink(id: ID!): DeletedConceptLink
 
   # Project mutations
   createProject(name: String!): Project
@@ -108,7 +108,7 @@ type Subscription {
 
   # ConceptLinks subscriptions
   conceptLinkCreated(workspaceId: ID!): ConceptLink!
-  conceptLinkDeleted(workspaceId: ID!): DeletedCourseItem!
+  conceptLinkDeleted(workspaceId: ID!): DeletedConceptLink!
 
   # Courses subscriptions
   courseCreated(workspaceId: ID!): Course!
@@ -158,6 +158,12 @@ type LimitedProject {
 type DeletedCourseItem {
   id: ID!
   courseId: ID!
+}
+
+type DeletedConceptLink {
+  id: ID!
+  courseId: ID!
+  conceptId: ID!
 }
 
 enum AuthType {
