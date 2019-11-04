@@ -32,15 +32,12 @@ const pathReducer = (obj, key) => {
 const pathRecurser = (obj, key, finalMutation) => {
   const part = key.shift()
   if (key.length === 0) {
-    console.log('Final mutation', obj, part)
     return finalMutation(obj, part)
   } else if (Array.isArray(part)) {
     const [path, expectedValue] = part
     const index = obj.findIndex(data => get(data, path) === expectedValue)
-    console.log('Recursing into', obj, part, 'index', index)
     obj[index] = pathRecurser(obj[index], key, finalMutation)
   } else {
-    console.log('Recursing into', obj, part)
     obj[part] = pathRecurser(obj[part], key, finalMutation)
   }
   return obj
