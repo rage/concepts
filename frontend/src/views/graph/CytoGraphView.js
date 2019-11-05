@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox
+  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography
 } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
@@ -133,6 +133,7 @@ const GraphView = ({ workspaceId }) => {
   const [nextMode, redraw] = useState('courses')
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
+  const [edgesMissing, setEdgesMissing] = useState(true)
   const [legendFilter, setLegendFilter] = useState([])
   const state = useRef({
     network: null,
@@ -402,9 +403,9 @@ const GraphView = ({ workspaceId }) => {
       },
       name: 'klay'
     })
-    loadingRef.current.stopLoading()
+    loadingRef.current.stopLoading('graph-view')
     controlsRef.current.style.display = 'block'
-
+    setEdgesMissing(cur.conceptEdges?.length === 0 || cur.courseEdges?.length === 0)
     cur.conceptLayout.run()
   }
 
@@ -439,8 +440,20 @@ const GraphView = ({ workspaceId }) => {
 
   return <main className={classes.root}>
     <div className={classes.graph} ref={graphRef}>
-      {!state.current.network && <LoadingBar id='graph-view' componentRef={loadingRef} />}
+      {!state.current.network &&
+        <LoadingBar id='graph-view' componentRef={loadingRef} />
+      }
     </div>
+    {edgesMissing && state.current.network &&
+      <div style={{ position: 'absolute', left: '50%', top: '40%' }}>
+        <Typography style={{ width: '260px', marginLeft: '-140px' }} variant='body1'>
+          {`Missing links between ${nextMode === 'courses' ? 'concepts' : 'courses'}.`}
+        </Typography>
+        <Typography style={{ width: '260px', marginLeft: '-140px' }} variant='body1'>
+          Add connections to display graph.
+        </Typography>
+      </div>
+    }
     <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
       <div className={classes.buttonWrapper}>
         <Button
