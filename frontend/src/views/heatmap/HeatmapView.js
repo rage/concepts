@@ -9,6 +9,7 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
+import * as objectRecursion from '../../lib/objectRecursion'
 import {
   useManyUpdatingSubscriptions,
   useUpdatingSubscription
@@ -244,58 +245,27 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
     variables: { workspaceId }
   })
 
-  const addToDictionary = (obj, path, value) => {
-    const pList = path.split('.')
-    const key = pList.pop()
-    const pointer = pList.reduce((accumulator, currentValue) => {
-      if (accumulator[currentValue] === undefined) accumulator[currentValue] = {}
-      if (currentValue.includes(':')) {
-        const [value, id] = currentValue.split(":")
-        return accumulator[value].find(data => data.id === id)
-      }
-      return accumulator[currentValue]
-    }, obj)
-    pointer[key] = [...pointer[key], value]
-    return obj
-  }
-
-  const deleteFromDictionary = (obj, path, filterMethod) => {
-    const pList = path.split('.')
-    const key = pList.pop()
-    const pointer = pList.reduce((accumulator, currentValue) => {
-      if (accumulator[currentValue] === undefined) accumulator[currentValue] = {}
-      if (currentValue.includes(':')) {
-        const [value, id] = currentValue.split(":")
-        return accumulator[value].find(data => data.id === id)
-      }
-      return accumulator[currentValue]
-    }, obj)
-
-    pointer[key] = pointer[key].filter(filterMethod)
-    return obj
-  }
-
   useUpdatingSubscription('concept link', 'delete', {
     variables: { workspaceId },
     update: (client, response) => {
       const { deleteConceptLink } = response.data
-      const { courseId, conceptId } = deleteConceptLink
+      const { id, courseId, conceptId } = deleteConceptLink
       const data = client.readQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
         variables: { id: workspaceId }
       })
 
-      const path = `workspaceById.courses:${courseId}.concepts:${conceptId}.linksToConcept`
-      deleteFromDictionary(data, path, data => {
-        return data.from.course.id !== courseId
-      })
-    
+      const obj = objectRecursion.get(data,
+        `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}]`)
+      obj.linksToConcept = obj.linksToConcept.filter(link =>
+        link.__typename !== 'DeletedConceptLink' && link.id !== id)
+
       client.writeQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
         variables: { id: workspaceId },
         data
       })
-    } 
+    }
   })
 
   useUpdatingSubscription('concept link', 'create', {
@@ -308,8 +278,8 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       })
       const courseId = createConceptLink.to.course.id
       const conceptId = createConceptLink.to.id
-      const path = `workspaceById.courses:${courseId}.concepts:${conceptId}.linksToConcept`
-      addToDictionary(data, path, createConceptLink)
+      const path = `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}].linksToConcept`
+      objectRecursion.push(data, path, createConceptLink)
 
       client.writeQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
@@ -318,7 +288,6 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       })
     }
   })
-
 
   useManyUpdatingSubscriptions(
     ['course', 'concept'],
