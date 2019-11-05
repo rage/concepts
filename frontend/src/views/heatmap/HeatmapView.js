@@ -258,7 +258,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
       const obj = objectRecursion.get(data,
         `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}]`)
       obj.linksToConcept = obj.linksToConcept.filter(link =>
-        link.__typename !== 'DeletedConceptLink' || link.id === id)
+        link.__typename !== 'DeletedConceptLink' && link.id !== id)
 
       client.writeQuery({
         query: WORKSPACE_COURSES_AND_CONCEPTS,
