@@ -1,29 +1,38 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Checkbox, Fade, IconButton, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography,
-  Menu, MenuItem, ListItemIcon
 } from '@material-ui/core'
-import {
-  Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon, MoreVert as MoreVertIcon
-} from '@material-ui/icons'
+import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import ConceptEditor from './ConceptEditor'
 import { Role } from '../../lib/permissions'
 
 const useStyles = makeStyles(theme => ({
-  listItemContainer: {
-    '&:hover $lockIcon': {
-      visibility: 'visible'
-    }
-  },
-  lockIcon: {
+  hoverButton: {
     visibility: 'hidden'
   },
   conceptBody: {
-    paddingRight: '80px'
+    paddingRight: 0,
+    '&$sortable': {
+      paddingRight: '56px'
+    }
   },
+  listItemContainer: {
+    '&:hover': {
+      '& $hoverButton': {
+        visibility: 'visible'
+      },
+      '& $conceptBody': {
+        paddingRight: '104px',
+        '&$sortable': {
+          paddingRight: '160px'
+        }
+      }
+    }
+  },
+  sortable: {},
   conceptName: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -54,7 +63,6 @@ const ConceptListItem = ({
   conceptTags,
   sortable = true
 }) => {
-  const [menuAnchor, setMenuAnchor] = useState(null)
   const classes = useStyles()
   const ItemClass = sortable ? SortableItem : ListItem
 
@@ -63,14 +71,8 @@ const ConceptListItem = ({
     if (window.confirm(msg)) {
       deleteConcept(concept.id)
     }
-    closeMenu()
   }
-  const handleEdit = () => {
-    setEditing(concept.id)
-    closeMenu()
-  }
-  const closeMenu = () => setMenuAnchor(null)
-  const openMenu = evt => setMenuAnchor(evt.currentTarget)
+  const handleEdit = () => setEditing(concept.id)
 
   return (
     <Tooltip
@@ -103,7 +105,7 @@ const ConceptListItem = ({
             tagOptions={conceptTags}
           />
         ) : <>
-          <ListItemText className={classes.conceptBody}>
+          <ListItemText className={`${classes.conceptBody} ${sortable ? classes.sortable : ''}`}>
             <Typography variant='h6' className={classes.conceptName}>
               {concept.name}
             </Typography>
@@ -119,26 +121,19 @@ const ConceptListItem = ({
               />
             ) : <>
               {concept.frozen && user.role < Role.STAFF ? (
-                <IconButton disabled classes={{ root: classes.lockIcon }}>
+                <IconButton disabled classes={{ root: classes.hoverButton }}>
                   <LockIcon />
                 </IconButton>
               ) : <>
-                <IconButton onClick={openMenu}>
-                  <MoreVertIcon />
+                <IconButton
+                  title={concept.frozen ? 'This concept is frozen' : undefined}
+                  disabled={concept.frozen} className={classes.hoverButton} onClick={handleDelete}
+                >
+                  <DeleteIcon />
                 </IconButton>
-                <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-                  <MenuItem
-                    title={concept.frozen ? 'This concept is frozen' : undefined}
-                    disabled={concept.frozen} onClick={handleDelete}
-                  >
-                    <ListItemIcon><DeleteIcon /></ListItemIcon>
-                    Delete
-                  </MenuItem>
-                  <MenuItem onClick={handleEdit}>
-                    <ListItemIcon><EditIcon /></ListItemIcon>
-                    Edit
-                  </MenuItem>
-                </Menu>
+                <IconButton className={classes.hoverButton} onClick={handleEdit}>
+                  <EditIcon />
+                </IconButton>
               </>}
               {sortable && <DragHandle />}
             </>}

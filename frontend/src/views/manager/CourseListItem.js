@@ -1,14 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  IconButton, ListItemIcon, ListItemSecondaryAction, ListItemText, Menu, MenuItem, Typography
-} from '@material-ui/core'
-import {
-  Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon, MoreVert as MoreVertIcon
-} from '@material-ui/icons'
+import { IconButton, ListItemSecondaryAction, ListItemText, Typography } from '@material-ui/core'
+import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
 import { Role } from '../../lib/permissions'
-import { noPropagation } from '../../lib/eventMiddleware'
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
@@ -20,13 +15,16 @@ const useStyles = makeStyles(theme => ({
   listItemDisabled: {
     color: 'rgba(0, 0, 0, 0.26)'
   },
-  lockIcon: {
+  hoverButton: {
     visibility: 'hidden'
   },
   courseButton: {
-    paddingRight: '80px',
-    '&:hover $lockIcon': {
-      visibility: 'visible'
+    paddingRight: '56px',
+    '&:hover': {
+      paddingRight: '160px',
+      '& $hoverButton': {
+        visibility: 'visible'
+      }
     }
   },
   courseName: {
@@ -46,20 +44,13 @@ const CourseListItem = ({
   const classes = useStyles()
   const infoBox = useInfoBox()
 
-  const [menuAnchor, setMenuAnchor] = useState(null)
   const handleDelete = () => {
     const msg = `Are you sure you want to delete the course ${course.name}?`
     if (window.confirm(msg)) {
       deleteCourse(course.id)
     }
-    closeMenu()
   }
-  const handleEdit = () => {
-    setEditing(course.id)
-    closeMenu()
-  }
-  const closeMenu = () => setMenuAnchor(null)
-  const openMenu = evt => setMenuAnchor(evt.currentTarget)
+  const handleEdit = () => setEditing(course.id)
 
   return (
     <SortableItem
@@ -86,25 +77,19 @@ const CourseListItem = ({
         } />
         <ListItemSecondaryAction>
           {course.frozen && user.role < Role.STAFF ? (
-            <IconButton disabled classes={{ root: classes.lockIcon }}>
+            <IconButton disabled classes={{ root: classes.hoverButton }}>
               <LockIcon />
             </IconButton>
           ) : <>
-            <IconButton onClick={noPropagation(openMenu)}>
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={noPropagation(closeMenu)}
+            <IconButton
+              title={course.frozen ? 'This course is frozen' : undefined}
+              disabled={course.frozen} className={classes.hoverButton} onClick={handleDelete}
             >
-              <MenuItem onClick={noPropagation(handleDelete)}>
-                <ListItemIcon><DeleteIcon /></ListItemIcon>
-                Delete
-              </MenuItem>
-              <MenuItem onClick={noPropagation(handleEdit)}>
-                <ListItemIcon><EditIcon /></ListItemIcon>
-                Edit
-              </MenuItem>
-            </Menu>
+              <DeleteIcon />
+            </IconButton>
+            <IconButton className={classes.hoverButton} onClick={handleEdit}>
+              <EditIcon />
+            </IconButton>
           </>}
           <DragHandle />
         </ListItemSecondaryAction>
