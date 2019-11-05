@@ -14,6 +14,7 @@ query($id : ID!) {
     activeTemplate {
       id
       name
+      courseOrder
       conceptLinks {
         official
         frozen
@@ -48,6 +49,7 @@ query($id : ID!) {
         createdBy {
           id
         }
+        conceptOrder
         concepts {
           id
           name
@@ -221,10 +223,15 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
   const workspaceId = makeSecret(25)
   const templateWorkspace = result.project.activeTemplate
   const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
+  const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
+    && conceptOrder[0].startsWith('__ORDER_BY__')
 
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    courseOrder: {
+      set: templateWorkspace.courseOrder.map(makeNewId)
+    },
     sourceProject: {
       connect: { id: projectId }
     },
@@ -247,6 +254,10 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
         frozen: true,
         createdBy: { connect: { id: course.createdBy.id } },
         sourceCourse: { connect: { id: course.id } },
+        conceptOrder:
+          isAutomaticSorting(course.conceptOrder)
+            ? { set: course.conceptOrder }
+            : { set: course.conceptOrder.map(makeNewId) },
         concepts: {
           create: course.concepts.map(concept => ({
             id: makeNewId(concept.id),
