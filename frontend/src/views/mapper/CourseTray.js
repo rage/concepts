@@ -16,7 +16,7 @@ import { useCreateCourseDialog, useEditCourseDialog } from '../../dialogs/course
 import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
-import { sortedCourses } from '../manager/ordering'
+import { sortedCourses } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
