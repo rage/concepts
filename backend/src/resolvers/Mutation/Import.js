@@ -71,6 +71,7 @@ export const importData = async (root, { data }, context) => {
       name: course.name,
       official: canSetOfficial && Boolean(json.projectId || course.official),
       createdBy: { connect: { id: context.user.id } },
+      conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       workspace: { connect: { id: workspace.id } },
       tags: { create: course.tags }
     })
@@ -111,7 +112,7 @@ export const importData = async (root, { data }, context) => {
         createdBy: { connect: { id: context.user.id } },
         official: canSetOfficial && Boolean(json.projectId || prerequisiteCourse.official)
       })
-      ) || [])
+    ) || [])
     // Link concept prerequisite
     for (const concept of course.concepts) {
       for (const prerequisiteConcept of concept.prerequisites || []) {

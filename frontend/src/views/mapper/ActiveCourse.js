@@ -13,7 +13,7 @@ import { useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
 import useRouter from '../../lib/useRouter'
-import { sortedConcepts, sortedCourses } from '../manager/ordering'
+import { sortedConcepts, sortedCourses } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -13,7 +13,7 @@ import MergeDialog from './MergeDialog'
 import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
-import { sortedConcepts } from './ordering'
+import { sortedConcepts } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
