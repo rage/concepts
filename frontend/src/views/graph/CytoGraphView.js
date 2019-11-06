@@ -52,6 +52,15 @@ const useStyles = makeStyles({
     right: '10px',
     position: 'absolute',
     zIndex: 10
+  },
+  noLinksWrapper: {
+    position: 'absolute',
+    left: '50%',
+    top: '40%'
+  },
+  noLinksMessage: {
+    width: '260px',
+    marginLeft: '-140px'
   }
 })
 
@@ -446,11 +455,11 @@ const GraphView = ({ workspaceId }) => {
       }
     </div>
     {edgesMissing &&
-      <div style={{ position: 'absolute', left: '50%', top: '40%' }}>
-        <Typography style={{ width: '260px', marginLeft: '-140px' }} variant='body1'>
+      <div className={classes.noLinksWrapper}>
+        <Typography className={classes.noLinksMessage} variant='body1'>
           {`No links between ${nextMode === 'courses' ? 'concepts' : 'courses'}.`}
         </Typography>
-        <Typography style={{ width: '260px', marginLeft: '-140px' }} variant='body1'>
+        <Typography className={classes.noLinksMessage} variant='body1'>
           Add connections to display graph.
         </Typography>
       </div>
