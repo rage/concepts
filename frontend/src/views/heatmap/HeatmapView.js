@@ -206,6 +206,7 @@ const TableCell = forwardRef(({
       { concepts.length > 0 ?
         <Tooltip
           placement='right'
+          TransitionComponent={({ children }) => children || null}
           classes={{
             tooltip: classes.tooltip,
             popper: classes.popper
