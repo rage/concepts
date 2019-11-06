@@ -3,10 +3,7 @@ import makeSecret from '../../util/secret'
 import bloom from '../../static/bloom'
 import { pubsub } from '../Subscription/config'
 import {
-  WORKSPACE_CREATED,
-  WORKSPACE_UPDATED,
-  WORKSPACE_DELETED,
-  PROJECT_WORKSPACE_CLONED
+  WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
 } from '../Subscription/config/channels'
 
 const workspaceAllDataQuery = `
@@ -149,8 +146,8 @@ export const createTemplateWorkspace = async (root, { name, projectId }, context
       }]
     }
   })
-  pubsub.publish(WORKSPACE_CREATED, {
-    createdWorkspace: { pId: projectId, ...createdTemplateWorkspace }
+  pubsub.publish(PROJECT_WORKSPACE_CREATED, {
+    projectWorkspaceCreated: { pId: projectId, ...createdTemplateWorkspace }
   })
   return createdTemplateWorkspace
 }
@@ -296,8 +293,8 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
       }))
     }
   })
-  pubsub.publish(PROJECT_WORKSPACE_CLONED, {
-    workspaceCloned: { pId: projectId, ...newClonedWorkspace }
+  pubsub.publish(PROJECT_WORKSPACE_CREATED, {
+    projectWorkspaceCreated: { pId: projectId, ...newClonedWorkspace }
   })
   return newClonedWorkspace
 }

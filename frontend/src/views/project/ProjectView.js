@@ -13,12 +13,7 @@ import MergeList from './MergeList'
 import { useLoginStateValue } from '../../lib/store'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
-
-import * as objectRecursion from '../../lib/objectRecursion'
-import {
-  useUpdatingSubscription,
-  useManyUpdatingSubscriptions
-} from '../../apollo/useUpdatingSubscription'
+import { useUpdatingSubscription } from '../../apollo/useUpdatingSubscription'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -80,7 +75,26 @@ const ProjectView = ({ projectId }) => {
   useUpdatingSubscription('project workspace', 'create', {
     variables: { projectId },
     update: (client, response) => {
+      const createdWorkspace = response.data.createProjectWorkspace
+      const data = client.readQuery({
+        query: PROJECT_BY_ID,
+        variables: { id: projectId }
+      })
 
+      let type
+      if (createdWorkspace.asTemplate?.id === projectId) type = 'template'
+      else if (createdWorkspace.asMerge?.id === projectId) type = 'merge'
+      else if (createdWorkspace.sourceProject?.id === projectId) type = 'workspace'
+
+      if (!data.projectById[`${type}s`].find(workspace => workspace.id === createdWorkspace.id)) {
+        data.projectById[`${type}s`].push(createdWorkspace)
+      }
+
+      client.writeQuery({
+        query: PROJECT_BY_ID,
+        variables: { id: projectId },
+        data
+      })
     }
   })
 

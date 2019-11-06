@@ -121,10 +121,10 @@ type Subscription {
   courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
 
   # Workspaces subscriptions
-  projectWorkspaceCloned(projectId: ID!): Workspace!
   projectWorkspaceCreated(projectId: ID!): Workspace!
   projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
   projectWorkspaceDeleted(projectId: ID!): Workspace!
+
   workspaceUpdated(workspaceId: ID!): WorkspaceUpdate!
   workspaceDeleted(workspaceId: ID!): Workspace!
 }

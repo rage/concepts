@@ -1,7 +1,7 @@
 import { withFilter } from 'graphql-subscriptions'
 
 import { pubsub } from './config'
-import { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } from './config/channels'
+import { WORKSPACE_UPDATED, WORKSPACE_DELETED } from './config/channels'
 
 export const workspaceUpdated = {
   subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_UPDATED),
