@@ -6,7 +6,7 @@ import { PROJECT_WORKSPACE_CREATED, PROJECT_WORKSPACE_UPDATED, PROJECT_WORKSPACE
 
 export const projectWorkspaceCloned = {
   subscribe: withFilter(() => pubsub.asyncIterator(PROJECT_WORKSPACE_CLONED),
-    (payload, variables) => payload.workspaceCreated.pId === variables.projectId)
+    (payload, variables) => payload.workspaceCloned.pId === variables.projectId)
 }
 
 export const projectWorkspaceCreated = {

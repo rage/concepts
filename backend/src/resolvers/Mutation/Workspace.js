@@ -297,7 +297,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
     }
   })
   pubsub.publish(PROJECT_WORKSPACE_CLONED, {
-    createdWorkspace: { pId: projectId, ...newClonedWorkspace }
+    workspaceCloned: { pId: projectId, ...newClonedWorkspace }
   })
   return newClonedWorkspace
 }
