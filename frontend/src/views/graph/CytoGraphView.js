@@ -133,7 +133,7 @@ const GraphView = ({ workspaceId }) => {
   const [nextMode, redraw] = useState('courses')
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
-  const [edgesMissing, setEdgesMissing] = useState(true)
+  const [edgesMissing, setEdgesMissing] = useState(false)
   const [legendFilter, setLegendFilter] = useState([])
   const state = useRef({
     network: null,
@@ -368,7 +368,8 @@ const GraphView = ({ workspaceId }) => {
           content.innerHTML = description
           return content
         },
-        trigger: 'manual'
+        trigger: 'manual',
+        duration: [0, 0]
       })
       conceptNode.on('mouseover', () => tippy.show())
       conceptNode.on('mouseout', () => tippy.hide())
@@ -444,10 +445,10 @@ const GraphView = ({ workspaceId }) => {
         <LoadingBar id='graph-view' componentRef={loadingRef} />
       }
     </div>
-    {edgesMissing && state.current.network &&
+    {edgesMissing &&
       <div style={{ position: 'absolute', left: '50%', top: '40%' }}>
         <Typography style={{ width: '260px', marginLeft: '-140px' }} variant='body1'>
-          {`Missing links between ${nextMode === 'courses' ? 'concepts' : 'courses'}.`}
+          {`No links between ${nextMode === 'courses' ? 'concepts' : 'courses'}.`}
         </Typography>
         <Typography style={{ width: '260px', marginLeft: '-140px' }} variant='body1'>
           Add connections to display graph.
