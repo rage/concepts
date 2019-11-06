@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, Button, Checkbox, IconButton, FormControl, Typography
+  Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText,
+  DialogTitle, FormControlLabel, Button, Checkbox, IconButton, FormControl, Typography
 } from '@material-ui/core'
 import {
   NavigateNext as NextIcon, NavigateBefore as PrevIcon
 } from '@material-ui/icons'
+
+import introContent from '../../static/introContent'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -22,13 +25,19 @@ const useStyles = makeStyles(() => ({
 
 const blankState = () => ({
   open: false,
-  actionText: '',
-  content: ['Text one more time', 'Another text', 'This is also text'],
-  title: 'TITLE',
-  type: '',
-  step: 0,
-  maxStep: 3
+  type: 'workspace',
+  step: 0
 })
+
+const IntroDialogContent = ({ currentCardContent }) => (
+  <DialogContent>
+    <DialogTitle>{currentCardContent.title}</DialogTitle>
+    <DialogContentText>{currentCardContent.description}</DialogContentText>
+    {currentCardContent.video && <video controls autoPlay muted width='100%' height='100%'>
+      <source src={currentCardContent.video} type='video/webm' />
+    </video>}
+  </DialogContent>
+)
 
 const IntroDialog = ({ contextRef }) => {
   const [state, setState] = useState(blankState())
@@ -37,6 +46,17 @@ const IntroDialog = ({ contextRef }) => {
   })
   const classes = useStyles()
 
+  const currentIntroContent = state.type ? introContent.types[state.type] : null
+
+  const local = {
+    get hasNext() {
+      return currentIntroContent?.length > state.step + 1
+    },
+    get hasPrev() {
+      return state.step > 0
+    }
+  }
+
   const closeDialog = () => {
     // Other cleanup
     setState({ ...state, open: false })
@@ -44,9 +64,9 @@ const IntroDialog = ({ contextRef }) => {
 
   contextRef.current.closeDialog = closeDialog
 
-  contextRef.current.openDialog = () => {
+  contextRef.current.openDialog = (type) => {
     // Other state changes
-    setState({ ...state, open: true })
+    setState({ ...state, open: true, type })
   }
 
   const showNext = () => {
@@ -56,55 +76,48 @@ const IntroDialog = ({ contextRef }) => {
     setState((prevState) => ({ ...prevState, step: prevState.step - 1 }))
   }
 
+  console.log(currentIntroContent)
+
   return (
-    <MuiDialog open={state.open} onClose={closeDialog}>
-      <DialogTitle>{state.title}</DialogTitle>
-      <DialogContent>
-        {
-          state.content.map((contentText, i) =>
-            <DialogContentText key={i}>
-              {contentText}
-            </DialogContentText>
-          )
-        }
-        <Typography>
-          {state.step}
-        </Typography>
-      </DialogContent>
+    <MuiDialog maxWidth='xl' open={state.open} onClose={closeDialog}>
+      {
+        currentIntroContent && state.type &&
+        <IntroDialogContent currentCardContent={currentIntroContent[state.step]} />
+      }
       <DialogActions>
         <div>
           <IconButton
-            className={`${classes.button} ${state.step === 0 ? classes.invisible : ''}`}
-            onClick={showPrev} disabled={state.step === 0}
+            className={`${classes.button} ${!local.hasPrev ? classes.invisible : ''}`}
+            onClick={showPrev} disabled={!local.hasPrev}
           >
             <PrevIcon />
           </IconButton>
           <IconButton
-            className={`${classes.button} ${state.step === state.maxStep ? classes.invisible : ''}`}
-            onClick={showNext} disabled={state.step === state.maxStep}
+            className={`${classes.button} ${!local.hasNext ? classes.invisible : ''}`}
+            onClick={showNext} disabled={!local.hasNext}
           >
             <NextIcon />
           </IconButton>
-        </div>
-        <FormControl
-          style={{ verticalAlign: 'middle', marginRight: '12px' }}
-          key='Do not show again'
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={inputState.noShowAgain}
-                onChange={evt => setInputState({ ...inputState, noShowAgain: evt.target.checked })}
-                value='Do not show again'
-                color='primary'
-              />
-            }
-            label='Do not show again'
-          />
-        </FormControl>
-        <Button onClick={closeDialog} color='primary'>
+          <FormControl
+            style={{ verticalAlign: 'middle', marginRight: '12px' }}
+            key='Do not show again'
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={inputState.noShowAgain}
+                  onChange={evt => setInputState({ ...inputState, noShowAgain: evt.target.checked })}
+                  value='Do not show again'
+                  color='primary'
+                />
+              }
+              label='Do not show again'
+            />
+          </FormControl>
+          <Button onClick={closeDialog} color='primary'>
           Close
-        </Button>
+          </Button>
+        </div>
       </DialogActions>
     </MuiDialog>
   )
