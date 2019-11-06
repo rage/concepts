@@ -14,6 +14,12 @@ import { useLoginStateValue } from '../../lib/store'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 
+import * as objectRecursion from '../../lib/objectRecursion'
+import {
+  useUpdatingSubscription,
+  useManyUpdatingSubscriptions
+} from '../../apollo/useUpdatingSubscription'
+
 const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
@@ -69,6 +75,13 @@ const ProjectView = ({ projectId }) => {
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
+  })
+
+  useUpdatingSubscription('project workspace', 'create', {
+    variables: { projectId },
+    update: (client, response) => {
+
+    }
   })
 
   useEffect(() => {

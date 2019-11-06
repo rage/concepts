@@ -5,7 +5,8 @@ import { pubsub } from '../Subscription/config'
 import {
   WORKSPACE_CREATED,
   WORKSPACE_UPDATED,
-  WORKSPACE_DELETED
+  WORKSPACE_DELETED,
+  PROJECT_WORKSPACE_CLONED
 } from '../Subscription/config/channels'
 
 const workspaceAllDataQuery = `
@@ -295,7 +296,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
       }))
     }
   })
-  pubsub.publish(WORKSPACE_CREATED, {
+  pubsub.publish(PROJECT_WORKSPACE_CLONED, {
     createdWorkspace: { pId: projectId, ...newClonedWorkspace }
   })
   return newClonedWorkspace

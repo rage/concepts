@@ -1,7 +1,12 @@
 import { withFilter } from 'graphql-subscriptions'
 
 import { pubsub } from './config'
-import { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED } from './config/channels'
+import { WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CLONED} from './config/channels'
+
+export const projectWorkspaceCloned = {
+  subscribe: withFilter(() => pubsub.asyncIterator(PROJECT_WORKSPACE_CLONED),
+    (payload, variables) => payload.workspaceCreated.pId === variables.projectId)
+}
 
 export const projectWorkspaceCreated = {
   subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_CREATED),
