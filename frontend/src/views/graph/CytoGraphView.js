@@ -369,12 +369,20 @@ const GraphView = ({ workspaceId }) => {
 
     // Add tooltip to concept nodes
     cur.network.nodes('node[type="concept"]').forEach(conceptNode => {
+      const name = conceptNode.data('label')
       const description = conceptNode.data('description')
       const nodeRef = conceptNode.popperRef()
       const tippy = new Tippy(nodeRef, {
         content: () => {
           const content = document.createElement('div')
-          content.innerHTML = description
+          const title = document.createElement('h3')
+          const desc = document.createElement('p')
+          title.style.textAlign = 'left'
+          desc.style.textAlign = 'left'
+          title.innerHTML = name
+          desc.innerHTML = description
+          content.appendChild(title)
+          content.appendChild(desc)
           return content
         },
         trigger: 'manual',
