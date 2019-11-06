@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Checkbox, Fade, IconButton, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography
+  Checkbox, IconButton, ListItem, ListItemSecondaryAction, ListItemText, Tooltip, Typography
 } from '@material-ui/core'
 import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
@@ -82,7 +82,7 @@ const ConceptListItem = ({
         tooltip: classes.tooltip,
         popper: classes.popper
       }}
-      TransitionComponent={Fade}
+      TransitionComponent={({ children }) => children || null}
       title={editing !== concept.id ?
         concept.description || 'No description available' : ''}
     >
