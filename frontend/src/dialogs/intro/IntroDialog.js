@@ -4,6 +4,7 @@ import {
   DialogTitle, FormControlLabel, Button, Checkbox, FormControl
 } from '@material-ui/core'
 
+import { useLoginStateValue } from '../../lib/store'
 import introContent from '../../static/introContent'
 
 const mapObject = (obj, func) => Object.fromEntries(Object.entries(obj)
@@ -35,21 +36,49 @@ const IntroDialog = ({ contextRef }) => {
   const [inputState, setInputState] = useState({
     noShowAgain: false
   })
+  const [{ user }, dispatch] = useLoginStateValue()
 
-  const currentCardContent = state.currentView && state.currentGuide ?
+  const currentCardContent = introContent.viewMaps && state.currentView && state.currentGuide ?
     introContent.viewMaps[state.currentView][state.currentGuide] : null
 
   const closeDialog = () => {
+    console.log('introDialog', user)
     // Other cleanup
+    saveViewed(inputState.noShowAgain)
     setState({ open: false })
     setInputState({ noShowAgain: false })
+  }
+
+  const saveViewed = (noShow) => {
+    if (noShow) {
+      // mutate
+    }
+    dispatch({
+      type: 'guideSeen',
+      data: {
+        view: state.currentView,
+        id: state.currentGuide
+      }
+    })
   }
 
   contextRef.current.closeDialog = closeDialog
 
   contextRef.current.openDialog = (currentView, currentGuide) => {
     // Other state changes
-    setState({ ...state, open: true, currentView, currentGuide })
+    const trimmedCurrView = currentView.slice(1, -1)
+    const hasSeenGuide = user?.seenGuides?.find(guide =>
+      guide.view === trimmedCurrView && guide.id === currentGuide)
+
+    console.log('hasSeenGuide', hasSeenGuide)
+    if (!hasSeenGuide) {
+      setState({
+        ...state,
+        open: Boolean(introContent.viewMaps?.[trimmedCurrView][currentGuide]),
+        currentView: trimmedCurrView,
+        currentGuide
+      })
+    }
   }
 
   return (

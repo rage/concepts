@@ -14,19 +14,33 @@ const fixRole = user => ({
 const fixData = data => ({
   ...data,
   type: typeof data.type === 'string' ? Auth.fromString(data.type) : data.type,
-  user: fixRole(data.user)
+  user: { ...fixRole(data.user), seenGuides: data.user?.seenGuides || [] }
 })
 
 const loginReducers = {
   noop: state => state,
   login: (state, { data }) => {
-    window.localStorage.currentUser = JSON.stringify(data)
+    window.localStorage.currentUser = JSON.stringify({
+      ...data,
+      seenGuides: data.user?.seenGuides || []
+    })
+    console.log('login', {
+      ...data,
+      seenGuides: data.user?.seenGuides || []
+    })
     changeSubscriptionToken(data.token)
     return {
       loggedIn: true,
       ...fixData(data)
     }
   },
+  guideSeen: (state, { data }) => ({
+    ...state,
+    user: {
+      ...state.user,
+      seenGuides: [...state.user.seenGuides, data]
+    }
+  }),
   update: (state, { user }) => {
     window.localStorage.currentUser = JSON.stringify({
       token: state.token,

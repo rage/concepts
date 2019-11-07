@@ -2,45 +2,39 @@
   "views": {
     "workspace": [
       {
-        "id": "LIST_GUIDE",
+        "id": "list",
         "title": "Using the workspace list",
         "description": "Watch the video to better understand how to use the workspace list.",
         "video": "/guide/home/full.webm"
       },
       {
-        "id": "MANAGER_GUIDE",
+        "id": "manager",
         "title": "Using the workspace manager",
         "description": "Watch the video to better understand how to use the manager view.",
         "video": "/guide/manager/full.webm"
       },
       {
-        "id": "MAPPER_GUIDE",
+        "id": "mapper",
         "title": "Using the workspace mapper",
         "description": "Watch the video to better understand how to use the mapper view.",
         "video": "/guide/mapper/full.webm"
-      },
-      {
-        "id": "GRAPH_GUIDE",
-        "title": "Using the workspace graph",
-        "description": "Watch the video to better understand how to use the graph view.",
-        "video": "/intro/workspace/<filename>.webm"
       }
     ],
     "project": [
       {
-        "id": "LIST_GUIDE",
+        "id": "list",
         "title": "Using the project list",
         "description": "Watch the video to better understand how to use the project list.",
         "video": "/guide/project/<filename>.webm"
       },
       {
-        "id": "OVERVIEW_GUIDE",
+        "id": "overview",
         "title": "Using the project overview",
         "description": "Watch the video to better understand how to use the project overview.",
         "video": "/guide/project/<filename>.webm"
       },
       {
-        "id": "POINTS_GUIDE",
+        "id": "points",
         "title": "Using the project overview",
         "description": "Watch the video to better understand how to use the project overview.",
         "video": "/guide/project/<filename>.webm"
