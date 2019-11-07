@@ -3,9 +3,7 @@ import makeSecret from '../../util/secret'
 import bloom from '../../static/bloom'
 import { pubsub } from '../Subscription/config'
 import {
-  WORKSPACE_CREATED,
-  WORKSPACE_UPDATED,
-  WORKSPACE_DELETED
+  WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
 } from '../Subscription/config/channels'
 
 const workspaceAllDataQuery = `
@@ -14,6 +12,7 @@ query($id : ID!) {
     activeTemplate {
       id
       name
+      courseOrder
       conceptLinks {
         official
         frozen
@@ -48,6 +47,7 @@ query($id : ID!) {
         createdBy {
           id
         }
+        conceptOrder
         concepts {
           id
           name
@@ -146,8 +146,8 @@ export const createTemplateWorkspace = async (root, { name, projectId }, context
       }]
     }
   })
-  pubsub.publish(WORKSPACE_CREATED, {
-    createdWorkspace: { pId: projectId, ...createdTemplateWorkspace }
+  pubsub.publish(PROJECT_WORKSPACE_CREATED, {
+    projectWorkspaceCreated: { pId: projectId, ...createdTemplateWorkspace }
   })
   return createdTemplateWorkspace
 }
@@ -221,10 +221,15 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
   const workspaceId = makeSecret(25)
   const templateWorkspace = result.project.activeTemplate
   const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
+  const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
+    && conceptOrder[0].startsWith('__ORDER_BY__')
 
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    courseOrder: {
+      set: templateWorkspace.courseOrder.map(makeNewId)
+    },
     sourceProject: {
       connect: { id: projectId }
     },
@@ -247,6 +252,10 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
         frozen: true,
         createdBy: { connect: { id: course.createdBy.id } },
         sourceCourse: { connect: { id: course.id } },
+        conceptOrder:
+          isAutomaticSorting(course.conceptOrder)
+            ? { set: course.conceptOrder }
+            : { set: course.conceptOrder.map(makeNewId) },
         concepts: {
           create: course.concepts.map(concept => ({
             id: makeNewId(concept.id),
@@ -284,8 +293,8 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
       }))
     }
   })
-  pubsub.publish(WORKSPACE_CREATED, {
-    createdWorkspace: { pId: projectId, ...newClonedWorkspace }
+  pubsub.publish(PROJECT_WORKSPACE_CREATED, {
+    projectWorkspaceCreated: { pId: projectId, ...newClonedWorkspace }
   })
   return newClonedWorkspace
 }

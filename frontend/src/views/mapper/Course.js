@@ -16,7 +16,7 @@ import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
-import { sortedConcepts } from '../manager/ordering'
+import { sortedConcepts } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {

@@ -5,6 +5,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { Role, Privilege, checkAccess } from '../../util/accessControl'
 import { NotFoundError } from '../../util/errors'
 import makeSecret from '../../util/secret'
+import { pubsub } from '../Subscription/config'
+import { PROJECT_WORKSPACE_CREATED } from '../Subscription/config/channels'
 
 const workspaceDataForMerge = `
 query($id: ID!) {
@@ -181,7 +183,7 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
   }
 
   const workspaceId = hash()
-  return await context.prisma.createWorkspace({
+  const mergedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
     asMerge: { connect: { id: projectId } },
@@ -239,6 +241,15 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
         )
     }
   })
+
+  pubsub.publish(PROJECT_WORKSPACE_CREATED, {
+    projectWorkspaceCreated: {
+      pId: projectId,
+      mergedWorkspace
+    }
+  })
+
+  return mergedWorkspace
 }
 export const mergeConcepts = async (root, {
   workspaceId, conceptIds, courseId, name, description, official, frozen, tags

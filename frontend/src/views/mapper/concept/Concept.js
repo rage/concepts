@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Fade
+  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton
 } from '@material-ui/core'
 import {
   MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon
@@ -193,7 +193,7 @@ const Concept = ({
         tooltip: classes.tooltip,
         popper: classes.popper
       }}
-      TransitionComponent={Fade}
+      TransitionComponent={({ children }) => children || null}
       title={concept.description || 'No description available'}>
       <ListItem
         divider

@@ -10,7 +10,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
-import { sortedCourses } from './ordering'
+import { sortedCourses } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {

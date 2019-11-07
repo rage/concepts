@@ -7,6 +7,7 @@ import { Role } from '../../lib/permissions'
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
+import {noPropagation} from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   listItemActive: {
@@ -44,13 +45,13 @@ const CourseListItem = ({
   const classes = useStyles()
   const infoBox = useInfoBox()
 
-  const handleDelete = () => {
+  const handleDelete = noPropagation(() => {
     const msg = `Are you sure you want to delete the course ${course.name}?`
     if (window.confirm(msg)) {
       deleteCourse(course.id)
     }
-  }
-  const handleEdit = () => setEditing(course.id)
+  })
+  const handleEdit = noPropagation(() => setEditing(course.id))
 
   return (
     <SortableItem

@@ -1,5 +1,6 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { NotFoundError } from '../../util/errors'
+import { sortedConcepts, sortedCourses } from '../../util/ordering'
 
 const exportQuery = `
 query($id: ID!) {
@@ -16,9 +17,11 @@ query($id: ID!) {
       type
       priority
     }
+    courseOrder
     courses {
       name
       official
+      conceptOrder
       concepts {
         name
         description
@@ -71,13 +74,15 @@ export const exportData = async (root, { workspaceId }, context) => {
   // Create json from workspace
   return JSON.stringify({
     ...result.workspace,
-    courses: result.workspace.courses.map(({ concepts, linksToCourse, ...course }) => ({
-      ...course,
-      concepts: concepts.map(({ linksToConcept, ...concept }) => ({
-        ...concept,
-        prerequisites: linksToConcept.map(prereqMap)
-      })),
-      prerequisites: linksToCourse.map(prereqMap)
-    }))
+    courses: sortedCourses(result.workspace.courses, result.workspace.courseOrder)
+      .map(({ concepts, linksToCourse, ...course }) => ({
+        ...course,
+        concepts: sortedConcepts(concepts, course.conceptOrder)
+          .map(({ linksToConcept, ...concept }) => ({
+            ...concept,
+            prerequisites: linksToConcept.map(prereqMap)
+          })),
+        prerequisites: linksToCourse.map(prereqMap)
+      }))
   })
 }
