@@ -5,6 +5,7 @@ export const Workspace = makeTypeResolvers('workspace', [
   'participants',
   'sourceProject',
   'asTemplate',
+  'asMerge',
   'courses',
   'conceptLinks',
   'courseLinks',
