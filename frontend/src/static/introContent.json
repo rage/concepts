@@ -3,20 +3,20 @@
     "workspace": [
       {
         "id": "list",
-        "title": "Using the workspace list",
-        "description": "Watch the video to better understand how to use the workspace list.",
+        "title": "Home",
+        "description": "The home view contains all your workspaces. You can create new workspaces using the ➕ buttons.",
         "video": "/guide/home/full.webm"
       },
       {
         "id": "manager",
-        "title": "Using the workspace manager",
-        "description": "Watch the video to better understand how to use the manager view.",
+        "title": "Workspace manager",
+        "description": "The workspace manager is used for quickly creating courses and concept.",
         "video": "/guide/manager/full.webm"
       },
       {
         "id": "mapper",
-        "title": "Using the workspace mapper",
-        "description": "Watch the video to better understand how to use the mapper view.",
+        "title": "Course mapper",
+        "description": "The course mapper is used for drawing links between concepts to define prerequisites.",
         "video": "/guide/mapper/full.webm"
       }
     ],

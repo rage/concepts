@@ -23,9 +23,16 @@ const blankState = () => ({
 const IntroDialogContent = ({ currentCardContent }) => <>
   <DialogTitle>{currentCardContent.title}</DialogTitle>
   <DialogContent style={{ display: 'flex', flexDirection: 'column' }}>
-    <DialogContentText>{currentCardContent.description}</DialogContentText>
+    <DialogContentText>
+      {currentCardContent.description} <br />
+      You can view the video below, or go through the user guide yourself by clicking the ?⃝ button
+      in the bottom right corner.
+    </DialogContentText>
     {currentCardContent.video &&
-      <video key={currentCardContent.id} controls autoPlay muted width='100%' style={{ height: 'calc(100% - 36px)' }}>
+      <video
+        key={currentCardContent.id} controls muted
+        style={{ width: '100%', height: 'calc(100% - 64px)' }}
+      >
         <source src={currentCardContent.video} type='video/webm' />
       </video>
     }
