@@ -38,7 +38,7 @@ const loginReducers = {
     ...state,
     user: {
       ...state.user,
-      seenGuides: [...state.user.seenGuides, data]
+      seenGuides: [...state.user.seenGuides || [], data]
     }
   }),
   update: (state, { user }) => {

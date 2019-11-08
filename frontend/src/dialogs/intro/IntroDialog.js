@@ -20,16 +20,17 @@ const blankState = () => ({
   currentGuide: null
 })
 
-const IntroDialogContent = ({ currentCardContent }) => (<>
-    <DialogTitle>{currentCardContent.title}</DialogTitle>
-    <DialogContent>
-      <DialogContentText>{currentCardContent.description}</DialogContentText>
-      {currentCardContent.video &&
+const IntroDialogContent = ({ currentCardContent }) => <>
+  <DialogTitle>{currentCardContent.title}</DialogTitle>
+  <DialogContent>
+    <DialogContentText>{currentCardContent.description}</DialogContentText>
+    {currentCardContent.video &&
       <video key={currentCardContent.id} controls autoPlay muted width='100%' height='100%'>
         <source src={currentCardContent.video} type='video/webm' />
-      </video>}
-    </DialogContent>
-  </>)
+      </video>
+    }
+  </DialogContent>
+</>
 
 const IntroDialog = ({ contextRef }) => {
   const [state, setState] = useState(blankState())
@@ -83,9 +84,7 @@ const IntroDialog = ({ contextRef }) => {
 
   return (
     <MuiDialog maxWidth='xl' open={state.open} onClose={closeDialog}>
-      {
-        currentCardContent && <IntroDialogContent currentCardContent={currentCardContent} />
-      }
+      {currentCardContent && <IntroDialogContent currentCardContent={currentCardContent} />}
       <DialogActions>
         <div>
           <FormControl
