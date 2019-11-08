@@ -67,7 +67,7 @@ type Mutation {
   setActiveTemplate(projectId: ID!, workspaceId: ID!): Project
 
   # Workspace mutations
-  createWorkspace(name: String!, projectId: ID): Workspace
+  createWorkspace(name: String!): Workspace
   deleteWorkspace(id: ID!): Workspace
   updateWorkspace(id: ID!, name: String, courseOrder: [ID!]): Workspace
 

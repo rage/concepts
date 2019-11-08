@@ -5,7 +5,7 @@ import { WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { useDialog } from '../DialogProvider'
 import WorkspaceCreationActions from './WorkspaceCreationActions'
 
-const useCreateWorkspaceDialog = projectId => {
+const useCreateWorkspaceDialog = () => {
   const { openDialog } = useDialog()
   const createWorkspace = useMutation(CREATE_WORKSPACE, {
     refetchQueries: [
@@ -16,7 +16,6 @@ const useCreateWorkspaceDialog = projectId => {
   return () => openDialog({
     mutation: createWorkspace,
     type: 'Workspace',
-    requiredVariables: { projectId },
     actionText: 'Create',
     fields: [{
       name: 'name',
