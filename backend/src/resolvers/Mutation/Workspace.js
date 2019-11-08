@@ -3,7 +3,7 @@ import makeSecret from '../../util/secret'
 import bloom from '../../static/bloom'
 import { pubsub } from '../Subscription/config'
 import {
-  WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
+  WORKSPACE_CREATED, WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
 } from '../Subscription/config/channels'
 
 const workspaceAllDataQuery = `
