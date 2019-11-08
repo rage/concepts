@@ -29,8 +29,8 @@
       },
       {
         "id": "overview",
-        "title": "Using the project overview",
-        "description": "Watch the video to better understand how to use the project overview.",
+        "title": "Project overview",
+        "description": "The project overview shows all the templates, user workspaces and merges in your project. You can also manage templates, invite users and create merges.",
         "video": "/guide/project/<filename>.webm"
       },
       {
