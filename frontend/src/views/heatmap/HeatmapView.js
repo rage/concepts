@@ -47,6 +47,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   tableCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'rgba(255, 255, 255, .5)',
+    fontSize: '22px',
+
     width: `${cellDimension.width}px`,
     height: `${cellDimension.height}px`,
     '&:hover': {
@@ -221,7 +227,9 @@ const TableCell = forwardRef(({
             className={classes.tableCell}
             style={{ backgroundColor: mapToGrad(conceptsLinked) }}
             onClick={navigateToMapper(toCourse.id)}
-          />
+          >
+            {concepts.length}
+          </div>
         </Tooltip>
         :
         <div
