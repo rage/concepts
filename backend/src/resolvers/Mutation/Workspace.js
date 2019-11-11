@@ -64,13 +64,10 @@ query($id : ID!) {
 }
 `
 
-export const createWorkspace = async (root, { name, projectId }, context) => {
+export const createWorkspace = async (root, { name }, context) => {
   await checkAccess(context, { minimumRole: Role.GUEST })
-  const newWorkspace = await context.prisma.createWorkspace({
+  return await context.prisma.createWorkspace({
     name: name,
-    sourceProject: projectId !== undefined ? {
-      connect: { id: projectId }
-    } : null,
     participants: {
       create: [{
         privilege: Privilege.OWNER.toString(),
@@ -83,8 +80,6 @@ export const createWorkspace = async (root, { name, projectId }, context) => {
       create: bloom
     }
   })
-  pubsub.publish(WORKSPACE_CREATED, { workspaceCreated: { ...newWorkspace, pId: projectId } })
-  return newWorkspace
 }
 
 export const deleteWorkspace = async (root, { id }, context) => {

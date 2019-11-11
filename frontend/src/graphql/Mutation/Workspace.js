@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 const CREATE_WORKSPACE = gql`
-mutation createWorkspace($name: String!, $projectId: ID) {
-  createWorkspace(name: $name, projectId: $projectId) {
+mutation createWorkspace($name: String!) {
+  createWorkspace(name: $name) {
     id
     name
   }
