@@ -66,7 +66,7 @@ const LoginView = () => {
   const [loadingHaka, setLoadingHaka] = useState(false)
   const loading = loadingTMC || loadingGuest || loadingGoogle
 
-  const { googleLoginEnabled, hakaLoginEnabled } = useAuthState()
+  const { google: googleLoginEnabled, haka: hakaLoginEnabled } = useAuthState()
 
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
