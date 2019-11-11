@@ -142,7 +142,10 @@ const GraphView = ({ workspaceId }) => {
   const [nextMode, redraw] = useState('courses')
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
-  const [edgesMissing, setEdgesMissing] = useState(false)
+  const [edgesMissing, setEdgesMissing] = useState({
+    course: false,
+    concept: false
+  })
   const [legendFilter, setLegendFilter] = useState([])
   const state = useRef({
     network: null,
@@ -423,7 +426,10 @@ const GraphView = ({ workspaceId }) => {
     })
     loadingRef.current.stopLoading('graph-view')
     controlsRef.current.style.display = 'block'
-    setEdgesMissing(cur.conceptEdges?.length === 0 || cur.courseEdges?.length === 0)
+    setEdgesMissing({
+      concept: cur.conceptEdges?.length === 0,
+      course: cur.courseEdges?.length === 0
+    })
     cur.conceptLayout.run()
   }
 
@@ -462,15 +468,21 @@ const GraphView = ({ workspaceId }) => {
         <LoadingBar id='graph-view' componentRef={loadingRef} />
       }
     </div>
-    {edgesMissing &&
-      <div className={classes.noLinksWrapper}>
-        <Typography className={classes.noLinksMessage} variant='body1'>
-          {`No links between ${nextMode === 'courses' ? 'concepts' : 'courses'}.`}
-        </Typography>
-        <Typography className={classes.noLinksMessage} variant='body1'>
-          Add connections to display graph.
-        </Typography>
-      </div>
+    <div className={classes.noLinksWrapper}>
+      <Typography className={classes.noLinksMessage} variant='body1'>
+        {nextMode === 'courses'
+          ? edgesMissing.concept && 'No links between concepts.'
+          : edgesMissing.course && 'No links between courses.'
+        }
+      </Typography>
+      <Typography className={classes.noLinksMessage} variant='body1'>
+        {nextMode === 'courses'
+          ? edgesMissing.concept && 'Add connections to display graph.'
+          : edgesMissing.course && 'Add connections to display graph.'
+        }
+
+      </Typography>
+    </div>
     }
     <div ref={controlsRef} style={{ display: state.current.network ? 'block' : 'none' }}>
       <div className={classes.buttonWrapper}>
