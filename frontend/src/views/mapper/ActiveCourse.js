@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Button, Paper, Select, MenuItem, InputBase, List, IconButton
@@ -79,6 +79,7 @@ const ActiveCourse = ({
   const { history } = useRouter()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
+  const [selectOpen, setSelectOpen] = useState(false)
 
   const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF)
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
@@ -97,7 +98,14 @@ const ActiveCourse = ({
     <Paper onClick={() => setAddingLink(null)} elevation={0} className={classes.root}>
       <div title={course.name} className={classes.header}>
         <Select
+          open={selectOpen}
           value={course.id}
+          MenuProps={{
+            MenuListProps: {
+              onMouseLeave: () => setSelectOpen(false)
+            }
+          }}
+          onMouseEnter={() => setSelectOpen(true)}
           classes={{ root: classes.titleSelect }}
           input={<InputBase classes={{ root: classes.title }} />}
           onChange={evt => history.push(`${urlPrefix}/${workspace.id}/mapper/${evt.target.value}`)}
