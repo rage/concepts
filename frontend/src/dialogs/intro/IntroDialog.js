@@ -31,7 +31,7 @@ const IntroDialogContent = ({ currentCardContent }) => <>
     {currentCardContent.video &&
       <video
         key={currentCardContent.id} controls muted
-        style={{ width: '100%', height: 'calc(100% - 64px)' }}
+        style={{ width: '100%', height: 'calc(100% - 64px)', overflow: 'hidden' }}
       >
         <source src={currentCardContent.video} type='video/webm' />
       </video>
