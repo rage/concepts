@@ -127,6 +127,15 @@ type Subscription {
 
   workspaceUpdated(workspaceId: ID!): WorkspaceUpdate!
   workspaceDeleted(workspaceId: ID!): Workspace!
+
+  # Member subscriptions
+  ## Join
+  memberJoinedWorkspace(workspaceId: ID!): WorkspaceParticipant!
+  memberJoinedProject(projectId: ID!): ProjectParticipant!
+  
+  ## Leave
+  memberLeftWorkspace(workspaceId: ID!): WorkspaceParticipant!
+  memberLeftProject(projectId: ID!): ProjectParticipant!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
