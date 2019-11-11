@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -18,6 +18,7 @@ import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../lib/store'
 import { useShareDialog } from '../dialogs/sharing'
 import { useInfoBox } from './InfoBox'
+import { useIntroDialog } from '../dialogs/intro/IntroDialogProvider'
 import useRouter from '../lib/useRouter'
 
 const useStyles = makeStyles({
@@ -68,6 +69,13 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   const [menuAnchor, setMenuAnchor] = useState(null)
 
   const infoBox = useInfoBox()
+
+  const introDialog = useIntroDialog()
+
+  useEffect(() => {
+    introDialog.openDialog(urlPrefix, page)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, urlPrefix])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }

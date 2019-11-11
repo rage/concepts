@@ -1,0 +1,44 @@
+{
+  "views": {
+    "workspace": [
+      {
+        "id": "list",
+        "title": "Home",
+        "description": "The home view contains all your workspaces. You can create new workspaces using the ➕ buttons.",
+        "video": "/guide/home/full.webm"
+      },
+      {
+        "id": "manager",
+        "title": "Workspace manager",
+        "description": "The workspace manager is used for quickly creating courses and concept.",
+        "video": "/guide/manager/full.webm"
+      },
+      {
+        "id": "mapper",
+        "title": "Course mapper",
+        "description": "The course mapper is used for drawing links between concepts to define prerequisites.",
+        "video": "/guide/mapper/full.webm"
+      }
+    ],
+    "project": [
+      {
+        "id": "list",
+        "title": "Using the project list",
+        "description": "Watch the video to better understand how to use the project list.",
+        "video": "/guide/project/<filename>.webm"
+      },
+      {
+        "id": "overview",
+        "title": "Project overview",
+        "description": "The project overview shows all the templates, user workspaces and merges in your project. You can also manage templates, invite users and create merges.",
+        "video": "/guide/project/<filename>.webm"
+      },
+      {
+        "id": "points",
+        "title": "Using the project overview",
+        "description": "Watch the video to better understand how to use the project overview.",
+        "video": "/guide/project/<filename>.webm"
+      }
+    ]
+  }
+}
