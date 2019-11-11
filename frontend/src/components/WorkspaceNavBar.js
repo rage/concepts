@@ -74,6 +74,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
 
   useEffect(() => {
     introDialog.openDialog(urlPrefix, page)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, urlPrefix])
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
