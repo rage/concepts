@@ -24,10 +24,6 @@ const loginReducers = {
       ...data,
       seenGuides: data.user?.seenGuides || []
     })
-    console.log('login', {
-      ...data,
-      seenGuides: data.user?.seenGuides || []
-    })
     changeSubscriptionToken(data.token)
     return {
       loggedIn: true,

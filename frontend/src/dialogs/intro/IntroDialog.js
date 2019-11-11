@@ -50,7 +50,6 @@ const IntroDialog = ({ contextRef }) => {
     introContent.viewMaps[state.currentView][state.currentGuide] : null
 
   const closeDialog = () => {
-    console.log('introDialog', user)
     // Other cleanup
     saveViewed(inputState.noShowAgain)
     setState({ open: false })
@@ -78,7 +77,6 @@ const IntroDialog = ({ contextRef }) => {
     const hasSeenGuide = user?.seenGuides?.find(guide =>
       guide.view === trimmedCurrView && guide.id === currentGuide)
 
-    console.log('hasSeenGuide', hasSeenGuide)
     if (!hasSeenGuide) {
       setState({
         ...state,
