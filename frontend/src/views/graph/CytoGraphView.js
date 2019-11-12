@@ -179,31 +179,30 @@ const GraphView = ({ workspaceId }) => {
     conceptLayout: null
   })
 
+  const postUpdate = () => setRefresh(true)
 
   useUpdatingSubscription('workspace', 'update', {
-    variables: { workspaceId }
+    variables: { workspaceId },
+    postUpdate
   })
 
   useManyUpdatingSubscriptions(
     ['course', 'concept'],
     ['create', 'delete', 'update'],
-    { variables: { workspaceId } }
+    { variables: { workspaceId }, postUpdate },
+    
   )
 
   useUpdatingSubscription('concept link', 'delete', {
     variables: { workspaceId },
-    update: (client, store) => {
-      cache.deleteConceptLinkRecursiveUpdate(workspaceId)(client, store)
-      setRefresh(true)
-    }
+    update: cache.deleteConceptLinkRecursiveUpdate(workspaceId),
+    postUpdate
   })
 
   useUpdatingSubscription('concept link', 'create', {
     variables: { workspaceId },
-    update: (client, store) => {
-      cache.createConceptLinkRecursiveUpdate(workspaceId)(client, store)
-      setRefresh(true)
-    }
+    update: cache.createConceptLinkRecursiveUpdate(workspaceId),
+    postUpdate
   })
 
   const redrawEverything = () => {
