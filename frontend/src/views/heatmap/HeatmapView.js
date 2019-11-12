@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'rgba(255, 255, 255, .5)',
+    color: 'rgba(0, 0, 0, .3)',
     fontSize: '22px',
 
     width: `${cellDimension.width}px`,
