@@ -46,6 +46,9 @@ export const useUpdatingSubscription = (namespace, action, args) => {
         }
       }
       cacheUpdate(client, res)
+      if (args.postUpdate) {
+        args.postUpdate()
+      }
     }
   })
 }
