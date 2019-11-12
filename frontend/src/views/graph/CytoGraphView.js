@@ -9,9 +9,10 @@ import popper from 'cytoscape-popper'
 import Tippy from 'tippy.js'
 
 import {
-  WORKSPACE_DATA_FOR_GRAPH
+  WORKSPACE_COURSES_AND_CONCEPTS
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
+import cache from '../../apollo/update'
 import colors from './hexcolors'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
@@ -179,15 +180,25 @@ const GraphView = ({ workspaceId }) => {
   })
 
 
-  useUpdatingSubscription('workspace', 'update', {
-    variables: { workspaceId }
-  })
+  // useUpdatingSubscription('workspace', 'update', {
+  //   variables: { workspaceId }
+  // })
 
-  useManyUpdatingSubscriptions(
-    ['course', 'concept'],
-    ['create', 'delete', 'update'],
-    { variables: { workspaceId } }
-  )
+  // useManyUpdatingSubscriptions(
+  //   ['course', 'concept'],
+  //   ['create', 'delete', 'update'],
+  //   { variables: { workspaceId } }
+  // )
+
+  // useUpdatingSubscription('concept link', 'delete', {
+  //   variables: { workspaceId },
+  //   update: cache.deleteConceptLinkRecursiveUpdate(workspaceId)
+  // })
+
+  // useUpdatingSubscription('concept link', 'create', {
+  //   variables: { workspaceId },
+  //   update: cache.createConceptLinkRecursiveUpdate(workspaceId)
+  // })
 
   const loadingRef = useRef(null)
   const controlsRef = useRef(null)
@@ -465,7 +476,7 @@ const GraphView = ({ workspaceId }) => {
     (async () => {
       try {
         const response = await client.query({
-          query: WORKSPACE_DATA_FOR_GRAPH,
+          query: WORKSPACE_COURSES_AND_CONCEPTS,
           variables: {
             id: workspaceId
           }
