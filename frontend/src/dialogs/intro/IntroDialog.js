@@ -73,7 +73,9 @@ const IntroDialog = ({ contextRef }) => {
 
   contextRef.current.openDialog = (currentView, currentGuide) => {
     // Other state changes
-    const trimmedCurrView = currentView.slice(1, -1)
+    let array = currentView.split("/")
+    let trimmedCurrView = array[array.length - 1]
+    trimmedCurrView = trimmedCurrView.substr(0, trimmedCurrView.length - 1)
     const hasSeenGuide = user?.seenGuides?.find(guide =>
       guide.view === trimmedCurrView && guide.id === currentGuide)
 
