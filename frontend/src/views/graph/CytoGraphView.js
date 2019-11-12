@@ -164,7 +164,7 @@ const GraphView = ({ workspaceId }) => {
     concept: false
   })
   const [legendFilter, setLegendFilter] = useState([])
-  const [refresh, setRefresh] = useState(true)
+  const [refresh, setRefresh] = useState(false)
   const state = useRef({
     network: null,
     nodes: null,
@@ -180,25 +180,40 @@ const GraphView = ({ workspaceId }) => {
   })
 
 
-  // useUpdatingSubscription('workspace', 'update', {
-  //   variables: { workspaceId }
-  // })
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId }
+  })
 
-  // useManyUpdatingSubscriptions(
-  //   ['course', 'concept'],
-  //   ['create', 'delete', 'update'],
-  //   { variables: { workspaceId } }
-  // )
+  useManyUpdatingSubscriptions(
+    ['course', 'concept'],
+    ['create', 'delete', 'update'],
+    { variables: { workspaceId } }
+  )
 
-  // useUpdatingSubscription('concept link', 'delete', {
-  //   variables: { workspaceId },
-  //   update: cache.deleteConceptLinkRecursiveUpdate(workspaceId)
-  // })
+  useUpdatingSubscription('concept link', 'delete', {
+    variables: { workspaceId },
+    update: (client, store) => {
+      cache.deleteConceptLinkRecursiveUpdate(workspaceId)(client, store)
+      setRefresh(true)
+    }
+  })
 
-  // useUpdatingSubscription('concept link', 'create', {
-  //   variables: { workspaceId },
-  //   update: cache.createConceptLinkRecursiveUpdate(workspaceId)
-  // })
+  useUpdatingSubscription('concept link', 'create', {
+    variables: { workspaceId },
+    update: (client, store) => {
+      cache.createConceptLinkRecursiveUpdate(workspaceId)(client, store)
+      setRefresh(true)
+    }
+  })
+
+  const redrawEverything = () => {
+    const data = client.readQuery({
+      query: WORKSPACE_COURSES_AND_CONCEPTS,
+      variables: { id: workspaceId }
+    })
+    drawConceptGraph(data)
+    setRefresh(false)
+  }
 
   const loadingRef = useRef(null)
   const controlsRef = useRef(null)
@@ -555,7 +570,7 @@ const GraphView = ({ workspaceId }) => {
             title={'There are new changes to graph.'}
           >
             <Button
-              className={classes.button} variant='outlined' color='secondary' onClick={() => { setRefresh(false) }}
+              className={classes.button} variant='outlined' color='secondary' onClick={redrawEverything}
             >
               Refresh
             </Button>
