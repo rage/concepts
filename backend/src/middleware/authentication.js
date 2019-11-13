@@ -38,7 +38,7 @@ export const parseToken = token => {
   }
 }
 
-const getUser = async (token, context, prisma) => {
+export const getUser = async (token, context, prisma) => {
   const id = parseToken(token)
   if (!id) {
     throw new AuthenticationError('Invalid token: no ID found')
