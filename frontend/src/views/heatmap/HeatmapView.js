@@ -10,7 +10,6 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
-import * as objectRecursion from '../../lib/objectRecursion'
 import {
   useManyUpdatingSubscriptions,
   useUpdatingSubscription

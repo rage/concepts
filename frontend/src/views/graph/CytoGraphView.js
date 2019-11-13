@@ -17,8 +17,6 @@ import colors from './hexcolors'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
-
-import * as objectRecursion from '../../lib/objectRecursion'
 import {
   useManyUpdatingSubscriptions,
   useUpdatingSubscription
@@ -190,7 +188,7 @@ const GraphView = ({ workspaceId }) => {
     ['course', 'concept'],
     ['create', 'delete', 'update'],
     { variables: { workspaceId }, postUpdate },
-    
+
   )
 
   useUpdatingSubscription('concept link', 'delete', {
