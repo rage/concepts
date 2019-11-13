@@ -129,13 +129,13 @@ type Subscription {
   workspaceDeleted(workspaceId: ID!): Workspace!
 
   # Member subscriptions
-  ## Join
-  memberJoinedWorkspace(workspaceId: ID!): WorkspaceParticipant!
-  memberJoinedProject(projectId: ID!): ProjectParticipant!
-  
-  ## Leave
-  memberLeftWorkspace(workspaceId: ID!): WorkspaceParticipant!
-  memberLeftProject(projectId: ID!): ProjectParticipant!
+  workspaceMemberCreated(workspaceId: ID!): WorkspaceParticipant!
+  workspaceMemberDeleted(workspaceId: ID!): WorkspaceParticipant!
+  workspaceMemberUpdated(workspaceId: ID!): WorkspaceParticipant!
+
+  projectMemberCreated(projectId: ID!): ProjectParticipant!
+  projectMemberDeleted(projectId: ID!): ProjectParticipant!
+  projectMemberUpdated(projectId: ID!): ProjectParticipant!
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
