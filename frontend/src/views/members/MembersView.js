@@ -18,7 +18,9 @@ const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
     maxWidth: '1280px',
-    margin: '0 auto'
+    margin: '0 auto',
+    gridArea: 'content',
+    overflow: 'hidden'
   }
 }))
 
