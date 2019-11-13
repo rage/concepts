@@ -2,12 +2,12 @@ import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import makeSecret from '../../util/secret'
 import { 
-  MEMBER_JOINED_WORKSPACE, 
-  MEMBER_JOINED_PROJECT,
-  MEMBER_LEFT_PROJECT, 
-  MEMBER_LEFT_WORKSPACE,
-  MEMBER_UPDATED_WORKSPACE,
-  MEMBER_UPDATED_PROJECT
+  WORKSPACE_MEMBER_CREATED, 
+  PROJECT_MEMBER_CREATED,
+  PROJECT_MEMBER_DELETED, 
+  WORKSPACE_MEMBER_DELETED,
+  WORKSPACE_MEMBER_UPDATED,
+  PROJECT_MEMBER_UPDATED
 } from '../Subscription/config'
 export const createWorkspaceToken = async (root, { workspaceId, privilege }, context) => {
   await checkAccess(context, {
@@ -81,7 +81,7 @@ export const useToken = async (root, { id }, context) => {
       user: { connect: { id: context.user.id } },
       token: { connect: { id } }
     })
-    pubsub.publish(MEMBER_JOINED_WORKSPACE, { 
+    pubsub.publish(WORKSPACE_MEMBER_CREATED, { 
       participant, 
       userId: context.user.id, 
       workspaceId: workspace.id 
@@ -96,7 +96,7 @@ export const useToken = async (root, { id }, context) => {
       user: { connect: { id: context.user.id } },
       token: { connect: { id } }
     })
-    pubsub.publish(MEMBER_JOINED_PROJECT, {
+    pubsub.publish(PROJECT_MEMBER_CREATED, {
       participant,
       userId: context.user.id,
       projectId: project.id
@@ -116,7 +116,7 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       where: { id },
       data: { privilege }
     })
-    pubsub.publish(MEMBER_UPDATED_PROJECT, {
+    pubsub.publish(PROJECT_MEMBER_UPDATED, {
       updatedProjectParticipant,
       projectId
     })
@@ -132,7 +132,7 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       where: { id },
       data: { privilege }
     })
-    pubsub.publish(MEMBER_UPDATED_WORKSPACE, {
+    pubsub.publish(WORKSPACE_MEMBER_UPDATED, {
       updatedWorkspaceParticipant,
       workspaceId
     })
@@ -149,7 +149,7 @@ export const deleteParticipant = async (root, { type, id }, context) => {
       await context.prisma.projectParticipant({ id }).project(), 'project')
     await checkAccess(context, { projectId, minimumPrivilege: Privilege.OWNER })
     const deletedProjectParticipant = await context.prisma.deleteProjectParticipant({ id })
-    pubsub.publish(MEMBER_LEFT_PROJECT, {
+    pubsub.publish(PROJECT_MEMBER_DELETED, {
       deletedProjectParticipant,
       projectId 
     })
@@ -159,7 +159,7 @@ export const deleteParticipant = async (root, { type, id }, context) => {
       await context.prisma.workspaceParticipant({ id }).workspace())
     await checkAccess(context, { workspaceId, minimumPrivilege: Privilege.OWNER })
     const deletedWorkspaceParticipant = await context.prisma.deleteWorkspaceParticipant({ id })
-    pubsub.publish(MEMBER_LEFT_WORKSPACE, {
+    pubsub.publish(WORKSPACE_MEMBER_DELETED, {
       deletedWorkspaceParticipant,
       workspaceId
     })

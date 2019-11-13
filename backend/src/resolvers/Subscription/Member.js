@@ -2,42 +2,40 @@ import { withFilter } from 'graphql-subscriptions'
 
 import { pubsub } from './config'
 import { 
-  MEMBER_JOINED_PROJECT, 
-  MEMBER_LEFT_PROJECT,
-  MEMBER_JOINED_WORKSPACE,
-  MEMBER_LEFT_WORKSPACE,
-  MEMBER_UPDATED_PROJECT,
-  MEMBER_UPDATED_WORKSPACE
+  PROJECT_MEMBER_CREATED, 
+  PROJECT_MEMBER_DELETED,
+  WORKSPACE_MEMBER_CREATED,
+  WORKSPACE_MEMBER_DELETED,
+  PROJECT_MEMBER_UPDATED,
+  WORKSPACE_MEMBER_UPDATED
 } from './config/channels'
 
-export const memberJoinedWorkspace = {
-  subscribe: withFilter(() => pubsub.asyncIterator(MEMBER_JOINED_WORKSPACE),
+export const workspaceMemberCreated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_MEMBER_CREATED),
     (payload, variables) => payload.participant.workspaceId === variables.workspaceId)
 }
 
-export const memberLeftWorkspace = {
-  subscribe: withFilter(() => pubsub.asyncIterator(MEMBER_LEFT_WORKSPACE),
+export const workspaceMemberDeleted = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_MEMBER_DELETED),
     (payload, variables) => payload.participant.workspaceId === variables.workspaceId)
 }
 
-export const memberJoinedWorkspace = {
-  subscribe: withFilter(() => pubsub.asyncIterator(MEMBER_JOINED_PROJECT),
+export const projectMemberCreated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(PROJECT_MEMBER_CREATED),
     (payload, variables) => payload.participant.projectId === variables.projectId)
 }
 
-export const memberLeftProject = {
-  subscribe: withFilter(() => pubsub.asyncIterator(MEMBER_LEFT_PROJECT),
+export const projectMemberDeleted = {
+  subscribe: withFilter(() => pubsub.asyncIterator(PROJECT_MEMBER_DELETED),
     (payload, variables) => payload.participant.projectId === variables.projectId)
 }
 
-// Member updated in project
-export const memberUpdatedProject = {
-  subscribe: withFilter(() => pubsub.asyncIterator(MEMBER_UPDATED_PROJECT),
+export const projectMemberUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(PROJECT_MEMBER_UPDATED),
     (payload, variables) => payload.participant.projectId === variables.projectsId)
 }
 
-// Member updated in workspace
-export const memberUpdatedWorkspace = {
-  subscribe: withFilter(() => pubsub.asyncIterator(MEMBER_UPDATED_WORKSPACE),
+export const workspaceMemberUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_MEMBER_UPDATED),
     (payload, variables) => payload.participant.workspaceId === variables.workspaceId)
 }
