@@ -61,7 +61,6 @@ const IntroDialog = ({ contextRef }) => {
   }
 
   const saveViewed = async (noShow) => {
-    let updateLocal = false
     let response
     if (noShow) {
       const currentUser = JSON.parse(window.localStorage.currentUser)
@@ -80,7 +79,6 @@ const IntroDialog = ({ contextRef }) => {
         type: 'guideSeen',
         data: {
           guide: `${state.currentView}.${state.currentGuide}`,
-          updateLocal,
           newSeenGuides: response?.data?.updateSeenGuides?.seenGuides
         }
       })
