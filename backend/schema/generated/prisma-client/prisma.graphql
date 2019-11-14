@@ -4167,6 +4167,7 @@ type User {
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   createdAt: DateTime!
   lastActivity: DateTime
+  seenGuides: [String!]!
 }
 
 type UserConnection {
@@ -4185,6 +4186,7 @@ input UserCreateInput {
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserCreateseenGuidesInput
 }
 
 input UserCreateOneInput {
@@ -4202,6 +4204,10 @@ input UserCreateOneWithoutWorkspaceParticipationsInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateseenGuidesInput {
+  set: [String!]
+}
+
 input UserCreateWithoutProjectParticipationsInput {
   id: ID
   tmcId: Int
@@ -4211,6 +4217,7 @@ input UserCreateWithoutProjectParticipationsInput {
   deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserCreateseenGuidesInput
 }
 
 input UserCreateWithoutWorkspaceParticipationsInput {
@@ -4222,6 +4229,7 @@ input UserCreateWithoutWorkspaceParticipationsInput {
   deactivated: Boolean
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserCreateseenGuidesInput
 }
 
 type UserEdge {
@@ -4257,6 +4265,7 @@ type UserPreviousValues {
   deactivated: Boolean!
   createdAt: DateTime!
   lastActivity: DateTime
+  seenGuides: [String!]!
 }
 
 type UserSubscriptionPayload {
@@ -4286,6 +4295,7 @@ input UserUpdateDataInput {
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserUpdateseenGuidesInput
 }
 
 input UserUpdateInput {
@@ -4297,6 +4307,7 @@ input UserUpdateInput {
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserUpdateseenGuidesInput
 }
 
 input UserUpdateManyMutationInput {
@@ -4306,6 +4317,7 @@ input UserUpdateManyMutationInput {
   role: Role
   deactivated: Boolean
   lastActivity: DateTime
+  seenGuides: UserUpdateseenGuidesInput
 }
 
 input UserUpdateOneRequiredInput {
@@ -4329,6 +4341,10 @@ input UserUpdateOneRequiredWithoutWorkspaceParticipationsInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateseenGuidesInput {
+  set: [String!]
+}
+
 input UserUpdateWithoutProjectParticipationsDataInput {
   tmcId: Int
   hakaId: String
@@ -4337,6 +4353,7 @@ input UserUpdateWithoutProjectParticipationsDataInput {
   deactivated: Boolean
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserUpdateseenGuidesInput
 }
 
 input UserUpdateWithoutWorkspaceParticipationsDataInput {
@@ -4347,6 +4364,7 @@ input UserUpdateWithoutWorkspaceParticipationsDataInput {
   deactivated: Boolean
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   lastActivity: DateTime
+  seenGuides: UserUpdateseenGuidesInput
 }
 
 input UserUpsertNestedInput {

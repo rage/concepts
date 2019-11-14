@@ -1769,6 +1769,7 @@ export interface UserCreateInput {
   >;
   projectParticipations?: Maybe<ProjectParticipantCreateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserCreateseenGuidesInput>;
 }
 
 export interface WorkspaceParticipantCreateManyWithoutUserInput {
@@ -2561,6 +2562,7 @@ export interface UserCreateWithoutWorkspaceParticipationsInput {
   deactivated?: Maybe<Boolean>;
   projectParticipations?: Maybe<ProjectParticipantCreateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserCreateseenGuidesInput>;
 }
 
 export interface ProjectParticipantCreateManyWithoutUserInput {
@@ -2708,6 +2710,11 @@ export interface UserCreateWithoutProjectParticipationsInput {
     WorkspaceParticipantCreateManyWithoutUserInput
   >;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserCreateseenGuidesInput>;
+}
+
+export interface UserCreateseenGuidesInput {
+  set?: Maybe<String[] | String>;
 }
 
 export interface ProjectTokenCreateOneWithoutParticipantsInput {
@@ -2894,6 +2901,7 @@ export interface UserUpdateDataInput {
   >;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserUpdateseenGuidesInput>;
 }
 
 export interface WorkspaceParticipantUpdateManyWithoutUserInput {
@@ -4713,6 +4721,7 @@ export interface UserUpdateWithoutWorkspaceParticipationsDataInput {
   deactivated?: Maybe<Boolean>;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserUpdateseenGuidesInput>;
 }
 
 export interface ProjectParticipantUpdateManyWithoutUserInput {
@@ -5166,6 +5175,11 @@ export interface UserUpdateWithoutProjectParticipationsDataInput {
     WorkspaceParticipantUpdateManyWithoutUserInput
   >;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserUpdateseenGuidesInput>;
+}
+
+export interface UserUpdateseenGuidesInput {
+  set?: Maybe<String[] | String>;
 }
 
 export interface UserUpsertWithoutProjectParticipationsInput {
@@ -6079,6 +6093,7 @@ export interface UserUpdateInput {
   >;
   projectParticipations?: Maybe<ProjectParticipantUpdateManyWithoutUserInput>;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserUpdateseenGuidesInput>;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -6088,6 +6103,7 @@ export interface UserUpdateManyMutationInput {
   role?: Maybe<Role>;
   deactivated?: Maybe<Boolean>;
   lastActivity?: Maybe<DateTimeInput>;
+  seenGuides?: Maybe<UserUpdateseenGuidesInput>;
 }
 
 export interface WorkspaceUpdateInput {
@@ -6444,6 +6460,7 @@ export interface User {
   deactivated: Boolean;
   createdAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
+  seenGuides: String[];
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -6475,6 +6492,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
+  seenGuides: () => Promise<String[]>;
 }
 
 export interface UserSubscription
@@ -6510,6 +6528,7 @@ export interface UserSubscription
   }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
+  seenGuides: () => Promise<AsyncIterator<String[]>>;
 }
 
 export interface UserNullablePromise
@@ -6543,6 +6562,7 @@ export interface UserNullablePromise
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
+  seenGuides: () => Promise<String[]>;
 }
 
 export interface WorkspaceParticipant {
@@ -9424,6 +9444,7 @@ export interface UserPreviousValues {
   deactivated: Boolean;
   createdAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
+  seenGuides: String[];
 }
 
 export interface UserPreviousValuesPromise
@@ -9437,6 +9458,7 @@ export interface UserPreviousValuesPromise
   deactivated: () => Promise<Boolean>;
   createdAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
+  seenGuides: () => Promise<String[]>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -9450,6 +9472,7 @@ export interface UserPreviousValuesSubscription
   deactivated: () => Promise<AsyncIterator<Boolean>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
+  seenGuides: () => Promise<AsyncIterator<String[]>>;
 }
 
 export interface WorkspaceSubscriptionPayload {

@@ -7,6 +7,7 @@ fragment UserInfo on User {
   googleId
   hakaId
   role
+  seenGuides
 }
 `
 
