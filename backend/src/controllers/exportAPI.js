@@ -55,15 +55,6 @@ query($wid: ID!) {
 }
 `
 
-export const exportData = async (root, { workspaceId }, context) => {
-  await checkAccess(context, {
-    minimumRole: Role.GUEST,
-    minimumPrivilege: Privilege.READ,
-    workspaceId
-  })
-
-}
-
 export const exportAPI = async (req, res) => {
   const resp = verifyAndRespondRequest(req, res, 'EXPORT_WORKSPACE')
   if (resp !== 'OK') return resp
