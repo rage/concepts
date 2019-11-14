@@ -97,7 +97,7 @@ const IntroDialog = ({ contextRef }) => {
       const [view, guide] = intro.split('.')
       return view === trimmedCurrView && guide === currentGuide
     })
-    const viewHasGuide = Boolean(introContent.viewMaps?.[trimmedCurrView][currentGuide])
+    const viewHasGuide = Boolean(introContent.viewMaps?.[trimmedCurrView]?.[currentGuide])
     if (!hasSeenGuide && viewHasGuide) {
       setState({
         ...state,
