@@ -6,6 +6,9 @@ import {
 
 import { useLoginStateValue } from '../../lib/store'
 import introContent from '../../static/introContent'
+import { useApolloClient } from 'react-apollo-hooks'
+
+import { UPDATE_SEEN_GUIDES } from '../../graphql/Mutation'
 
 const mapObject = (obj, func) => Object.fromEntries(Object.entries(obj)
   .map(([k, v], ...args) => [k, func(v, ...args)]))
@@ -45,6 +48,7 @@ const IntroDialog = ({ contextRef }) => {
     noShowAgain: false
   })
   const [{ user }, dispatch] = useLoginStateValue()
+  const client = useApolloClient()
 
   const currentCardContent = introContent.viewMaps && state.currentView && state.currentGuide ?
     introContent.viewMaps[state.currentView][state.currentGuide] : null
@@ -56,17 +60,34 @@ const IntroDialog = ({ contextRef }) => {
     setInputState({ noShowAgain: false })
   }
 
-  const saveViewed = (noShow) => {
+  const saveViewed = async (noShow) => {
+    let updateLocal = false
+    let response
     if (noShow) {
-      // mutate
+      const currentUser = JSON.parse(window.localStorage.currentUser)
+      console.log(currentUser)
+      try {
+        response = await client.mutate({
+          mutation: UPDATE_SEEN_GUIDES,
+          variables: { id: user.id, seenGuides: [
+            ...currentUser.user.seenGuides,
+            `${state.currentView}.${state.currentGuide}`
+          ]}
+        })
+        console.log(response)
+        console.log('update local', updateLocal)
+      } catch {}
     }
-    dispatch({
-      type: 'guideSeen',
-      data: {
-        view: state.currentView,
-        id: state.currentGuide
-      }
-    })
+    if (state.currentView && state.currentGuide) {
+      dispatch({
+        type: 'guideSeen',
+        data: {
+          guide: `${state.currentView}.${state.currentGuide}`,
+          updateLocal,
+          newSeenGuides: response?.data?.updateSeenGuides?.seenGuides
+        }
+      })
+    }
   }
 
   contextRef.current.closeDialog = closeDialog
@@ -76,13 +97,21 @@ const IntroDialog = ({ contextRef }) => {
     const array = currentView.split('/')
     let trimmedCurrView = array[array.length - 1]
     trimmedCurrView = trimmedCurrView.slice(0, -1)
-    const hasSeenGuide = user?.seenGuides?.find(guide =>
-      guide.view === trimmedCurrView && guide.id === currentGuide)
 
-    if (!hasSeenGuide) {
+    console.log('user if any', user?.seenGuides)
+    const hasSeenGuide = user?.seenGuides?.find(intro => {
+      const [view, guide] = intro.split('.')
+      return view === trimmedCurrView && guide === currentGuide
+    })
+    
+    console.log('hasSeen', hasSeenGuide)
+    const viewHasGuide = Boolean(introContent.viewMaps?.[trimmedCurrView][currentGuide])
+    console.log('viewHasGuide', viewHasGuide)
+
+    if (!hasSeenGuide && viewHasGuide) {
       setState({
         ...state,
-        open: Boolean(introContent.viewMaps?.[trimmedCurrView][currentGuide]),
+        open: viewHasGuide,
         currentView: trimmedCurrView,
         currentGuide
       })

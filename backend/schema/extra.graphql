@@ -41,6 +41,9 @@ type Mutation {
   disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload
 
+  # User
+  updateSeenGuides(id: ID!, seenGuides: [String!]): User!
+
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
   deleteCourse(id: ID!): Course
