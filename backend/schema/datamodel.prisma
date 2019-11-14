@@ -11,6 +11,7 @@ type User {
   projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser", onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   lastActivity: DateTime
+  seenGuides: [String!]! @scalarList(strategy:"RELATION")
 }
 
 enum Role {

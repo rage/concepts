@@ -41,6 +41,9 @@ type Mutation {
   disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload
 
+  # User
+  updateSeenGuides(id: ID!, seenGuides: [String!]): User!
+
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
   deleteCourse(id: ID!): Course
@@ -225,6 +228,7 @@ type User {
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!
   lastActivity: DateTime
+  seenGuides: [String!]!
 }
 
 enum Role {
