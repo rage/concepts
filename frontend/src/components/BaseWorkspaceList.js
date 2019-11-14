@@ -146,7 +146,7 @@ const BaseWorkspaceList = ({
   const handleWorkspaceExport = async () => {
     handleMenuClose()
     try {
-      await exportWorkspace(menu.workspace.id, menu.workspace.name)
+      await exportWorkspace(menu.workspace.id)
     } catch (err) {
       messageDispatch({
         type: 'setError',

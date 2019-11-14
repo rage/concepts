@@ -1,10 +1,11 @@
-import { checkAccess, Role, Privilege } from '../../util/accessControl'
-import { NotFoundError } from '../../util/errors'
-import { sortedConcepts, sortedCourses } from '../../util/ordering'
+import { verifyAndRespondRequest } from '../util/restAuth'
+import { prisma } from '../../schema/generated/prisma-client'
+import { checkAccess, Role, Privilege } from '../util/accessControl'
+import { sortedConcepts, sortedCourses } from '../util/ordering'
 
 const exportQuery = `
-query($id: ID!) {
-  workspace(where: { id: $id }) {
+query($wid: ID!) {
+  workspace(where: { id: $wid }) {
     workspaceId: id
     workspace: name
     courseTags {
@@ -61,18 +62,23 @@ export const exportData = async (root, { workspaceId }, context) => {
     workspaceId
   })
 
-  const result = await context.prisma.$graphql(exportQuery, {
-    id: workspaceId
-  })
+}
+
+export const exportAPI = async (req, res) => {
+  const resp = verifyAndRespondRequest(req, res, 'EXPORT_WORKSPACE')
+  if (resp !== 'OK') return resp
+  const { wid } = req.params
+
+  const result = await prisma.$graphql(exportQuery, { wid })
 
   if (!result.workspace) {
-    throw new NotFoundError('workspace')
+    return res.status(404).json({ error: 'Workspace not found' })
   }
 
   const prereqMap = ({ from, official }) => ({ name: from.name, official })
 
-  // Create json from workspace
-  return JSON.stringify({
+  res.set('Content-Disposition', `attachment; filename="${result.workspace.workspace}.json"`)
+  return res.json({
     ...result.workspace,
     courses: sortedCourses(result.workspace.courses, result.workspace.courseOrder)
       .map(({ concepts, linksToCourse, ...course }) => ({

@@ -65,10 +65,17 @@ mutation disconnectAuth($authType: AuthType!) {
 ${USER_FRAGMENT}
 `
 
+const CREATE_LINK_TOKEN = gql`
+mutation createLinkToken($linkType: LinkType!, $id: ID!) {
+  createLinkToken(linkType: $linkType, id: $id)
+}
+`
+
 export {
   AUTHENTICATE,
   AUTHENTICATE_GOOGLE,
   CREATE_GUEST_ACCOUNT,
   MERGE_USER,
-  DISCONNECT_AUTH
+  DISCONNECT_AUTH,
+  CREATE_LINK_TOKEN
 }

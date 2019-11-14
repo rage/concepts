@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken'
 import { AuthenticationError } from 'apollo-server-core'
 
-import { Role } from '../../util/accessControl'
+import { checkAccess, Privilege, Role } from '../../util/accessControl'
 import { verify as verifyGoogle } from '../../util/googleAuth'
 import * as tmc from '../../util/tmcAuthentication'
 import { makeMockWorkspaceForUser, signOrCreateUser } from '../../util/createUser'
 import { parseToken } from '../../middleware/authentication'
+import { NotFoundError } from '../../util/errors'
 
 const getData = async (prisma, type, titleType, id) => new Map(
   (await prisma
@@ -53,6 +54,29 @@ export const createGuest = async (root, args, context) => {
   }
 }
 
+const nextWeek = () => new Date(new Date().getTime() + (7 * 24 * 60 * 60 * 1000))
+
+export const createLinkToken = async (root, { linkType, id, expiry }, context) => {
+  const data = {
+    type: linkType,
+    expiry: (expiry ? new Date(expiry) : nextWeek()).toISOString()
+  }
+  switch (linkType) {
+  case 'EXPORT_WORKSPACE':
+    await checkAccess(context, { minimumPrivilege: Privilege.READ, workspaceId: id })
+    data.workspaceId = id
+    break
+  case 'EXPORT_POINTS':
+    await checkAccess(context, { minimumPrivilege: Privilege.READ, projectId: id })
+    data.projectId = id
+    break
+  default:
+    throw new NotFoundError('link type')
+  }
+  // data.user = context.user.id
+  return jwt.sign(data, process.env.SECRET)
+}
+
 export const login = async (root, args, context) => {
   // Get user details from tmc
   let userDetails
@@ -81,7 +105,7 @@ export const mergeUser = async (root, { accessToken }, context) => {
   if (!context.user) {
     return new AuthenticationError('Must be logged in')
   }
-  const oldUserId = parseToken(accessToken)
+  const oldUserId = parseToken(accessToken).id
   const curUserId = context.user.id
 
   await mergeData(context.prisma, oldUserId, curUserId, 'workspace')

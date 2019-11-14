@@ -11,6 +11,7 @@ import { authenticate } from './middleware/authentication'
 import { logError } from './util/errorLogger'
 import resolvers from './resolvers'
 import { progressAPI, pointsAPI } from './controllers/pointsAPI'
+import { exportAPI } from './controllers/exportAPI'
 import { loginAPIRedirect, loginAPIAssert, loginAPIMetadata } from './controllers/loginAPI'
 
 const options = {
@@ -34,6 +35,7 @@ const server = new GraphQLServer({
 // Points for completions
 server.express.get('/api/projects/:pid/courses/:cid/progress', cors(), progressAPI)
 server.express.get('/api/projects/:pid/points', cors(), pointsAPI)
+server.express.get('/api/workspace/:wid/export', cors(), exportAPI)
 
 // SAML API for Haka login
 server.express.use(express.urlencoded({ extended: true }))

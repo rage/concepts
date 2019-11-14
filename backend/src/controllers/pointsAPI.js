@@ -1,15 +1,6 @@
 import { userDetails } from '../util/tmcAuthentication'
 import { prisma } from '../../schema/generated/prisma-client'
-import { getUser } from '../middleware/authentication'
-import { Role } from '../util/permissions'
-
-const HEADER_PREFIX = 'Bearer '.toLowerCase()
-
-const getTokenFrom = request => {
-  const authorization = request.get('Authorization') || ''
-  return authorization.toLowerCase().startsWith(HEADER_PREFIX)
-    && authorization.substr(HEADER_PREFIX.length)
-}
+import { getTokenFrom, verifyAndRespondRequest } from '../util/restAuth'
 
 const convertPointGroup = ({ name, completions: [completion], maxPoints, pointsPerConcept }) => {
   const nPoints = Math.min(maxPoints, (completion?.conceptAmount || 0) * pointsPerConcept)
@@ -28,9 +19,9 @@ export const progressAPI = async (req, res) => {
   const { pid, cid } = req.params
   const token = getTokenFrom(req)
   let tmcId
-  if (!token) return res.status(401).send({ error: 'Authorization header missing or invalid' })
-  else if (!pid) return res.status(401).send({ error: 'Project ID missing' })
-  else if (!cid) return res.status(401).send({ error: 'Course ID missing' })
+  if (!token) return res.status(401).json({ error: 'Authorization header missing or invalid' })
+  else if (!pid) return res.status(401).json({ error: 'Project ID missing' })
+  else if (!cid) return res.status(401).json({ error: 'Course ID missing' })
   try {
     tmcId = (await userDetails(token)).id
   } catch (e) {
@@ -56,22 +47,15 @@ export const progressAPI = async (req, res) => {
 }
 
 export const pointsAPI = async (req, res) => {
+  const resp = verifyAndRespondRequest(req, res, 'EXPORT_POINTS')
+  if (resp !== 'OK') return resp
   const { pid } = req.params
-  const token = getTokenFrom(req)
-  if (!token) return res.status(401).send({ error: 'Authorization header missing or invalid' })
-
-  const context = {}
-  await getUser(token, context, prisma)
-
-  if (context.user.role < Role.STAFF) {
-    return res.status(401).send({ error: 'Insufficient privileges' })
-  }
 
   const data = await prisma.$graphql(`
     query($pid: ID!) {
       project(where: { id: $pid }) {
+        name
         activeTemplate {
-          name
           pointGroups {
             name
             maxPoints
@@ -96,8 +80,9 @@ export const pointsAPI = async (req, res) => {
           completions: [completion]
         })
         const userId = completion.user.tmcId || completion.user.id
-        return `${group.name},${userId},${points}`
+        return `${group.name}\t${userId}\t${points}`
       })) || []
-  res.set('Content-Type', 'text/csv')
+  res.set('Content-Disposition', `attachment; filename="${data.project.name} points.tsv"`)
+  res.set('Content-Type', 'text/tab-separated-values')
   return res.send(points.join('\n'))
 }
