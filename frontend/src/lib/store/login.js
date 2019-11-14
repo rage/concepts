@@ -25,7 +25,6 @@ const updateSeenGuides = (data, newSeenGuides) => ({
 const loginReducers = {
   noop: state => state,
   login: (state, { data }) => {
-    console.log(data)
     window.localStorage.currentUser = JSON.stringify({
       ...data
     })

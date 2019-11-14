@@ -65,7 +65,6 @@ const IntroDialog = ({ contextRef }) => {
     let response
     if (noShow) {
       const currentUser = JSON.parse(window.localStorage.currentUser)
-      console.log(currentUser)
       try {
         response = await client.mutate({
           mutation: UPDATE_SEEN_GUIDES,
@@ -74,8 +73,6 @@ const IntroDialog = ({ contextRef }) => {
             `${state.currentView}.${state.currentGuide}`
           ]}
         })
-        console.log(response)
-        console.log('update local', updateLocal)
       } catch {}
     }
     if (state.currentView && state.currentGuide) {
@@ -98,16 +95,11 @@ const IntroDialog = ({ contextRef }) => {
     let trimmedCurrView = array[array.length - 1]
     trimmedCurrView = trimmedCurrView.slice(0, -1)
 
-    console.log('user if any', user?.seenGuides)
     const hasSeenGuide = user?.seenGuides?.find(intro => {
       const [view, guide] = intro.split('.')
       return view === trimmedCurrView && guide === currentGuide
     })
-    
-    console.log('hasSeen', hasSeenGuide)
     const viewHasGuide = Boolean(introContent.viewMaps?.[trimmedCurrView][currentGuide])
-    console.log('viewHasGuide', viewHasGuide)
-
     if (!hasSeenGuide && viewHasGuide) {
       setState({
         ...state,
