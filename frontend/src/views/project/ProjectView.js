@@ -52,13 +52,16 @@ const useStyles = makeStyles(() => ({
     gridArea: 'toolbar'
   },
   templates: {
-    gridArea: 'templates'
+    gridArea: 'templates',
+    overflow: 'hidden'
   },
   merges: {
-    gridArea: 'merges'
+    gridArea: 'merges',
+    overflow: 'hidden'
   },
   userWorkspaces: {
-    gridArea: 'userWorkspaces'
+    gridArea: 'userWorkspaces',
+    overflow: 'hidden'
   }
 }))
 

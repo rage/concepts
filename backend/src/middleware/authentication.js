@@ -31,15 +31,15 @@ export const authenticate = async (resolve, root, args, context, info) => {
 
 export const parseToken = token => {
   try {
-    return jwt.verify(token, process.env.SECRET).id
+    return jwt.verify(token, process.env.SECRET)
   } catch (e) {
     console.log(e)
     throw new AuthenticationError('Bad token')
   }
 }
 
-const getUser = async (token, context, prisma) => {
-  const id = parseToken(token)
+export const getUser = async (token, context, prisma) => {
+  const id = parseToken(token).id
   if (!id) {
     throw new AuthenticationError('Invalid token: no ID found')
   }
@@ -55,11 +55,7 @@ const getUser = async (token, context, prisma) => {
 
   // Update last activity of the user
   await prisma.updateUser({
-    where: {
-      id: context.user.id
-    },
-    data: {
-      lastActivity: new Date().toISOString()
-    }
+    where: { id: context.user.id },
+    data: { lastActivity: new Date().toISOString() }
   })
 }
