@@ -9,6 +9,7 @@ import {
   WORKSPACE_MEMBER_UPDATED,
   PROJECT_MEMBER_UPDATED
 } from '../Subscription/config'
+import { pubsub } from '../Subscription/config'
 export const createWorkspaceToken = async (root, { workspaceId, privilege }, context) => {
   await checkAccess(context, {
     minimumRole: Role.GUEST,

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-const WORKPACE_MEMBER_CREATED = gql`
+const WORKSPACE_MEMBER_CREATED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   workspaceMemberCreated(workspaceId: $workspaceId) {
     id
@@ -17,7 +17,7 @@ subscription($workspaceId: ID!) {
 }
 `
 
-const WORKSPACE_MEMBER_DELETED = gql`
+const WORKSPACE_MEMBER_DELETED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   workspaceMemberDeleted(workspaceId: $workspaceId) {
     id
@@ -25,7 +25,7 @@ subscription($workspaceId: ID!) {
 }
 `
 
-const WORKSPACE_MEMBER_UPDATED = gql`
+const WORKSPACE_MEMBER_UPDATED_SUBSCRIPTION = gql`
 subscription($workspaceId: ID!) {
   workspaceMemberUpdated(workspaceId: $workspaceId) {
     id
@@ -42,7 +42,7 @@ subscription($workspaceId: ID!) {
 }
 `
 
-const PROJECT_MEMBER_CREATED = gql`
+const PROJECT_MEMBER_CREATED_SUBSCRIPTION = gql`
 subscription($projectId: ID!) {
   projectMemberCreated(projectId: $projectId) {
     id
@@ -59,7 +59,7 @@ subscription($projectId: ID!) {
 }
 `
 
-const PROJECT_MEMBER_DELETED = gql`
+const PROJECT_MEMBER_DELETED_SUBSCRIPTION = gql`
 subscription($projectId: ID!) {
   projectMemberDeleted(projectId: $projectId) {
     id
@@ -67,7 +67,7 @@ subscription($projectId: ID!) {
 }
 `
 
-const PROJECT_MEMBER_UPDATED = gql`
+const PROJECT_MEMBER_UPDATED_SUBSCRIPTION = gql`
 subscription($projectId: ID!) {
   projectMemberUpdated(projectId: $projectId) {
     id
@@ -85,10 +85,10 @@ subscription($projectId: ID!) {
 `
 
 export {
-  WORKPACE_MEMBER_CREATED,
-  WORKSPACE_MEMBER_DELETED,
-  WORKSPACE_MEMBER_UPDATED,
-  PROJECT_MEMBER_CREATED,
-  PROJECT_MEMBER_DELETED,
-  PROJECT_MEMBER_UPDATED
+  WORKSPACE_MEMBER_CREATED_SUBSCRIPTION,
+  WORKSPACE_MEMBER_DELETED_SUBSCRIPTION,
+  WORKSPACE_MEMBER_UPDATED_SUBSCRIPTION,
+  PROJECT_MEMBER_CREATED_SUBSCRIPTION,
+  PROJECT_MEMBER_DELETED_SUBSCRIPTION,
+  PROJECT_MEMBER_UPDATED_SUBSCRIPTION
 }
