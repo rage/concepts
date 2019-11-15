@@ -33,6 +33,14 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
     }
   }
 
+  ctx.customSubmit = () => {
+    if (data) {
+      sendData(data)
+      return true
+    }
+    return false
+  }
+
   const addStateDataToJSON = (jsonData) => {
     if (ctx.inputState.name !== '') {
       jsonData.workspace = ctx.inputState.name
