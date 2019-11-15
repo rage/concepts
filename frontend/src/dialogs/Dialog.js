@@ -77,6 +77,9 @@ const Dialog = ({ contextRef }) => {
   }
 
   const handleSubmit = ({ close = true }) => {
+    if (contextRef.current.customSubmit?.()) {
+      return
+    }
     if (state.submitDisabled) return
     const variables = {}
     for (const key of state.fields) {
@@ -118,6 +121,7 @@ const Dialog = ({ contextRef }) => {
     mutation, requiredVariables, actionText, fields, title, content, CustomActions,
     customActionsProps, type, createOptimisticResponse, rejectPromise
   }) => {
+    delete contextRef.current.customSubmit
     clearTimeout(stateChange.current)
     if (fields) {
       setInputState(Object.fromEntries(fields.map(key =>
