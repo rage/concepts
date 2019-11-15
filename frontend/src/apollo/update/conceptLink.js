@@ -1,5 +1,6 @@
 import client from '../apolloClient'
-import { LINKS_IN_COURSE } from '../../graphql/Query'
+import { LINKS_IN_COURSE, WORKSPACE_COURSES_AND_CONCEPTS } from '../../graphql/Query'
+import * as objectRecursion from '../../lib/objectRecursion'
 
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
@@ -55,7 +56,47 @@ const deleteConceptLinkUpdate = () =>
     }
   }
 
+const deleteConceptLinkRecursiveUpdate = workspaceId => (client, response) => {
+  const { deleteConceptLink } = response.data
+  const { id, courseId, conceptId } = deleteConceptLink
+  const data = client.readQuery({
+    query: WORKSPACE_COURSES_AND_CONCEPTS,
+    variables: { id: workspaceId }
+  })
+
+  const obj = objectRecursion.get(data,
+    `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}]`)
+  obj.linksToConcept = obj.linksToConcept.filter(link =>
+    link.__typename !== 'DeletedConceptLink' && link.id !== id)
+
+  client.writeQuery({
+    query: WORKSPACE_COURSES_AND_CONCEPTS,
+    variables: { id: workspaceId },
+    data
+  })
+}
+
+const createConceptLinkRecursiveUpdate = workspaceId => (client, response) => {
+  const { createConceptLink } = response.data
+  const data = client.readQuery({
+    query: WORKSPACE_COURSES_AND_CONCEPTS,
+    variables: { id: workspaceId }
+  })
+  const courseId = createConceptLink.to.course.id
+  const conceptId = createConceptLink.to.id
+  const path = `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}].linksToConcept`
+  objectRecursion.push(data, path, createConceptLink)
+
+  client.writeQuery({
+    query: WORKSPACE_COURSES_AND_CONCEPTS,
+    variables: { id: workspaceId },
+    data
+  })
+}
+
 export {
   createConceptLinkUpdate,
-  deleteConceptLinkUpdate
+  deleteConceptLinkUpdate,
+  createConceptLinkRecursiveUpdate,
+  deleteConceptLinkRecursiveUpdate
 }

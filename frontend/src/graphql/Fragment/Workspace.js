@@ -21,6 +21,7 @@ fragment coursesForWorkspace on Workspace {
         id
       }
       linksToConcept {
+        id
         from {
           id
           name

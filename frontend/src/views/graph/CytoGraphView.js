@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography
+  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
 } from '@material-ui/core'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
@@ -9,18 +9,25 @@ import popper from 'cytoscape-popper'
 import Tippy from 'tippy.js'
 
 import {
-  WORKSPACE_DATA_FOR_GRAPH
+  WORKSPACE_COURSES_AND_CONCEPTS
 } from '../../graphql/Query'
 import client from '../../apollo/apolloClient'
+import cache from '../../apollo/update'
 import colors from './hexcolors'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
 
+import * as objectRecursion from '../../lib/objectRecursion'
+import {
+  useManyUpdatingSubscriptions,
+  useUpdatingSubscription
+} from '../../apollo/useUpdatingSubscription'
+
 cytoscape.use(klay)
 cytoscape.use(popper)
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     gridArea: 'content',
     overflow: 'hidden'
@@ -61,8 +68,18 @@ const useStyles = makeStyles({
   noLinksMessage: {
     width: '260px',
     marginLeft: '-140px'
+  },
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
+  },
+  popper: {
+    padding: '5px'
   }
-})
+}))
 
 /* eslint-disable max-len, no-unused-vars */
 const options = {
@@ -147,6 +164,7 @@ const GraphView = ({ workspaceId }) => {
     concept: false
   })
   const [legendFilter, setLegendFilter] = useState([])
+  const [refresh, setRefresh] = useState(false)
   const state = useRef({
     network: null,
     nodes: null,
@@ -160,6 +178,41 @@ const GraphView = ({ workspaceId }) => {
     courseLayout: null,
     conceptLayout: null
   })
+
+  const postUpdate = () => setRefresh(true)
+
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId },
+    postUpdate
+  })
+
+  useManyUpdatingSubscriptions(
+    ['course', 'concept'],
+    ['create', 'delete', 'update'],
+    { variables: { workspaceId }, postUpdate },
+    
+  )
+
+  useUpdatingSubscription('concept link', 'delete', {
+    variables: { workspaceId },
+    update: cache.deleteConceptLinkRecursiveUpdate(workspaceId),
+    postUpdate
+  })
+
+  useUpdatingSubscription('concept link', 'create', {
+    variables: { workspaceId },
+    update: cache.createConceptLinkRecursiveUpdate(workspaceId),
+    postUpdate
+  })
+
+  const redrawEverything = () => {
+    const data = client.readQuery({
+      query: WORKSPACE_COURSES_AND_CONCEPTS,
+      variables: { id: workspaceId }
+    })
+    drawConceptGraph(data)
+    setRefresh(false)
+  }
 
   const loadingRef = useRef(null)
   const controlsRef = useRef(null)
@@ -437,7 +490,7 @@ const GraphView = ({ workspaceId }) => {
     (async () => {
       try {
         const response = await client.query({
-          query: WORKSPACE_DATA_FOR_GRAPH,
+          query: WORKSPACE_COURSES_AND_CONCEPTS,
           variables: {
             id: workspaceId
           }
@@ -448,7 +501,7 @@ const GraphView = ({ workspaceId }) => {
         setError(err)
       }
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const infoBox = useInfoBox()
@@ -504,6 +557,24 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
+        {refresh &&
+          <Tooltip
+            key={'refresh-graph'}
+            placement='bottom'
+            classes={{
+              tooltip: classes.tooltip,
+              popper: classes.popper
+            }}
+            TransitionComponent={({ children }) => children || null}
+            title={'There are new changes to graph.'}
+          >
+            <Button
+              className={classes.button} variant='outlined' color='secondary' onClick={redrawEverything}
+            >
+              Refresh
+            </Button>
+          </Tooltip>
+        }
       </div>
       <div className={classes.sliderWrapper}>
         <Slider

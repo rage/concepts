@@ -5,6 +5,7 @@ import { pink } from '@material-ui/core/colors'
 import { Paper, Typography, Tooltip } from '@material-ui/core'
 
 import { WORKSPACE_COURSES_AND_CONCEPTS } from '../../graphql/Query'
+import cache from '../../apollo/update'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
@@ -47,6 +48,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   tableCell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'rgba(0, 0, 0, .3)',
+    fontSize: '22px',
+
     width: `${cellDimension.width}px`,
     height: `${cellDimension.height}px`,
     '&:hover': {
@@ -221,7 +228,9 @@ const TableCell = forwardRef(({
             className={classes.tableCell}
             style={{ backgroundColor: mapToGrad(conceptsLinked) }}
             onClick={navigateToMapper(toCourse.id)}
-          />
+          >
+            {concepts.length}
+          </div>
         </Tooltip>
         :
         <div
@@ -248,46 +257,12 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
 
   useUpdatingSubscription('concept link', 'delete', {
     variables: { workspaceId },
-    update: (client, response) => {
-      const { deleteConceptLink } = response.data
-      const { id, courseId, conceptId } = deleteConceptLink
-      const data = client.readQuery({
-        query: WORKSPACE_COURSES_AND_CONCEPTS,
-        variables: { id: workspaceId }
-      })
-
-      const obj = objectRecursion.get(data,
-        `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}]`)
-      obj.linksToConcept = obj.linksToConcept.filter(link =>
-        link.__typename !== 'DeletedConceptLink' && link.id !== id)
-
-      client.writeQuery({
-        query: WORKSPACE_COURSES_AND_CONCEPTS,
-        variables: { id: workspaceId },
-        data
-      })
-    }
+    update: cache.deleteConceptLinkRecursiveUpdate(workspaceId)
   })
 
   useUpdatingSubscription('concept link', 'create', {
     variables: { workspaceId },
-    update: (client, response) => {
-      const { createConceptLink } = response.data
-      const data = client.readQuery({
-        query: WORKSPACE_COURSES_AND_CONCEPTS,
-        variables: { id: workspaceId }
-      })
-      const courseId = createConceptLink.to.course.id
-      const conceptId = createConceptLink.to.id
-      const path = `workspaceById.courses[id=${courseId}].concepts[id=${conceptId}].linksToConcept`
-      objectRecursion.push(data, path, createConceptLink)
-
-      client.writeQuery({
-        query: WORKSPACE_COURSES_AND_CONCEPTS,
-        variables: { id: workspaceId },
-        data
-      })
-    }
+    update: cache.createConceptLinkRecursiveUpdate(workspaceId)
   })
 
   useManyUpdatingSubscriptions(
