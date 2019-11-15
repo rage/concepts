@@ -83,9 +83,11 @@ export const useToken = async (root, { id }, context) => {
       token: { connect: { id } }
     })
     pubsub.publish(WORKSPACE_MEMBER_CREATED, { 
-      participant, 
-      userId: context.user.id, 
-      workspaceId: workspace.id 
+      participant : {
+        ...participant,
+        userId: context.user.id, 
+        workspaceId: workspace.id 
+      } 
     })
     return participant
   } else if (id[0] === 'p') {
@@ -98,9 +100,11 @@ export const useToken = async (root, { id }, context) => {
       token: { connect: { id } }
     })
     pubsub.publish(PROJECT_MEMBER_CREATED, {
-      participant,
-      userId: context.user.id,
-      projectId: project.id
+      participant: {
+        ...participant,
+        userId: context.user.id,
+        projectId: project.id
+      }
     })
     return participant
   } else {
@@ -118,8 +122,10 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       data: { privilege }
     })
     pubsub.publish(PROJECT_MEMBER_UPDATED, {
-      updatedProjectParticipant,
-      projectId
+      participant: {
+        ...updatedProjectParticipant,
+        projectId
+      }
     })
     return {
       id,
@@ -134,8 +140,10 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       data: { privilege }
     })
     pubsub.publish(WORKSPACE_MEMBER_UPDATED, {
-      updatedWorkspaceParticipant,
-      workspaceId
+      participant: {
+        ...updatedWorkspaceParticipant,
+        workspaceId
+      }
     })
     return {
       id,
@@ -151,8 +159,10 @@ export const deleteParticipant = async (root, { type, id }, context) => {
     await checkAccess(context, { projectId, minimumPrivilege: Privilege.OWNER })
     const deletedProjectParticipant = await context.prisma.deleteProjectParticipant({ id })
     pubsub.publish(PROJECT_MEMBER_DELETED, {
-      deletedProjectParticipant,
-      projectId 
+      participant: {
+        ...deletedProjectParticipant,
+        projectId 
+      }
     })
     return id
   } else if (type === 'WORKSPACE') {
@@ -161,8 +171,10 @@ export const deleteParticipant = async (root, { type, id }, context) => {
     await checkAccess(context, { workspaceId, minimumPrivilege: Privilege.OWNER })
     const deletedWorkspaceParticipant = await context.prisma.deleteWorkspaceParticipant({ id })
     pubsub.publish(WORKSPACE_MEMBER_DELETED, {
-      deletedWorkspaceParticipant,
-      workspaceId
+      participant: {
+        ...deletedWorkspaceParticipant,
+        workspaceId
+      }
     })
     return id
   }
