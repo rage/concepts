@@ -7,6 +7,7 @@ import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
 import Tippy from 'tippy.js'
+import 'tippy.js/themes/light.css'
 
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
@@ -21,6 +22,7 @@ import {
   useManyUpdatingSubscriptions,
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
+import { getTagColor } from '../../dialogs/tagSelectUtils'
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -297,6 +299,7 @@ const GraphView = ({ workspaceId }) => {
             description: !concept.description ? 'No description available'
               : concept.description.replace('\n', '</br>'),
             color: course.color.bg,
+            tags: concept.tags,
             type: 'concept',
             display: 'element',
             courseId: course.id
@@ -424,6 +427,7 @@ const GraphView = ({ workspaceId }) => {
     // Add tooltip to concept nodes
     cur.network.nodes('node[type="concept"]').forEach(conceptNode => {
       const name = conceptNode.data('label')
+      const tags = conceptNode.data('tags')
       const description = conceptNode.data('description')
       const nodeRef = conceptNode.popperRef()
       const tippy = new Tippy(nodeRef, {
@@ -432,15 +436,32 @@ const GraphView = ({ workspaceId }) => {
           const title = document.createElement('h3')
           const desc = document.createElement('p')
           title.style.textAlign = 'left'
+          title.style.marginTop = '0px'
+          title.style.marginBottom = '0px'
           desc.style.textAlign = 'left'
+          desc.style.marginTop = '5px'
           title.innerHTML = name
           desc.innerHTML = description
           content.appendChild(title)
           content.appendChild(desc)
+          tags.forEach(tag => {
+            const chip = document.createElement('span')
+            chip.innerHTML = tag.name
+            chip.style.padding = '4px 6px 4px 6px'
+            chip.style.border = '1px solid'
+            chip.style.borderRadius = '30px'
+            chip.style.borderColor = getTagColor(tag)
+            chip.style.color = getTagColor(tag)
+            chip.style.margin = '0px 4px 0px 0px'
+            content.appendChild(chip)
+          })
+          content.style.marginTop = '4px'
+          content.style.marginBottom = '8px'
           return content
         },
         trigger: 'manual',
-        duration: [0, 0]
+        duration: [0, 0],
+        theme: 'light'
       })
       conceptNode.on('mouseover', () => tippy.show())
       conceptNode.on('mouseout', () => tippy.hide())
@@ -557,14 +578,14 @@ const GraphView = ({ workspaceId }) => {
         </Button>
         {refresh &&
           <Tooltip
-            key={'refresh-graph'}
+            key='refresh-graph'
             placement='bottom'
             classes={{
               tooltip: classes.tooltip,
               popper: classes.popper
             }}
             TransitionComponent={({ children }) => children || null}
-            title={'There are new changes to graph.'}
+            title='There are new changes to graph.'
           >
             <Button
               className={classes.button} variant='outlined' color='secondary' onClick={redrawEverything}
