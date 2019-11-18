@@ -1,6 +1,6 @@
 import React from 'react'
 import { useMutation } from 'react-apollo-hooks'
-import { Button } from '@material-ui/core'
+import { Button, Tooltip } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import { DELETE_WORKSPACE, MERGE_PROJECT } from '../../graphql/Mutation'
@@ -26,17 +26,25 @@ const MergeList = ({ mergeWorkspaces, projectId, activeTemplate, urlPrefix }) =>
     }]
   })
   const cardHeaderTitle = 'Merged workspaces'
-  const cardHeaderAction = (
+  let cardHeaderAction = (
     <Button
       style={{ margin: '6px' }}
       variant='outlined' color='primary'
       onClick={() => merge({ variables: { projectId } })}
-      disabled={!activeTemplate}
+      disabled={mergeWorkspaces.length === 0}
       ref={infoBox.ref('project', 'MERGE_USER_WORKSPACES')}
     >
       New merge
     </Button>
   )
+
+  if (mergeWorkspaces.length === 0) {
+    cardHeaderAction = (
+      <Tooltip title='You must have existing student workspaces before merging' placement='bottom'>
+        <div>{cardHeaderAction}</div>
+      </Tooltip>
+    )
+  }
 
   return <BaseWorkspaceList type={TYPE_MERGE}
     workspaces={mergeWorkspaces} urlPrefix={urlPrefix} activeTemplate={activeTemplate}

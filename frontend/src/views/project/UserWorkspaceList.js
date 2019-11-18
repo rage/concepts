@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, Tooltip } from '@material-ui/core'
 
 import { Privilege } from '../../lib/permissions'
 import { useShareDialog } from '../../dialogs/sharing'
@@ -14,7 +14,7 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
     'Let students clone the active template to contribute towards the mapping.')
 
   const cardHeaderTitle = 'Workspaces by users'
-  const cardHeaderAction = (
+  let cardHeaderAction = (
     <Button
       style={{ margin: '6px' }}
       variant='outlined' color='primary'
@@ -25,6 +25,14 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
       Invite students
     </Button>
   )
+
+  if (!activeTemplate) {
+    cardHeaderAction = (
+      <Tooltip title='You must add an active template before inviting students' placement='bottom'>
+        <div>{cardHeaderAction}</div>
+      </Tooltip>
+    )
+  }
 
   return <BaseWorkspaceList type={TYPE_USER}
     workspaces={userWorkspaces} urlPrefix={urlPrefix} projectId={projectId}
