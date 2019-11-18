@@ -143,11 +143,7 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
     pubsub.publish(WORKSPACE_MEMBER_UPDATED, { 
       workspaceMemberUpdated: {
         ...updatedWorkspaceParticipant,
-        participantId: updatedWorkspaceParticipant.id,
         workspaceId,
-        privilege,
-        user: context.user,
-        workspace
       } 
     })
     return {
