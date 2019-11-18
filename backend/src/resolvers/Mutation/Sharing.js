@@ -8,7 +8,7 @@ import {
   WORKSPACE_MEMBER_DELETED,
   WORKSPACE_MEMBER_UPDATED,
   PROJECT_MEMBER_UPDATED
-} from '../Subscription/config'
+} from '../Subscription/config/channels'
 import { pubsub } from '../Subscription/config'
 export const createWorkspaceToken = async (root, { workspaceId, privilege }, context) => {
   await checkAccess(context, {
@@ -132,18 +132,23 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       privilege
     }
   } else if (type === 'WORKSPACE') {
-    const { id: workspaceId } = nullShield(
+    const workspace = nullShield(
       await context.prisma.workspaceParticipant({ id }).workspace())
+    const workspaceId = workspace.id
     await checkAccess(context, { workspaceId, minimumPrivilege: Privilege.OWNER })
     const updatedWorkspaceParticipant = await context.prisma.updateWorkspaceParticipant({
       where: { id },
       data: { privilege }
     })
-    pubsub.publish(WORKSPACE_MEMBER_UPDATED, {
-      participant: {
+    pubsub.publish(WORKSPACE_MEMBER_UPDATED, { 
+      workspaceMemberUpdated: {
         ...updatedWorkspaceParticipant,
-        workspaceId
-      }
+        participantId: updatedWorkspaceParticipant.id,
+        workspaceId,
+        privilege,
+        user: context.user,
+        workspace
+      } 
     })
     return {
       id,

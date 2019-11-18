@@ -20,6 +20,11 @@ export const workspaceMemberDeleted = {
     (payload, variables) => payload.participant.workspaceId === variables.workspaceId)
 }
 
+export const workspaceMemberUpdated = {
+  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_MEMBER_UPDATED),
+    (payload, variables) => payload.workspaceMemberUpdated.workspaceId === variables.workspaceId)
+}
+
 export const projectMemberCreated = {
   subscribe: withFilter(() => pubsub.asyncIterator(PROJECT_MEMBER_CREATED),
     (payload, variables) => payload.participant.projectId === variables.projectId)
@@ -35,7 +40,3 @@ export const projectMemberUpdated = {
     (payload, variables) => payload.participant.projectId === variables.projectsId)
 }
 
-export const workspaceMemberUpdated = {
-  subscribe: withFilter(() => pubsub.asyncIterator(WORKSPACE_MEMBER_UPDATED),
-    (payload, variables) => payload.participant.workspaceId === variables.workspaceId)
-}
