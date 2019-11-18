@@ -1,12 +1,12 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { TextField, MenuItem, Button } from '@material-ui/core'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { TextField, MenuItem } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import {
   CREATE_POINTGROUP, UPDATE_POINTGROUP,
-  DELETE_POINTGROUP, UPDATE_TEMPLATE_WORKSPACE
+  DELETE_POINTGROUP, UPDATE_TEMPLATE_WORKSPACE, CREATE_LINK_TOKEN
 } from '../../graphql/Mutation'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
@@ -27,6 +27,13 @@ const PointGroupsView = ({ projectId }) => {
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
+  })
+
+  const createLinkToken = useMutation(CREATE_LINK_TOKEN, {
+    variables: {
+      linkType: 'EXPORT_POINTS',
+      id: projectId
+    }
   })
 
   const createPointGroup = useMutation(CREATE_POINTGROUP, {
@@ -92,6 +99,23 @@ const PointGroupsView = ({ projectId }) => {
     })
   }
 
+  const ExportData = () => (
+    <Button
+      type='button'
+      variant='contained'
+      color='primary'
+      onClick={async () => {
+        const resp = await createLinkToken()
+
+        // eslint-disable-next-line max-len
+        const url = `${window.location.origin}/api/projects/${projectId}/points?access_token=${resp.data.createLinkToken}`
+        window.open(url, '_blank')
+      }}
+    >
+      Export points
+    </Button>
+  )
+
   const CourseSelector = () => (
     <TextField
       select
@@ -114,7 +138,10 @@ const PointGroupsView = ({ projectId }) => {
       <EditableTable
         title='Point groups'
         columns={columns}
-        AdditionalAction={CourseSelector}
+        AdditionalAction={() => <>
+          <ExportData />
+          <CourseSelector />
+        </>}
         disabled={editableTableDisabled}
         createMutation={args => createPointGroup({
           variables: {

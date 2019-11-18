@@ -12,8 +12,8 @@ import {
 
 import { Privilege } from '../lib/permissions'
 import client from '../apollo/apolloClient'
-import { EXPORT_QUERY, WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
-import { DELETE_WORKSPACE } from '../graphql/Mutation'
+import { WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
+import { CREATE_LINK_TOKEN, DELETE_WORKSPACE } from '../graphql/Mutation'
 import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../lib/store'
 import { useShareDialog } from '../dialogs/sharing'
@@ -41,24 +41,18 @@ const useStyles = makeStyles({
   }
 })
 
-const downloadFile = (data, fileName) => {
-  const element = document.createElement('a')
-  element.href = URL.createObjectURL(new Blob([data], { type: 'application/json' }))
-  element.download = fileName
-  document.body.appendChild(element)
-  element.click()
-  document.body.removeChild(element)
-}
-
-export const exportWorkspace = async (workspaceId, workspaceName) => {
-  const queryResponse = await client.query({
-    query: EXPORT_QUERY,
+export const exportWorkspace = async workspaceId => {
+  const linkResp = await client.mutate({
+    mutation: CREATE_LINK_TOKEN,
     variables: {
-      workspaceId: workspaceId
+      linkType: 'EXPORT_WORKSPACE',
+      id: workspaceId
     }
   })
 
-  downloadFile(queryResponse.data.exportData, `${workspaceName}.json`)
+  // eslint-disable-next-line max-len
+  const url = `${window.location.origin}/api/workspace/${workspaceId}/export?access_token=${linkResp.data.createLinkToken}`
+  window.open(url, '_blank')
 }
 
 const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
@@ -124,7 +118,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   const handleWorkspaceExport = async () => {
     setMenuAnchor(null)
     try {
-      await exportWorkspace(workspaceId, workspaceId)
+      await exportWorkspace(workspaceId)
     } catch (err) {
       messageDispatch({
         type: 'setError',

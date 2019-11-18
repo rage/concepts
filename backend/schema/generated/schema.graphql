@@ -1,5 +1,3 @@
-# import ConceptSubscriptionPayload from "./prisma-client/prisma.graphql"
-
 type Query {
   # Authentication
   allUsers: [User!]!
@@ -24,9 +22,6 @@ type Query {
   courseById(id: ID!): Course
   conceptsByCourse(id: ID!): [Concept!]!
 
-  # Porting queries
-  exportData(workspaceId: ID!): String!
-
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace
   workspaceMemberInfo(id: ID!): [MemberInfo]!
@@ -40,6 +35,10 @@ type Mutation {
   mergeUser(accessToken: String!): User!
   disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload
+  createLinkToken(linkType: LinkType!, id: ID!, expiry: DateTime): String!
+
+  # User
+  updateSeenGuides(id: ID!, seenGuides: [String!]): User!
 
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
@@ -138,6 +137,11 @@ type Subscription {
   projectMemberUpdated(projectId: ID!): ProjectParticipant!
 }
 
+enum LinkType {
+  EXPORT_WORKSPACE
+  EXPORT_POINTS
+}
+
 union ProjectOrWorkspace = Workspace | Project | LimitedProject
 union ProjectOrWorkspaceParticipant = WorkspaceParticipant | ProjectParticipant
 union ProjectOrWorkspaceToken = WorkspaceToken | ProjectToken
@@ -234,6 +238,7 @@ type User {
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!
   lastActivity: DateTime
+  seenGuides: [String!]!
 }
 
 enum Role {
