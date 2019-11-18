@@ -83,7 +83,7 @@ export const useToken = async (root, { id }, context) => {
       token: { connect: { id } }
     })
     pubsub.publish(WORKSPACE_MEMBER_CREATED, { 
-      participant : {
+      workspaceMemberCreated : {
         ...participant,
         userId: context.user.id, 
         workspaceId: workspace.id 
@@ -100,7 +100,7 @@ export const useToken = async (root, { id }, context) => {
       token: { connect: { id } }
     })
     pubsub.publish(PROJECT_MEMBER_CREATED, {
-      participant: {
+      projectMemberCreated: {
         ...participant,
         userId: context.user.id,
         projectId: project.id
@@ -122,7 +122,7 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       data: { privilege }
     })
     pubsub.publish(PROJECT_MEMBER_UPDATED, {
-      participant: {
+      projectMemberUpdated: {
         ...updatedProjectParticipant,
         projectId
       }
@@ -164,7 +164,7 @@ export const deleteParticipant = async (root, { type, id }, context) => {
     await checkAccess(context, { projectId, minimumPrivilege: Privilege.OWNER })
     const deletedProjectParticipant = await context.prisma.deleteProjectParticipant({ id })
     pubsub.publish(PROJECT_MEMBER_DELETED, {
-      participant: {
+      projectMemberDeleted: {
         ...deletedProjectParticipant,
         projectId 
       }
@@ -176,7 +176,7 @@ export const deleteParticipant = async (root, { type, id }, context) => {
     await checkAccess(context, { workspaceId, minimumPrivilege: Privilege.OWNER })
     const deletedWorkspaceParticipant = await context.prisma.deleteWorkspaceParticipant({ id })
     pubsub.publish(WORKSPACE_MEMBER_DELETED, {
-      participant: {
+      workspaceMemberDeleted: {
         ...deletedWorkspaceParticipant,
         workspaceId
       }
