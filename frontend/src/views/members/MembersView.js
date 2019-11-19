@@ -13,6 +13,10 @@ import EditableTable, { Type } from '../../components/EditableTable'
 import { useLoginStateValue } from '../../lib/store'
 import { DELETE_PARTICIPANT, UPDATE_PARTICIPANT } from '../../graphql/Mutation'
 import useRouter from '../../lib/useRouter'
+import cache from '../../apollo/update'
+import {
+  useUpdatingSubscription
+} from '../../apollo/useUpdatingSubscription'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -68,6 +72,11 @@ const MembersView = ({ projectId, workspaceId }) => {
   const memberQueryType = projectId ? PROJECT_BY_ID_MEMBER_INFO : WORKSPACE_BY_ID_MEMBER_INFO
   const id = projectId || workspaceId
   const type = projectId ? 'project' : 'workspace'
+
+  useUpdatingSubscription('workspace member', 'create', {
+    variables: { workspaceId },
+    update: cache.createWorkspaceMember(workspaceId)
+  })
 
   const mainQuery = useQuery(mainQueryType, {
     variables: { id }
