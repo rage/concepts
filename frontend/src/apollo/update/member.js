@@ -5,8 +5,8 @@ import * as objectRecursion from '../../lib/objectRecursion'
 
 const getMemberInfo = (workspaceMember) => {
   return {
-    participantId: workspaceMember.user.id,
-    id: workspaceMember.id,
+    participantId: workspaceMember.id,
+    id: workspaceMember.user.id,
     role: workspaceMember.user.role, 
     privilege: workspaceMember.privilege,
     token: workspaceMember.token,
@@ -51,9 +51,27 @@ const updateWorkspaceMember = (workspaceId) =>
       variables: { id: workspaceId },
       data
     })
-  }
+}
+
+const deleteWorkspaceMember = (workspaceId) => 
+  (store, response) => {
+    const { deleteWorkspaceMember } = response.data
+    const data = store.readQuery({
+      query: WORKSPACE_BY_ID_MEMBER_INFO,
+      variables: { id: workspaceId }
+    })
+
+    objectRecursion.del(data, `workspaceMemberInfo[participantId=${deleteWorkspaceMember.id}]`)
+
+    store.writeQuery({
+      query: WORKSPACE_BY_ID_MEMBER_INFO,
+      variables: { id: workspaceId },
+      data
+    })
+}
 
 export {
   createWorkspaceMember,
-  updateWorkspaceMember
+  updateWorkspaceMember,
+  deleteWorkspaceMember
 }
