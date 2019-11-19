@@ -74,18 +74,15 @@ const MembersView = ({ projectId, workspaceId }) => {
   const type = projectId ? 'project' : 'workspace'
 
   useUpdatingSubscription(`${type} member`, 'create', {
-    variables: { [`${type}Id`]: id },
-    update: cache.createWorkspaceMember(id)
+    variables: { [`${type}Id`]: id }
   })
 
   useUpdatingSubscription(`${type} member`, 'update', {
-    variables: { [`${type}Id`]: id },
-    update: cache.updateWorkspaceMember(id)
+    variables: { [`${type}Id`]: id }
   })
 
   useUpdatingSubscription(`${type} member`, 'delete', {
-    variables: { [`${type}Id`]: id },
-    update: cache.deleteWorkspaceMember(id)
+    variables: { [`${type}Id`]: id }
   })
 
 

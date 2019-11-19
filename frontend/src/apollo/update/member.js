@@ -74,20 +74,20 @@ const deleteMember = type => (id) =>
     })
 }
 
-const createWorkspaceMember = createMember('Workspace')
-const createProjectMember = createMember('Project')
+const createWorkspaceMemberUpdate = createMember('Workspace')
+const createProjectMemberUpdate = createMember('Project')
 
-const updateWorkspaceMember = updateMember('Workspace')
-const updateProjectMember = updateMember('Project')
+const updateWorkspaceMemberUpdate = updateMember('Workspace')
+const updateProjectMemberUpdate = updateMember('Project')
 
-const deleteWorkspaceMember = deleteMember('Workspace')
-const deleteProjectMember = deleteMember('Project')
+const deleteWorkspaceMemberUpdate = deleteMember('Workspace')
+const deleteProjectMemberUpdate = deleteMember('Project')
 
 export {
-  createWorkspaceMember,
-  createProjectMember,
-  updateWorkspaceMember,
-  updateProjectMember,
-  deleteWorkspaceMember,
-  deleteProjectMember
+  createWorkspaceMemberUpdate,
+  createProjectMemberUpdate,
+  updateWorkspaceMemberUpdate,
+  updateProjectMemberUpdate,
+  deleteWorkspaceMemberUpdate,
+  deleteProjectMemberUpdate
 }
