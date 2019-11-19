@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
+  BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon, Tooltip
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
@@ -149,11 +149,13 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
         }
       </BottomNavigation>
       <div>
-        <IconButton
-          className={classes.menuButton} onClick={infoBox.open}
-        >
-          <HelpIcon />
-        </IconButton>
+        <Tooltip title='Open the tutorial for this view' placement='top'>
+          <IconButton
+            className={classes.menuButton} onClick={infoBox.open}
+          >
+            <HelpIcon />
+          </IconButton>
+        </Tooltip>
         <IconButton
           onClick={evt => setMenuAnchor(evt.currentTarget)}
           className={classes.menuButton}
