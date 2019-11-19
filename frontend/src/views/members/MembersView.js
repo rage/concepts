@@ -73,20 +73,21 @@ const MembersView = ({ projectId, workspaceId }) => {
   const id = projectId || workspaceId
   const type = projectId ? 'project' : 'workspace'
 
-  useUpdatingSubscription('workspace member', 'create', {
-    variables: { workspaceId },
-    update: cache.createWorkspaceMember(workspaceId)
+  useUpdatingSubscription(`${type} member`, 'create', {
+    variables: { [`${type}Id`]: id },
+    update: cache.createWorkspaceMember(id)
   })
 
-  useUpdatingSubscription('workspace member', 'update', {
-    variables: { workspaceId },
-    update: cache.updateWorkspaceMember(workspaceId)
+  useUpdatingSubscription(`${type} member`, 'update', {
+    variables: { [`${type}Id`]: id },
+    update: cache.updateWorkspaceMember(id)
   })
 
-  useUpdatingSubscription('workspace member', 'delete', {
-    variables: { workspaceId },
-    update: cache.deleteWorkspaceMember(workspaceId)
+  useUpdatingSubscription(`${type} member`, 'delete', {
+    variables: { [`${type}Id`]: id },
+    update: cache.deleteWorkspaceMember(id)
   })
+
 
   const mainQuery = useQuery(mainQueryType, {
     variables: { id }
