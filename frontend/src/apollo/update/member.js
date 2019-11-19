@@ -65,7 +65,7 @@ const deleteMember = type => (id) =>
       variables: { id }
     })
 
-    objectRecursion.del(data, `workspaceMemberInfo[participantId=${deleteMember.id}]`)
+    objectRecursion.del(data, `${type.toLowerCase()}MemberInfo[participantId=${deleteMember.id}]`)
 
     store.writeQuery({
       query,
