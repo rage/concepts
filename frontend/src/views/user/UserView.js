@@ -89,17 +89,33 @@ const ConnectButton = ({ disabled, loading, onClick, connected }) => {
   )
 }
 
+const JSONValue = ({ value }) =>
+  value !== null && typeof value === 'object'
+    ? Array.isArray(value)
+      ? <JSONArray data={value} />
+      : <JSONObject data={value} />
+    : JSON.stringify(value)
+
+const JSONArray = ({ data, className }) => (
+  <table className={className}>
+    <tbody>
+      <tr><th>[</th><td /></tr>
+      {data.map((value, index) => typeof value !== 'function' && <tr>
+        <th />
+        <td><JSONValue value={value} />{index < data.length - 1 ? ',' : ''}</td>
+      </tr>)}
+      <tr><th>]</th><td /></tr>
+    </tbody>
+  </table>
+)
+
 const JSONObject = ({ data, className }) => (
   <table className={className}>
     <tbody>
       {Object.entries(data).map(([key, value]) => typeof value !== 'function' && (
         <tr key={key}>
           <th nowrap='true'>"{key}":</th>
-          <td>
-            {value !== null && typeof value === 'object'
-              ? <JSONObject data={value} />
-              : JSON.stringify(value)}
-          </td>
+          <td><JSONValue value={value} /></td>
         </tr>
       ))}
     </tbody>

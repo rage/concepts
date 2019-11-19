@@ -145,6 +145,7 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
           mergeWorkspaces={projectQuery.data.projectById.merges}
+          canMerge={projectQuery.data.projectById.workspaces.length > 0}
           urlPrefix={`/projects/${projectId}/merges`}
         />
       </section>
