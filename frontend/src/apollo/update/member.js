@@ -1,5 +1,6 @@
 import {
-  WORKSPACE_BY_ID_MEMBER_INFO
+  WORKSPACE_BY_ID_MEMBER_INFO,
+  PROJECT_BY_ID_MEMBER_INFO
 } from '../../graphql/Query'
 import * as objectRecursion from '../../lib/objectRecursion'
 
@@ -18,60 +19,75 @@ const getMemberInfo = (workspaceMember) => {
   }
 }
 
-const createWorkspaceMember = (workspaceId) => 
+const createMember = type => (id) => 
   (store, response) => {
-    const { createWorkspaceMember } = response.data
+    const query = type === 'Workspace' ? WORKSPACE_BY_ID_MEMBER_INFO : PROJECT_BY_ID_MEMBER_INFO
+    const { [`create${type}Member`]: createMember } = response.data
     const data = store.readQuery({
-      query: WORKSPACE_BY_ID_MEMBER_INFO,
-      variables: { id: workspaceId }
+      query,
+      variables: { id }
     })
   
-    objectRecursion.push(data, 'workspaceMemberInfo', getMemberInfo(createWorkspaceMember))
+    objectRecursion.push(data, `${type.toLowerCase()}MemberInfo`, getMemberInfo(createMember))
     
     store.writeQuery({
-      query: WORKSPACE_BY_ID_MEMBER_INFO,
-      variables: { id: workspaceId },
+      query,
+      variables: { id },
       data
     })   
 }
 
-const updateWorkspaceMember = (workspaceId) => 
+const updateMember = type => (id) => 
   (store, response) => {
-    const { updateWorkspaceMember } = response.data
+    const query = type === 'Workspace' ? WORKSPACE_BY_ID_MEMBER_INFO : PROJECT_BY_ID_MEMBER_INFO
+    const { [`update${type}Member`]: updateMember } = response.data
     const data = store.readQuery({
-      query: WORKSPACE_BY_ID_MEMBER_INFO,
-      variables: { id: workspaceId }
+      query,
+      variables: { id }
     })
     
-    const obj = objectRecursion.get(data, `workspaceMemberInfo[participantId=${updateWorkspaceMember.id}]`)
-    obj.privilege = updateWorkspaceMember.privilege
+    const obj = objectRecursion.get(data, `${type.toLowerCase()}MemberInfo[participantId=${updateMember.id}]`)
+    obj.privilege = updateMember.privilege
 
     store.writeQuery({
-      query: WORKSPACE_BY_ID_MEMBER_INFO,
-      variables: { id: workspaceId },
+      query,
+      variables: { id },
       data
     })
 }
 
-const deleteWorkspaceMember = (workspaceId) => 
+const deleteMember = type => (id) => 
   (store, response) => {
-    const { deleteWorkspaceMember } = response.data
+    const query = type === 'Workspace' ? WORKSPACE_BY_ID_MEMBER_INFO : PROJECT_BY_ID_MEMBER_INFO
+    const {[`delete${type}Member`]: deleteMember } = response.data
     const data = store.readQuery({
-      query: WORKSPACE_BY_ID_MEMBER_INFO,
-      variables: { id: workspaceId }
+      query,
+      variables: { id }
     })
 
-    objectRecursion.del(data, `workspaceMemberInfo[participantId=${deleteWorkspaceMember.id}]`)
+    objectRecursion.del(data, `workspaceMemberInfo[participantId=${deleteMember.id}]`)
 
     store.writeQuery({
-      query: WORKSPACE_BY_ID_MEMBER_INFO,
-      variables: { id: workspaceId },
+      query,
+      variables: { id },
       data
     })
 }
+
+const createWorkspaceMember = createMember('Workspace')
+const createProjectMember = createMember('Project')
+
+const updateWorkspaceMember = updateMember('Workspace')
+const updateProjectMember = updateMember('Project')
+
+const deleteWorkspaceMember = deleteMember('Workspace')
+const deleteProjectMember = deleteMember('Project')
 
 export {
   createWorkspaceMember,
+  createProjectMember,
   updateWorkspaceMember,
-  deleteWorkspaceMember
+  updateProjectMember,
+  deleteWorkspaceMember,
+  deleteProjectMember
 }
