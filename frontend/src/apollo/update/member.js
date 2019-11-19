@@ -32,10 +32,28 @@ const createWorkspaceMember = (workspaceId) =>
       query: WORKSPACE_BY_ID_MEMBER_INFO,
       variables: { id: workspaceId },
       data
-    })
-    
+    })   
 }
 
+const updateWorkspaceMember = (workspaceId) => 
+  (store, response) => {
+    const { updateWorkspaceMember } = response.data
+    const data = store.readQuery({
+      query: WORKSPACE_BY_ID_MEMBER_INFO,
+      variables: { id: workspaceId }
+    })
+    
+    const obj = objectRecursion.get(data, `workspaceMemberInfo[participantId=${updateWorkspaceMember.id}]`)
+    obj.privilege = updateWorkspaceMember.privilege
+
+    store.writeQuery({
+      query: WORKSPACE_BY_ID_MEMBER_INFO,
+      variables: { id: workspaceId },
+      data
+    })
+  }
+
 export {
-  createWorkspaceMember
+  createWorkspaceMember,
+  updateWorkspaceMember
 }

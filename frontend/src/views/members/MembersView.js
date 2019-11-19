@@ -78,6 +78,11 @@ const MembersView = ({ projectId, workspaceId }) => {
     update: cache.createWorkspaceMember(workspaceId)
   })
 
+  useUpdatingSubscription('workspace member', 'update', {
+    variables: { workspaceId },
+    update: cache.updateWorkspaceMember(workspaceId)
+  })
+
   const mainQuery = useQuery(mainQueryType, {
     variables: { id }
   })
