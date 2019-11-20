@@ -22,9 +22,9 @@ enum Role {
 }
 
 enum Privilege {
-  CLONE,
-  VIEW,
-  EDIT,
+  CLONE
+  VIEW
+  EDIT
   OWNER
 }
 
