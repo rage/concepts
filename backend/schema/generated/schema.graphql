@@ -2,97 +2,97 @@ type Query {
   # Authentication
   allUsers: [User!]!
   userById(id: ID!): User!
-  googleClientId: GoogleClientID
-  hakaLoginUrl: HakaLoginURL
+  googleClientId: GoogleClientID!
+  hakaLoginUrl: HakaLoginURL!
   currentUser: User
 
   # Project queries
   allProjects: [Project!]!
   projectsForUser: [ProjectParticipant!]!
-  projectById(id: ID!): Project
-  limitedProjectById(id: ID!): LimitedProject
+  projectById(id: ID!): Project!
+  limitedProjectById(id: ID!): LimitedProject!
 
   # Workspace queries
   allWorkspaces: [Workspace!]!
   workspacesForUser: [WorkspaceParticipant!]!
-  workspaceById(id: ID!): Workspace
-  workspaceBySourceTemplate(sourceId: ID!): Workspace
+  workspaceById(id: ID!): Workspace!
+  workspaceBySourceTemplate(sourceId: ID!): Workspace!
 
   # Course queries
-  courseById(id: ID!): Course
+  courseById(id: ID!): Course!
   conceptsByCourse(id: ID!): [Concept!]!
 
   # Sharing
-  peekToken(id: ID!): ProjectOrWorkspace
+  peekToken(id: ID!): ProjectOrWorkspace!
   workspaceMemberInfo(id: ID!): [MemberInfo]!
   projectMemberInfo(id: ID!): [MemberInfo]!
 }
 
 type Mutation {
   # Authentication mutation
-  login(tmcToken: String!): AuthPayload
-  loginGoogle(idToken: String!): AuthPayload
+  login(tmcToken: String!): AuthPayload!
+  loginGoogle(idToken: String!): AuthPayload!
   mergeUser(accessToken: String!): User!
   disconnectAuth(authType: AuthType!): User!
-  createGuest: AuthPayload
+  createGuest: AuthPayload!
   createLinkToken(linkType: LinkType!, id: ID!, expiry: DateTime): String!
 
   # User
   updateSeenGuides(id: ID!, seenGuides: [String!]): User!
 
   # Course mutations
-  createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
-  deleteCourse(id: ID!): Course
-  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course
+  createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course!
+  deleteCourse(id: ID!): Course!
+  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course!
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
-  deleteConcept(id: ID!): DeletedCourseItem
-  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  deleteConcept(id: ID!): DeletedCourseItem!
+  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
-  createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink
-  updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink
-  deleteCourseLink(id: ID!): DeletedCourseItem
+  createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
+  updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink!
+  deleteCourseLink(id: ID!): DeletedCourseItem!
 
   # Concept link mutations
-  createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink
-  deleteConceptLink(id: ID!): DeletedConceptLink
+  createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink!
+  deleteConceptLink(id: ID!): DeletedConceptLink!
 
   # Project mutations
-  createProject(name: String!): Project
-  updateProject(id: ID!, name: String!): Project
-  deleteProject(id: ID!): Project
-  setActiveTemplate(projectId: ID!, workspaceId: ID!): Project
+  createProject(name: String!): Project!
+  updateProject(id: ID!, name: String!): Project!
+  deleteProject(id: ID!): Project!
+  setActiveTemplate(projectId: ID!, workspaceId: ID!): Project!
 
   # Workspace mutations
-  createWorkspace(name: String!): Workspace
-  deleteWorkspace(id: ID!): Workspace
-  updateWorkspace(id: ID!, name: String, courseOrder: [ID!]): Workspace
+  createWorkspace(name: String!): Workspace!
+  deleteWorkspace(id: ID!): Workspace!
+  updateWorkspace(id: ID!, name: String, courseOrder: [ID!]): Workspace!
 
   # Template workspace mutations
-  createTemplateWorkspace(projectId: ID!, name: String!): Workspace
-  deleteTemplateWorkspace(id: ID!): Workspace
-  updateTemplateWorkspace(id: ID!, name: String, active: Boolean, courseId: ID): Workspace
-  cloneTemplateWorkspace(projectId: ID!, name: String!): Workspace
+  createTemplateWorkspace(projectId: ID!, name: String!): Workspace!
+  deleteTemplateWorkspace(id: ID!): Workspace!
+  updateTemplateWorkspace(id: ID!, name: String, active: Boolean, courseId: ID): Workspace!
+  cloneTemplateWorkspace(projectId: ID!, name: String!): Workspace!
 
   # PointGroup
   createPointGroup(name: String!, startDate: String!, endDate: String!, maxPoints: Int!,
-    pointsPerConcept: Float!, courseId: ID!, workspaceId: ID!): PointGroup
-  deletePointGroup(id: ID!): PointGroup
+    pointsPerConcept: Float!, courseId: ID!, workspaceId: ID!): PointGroup!
+  deletePointGroup(id: ID!): PointGroup!
   updatePointGroup(id: ID!, name: String, startDate: String, endDate: String, maxPoints: Int,
-    pointsPerConcept: Float): PointGroup
+    pointsPerConcept: Float): PointGroup!
 
   # Porting mutations
-  importData(data: String!): Workspace
+  importData(data: String!): Workspace!
 
   # Sharing
-  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
-  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
-  deleteToken(id: ID!): ProjectOrWorkspaceToken
-  useToken(id: ID!): ProjectOrWorkspaceParticipant
-  updateParticipant(type: Type!, id: ID!, privilege: Privilege!): IDAndPrivilege
-  deleteParticipant(type: Type!, id: ID!): ID
+  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken!
+  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken!
+  deleteToken(id: ID!): ProjectOrWorkspaceToken!
+  useToken(id: ID!): ProjectOrWorkspaceParticipant!
+  updateParticipant(type: Type!, id: ID!, privilege: Privilege!): IDAndPrivilege!
+  deleteParticipant(type: Type!, id: ID!): ID!
 
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
@@ -249,9 +249,9 @@ enum Role {
 }
 
 enum Privilege {
-  CLONE,
-  VIEW,
-  EDIT,
+  CLONE
+  VIEW
+  EDIT
   OWNER
 }
 

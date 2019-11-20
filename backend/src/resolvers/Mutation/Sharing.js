@@ -66,6 +66,8 @@ export const deleteToken = async (root, { id }, context) => {
     return await context.prisma.deleteProjectToken({
       id
     })
+  } else {
+    throw Error('invalid share token')
   }
 }
 
@@ -150,6 +152,8 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       id,
       privilege
     }
+  } else {
+    throw Error('invalid participant type')
   }
 }
 
@@ -178,5 +182,7 @@ export const deleteParticipant = async (root, { type, id }, context) => {
       }
     })
     return id
+  } else {
+    throw Error('invalid participant type')
   }
 }
