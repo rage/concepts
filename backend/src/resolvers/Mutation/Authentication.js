@@ -63,11 +63,11 @@ export const createLinkToken = async (root, { linkType, id, expiry }, context) =
   }
   switch (linkType) {
   case 'EXPORT_WORKSPACE':
-    await checkAccess(context, { minimumPrivilege: Privilege.READ, workspaceId: id })
+    await checkAccess(context, { minimumPrivilege: Privilege.VIEW, workspaceId: id })
     data.workspaceId = id
     break
   case 'EXPORT_POINTS':
-    await checkAccess(context, { minimumPrivilege: Privilege.READ, projectId: id })
+    await checkAccess(context, { minimumPrivilege: Privilege.VIEW, projectId: id })
     data.projectId = id
     break
   default:

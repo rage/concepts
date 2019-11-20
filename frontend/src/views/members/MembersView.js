@@ -43,7 +43,7 @@ Type.PRIVILEGE = {
       margin='none'
     >
       <MenuItem value={Privilege.CLONE.toString()}>Clone</MenuItem>
-      <MenuItem value={Privilege.READ.toString()}>Read</MenuItem>
+      <MenuItem value={Privilege.VIEW.toString()}>View</MenuItem>
       <MenuItem value={Privilege.EDIT.toString()}>Edit</MenuItem>
       <MenuItem value={Privilege.OWNER.toString()}>Owner</MenuItem>
     </TextField>

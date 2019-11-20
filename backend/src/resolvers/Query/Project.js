@@ -36,7 +36,7 @@ export const limitedProjectById = async (root, args, context) => {
 export const projectById = async (root, args, context) => {
   await checkAccess(context, {
     minimumRole: Role.STAFF,
-    minimumPrivilege: Privilege.READ,
+    minimumPrivilege: Privilege.VIEW,
     projectId: args.id
   })
   return await context.prisma.project({
