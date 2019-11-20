@@ -1,5 +1,5 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
-import {NotFoundError} from '../../util/errors'
+import { NotFoundError } from '../../util/errors'
 
 const workspaceBySourceTemplateQuery = `
 query($id: ID!, $userId: ID!) {
