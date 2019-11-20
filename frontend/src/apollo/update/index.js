@@ -5,6 +5,7 @@ import * as courseLink from './courseLink'
 import * as workspace from './workspace'
 import * as port from './port'
 import * as project from './project'
+import * as member from './member'
 
 export default {
   ...concept,
@@ -13,5 +14,6 @@ export default {
   ...courseLink,
   ...workspace,
   ...port,
-  ...project
+  ...project,
+  ...member
 }

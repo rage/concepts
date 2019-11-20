@@ -73,7 +73,7 @@ export class Privilege extends Permission {
 
   static NONE = new Privilege('NONE', 0)
   static CLONE = new Privilege('CLONE', 1)
-  static READ = new Privilege('READ', 2)
+  static VIEW = new Privilege('VIEW', 2)
   static EDIT = new Privilege('EDIT', 3)
   static OWNER = new Privilege('OWNER', 4)
 

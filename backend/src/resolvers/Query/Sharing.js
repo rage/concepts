@@ -47,7 +47,7 @@ export const peekToken = async (root, { id }, context) => {
       participants: data.projectToken.project.participants
     }
   }
-  if (privilege < Privilege.READ) {
+  if (privilege < Privilege.VIEW) {
     throw new ForbiddenError('Token does not allow reading')
   }
 

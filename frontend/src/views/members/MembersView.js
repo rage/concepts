@@ -13,12 +13,18 @@ import EditableTable, { Type } from '../../components/EditableTable'
 import { useLoginStateValue } from '../../lib/store'
 import { DELETE_PARTICIPANT, UPDATE_PARTICIPANT } from '../../graphql/Mutation'
 import useRouter from '../../lib/useRouter'
+import cache from '../../apollo/update'
+import {
+  useUpdatingSubscription
+} from '../../apollo/useUpdatingSubscription'
 
 const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
     maxWidth: '1280px',
-    margin: '0 auto'
+    margin: '0 auto',
+    gridArea: 'content',
+    overflow: 'hidden'
   }
 }))
 
@@ -37,7 +43,7 @@ Type.PRIVILEGE = {
       margin='none'
     >
       <MenuItem value={Privilege.CLONE.toString()}>Clone</MenuItem>
-      <MenuItem value={Privilege.READ.toString()}>Read</MenuItem>
+      <MenuItem value={Privilege.VIEW.toString()}>View</MenuItem>
       <MenuItem value={Privilege.EDIT.toString()}>Edit</MenuItem>
       <MenuItem value={Privilege.OWNER.toString()}>Owner</MenuItem>
     </TextField>
@@ -66,6 +72,19 @@ const MembersView = ({ projectId, workspaceId }) => {
   const memberQueryType = projectId ? PROJECT_BY_ID_MEMBER_INFO : WORKSPACE_BY_ID_MEMBER_INFO
   const id = projectId || workspaceId
   const type = projectId ? 'project' : 'workspace'
+
+  useUpdatingSubscription(`${type} member`, 'create', {
+    variables: { [`${type}Id`]: id }
+  })
+
+  useUpdatingSubscription(`${type} member`, 'update', {
+    variables: { [`${type}Id`]: id }
+  })
+
+  useUpdatingSubscription(`${type} member`, 'delete', {
+    variables: { [`${type}Id`]: id }
+  })
+
 
   const mainQuery = useQuery(mainQueryType, {
     variables: { id }

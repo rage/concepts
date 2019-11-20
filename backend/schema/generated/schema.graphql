@@ -126,6 +126,15 @@ type Subscription {
 
   workspaceUpdated(workspaceId: ID!): WorkspaceUpdate!
   workspaceDeleted(workspaceId: ID!): Workspace!
+
+  # Member subscriptions
+  workspaceMemberCreated(workspaceId: ID!): WorkspaceParticipant!
+  workspaceMemberDeleted(workspaceId: ID!): WorkspaceParticipant!
+  workspaceMemberUpdated(workspaceId: ID!): WorkspaceParticipant!
+
+  projectMemberCreated(projectId: ID!): ProjectParticipant!
+  projectMemberDeleted(projectId: ID!): ProjectParticipant!
+  projectMemberUpdated(projectId: ID!): ProjectParticipant!
 }
 
 enum LinkType {

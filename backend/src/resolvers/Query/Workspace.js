@@ -21,7 +21,7 @@ export const allWorkspaces = async (root, args, context) => {
 export const workspaceById = async (root, args, context) => {
   await checkAccess(context, {
     minimumRole: Role.GUEST,
-    minimumPrivilege: Privilege.READ,
+    minimumPrivilege: Privilege.VIEW,
     workspaceId: args.id
   })
   return await context.prisma.workspace({
