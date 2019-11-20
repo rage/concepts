@@ -1,4 +1,5 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import {NotFoundError} from '../../util/errors'
 
 const workspaceBySourceTemplateQuery = `
 query($id: ID!, $userId: ID!) {
@@ -39,6 +40,9 @@ export const workspaceBySourceTemplate = async (root, { sourceId }, context) => 
   const res = await context.prisma.$graphql(workspaceBySourceTemplateQuery, {
     id: sourceId, userId: context.user.id
   })
+  if (res.user.workspaceParticipations?.[0]?.workspace) {
+    throw new NotFoundError('workspace')
+  }
   return res.user.workspaceParticipations?.[0]?.workspace
 }
 export const workspaceMemberInfo = async (root, { id }, context) => {

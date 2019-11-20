@@ -16,7 +16,7 @@ type Query {
   allWorkspaces: [Workspace!]!
   workspacesForUser: [WorkspaceParticipant!]!
   workspaceById(id: ID!): Workspace!
-  workspaceBySourceTemplate(sourceId: ID!): Workspace
+  workspaceBySourceTemplate(sourceId: ID!): Workspace!
 
   # Course queries
   courseById(id: ID!): Course!
