@@ -100,7 +100,7 @@ const JSONArray = ({ data, className }) => (
   <table className={className}>
     <tbody>
       <tr><th>[</th><td /></tr>
-      {data.map((value, index) => typeof value !== 'function' && <tr>
+      {data.map((value, index) => typeof value !== 'function' && <tr key={index}>
         <th />
         <td><JSONValue value={value} />{index < data.length - 1 ? ',' : ''}</td>
       </tr>)}
