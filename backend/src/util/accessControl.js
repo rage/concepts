@@ -93,3 +93,17 @@ export const checkAccess = async (ctx, {
   }
   return true
 }
+
+export const canViewWorkspace = (ctx, workspaceId) =>
+  ctx.user && checkPrivilege(ctx, { minimumPrivilege: Privilege.VIEW, workspaceId })
+
+export const canViewProject = (ctx, projectId) =>
+  ctx.user && checkPrivilege(ctx, { minimumPrivilege: Privilege.VIEW, projectId })
+
+export const withViewPrivilege = (type, id, cb) => async (payload, variables, ctx, ...rest) => {
+  const hasPrivilege = type === 'w'
+    ? await canViewWorkspace(ctx, id)
+    : await canViewProject(ctx, id)
+  const callbackResult = cb(payload, variables, ctx, ...rest)
+  return hasPrivilege && callbackResult
+}

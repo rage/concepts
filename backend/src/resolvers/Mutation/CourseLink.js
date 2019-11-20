@@ -23,7 +23,7 @@ export const createCourseLink = async (root, { workspaceId, official, from, to }
     ]
   })
   if (linkExists) return null
-  const createdCourseLink = context.prisma.createCourseLink({
+  const createdCourseLink = await context.prisma.createCourseLink({
     to: { connect: { id: to } },
     from: { connect: { id: from } },
     official: Boolean(official),
