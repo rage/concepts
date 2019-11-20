@@ -87,12 +87,12 @@ type Mutation {
   importData(data: String!): Workspace!
 
   # Sharing
-  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken
-  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken
-  deleteToken(id: ID!): ProjectOrWorkspaceToken
-  useToken(id: ID!): ProjectOrWorkspaceParticipant
-  updateParticipant(type: Type!, id: ID!, privilege: Privilege!): IDAndPrivilege
-  deleteParticipant(type: Type!, id: ID!): ID
+  createWorkspaceToken(workspaceId: ID!, privilege: Privilege!): WorkspaceToken!
+  createProjectToken(projectId: ID!, privilege: Privilege!): ProjectToken!
+  deleteToken(id: ID!): ProjectOrWorkspaceToken!
+  useToken(id: ID!): ProjectOrWorkspaceParticipant!
+  updateParticipant(type: Type!, id: ID!, privilege: Privilege!): IDAndPrivilege!
+  deleteParticipant(type: Type!, id: ID!): ID!
 
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
