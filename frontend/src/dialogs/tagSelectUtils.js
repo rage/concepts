@@ -12,11 +12,14 @@ String.prototype.hashCode = function() {
   return hash
 }
 
+export const getTagColor = tag =>
+  colors[((tag.name.hashCode() % colors.length) + colors.length) % colors.length]
+
 export const backendToSelect = tags => tags ? tags.map(tag => ({
   value: tag.name,
   label: tag.name,
   type: tag.type,
-  color: colors[((tag.name.hashCode() % colors.length) + colors.length) % colors.length],
+  color: getTagColor(tag),
   id: tag.id
 })) : []
 

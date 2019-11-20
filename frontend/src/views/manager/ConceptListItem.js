@@ -8,6 +8,7 @@ import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@mater
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import ConceptEditor from './ConceptEditor'
 import { Role } from '../../lib/permissions'
+import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 
 const useStyles = makeStyles(theme => ({
   hoverButton: {
@@ -77,14 +78,18 @@ const ConceptListItem = ({
   return (
     <Tooltip
       key={concept.id}
-      placement='top'
+      placement='right-start'
       classes={{
         tooltip: classes.tooltip,
         popper: classes.popper
       }}
       TransitionComponent={({ children }) => children || null}
       title={editing !== concept.id ?
-        concept.description || 'No description available' : ''}
+        <ConceptToolTipContent
+          description={concept.description || 'No description available'}
+          tags={concept.tags}
+        />
+        : ''}
     >
       <ItemClass
         divider={divider}

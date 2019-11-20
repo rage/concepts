@@ -17,6 +17,7 @@ import { useMessageStateValue, useLoginStateValue } from '../../../lib/store'
 import { useEditConceptDialog } from '../../../dialogs/concept'
 import { noPropagation } from '../../../lib/eventMiddleware'
 import generateTempId from '../../../lib/generateTempId'
+import ConceptToolTipContent from '../../../components/ConceptTooltipContent'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -194,7 +195,11 @@ const Concept = ({
         popper: classes.popper
       }}
       TransitionComponent={({ children }) => children || null}
-      title={concept.description || 'No description available'}>
+      title={<ConceptToolTipContent
+        description={concept.description || 'No description available'}
+        tags={concept.tags}
+      />}
+    >
       <ListItem
         divider
         button

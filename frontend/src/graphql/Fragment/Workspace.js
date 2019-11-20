@@ -20,6 +20,10 @@ fragment coursesForWorkspace on Workspace {
       course {
         id
       }
+      tags {
+        id
+        name
+      }
       linksToConcept {
         id
         from {
