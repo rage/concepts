@@ -77,7 +77,6 @@ const ConceptListItem = ({
 
   return (
     <Tooltip
-      leaveDelay={100000}
       key={concept.id}
       placement='right-start'
       classes={{
