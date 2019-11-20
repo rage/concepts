@@ -41,14 +41,14 @@ type Mutation {
   updateSeenGuides(id: ID!, seenGuides: [String!]): User!
 
   # Course mutations
-  createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course
-  deleteCourse(id: ID!): Course
-  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course
+  createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course!
+  deleteCourse(id: ID!): Course!
+  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course!
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
-  deleteConcept(id: ID!): DeletedCourseItem
-  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  deleteConcept(id: ID!): DeletedCourseItem!
+  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
@@ -240,9 +240,9 @@ enum Role {
 }
 
 enum Privilege {
-  CLONE,
-  VIEW,
-  EDIT,
+  CLONE
+  VIEW
+  EDIT
   OWNER
 }
 
