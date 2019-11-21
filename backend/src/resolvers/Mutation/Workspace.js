@@ -239,6 +239,18 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
         }
       }]
     },
+    courseTags: {
+      create: templateWorkspace.courseTags.map(tag => ({
+        ...tag,
+        id: makeNewId(tag.id)
+      }))
+    },
+    conceptTags: {
+      create: templateWorkspace.conceptTags.map(tag => ({
+        ...tag,
+        id: makeNewId(tag.id)
+      }))
+    },
     courses: {
       create: templateWorkspace.courses.map(course => ({
         id: makeNewId(course.id),
@@ -247,6 +259,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
         frozen: true,
         createdBy: { connect: { id: course.createdBy.id } },
         sourceCourse: { connect: { id: course.id } },
+        tags: { connect: course.tags.map(tag => ({ id: makeNewId(tag.id) })) },
         conceptOrder:
           isAutomaticSorting(course.conceptOrder)
             ? { set: course.conceptOrder }
@@ -258,6 +271,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
             description: concept.description,
             official: concept.official,
             frozen: true,
+            tags: { connect: concept.tags.map(tag => ({ id: makeNewId(tag.id) })) },
             createdBy: { connect: { id: concept.createdBy.id } },
             workspace: { connect: { id: workspaceId } },
             sourceConcept: { connect: { id: concept.id } }
