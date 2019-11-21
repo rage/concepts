@@ -1,7 +1,7 @@
 import { ForbiddenError } from 'apollo-server-core'
 
 import { NotFoundError } from './errors'
-import { readPrivilege } from './permissions'
+import { readPrivilege, Privilege } from './permissions'
 
 export { Privilege, Role } from './permissions'
 
@@ -93,3 +93,9 @@ export const checkAccess = async (ctx, {
   }
   return true
 }
+
+export const canViewWorkspace = (ctx, workspaceId) =>
+  ctx.user && checkPrivilege(ctx, { minimumPrivilege: Privilege.VIEW, workspaceId })
+
+export const canViewProject = (ctx, projectId) =>
+  ctx.user && checkPrivilege(ctx, { minimumPrivilege: Privilege.VIEW, projectId })
