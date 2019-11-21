@@ -237,6 +237,7 @@ type User {
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!
   createdAt: DateTime!
+  updatedAt: DateTime!
   lastActivity: DateTime
   seenGuides: [String!]!
 }
@@ -264,6 +265,8 @@ type Project {
   merges: [Workspace!]!
   participants: [ProjectParticipant!]!
   tokens: [ProjectToken!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Workspace {
@@ -285,6 +288,8 @@ type Workspace {
   pointGroups: [PointGroup!]!
   courseTags: [Tag!]
   conceptTags: [Tag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceParticipant {
@@ -293,6 +298,8 @@ type WorkspaceParticipant {
   workspace: Workspace!
   token: WorkspaceToken
   user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ProjectParticipant {
@@ -301,6 +308,8 @@ type ProjectParticipant {
   project: Project!
   token: ProjectToken
   user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceToken {
@@ -329,6 +338,8 @@ type CourseLink {
   workspace: Workspace!
   weight: Int!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Course {
@@ -345,6 +356,8 @@ type Course {
   conceptOrder: [ID!]!
   workspace: Workspace!
   tags: [Tag!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ConceptLink {
@@ -357,6 +370,8 @@ type ConceptLink {
   createdBy: User!
   weight: Int!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Concept {
@@ -375,6 +390,8 @@ type Concept {
   workspace: Workspace!
   tags: [Tag!]!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type PointGroup {
@@ -387,6 +404,8 @@ type PointGroup {
   course: Course!
   pointsPerConcept: Float!
   completions: [Completion!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Completion {
@@ -394,6 +413,7 @@ type Completion {
   user: User!
   conceptAmount: Int!
   createdAt: DateTime!
+  updatedAt: DateTime!
   pointGroup: PointGroup!
 }
 
@@ -402,6 +422,8 @@ type Tag {
   name: String!
   type: String!
   priority: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Resource {
