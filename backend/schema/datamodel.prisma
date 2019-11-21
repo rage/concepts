@@ -10,6 +10,7 @@ type User {
   workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser", onDelete: CASCADE)
   projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser", onDelete: CASCADE)
   createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   lastActivity: DateTime
   seenGuides: [String!]! @scalarList(strategy:"RELATION")
 }
@@ -37,6 +38,8 @@ type Project {
   merges: [Workspace!]! @relation(name:"Merges")
   participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject", onDelete: CASCADE)
   tokens: [ProjectToken!]! @relation(name: "ProjectAccessToken", onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Workspace {
@@ -58,6 +61,8 @@ type Workspace {
   pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup")
   courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
   conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type WorkspaceParticipant {
@@ -66,6 +71,8 @@ type WorkspaceParticipant {
   workspace: Workspace! @relation(name:"WorkspaceParticipantWorkspace")
   token: WorkspaceToken @relation(name:"WorkspaceParticipationToken")
   user: User! @relation(name:"WorkspaceParticipantUser")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type ProjectParticipant {
@@ -74,6 +81,8 @@ type ProjectParticipant {
   project: Project! @relation(name:"ProjectParticipantProject")
   token: ProjectToken @relation(name:"ProjectParticipationToken")
   user: User! @relation(name:"ProjectParticipantUser")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type WorkspaceToken {
@@ -102,6 +111,8 @@ type CourseLink {
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Course {
@@ -118,6 +129,8 @@ type Course {
   conceptOrder: [ID!]! @scalarList(strategy:"RELATION")
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
   tags: [Tag!]!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type ConceptLink {
@@ -130,6 +143,8 @@ type ConceptLink {
   createdBy: User!
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Concept {
@@ -148,6 +163,8 @@ type Concept {
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
   tags: [Tag!]!
   count: Int! @default(value: 1)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type PointGroup {
@@ -160,6 +177,8 @@ type PointGroup {
   course: Course! @relation(link: INLINE, name: "CoursePointGroup")
   pointsPerConcept: Float! @default(value: 0.5)
   completions: [Completion!]! @relation(name: "PointGroupCompletions", onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Completion {
@@ -167,6 +186,7 @@ type Completion {
   user: User!
   conceptAmount: Int! @default(value: 0)
   createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   pointGroup: PointGroup! @relation(name: "PointGroupCompletions")
 }
 
@@ -175,6 +195,8 @@ type Tag {
   name: String!
   type: String! @default(value: "custom")
   priority: Int! @default(value: 0)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Resource {

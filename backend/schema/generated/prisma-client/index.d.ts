@@ -732,19 +732,31 @@ export type WorkspaceParticipantOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "privilege_ASC"
-  | "privilege_DESC";
+  | "privilege_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type WorkspaceOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "name_ASC"
-  | "name_DESC";
+  | "name_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ProjectParticipantOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "privilege_ASC"
-  | "privilege_DESC";
+  | "privilege_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ProjectTokenOrderByInput =
   | "id_ASC"
@@ -762,7 +774,11 @@ export type CourseOrderByInput =
   | "official_ASC"
   | "official_DESC"
   | "frozen_ASC"
-  | "frozen_DESC";
+  | "frozen_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type CourseLinkOrderByInput =
   | "id_ASC"
@@ -774,7 +790,11 @@ export type CourseLinkOrderByInput =
   | "weight_ASC"
   | "weight_DESC"
   | "count_ASC"
-  | "count_DESC";
+  | "count_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ConceptOrderByInput =
   | "id_ASC"
@@ -788,7 +808,11 @@ export type ConceptOrderByInput =
   | "frozen_ASC"
   | "frozen_DESC"
   | "count_ASC"
-  | "count_DESC";
+  | "count_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ConceptLinkOrderByInput =
   | "id_ASC"
@@ -800,7 +824,11 @@ export type ConceptLinkOrderByInput =
   | "weight_ASC"
   | "weight_DESC"
   | "count_ASC"
-  | "count_DESC";
+  | "count_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ResourceOrderByInput =
   | "id_ASC"
@@ -824,7 +852,11 @@ export type TagOrderByInput =
   | "type_ASC"
   | "type_DESC"
   | "priority_ASC"
-  | "priority_DESC";
+  | "priority_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type WorkspaceTokenOrderByInput =
   | "id_ASC"
@@ -846,7 +878,11 @@ export type PointGroupOrderByInput =
   | "maxPoints_ASC"
   | "maxPoints_DESC"
   | "pointsPerConcept_ASC"
-  | "pointsPerConcept_DESC";
+  | "pointsPerConcept_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type CompletionOrderByInput =
   | "id_ASC"
@@ -854,13 +890,19 @@ export type CompletionOrderByInput =
   | "conceptAmount_ASC"
   | "conceptAmount_DESC"
   | "createdAt_ASC"
-  | "createdAt_DESC";
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type ProjectOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "name_ASC"
-  | "name_DESC";
+  | "name_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -877,6 +919,8 @@ export type UserOrderByInput =
   | "deactivated_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC"
   | "lastActivity_ASC"
   | "lastActivity_DESC";
 
@@ -908,6 +952,22 @@ export interface WorkspaceParticipantWhereInput {
   workspace?: Maybe<WorkspaceWhereInput>;
   token?: Maybe<WorkspaceTokenWhereInput>;
   user?: Maybe<UserWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<
     WorkspaceParticipantWhereInput[] | WorkspaceParticipantWhereInput
   >;
@@ -981,6 +1041,22 @@ export interface WorkspaceWhereInput {
   conceptTags_every?: Maybe<TagWhereInput>;
   conceptTags_some?: Maybe<TagWhereInput>;
   conceptTags_none?: Maybe<TagWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
   OR?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
   NOT?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
@@ -1031,6 +1107,22 @@ export interface ProjectWhereInput {
   tokens_every?: Maybe<ProjectTokenWhereInput>;
   tokens_some?: Maybe<ProjectTokenWhereInput>;
   tokens_none?: Maybe<ProjectTokenWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<ProjectWhereInput[] | ProjectWhereInput>;
   OR?: Maybe<ProjectWhereInput[] | ProjectWhereInput>;
   NOT?: Maybe<ProjectWhereInput[] | ProjectWhereInput>;
@@ -1058,6 +1150,22 @@ export interface ProjectParticipantWhereInput {
   project?: Maybe<ProjectWhereInput>;
   token?: Maybe<ProjectTokenWhereInput>;
   user?: Maybe<UserWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<ProjectParticipantWhereInput[] | ProjectParticipantWhereInput>;
   OR?: Maybe<ProjectParticipantWhereInput[] | ProjectParticipantWhereInput>;
   NOT?: Maybe<ProjectParticipantWhereInput[] | ProjectParticipantWhereInput>;
@@ -1164,6 +1272,14 @@ export interface UserWhereInput {
   createdAt_lte?: Maybe<DateTimeInput>;
   createdAt_gt?: Maybe<DateTimeInput>;
   createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   lastActivity?: Maybe<DateTimeInput>;
   lastActivity_not?: Maybe<DateTimeInput>;
   lastActivity_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1228,6 +1344,22 @@ export interface CourseWhereInput {
   tags_every?: Maybe<TagWhereInput>;
   tags_some?: Maybe<TagWhereInput>;
   tags_none?: Maybe<TagWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
   OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
   NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
@@ -1272,6 +1404,22 @@ export interface CourseLinkWhereInput {
   count_lte?: Maybe<Int>;
   count_gt?: Maybe<Int>;
   count_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CourseLinkWhereInput[] | CourseLinkWhereInput>;
   OR?: Maybe<CourseLinkWhereInput[] | CourseLinkWhereInput>;
   NOT?: Maybe<CourseLinkWhereInput[] | CourseLinkWhereInput>;
@@ -1351,6 +1499,22 @@ export interface ConceptWhereInput {
   count_lte?: Maybe<Int>;
   count_gt?: Maybe<Int>;
   count_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   OR?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
   NOT?: Maybe<ConceptWhereInput[] | ConceptWhereInput>;
@@ -1395,6 +1559,22 @@ export interface ConceptLinkWhereInput {
   count_lte?: Maybe<Int>;
   count_gt?: Maybe<Int>;
   count_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<ConceptLinkWhereInput[] | ConceptLinkWhereInput>;
   OR?: Maybe<ConceptLinkWhereInput[] | ConceptLinkWhereInput>;
   NOT?: Maybe<ConceptLinkWhereInput[] | ConceptLinkWhereInput>;
@@ -1538,6 +1718,22 @@ export interface TagWhereInput {
   priority_lte?: Maybe<Int>;
   priority_gt?: Maybe<Int>;
   priority_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<TagWhereInput[] | TagWhereInput>;
   OR?: Maybe<TagWhereInput[] | TagWhereInput>;
   NOT?: Maybe<TagWhereInput[] | TagWhereInput>;
@@ -1639,6 +1835,22 @@ export interface PointGroupWhereInput {
   completions_every?: Maybe<CompletionWhereInput>;
   completions_some?: Maybe<CompletionWhereInput>;
   completions_none?: Maybe<CompletionWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<PointGroupWhereInput[] | PointGroupWhereInput>;
   OR?: Maybe<PointGroupWhereInput[] | PointGroupWhereInput>;
   NOT?: Maybe<PointGroupWhereInput[] | PointGroupWhereInput>;
@@ -1676,6 +1888,14 @@ export interface CompletionWhereInput {
   createdAt_lte?: Maybe<DateTimeInput>;
   createdAt_gt?: Maybe<DateTimeInput>;
   createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   pointGroup?: Maybe<PointGroupWhereInput>;
   AND?: Maybe<CompletionWhereInput[] | CompletionWhereInput>;
   OR?: Maybe<CompletionWhereInput[] | CompletionWhereInput>;
@@ -4067,6 +4287,22 @@ export interface TagScalarWhereInput {
   priority_lte?: Maybe<Int>;
   priority_gt?: Maybe<Int>;
   priority_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
   OR?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
   NOT?: Maybe<TagScalarWhereInput[] | TagScalarWhereInput>;
@@ -4144,6 +4380,22 @@ export interface ConceptScalarWhereInput {
   count_lte?: Maybe<Int>;
   count_gt?: Maybe<Int>;
   count_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
   OR?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
   NOT?: Maybe<ConceptScalarWhereInput[] | ConceptScalarWhereInput>;
@@ -4246,6 +4498,22 @@ export interface ConceptLinkScalarWhereInput {
   count_lte?: Maybe<Int>;
   count_gt?: Maybe<Int>;
   count_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<ConceptLinkScalarWhereInput[] | ConceptLinkScalarWhereInput>;
   OR?: Maybe<ConceptLinkScalarWhereInput[] | ConceptLinkScalarWhereInput>;
   NOT?: Maybe<ConceptLinkScalarWhereInput[] | ConceptLinkScalarWhereInput>;
@@ -4343,6 +4611,22 @@ export interface CourseLinkScalarWhereInput {
   count_lte?: Maybe<Int>;
   count_gt?: Maybe<Int>;
   count_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CourseLinkScalarWhereInput[] | CourseLinkScalarWhereInput>;
   OR?: Maybe<CourseLinkScalarWhereInput[] | CourseLinkScalarWhereInput>;
   NOT?: Maybe<CourseLinkScalarWhereInput[] | CourseLinkScalarWhereInput>;
@@ -4597,6 +4881,14 @@ export interface CompletionScalarWhereInput {
   createdAt_lte?: Maybe<DateTimeInput>;
   createdAt_gt?: Maybe<DateTimeInput>;
   createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CompletionScalarWhereInput[] | CompletionScalarWhereInput>;
   OR?: Maybe<CompletionScalarWhereInput[] | CompletionScalarWhereInput>;
   NOT?: Maybe<CompletionScalarWhereInput[] | CompletionScalarWhereInput>;
@@ -4678,6 +4970,22 @@ export interface PointGroupScalarWhereInput {
   pointsPerConcept_lte?: Maybe<Float>;
   pointsPerConcept_gt?: Maybe<Float>;
   pointsPerConcept_gte?: Maybe<Float>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<PointGroupScalarWhereInput[] | PointGroupScalarWhereInput>;
   OR?: Maybe<PointGroupScalarWhereInput[] | PointGroupScalarWhereInput>;
   NOT?: Maybe<PointGroupScalarWhereInput[] | PointGroupScalarWhereInput>;
@@ -4953,6 +5261,22 @@ export interface WorkspaceParticipantScalarWhereInput {
   privilege_not?: Maybe<Privilege>;
   privilege_in?: Maybe<Privilege[] | Privilege>;
   privilege_not_in?: Maybe<Privilege[] | Privilege>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<
     | WorkspaceParticipantScalarWhereInput[]
     | WorkspaceParticipantScalarWhereInput
@@ -5057,6 +5381,22 @@ export interface WorkspaceScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
   OR?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
   NOT?: Maybe<WorkspaceScalarWhereInput[] | WorkspaceScalarWhereInput>;
@@ -5212,6 +5552,22 @@ export interface ProjectParticipantScalarWhereInput {
   privilege_not?: Maybe<Privilege>;
   privilege_in?: Maybe<Privilege[] | Privilege>;
   privilege_not_in?: Maybe<Privilege[] | Privilege>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<
     ProjectParticipantScalarWhereInput[] | ProjectParticipantScalarWhereInput
   >;
@@ -5580,6 +5936,22 @@ export interface CourseScalarWhereInput {
   official_not?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   frozen_not?: Maybe<Boolean>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
   AND?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
   OR?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
   NOT?: Maybe<CourseScalarWhereInput[] | CourseScalarWhereInput>;
@@ -6421,6 +6793,7 @@ export interface Completion {
   id: ID_Output;
   conceptAmount: Int;
   createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CompletionPromise extends Promise<Completion>, Fragmentable {
@@ -6428,6 +6801,7 @@ export interface CompletionPromise extends Promise<Completion>, Fragmentable {
   user: <T = UserPromise>() => T;
   conceptAmount: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   pointGroup: <T = PointGroupPromise>() => T;
 }
 
@@ -6438,6 +6812,7 @@ export interface CompletionSubscription
   user: <T = UserSubscription>() => T;
   conceptAmount: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   pointGroup: <T = PointGroupSubscription>() => T;
 }
 
@@ -6448,6 +6823,7 @@ export interface CompletionNullablePromise
   user: <T = UserPromise>() => T;
   conceptAmount: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   pointGroup: <T = PointGroupPromise>() => T;
 }
 
@@ -6459,6 +6835,7 @@ export interface User {
   role: Role;
   deactivated: Boolean;
   createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
   seenGuides: String[];
 }
@@ -6491,6 +6868,7 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     last?: Int;
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
   seenGuides: () => Promise<String[]>;
 }
@@ -6527,6 +6905,7 @@ export interface UserSubscription
     last?: Int;
   }) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
   seenGuides: () => Promise<AsyncIterator<String[]>>;
 }
@@ -6561,6 +6940,7 @@ export interface UserNullablePromise
     last?: Int;
   }) => T;
   createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
   seenGuides: () => Promise<String[]>;
 }
@@ -6568,6 +6948,8 @@ export interface UserNullablePromise
 export interface WorkspaceParticipant {
   id: ID_Output;
   privilege: Privilege;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface WorkspaceParticipantPromise
@@ -6578,6 +6960,8 @@ export interface WorkspaceParticipantPromise
   workspace: <T = WorkspacePromise>() => T;
   token: <T = WorkspaceTokenPromise>() => T;
   user: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface WorkspaceParticipantSubscription
@@ -6588,6 +6972,8 @@ export interface WorkspaceParticipantSubscription
   workspace: <T = WorkspaceSubscription>() => T;
   token: <T = WorkspaceTokenSubscription>() => T;
   user: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface WorkspaceParticipantNullablePromise
@@ -6598,12 +6984,16 @@ export interface WorkspaceParticipantNullablePromise
   workspace: <T = WorkspacePromise>() => T;
   token: <T = WorkspaceTokenPromise>() => T;
   user: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface Workspace {
   id: ID_Output;
   name: String;
   courseOrder: ID_Output[];
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
@@ -6705,6 +7095,8 @@ export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface WorkspaceSubscription
@@ -6810,6 +7202,8 @@ export interface WorkspaceSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface WorkspaceNullablePromise
@@ -6913,11 +7307,15 @@ export interface WorkspaceNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface Project {
   id: ID_Output;
   name: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ProjectPromise extends Promise<Project>, Fragmentable {
@@ -6969,6 +7367,8 @@ export interface ProjectPromise extends Promise<Project>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ProjectSubscription
@@ -7024,6 +7424,8 @@ export interface ProjectSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ProjectNullablePromise
@@ -7077,11 +7479,15 @@ export interface ProjectNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ProjectParticipant {
   id: ID_Output;
   privilege: Privilege;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ProjectParticipantPromise
@@ -7092,6 +7498,8 @@ export interface ProjectParticipantPromise
   project: <T = ProjectPromise>() => T;
   token: <T = ProjectTokenPromise>() => T;
   user: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ProjectParticipantSubscription
@@ -7102,6 +7510,8 @@ export interface ProjectParticipantSubscription
   project: <T = ProjectSubscription>() => T;
   token: <T = ProjectTokenSubscription>() => T;
   user: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ProjectParticipantNullablePromise
@@ -7112,6 +7522,8 @@ export interface ProjectParticipantNullablePromise
   project: <T = ProjectPromise>() => T;
   token: <T = ProjectTokenPromise>() => T;
   user: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ProjectToken {
@@ -7182,6 +7594,8 @@ export interface Course {
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CoursePromise extends Promise<Course>, Fragmentable {
@@ -7238,6 +7652,8 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CourseSubscription
@@ -7296,6 +7712,8 @@ export interface CourseSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CourseNullablePromise
@@ -7354,6 +7772,8 @@ export interface CourseNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CourseLink {
@@ -7362,6 +7782,8 @@ export interface CourseLink {
   frozen: Boolean;
   weight: Int;
   count: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CourseLinkPromise extends Promise<CourseLink>, Fragmentable {
@@ -7374,6 +7796,8 @@ export interface CourseLinkPromise extends Promise<CourseLink>, Fragmentable {
   workspace: <T = WorkspacePromise>() => T;
   weight: () => Promise<Int>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CourseLinkSubscription
@@ -7388,6 +7812,8 @@ export interface CourseLinkSubscription
   workspace: <T = WorkspaceSubscription>() => T;
   weight: () => Promise<AsyncIterator<Int>>;
   count: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CourseLinkNullablePromise
@@ -7402,6 +7828,8 @@ export interface CourseLinkNullablePromise
   workspace: <T = WorkspacePromise>() => T;
   weight: () => Promise<Int>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface Concept {
@@ -7411,6 +7839,8 @@ export interface Concept {
   official: Boolean;
   frozen: Boolean;
   count: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ConceptPromise extends Promise<Concept>, Fragmentable {
@@ -7469,6 +7899,8 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
     last?: Int;
   }) => T;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ConceptSubscription
@@ -7531,6 +7963,8 @@ export interface ConceptSubscription
     last?: Int;
   }) => T;
   count: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ConceptNullablePromise
@@ -7591,6 +8025,8 @@ export interface ConceptNullablePromise
     last?: Int;
   }) => T;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ConceptLink {
@@ -7599,6 +8035,8 @@ export interface ConceptLink {
   frozen: Boolean;
   weight: Int;
   count: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ConceptLinkPromise extends Promise<ConceptLink>, Fragmentable {
@@ -7611,6 +8049,8 @@ export interface ConceptLinkPromise extends Promise<ConceptLink>, Fragmentable {
   createdBy: <T = UserPromise>() => T;
   weight: () => Promise<Int>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ConceptLinkSubscription
@@ -7625,6 +8065,8 @@ export interface ConceptLinkSubscription
   createdBy: <T = UserSubscription>() => T;
   weight: () => Promise<AsyncIterator<Int>>;
   count: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ConceptLinkNullablePromise
@@ -7639,6 +8081,8 @@ export interface ConceptLinkNullablePromise
   createdBy: <T = UserPromise>() => T;
   weight: () => Promise<Int>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface Resource {
@@ -7729,6 +8173,8 @@ export interface Tag {
   name: String;
   type: String;
   priority: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface TagPromise extends Promise<Tag>, Fragmentable {
@@ -7736,6 +8182,8 @@ export interface TagPromise extends Promise<Tag>, Fragmentable {
   name: () => Promise<String>;
   type: () => Promise<String>;
   priority: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface TagSubscription
@@ -7745,6 +8193,8 @@ export interface TagSubscription
   name: () => Promise<AsyncIterator<String>>;
   type: () => Promise<AsyncIterator<String>>;
   priority: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface TagNullablePromise extends Promise<Tag | null>, Fragmentable {
@@ -7752,6 +8202,8 @@ export interface TagNullablePromise extends Promise<Tag | null>, Fragmentable {
   name: () => Promise<String>;
   type: () => Promise<String>;
   priority: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface WorkspaceToken {
@@ -7823,6 +8275,8 @@ export interface PointGroup {
   endDate: DateTimeOutput;
   maxPoints: Int;
   pointsPerConcept: Float;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface PointGroupPromise extends Promise<PointGroup>, Fragmentable {
@@ -7843,6 +8297,8 @@ export interface PointGroupPromise extends Promise<PointGroup>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface PointGroupSubscription
@@ -7865,6 +8321,8 @@ export interface PointGroupSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface PointGroupNullablePromise
@@ -7887,6 +8345,8 @@ export interface PointGroupNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CompletionConnection {
@@ -8845,6 +9305,7 @@ export interface CompletionPreviousValues {
   id: ID_Output;
   conceptAmount: Int;
   createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CompletionPreviousValuesPromise
@@ -8853,6 +9314,7 @@ export interface CompletionPreviousValuesPromise
   id: () => Promise<ID_Output>;
   conceptAmount: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CompletionPreviousValuesSubscription
@@ -8861,6 +9323,7 @@ export interface CompletionPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   conceptAmount: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ConceptSubscriptionPayload {
@@ -8895,6 +9358,8 @@ export interface ConceptPreviousValues {
   official: Boolean;
   frozen: Boolean;
   count: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ConceptPreviousValuesPromise
@@ -8906,6 +9371,8 @@ export interface ConceptPreviousValuesPromise
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ConceptPreviousValuesSubscription
@@ -8917,6 +9384,8 @@ export interface ConceptPreviousValuesSubscription
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   count: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ConceptLinkSubscriptionPayload {
@@ -8950,6 +9419,8 @@ export interface ConceptLinkPreviousValues {
   frozen: Boolean;
   weight: Int;
   count: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ConceptLinkPreviousValuesPromise
@@ -8960,6 +9431,8 @@ export interface ConceptLinkPreviousValuesPromise
   frozen: () => Promise<Boolean>;
   weight: () => Promise<Int>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ConceptLinkPreviousValuesSubscription
@@ -8970,6 +9443,8 @@ export interface ConceptLinkPreviousValuesSubscription
   frozen: () => Promise<AsyncIterator<Boolean>>;
   weight: () => Promise<AsyncIterator<Int>>;
   count: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CourseSubscriptionPayload {
@@ -9003,6 +9478,8 @@ export interface CoursePreviousValues {
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CoursePreviousValuesPromise
@@ -9013,6 +9490,8 @@ export interface CoursePreviousValuesPromise
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   conceptOrder: () => Promise<ID_Output[]>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CoursePreviousValuesSubscription
@@ -9023,6 +9502,8 @@ export interface CoursePreviousValuesSubscription
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   conceptOrder: () => Promise<AsyncIterator<ID_Output[]>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface CourseLinkSubscriptionPayload {
@@ -9056,6 +9537,8 @@ export interface CourseLinkPreviousValues {
   frozen: Boolean;
   weight: Int;
   count: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface CourseLinkPreviousValuesPromise
@@ -9066,6 +9549,8 @@ export interface CourseLinkPreviousValuesPromise
   frozen: () => Promise<Boolean>;
   weight: () => Promise<Int>;
   count: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface CourseLinkPreviousValuesSubscription
@@ -9076,6 +9561,8 @@ export interface CourseLinkPreviousValuesSubscription
   frozen: () => Promise<AsyncIterator<Boolean>>;
   weight: () => Promise<AsyncIterator<Int>>;
   count: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface PointGroupSubscriptionPayload {
@@ -9110,6 +9597,8 @@ export interface PointGroupPreviousValues {
   endDate: DateTimeOutput;
   maxPoints: Int;
   pointsPerConcept: Float;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface PointGroupPreviousValuesPromise
@@ -9121,6 +9610,8 @@ export interface PointGroupPreviousValuesPromise
   endDate: () => Promise<DateTimeOutput>;
   maxPoints: () => Promise<Int>;
   pointsPerConcept: () => Promise<Float>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface PointGroupPreviousValuesSubscription
@@ -9132,6 +9623,8 @@ export interface PointGroupPreviousValuesSubscription
   endDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   maxPoints: () => Promise<AsyncIterator<Int>>;
   pointsPerConcept: () => Promise<AsyncIterator<Float>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ProjectSubscriptionPayload {
@@ -9162,6 +9655,8 @@ export interface ProjectSubscriptionPayloadSubscription
 export interface ProjectPreviousValues {
   id: ID_Output;
   name: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ProjectPreviousValuesPromise
@@ -9169,6 +9664,8 @@ export interface ProjectPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ProjectPreviousValuesSubscription
@@ -9176,6 +9673,8 @@ export interface ProjectPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ProjectParticipantSubscriptionPayload {
@@ -9206,6 +9705,8 @@ export interface ProjectParticipantSubscriptionPayloadSubscription
 export interface ProjectParticipantPreviousValues {
   id: ID_Output;
   privilege: Privilege;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface ProjectParticipantPreviousValuesPromise
@@ -9213,6 +9714,8 @@ export interface ProjectParticipantPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface ProjectParticipantPreviousValuesSubscription
@@ -9220,6 +9723,8 @@ export interface ProjectParticipantPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   privilege: () => Promise<AsyncIterator<Privilege>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface ProjectTokenSubscriptionPayload {
@@ -9346,6 +9851,8 @@ export interface TagPreviousValues {
   name: String;
   type: String;
   priority: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface TagPreviousValuesPromise
@@ -9355,6 +9862,8 @@ export interface TagPreviousValuesPromise
   name: () => Promise<String>;
   type: () => Promise<String>;
   priority: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface TagPreviousValuesSubscription
@@ -9364,6 +9873,8 @@ export interface TagPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   type: () => Promise<AsyncIterator<String>>;
   priority: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface URLSubscriptionPayload {
@@ -9443,6 +9954,7 @@ export interface UserPreviousValues {
   role: Role;
   deactivated: Boolean;
   createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
   lastActivity?: DateTimeOutput;
   seenGuides: String[];
 }
@@ -9457,6 +9969,7 @@ export interface UserPreviousValuesPromise
   role: () => Promise<Role>;
   deactivated: () => Promise<Boolean>;
   createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   lastActivity: () => Promise<DateTimeOutput>;
   seenGuides: () => Promise<String[]>;
 }
@@ -9471,6 +9984,7 @@ export interface UserPreviousValuesSubscription
   role: () => Promise<AsyncIterator<Role>>;
   deactivated: () => Promise<AsyncIterator<Boolean>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   lastActivity: () => Promise<AsyncIterator<DateTimeOutput>>;
   seenGuides: () => Promise<AsyncIterator<String[]>>;
 }
@@ -9504,6 +10018,8 @@ export interface WorkspacePreviousValues {
   id: ID_Output;
   name: String;
   courseOrder: ID_Output[];
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface WorkspacePreviousValuesPromise
@@ -9512,6 +10028,8 @@ export interface WorkspacePreviousValuesPromise
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   courseOrder: () => Promise<ID_Output[]>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface WorkspacePreviousValuesSubscription
@@ -9520,6 +10038,8 @@ export interface WorkspacePreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   courseOrder: () => Promise<AsyncIterator<ID_Output[]>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface WorkspaceParticipantSubscriptionPayload {
@@ -9550,6 +10070,8 @@ export interface WorkspaceParticipantSubscriptionPayloadSubscription
 export interface WorkspaceParticipantPreviousValues {
   id: ID_Output;
   privilege: Privilege;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface WorkspaceParticipantPreviousValuesPromise
@@ -9557,6 +10079,8 @@ export interface WorkspaceParticipantPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   privilege: () => Promise<Privilege>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface WorkspaceParticipantPreviousValuesSubscription
@@ -9564,6 +10088,8 @@ export interface WorkspaceParticipantPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   privilege: () => Promise<AsyncIterator<Privilege>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface WorkspaceTokenSubscriptionPayload {

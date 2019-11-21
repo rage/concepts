@@ -76,6 +76,7 @@ type Completion {
   user: User!
   conceptAmount: Int!
   createdAt: DateTime!
+  updatedAt: DateTime!
   pointGroup: PointGroup!
 }
 
@@ -115,12 +116,15 @@ enum CompletionOrderByInput {
   conceptAmount_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type CompletionPreviousValues {
   id: ID!
   conceptAmount: Int!
   createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input CompletionScalarWhereInput {
@@ -154,6 +158,14 @@ input CompletionScalarWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [CompletionScalarWhereInput!]
   OR: [CompletionScalarWhereInput!]
   NOT: [CompletionScalarWhereInput!]
@@ -256,6 +268,14 @@ input CompletionWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   pointGroup: PointGroupWhereInput
   AND: [CompletionWhereInput!]
   OR: [CompletionWhereInput!]
@@ -282,6 +302,8 @@ type Concept {
   workspace: Workspace!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ConceptConnection {
@@ -477,6 +499,8 @@ type ConceptLink {
   createdBy: User!
   weight: Int!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ConceptLinkConnection {
@@ -561,6 +585,10 @@ enum ConceptLinkOrderByInput {
   weight_DESC
   count_ASC
   count_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ConceptLinkPreviousValues {
@@ -569,6 +597,8 @@ type ConceptLinkPreviousValues {
   frozen: Boolean!
   weight: Int!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input ConceptLinkScalarWhereInput {
@@ -606,6 +636,22 @@ input ConceptLinkScalarWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ConceptLinkScalarWhereInput!]
   OR: [ConceptLinkScalarWhereInput!]
   NOT: [ConceptLinkScalarWhereInput!]
@@ -797,6 +843,22 @@ input ConceptLinkWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ConceptLinkWhereInput!]
   OR: [ConceptLinkWhereInput!]
   NOT: [ConceptLinkWhereInput!]
@@ -819,6 +881,10 @@ enum ConceptOrderByInput {
   frozen_DESC
   count_ASC
   count_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ConceptPreviousValues {
@@ -828,6 +894,8 @@ type ConceptPreviousValues {
   official: Boolean!
   frozen: Boolean!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input ConceptScalarWhereInput {
@@ -885,6 +953,22 @@ input ConceptScalarWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ConceptScalarWhereInput!]
   OR: [ConceptScalarWhereInput!]
   NOT: [ConceptScalarWhereInput!]
@@ -1251,6 +1335,22 @@ input ConceptWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ConceptWhereInput!]
   OR: [ConceptWhereInput!]
   NOT: [ConceptWhereInput!]
@@ -1274,6 +1374,8 @@ type Course {
   conceptOrder: [ID!]!
   workspace: Workspace!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type CourseConnection {
@@ -1442,6 +1544,8 @@ type CourseLink {
   workspace: Workspace!
   weight: Int!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type CourseLinkConnection {
@@ -1526,6 +1630,10 @@ enum CourseLinkOrderByInput {
   weight_DESC
   count_ASC
   count_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type CourseLinkPreviousValues {
@@ -1534,6 +1642,8 @@ type CourseLinkPreviousValues {
   frozen: Boolean!
   weight: Int!
   count: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input CourseLinkScalarWhereInput {
@@ -1571,6 +1681,22 @@ input CourseLinkScalarWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [CourseLinkScalarWhereInput!]
   OR: [CourseLinkScalarWhereInput!]
   NOT: [CourseLinkScalarWhereInput!]
@@ -1762,6 +1888,22 @@ input CourseLinkWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [CourseLinkWhereInput!]
   OR: [CourseLinkWhereInput!]
   NOT: [CourseLinkWhereInput!]
@@ -1780,6 +1922,10 @@ enum CourseOrderByInput {
   official_DESC
   frozen_ASC
   frozen_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type CoursePreviousValues {
@@ -1788,6 +1934,8 @@ type CoursePreviousValues {
   official: Boolean!
   frozen: Boolean!
   conceptOrder: [ID!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input CourseScalarWhereInput {
@@ -1823,6 +1971,22 @@ input CourseScalarWhereInput {
   official_not: Boolean
   frozen: Boolean
   frozen_not: Boolean
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [CourseScalarWhereInput!]
   OR: [CourseScalarWhereInput!]
   NOT: [CourseScalarWhereInput!]
@@ -2151,6 +2315,22 @@ input CourseWhereInput {
   tags_every: TagWhereInput
   tags_some: TagWhereInput
   tags_none: TagWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [CourseWhereInput!]
   OR: [CourseWhereInput!]
   NOT: [CourseWhereInput!]
@@ -2290,6 +2470,8 @@ type PointGroup {
   course: Course!
   pointsPerConcept: Float!
   completions(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Completion!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type PointGroupConnection {
@@ -2360,6 +2542,10 @@ enum PointGroupOrderByInput {
   maxPoints_DESC
   pointsPerConcept_ASC
   pointsPerConcept_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type PointGroupPreviousValues {
@@ -2369,6 +2555,8 @@ type PointGroupPreviousValues {
   endDate: DateTime!
   maxPoints: Int!
   pointsPerConcept: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input PointGroupScalarWhereInput {
@@ -2432,6 +2620,22 @@ input PointGroupScalarWhereInput {
   pointsPerConcept_lte: Float
   pointsPerConcept_gt: Float
   pointsPerConcept_gte: Float
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [PointGroupScalarWhereInput!]
   OR: [PointGroupScalarWhereInput!]
   NOT: [PointGroupScalarWhereInput!]
@@ -2608,6 +2812,22 @@ input PointGroupWhereInput {
   completions_every: CompletionWhereInput
   completions_some: CompletionWhereInput
   completions_none: CompletionWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [PointGroupWhereInput!]
   OR: [PointGroupWhereInput!]
   NOT: [PointGroupWhereInput!]
@@ -2633,6 +2853,8 @@ type Project {
   merges(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace!]
   participants(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   tokens(where: ProjectTokenWhereInput, orderBy: ProjectTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectToken!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ProjectConnection {
@@ -2737,6 +2959,10 @@ enum ProjectOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ProjectParticipant {
@@ -2745,6 +2971,8 @@ type ProjectParticipant {
   project: Project!
   token: ProjectToken
   user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ProjectParticipantConnection {
@@ -2807,11 +3035,17 @@ enum ProjectParticipantOrderByInput {
   id_DESC
   privilege_ASC
   privilege_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type ProjectParticipantPreviousValues {
   id: ID!
   privilege: Privilege!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input ProjectParticipantScalarWhereInput {
@@ -2833,6 +3067,22 @@ input ProjectParticipantScalarWhereInput {
   privilege_not: Privilege
   privilege_in: [Privilege!]
   privilege_not_in: [Privilege!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ProjectParticipantScalarWhereInput!]
   OR: [ProjectParticipantScalarWhereInput!]
   NOT: [ProjectParticipantScalarWhereInput!]
@@ -2985,6 +3235,22 @@ input ProjectParticipantWhereInput {
   project: ProjectWhereInput
   token: ProjectTokenWhereInput
   user: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ProjectParticipantWhereInput!]
   OR: [ProjectParticipantWhereInput!]
   NOT: [ProjectParticipantWhereInput!]
@@ -2997,6 +3263,8 @@ input ProjectParticipantWhereUniqueInput {
 type ProjectPreviousValues {
   id: ID!
   name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ProjectSubscriptionPayload {
@@ -3402,6 +3670,22 @@ input ProjectWhereInput {
   tokens_every: ProjectTokenWhereInput
   tokens_some: ProjectTokenWhereInput
   tokens_none: ProjectTokenWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [ProjectWhereInput!]
   OR: [ProjectWhereInput!]
   NOT: [ProjectWhereInput!]
@@ -3751,6 +4035,8 @@ type Tag {
   name: String!
   type: String!
   priority: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type TagConnection {
@@ -3785,6 +4071,10 @@ enum TagOrderByInput {
   type_DESC
   priority_ASC
   priority_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type TagPreviousValues {
@@ -3792,6 +4082,8 @@ type TagPreviousValues {
   name: String!
   type: String!
   priority: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input TagScalarWhereInput {
@@ -3845,6 +4137,22 @@ input TagScalarWhereInput {
   priority_lte: Int
   priority_gt: Int
   priority_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [TagScalarWhereInput!]
   OR: [TagScalarWhereInput!]
   NOT: [TagScalarWhereInput!]
@@ -3971,6 +4279,22 @@ input TagWhereInput {
   priority_lte: Int
   priority_gt: Int
   priority_gte: Int
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [TagWhereInput!]
   OR: [TagWhereInput!]
   NOT: [TagWhereInput!]
@@ -4171,6 +4495,7 @@ type User {
   workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   createdAt: DateTime!
+  updatedAt: DateTime!
   lastActivity: DateTime
   seenGuides: [String!]!
 }
@@ -4257,6 +4582,8 @@ enum UserOrderByInput {
   deactivated_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
   lastActivity_ASC
   lastActivity_DESC
 }
@@ -4269,6 +4596,7 @@ type UserPreviousValues {
   role: Role!
   deactivated: Boolean!
   createdAt: DateTime!
+  updatedAt: DateTime!
   lastActivity: DateTime
   seenGuides: [String!]!
 }
@@ -4458,6 +4786,14 @@ input UserWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   lastActivity: DateTime
   lastActivity_not: DateTime
   lastActivity_in: [DateTime!]
@@ -4497,6 +4833,8 @@ type Workspace {
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup!]
   courseTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
   conceptTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceConnection {
@@ -4845,6 +5183,10 @@ enum WorkspaceOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type WorkspaceParticipant {
@@ -4853,6 +5195,8 @@ type WorkspaceParticipant {
   workspace: Workspace!
   token: WorkspaceToken
   user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceParticipantConnection {
@@ -4915,11 +5259,17 @@ enum WorkspaceParticipantOrderByInput {
   id_DESC
   privilege_ASC
   privilege_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type WorkspaceParticipantPreviousValues {
   id: ID!
   privilege: Privilege!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input WorkspaceParticipantScalarWhereInput {
@@ -4941,6 +5291,22 @@ input WorkspaceParticipantScalarWhereInput {
   privilege_not: Privilege
   privilege_in: [Privilege!]
   privilege_not_in: [Privilege!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [WorkspaceParticipantScalarWhereInput!]
   OR: [WorkspaceParticipantScalarWhereInput!]
   NOT: [WorkspaceParticipantScalarWhereInput!]
@@ -5093,6 +5459,22 @@ input WorkspaceParticipantWhereInput {
   workspace: WorkspaceWhereInput
   token: WorkspaceTokenWhereInput
   user: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [WorkspaceParticipantWhereInput!]
   OR: [WorkspaceParticipantWhereInput!]
   NOT: [WorkspaceParticipantWhereInput!]
@@ -5106,6 +5488,8 @@ type WorkspacePreviousValues {
   id: ID!
   name: String!
   courseOrder: [ID!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input WorkspaceScalarWhereInput {
@@ -5137,6 +5521,22 @@ input WorkspaceScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [WorkspaceScalarWhereInput!]
   OR: [WorkspaceScalarWhereInput!]
   NOT: [WorkspaceScalarWhereInput!]
@@ -5930,6 +6330,22 @@ input WorkspaceWhereInput {
   conceptTags_every: TagWhereInput
   conceptTags_some: TagWhereInput
   conceptTags_none: TagWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [WorkspaceWhereInput!]
   OR: [WorkspaceWhereInput!]
   NOT: [WorkspaceWhereInput!]
