@@ -68,13 +68,16 @@ export const exportAPI = async (req, res) => {
 
   const prereqMap = ({ from, official }) => ({ name: from.name, official })
 
+  const courseOrder = result.workspace.courseOrder
+  delete result.workspace.courseOrder
+
   res.set('Content-Disposition', `attachment; filename="${result.workspace.workspace}.json"`)
   return res.json({
     ...result.workspace,
-    courses: sortedCourses(result.workspace.courses, result.workspace.courseOrder)
-      .map(({ concepts, linksToCourse, ...course }) => ({
+    courses: sortedCourses(result.workspace.courses, courseOrder)
+      .map(({ concepts, linksToCourse, conceptOrder, ...course }) => ({
         ...course,
-        concepts: sortedConcepts(concepts, course.conceptOrder)
+        concepts: sortedConcepts(concepts, conceptOrder)
           .map(({ linksToConcept, ...concept }) => ({
             ...concept,
             prerequisites: linksToConcept.map(prereqMap)
