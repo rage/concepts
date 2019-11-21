@@ -48,6 +48,14 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "courseOrder": {
+      "type":"array",
+      "description": "Order of courses",
+      "uniqueItems": true,
+      "examples": [
+        "[\"cjxk1l6uf001707606jgv7f9z\", \"cjdk1l6uf0017076g6jg47f9z\"]"
+      ]
+    },
     "projectId": {
       "type": "string",
       "description": "ID of a project",
@@ -213,6 +221,14 @@
                 }
               }
             }
+          },
+          "conceptOrder": {
+            "type":"array",
+            "description": "Order of concepts",
+            "uniqueItems": true,
+            "examples": [
+              "[\"cjxk1l6uf0311707606jgv7f9z\", \"cjdk1l213f0017076g6jg47f9z\"]"
+            ]
           }
         }
       }
