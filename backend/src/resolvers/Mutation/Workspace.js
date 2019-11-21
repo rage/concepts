@@ -26,6 +26,18 @@ query($id : ID!) {
           id
         }
       }
+      courseTags {
+        id
+        name
+        type
+        priority
+      }
+      conceptTags {
+        id
+        name
+        type
+        priority
+      }
       courseLinks {
         official
         frozen
@@ -44,6 +56,9 @@ query($id : ID!) {
         name
         official
         frozen
+        tags {
+          id
+        }
         createdBy {
           id
         }
@@ -54,6 +69,9 @@ query($id : ID!) {
           description
           official
           frozen
+          tags {
+            id
+          }
           createdBy {
             id
           }
@@ -219,6 +237,12 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
   const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
     && conceptOrder[0].startsWith('__ORDER_BY__')
 
+  await Promise.all(templateWorkspace.conceptTags.concat(templateWorkspace.courseTags)
+    .map(tag => context.prisma.createTag({
+      ...tag,
+      id: makeNewId(tag.id)
+    })))
+
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
@@ -240,14 +264,12 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
       }]
     },
     courseTags: {
-      create: templateWorkspace.courseTags.map(tag => ({
-        ...tag,
+      connect: templateWorkspace.courseTags.map(tag => ({
         id: makeNewId(tag.id)
       }))
     },
     conceptTags: {
-      create: templateWorkspace.conceptTags.map(tag => ({
-        ...tag,
+      connect: templateWorkspace.conceptTags.map(tag => ({
         id: makeNewId(tag.id)
       }))
     },
