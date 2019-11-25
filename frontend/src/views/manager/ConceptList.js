@@ -8,12 +8,13 @@ import { useLoginStateValue } from '../../lib/store'
 import { SortableList } from '../../lib/sortableMoc'
 import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
-import groupConcepts from './ConceptGroup'
+import groupConcepts from './groupConcepts'
 import MergeDialog from './MergeDialog'
 import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
 import { sortedConcepts } from '../../lib/ordering'
+import { searchConcepts } from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,6 +67,7 @@ const ConceptList = ({
   const mergeDialogTimeout = useRef(-1)
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
   const [conceptFilter, setConceptFilter] = useState('')
+  const prevSortData = useRef({})
 
   const isOrdered = course.conceptOrder.length === 1
     && course.conceptOrder[0].startsWith('__ORDER_BY__')
@@ -79,10 +81,22 @@ const ConceptList = ({
     if (!dirtyOrder && defaultOrderMethod !== orderMethod) {
       setOrderMethod(defaultOrderMethod)
     }
-    if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sortedConcepts(course.concepts, course.conceptOrder, orderMethod))
+    if (conceptFilter !== '') {
+      if (prevSortData.current.conceptFilter !== conceptFilter) {
+        setOrderedConcepts(searchConcepts(course.concepts, conceptFilter))
+        prevSortData.current = { conceptFilter }
+      }
+    } else if (!dirtyOrder || orderMethod !== 'CUSTOM') {
+      if (prevSortData.current.orderMethod !== orderMethod
+        || prevSortData.current.conceptOrder !== course.conceptOrder) {
+        setOrderedConcepts(sortedConcepts(course.concepts, course.conceptOrder, orderMethod))
+        prevSortData.current = {
+          orderMethod,
+          conceptOrder: course.conceptOrder
+        }
+      }
     }
-  }, [course.concepts, course.conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod])
+  }, [course.concepts, course.conceptOrder, conceptFilter, dirtyOrder, defaultOrderMethod, orderMethod])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
@@ -189,10 +203,6 @@ const ConceptList = ({
     return null
   }
 
-  const conceptFilterLowerCase = conceptFilter.toLowerCase()
-  const includeConcept = concept => conceptFilter.length === 0
-    || concept.name.toLowerCase().includes(conceptFilterLowerCase)
-
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -237,7 +247,6 @@ const ConceptList = ({
         ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
       >
         {orderMethod !== 'GROUP_BY' ? orderedConcepts.map((concept, conceptIndex) =>
-          includeConcept(concept) &&
           <ConceptListItem
             key={concept.id}
             concept={concept}
@@ -248,15 +257,15 @@ const ConceptList = ({
             updateConcept={updateConcept}
             merging={merging}
             setEditing={setEditing}
-            sortable={orderMethod === 'CUSTOM' && !course.frozen}
+            sortable={orderMethod === 'CUSTOM' && conceptFilter === '' && !course.frozen}
             toggleMergingConcept={toggleMergingConcept}
             checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
               : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                 : undefined}
             conceptTags={conceptTags}
           />
-        ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
-          group.map((concept, conceptIndex) => includeConcept(concept) &&
+        ) : groupConcepts(orderedConcepts).flatMap((group, index, array) =>
+          group.map((concept, conceptIndex) =>
             <ConceptListItem
               key={concept.id}
               concept={concept}
