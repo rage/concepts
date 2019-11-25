@@ -1,6 +1,5 @@
-import { get } from "../../lib/objectRecursion"
-
 const keyRegex = /^([a-z.]+):(.*)$/
+const knownKeys = new Set(['tag', 'tags'])
 
 /**
  * Split a filter string into parts.
@@ -37,7 +36,7 @@ const parseFilter = filter => {
       data.text = data.text.substr(1)
     }
     const keyData = data.text.match(keyRegex)
-    if (keyData) {
+    if (keyData && knownKeys.has(keyData[1])) {
       data.key = keyData[1]
       data.text = keyData[2]
     }
@@ -67,20 +66,18 @@ const parseFilter = filter => {
  * @returns {boolean} Whether or not the part is a match.
  */
 const matchPart = (concept, part) => {
-  if (part.key) {
-    const value = get(concept, part.key)
-    if (!value) {
+  switch(part.key) {
+    case 'tags':
+    case 'tag':
+      return part.additive === Boolean(concept.tags.find(tag => tag.name.toLowerCase().startsWith(part.text)))
+    case null:
+      // TODO we should do fuzzy matching here when part.quote is false
+      return part.additive === (
+          concept.name.toLowerCase().includes(part.text)
+          || concept.description.toLowerCase().includes(part.text))
+    default:
+      console.warn('Unknown part key', part.key)
       return !part.additive
-    } else if (Array.isArray(value)) {
-      return part.additive === Boolean(value.find(item => (item.name || item).toLowerCase().startsWith(part.text)))
-    } else {
-      return part.additive === value.toLowerCase().startsWith(part.text)
-    }
-  } else {
-    // TODO we should do fuzzy matching here when part.quote is false
-    return part.additive === (
-        concept.name.toLowerCase().includes(part.text)
-        || concept.description.toLowerCase().includes(part.text))
   }
 }
 
