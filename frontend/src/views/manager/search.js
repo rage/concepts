@@ -2,15 +2,20 @@ const keyRegex = /^([a-z.]+):(.*)$/
 const knownKeys = new Set(['tag', 'tags'])
 
 /**
+ * A part of a parsed filter
+ * @typedef {Object} FilterPart
+ * @property {string}  text     The text in the filter
+ * @property {boolean} quote    Whether or not the filter part was quoted
+ * @property {boolean} additive Whether the filter is additive (only concepts matching should be included)
+ *                              or not (concepts matching should be excluded)
+ * @property {string}  [key]    The key for filtering by a specific concept field.
+ */
+
+/**
  * Split a filter string into parts.
  *
  * @param {string} filter The string filter parameter
- * @returns {[{
- *  text: string,
- *  quote: boolean,
- *  additive: boolean,
- *  key: string?
- * }]} The array of parts in the filter.
+ * @returns {[FilterPart]} The array of parts in the filter.
  */
 const parseFilter = filter => {
   let quote = null
@@ -21,14 +26,9 @@ const parseFilter = filter => {
       return
     }
     const data = {
-      // The text in the filter part
       text: building.join('').toLowerCase(),
-      // Whether or not the filter part was quoted
       quote: quote !== null,
-      // Whether the filter is additive (only concepts matching should be included)
-      // or not (concepts matching should be excluded)
       additive: true,
-      // The key to apply this filter to. Can be used e.g. to search for a specific tag.
       key: null,
     }
     if (data.text[0] === '+' || data.text[0] === '-') {
@@ -57,12 +57,7 @@ const parseFilter = filter => {
  * Check if the given concept should be shown when filtering with the given filter part.
  *
  * @param {Concept} concept The concept to match.
- * @param {{
- *  text: string,
- *  quote: boolean,
- *  additive: boolean,
- *  key: string?
- * }} part The filter part from parseFilter.
+ * @param {FilterPart} part The filter part from parseFilter.
  * @returns {boolean} Whether or not the part is a match.
  */
 const matchPart = (concept, part) => {
