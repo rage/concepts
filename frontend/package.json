@@ -25,7 +25,6 @@
     "cytoscape-klay": "^3.1.2",
     "cytoscape-popper": "^1.0.4",
     "fast-levenshtein": "^2.0.6",
-    "fuse.js": "^3.4.6",
     "graphql": "^14.3.0",
     "graphql-tag": "^2.10.1",
     "moment": "^2.24.0",
