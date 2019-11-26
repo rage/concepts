@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 1)
   },
   buttonGroup: {
-    '& > *' : {
+    '& > *': {
       marginRight: '6px',
       marginBottom: '4px'
     }
@@ -148,9 +148,9 @@ const EditableTable = ({
           {AdditionalAction && <AdditionalAction />}
           {createMutation &&
             <Tooltip title="Add point group">
-            <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
-              <AddIcon />
-            </IconButton>
+              <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
+                <AddIcon />
+              </IconButton>
             </Tooltip>
           }
         </div>}
@@ -217,22 +217,22 @@ const EditTableRow = ({ columns, classes, state, setState, disabled, submit, can
 const DisplayTableRow = ({
   columns, classes, data, editing, setEditing, disabled, iconColor, deleteRow
 }) => (
-  <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-    {columns.map(col => !col.hidden && (
-      <TableCell key={col.field} className={classes.tableCell}>
-        <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
+    <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
+      {columns.map(col => !col.hidden && (
+        <TableCell key={col.field} className={classes.tableCell}>
+          <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
+        </TableCell>
+      ))}
+      <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+        <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
+          <EditIcon />
+        </IconButton>
+        <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
+          <DeleteIcon />
+        </IconButton>
       </TableCell>
-    ))}
-    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
-      <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
-        <EditIcon />
-      </IconButton>
-      <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
-        <DeleteIcon />
-      </IconButton>
-    </TableCell>
-  </TableRow>
-)
+    </TableRow>
+  )
 
 const EditableTableRow = ({
   data, columns, disabled, editing, setEditing, updateMutation, deleteMutation
