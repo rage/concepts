@@ -157,7 +157,7 @@ const EditableTable = ({
               <Tooltip title={createButtonTitle}>
                 <span>
                   {createButton}
-                </div>
+                </span>
               </Tooltip> : createButton
           }
         </div>}
