@@ -255,7 +255,7 @@ const ConceptList = ({
                 : undefined}
             conceptTags={conceptTags}
           />
-        ) : groupConcepts(orderedConcepts).flatMap((group, index, array) =>
+        ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
           group.map((concept, conceptIndex) => includeConcept(concept) &&
             <ConceptListItem
               key={concept.id}
