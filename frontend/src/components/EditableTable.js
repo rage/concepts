@@ -117,7 +117,7 @@ export const Type = {
 }
 
 const EditableTable = ({
-  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled, title
+  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled, title, createButtonTitle
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
@@ -141,17 +141,24 @@ const EditableTable = ({
     }
   }
 
+  const createButton = (
+      <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
+        <AddIcon />
+      </IconButton>
+  )
+
   return (
     <Card className={classes.root} elevation={0}>
       <CardHeader
         action={(createMutation || AdditionalAction) && <div className={classes.buttonGroup}>
           {AdditionalAction && <AdditionalAction />}
           {createMutation &&
-            <Tooltip title="Add point group">
-              <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
+            Boolean(createButtonTitle) ? 
+              <Tooltip title={createButtonTitle}>
+                <span>
+                  {createButton}
+                </span>
+              </Tooltip> : createButton
           }
         </div>}
         title={title}
