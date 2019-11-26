@@ -141,7 +141,7 @@ const EditableTable = ({
     }
   }
 
-  const addingButton = (
+  const createButton = (
       <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
         <AddIcon />
       </IconButton>
@@ -156,9 +156,9 @@ const EditableTable = ({
             Boolean(createButtonTitle) ? 
               <Tooltip title={createButtonTitle}>
                 <div style={{display: 'inline-block'}}>
-                  {addingButton}
+                  {createButton}
                 </div>
-              </Tooltip> : {addingButton}
+              </Tooltip> : {createButton}
           }
         </div>}
         title={title}
