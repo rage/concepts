@@ -147,7 +147,7 @@ const PointGroupsView = ({ projectId }) => {
       <EditableTable
         title='Point groups'
         columns={columns}
-        createButtonTitle={editableTableDisabled ? 'Course not selected' : 'Add point group'}
+        createButtonTitle={editableTableDisabled ? 'Select a course to add a point group' : 'Add point group'}
         AdditionalAction={() => <>
           <CourseSelector />
           <ExportData />
