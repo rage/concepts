@@ -158,7 +158,7 @@ const EditableTable = ({
                 <div style={{display: 'inline-block'}}>
                   {createButton}
                 </div>
-              </Tooltip> : {createButton}
+              </Tooltip> : createButton
           }
         </div>}
         title={title}
