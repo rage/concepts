@@ -167,6 +167,35 @@ type Concept {
   updatedAt: DateTime! @updatedAt
 }
 
+type Objective {
+  id: ID! @id
+  name: String!
+  description: String
+  official: Boolean! @default(value: false)
+  frozen: Boolean! @default(value: false)
+  course: Course! @relation(name: "ObjectiveCourses")
+  concepts: [Concept!]! @relation(name: "ObjectiveConcepts")
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
+  tags: [Tag!]!
+  createdBy: User!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type ObjectiveLink {
+  id: ID! @id
+  from: Objective! @relation(link: INLINE, name: "FromObjective")
+  to: Objective! @relation(link: INLINE, name: "ToObjective")
+  official: Boolean! @default(value: false)
+  frozen: Boolean! @default(value: false)
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceObjectiveLinks")
+  createdBy: User!
+  weight: Int! @default(value: 100)
+  count: Int! @default(value: 1)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
 type PointGroup {
   id: ID! @id
   name: String!
