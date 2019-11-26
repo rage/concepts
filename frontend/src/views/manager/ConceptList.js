@@ -8,12 +8,13 @@ import { useLoginStateValue } from '../../lib/store'
 import { SortableList } from '../../lib/sortableMoc'
 import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
-import groupConcepts from './ConceptGroup'
+import groupConcepts from './groupConcepts'
 import MergeDialog from './MergeDialog'
 import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
 import { sortedConcepts } from '../../lib/ordering'
+import { parseFilter, includeConcept as intIncludeConcept } from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -107,7 +108,7 @@ const ConceptList = ({
     setDirtyOrder(null)
   }
 
-  const isTemplate = Boolean(workspace.asTemplate?.id)
+  const isTemplate = Boolean(workspace.asTemplate ?.id)
   const conceptTags = backendToSelect(workspace.conceptTags)
 
   const startMerging = () => {
@@ -142,7 +143,7 @@ const ConceptList = ({
 
   const CardHeaderButton = ({ children, bRef, color = 'primary', onClick, disabled = false }) => (
     <Button
-      style={{ margin: '6px' }} ref={bRef} color={color} onClick={!disabled ? onClick : () => {}}
+      style={{ margin: '6px' }} ref={bRef} color={color} onClick={!disabled ? onClick : () => { }}
       disabled={disabled}
     >
       {children}
@@ -189,9 +190,8 @@ const ConceptList = ({
     return null
   }
 
-  const conceptFilterLowerCase = conceptFilter.toLowerCase()
-  const includeConcept = concept => conceptFilter.length === 0
-    || concept.name.toLowerCase().includes(conceptFilterLowerCase)
+  const conceptFilterParsed = parseFilter(conceptFilter)
+  const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -232,7 +232,7 @@ const ConceptList = ({
       {mergeDialogOpen !== null && <MergeDialog
         workspace={workspace} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
-      /> }
+      />}
       <SortableList
         ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
       >
@@ -255,26 +255,32 @@ const ConceptList = ({
                 : undefined}
             conceptTags={conceptTags}
           />
-        ) : groupConcepts(course.concepts).flatMap((group, index, array) =>
-          group.map((concept, conceptIndex) => includeConcept(concept) &&
-            <ConceptListItem
-              key={concept.id}
-              concept={concept}
-              user={user}
-              editing={editing}
-              deleteConcept={deleteConcept}
-              updateConcept={updateConcept}
-              merging={merging}
-              setEditing={setEditing}
-              toggleMergingConcept={toggleMergingConcept}
-              divider={false}
-              checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-                : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
-                  : undefined}
-              sortable={false}
-              conceptTags={conceptTags}
-            />
-          ).concat(index < array.length - 1 ? [<hr key={index} />] : [])
+        ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
+          const elements = group.filter(concept => includeConcept(concept))
+            .map((concept, conceptIndex) =>
+              <ConceptListItem
+                key={concept.id}
+                concept={concept}
+                user={user}
+                editing={editing}
+                deleteConcept={deleteConcept}
+                updateConcept={updateConcept}
+                merging={merging}
+                setEditing={setEditing}
+                toggleMergingConcept={toggleMergingConcept}
+                divider={false}
+                checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+                  : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+                    : undefined}
+                sortable={false}
+                conceptTags={conceptTags}
+              />
+            )
+          if (elements.length !== 0 && index < array.length - 1) {
+            elements.push([<hr key={index} />])
+          }
+          return elements
+        }
         )
         }</SortableList>
       <ConceptEditor submit={async args => {
