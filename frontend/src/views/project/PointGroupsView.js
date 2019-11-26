@@ -121,7 +121,7 @@ const PointGroupsView = ({ projectId }) => {
 
   const ExportData = () => (
     <Tooltip title={editableTableDisabled ? 'No groups available' : 'Export points'}> 
-      <div style={{display: 'inline-block'}}>{ExportButton}</div>
+      <span>{ExportButton}</span>
     </Tooltip>
   )
 
