@@ -100,23 +100,28 @@ const PointGroupsView = ({ projectId }) => {
     })
   }
 
-  const ExportData = () => (
-    <Tooltip title="Export points"> 
-      <IconButton
-        type='button'
-        variant='contained'
-        // color='primary'
-        disabled={editableTableDisabled}
-        onClick={async () => {
-          const resp = await createLinkToken()
 
-          // eslint-disable-next-line max-len
-          const url = `${window.location.origin}/api/projects/${projectId}/points?access_token=${resp.data.createLinkToken}`
-          window.open(url, '_blank')
-        }}
-      >
-        <ArchiveRounded/>
-      </IconButton>
+  const ExportButton = (
+    <IconButton
+      type='button'
+      variant='contained'
+      // color='primary'
+      disabled={editableTableDisabled}
+      onClick={async () => {
+        const resp = await createLinkToken()
+
+        // eslint-disable-next-line max-len
+        const url = `${window.location.origin}/api/projects/${projectId}/points?access_token=${resp.data.createLinkToken}`
+        window.open(url, '_blank')
+      }}
+    >
+      <ArchiveRounded/>
+    </IconButton>
+  )
+
+  const ExportData = () => (
+    <Tooltip title={editableTableDisabled ? 'No groups available' : 'Export points'}> 
+      <div style={{display: 'inline-block'}}>{ExportButton}</div>
     </Tooltip>
   )
 
@@ -142,6 +147,7 @@ const PointGroupsView = ({ projectId }) => {
       <EditableTable
         title='Point groups'
         columns={columns}
+        createButtonTitle={editableTableDisabled ? 'Course not selected' : 'Add point group'}
         AdditionalAction={() => <>
           <CourseSelector />
           <ExportData />
