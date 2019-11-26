@@ -155,7 +155,7 @@ const EditableTable = ({
           {createMutation &&
             Boolean(createButtonTitle) ? 
               <Tooltip title={createButtonTitle}>
-                <div style={{display: 'inline-block'}}>
+                <span>
                   {createButton}
                 </div>
               </Tooltip> : createButton
