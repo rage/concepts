@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { TextField, MenuItem, Button } from '@material-ui/core'
+import { TextField, MenuItem, Tooltip, IconButton } from '@material-ui/core'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
@@ -12,6 +12,7 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useMessageStateValue } from '../../lib/store'
 import EditableTable, { Type } from '../../components/EditableTable'
+import { ArchiveRounded  } from '@material-ui/icons'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -100,20 +101,23 @@ const PointGroupsView = ({ projectId }) => {
   }
 
   const ExportData = () => (
-    <Button
-      type='button'
-      variant='contained'
-      color='primary'
-      onClick={async () => {
-        const resp = await createLinkToken()
+    <Tooltip title="Export points"> 
+      <IconButton
+        type='button'
+        variant='contained'
+        // color='primary'
+        disabled={editableTableDisabled}
+        onClick={async () => {
+          const resp = await createLinkToken()
 
-        // eslint-disable-next-line max-len
-        const url = `${window.location.origin}/api/projects/${projectId}/points?access_token=${resp.data.createLinkToken}`
-        window.open(url, '_blank')
-      }}
-    >
-      Export points
-    </Button>
+          // eslint-disable-next-line max-len
+          const url = `${window.location.origin}/api/projects/${projectId}/points?access_token=${resp.data.createLinkToken}`
+          window.open(url, '_blank')
+        }}
+      >
+        <ArchiveRounded/>
+      </IconButton>
+    </Tooltip>
   )
 
   const CourseSelector = () => (
@@ -139,8 +143,8 @@ const PointGroupsView = ({ projectId }) => {
         title='Point groups'
         columns={columns}
         AdditionalAction={() => <>
-          <ExportData />
           <CourseSelector />
+          <ExportData />
         </>}
         disabled={editableTableDisabled}
         createMutation={args => createPointGroup({

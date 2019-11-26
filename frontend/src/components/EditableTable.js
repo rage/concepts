@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Table, TableBody, TableCell, TableHead,
-  TableRow, Card, TextField, IconButton, CardHeader
+  TableRow, Card, TextField, IconButton, CardHeader, Tooltip
 } from '@material-ui/core'
 import {
   Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
@@ -35,6 +35,12 @@ const useStyles = makeStyles(theme => ({
   tableCell: {
     color: 'inherit',
     padding: theme.spacing(1, 1)
+  },
+  buttonGroup: {
+    '& > *': {
+      marginRight: '6px',
+      marginBottom: '4px'
+    }
   }
 }))
 
@@ -138,14 +144,16 @@ const EditableTable = ({
   return (
     <Card className={classes.root} elevation={0}>
       <CardHeader
-        action={(createMutation || AdditionalAction) && <>
+        action={(createMutation || AdditionalAction) && <div className={classes.buttonGroup}>
           {AdditionalAction && <AdditionalAction />}
           {createMutation &&
-            <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
-              <AddIcon />
-            </IconButton>
+            <Tooltip title="Add point group">
+              <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
           }
-        </>}
+        </div>}
         title={title}
       />
       <Table className={classes.table}>
@@ -209,22 +217,22 @@ const EditTableRow = ({ columns, classes, state, setState, disabled, submit, can
 const DisplayTableRow = ({
   columns, classes, data, editing, setEditing, disabled, iconColor, deleteRow
 }) => (
-  <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-    {columns.map(col => !col.hidden && (
-      <TableCell key={col.field} className={classes.tableCell}>
-        <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
+    <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
+      {columns.map(col => !col.hidden && (
+        <TableCell key={col.field} className={classes.tableCell}>
+          <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
+        </TableCell>
+      ))}
+      <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+        <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
+          <EditIcon />
+        </IconButton>
+        <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
+          <DeleteIcon />
+        </IconButton>
       </TableCell>
-    ))}
-    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
-      <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
-        <EditIcon />
-      </IconButton>
-      <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
-        <DeleteIcon />
-      </IconButton>
-    </TableCell>
-  </TableRow>
-)
+    </TableRow>
+  )
 
 const EditableTableRow = ({
   data, columns, disabled, editing, setEditing, updateMutation, deleteMutation
