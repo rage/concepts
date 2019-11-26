@@ -6,8 +6,8 @@ const knownKeys = new Set(['tag', 'tags'])
  * @typedef {Object} FilterPart
  * @property {string}  text     The text in the filter
  * @property {boolean} quote    Whether or not the filter part was quoted
- * @property {boolean} additive Whether the filter is additive (only concepts matching should be included)
- *                              or not (concepts matching should be excluded)
+ * @property {boolean} additive Whether the filter is additive (only concepts matching should
+ *                              be included) or not (concepts matching should be excluded)
  * @property {string}  [key]    The key for filtering by a specific concept field.
  */
 
@@ -17,7 +17,7 @@ const knownKeys = new Set(['tag', 'tags'])
  * @param {string} filter The string filter parameter
  * @returns {[FilterPart]} The array of parts in the filter.
  */
-const parseFilter = filter => {
+export const parseFilter = filter => {
   let quote = null
   const building = []
   const result = []
@@ -29,7 +29,7 @@ const parseFilter = filter => {
       text: building.join('').toLowerCase(),
       quote: quote !== null,
       additive: true,
-      key: null,
+      key: null
     }
     if (data.text[0] === '+' || data.text[0] === '-') {
       data.additive = data.text[0] === '+'
@@ -44,7 +44,7 @@ const parseFilter = filter => {
     quote = null
     building.length = 0
   }
-  for (const char of filter.split("")) {
+  for (const char of filter.split('')) {
     if (char === quote || (char === ' ' && !quote)) build()
     else if (!quote && (char === '"' || char === "'")) quote = char
     else building.push(char)
@@ -61,22 +61,21 @@ const parseFilter = filter => {
  * @returns {boolean} Whether or not the part is a match.
  */
 const matchPart = (concept, part) => {
-  switch(part.key) {
-    case 'tags':
-    case 'tag':
-      return part.additive === Boolean(concept.tags.find(tag => tag.name.toLowerCase().startsWith(part.text)))
-    case null:
-      // TODO we should do fuzzy matching here when part.quote is false
-      return part.additive === (
-          concept.name.toLowerCase().includes(part.text)
+  switch (part.key) {
+  case 'tags':
+  case 'tag':
+    return part.additive === Boolean(concept.tags
+      .find(tag => tag.name.toLowerCase().startsWith(part.text)))
+  case null:
+    // TODO we should do fuzzy matching here when part.quote is false
+    return part.additive === (
+      concept.name.toLowerCase().includes(part.text)
           || concept.description.toLowerCase().includes(part.text))
-    default:
-      console.warn('Unknown part key', part.key)
-      return !part.additive
+  default:
+    console.warn('Unknown part key', part.key)
+    return !part.additive
   }
 }
 
-export const searchConcepts = (list, filter) => {
-  const parts = parseFilter(filter)
-  return list.filter(concept => parts.find(part => matchPart(concept, part) === false) === undefined)
-}
+export const includeConcept = (concept, filter) =>
+  filter.find(part => matchPart(concept, part) === false) === undefined
