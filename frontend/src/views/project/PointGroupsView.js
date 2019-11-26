@@ -107,6 +107,7 @@ const PointGroupsView = ({ projectId }) => {
         type='button'
         variant='contained'
         // color='primary'
+        disabled={editableTableDisabled}
         onClick={async () => {
           const resp = await createLinkToken()
 
