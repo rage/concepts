@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Table, TableBody, TableCell, TableHead,
-  TableRow, Card, TextField, IconButton, CardHeader
+  TableRow, Card, TextField, IconButton, CardHeader, Tooltip
 } from '@material-ui/core'
 import {
   Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
@@ -35,6 +35,12 @@ const useStyles = makeStyles(theme => ({
   tableCell: {
     color: 'inherit',
     padding: theme.spacing(1, 1)
+  },
+  buttonGroup: {
+    '& > *' : {
+      marginRight: '6px',
+      marginBottom: '4px'
+    }
   }
 }))
 
@@ -138,14 +144,16 @@ const EditableTable = ({
   return (
     <Card className={classes.root} elevation={0}>
       <CardHeader
-        action={(createMutation || AdditionalAction) && <>
+        action={(createMutation || AdditionalAction) && <div className={classes.buttonGroup}>
           {AdditionalAction && <AdditionalAction />}
           {createMutation &&
+            <Tooltip title="Add point group">
             <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
               <AddIcon />
             </IconButton>
+            </Tooltip>
           }
-        </>}
+        </div>}
         title={title}
       />
       <Table className={classes.table}>
