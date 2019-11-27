@@ -2,6 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField, MenuItem, Tooltip, IconButton } from '@material-ui/core'
 import { useQuery, useMutation } from 'react-apollo-hooks'
+import { ArchiveRounded } from '@material-ui/icons'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
 import {
@@ -12,7 +13,6 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import { useMessageStateValue } from '../../lib/store'
 import EditableTable, { Type } from '../../components/EditableTable'
-import { ArchiveRounded  } from '@material-ui/icons'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -100,7 +100,6 @@ const PointGroupsView = ({ projectId }) => {
     })
   }
 
-
   const ExportButton = (
     <IconButton
       type='button'
@@ -115,31 +114,38 @@ const PointGroupsView = ({ projectId }) => {
         window.open(url, '_blank')
       }}
     >
-      <ArchiveRounded/>
+      <ArchiveRounded />
     </IconButton>
   )
 
   const ExportData = () => (
-    <Tooltip title={editableTableDisabled ? 'No groups available' : 'Export points'}> 
+    <Tooltip title={editableTableDisabled ? 'No groups available' : 'Export points'}>
       <span>{ExportButton}</span>
     </Tooltip>
   )
 
   const CourseSelector = () => (
-    <TextField
-      select
-      disabled={disabled}
-      variant='outlined'
-      margin='dense'
-      label={disabled ? 'No courses to show' : 'Tracking course'}
-      value={mainCourse ? mainCourse.id : ''}
-      style={{ width: '200px' }}
-      onChange={handleMainCourseChange}
+    <Tooltip
+      title={disabled
+        ? 'Select an active template workspace and add courses to it first.'
+        : 'Use this to choose the course where students get points for adding concepts.'}
+      placement='left-end'
     >
-      {(activeTemplate ? activeTemplate.courses : []).map(course =>
-        <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-      )}
-    </TextField>
+      <TextField
+        select
+        disabled={disabled}
+        variant='outlined'
+        margin='dense'
+        label={disabled ? 'No courses to show' : 'Tracking course'}
+        value={mainCourse ? mainCourse.id : ''}
+        style={{ width: '200px' }}
+        onChange={handleMainCourseChange}
+      >
+        {(activeTemplate ? activeTemplate.courses : []).map(course =>
+          <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+        )}
+      </TextField>
+    </Tooltip>
   )
 
   return (
@@ -147,7 +153,9 @@ const PointGroupsView = ({ projectId }) => {
       <EditableTable
         title='Point groups'
         columns={columns}
-        createButtonTitle={editableTableDisabled ? 'Select a course to add a point group' : 'Add point group'}
+        createButtonTitle={editableTableDisabled
+          ? 'Select a course to add a point group'
+          : 'Add point group'}
         AdditionalAction={() => <>
           <CourseSelector />
           <ExportData />
