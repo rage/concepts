@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon
+  BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon, Tooltip
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon, Group as GroupIcon,
@@ -125,11 +125,13 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
           icon={<GroupIcon />}
         />}
       </BottomNavigation>
-      <IconButton
-        className={classes.menuButton} onClick={infoBox.open}
-      >
-        <HelpIcon />
-      </IconButton>
+      <Tooltip title='Open the tutorial for this view' placement='top'>
+        <IconButton
+          className={classes.menuButton} onClick={infoBox.open}
+        >
+          <HelpIcon />
+        </IconButton>
+      </Tooltip>
       <IconButton
         onClick={evt => setMenuAnchor(evt.currentTarget)}
         className={classes.menuButton}
