@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { makeStyles, IconButton } from '@material-ui/core'
+import { makeStyles, IconButton, Tooltip } from '@material-ui/core'
 import { useQuery } from 'react-apollo-hooks'
 import { HelpOutline as HelpIcon } from '@material-ui/icons'
 
@@ -67,9 +67,11 @@ const UserViewContent = ({ user }) => {
       {user.role >= Role.STAFF &&
         <ProjectList projects={projectQuery.data.projectsForUser.map(p => p.project)} />
       }
-      <IconButton className={classes.helpButton} onClick={infoBox.open}>
-        <HelpIcon />
-      </IconButton>
+      <Tooltip title='View tutorial for this view' placement='top'>
+        <IconButton className={classes.helpButton} onClick={infoBox.open}>
+          <HelpIcon />
+        </IconButton>
+      </Tooltip>
     </main>
   )
 }
