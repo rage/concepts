@@ -60,6 +60,16 @@ type Mutation {
   updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink!
   deleteCourseLink(id: ID!): DeletedCourseItem!
 
+  # Objective link mutations
+  createObjectiveLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ObjectiveLink!
+  updateObjectiveLink(id: ID!, frozen: Boolean, official: Boolean): ObjectiveLink!
+  deleteObjectiveLink(id: ID!): DeletedObjectiveLink!
+
+  # Concept objective link mutations
+  createConceptObjectiveLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptObjectiveLink!
+  updateConceptObjectiveLink(id: ID!, frozen: Boolean, official: Boolean): ConceptObjectiveLink!
+  deleteConceptObjectiveLink(id: ID!): DeletedConceptLink!
+
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink!
   deleteConceptLink(id: ID!): DeletedConceptLink!
@@ -123,6 +133,16 @@ type Subscription {
   courseLinkCreated(workspaceId: ID!): CourseLink!
   courseLinkUpdated(workspaceId: ID!): CourseLink!
   courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
+
+  # ObjectivesLinks subscriptions
+  objectiveLinkCreated(workspaceId: ID!): ObjectiveLink!
+  objectiveLinkUpdated(workspaceId: ID!): ObjectiveLink!
+  objectiveLinkDeleted(workspaceId: ID!): DeletedObjectiveLink!
+
+  # ConceptObjectiveLinks subscriptions
+  conceptObjectiveLinkCreated(workspaceId: ID!): ConceptObjectiveLink!
+  conceptObjectiveLinkUpdated(workspaceId: ID!): ConceptObjectiveLink!
+  conceptObjectiveLinkDeleted(workspaceId: ID!): DeletedConceptLink!
 
   # Objective subscriptions
   objectiveCreated(workspaceId: ID!): Objective!
@@ -188,6 +208,12 @@ type DeletedConceptLink {
   id: ID!
   courseId: ID!
   conceptId: ID!
+}
+
+type DeletedObjectiveLink {
+  id: ID!
+  courseId: ID!
+  objectiveId: ID!
 }
 
 enum AuthType {
