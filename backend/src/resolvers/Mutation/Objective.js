@@ -40,7 +40,7 @@ export const createObjective = async (root, {
 export const updateObjective = async (root, {
   id, name, description, official, tags, frozen
 }, context) => {
-  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
+  const { id: workspaceId } = nullShield(await context.prisma.objective({ id }).workspace())
   await checkAccess(context, {
     minimumRole: Role.GUEST,
     minimumPrivilege: Privilege.EDIT,
@@ -60,7 +60,7 @@ export const updateObjective = async (root, {
   }
 
   const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
-  const oldTags = await context.prisma.concept({ id }).tags()
+  const oldTags = await context.prisma.objective({ id }).tags()
 
   const data = {
     tags: await filterTags(tags, oldTags, workspaceId, context, 'objectiveTags'),
@@ -79,12 +79,12 @@ export const updateObjective = async (root, {
     data
   })
 
-  pubsub.publish(OBJECTIVE_UPDATED, { conceptUpdated: { ...updatedObjective, workspaceId } })
+  pubsub.publish(OBJECTIVE_UPDATED, { objectiveUpdated: { ...updatedObjective, workspaceId } })
   return updatedObjective
 }
 
 export const deleteObjective = async (root, { id }, context) => {
-  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
+  const { id: workspaceId } = nullShield(await context.prisma.objective({ id }).workspace())
   await checkAccess(context, {
     minimumRole: Role.GUEST,
     minimumPrivilege: Privilege.EDIT,
