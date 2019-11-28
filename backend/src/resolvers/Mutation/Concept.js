@@ -38,8 +38,8 @@ const findPointGroups = async (workspaceId, courseId, context) => {
         }
       }
     `, { workspaceId, userId: context.user.id, courseId: sourceCourseId })
-    const sourceTemplate = pgData?.workspace?.sourceTemplate
-    if (!sourceTemplate?.pointGroups || !sourceTemplate?.mainCourse) {
+    const sourceTemplate = pgData ?.workspace ?.sourceTemplate
+    if (!sourceTemplate ?.pointGroups || !sourceTemplate ?.mainCourse) {
       return null
     }
     const mainCourseId = sourceTemplate.mainCourse.id
@@ -95,7 +95,7 @@ export const createConcept = async (root, {
     description,
     official: Boolean(official),
     frozen: Boolean(frozen),
-    course: courseId ? { connect: { id: courseId } } : undefined,
+    course: { connect: { id: courseId } },
     tags: { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
   })
 
@@ -116,6 +116,8 @@ export const createConcept = async (root, {
     })
   }
 
+  // Maybe add conceptObjectiveLink here
+
   pubsub.publish(CONCEPT_CREATED, { conceptCreated: { ...createdConcept, workspaceId } })
   return createdConcept
 }
@@ -135,7 +137,7 @@ export const updateConcept = async (root, {
   if (oldConcept.frozen && frozen !== false)
     throw new ForbiddenError('This concept is frozen')
   if ((official !== undefined && official !== oldConcept.official)
-        || (frozen || oldConcept.frozen)) {
+    || (frozen || oldConcept.frozen)) {
     await checkAccess(context, {
       minimumRole: Role.STAFF,
       workspaceId

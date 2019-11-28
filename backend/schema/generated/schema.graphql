@@ -50,6 +50,11 @@ type Mutation {
   deleteConcept(id: ID!): DeletedCourseItem!
   updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
+  # Objective mutations
+  createObjective(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
+  deleteObjective(id: ID!): DeletedCourseItem!
+  updateObejctive(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
+
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
   updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink!
@@ -317,6 +322,7 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!]
   conceptTags: [Tag!]
+  objectiveTags: [Tag!]
   
   # Creation data
   createdBy: User!
