@@ -99,7 +99,7 @@ export const deleteLink = generic('delete', async (root, { id }, context) => {
   })
   const frozen = await context.prisma[context.type.getMethod]({ id }).frozen()
   if (frozen) throw new ForbiddenError('This link is frozen')
-  const data = getMetadata(id, context)
+  const data = await getMetadata(id, context)
   await context.prisma[context.type.mutateMethod]({ id })
   pubsub.publish(context.type.channel, {
     [context.type.pubsubVariableName]: { ...data, workspaceId }
