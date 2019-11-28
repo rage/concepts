@@ -86,6 +86,7 @@ export const createWorkspace = async (root, { name }, context) => {
   await checkAccess(context, { minimumRole: Role.GUEST })
   return await context.prisma.createWorkspace({
     name: name,
+    createdBy: { connect: { id: context.user.id } },
     participants: {
       create: [{
         privilege: Privilege.OWNER.toString(),
@@ -246,6 +247,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    createdBy: { connect: { id: context.user.id } },
     courseOrder: {
       set: templateWorkspace.courseOrder.map(makeNewId)
     },

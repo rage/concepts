@@ -6,6 +6,7 @@ export const createProject = async (root, args, context) => {
   await checkAccess(context, { minimumRole: Role.STAFF })
   return await context.prisma.createProject({
     name: args.name,
+    createdBy: { connect: { id: context.user.id } },
     participants: {
       create: [{
         privilege: Privilege.OWNER.toString(),

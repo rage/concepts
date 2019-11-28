@@ -32,6 +32,7 @@ export const createPointGroup = async (root, {
     endDate,
     maxPoints,
     pointsPerConcept,
+    createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } },
     course: { connect: { id: courseId } }
   })
