@@ -53,7 +53,7 @@ type Mutation {
   # Objective mutations
   createObjective(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
   deleteObjective(id: ID!): DeletedCourseItem!
-  updateObejctive(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
+  updateObjective(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!

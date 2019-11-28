@@ -38,8 +38,8 @@ const findPointGroups = async (workspaceId, courseId, context) => {
         }
       }
     `, { workspaceId, userId: context.user.id, courseId: sourceCourseId })
-    const sourceTemplate = pgData ?.workspace ?.sourceTemplate
-    if (!sourceTemplate ?.pointGroups || !sourceTemplate ?.mainCourse) {
+    const sourceTemplate = pgData?.workspace?.sourceTemplate
+    if (!sourceTemplate?.pointGroups || !sourceTemplate?.mainCourse) {
       return null
     }
     const mainCourseId = sourceTemplate.mainCourse.id
