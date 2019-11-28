@@ -227,6 +227,7 @@ type LimitedToken {
 }
 scalar DateTime
 
+
 type User {
   id: ID!
   tmcId: Int
@@ -234,13 +235,20 @@ type User {
   googleId: String
   role: Role!
   deactivated: Boolean!
+  
+  # Relations
   workspaceParticipations: [WorkspaceParticipant!]!
   projectParticipations: [ProjectParticipant!]!
+  
+  # Activity meta
+  seenGuides: [String!]!
+  lastActivity: DateTime
+  
+  # Creation data
   createdAt: DateTime!
   updatedAt: DateTime!
-  lastActivity: DateTime
-  seenGuides: [String!]!
 }
+
 
 enum Role {
   GUEST
@@ -259,120 +267,185 @@ enum Privilege {
 type Project {
   id: ID!
   name: String!
+
+  # Relations
   workspaces: [Workspace!]!
   activeTemplate: Workspace
   templates: [Workspace!]!
   merges: [Workspace!]!
+  
+  # Authorization data
   participants: [ProjectParticipant!]!
   tokens: [ProjectToken!]!
+  
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
+
 type Workspace {
   id: ID!
   name: String!
+  
+  # Workspace metadata
   sourceProject: Project
   sourceTemplate: Workspace
   asMerge: Project
   asTemplate: Project
   clones: [Workspace!]!
+  
+  # Relations
   courses: [Course!]!
   courseOrder: [ID!]!
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  objectives: [Objective!]!
+  objectiveLinks: [ObjectiveLink!]!
+  conceptObjectiveLinks: [ConceptObjectiveLink!]!
+
+  # Authorization data
   participants: [WorkspaceParticipant!]!
   tokens: [WorkspaceToken!]!
+  
+  # Completion data
   mainCourse: Course
   pointGroups: [PointGroup!]!
+  
+  # Shared metadata
   courseTags: [Tag!]
   conceptTags: [Tag!]
+  
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
 
 type WorkspaceParticipant {
   id: ID!
   privilege: Privilege!
+
+  # Relations
   workspace: Workspace!
   token: WorkspaceToken
   user: User!
+  
+  # Creation data
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
+
 type ProjectParticipant {
   id: ID!
   privilege: Privilege!
+
+  # Relations
   project: Project!
   token: ProjectToken
   user: User!
+  
+  # Creation data
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
 
 type WorkspaceToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
+
+  # Relations
   workspace: Workspace!
   participants: [WorkspaceParticipant!]!
 }
+
 
 type ProjectToken {
   id: ID!
   privilege: Privilege!
   revoked: Boolean!
+
+  # Relations
   project: Project!
   participants: [ProjectParticipant!]!
 }
+
 
 type CourseLink {
   id: ID!
   from: Course!
   to: Course!
+  
+  # Meta
   official: Boolean!
   frozen: Boolean!
-  createdBy: User!
-  workspace: Workspace!
   weight: Int!
   count: Int!
+  
+  # Relations
+  workspace: Workspace!
+  
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
 
 type Course {
   id: ID!
   name: String!
   official: Boolean!
   frozen: Boolean!
-  createdBy: User!
+  tags: [Tag!]!
+
+  # Source data
   sourceCourse: Course
   clones: [Course!]!
+  
+  # Links
   linksFromCourse: [CourseLink!]!
   linksToCourse: [CourseLink!]!
+  
+  # Relations
   concepts: [Concept!]!
   conceptOrder: [ID!]!
   workspace: Workspace!
-  tags: [Tag!]!
+  objectives: [Objective!]!
+  
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
 
 type ConceptLink {
   id: ID!
   from: Concept!
   to: Concept!
+  
+  # Meta
   official: Boolean!
   frozen: Boolean!
-  workspace: Workspace!
-  createdBy: User!
   weight: Int!
   count: Int!
+
+  # Relations
+  workspace: Workspace!
+  
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
 
 type Concept {
   id: ID!
@@ -380,62 +453,138 @@ type Concept {
   description: String
   official: Boolean!
   frozen: Boolean!
-  createdBy: User!
-  sourceConcept: Concept
-  clones: [Concept!]!
-  linksFromConcept: [ConceptLink!]!
-  linksToConcept: [ConceptLink!]!
-  course: Course!
-  resources: [Resource!]!
-  workspace: Workspace!
   tags: [Tag!]!
   count: Int!
+  
+  # Source data
+  sourceConcept: Concept
+  clones: [Concept!]!
+  
+  # Links
+  linksFromConcept: [ConceptLink!]!
+  linksToConcept: [ConceptLink!]!
+  linksToObjective: [ConceptObjectiveLink!]!
+  
+  # Relations
+  course: Course!
+  workspace: Workspace!
+  
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type PointGroup {
+
+type Objective {
   id: ID!
   name: String!
-  startDate: DateTime!
-  endDate: DateTime!
-  maxPoints: Int!
+  description: String
+  official: Boolean!
+  frozen: Boolean!
+  tags: [Tag!]!
+
+  # Links
+  linksFromObjective: [ObjectiveLink!]!
+  linksToObjective: [ObjectiveLink!]!
+  linksFromConcept: [ConceptObjectiveLink!]!
+  
+  # Relations
   workspace: Workspace!
   course: Course!
-  pointsPerConcept: Float!
-  completions: [Completion!]!
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
+
+type ObjectiveLink {
+  id: ID!
+  from: Objective!
+  to: Objective!
+  
+  # Meta
+  official: Boolean!
+  frozen: Boolean!
+  weight: Int!
+  count: Int!
+  
+  # Relations
+  workspace: Workspace!
+  
+  # Creation data
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+
+type ConceptObjectiveLink {
+  id: ID!
+  from: Concept!
+  to: Objective!
+
+  # Meta
+  official: Boolean!
+  frozen: Boolean!
+  weight: Int!
+  count: Int!
+
+  # Relations
+  workspace: Workspace!
+  
+  # Creation data
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+
+type PointGroup {
+  id: ID!
+  name: String!
+
+  # Timing
+  startDate: DateTime!
+  endDate: DateTime!
+
+  # Meta
+  maxPoints: Int!
+  pointsPerConcept: Float!
+  
+  # Relations
+  workspace: Workspace!
+  course: Course!
+  completions: [Completion!]!
+  
+  # Creation data
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 
 type Completion {
   id: ID!
   user: User!
   conceptAmount: Int!
+  pointGroup: PointGroup!
+
+  # Creation data
   createdAt: DateTime!
   updatedAt: DateTime!
-  pointGroup: PointGroup!
 }
+
 
 type Tag {
   id: ID!
   name: String!
   type: String!
   priority: Int!
+
+  # Creation data
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type Resource {
-  id: ID!
-  concept: Concept!
-  name: String!
-  description: String!
-  urls: [URL!]!
-}
-
-type URL {
-  id: ID!
-  address: String!
-  resource: Resource!
 }
