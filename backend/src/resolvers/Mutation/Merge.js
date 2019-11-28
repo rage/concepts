@@ -186,6 +186,7 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
   const mergedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    createdBy: { connect: { id: context.user.id } },
     asMerge: { connect: { id: projectId } },
     sourceTemplate: { connect: { id: templateId } },
     participants: {

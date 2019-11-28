@@ -13,6 +13,7 @@ export const makeMockWorkspaceForUser = async (prisma, userId) => {
   await prisma.createWorkspace({
     id: workspaceId,
     name: templateWorkspace.name,
+    createdBy: { connect: { id: userId } },
     participants: {
       create: [{
         privilege: Privilege.OWNER.toString(),

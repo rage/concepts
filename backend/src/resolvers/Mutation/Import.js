@@ -52,6 +52,7 @@ export const importData = async (root, { data }, context) => {
   } else if (json.workspace) {
     workspace = await context.prisma.createWorkspace({
       name: json.workspace,
+      createdBy: { connect: { id: context.user.id } },
       participants: {
         create: [{
           privilege: Privilege.OWNER.toString(),

@@ -247,6 +247,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    createdBy: { connect: { id: context.user.id } },
     courseOrder: {
       set: templateWorkspace.courseOrder.map(makeNewId)
     },
