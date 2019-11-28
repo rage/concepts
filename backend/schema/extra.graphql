@@ -124,6 +124,11 @@ type Subscription {
   courseLinkUpdated(workspaceId: ID!): CourseLink!
   courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
 
+  # Objective subscriptions
+  objectiveCreated(workspaceId: ID!): Objective!
+  objectiveUpdated(workspaceId: ID!): Objective!
+  objectiveDeleted(workspaceId: ID!): DeletedCourseItem!
+
   # Workspaces subscriptions
   projectWorkspaceCreated(projectId: ID!): Workspace!
   projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
