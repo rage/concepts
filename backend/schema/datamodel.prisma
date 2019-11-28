@@ -260,7 +260,7 @@ type Objective {
   # Links
   linksFromObjective: [ObjectiveLink!]! @relation(name: "FromObjective")
   linksToObjective: [ObjectiveLink!]! @relation(name: "ToObjective")
-  linksFromConcept: [ConceptObjectiveLink!]! @relation(link: INLINE, name: "ObjectiveFromConcept")
+  linksFromConcept: [ConceptObjectiveLink!]! @relation(name: "ObjectiveFromConcept")
   
   # Relations
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceObjectives")

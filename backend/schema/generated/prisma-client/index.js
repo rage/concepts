@@ -57,6 +57,18 @@ var models = [
     embedded: false
   },
   {
+    name: "Objective",
+    embedded: false
+  },
+  {
+    name: "ObjectiveLink",
+    embedded: false
+  },
+  {
+    name: "ConceptObjectiveLink",
+    embedded: false
+  },
+  {
     name: "PointGroup",
     embedded: false
   },
@@ -66,14 +78,6 @@ var models = [
   },
   {
     name: "Tag",
-    embedded: false
-  },
-  {
-    name: "Resource",
-    embedded: false
-  },
-  {
-    name: "URL",
     embedded: false
   }
 ];
