@@ -237,7 +237,7 @@ type Concept {
   # Links
   linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
   linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
-  linksToObjective: [ConceptObjectiveLink!]! @relation(name: "ConceptToObjective")
+  objectiveLinks: [ConceptObjectiveLink!]! @relation(name: "ConceptToObjective")
   
   # Relations
   course: Course! @relation(name: "ConceptCourses")
@@ -261,7 +261,7 @@ type Objective {
   # Links
   linksFromObjective: [ObjectiveLink!]! @relation(name: "FromObjective")
   linksToObjective: [ObjectiveLink!]! @relation(name: "ToObjective")
-  linksFromConcept: [ConceptObjectiveLink!]! @relation(name: "ObjectiveFromConcept")
+  conceptLinks: [ConceptObjectiveLink!]! @relation(name: "ObjectiveFromConcept")
   
   # Relations
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceObjectives")

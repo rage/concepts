@@ -500,7 +500,7 @@ type Concept {
   # Links
   linksFromConcept: [ConceptLink!]!
   linksToConcept: [ConceptLink!]!
-  linksToObjective: [ConceptObjectiveLink!]!
+  objectiveLinks: [ConceptObjectiveLink!]!
   
   # Relations
   course: Course!
@@ -524,7 +524,7 @@ type Objective {
   # Links
   linksFromObjective: [ObjectiveLink!]!
   linksToObjective: [ObjectiveLink!]!
-  linksFromConcept: [ConceptObjectiveLink!]!
+  conceptLinks: [ConceptObjectiveLink!]!
   
   # Relations
   workspace: Workspace!

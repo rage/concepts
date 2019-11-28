@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 
-const CREATE_CONCEPT_FRAGMENT = gql`
-fragment createConceptData on Concept {
+const CREATE_OBJECTIVE_FRAGMENT = gql`
+fragment createObjectiveData on Objective {
   id
   name
   description
@@ -16,7 +16,7 @@ fragment createConceptData on Concept {
   course {
     id
   }
-  linksFromConcept {
+  linksFromObjective {
     id
     official
     frozen
@@ -24,7 +24,7 @@ fragment createConceptData on Concept {
       id
     }
   }
-  linksToConcept {
+  linksToObjective {
     id
     official
     frozen
@@ -32,19 +32,19 @@ fragment createConceptData on Concept {
       id
     }
   }
-  objectiveLinks {
+  conceptLinks {
     id
     official
     frozen
-    to {
+    from {
       id
     }
   }
 }
 `
 
-const UPDATE_CONCEPT_FRAGMENT = gql`
-fragment updateConceptData on Concept {
+const UPDATE_OBJECTIVE_FRAGMENT = gql`
+fragment updateObjectiveData on Objective {
   id
   name
   description
@@ -62,15 +62,15 @@ fragment updateConceptData on Concept {
 }
 `
 
-const DELETE_CONCEPT_FRAGMENT = gql`
-fragment deleteConceptData on DeletedCourseItem {
+const DELETE_OBJECTIVE_FRAGMENT = gql`
+fragment deleteObjectiveData on DeletedCourseItem {
   id
   courseId
 }
 `
 
 export {
-  CREATE_CONCEPT_FRAGMENT,
-  UPDATE_CONCEPT_FRAGMENT,
-  DELETE_CONCEPT_FRAGMENT
+  CREATE_OBJECTIVE_FRAGMENT,
+  UPDATE_OBJECTIVE_FRAGMENT,
+  DELETE_OBJECTIVE_FRAGMENT
 }

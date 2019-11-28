@@ -3,7 +3,7 @@ import makeTypeResolvers from './typeutil'
 export const Concept = makeTypeResolvers('concept', [
   'linksToConcept',
   'linksFromConcept',
-  'linksToObjective',
+  'objectiveLinks',
   'course',
   'createdBy',
   'workspace',
