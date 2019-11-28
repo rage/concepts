@@ -50,6 +50,11 @@ type Mutation {
   deleteConcept(id: ID!): DeletedCourseItem!
   updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
+  # Objective mutations
+  createObjective(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
+  deleteObjective(id: ID!): DeletedCourseItem!
+  updateObjective(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
+
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
   updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink!
@@ -138,6 +143,11 @@ type Subscription {
   conceptObjectiveLinkCreated(workspaceId: ID!): ConceptObjectiveLink!
   conceptObjectiveLinkUpdated(workspaceId: ID!): ConceptObjectiveLink!
   conceptObjectiveLinkDeleted(workspaceId: ID!): DeletedConceptLink!
+
+  # Objective subscriptions
+  objectiveCreated(workspaceId: ID!): Objective!
+  objectiveUpdated(workspaceId: ID!): Objective!
+  objectiveDeleted(workspaceId: ID!): DeletedCourseItem!
 
   # Workspaces subscriptions
   projectWorkspaceCreated(projectId: ID!): Workspace!
