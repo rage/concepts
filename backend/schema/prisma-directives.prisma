@@ -1,0 +1,29 @@
+# GraphQL directives used in the Prisma datamodel
+
+scalar String
+scalar Boolean
+scalar Int
+scalar Float
+scalar ID
+union Primitive = String | Boolean | Int | Float | ID
+
+enum ON_DELETE {
+    CASCADE
+    SET_NULL
+    NO_ACTION
+}
+
+enum STRATEGY {
+    INLINE
+    RELATION
+}
+
+directive @id on FIELD_DEFINITION
+directive @createdAt on FIELD_DEFINITION
+directive @updatedAt on FIELD_DEFINITION
+directive @unique on FIELD_DEFINITION
+
+directive @db(name: String!) on FIELD_DEFINITION
+directive @default(value: Primitive!) on FIELD_DEFINITION
+directive @relation(link: STRATEGY, name: String, onDelete: ON_DELETE! = SET_NULL) on FIELD_DEFINITION
+directive @scalarList(strategy: STRATEGY!) on FIELD_DEFINITION
