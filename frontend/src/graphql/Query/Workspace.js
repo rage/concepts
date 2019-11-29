@@ -53,6 +53,23 @@ query workspaceById($id: ID!) {
         type
         priority
       }
+      objectiveOrder
+      objectives {
+        id
+        name
+        description
+        official
+        frozen
+        course {
+          id
+        }
+        tags {
+          id
+          name
+          type
+          priority
+        }
+      }
       conceptOrder
       concepts {
         id
@@ -109,16 +126,6 @@ query workspaceMemberInfo($id: ID!) {
 }
 `
 
-const WORKSPACE_DATA_FOR_GRAPH = gql`
-query workspaceById($id: ID!) {
-  workspaceById(id: $id) {
-    id
-    ...coursesForWorkspace
-  }
-}
-${COURSES_FOR_WORKSPACE_FRAGMENT}
-`
-
 const WORKSPACE_COURSES_AND_CONCEPTS = gql`
 query workspaceById($id: ID!) {
   workspaceById(id: $id) {
@@ -143,7 +150,6 @@ export {
   WORKSPACE_BY_ID,
   WORKSPACE_BY_ID_MEMBER_INFO,
   WORKSPACE_COURSES_AND_CONCEPTS,
-  WORKSPACE_DATA_FOR_GRAPH,
   WORKSPACE_BY_SOURCE_TEMPLATE,
   COURSES_FOR_WORKSPACE_FRAGMENT
 }
