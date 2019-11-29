@@ -1,15 +1,16 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import makeSecret from '../../util/secret'
-import { 
-  WORKSPACE_MEMBER_CREATED, 
+import {
+  WORKSPACE_MEMBER_CREATED,
   PROJECT_MEMBER_CREATED,
-  PROJECT_MEMBER_DELETED, 
+  PROJECT_MEMBER_DELETED,
   WORKSPACE_MEMBER_DELETED,
   WORKSPACE_MEMBER_UPDATED,
   PROJECT_MEMBER_UPDATED
-} from '../Subscription/config/channels'
-import { pubsub } from '../Subscription/config'
+} from '../Subscription/channels'
+import pubsub from '../Subscription/pubsub'
+
 export const createWorkspaceToken = async (root, { workspaceId, privilege }, context) => {
   await checkAccess(context, {
     minimumRole: Role.GUEST,
@@ -78,24 +79,24 @@ export const useToken = async (root, { id }, context) => {
   if (id[0] === 'w') {
     const privilege = await context.prisma.workspaceToken({ id }).privilege()
     const workspace = await context.prisma.workspaceToken({ id }).workspace()
-    const participant =  await context.prisma.createWorkspaceParticipant({
+    const participant = await context.prisma.createWorkspaceParticipant({
       privilege,
       workspace: { connect: { id: workspace.id } },
       user: { connect: { id: context.user.id } },
       token: { connect: { id } }
     })
-    pubsub.publish(WORKSPACE_MEMBER_CREATED, { 
-      workspaceMemberCreated : {
+    pubsub.publish(WORKSPACE_MEMBER_CREATED, {
+      workspaceMemberCreated: {
         ...participant,
-        userId: context.user.id, 
-        workspaceId: workspace.id 
-      } 
+        userId: context.user.id,
+        workspaceId: workspace.id
+      }
     })
     return participant
   } else if (id[0] === 'p') {
     const privilege = await context.prisma.projectToken({ id }).privilege()
     const project = await context.prisma.projectToken({ id }).project()
-    const participant =  await context.prisma.createProjectParticipant({
+    const participant = await context.prisma.createProjectParticipant({
       privilege,
       project: { connect: { id: project.id } },
       user: { connect: { id: context.user.id } },
@@ -142,11 +143,11 @@ export const updateParticipant = async (root, { type, id, privilege }, context) 
       where: { id },
       data: { privilege }
     })
-    pubsub.publish(WORKSPACE_MEMBER_UPDATED, { 
+    pubsub.publish(WORKSPACE_MEMBER_UPDATED, {
       workspaceMemberUpdated: {
         ...updatedWorkspaceParticipant,
-        workspaceId,
-      } 
+        workspaceId
+      }
     })
     return {
       id,
@@ -166,7 +167,7 @@ export const deleteParticipant = async (root, { type, id }, context) => {
     pubsub.publish(PROJECT_MEMBER_DELETED, {
       projectMemberDeleted: {
         ...deletedProjectParticipant,
-        projectId 
+        projectId
       }
     })
     return id

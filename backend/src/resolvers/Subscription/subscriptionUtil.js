@@ -1,8 +1,8 @@
 import { withFilter } from 'graphql-subscriptions'
 
 import { canViewWorkspace } from '../../util/accessControl'
-import { pubsub } from './config'
-import * as channels from './config/channels'
+import pubsub from './pubsub'
+import * as channels from './channels'
 
 export const makeSubscriptionResolver = (
   type,

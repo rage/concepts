@@ -5,8 +5,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { Role, Privilege, checkAccess } from '../../util/accessControl'
 import { NotFoundError } from '../../util/errors'
 import makeSecret from '../../util/secret'
-import { pubsub } from '../Subscription/config'
-import { PROJECT_WORKSPACE_CREATED } from '../Subscription/config/channels'
+import pubsub from '../Subscription/pubsub'
+import { PROJECT_WORKSPACE_CREATED } from '../Subscription/channels'
 
 const workspaceDataForMerge = `
 query($id: ID!) {

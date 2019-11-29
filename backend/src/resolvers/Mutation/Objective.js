@@ -3,12 +3,12 @@ import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
-import { pubsub } from '../Subscription/config'
+import pubsub from '../Subscription/pubsub'
 import {
   OBJECTIVE_CREATED,
   OBJECTIVE_UPDATED,
   OBJECTIVE_DELETED
-} from '../Subscription/config/channels'
+} from '../Subscription/channels'
 
 export const createObjective = async (root, {
   name, description, official, frozen,

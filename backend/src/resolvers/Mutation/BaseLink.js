@@ -2,8 +2,8 @@ import { ForbiddenError } from 'apollo-server-core'
 
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
-import { pubsub } from '../Subscription/config'
-import * as channels from '../Subscription/config/channels'
+import pubsub from '../Subscription/pubsub'
+import * as channels from '../Subscription/channels'
 
 const getParams = (action, type) => ({
   name: type,
