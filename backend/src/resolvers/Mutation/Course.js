@@ -3,8 +3,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
-import { pubsub } from '../Subscription/config'
-import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/config/channels'
+import pubsub from '../Subscription/pubsub'
+import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/channels'
 
 export const createCourse = async (root, {
   name, workspaceId, official, frozen, tags

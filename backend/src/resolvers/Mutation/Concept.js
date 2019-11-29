@@ -3,8 +3,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
-import { pubsub } from '../Subscription/config'
-import { CONCEPT_CREATED, CONCEPT_UPDATED, CONCEPT_DELETED } from '../Subscription/config/channels'
+import pubsub from '../Subscription/pubsub'
+import { CONCEPT_CREATED, CONCEPT_UPDATED, CONCEPT_DELETED } from '../Subscription/channels'
 
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (context.role === Role.STUDENT) {

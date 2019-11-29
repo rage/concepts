@@ -1,10 +1,10 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import makeSecret from '../../util/secret'
 import bloom from '../../static/bloom'
-import { pubsub } from '../Subscription/config'
+import pubsub from '../Subscription/pubsub'
 import {
   WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
-} from '../Subscription/config/channels'
+} from '../Subscription/channels'
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
