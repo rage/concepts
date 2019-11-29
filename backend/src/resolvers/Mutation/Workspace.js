@@ -145,6 +145,7 @@ export const createTemplateWorkspace = async (root, { name, projectId }, context
   await checkAccess(context, { minimumRole: Role.STAFF })
   const createdTemplateWorkspace = await context.prisma.createWorkspace({
     name,
+    createdBy: { connect: { id: context.user.id } },
     asTemplate: {
       connect: { id: projectId }
     },
