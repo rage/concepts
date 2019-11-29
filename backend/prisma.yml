@@ -1,5 +1,5 @@
 endpoint: ${env:ENDPOINT}
-datamodel: ./schema/datamodel.prisma
+datamodel: ./schema/source/datamodel.prisma
 secret: $(env:SECRET)
 
 generate:
@@ -10,5 +10,4 @@ generate:
 
 hooks:
   post-deploy:
-    - prisma generate
     - ./schema/generate.sh
