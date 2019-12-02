@@ -22,6 +22,7 @@ fragment createCourseData on Course {
     id
     name
     description
+    level
     official
     frozen
     course {

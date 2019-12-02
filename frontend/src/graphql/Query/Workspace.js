@@ -58,6 +58,7 @@ query workspaceById($id: ID!) {
         id
         name
         description
+        level
         official
         frozen
         course {

@@ -32,6 +32,7 @@ query($id: ID!) {
             id
             name
             description
+            level
             official
             frozen
             linksToConcept {
@@ -60,6 +61,7 @@ query($conceptIds: [ID!]!) {
     id
     name
     description
+    level
     official
     frozen
     linksFromConcept {
@@ -165,8 +167,10 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
 
       for (const concept of course.concepts) {
         // TODO merge conflicting descriptions?
+        // TODO separate conflicting levels?
         const updatedConcept = setDefault(updatedCourse.concepts, concept.name, {
           description: concept.description,
+          level: concept.level,
           official: concept.official,
           frozen: concept.frozen,
           course: course.name,

@@ -20,7 +20,6 @@ type Query {
 
   # Course queries
   courseById(id: ID!): Course!
-  conceptsByCourse(id: ID!): [Concept!]!
 
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace!

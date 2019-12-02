@@ -81,6 +81,7 @@ export const importData = async (root, { data }, context) => {
       context.prisma.createConcept({
         name: concept.name,
         description: concept.description,
+        level: concept.level,
         official: canSetOfficial && Boolean(json.projectId || concept.official),
         createdBy: { connect: { id: context.user.id } },
         workspace: { connect: { id: workspace.id } },

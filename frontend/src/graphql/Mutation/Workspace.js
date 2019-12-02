@@ -32,18 +32,6 @@ mutation createTemplateWorkspace($projectId: ID!, $name: String!) {
   createTemplateWorkspace(projectId: $projectId, name: $name) {
     id
     name
-    courses {
-      id
-    }
-    concepts {
-      id
-    }
-    courseLinks {
-      id
-    }
-    conceptLinks {
-      id
-    }
   }
 }
 `

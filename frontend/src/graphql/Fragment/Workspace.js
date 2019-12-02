@@ -17,6 +17,7 @@ fragment coursesForWorkspace on Workspace {
       id
       name
       description
+      level
       course {
         id
       }
