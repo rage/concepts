@@ -79,12 +79,9 @@ const getMetadata = async (id, context) => {
   }
   data.courseId = (await toCourseGetter).id
 
-  if (context.type.name === 'objective' || context.type.name === 'concept') {
+  if (context.type.name === 'concept') {
     const toData = await context.prisma[context.type.getMethod]({ id }).to()
     data[`${context.type.name}Id`] = toData.id
-  } else if (context.type.name === 'concept objective') {
-    const { id: objectiveId } = await context.prisma[context.type.getMethod]({ id }).to()
-    data.objectiveId = objectiveId
   }
   return data
 }

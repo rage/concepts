@@ -32,14 +32,6 @@ fragment createConceptData on Concept {
       id
     }
   }
-  objectiveLinks {
-    id
-    official
-    frozen
-    to {
-      id
-    }
-  }
 }
 `
 

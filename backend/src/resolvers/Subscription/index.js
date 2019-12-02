@@ -7,7 +7,6 @@ export default {
   ...makeSubscriptionResolvers('course', ['create', 'update', 'delete']),
   ...makeSubscriptionResolvers('course link', ['create', 'update', 'delete']),
   ...makeSubscriptionResolvers('workspace member', ['create', 'update', 'delete']),
-  ...makeSubscriptionResolvers('objective', ['create', 'update', 'delete']),
   ...makeSubscriptionResolvers('workspace', ['update', 'delete']),
   ...makeSubscriptionResolvers('project member', ['create', 'update', 'delete'],
     'projectId', 'projectId', canViewProject),

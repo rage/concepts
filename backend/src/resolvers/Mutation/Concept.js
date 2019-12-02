@@ -116,8 +116,6 @@ export const createConcept = async (root, {
     })
   }
 
-  // Maybe add conceptObjectiveLink here
-
   pubsub.publish(CONCEPT_CREATED, { conceptCreated: { ...createdConcept, workspaceId } })
   return createdConcept
 }

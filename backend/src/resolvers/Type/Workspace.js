@@ -14,10 +14,6 @@ export const Workspace = makeTypeResolvers('workspace', [
   'mainCourse',
   'courseTags',
   'conceptTags',
-  'objectiveTags',
-  'objectives',
-  'objectiveLinks',
-  'conceptObjectiveLinks',
   'createdBy',
   {
     name: 'pointGroups',
