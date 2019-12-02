@@ -7,7 +7,7 @@ import { useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import {
-  CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE,
+  CREATE_OBJECTIVE, CREATE_COURSE, DELETE_OBJECTIVE, DELETE_COURSE, UPDATE_OBJECTIVE, UPDATE_COURSE,
   UPDATE_WORKSPACE
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
@@ -19,7 +19,7 @@ import { useInfoBox } from '../../components/InfoBox'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import CourseList from './CourseList'
-import ConceptList from './ConceptList'
+import ObjectiveList from './ObjectiveList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -82,7 +82,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
     variables: { workspaceId }
   })
 
-  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
+  useManyUpdatingSubscriptions(['course', 'objective'], ['create', 'delete', 'update'], {
     variables: { workspaceId }
   })
 
@@ -103,14 +103,14 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
   const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
-  const createConcept = useMutation(CREATE_CONCEPT, {
-    update: cache.createConceptUpdate(workspaceId)
+  const createObjective = useMutation(CREATE_OBJECTIVE, {
+    update: cache.createObjectiveUpdate(workspaceId)
   })
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: cache.updateConceptUpdate(workspaceId)
+  const updateObjective = useMutation(UPDATE_OBJECTIVE, {
+    update: cache.updateObjectiveUpdate(workspaceId)
   })
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: cache.deleteConceptUpdate(workspaceId)
+  const deleteObjective = useMutation(DELETE_OBJECTIVE, {
+    update: cache.deleteObjectiveUpdate(workspaceId)
   })
 
   if (workspaceQuery.loading) {
@@ -148,19 +148,19 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
       </div>
       <div className={classes.newCourse}>
         {focusedCourse
-          ? <ConceptList
+          ? <ObjectiveList
             workspace={workspaceQuery.data.workspaceById}
             course={focusedCourse}
             updateCourse={args => updateCourse({ variables: args }).catch(e)}
-            createConcept={args => createConcept({
+            createObjective={args => createObjective({
               variables: {
                 workspaceId,
                 courseId: focusedCourse.id,
                 ...args
               }
             }).catch(e)}
-            deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-            updateConcept={args => updateConcept({ variables: args }).catch(e)}
+            deleteObjective={id => deleteObjective({ variables: { id } }).catch(e)}
+            updateObjective={args => updateObjective({ variables: args }).catch(e)}
           /> : <Paper elevation={0} />
         }
       </div>

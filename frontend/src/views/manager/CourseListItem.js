@@ -7,7 +7,7 @@ import { Role } from '../../lib/permissions'
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
-import {noPropagation} from '../../lib/eventMiddleware'
+import { noPropagation } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   listItemActive: {

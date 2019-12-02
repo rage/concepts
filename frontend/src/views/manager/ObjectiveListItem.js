@@ -6,7 +6,7 @@ import {
 import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
-import ConceptEditor from './ConceptEditor'
+import ObjectiveEditor from './ObjectiveEditor'
 import { Role } from '../../lib/permissions'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
   hoverButton: {
     visibility: 'hidden'
   },
-  conceptBody: {
+  objectiveBody: {
     paddingRight: 0,
     '&$sortable': {
       paddingRight: '56px'
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
       '& $hoverButton': {
         visibility: 'visible'
       },
-      '& $conceptBody': {
+      '& $objectiveBody': {
         paddingRight: '104px',
         '&$sortable': {
           paddingRight: '160px'
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   sortable: {},
-  conceptName: {
+  objectiveName: {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
@@ -54,85 +54,85 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ConceptListItem = ({
-  concept, user, index,
+const ObjectiveListItem = ({
+  objective, user, index,
   editing, setEditing,
-  updateConcept, deleteConcept,
-  merging, toggleMergingConcept,
+  updateObjective, deleteObjective,
+  merging, toggleMergingObjective,
   divider = true,
   checkboxRef,
-  conceptTags,
+  objectiveTags,
   sortable = true
 }) => {
   const classes = useStyles()
   const ItemClass = sortable ? SortableItem : ListItem
 
   const handleDelete = () => {
-    const msg = `Are you sure you want to delete the concept ${concept.name}?`
+    const msg = `Are you sure you want to delete the objective ${objective.name}?`
     if (window.confirm(msg)) {
-      deleteConcept(concept.id)
+      deleteObjective(objective.id)
     }
   }
-  const handleEdit = () => setEditing(concept.id)
+  const handleEdit = () => setEditing(objective.id)
 
   return (
     <Tooltip
-      key={concept.id}
+      key={objective.id}
       placement='right-start'
       classes={{
         tooltip: classes.tooltip,
         popper: classes.popper
       }}
       TransitionComponent={({ children }) => children || null}
-      title={editing !== concept.id ?
+      title={editing !== objective.id ?
         <ConceptToolTipContent
-          description={concept.description || 'No description available'}
-          tags={concept.tags}
+          description={objective.description || 'No description available'}
+          tags={objective.tags}
         />
         : ''}
     >
       <ItemClass
         divider={divider}
-        key={concept.id}
+        key={objective.id}
         index={index}
         classes={{ divider: classes.listItemContainer }}
-        className={editing && editing !== concept.id ? classes.listItemDisabled : null}
+        className={editing && editing !== objective.id ? classes.listItemDisabled : null}
       >
-        {editing === concept.id ? (
-          <ConceptEditor
+        {editing === objective.id ? (
+          <ObjectiveEditor
             submit={args => {
               setEditing(null)
-              updateConcept({ id: concept.id, ...args })
+              updateObjective({ id: objective.id, ...args })
             }}
             cancel={() => setEditing(null)}
-            defaultValues={concept}
+            defaultValues={objective}
             action='Save'
-            tagOptions={conceptTags}
+            tagOptions={objectiveTags}
           />
         ) : <>
-          <ListItemText className={`${classes.conceptBody} ${sortable ? classes.sortable : ''}`}>
-            <Typography variant='h6' className={classes.conceptName}>
-              {concept.name}
+          <ListItemText className={`${classes.objectiveBody} ${sortable ? classes.sortable : ''}`}>
+            <Typography variant='h6' className={classes.objectiveName}>
+              {objective.name}
             </Typography>
           </ListItemText>
 
           <ListItemSecondaryAction>
             {merging ? (
               <Checkbox
-                checked={merging.has(concept.id)}
-                onClick={() => toggleMergingConcept(concept.id)}
+                checked={merging.has(objective.id)}
+                onClick={() => toggleMergingObjective(objective.id)}
                 ref={checkboxRef}
                 color='primary'
               />
             ) : <>
-              {concept.frozen && user.role < Role.STAFF ? (
+              {objective.frozen && user.role < Role.STAFF ? (
                 <IconButton disabled classes={{ root: classes.hoverButton }}>
                   <LockIcon />
                 </IconButton>
               ) : <>
                 <IconButton
-                  title={concept.frozen ? 'This concept is frozen' : undefined}
-                  disabled={concept.frozen} className={classes.hoverButton} onClick={handleDelete}
+                  title={objective.frozen ? 'This objective is frozen' : undefined}
+                  disabled={objective.frozen} className={classes.hoverButton} onClick={handleDelete}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -149,4 +149,4 @@ const ConceptListItem = ({
   )
 }
 
-export default ConceptListItem
+export default ObjectiveListItem

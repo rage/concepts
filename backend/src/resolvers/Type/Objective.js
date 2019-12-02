@@ -6,5 +6,6 @@ export const Objective = makeTypeResolvers('objective', [
   'conceptLinks',
   'workspace',
   'course',
-  'createdBy'
+  'createdBy',
+  'tags'
 ])

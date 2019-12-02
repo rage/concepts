@@ -98,61 +98,61 @@
       "placement": "right-end",
       "video": "/guide/manager/new-concept.webm"
     }, {
-      "id": "CREATE_CONCEPT_NAME",
-      "title": "New concept",
-      "description": "Enter the name for a new concept.",
+      "id": "CREATE_OBJECTIVE_NAME",
+      "title": "New objective",
+      "description": "Enter the name for a new learning objective.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
     }, {
-      "id": "CREATE_CONCEPT_DESCRIPTION",
-      "title": "New concept",
-      "description": "Enter a description for the new concept.",
+      "id": "CREATE_OBJECTIVE_DESCRIPTION",
+      "title": "New objective",
+      "description": "Enter a description for the new learning objective.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
     }, {
-      "id": "CREATE_CONCEPT_TAGS",
-      "title": "New concept",
-      "description": "Enter tags for the new course.",
+      "id": "CREATE_OBJECTIVE_TAGS",
+      "title": "New objective",
+      "description": "Enter tags for the new learning objective.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
     }, {
-      "id": "CREATE_CONCEPT_FROZEN",
-      "title": "New concept",
-      "description": "\"Frozen\" means the concept can't be modified or deleted. Only staff members can un-freeze concepts.",
+      "id": "CREATE_OBJECTIVE_FROZEN",
+      "title": "New objective",
+      "description": "\"Frozen\" means the objective can't be modified or deleted. Only staff members can un-freeze objectives.",
       "placement": "left-end",
       "minimumRole": "STAFF"
     }, {
-      "id": "CREATE_CONCEPT_OFFICIAL",
-      "title": "New concept",
-      "description": "\"Official\" is metadata indicating the concept came from the template. It is automatically set to true for all concepts in a template when a student clones the template.",
+      "id": "CREATE_OBJECTIVE_OFFICIAL",
+      "title": "New objective",
+      "description": "\"Official\" is metadata indicating the learning objective came from the template. It is automatically set to true for all objectives in a template when a student clones the template.",
       "placement": "left-end",
       "minimumRole": "STAFF"
     }, {
-      "id": "CREATE_CONCEPT_SUBMIT",
-      "title": "New concept",
-      "description": "Finally, click \"CREATE\" to create the concept.",
+      "id": "CREATE_OBJECTIVE_SUBMIT",
+      "title": "New objective",
+      "description": "Finally, click \"CREATE\" to create the learming objective.",
       "placement": "left-end",
       "video": "/guide/manager/new-concept.webm"
     }, {
-      "id": "FILTER_CONCEPTS",
-      "title": "Filter concepts",
-      "description": "The filter bar can be used to search for a concept by its name.",
+      "id": "FILTER_OBJECTIVES",
+      "title": "Filter objectives",
+      "description": "The filter bar can be used to search for a learning objective by its name.",
       "placement": "bottom"
     }, {
-      "id": "SORT_CONCEPTS",
-      "title": "Sort concepts",
-      "description": "You can change how concepts are sorted here.",
+      "id": "SORT_OBJECTIVES",
+      "title": "Sort objectives",
+      "description": "You can change how learning objectives are sorted here.",
       "placement": "bottom-end"
     }, {
       "id": "START_MERGE",
-      "title": "Merge concepts",
-      "description": "After merging students' workspaces, you can merge two or more concepts. This is useful if the student workspaces had the same concept with slightly different wording.",
+      "title": "Merge objectives",
+      "description": "After merging students' workspaces, you can merge two or more learning objectives. This is useful if the student workspaces had the same objective with slightly different wording.",
       "placement": "bottom-end",
       "minimumRole": "STAFF"
     }, {
-      "id": "SELECT_MERGE_CONCEPTS",
-      "title": "Select concepts",
-      "description": "Select the concepts to merge by clicking the checkboxes that appear.",
+      "id": "SELECT_MERGE_OBJECTIVES",
+      "title": "Select objectives",
+      "description": "Select the learning objectives to merge by clicking the checkboxes that appear.",
       "placement": "left",
       "minimumRole": "STAFF"
     }, {

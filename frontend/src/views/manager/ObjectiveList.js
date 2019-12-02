@@ -10,8 +10,8 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import groupConcepts from './groupConcepts'
 import MergeDialog from './MergeDialog'
-import ConceptEditor from './ConceptEditor'
-import ConceptListItem from './ConceptListItem'
+import ObjectiveEditor from './ObjectiveEditor'
+import ObjectiveListItem from './ObjectiveListItem'
 import arrayShift from '../../lib/arrayShift'
 import { sortedConcepts } from '../../lib/ordering'
 import { parseFilter, includeConcept as intIncludeConcept } from './search'
@@ -55,8 +55,8 @@ const sortingOptions = {
   CUSTOM: 'Custom'
 }
 
-const ConceptList = ({
-  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept
+const ObjectiveList = ({
+  workspace, course, updateCourse, createObjective, updateObjective, deleteObjective
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -66,13 +66,13 @@ const ConceptList = ({
   const [merging, setMerging] = useState(null)
   const mergeDialogTimeout = useRef(-1)
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
-  const [conceptFilter, setConceptFilter] = useState('')
+  const [objectiveFilter, setObjectiveFilter] = useState('')
 
-  const isOrdered = course.conceptOrder.length === 1
-    && course.conceptOrder[0].startsWith('__ORDER_BY__')
-  const defaultOrderMethod = isOrdered ? course.conceptOrder[0].substr('__ORDER_BY__'.length)
+  const isOrdered = course.objectiveOrder.length === 1
+    && course.objectiveOrder[0].startsWith('__ORDER_BY__')
+  const defaultOrderMethod = isOrdered ? course.objectiveOrder[0].substr('__ORDER_BY__'.length)
     : 'CUSTOM'
-  const [orderedConcepts, setOrderedConcepts] = useState([])
+  const [orderedObjectives, setOrderedObjectives] = useState([])
   const [orderMethod, setOrderMethod] = useState(defaultOrderMethod)
   const [dirtyOrder, setDirtyOrder] = useState(null)
 
@@ -81,13 +81,13 @@ const ConceptList = ({
       setOrderMethod(defaultOrderMethod)
     }
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sortedConcepts(course.concepts, course.conceptOrder, orderMethod))
+      setOrderedObjectives(sortedConcepts(course.objectives, course.objectiveOrder, orderMethod))
     }
-  }, [course.concepts, course.conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod])
+  }, [course.objectives, course.objectiveOrder, dirtyOrder, defaultOrderMethod, orderMethod])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
-      setOrderedConcepts(items => arrayShift(items, oldIndex, newIndex))
+      setOrderedObjectives(items => arrayShift(items, oldIndex, newIndex))
       if (!dirtyOrder) setDirtyOrder('yes')
       if (orderMethod !== 'CUSTOM') setOrderMethod('CUSTOM')
     })
@@ -101,21 +101,21 @@ const ConceptList = ({
     setDirtyOrder('loading')
     await updateCourse({
       id: course.id,
-      conceptOrder: orderMethod === 'CUSTOM'
-        ? orderedConcepts.map(concept => concept.id)
+      objectiveOrder: orderMethod === 'CUSTOM'
+        ? orderedObjectives.map(objective => objective.id)
         : [`__ORDER_BY__${orderMethod}`]
     })
     setDirtyOrder(null)
   }
 
   const isTemplate = Boolean(workspace.asTemplate ?.id)
-  const conceptTags = backendToSelect(workspace.conceptTags)
+  const objectiveTags = backendToSelect(workspace.objectiveTags)
 
   const startMerging = () => {
     setEditing(null)
     setMerging(new Set())
   }
-  const toggleMergingConcept = id => {
+  const toggleMergingObjective = id => {
     const copy = new Set(merging)
     if (copy.has(id)) {
       copy.delete(id)
@@ -181,7 +181,7 @@ const ConceptList = ({
       return (
         <CardHeaderButton
           bRef={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
-          disabled={course.concepts.length < 2}
+          disabled={course.objectives.length < 2}
         >
           Start merge
         </CardHeaderButton>
@@ -190,14 +190,14 @@ const ConceptList = ({
     return null
   }
 
-  const conceptFilterParsed = parseFilter(conceptFilter)
-  const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
+  const objectiveFilterParsed = parseFilter(objectiveFilter)
+  const includeObjective = objective => intIncludeConcept(objective, objectiveFilterParsed)
 
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`Concepts of ${course.name}`}
+        title={`Objectives of ${course.name}`}
         action={cardHeaderActions()}
       />
 
@@ -205,10 +205,10 @@ const ConceptList = ({
         <TextField
           variant='outlined'
           margin='dense'
-          label='Filter concepts'
-          ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
-          value={conceptFilter}
-          onChange={evt => setConceptFilter(evt.target.value)}
+          label='Filter objectives'
+          ref={infoBox.ref('manager', 'FILTER_OBJECTIVES')}
+          value={objectiveFilter}
+          onChange={evt => setObjectiveFilter(evt.target.value)}
           className={classes.filterText}
         />
         <TextField
@@ -216,7 +216,7 @@ const ConceptList = ({
           variant='outlined'
           margin='dense'
           label='Sort by'
-          ref={infoBox.ref('manager', 'SORT_CONCEPTS')}
+          ref={infoBox.ref('manager', 'SORT_OBJECTIVES')}
           value={orderMethod}
           onChange={evt => {
             setOrderMethod(evt.target.value)
@@ -230,50 +230,50 @@ const ConceptList = ({
       </div>
 
       {mergeDialogOpen !== null && <MergeDialog
-        workspace={workspace} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
+        workspace={workspace} courseId={course.id} objectiveIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       />}
       <SortableList
         ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
       >
-        {orderMethod !== 'GROUP_BY' ? orderedConcepts.map((concept, conceptIndex) =>
-          includeConcept(concept) &&
-          <ConceptListItem
-            key={concept.id}
-            concept={concept}
+        {orderMethod !== 'GROUP_BY' ? orderedObjectives.map((objective, objectiveIndex) =>
+          includeObjective(objective) &&
+          <ObjectiveListItem
+            key={objective.id}
+            objective={objective}
             user={user}
             editing={editing}
-            index={conceptIndex}
-            deleteConcept={deleteConcept}
-            updateConcept={updateConcept}
+            index={objectiveIndex}
+            deleteObjective={deleteObjective}
+            updateObjective={updateObjective}
             merging={merging}
             setEditing={setEditing}
             sortable={orderMethod === 'CUSTOM' && !course.frozen}
-            toggleMergingConcept={toggleMergingConcept}
-            checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-              : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+            toggleMergingObjective={toggleMergingObjective}
+            checkboxRef={objectiveIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_OBJECTIVES')
+              : objectiveIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_OBJECTIVES')
                 : undefined}
-            conceptTags={conceptTags}
+            objectiveTags={objectiveTags}
           />
-        ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
-          const elements = group.filter(concept => includeConcept(concept))
-            .map((concept, conceptIndex) =>
-              <ConceptListItem
-                key={concept.id}
-                concept={concept}
+        ) : groupConcepts(course.objectives).flatMap((group, index, array) => {
+          const elements = group.filter(objective => includeObjective(objective))
+            .map((objective, objectiveIndex) =>
+              <ObjectiveListItem
+                key={objective.id}
+                objective={objective}
                 user={user}
                 editing={editing}
-                deleteConcept={deleteConcept}
-                updateConcept={updateConcept}
+                deleteObjective={deleteObjective}
+                updateObjective={updateObjective}
                 merging={merging}
                 setEditing={setEditing}
-                toggleMergingConcept={toggleMergingConcept}
+                toggleMergingObjective={toggleMergingObjective}
                 divider={false}
-                checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-                  : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+                checkboxRef={objectiveIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_OBJECTIVES')
+                  : objectiveIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_OBJECTIVES')
                     : undefined}
                 sortable={false}
-                conceptTags={conceptTags}
+                objectiveTags={objectiveTags}
               />
             )
           if (elements.length !== 0 && index < array.length - 1) {
@@ -283,15 +283,15 @@ const ConceptList = ({
         }
         )
         }</SortableList>
-      <ConceptEditor submit={async args => {
-        await createConcept(args)
+      <ObjectiveEditor submit={async args => {
+        await createObjective(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
         infoBox.redrawIfOpen('manager',
-          'CREATE_CONCEPT_NAME', 'CREATE_CONCEPT_DESCRIPTION', 'CREATE_CONCEPT_TAGS',
-          'CREATE_CONCEPT_SUBMIT')
-      }} defaultValues={{ official: isTemplate }} tagOptions={conceptTags} />
+          'CREATE_OBJECTIVE_NAME', 'CREATE_OBJECTIVE_DESCRIPTION', 'CREATE_OBJECTIVE_TAGS',
+          'CREATE_OBJECTIVE_SUBMIT')
+      }} defaultValues={{ official: isTemplate }} tagOptions={objectiveTags} />
     </Card>
   )
 }
 
-export default ConceptList
+export default ObjectiveList

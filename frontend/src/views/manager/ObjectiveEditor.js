@@ -19,7 +19,7 @@ const initialState = {
   frozen: undefined
 }
 
-const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel }) => {
+const ObjectiveEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -51,7 +51,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
 
-  const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_CONCEPT_TAGS')
+  const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_OBJECTIVE_TAGS')
   const selectRef = useRef(null)
   return (
     <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
@@ -60,12 +60,12 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         variant='outlined'
         margin='dense'
         name='name'
-        label='Concept name'
+        label='Objective name'
         type='text'
         value={input.name}
         fullWidth
         inputRef={nameRef}
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_NAME') : undefined}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_OBJECTIVE_NAME') : undefined}
         autoFocus={action !== 'Create'}
         onChange={onChange}
       />
@@ -74,10 +74,10 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         variant='outlined'
         margin='dense'
         name='description'
-        label='Concept description'
+        label='Objective description'
         type='text'
         value={input.description}
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_DESCRIPTION') : undefined}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_OBJECTIVE_DESCRIPTION') : undefined}
         fullWidth
         onChange={onChange}
       />
@@ -98,11 +98,11 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         }}
         onMenuOpen={() => {
           setTimeout(() => {
-            const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS')
+            const func = infoBox.secondaryRef('manager', 'CREATE_OBJECTIVE_TAGS')
             func(selectRef.current?.menuListRef)
           }, 0)
         }}
-        onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(null)}
+        onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_OBJECTIVE_TAGS', true)(null)}
         isMulti
         placeholder='Select tags...'
         menuPlacement='auto'
@@ -110,7 +110,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
       />
       <Button
         color='primary' variant='contained' disabled={!input.name} type='submit'
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_SUBMIT') : undefined}
+        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_OBJECTIVE_SUBMIT') : undefined}
         className={classes.submit}
       >
         {action}
@@ -122,7 +122,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
       }
       {user.role >= Role.STAFF && <>
         <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_OFFICIAL') : undefined}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_OBJECTIVE_OFFICIAL') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
@@ -138,7 +138,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
           />
         </FormControl>
         <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_FROZEN') : undefined}
+          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_OBJECTIVE_FROZEN') : undefined}
           style={{ verticalAlign: 'middle', marginLeft: '12px' }}
         >
           <FormControlLabel
@@ -158,4 +158,4 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
   )
 }
 
-export default ConceptEditor
+export default ObjectiveEditor
