@@ -41,6 +41,12 @@ query workspaceById($id: ID!) {
       type
       priority
     }
+    objectiveTags {
+      id
+      name
+      type
+      priority
+    }
     courseOrder
     courses {
       id

@@ -35,6 +35,29 @@ fragment coursesForWorkspace on Workspace {
         }
       }
     }
+    objectiveOrder
+    objectives {
+      id
+      name
+      description
+      course {
+        id
+      }
+      tags {
+        id
+        name
+      }
+      linksToObjective {
+        id
+        from {
+          id
+          name
+          course {
+            id
+          }
+        }
+      }
+    }
   }
 }
 `

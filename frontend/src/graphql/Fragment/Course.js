@@ -18,6 +18,7 @@ fragment createCourseData on Course {
     }
   }
   conceptOrder
+  objectiveOrder
   concepts {
     id
     name
@@ -37,6 +38,25 @@ fragment createCourseData on Course {
       }
     }
   }
+  objectives {
+    id
+    name
+    description
+    official
+    frozen
+    course {
+      id
+    }
+    linksToObjective {
+      from {
+        id
+        name
+        course {
+          id
+        }
+      }
+    }
+  }
 }
 `
 
@@ -47,6 +67,7 @@ fragment updateCourseData on Course {
   official
   frozen
   conceptOrder
+  objectiveOrder
   tags {
     id
     name

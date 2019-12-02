@@ -69,7 +69,7 @@ export const deleteCourse = async (root, { id }, context) => {
 }
 
 export const updateCourse = async (root, {
-  id, name, official, frozen, tags, conceptOrder
+  id, name, official, frozen, tags, conceptOrder, objectiveOrder
 }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
   await checkAccess(context, {
@@ -100,6 +100,11 @@ export const updateCourse = async (root, {
   if (conceptOrder !== undefined) {
     data.conceptOrder = {
       set: conceptOrder
+    }
+  }
+  if (objectiveOrder !== undefined) {
+    data.objectiveOrder = {
+      set: objectiveOrder
     }
   }
   if (name !== undefined) {
