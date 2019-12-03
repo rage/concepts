@@ -36,6 +36,53 @@ query courseById($id: ID!) {
 }
 `
 
+const COURSE_BY_ID_WITH_LINKS = gql`
+query courseById($id: ID!) {
+  courseById(id: $id) {
+    id
+    name
+    official
+    frozen
+    tags {
+      id
+      name
+      type
+      priority
+    }
+    conceptOrder
+    concepts {
+      id
+      name
+      description
+      level
+      position
+      official
+      frozen
+      tags {
+        id
+        name
+        type
+        priority
+      }
+      course {
+        id
+      }
+      linksToConcept {
+        id
+        official
+        frozen
+        from {
+          course {
+            id
+          }
+          id
+        }
+      }
+    }
+  }
+}
+`
+
 const LINKS_IN_COURSE = gql`
 query linksInCourse($courseId: ID!) {
   linksInCourse: courseById(id: $courseId) {
@@ -120,5 +167,6 @@ export {
   COURSE_BY_ID,
   COURSE_PREREQUISITES,
   COURSE_PREREQ_FRAGMENT,
-  LINKS_IN_COURSE
+  LINKS_IN_COURSE,
+  COURSE_BY_ID_WITH_LINKS
 }

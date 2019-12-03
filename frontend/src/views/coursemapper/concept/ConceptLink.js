@@ -239,6 +239,28 @@ const Line = ({
     recalculate()
   }
 
+  const handleMoveEvent = evt => {
+    let changed = false, bothChanged = false
+    if (evt.detail.id === from || (evt.detail.selected && evt.detail.selected.has(from))) {
+      pos.current.x0 += evt.detail.deltaX
+      pos.current.y0 += evt.detail.deltaY
+      changed = true
+    }
+    if (evt.detail.id === to || (evt.detail.selected && evt.detail.selected.has(to))) {
+      pos.current.x1 += evt.detail.deltaX
+      pos.current.y1 += evt.detail.deltaY
+      bothChanged = changed
+      changed = true
+    }
+    if (bothChanged) {
+      // Don't even bother with the angle recalculation
+      el.current.style.top = `${pos.current.y0}px`
+      el.current.style.left = `${pos.current.x0}px`
+    } else if (changed) {
+      recalculate()
+    }
+  }
+
   const elCallback = node => {
     el.current = node
     if (linkRef) {
@@ -255,11 +277,13 @@ const Line = ({
   useEffect(() => {
     window.addEventListener('resize', handleResize)
     window.addEventListener('redrawConceptLink', handleResize)
+    window.addEventListener('moveConcept', handleMoveEvent)
     window.addEventListener('scroll', handleResize, true)
     // componentWillUnmount
     return () => {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('redrawConceptLink', handleResize)
+      window.removeEventListener('moveConcept', handleMoveEvent)
       window.removeEventListener('scroll', handleResize)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
