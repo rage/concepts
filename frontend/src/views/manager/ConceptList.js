@@ -56,7 +56,7 @@ const sortingOptions = {
 }
 
 const ConceptList = ({
-  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept
+  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -190,6 +190,7 @@ const ConceptList = ({
     return null
   }
 
+  const concepts = course.concepts.filter(concept => concept.level === level.toUpperCase())
   const conceptFilterParsed = parseFilter(conceptFilter)
   const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
 
@@ -197,7 +198,7 @@ const ConceptList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`Concepts of ${course.name}`}
+        title={`${level.charAt(0).toUpperCase() + level.substring(1)}s of ${course.name}`}
         action={cardHeaderActions()}
       />
 
@@ -205,7 +206,7 @@ const ConceptList = ({
         <TextField
           variant='outlined'
           margin='dense'
-          label='Filter concepts'
+          label={`Filter ${level}s`}
           ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
@@ -283,7 +284,7 @@ const ConceptList = ({
         }
         )
         }</SortableList>
-      <ConceptEditor submit={async args => {
+      <ConceptEditor level={level} submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
         infoBox.redrawIfOpen('manager',

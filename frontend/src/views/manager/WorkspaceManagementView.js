@@ -163,23 +163,38 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
               </Tabs>
             </AppBar>
             <TabContent value={index} index={0}>
-            <ConceptList
-              workspace={workspaceQuery.data.workspaceById}
-              course={focusedCourse}
-              updateCourse={args => updateCourse({ variables: args }).catch(e)}
-              createConcept={args => createConcept({
-                variables: {
-                  workspaceId,
-                  courseId: focusedCourse.id,
-                  ...args
-                }
-              }).catch(e)}
-              deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-              updateConcept={args => updateConcept({ variables: args }).catch(e)}
-            />
+              <ConceptList
+                level='concept'
+                workspace={workspaceQuery.data.workspaceById}
+                course={focusedCourse}
+                updateCourse={args => updateCourse({ variables: args }).catch(e)}
+                createConcept={args => createConcept({
+                  variables: {
+                    workspaceId,
+                    courseId: focusedCourse.id,
+                    ...args
+                  }
+                }).catch(e)}
+                deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
+                updateConcept={args => updateConcept({ variables: args }).catch(e)}
+              />
             </TabContent>
             <TabContent value={index} index={1}>
-              Objectives
+              <ConceptList
+                level='objective'
+                workspace={workspaceQuery.data.workspaceById}
+                course={focusedCourse}
+                updateCourse={args => updateCourse({ variables: args }).catch(e)}
+                createConcept={args => createConcept({
+                  variables: {
+                    workspaceId,
+                    courseId: focusedCourse.id,
+                    ...args
+                  }
+                }).catch(e)}
+                deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
+                updateConcept={args => updateConcept({ variables: args }).catch(e)}
+              />
             </TabContent>
           </Paper> : <Paper elevation={0} />
         }

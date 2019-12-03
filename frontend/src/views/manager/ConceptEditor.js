@@ -16,11 +16,10 @@ const initialState = {
   tags: [],
   bloomTag: '',
   official: undefined,
-  frozen: undefined,
-  level: 'CONCEPT'
+  frozen: undefined
 }
 
-const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel }) => {
+const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel, level }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -28,6 +27,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
   const [input, setInput] = useState({
     ...initialState,
     ...defaultValues,
+    level,
     tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
 
@@ -61,7 +61,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         variant='outlined'
         margin='dense'
         name='name'
-        label='Concept name'
+        label={`${level.charAt(0).toUpperCase() + level.substring(1)} name`}
         type='text'
         value={input.name}
         fullWidth
@@ -75,7 +75,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         variant='outlined'
         margin='dense'
         name='description'
-        label='Concept description'
+        label={`${level.charAt(0).toUpperCase() + level.substring(1)} description`}
         type='text'
         value={input.description}
         ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_DESCRIPTION') : undefined}
