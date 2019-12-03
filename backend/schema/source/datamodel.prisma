@@ -225,6 +225,7 @@ type Concept {
   name: String!
   description: String
   level: ConceptLevel! @default(value: CONCEPT)
+  position: String
   official: Boolean! @default(value: false)
   frozen: Boolean! @default(value: false)
   tags: [Tag!]!

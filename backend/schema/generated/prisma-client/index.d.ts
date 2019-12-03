@@ -743,6 +743,8 @@ export type ConceptOrderByInput =
   | "description_DESC"
   | "level_ASC"
   | "level_DESC"
+  | "position_ASC"
+  | "position_DESC"
   | "official_ASC"
   | "official_DESC"
   | "frozen_ASC"
@@ -1458,6 +1460,20 @@ export interface ConceptWhereInput {
   level_not?: Maybe<ConceptLevel>;
   level_in?: Maybe<ConceptLevel[] | ConceptLevel>;
   level_not_in?: Maybe<ConceptLevel[] | ConceptLevel>;
+  position?: Maybe<String>;
+  position_not?: Maybe<String>;
+  position_in?: Maybe<String[] | String>;
+  position_not_in?: Maybe<String[] | String>;
+  position_lt?: Maybe<String>;
+  position_lte?: Maybe<String>;
+  position_gt?: Maybe<String>;
+  position_gte?: Maybe<String>;
+  position_contains?: Maybe<String>;
+  position_not_contains?: Maybe<String>;
+  position_starts_with?: Maybe<String>;
+  position_not_starts_with?: Maybe<String>;
+  position_ends_with?: Maybe<String>;
+  position_not_ends_with?: Maybe<String>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
@@ -2239,6 +2255,7 @@ export interface ConceptCreateWithoutWorkspaceInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2261,6 +2278,7 @@ export interface ConceptCreateWithoutClonesInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2301,6 +2319,7 @@ export interface ConceptCreateWithoutLinksToConceptInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2326,6 +2345,7 @@ export interface ConceptCreateWithoutSourceConceptInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2366,6 +2386,7 @@ export interface ConceptCreateWithoutLinksFromConceptInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2555,6 +2576,7 @@ export interface ConceptCreateWithoutCourseInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3685,6 +3707,7 @@ export interface ConceptUpdateWithoutWorkspaceDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -3710,6 +3733,7 @@ export interface ConceptUpdateWithoutClonesDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -3775,6 +3799,7 @@ export interface ConceptUpdateWithoutLinksToConceptDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -3820,6 +3845,7 @@ export interface ConceptUpdateWithoutSourceConceptDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -3885,6 +3911,7 @@ export interface ConceptUpdateWithoutLinksFromConceptDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4332,6 +4359,7 @@ export interface ConceptUpdateWithoutCourseDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4397,6 +4425,20 @@ export interface ConceptScalarWhereInput {
   level_not?: Maybe<ConceptLevel>;
   level_in?: Maybe<ConceptLevel[] | ConceptLevel>;
   level_not_in?: Maybe<ConceptLevel[] | ConceptLevel>;
+  position?: Maybe<String>;
+  position_not?: Maybe<String>;
+  position_in?: Maybe<String[] | String>;
+  position_not_in?: Maybe<String[] | String>;
+  position_lt?: Maybe<String>;
+  position_lte?: Maybe<String>;
+  position_gt?: Maybe<String>;
+  position_gte?: Maybe<String>;
+  position_contains?: Maybe<String>;
+  position_not_contains?: Maybe<String>;
+  position_starts_with?: Maybe<String>;
+  position_not_starts_with?: Maybe<String>;
+  position_ends_with?: Maybe<String>;
+  position_not_ends_with?: Maybe<String>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
@@ -4439,6 +4481,7 @@ export interface ConceptUpdateManyDataInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   count?: Maybe<Int>;
@@ -5774,6 +5817,7 @@ export interface ConceptCreateInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -5791,6 +5835,7 @@ export interface ConceptUpdateInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -5808,6 +5853,7 @@ export interface ConceptUpdateManyMutationInput {
   name?: Maybe<String>;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
+  position?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   count?: Maybe<Int>;
@@ -7408,6 +7454,7 @@ export interface Concept {
   name: String;
   description?: String;
   level: ConceptLevel;
+  position?: String;
   official: Boolean;
   frozen: Boolean;
   count: Int;
@@ -7420,6 +7467,7 @@ export interface ConceptPromise extends Promise<Concept>, Fragmentable {
   name: () => Promise<String>;
   description: () => Promise<String>;
   level: () => Promise<ConceptLevel>;
+  position: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   tags: <T = FragmentableArray<Tag>>(args?: {
@@ -7474,6 +7522,7 @@ export interface ConceptSubscription
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   level: () => Promise<AsyncIterator<ConceptLevel>>;
+  position: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   tags: <T = Promise<AsyncIterator<TagSubscription>>>(args?: {
@@ -7530,6 +7579,7 @@ export interface ConceptNullablePromise
   name: () => Promise<String>;
   description: () => Promise<String>;
   level: () => Promise<ConceptLevel>;
+  position: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   tags: <T = FragmentableArray<Tag>>(args?: {
@@ -8676,6 +8726,7 @@ export interface ConceptPreviousValues {
   name: String;
   description?: String;
   level: ConceptLevel;
+  position?: String;
   official: Boolean;
   frozen: Boolean;
   count: Int;
@@ -8690,6 +8741,7 @@ export interface ConceptPreviousValuesPromise
   name: () => Promise<String>;
   description: () => Promise<String>;
   level: () => Promise<ConceptLevel>;
+  position: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   count: () => Promise<Int>;
@@ -8704,6 +8756,7 @@ export interface ConceptPreviousValuesSubscription
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   level: () => Promise<AsyncIterator<ConceptLevel>>;
+  position: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   count: () => Promise<AsyncIterator<Int>>;

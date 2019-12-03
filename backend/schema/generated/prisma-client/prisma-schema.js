@@ -283,6 +283,7 @@ type Concept {
   name: String!
   description: String
   level: ConceptLevel!
+  position: String
   official: Boolean!
   frozen: Boolean!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -309,6 +310,7 @@ input ConceptCreateInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -357,6 +359,7 @@ input ConceptCreateWithoutClonesInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -374,6 +377,7 @@ input ConceptCreateWithoutCourseInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -391,6 +395,7 @@ input ConceptCreateWithoutLinksFromConceptInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -408,6 +413,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -425,6 +431,7 @@ input ConceptCreateWithoutSourceConceptInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -442,6 +449,7 @@ input ConceptCreateWithoutWorkspaceInput {
   name: String!
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -852,6 +860,8 @@ enum ConceptOrderByInput {
   description_DESC
   level_ASC
   level_DESC
+  position_ASC
+  position_DESC
   official_ASC
   official_DESC
   frozen_ASC
@@ -869,6 +879,7 @@ type ConceptPreviousValues {
   name: String!
   description: String
   level: ConceptLevel!
+  position: String
   official: Boolean!
   frozen: Boolean!
   count: Int!
@@ -923,6 +934,20 @@ input ConceptScalarWhereInput {
   level_not: ConceptLevel
   level_in: [ConceptLevel!]
   level_not_in: [ConceptLevel!]
+  position: String
+  position_not: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_lt: String
+  position_lte: String
+  position_gt: String
+  position_gte: String
+  position_contains: String
+  position_not_contains: String
+  position_starts_with: String
+  position_not_starts_with: String
+  position_ends_with: String
+  position_not_ends_with: String
   official: Boolean
   official_not: Boolean
   frozen: Boolean
@@ -978,6 +1003,7 @@ input ConceptUpdateInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -995,6 +1021,7 @@ input ConceptUpdateManyDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   count: Int
@@ -1004,6 +1031,7 @@ input ConceptUpdateManyMutationInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   count: Int
@@ -1077,6 +1105,7 @@ input ConceptUpdateWithoutClonesDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1093,6 +1122,7 @@ input ConceptUpdateWithoutCourseDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1109,6 +1139,7 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1125,6 +1156,7 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1141,6 +1173,7 @@ input ConceptUpdateWithoutSourceConceptDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1157,6 +1190,7 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   name: String
   description: String
   level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1264,6 +1298,20 @@ input ConceptWhereInput {
   level_not: ConceptLevel
   level_in: [ConceptLevel!]
   level_not_in: [ConceptLevel!]
+  position: String
+  position_not: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_lt: String
+  position_lte: String
+  position_gt: String
+  position_gte: String
+  position_contains: String
+  position_not_contains: String
+  position_starts_with: String
+  position_not_starts_with: String
+  position_ends_with: String
+  position_not_ends_with: String
   official: Boolean
   official_not: Boolean
   frozen: Boolean

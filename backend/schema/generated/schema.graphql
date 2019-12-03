@@ -45,9 +45,9 @@ type Mutation {
   updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course!
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, level: ConceptLevel!, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteConcept(id: ID!): DeletedCourseItem!
-  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  updateConcept(id: ID!, name: String, description: String, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
@@ -451,6 +451,7 @@ type Concept {
   name: String!
   description: String
   level: ConceptLevel!
+  position: String
   official: Boolean!
   frozen: Boolean!
   tags: [Tag!]!
