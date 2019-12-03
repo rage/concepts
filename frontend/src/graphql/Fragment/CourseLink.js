@@ -25,6 +25,7 @@ fragment createCourseLinkData on CourseLink {
       name
       description
       level
+      position
       official
       frozen
       course {
