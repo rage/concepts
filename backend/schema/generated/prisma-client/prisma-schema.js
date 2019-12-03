@@ -15,23 +15,11 @@ type AggregateConceptLink {
   count: Int!
 }
 
-type AggregateConceptObjectiveLink {
-  count: Int!
-}
-
 type AggregateCourse {
   count: Int!
 }
 
 type AggregateCourseLink {
-  count: Int!
-}
-
-type AggregateObjective {
-  count: Int!
-}
-
-type AggregateObjectiveLink {
   count: Int!
 }
 
@@ -294,6 +282,8 @@ type Concept {
   id: ID!
   name: String!
   description: String
+  level: ConceptLevel!
+  position: String
   official: Boolean!
   frozen: Boolean!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -302,7 +292,6 @@ type Concept {
   clones(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   linksFromConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   linksToConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
-  objectiveLinks(where: ConceptObjectiveLinkWhereInput, orderBy: ConceptObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptObjectiveLink!]
   course: Course!
   workspace: Workspace!
   createdBy: User!
@@ -320,6 +309,8 @@ input ConceptCreateInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -328,7 +319,6 @@ input ConceptCreateInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
   course: CourseCreateOneWithoutConceptsInput!
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
@@ -364,15 +354,12 @@ input ConceptCreateOneWithoutLinksToConceptInput {
   connect: ConceptWhereUniqueInput
 }
 
-input ConceptCreateOneWithoutObjectiveLinksInput {
-  create: ConceptCreateWithoutObjectiveLinksInput
-  connect: ConceptWhereUniqueInput
-}
-
 input ConceptCreateWithoutClonesInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -380,7 +367,6 @@ input ConceptCreateWithoutClonesInput {
   sourceConcept: ConceptCreateOneWithoutClonesInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
   course: CourseCreateOneWithoutConceptsInput!
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
@@ -390,6 +376,8 @@ input ConceptCreateWithoutCourseInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -398,7 +386,6 @@ input ConceptCreateWithoutCourseInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
@@ -407,6 +394,8 @@ input ConceptCreateWithoutLinksFromConceptInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -414,7 +403,6 @@ input ConceptCreateWithoutLinksFromConceptInput {
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
   course: CourseCreateOneWithoutConceptsInput!
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
@@ -424,6 +412,8 @@ input ConceptCreateWithoutLinksToConceptInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -431,24 +421,6 @@ input ConceptCreateWithoutLinksToConceptInput {
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
-  course: CourseCreateOneWithoutConceptsInput!
-  workspace: WorkspaceCreateOneWithoutConceptsInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ConceptCreateWithoutObjectiveLinksInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  count: Int
-  sourceConcept: ConceptCreateOneWithoutClonesInput
-  clones: ConceptCreateManyWithoutSourceConceptInput
-  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
-  linksToConcept: ConceptLinkCreateManyWithoutToInput
   course: CourseCreateOneWithoutConceptsInput!
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
@@ -458,6 +430,8 @@ input ConceptCreateWithoutSourceConceptInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -465,7 +439,6 @@ input ConceptCreateWithoutSourceConceptInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
   course: CourseCreateOneWithoutConceptsInput!
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
@@ -475,6 +448,8 @@ input ConceptCreateWithoutWorkspaceInput {
   id: ID
   name: String!
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -483,7 +458,6 @@ input ConceptCreateWithoutWorkspaceInput {
   clones: ConceptCreateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkCreateManyWithoutFromInput
   course: CourseCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
@@ -491,6 +465,11 @@ input ConceptCreateWithoutWorkspaceInput {
 type ConceptEdge {
   node: Concept!
   cursor: String!
+}
+
+enum ConceptLevel {
+  OBJECTIVE
+  CONCEPT
 }
 
 type ConceptLink {
@@ -872,385 +851,6 @@ input ConceptLinkWhereUniqueInput {
   id: ID
 }
 
-type ConceptObjectiveLink {
-  id: ID!
-  from: Concept!
-  to: Objective!
-  official: Boolean!
-  frozen: Boolean!
-  weight: Int!
-  count: Int!
-  workspace: Workspace!
-  createdBy: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type ConceptObjectiveLinkConnection {
-  pageInfo: PageInfo!
-  edges: [ConceptObjectiveLinkEdge]!
-  aggregate: AggregateConceptObjectiveLink!
-}
-
-input ConceptObjectiveLinkCreateInput {
-  id: ID
-  from: ConceptCreateOneWithoutObjectiveLinksInput!
-  to: ObjectiveCreateOneWithoutConceptLinksInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceCreateOneWithoutConceptObjectiveLinksInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ConceptObjectiveLinkCreateManyWithoutFromInput {
-  create: [ConceptObjectiveLinkCreateWithoutFromInput!]
-  connect: [ConceptObjectiveLinkWhereUniqueInput!]
-}
-
-input ConceptObjectiveLinkCreateManyWithoutToInput {
-  create: [ConceptObjectiveLinkCreateWithoutToInput!]
-  connect: [ConceptObjectiveLinkWhereUniqueInput!]
-}
-
-input ConceptObjectiveLinkCreateManyWithoutWorkspaceInput {
-  create: [ConceptObjectiveLinkCreateWithoutWorkspaceInput!]
-  connect: [ConceptObjectiveLinkWhereUniqueInput!]
-}
-
-input ConceptObjectiveLinkCreateWithoutFromInput {
-  id: ID
-  to: ObjectiveCreateOneWithoutConceptLinksInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceCreateOneWithoutConceptObjectiveLinksInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ConceptObjectiveLinkCreateWithoutToInput {
-  id: ID
-  from: ConceptCreateOneWithoutObjectiveLinksInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceCreateOneWithoutConceptObjectiveLinksInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ConceptObjectiveLinkCreateWithoutWorkspaceInput {
-  id: ID
-  from: ConceptCreateOneWithoutObjectiveLinksInput!
-  to: ObjectiveCreateOneWithoutConceptLinksInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  createdBy: UserCreateOneInput!
-}
-
-type ConceptObjectiveLinkEdge {
-  node: ConceptObjectiveLink!
-  cursor: String!
-}
-
-enum ConceptObjectiveLinkOrderByInput {
-  id_ASC
-  id_DESC
-  official_ASC
-  official_DESC
-  frozen_ASC
-  frozen_DESC
-  weight_ASC
-  weight_DESC
-  count_ASC
-  count_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type ConceptObjectiveLinkPreviousValues {
-  id: ID!
-  official: Boolean!
-  frozen: Boolean!
-  weight: Int!
-  count: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input ConceptObjectiveLinkScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  official: Boolean
-  official_not: Boolean
-  frozen: Boolean
-  frozen_not: Boolean
-  weight: Int
-  weight_not: Int
-  weight_in: [Int!]
-  weight_not_in: [Int!]
-  weight_lt: Int
-  weight_lte: Int
-  weight_gt: Int
-  weight_gte: Int
-  count: Int
-  count_not: Int
-  count_in: [Int!]
-  count_not_in: [Int!]
-  count_lt: Int
-  count_lte: Int
-  count_gt: Int
-  count_gte: Int
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [ConceptObjectiveLinkScalarWhereInput!]
-  OR: [ConceptObjectiveLinkScalarWhereInput!]
-  NOT: [ConceptObjectiveLinkScalarWhereInput!]
-}
-
-type ConceptObjectiveLinkSubscriptionPayload {
-  mutation: MutationType!
-  node: ConceptObjectiveLink
-  updatedFields: [String!]
-  previousValues: ConceptObjectiveLinkPreviousValues
-}
-
-input ConceptObjectiveLinkSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: ConceptObjectiveLinkWhereInput
-  AND: [ConceptObjectiveLinkSubscriptionWhereInput!]
-  OR: [ConceptObjectiveLinkSubscriptionWhereInput!]
-  NOT: [ConceptObjectiveLinkSubscriptionWhereInput!]
-}
-
-input ConceptObjectiveLinkUpdateInput {
-  from: ConceptUpdateOneRequiredWithoutObjectiveLinksInput
-  to: ObjectiveUpdateOneRequiredWithoutConceptLinksInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceUpdateOneRequiredWithoutConceptObjectiveLinksInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ConceptObjectiveLinkUpdateManyDataInput {
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-}
-
-input ConceptObjectiveLinkUpdateManyMutationInput {
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-}
-
-input ConceptObjectiveLinkUpdateManyWithoutFromInput {
-  create: [ConceptObjectiveLinkCreateWithoutFromInput!]
-  delete: [ConceptObjectiveLinkWhereUniqueInput!]
-  connect: [ConceptObjectiveLinkWhereUniqueInput!]
-  set: [ConceptObjectiveLinkWhereUniqueInput!]
-  disconnect: [ConceptObjectiveLinkWhereUniqueInput!]
-  update: [ConceptObjectiveLinkUpdateWithWhereUniqueWithoutFromInput!]
-  upsert: [ConceptObjectiveLinkUpsertWithWhereUniqueWithoutFromInput!]
-  deleteMany: [ConceptObjectiveLinkScalarWhereInput!]
-  updateMany: [ConceptObjectiveLinkUpdateManyWithWhereNestedInput!]
-}
-
-input ConceptObjectiveLinkUpdateManyWithoutToInput {
-  create: [ConceptObjectiveLinkCreateWithoutToInput!]
-  delete: [ConceptObjectiveLinkWhereUniqueInput!]
-  connect: [ConceptObjectiveLinkWhereUniqueInput!]
-  set: [ConceptObjectiveLinkWhereUniqueInput!]
-  disconnect: [ConceptObjectiveLinkWhereUniqueInput!]
-  update: [ConceptObjectiveLinkUpdateWithWhereUniqueWithoutToInput!]
-  upsert: [ConceptObjectiveLinkUpsertWithWhereUniqueWithoutToInput!]
-  deleteMany: [ConceptObjectiveLinkScalarWhereInput!]
-  updateMany: [ConceptObjectiveLinkUpdateManyWithWhereNestedInput!]
-}
-
-input ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput {
-  create: [ConceptObjectiveLinkCreateWithoutWorkspaceInput!]
-  delete: [ConceptObjectiveLinkWhereUniqueInput!]
-  connect: [ConceptObjectiveLinkWhereUniqueInput!]
-  set: [ConceptObjectiveLinkWhereUniqueInput!]
-  disconnect: [ConceptObjectiveLinkWhereUniqueInput!]
-  update: [ConceptObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput!]
-  upsert: [ConceptObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput!]
-  deleteMany: [ConceptObjectiveLinkScalarWhereInput!]
-  updateMany: [ConceptObjectiveLinkUpdateManyWithWhereNestedInput!]
-}
-
-input ConceptObjectiveLinkUpdateManyWithWhereNestedInput {
-  where: ConceptObjectiveLinkScalarWhereInput!
-  data: ConceptObjectiveLinkUpdateManyDataInput!
-}
-
-input ConceptObjectiveLinkUpdateWithoutFromDataInput {
-  to: ObjectiveUpdateOneRequiredWithoutConceptLinksInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceUpdateOneRequiredWithoutConceptObjectiveLinksInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ConceptObjectiveLinkUpdateWithoutToDataInput {
-  from: ConceptUpdateOneRequiredWithoutObjectiveLinksInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceUpdateOneRequiredWithoutConceptObjectiveLinksInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ConceptObjectiveLinkUpdateWithoutWorkspaceDataInput {
-  from: ConceptUpdateOneRequiredWithoutObjectiveLinksInput
-  to: ObjectiveUpdateOneRequiredWithoutConceptLinksInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ConceptObjectiveLinkUpdateWithWhereUniqueWithoutFromInput {
-  where: ConceptObjectiveLinkWhereUniqueInput!
-  data: ConceptObjectiveLinkUpdateWithoutFromDataInput!
-}
-
-input ConceptObjectiveLinkUpdateWithWhereUniqueWithoutToInput {
-  where: ConceptObjectiveLinkWhereUniqueInput!
-  data: ConceptObjectiveLinkUpdateWithoutToDataInput!
-}
-
-input ConceptObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: ConceptObjectiveLinkWhereUniqueInput!
-  data: ConceptObjectiveLinkUpdateWithoutWorkspaceDataInput!
-}
-
-input ConceptObjectiveLinkUpsertWithWhereUniqueWithoutFromInput {
-  where: ConceptObjectiveLinkWhereUniqueInput!
-  update: ConceptObjectiveLinkUpdateWithoutFromDataInput!
-  create: ConceptObjectiveLinkCreateWithoutFromInput!
-}
-
-input ConceptObjectiveLinkUpsertWithWhereUniqueWithoutToInput {
-  where: ConceptObjectiveLinkWhereUniqueInput!
-  update: ConceptObjectiveLinkUpdateWithoutToDataInput!
-  create: ConceptObjectiveLinkCreateWithoutToInput!
-}
-
-input ConceptObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: ConceptObjectiveLinkWhereUniqueInput!
-  update: ConceptObjectiveLinkUpdateWithoutWorkspaceDataInput!
-  create: ConceptObjectiveLinkCreateWithoutWorkspaceInput!
-}
-
-input ConceptObjectiveLinkWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  from: ConceptWhereInput
-  to: ObjectiveWhereInput
-  official: Boolean
-  official_not: Boolean
-  frozen: Boolean
-  frozen_not: Boolean
-  weight: Int
-  weight_not: Int
-  weight_in: [Int!]
-  weight_not_in: [Int!]
-  weight_lt: Int
-  weight_lte: Int
-  weight_gt: Int
-  weight_gte: Int
-  count: Int
-  count_not: Int
-  count_in: [Int!]
-  count_not_in: [Int!]
-  count_lt: Int
-  count_lte: Int
-  count_gt: Int
-  count_gte: Int
-  workspace: WorkspaceWhereInput
-  createdBy: UserWhereInput
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [ConceptObjectiveLinkWhereInput!]
-  OR: [ConceptObjectiveLinkWhereInput!]
-  NOT: [ConceptObjectiveLinkWhereInput!]
-}
-
-input ConceptObjectiveLinkWhereUniqueInput {
-  id: ID
-}
-
 enum ConceptOrderByInput {
   id_ASC
   id_DESC
@@ -1258,6 +858,10 @@ enum ConceptOrderByInput {
   name_DESC
   description_ASC
   description_DESC
+  level_ASC
+  level_DESC
+  position_ASC
+  position_DESC
   official_ASC
   official_DESC
   frozen_ASC
@@ -1274,6 +878,8 @@ type ConceptPreviousValues {
   id: ID!
   name: String!
   description: String
+  level: ConceptLevel!
+  position: String
   official: Boolean!
   frozen: Boolean!
   count: Int!
@@ -1324,6 +930,24 @@ input ConceptScalarWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  level: ConceptLevel
+  level_not: ConceptLevel
+  level_in: [ConceptLevel!]
+  level_not_in: [ConceptLevel!]
+  position: String
+  position_not: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_lt: String
+  position_lte: String
+  position_gt: String
+  position_gte: String
+  position_contains: String
+  position_not_contains: String
+  position_starts_with: String
+  position_not_starts_with: String
+  position_ends_with: String
+  position_not_ends_with: String
   official: Boolean
   official_not: Boolean
   frozen: Boolean
@@ -1378,6 +1002,8 @@ input ConceptSubscriptionWhereInput {
 input ConceptUpdateInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1386,7 +1012,6 @@ input ConceptUpdateInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
   course: CourseUpdateOneRequiredWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
@@ -1395,6 +1020,8 @@ input ConceptUpdateInput {
 input ConceptUpdateManyDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   count: Int
@@ -1403,6 +1030,8 @@ input ConceptUpdateManyDataInput {
 input ConceptUpdateManyMutationInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   count: Int
@@ -1463,13 +1092,6 @@ input ConceptUpdateOneRequiredWithoutLinksToConceptInput {
   connect: ConceptWhereUniqueInput
 }
 
-input ConceptUpdateOneRequiredWithoutObjectiveLinksInput {
-  create: ConceptCreateWithoutObjectiveLinksInput
-  update: ConceptUpdateWithoutObjectiveLinksDataInput
-  upsert: ConceptUpsertWithoutObjectiveLinksInput
-  connect: ConceptWhereUniqueInput
-}
-
 input ConceptUpdateOneWithoutClonesInput {
   create: ConceptCreateWithoutClonesInput
   update: ConceptUpdateWithoutClonesDataInput
@@ -1482,6 +1104,8 @@ input ConceptUpdateOneWithoutClonesInput {
 input ConceptUpdateWithoutClonesDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1489,7 +1113,6 @@ input ConceptUpdateWithoutClonesDataInput {
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
   course: CourseUpdateOneRequiredWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
@@ -1498,6 +1121,8 @@ input ConceptUpdateWithoutClonesDataInput {
 input ConceptUpdateWithoutCourseDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1506,7 +1131,6 @@ input ConceptUpdateWithoutCourseDataInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1514,6 +1138,8 @@ input ConceptUpdateWithoutCourseDataInput {
 input ConceptUpdateWithoutLinksFromConceptDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1521,7 +1147,6 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
   course: CourseUpdateOneRequiredWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
@@ -1530,6 +1155,8 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
 input ConceptUpdateWithoutLinksToConceptDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1537,23 +1164,6 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
-  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ConceptUpdateWithoutObjectiveLinksDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  count: Int
-  sourceConcept: ConceptUpdateOneWithoutClonesInput
-  clones: ConceptUpdateManyWithoutSourceConceptInput
-  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
-  linksToConcept: ConceptLinkUpdateManyWithoutToInput
   course: CourseUpdateOneRequiredWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
@@ -1562,6 +1172,8 @@ input ConceptUpdateWithoutObjectiveLinksDataInput {
 input ConceptUpdateWithoutSourceConceptDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1569,7 +1181,6 @@ input ConceptUpdateWithoutSourceConceptDataInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
   course: CourseUpdateOneRequiredWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
@@ -1578,6 +1189,8 @@ input ConceptUpdateWithoutSourceConceptDataInput {
 input ConceptUpdateWithoutWorkspaceDataInput {
   name: String
   description: String
+  level: ConceptLevel
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -1586,7 +1199,6 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   clones: ConceptUpdateManyWithoutSourceConceptInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  objectiveLinks: ConceptObjectiveLinkUpdateManyWithoutFromInput
   course: CourseUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1619,11 +1231,6 @@ input ConceptUpsertWithoutLinksFromConceptInput {
 input ConceptUpsertWithoutLinksToConceptInput {
   update: ConceptUpdateWithoutLinksToConceptDataInput!
   create: ConceptCreateWithoutLinksToConceptInput!
-}
-
-input ConceptUpsertWithoutObjectiveLinksInput {
-  update: ConceptUpdateWithoutObjectiveLinksDataInput!
-  create: ConceptCreateWithoutObjectiveLinksInput!
 }
 
 input ConceptUpsertWithWhereUniqueWithoutCourseInput {
@@ -1687,6 +1294,24 @@ input ConceptWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  level: ConceptLevel
+  level_not: ConceptLevel
+  level_in: [ConceptLevel!]
+  level_not_in: [ConceptLevel!]
+  position: String
+  position_not: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_lt: String
+  position_lte: String
+  position_gt: String
+  position_gte: String
+  position_contains: String
+  position_not_contains: String
+  position_starts_with: String
+  position_not_starts_with: String
+  position_ends_with: String
+  position_not_ends_with: String
   official: Boolean
   official_not: Boolean
   frozen: Boolean
@@ -1712,9 +1337,6 @@ input ConceptWhereInput {
   linksToConcept_every: ConceptLinkWhereInput
   linksToConcept_some: ConceptLinkWhereInput
   linksToConcept_none: ConceptLinkWhereInput
-  objectiveLinks_every: ConceptObjectiveLinkWhereInput
-  objectiveLinks_some: ConceptObjectiveLinkWhereInput
-  objectiveLinks_none: ConceptObjectiveLinkWhereInput
   course: CourseWhereInput
   workspace: WorkspaceWhereInput
   createdBy: UserWhereInput
@@ -1756,8 +1378,6 @@ type Course {
   workspace: Workspace!
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptOrder: [ID!]!
-  objectives(where: ObjectiveWhereInput, orderBy: ObjectiveOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Objective!]
-  objectiveOrder: [ID!]!
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -1786,8 +1406,6 @@ input CourseCreateInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1799,10 +1417,6 @@ input CourseCreateManyWithoutSourceCourseInput {
 input CourseCreateManyWithoutWorkspaceInput {
   create: [CourseCreateWithoutWorkspaceInput!]
   connect: [CourseWhereUniqueInput!]
-}
-
-input CourseCreateobjectiveOrderInput {
-  set: [ID!]
 }
 
 input CourseCreateOneInput {
@@ -1830,11 +1444,6 @@ input CourseCreateOneWithoutLinksToCourseInput {
   connect: CourseWhereUniqueInput
 }
 
-input CourseCreateOneWithoutObjectivesInput {
-  create: CourseCreateWithoutObjectivesInput
-  connect: CourseWhereUniqueInput
-}
-
 input CourseCreateWithoutClonesInput {
   id: ID
   name: String!
@@ -1847,8 +1456,6 @@ input CourseCreateWithoutClonesInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1864,8 +1471,6 @@ input CourseCreateWithoutConceptsInput {
   linksToCourse: CourseLinkCreateManyWithoutToInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1881,8 +1486,6 @@ input CourseCreateWithoutLinksFromCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1898,25 +1501,6 @@ input CourseCreateWithoutLinksToCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
-  createdBy: UserCreateOneInput!
-}
-
-input CourseCreateWithoutObjectivesInput {
-  id: ID
-  name: String!
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  sourceCourse: CourseCreateOneWithoutClonesInput
-  clones: CourseCreateManyWithoutSourceCourseInput
-  linksFromCourse: CourseLinkCreateManyWithoutFromInput
-  linksToCourse: CourseLinkCreateManyWithoutToInput
-  workspace: WorkspaceCreateOneWithoutCoursesInput!
-  concepts: ConceptCreateManyWithoutCourseInput
-  conceptOrder: CourseCreateconceptOrderInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1932,8 +1516,6 @@ input CourseCreateWithoutSourceCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1949,8 +1531,6 @@ input CourseCreateWithoutWorkspaceInput {
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
-  objectives: ObjectiveCreateManyWithoutCourseInput
-  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -2359,7 +1939,6 @@ type CoursePreviousValues {
   official: Boolean!
   frozen: Boolean!
   conceptOrder: [ID!]!
-  objectiveOrder: [ID!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -2452,8 +2031,6 @@ input CourseUpdateDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2469,8 +2046,6 @@ input CourseUpdateInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2479,7 +2054,6 @@ input CourseUpdateManyDataInput {
   official: Boolean
   frozen: Boolean
   conceptOrder: CourseUpdateconceptOrderInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
 }
 
 input CourseUpdateManyMutationInput {
@@ -2487,7 +2061,6 @@ input CourseUpdateManyMutationInput {
   official: Boolean
   frozen: Boolean
   conceptOrder: CourseUpdateconceptOrderInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
 }
 
 input CourseUpdateManyWithoutSourceCourseInput {
@@ -2517,10 +2090,6 @@ input CourseUpdateManyWithoutWorkspaceInput {
 input CourseUpdateManyWithWhereNestedInput {
   where: CourseScalarWhereInput!
   data: CourseUpdateManyDataInput!
-}
-
-input CourseUpdateobjectiveOrderInput {
-  set: [ID!]
 }
 
 input CourseUpdateOneInput {
@@ -2560,13 +2129,6 @@ input CourseUpdateOneRequiredWithoutLinksToCourseInput {
   connect: CourseWhereUniqueInput
 }
 
-input CourseUpdateOneRequiredWithoutObjectivesInput {
-  create: CourseCreateWithoutObjectivesInput
-  update: CourseUpdateWithoutObjectivesDataInput
-  upsert: CourseUpsertWithoutObjectivesInput
-  connect: CourseWhereUniqueInput
-}
-
 input CourseUpdateOneWithoutClonesInput {
   create: CourseCreateWithoutClonesInput
   update: CourseUpdateWithoutClonesDataInput
@@ -2587,8 +2149,6 @@ input CourseUpdateWithoutClonesDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2603,8 +2163,6 @@ input CourseUpdateWithoutConceptsDataInput {
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2619,8 +2177,6 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2635,24 +2191,6 @@ input CourseUpdateWithoutLinksToCourseDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input CourseUpdateWithoutObjectivesDataInput {
-  name: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  sourceCourse: CourseUpdateOneWithoutClonesInput
-  clones: CourseUpdateManyWithoutSourceCourseInput
-  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
-  linksToCourse: CourseLinkUpdateManyWithoutToInput
-  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
-  concepts: ConceptUpdateManyWithoutCourseInput
-  conceptOrder: CourseUpdateconceptOrderInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2667,8 +2205,6 @@ input CourseUpdateWithoutSourceCourseDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2683,8 +2219,6 @@ input CourseUpdateWithoutWorkspaceDataInput {
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
-  objectives: ObjectiveUpdateManyWithoutCourseInput
-  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2721,11 +2255,6 @@ input CourseUpsertWithoutLinksFromCourseInput {
 input CourseUpsertWithoutLinksToCourseInput {
   update: CourseUpdateWithoutLinksToCourseDataInput!
   create: CourseCreateWithoutLinksToCourseInput!
-}
-
-input CourseUpsertWithoutObjectivesInput {
-  update: CourseUpdateWithoutObjectivesDataInput!
-  create: CourseCreateWithoutObjectivesInput!
 }
 
 input CourseUpsertWithWhereUniqueWithoutSourceCourseInput {
@@ -2790,9 +2319,6 @@ input CourseWhereInput {
   concepts_every: ConceptWhereInput
   concepts_some: ConceptWhereInput
   concepts_none: ConceptWhereInput
-  objectives_every: ObjectiveWhereInput
-  objectives_some: ObjectiveWhereInput
-  objectives_none: ObjectiveWhereInput
   createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
@@ -2842,12 +2368,6 @@ type Mutation {
   upsertConceptLink(where: ConceptLinkWhereUniqueInput!, create: ConceptLinkCreateInput!, update: ConceptLinkUpdateInput!): ConceptLink!
   deleteConceptLink(where: ConceptLinkWhereUniqueInput!): ConceptLink
   deleteManyConceptLinks(where: ConceptLinkWhereInput): BatchPayload!
-  createConceptObjectiveLink(data: ConceptObjectiveLinkCreateInput!): ConceptObjectiveLink!
-  updateConceptObjectiveLink(data: ConceptObjectiveLinkUpdateInput!, where: ConceptObjectiveLinkWhereUniqueInput!): ConceptObjectiveLink
-  updateManyConceptObjectiveLinks(data: ConceptObjectiveLinkUpdateManyMutationInput!, where: ConceptObjectiveLinkWhereInput): BatchPayload!
-  upsertConceptObjectiveLink(where: ConceptObjectiveLinkWhereUniqueInput!, create: ConceptObjectiveLinkCreateInput!, update: ConceptObjectiveLinkUpdateInput!): ConceptObjectiveLink!
-  deleteConceptObjectiveLink(where: ConceptObjectiveLinkWhereUniqueInput!): ConceptObjectiveLink
-  deleteManyConceptObjectiveLinks(where: ConceptObjectiveLinkWhereInput): BatchPayload!
   createCourse(data: CourseCreateInput!): Course!
   updateCourse(data: CourseUpdateInput!, where: CourseWhereUniqueInput!): Course
   updateManyCourses(data: CourseUpdateManyMutationInput!, where: CourseWhereInput): BatchPayload!
@@ -2860,18 +2380,6 @@ type Mutation {
   upsertCourseLink(where: CourseLinkWhereUniqueInput!, create: CourseLinkCreateInput!, update: CourseLinkUpdateInput!): CourseLink!
   deleteCourseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   deleteManyCourseLinks(where: CourseLinkWhereInput): BatchPayload!
-  createObjective(data: ObjectiveCreateInput!): Objective!
-  updateObjective(data: ObjectiveUpdateInput!, where: ObjectiveWhereUniqueInput!): Objective
-  updateManyObjectives(data: ObjectiveUpdateManyMutationInput!, where: ObjectiveWhereInput): BatchPayload!
-  upsertObjective(where: ObjectiveWhereUniqueInput!, create: ObjectiveCreateInput!, update: ObjectiveUpdateInput!): Objective!
-  deleteObjective(where: ObjectiveWhereUniqueInput!): Objective
-  deleteManyObjectives(where: ObjectiveWhereInput): BatchPayload!
-  createObjectiveLink(data: ObjectiveLinkCreateInput!): ObjectiveLink!
-  updateObjectiveLink(data: ObjectiveLinkUpdateInput!, where: ObjectiveLinkWhereUniqueInput!): ObjectiveLink
-  updateManyObjectiveLinks(data: ObjectiveLinkUpdateManyMutationInput!, where: ObjectiveLinkWhereInput): BatchPayload!
-  upsertObjectiveLink(where: ObjectiveLinkWhereUniqueInput!, create: ObjectiveLinkCreateInput!, update: ObjectiveLinkUpdateInput!): ObjectiveLink!
-  deleteObjectiveLink(where: ObjectiveLinkWhereUniqueInput!): ObjectiveLink
-  deleteManyObjectiveLinks(where: ObjectiveLinkWhereInput): BatchPayload!
   createPointGroup(data: PointGroupCreateInput!): PointGroup!
   updatePointGroup(data: PointGroupUpdateInput!, where: PointGroupWhereUniqueInput!): PointGroup
   updateManyPointGroups(data: PointGroupUpdateManyMutationInput!, where: PointGroupWhereInput): BatchPayload!
@@ -2936,903 +2444,6 @@ enum MutationType {
 
 interface Node {
   id: ID!
-}
-
-type Objective {
-  id: ID!
-  name: String!
-  description: String
-  official: Boolean!
-  frozen: Boolean!
-  tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
-  linksFromObjective(where: ObjectiveLinkWhereInput, orderBy: ObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ObjectiveLink!]
-  linksToObjective(where: ObjectiveLinkWhereInput, orderBy: ObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ObjectiveLink!]
-  conceptLinks(where: ConceptObjectiveLinkWhereInput, orderBy: ConceptObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptObjectiveLink!]
-  workspace: Workspace!
-  course: Course!
-  createdBy: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type ObjectiveConnection {
-  pageInfo: PageInfo!
-  edges: [ObjectiveEdge]!
-  aggregate: AggregateObjective!
-}
-
-input ObjectiveCreateInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  linksFromObjective: ObjectiveLinkCreateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkCreateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkCreateManyWithoutToInput
-  workspace: WorkspaceCreateOneWithoutObjectivesInput!
-  course: CourseCreateOneWithoutObjectivesInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveCreateManyWithoutCourseInput {
-  create: [ObjectiveCreateWithoutCourseInput!]
-  connect: [ObjectiveWhereUniqueInput!]
-}
-
-input ObjectiveCreateManyWithoutWorkspaceInput {
-  create: [ObjectiveCreateWithoutWorkspaceInput!]
-  connect: [ObjectiveWhereUniqueInput!]
-}
-
-input ObjectiveCreateOneWithoutConceptLinksInput {
-  create: ObjectiveCreateWithoutConceptLinksInput
-  connect: ObjectiveWhereUniqueInput
-}
-
-input ObjectiveCreateOneWithoutLinksFromObjectiveInput {
-  create: ObjectiveCreateWithoutLinksFromObjectiveInput
-  connect: ObjectiveWhereUniqueInput
-}
-
-input ObjectiveCreateOneWithoutLinksToObjectiveInput {
-  create: ObjectiveCreateWithoutLinksToObjectiveInput
-  connect: ObjectiveWhereUniqueInput
-}
-
-input ObjectiveCreateWithoutConceptLinksInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  linksFromObjective: ObjectiveLinkCreateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkCreateManyWithoutToInput
-  workspace: WorkspaceCreateOneWithoutObjectivesInput!
-  course: CourseCreateOneWithoutObjectivesInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveCreateWithoutCourseInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  linksFromObjective: ObjectiveLinkCreateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkCreateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkCreateManyWithoutToInput
-  workspace: WorkspaceCreateOneWithoutObjectivesInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveCreateWithoutLinksFromObjectiveInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  linksToObjective: ObjectiveLinkCreateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkCreateManyWithoutToInput
-  workspace: WorkspaceCreateOneWithoutObjectivesInput!
-  course: CourseCreateOneWithoutObjectivesInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveCreateWithoutLinksToObjectiveInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  linksFromObjective: ObjectiveLinkCreateManyWithoutFromInput
-  conceptLinks: ConceptObjectiveLinkCreateManyWithoutToInput
-  workspace: WorkspaceCreateOneWithoutObjectivesInput!
-  course: CourseCreateOneWithoutObjectivesInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveCreateWithoutWorkspaceInput {
-  id: ID
-  name: String!
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagCreateManyInput
-  linksFromObjective: ObjectiveLinkCreateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkCreateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkCreateManyWithoutToInput
-  course: CourseCreateOneWithoutObjectivesInput!
-  createdBy: UserCreateOneInput!
-}
-
-type ObjectiveEdge {
-  node: Objective!
-  cursor: String!
-}
-
-type ObjectiveLink {
-  id: ID!
-  from: Objective!
-  to: Objective!
-  official: Boolean!
-  frozen: Boolean!
-  weight: Int!
-  count: Int!
-  workspace: Workspace!
-  createdBy: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type ObjectiveLinkConnection {
-  pageInfo: PageInfo!
-  edges: [ObjectiveLinkEdge]!
-  aggregate: AggregateObjectiveLink!
-}
-
-input ObjectiveLinkCreateInput {
-  id: ID
-  from: ObjectiveCreateOneWithoutLinksFromObjectiveInput!
-  to: ObjectiveCreateOneWithoutLinksToObjectiveInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveLinkCreateManyWithoutFromInput {
-  create: [ObjectiveLinkCreateWithoutFromInput!]
-  connect: [ObjectiveLinkWhereUniqueInput!]
-}
-
-input ObjectiveLinkCreateManyWithoutToInput {
-  create: [ObjectiveLinkCreateWithoutToInput!]
-  connect: [ObjectiveLinkWhereUniqueInput!]
-}
-
-input ObjectiveLinkCreateManyWithoutWorkspaceInput {
-  create: [ObjectiveLinkCreateWithoutWorkspaceInput!]
-  connect: [ObjectiveLinkWhereUniqueInput!]
-}
-
-input ObjectiveLinkCreateWithoutFromInput {
-  id: ID
-  to: ObjectiveCreateOneWithoutLinksToObjectiveInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveLinkCreateWithoutToInput {
-  id: ID
-  from: ObjectiveCreateOneWithoutLinksFromObjectiveInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
-  createdBy: UserCreateOneInput!
-}
-
-input ObjectiveLinkCreateWithoutWorkspaceInput {
-  id: ID
-  from: ObjectiveCreateOneWithoutLinksFromObjectiveInput!
-  to: ObjectiveCreateOneWithoutLinksToObjectiveInput!
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  createdBy: UserCreateOneInput!
-}
-
-type ObjectiveLinkEdge {
-  node: ObjectiveLink!
-  cursor: String!
-}
-
-enum ObjectiveLinkOrderByInput {
-  id_ASC
-  id_DESC
-  official_ASC
-  official_DESC
-  frozen_ASC
-  frozen_DESC
-  weight_ASC
-  weight_DESC
-  count_ASC
-  count_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type ObjectiveLinkPreviousValues {
-  id: ID!
-  official: Boolean!
-  frozen: Boolean!
-  weight: Int!
-  count: Int!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input ObjectiveLinkScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  official: Boolean
-  official_not: Boolean
-  frozen: Boolean
-  frozen_not: Boolean
-  weight: Int
-  weight_not: Int
-  weight_in: [Int!]
-  weight_not_in: [Int!]
-  weight_lt: Int
-  weight_lte: Int
-  weight_gt: Int
-  weight_gte: Int
-  count: Int
-  count_not: Int
-  count_in: [Int!]
-  count_not_in: [Int!]
-  count_lt: Int
-  count_lte: Int
-  count_gt: Int
-  count_gte: Int
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [ObjectiveLinkScalarWhereInput!]
-  OR: [ObjectiveLinkScalarWhereInput!]
-  NOT: [ObjectiveLinkScalarWhereInput!]
-}
-
-type ObjectiveLinkSubscriptionPayload {
-  mutation: MutationType!
-  node: ObjectiveLink
-  updatedFields: [String!]
-  previousValues: ObjectiveLinkPreviousValues
-}
-
-input ObjectiveLinkSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: ObjectiveLinkWhereInput
-  AND: [ObjectiveLinkSubscriptionWhereInput!]
-  OR: [ObjectiveLinkSubscriptionWhereInput!]
-  NOT: [ObjectiveLinkSubscriptionWhereInput!]
-}
-
-input ObjectiveLinkUpdateInput {
-  from: ObjectiveUpdateOneRequiredWithoutLinksFromObjectiveInput
-  to: ObjectiveUpdateOneRequiredWithoutLinksToObjectiveInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveLinkUpdateManyDataInput {
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-}
-
-input ObjectiveLinkUpdateManyMutationInput {
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-}
-
-input ObjectiveLinkUpdateManyWithoutFromInput {
-  create: [ObjectiveLinkCreateWithoutFromInput!]
-  delete: [ObjectiveLinkWhereUniqueInput!]
-  connect: [ObjectiveLinkWhereUniqueInput!]
-  set: [ObjectiveLinkWhereUniqueInput!]
-  disconnect: [ObjectiveLinkWhereUniqueInput!]
-  update: [ObjectiveLinkUpdateWithWhereUniqueWithoutFromInput!]
-  upsert: [ObjectiveLinkUpsertWithWhereUniqueWithoutFromInput!]
-  deleteMany: [ObjectiveLinkScalarWhereInput!]
-  updateMany: [ObjectiveLinkUpdateManyWithWhereNestedInput!]
-}
-
-input ObjectiveLinkUpdateManyWithoutToInput {
-  create: [ObjectiveLinkCreateWithoutToInput!]
-  delete: [ObjectiveLinkWhereUniqueInput!]
-  connect: [ObjectiveLinkWhereUniqueInput!]
-  set: [ObjectiveLinkWhereUniqueInput!]
-  disconnect: [ObjectiveLinkWhereUniqueInput!]
-  update: [ObjectiveLinkUpdateWithWhereUniqueWithoutToInput!]
-  upsert: [ObjectiveLinkUpsertWithWhereUniqueWithoutToInput!]
-  deleteMany: [ObjectiveLinkScalarWhereInput!]
-  updateMany: [ObjectiveLinkUpdateManyWithWhereNestedInput!]
-}
-
-input ObjectiveLinkUpdateManyWithoutWorkspaceInput {
-  create: [ObjectiveLinkCreateWithoutWorkspaceInput!]
-  delete: [ObjectiveLinkWhereUniqueInput!]
-  connect: [ObjectiveLinkWhereUniqueInput!]
-  set: [ObjectiveLinkWhereUniqueInput!]
-  disconnect: [ObjectiveLinkWhereUniqueInput!]
-  update: [ObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput!]
-  upsert: [ObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput!]
-  deleteMany: [ObjectiveLinkScalarWhereInput!]
-  updateMany: [ObjectiveLinkUpdateManyWithWhereNestedInput!]
-}
-
-input ObjectiveLinkUpdateManyWithWhereNestedInput {
-  where: ObjectiveLinkScalarWhereInput!
-  data: ObjectiveLinkUpdateManyDataInput!
-}
-
-input ObjectiveLinkUpdateWithoutFromDataInput {
-  to: ObjectiveUpdateOneRequiredWithoutLinksToObjectiveInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveLinkUpdateWithoutToDataInput {
-  from: ObjectiveUpdateOneRequiredWithoutLinksFromObjectiveInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveLinkUpdateWithoutWorkspaceDataInput {
-  from: ObjectiveUpdateOneRequiredWithoutLinksFromObjectiveInput
-  to: ObjectiveUpdateOneRequiredWithoutLinksToObjectiveInput
-  official: Boolean
-  frozen: Boolean
-  weight: Int
-  count: Int
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveLinkUpdateWithWhereUniqueWithoutFromInput {
-  where: ObjectiveLinkWhereUniqueInput!
-  data: ObjectiveLinkUpdateWithoutFromDataInput!
-}
-
-input ObjectiveLinkUpdateWithWhereUniqueWithoutToInput {
-  where: ObjectiveLinkWhereUniqueInput!
-  data: ObjectiveLinkUpdateWithoutToDataInput!
-}
-
-input ObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: ObjectiveLinkWhereUniqueInput!
-  data: ObjectiveLinkUpdateWithoutWorkspaceDataInput!
-}
-
-input ObjectiveLinkUpsertWithWhereUniqueWithoutFromInput {
-  where: ObjectiveLinkWhereUniqueInput!
-  update: ObjectiveLinkUpdateWithoutFromDataInput!
-  create: ObjectiveLinkCreateWithoutFromInput!
-}
-
-input ObjectiveLinkUpsertWithWhereUniqueWithoutToInput {
-  where: ObjectiveLinkWhereUniqueInput!
-  update: ObjectiveLinkUpdateWithoutToDataInput!
-  create: ObjectiveLinkCreateWithoutToInput!
-}
-
-input ObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: ObjectiveLinkWhereUniqueInput!
-  update: ObjectiveLinkUpdateWithoutWorkspaceDataInput!
-  create: ObjectiveLinkCreateWithoutWorkspaceInput!
-}
-
-input ObjectiveLinkWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  from: ObjectiveWhereInput
-  to: ObjectiveWhereInput
-  official: Boolean
-  official_not: Boolean
-  frozen: Boolean
-  frozen_not: Boolean
-  weight: Int
-  weight_not: Int
-  weight_in: [Int!]
-  weight_not_in: [Int!]
-  weight_lt: Int
-  weight_lte: Int
-  weight_gt: Int
-  weight_gte: Int
-  count: Int
-  count_not: Int
-  count_in: [Int!]
-  count_not_in: [Int!]
-  count_lt: Int
-  count_lte: Int
-  count_gt: Int
-  count_gte: Int
-  workspace: WorkspaceWhereInput
-  createdBy: UserWhereInput
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [ObjectiveLinkWhereInput!]
-  OR: [ObjectiveLinkWhereInput!]
-  NOT: [ObjectiveLinkWhereInput!]
-}
-
-input ObjectiveLinkWhereUniqueInput {
-  id: ID
-}
-
-enum ObjectiveOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  description_ASC
-  description_DESC
-  official_ASC
-  official_DESC
-  frozen_ASC
-  frozen_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type ObjectivePreviousValues {
-  id: ID!
-  name: String!
-  description: String
-  official: Boolean!
-  frozen: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input ObjectiveScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
-  official: Boolean
-  official_not: Boolean
-  frozen: Boolean
-  frozen_not: Boolean
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [ObjectiveScalarWhereInput!]
-  OR: [ObjectiveScalarWhereInput!]
-  NOT: [ObjectiveScalarWhereInput!]
-}
-
-type ObjectiveSubscriptionPayload {
-  mutation: MutationType!
-  node: Objective
-  updatedFields: [String!]
-  previousValues: ObjectivePreviousValues
-}
-
-input ObjectiveSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: ObjectiveWhereInput
-  AND: [ObjectiveSubscriptionWhereInput!]
-  OR: [ObjectiveSubscriptionWhereInput!]
-  NOT: [ObjectiveSubscriptionWhereInput!]
-}
-
-input ObjectiveUpdateInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  linksFromObjective: ObjectiveLinkUpdateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkUpdateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkUpdateManyWithoutToInput
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectivesInput
-  course: CourseUpdateOneRequiredWithoutObjectivesInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveUpdateManyDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-}
-
-input ObjectiveUpdateManyMutationInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-}
-
-input ObjectiveUpdateManyWithoutCourseInput {
-  create: [ObjectiveCreateWithoutCourseInput!]
-  delete: [ObjectiveWhereUniqueInput!]
-  connect: [ObjectiveWhereUniqueInput!]
-  set: [ObjectiveWhereUniqueInput!]
-  disconnect: [ObjectiveWhereUniqueInput!]
-  update: [ObjectiveUpdateWithWhereUniqueWithoutCourseInput!]
-  upsert: [ObjectiveUpsertWithWhereUniqueWithoutCourseInput!]
-  deleteMany: [ObjectiveScalarWhereInput!]
-  updateMany: [ObjectiveUpdateManyWithWhereNestedInput!]
-}
-
-input ObjectiveUpdateManyWithoutWorkspaceInput {
-  create: [ObjectiveCreateWithoutWorkspaceInput!]
-  delete: [ObjectiveWhereUniqueInput!]
-  connect: [ObjectiveWhereUniqueInput!]
-  set: [ObjectiveWhereUniqueInput!]
-  disconnect: [ObjectiveWhereUniqueInput!]
-  update: [ObjectiveUpdateWithWhereUniqueWithoutWorkspaceInput!]
-  upsert: [ObjectiveUpsertWithWhereUniqueWithoutWorkspaceInput!]
-  deleteMany: [ObjectiveScalarWhereInput!]
-  updateMany: [ObjectiveUpdateManyWithWhereNestedInput!]
-}
-
-input ObjectiveUpdateManyWithWhereNestedInput {
-  where: ObjectiveScalarWhereInput!
-  data: ObjectiveUpdateManyDataInput!
-}
-
-input ObjectiveUpdateOneRequiredWithoutConceptLinksInput {
-  create: ObjectiveCreateWithoutConceptLinksInput
-  update: ObjectiveUpdateWithoutConceptLinksDataInput
-  upsert: ObjectiveUpsertWithoutConceptLinksInput
-  connect: ObjectiveWhereUniqueInput
-}
-
-input ObjectiveUpdateOneRequiredWithoutLinksFromObjectiveInput {
-  create: ObjectiveCreateWithoutLinksFromObjectiveInput
-  update: ObjectiveUpdateWithoutLinksFromObjectiveDataInput
-  upsert: ObjectiveUpsertWithoutLinksFromObjectiveInput
-  connect: ObjectiveWhereUniqueInput
-}
-
-input ObjectiveUpdateOneRequiredWithoutLinksToObjectiveInput {
-  create: ObjectiveCreateWithoutLinksToObjectiveInput
-  update: ObjectiveUpdateWithoutLinksToObjectiveDataInput
-  upsert: ObjectiveUpsertWithoutLinksToObjectiveInput
-  connect: ObjectiveWhereUniqueInput
-}
-
-input ObjectiveUpdateWithoutConceptLinksDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  linksFromObjective: ObjectiveLinkUpdateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkUpdateManyWithoutToInput
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectivesInput
-  course: CourseUpdateOneRequiredWithoutObjectivesInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveUpdateWithoutCourseDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  linksFromObjective: ObjectiveLinkUpdateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkUpdateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkUpdateManyWithoutToInput
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectivesInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveUpdateWithoutLinksFromObjectiveDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  linksToObjective: ObjectiveLinkUpdateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkUpdateManyWithoutToInput
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectivesInput
-  course: CourseUpdateOneRequiredWithoutObjectivesInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveUpdateWithoutLinksToObjectiveDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  linksFromObjective: ObjectiveLinkUpdateManyWithoutFromInput
-  conceptLinks: ConceptObjectiveLinkUpdateManyWithoutToInput
-  workspace: WorkspaceUpdateOneRequiredWithoutObjectivesInput
-  course: CourseUpdateOneRequiredWithoutObjectivesInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveUpdateWithoutWorkspaceDataInput {
-  name: String
-  description: String
-  official: Boolean
-  frozen: Boolean
-  tags: TagUpdateManyInput
-  linksFromObjective: ObjectiveLinkUpdateManyWithoutFromInput
-  linksToObjective: ObjectiveLinkUpdateManyWithoutToInput
-  conceptLinks: ConceptObjectiveLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutObjectivesInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input ObjectiveUpdateWithWhereUniqueWithoutCourseInput {
-  where: ObjectiveWhereUniqueInput!
-  data: ObjectiveUpdateWithoutCourseDataInput!
-}
-
-input ObjectiveUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: ObjectiveWhereUniqueInput!
-  data: ObjectiveUpdateWithoutWorkspaceDataInput!
-}
-
-input ObjectiveUpsertWithoutConceptLinksInput {
-  update: ObjectiveUpdateWithoutConceptLinksDataInput!
-  create: ObjectiveCreateWithoutConceptLinksInput!
-}
-
-input ObjectiveUpsertWithoutLinksFromObjectiveInput {
-  update: ObjectiveUpdateWithoutLinksFromObjectiveDataInput!
-  create: ObjectiveCreateWithoutLinksFromObjectiveInput!
-}
-
-input ObjectiveUpsertWithoutLinksToObjectiveInput {
-  update: ObjectiveUpdateWithoutLinksToObjectiveDataInput!
-  create: ObjectiveCreateWithoutLinksToObjectiveInput!
-}
-
-input ObjectiveUpsertWithWhereUniqueWithoutCourseInput {
-  where: ObjectiveWhereUniqueInput!
-  update: ObjectiveUpdateWithoutCourseDataInput!
-  create: ObjectiveCreateWithoutCourseInput!
-}
-
-input ObjectiveUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: ObjectiveWhereUniqueInput!
-  update: ObjectiveUpdateWithoutWorkspaceDataInput!
-  create: ObjectiveCreateWithoutWorkspaceInput!
-}
-
-input ObjectiveWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
-  official: Boolean
-  official_not: Boolean
-  frozen: Boolean
-  frozen_not: Boolean
-  tags_every: TagWhereInput
-  tags_some: TagWhereInput
-  tags_none: TagWhereInput
-  linksFromObjective_every: ObjectiveLinkWhereInput
-  linksFromObjective_some: ObjectiveLinkWhereInput
-  linksFromObjective_none: ObjectiveLinkWhereInput
-  linksToObjective_every: ObjectiveLinkWhereInput
-  linksToObjective_some: ObjectiveLinkWhereInput
-  linksToObjective_none: ObjectiveLinkWhereInput
-  conceptLinks_every: ConceptObjectiveLinkWhereInput
-  conceptLinks_some: ConceptObjectiveLinkWhereInput
-  conceptLinks_none: ConceptObjectiveLinkWhereInput
-  workspace: WorkspaceWhereInput
-  course: CourseWhereInput
-  createdBy: UserWhereInput
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [ObjectiveWhereInput!]
-  OR: [ObjectiveWhereInput!]
-  NOT: [ObjectiveWhereInput!]
-}
-
-input ObjectiveWhereUniqueInput {
-  id: ID
 }
 
 type PageInfo {
@@ -5109,21 +3720,12 @@ type Query {
   conceptLink(where: ConceptLinkWhereUniqueInput!): ConceptLink
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink]!
   conceptLinksConnection(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConceptLinkConnection!
-  conceptObjectiveLink(where: ConceptObjectiveLinkWhereUniqueInput!): ConceptObjectiveLink
-  conceptObjectiveLinks(where: ConceptObjectiveLinkWhereInput, orderBy: ConceptObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptObjectiveLink]!
-  conceptObjectiveLinksConnection(where: ConceptObjectiveLinkWhereInput, orderBy: ConceptObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConceptObjectiveLinkConnection!
   course(where: CourseWhereUniqueInput!): Course
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course]!
   coursesConnection(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseConnection!
   courseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink]!
   courseLinksConnection(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseLinkConnection!
-  objective(where: ObjectiveWhereUniqueInput!): Objective
-  objectives(where: ObjectiveWhereInput, orderBy: ObjectiveOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Objective]!
-  objectivesConnection(where: ObjectiveWhereInput, orderBy: ObjectiveOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ObjectiveConnection!
-  objectiveLink(where: ObjectiveLinkWhereUniqueInput!): ObjectiveLink
-  objectiveLinks(where: ObjectiveLinkWhereInput, orderBy: ObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ObjectiveLink]!
-  objectiveLinksConnection(where: ObjectiveLinkWhereInput, orderBy: ObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ObjectiveLinkConnection!
   pointGroup(where: PointGroupWhereUniqueInput!): PointGroup
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup]!
   pointGroupsConnection(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PointGroupConnection!
@@ -5165,11 +3767,8 @@ type Subscription {
   completion(where: CompletionSubscriptionWhereInput): CompletionSubscriptionPayload
   concept(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
   conceptLink(where: ConceptLinkSubscriptionWhereInput): ConceptLinkSubscriptionPayload
-  conceptObjectiveLink(where: ConceptObjectiveLinkSubscriptionWhereInput): ConceptObjectiveLinkSubscriptionPayload
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   courseLink(where: CourseLinkSubscriptionWhereInput): CourseLinkSubscriptionPayload
-  objective(where: ObjectiveSubscriptionWhereInput): ObjectiveSubscriptionPayload
-  objectiveLink(where: ObjectiveLinkSubscriptionWhereInput): ObjectiveLinkSubscriptionPayload
   pointGroup(where: PointGroupSubscriptionWhereInput): PointGroupSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
   projectParticipant(where: ProjectParticipantSubscriptionWhereInput): ProjectParticipantSubscriptionPayload
@@ -5797,16 +4396,12 @@ type Workspace {
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
-  objectives(where: ObjectiveWhereInput, orderBy: ObjectiveOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Objective!]
-  objectiveLinks(where: ObjectiveLinkWhereInput, orderBy: ObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ObjectiveLink!]
-  conceptObjectiveLinks(where: ConceptObjectiveLinkWhereInput, orderBy: ConceptObjectiveLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptObjectiveLink!]
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   tokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken!]
   mainCourse: Course
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup!]
   courseTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
   conceptTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
-  objectiveTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -5835,16 +4430,12 @@ input WorkspaceCreateInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -5883,11 +4474,6 @@ input WorkspaceCreateOneWithoutConceptLinksInput {
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceCreateOneWithoutConceptObjectiveLinksInput {
-  create: WorkspaceCreateWithoutConceptObjectiveLinksInput
-  connect: WorkspaceWhereUniqueInput
-}
-
 input WorkspaceCreateOneWithoutConceptsInput {
   create: WorkspaceCreateWithoutConceptsInput
   connect: WorkspaceWhereUniqueInput
@@ -5900,16 +4486,6 @@ input WorkspaceCreateOneWithoutCourseLinksInput {
 
 input WorkspaceCreateOneWithoutCoursesInput {
   create: WorkspaceCreateWithoutCoursesInput
-  connect: WorkspaceWhereUniqueInput
-}
-
-input WorkspaceCreateOneWithoutObjectiveLinksInput {
-  create: WorkspaceCreateWithoutObjectiveLinksInput
-  connect: WorkspaceWhereUniqueInput
-}
-
-input WorkspaceCreateOneWithoutObjectivesInput {
-  create: WorkspaceCreateWithoutObjectivesInput
   connect: WorkspaceWhereUniqueInput
 }
 
@@ -5940,16 +4516,12 @@ input WorkspaceCreateWithoutAsMergeInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -5965,16 +4537,12 @@ input WorkspaceCreateWithoutAsTemplateInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -5990,16 +4558,12 @@ input WorkspaceCreateWithoutClonesInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6015,41 +4579,12 @@ input WorkspaceCreateWithoutConceptLinksInput {
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
-  createdBy: UserCreateOneInput!
-}
-
-input WorkspaceCreateWithoutConceptObjectiveLinksInput {
-  id: ID
-  name: String!
-  sourceProject: ProjectCreateOneWithoutWorkspacesInput
-  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
-  asMerge: ProjectCreateOneWithoutMergesInput
-  asTemplate: ProjectCreateOneWithoutTemplatesInput
-  clones: WorkspaceCreateManyWithoutSourceTemplateInput
-  courses: CourseCreateManyWithoutWorkspaceInput
-  courseOrder: WorkspaceCreatecourseOrderInput
-  concepts: ConceptCreateManyWithoutWorkspaceInput
-  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
-  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
-  mainCourse: CourseCreateOneInput
-  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
-  courseTags: TagCreateManyInput
-  conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6065,16 +4600,12 @@ input WorkspaceCreateWithoutConceptsInput {
   courseOrder: WorkspaceCreatecourseOrderInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6090,16 +4621,12 @@ input WorkspaceCreateWithoutCourseLinksInput {
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6115,66 +4642,12 @@ input WorkspaceCreateWithoutCoursesInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
-  createdBy: UserCreateOneInput!
-}
-
-input WorkspaceCreateWithoutObjectiveLinksInput {
-  id: ID
-  name: String!
-  sourceProject: ProjectCreateOneWithoutWorkspacesInput
-  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
-  asMerge: ProjectCreateOneWithoutMergesInput
-  asTemplate: ProjectCreateOneWithoutTemplatesInput
-  clones: WorkspaceCreateManyWithoutSourceTemplateInput
-  courses: CourseCreateManyWithoutWorkspaceInput
-  courseOrder: WorkspaceCreatecourseOrderInput
-  concepts: ConceptCreateManyWithoutWorkspaceInput
-  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
-  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
-  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
-  mainCourse: CourseCreateOneInput
-  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
-  courseTags: TagCreateManyInput
-  conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
-  createdBy: UserCreateOneInput!
-}
-
-input WorkspaceCreateWithoutObjectivesInput {
-  id: ID
-  name: String!
-  sourceProject: ProjectCreateOneWithoutWorkspacesInput
-  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
-  asMerge: ProjectCreateOneWithoutMergesInput
-  asTemplate: ProjectCreateOneWithoutTemplatesInput
-  clones: WorkspaceCreateManyWithoutSourceTemplateInput
-  courses: CourseCreateManyWithoutWorkspaceInput
-  courseOrder: WorkspaceCreatecourseOrderInput
-  concepts: ConceptCreateManyWithoutWorkspaceInput
-  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
-  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
-  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
-  mainCourse: CourseCreateOneInput
-  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
-  courseTags: TagCreateManyInput
-  conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6191,15 +4664,11 @@ input WorkspaceCreateWithoutParticipantsInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6216,15 +4685,11 @@ input WorkspaceCreateWithoutPointGroupsInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6240,16 +4705,12 @@ input WorkspaceCreateWithoutSourceProjectInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6265,16 +4726,12 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6291,15 +4748,11 @@ input WorkspaceCreateWithoutTokensInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
-  objectives: ObjectiveCreateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkCreateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
-  objectiveTags: TagCreateManyInput
   createdBy: UserCreateOneInput!
 }
 
@@ -6921,16 +5374,12 @@ input WorkspaceUpdateDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -6946,16 +5395,12 @@ input WorkspaceUpdateInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7038,13 +5483,6 @@ input WorkspaceUpdateOneRequiredWithoutConceptLinksInput {
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceUpdateOneRequiredWithoutConceptObjectiveLinksInput {
-  create: WorkspaceCreateWithoutConceptObjectiveLinksInput
-  update: WorkspaceUpdateWithoutConceptObjectiveLinksDataInput
-  upsert: WorkspaceUpsertWithoutConceptObjectiveLinksInput
-  connect: WorkspaceWhereUniqueInput
-}
-
 input WorkspaceUpdateOneRequiredWithoutConceptsInput {
   create: WorkspaceCreateWithoutConceptsInput
   update: WorkspaceUpdateWithoutConceptsDataInput
@@ -7063,20 +5501,6 @@ input WorkspaceUpdateOneRequiredWithoutCoursesInput {
   create: WorkspaceCreateWithoutCoursesInput
   update: WorkspaceUpdateWithoutCoursesDataInput
   upsert: WorkspaceUpsertWithoutCoursesInput
-  connect: WorkspaceWhereUniqueInput
-}
-
-input WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput {
-  create: WorkspaceCreateWithoutObjectiveLinksInput
-  update: WorkspaceUpdateWithoutObjectiveLinksDataInput
-  upsert: WorkspaceUpsertWithoutObjectiveLinksInput
-  connect: WorkspaceWhereUniqueInput
-}
-
-input WorkspaceUpdateOneRequiredWithoutObjectivesInput {
-  create: WorkspaceCreateWithoutObjectivesInput
-  update: WorkspaceUpdateWithoutObjectivesDataInput
-  upsert: WorkspaceUpsertWithoutObjectivesInput
   connect: WorkspaceWhereUniqueInput
 }
 
@@ -7121,16 +5545,12 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7145,16 +5565,12 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7169,16 +5585,12 @@ input WorkspaceUpdateWithoutClonesDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7193,40 +5605,12 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input WorkspaceUpdateWithoutConceptObjectiveLinksDataInput {
-  name: String
-  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
-  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
-  asMerge: ProjectUpdateOneWithoutMergesInput
-  asTemplate: ProjectUpdateOneWithoutTemplatesInput
-  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
-  courses: CourseUpdateManyWithoutWorkspaceInput
-  courseOrder: WorkspaceUpdatecourseOrderInput
-  concepts: ConceptUpdateManyWithoutWorkspaceInput
-  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
-  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
-  mainCourse: CourseUpdateOneInput
-  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
-  courseTags: TagUpdateManyInput
-  conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7241,16 +5625,12 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   courseOrder: WorkspaceUpdatecourseOrderInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7265,16 +5645,12 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7289,64 +5665,12 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input WorkspaceUpdateWithoutObjectiveLinksDataInput {
-  name: String
-  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
-  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
-  asMerge: ProjectUpdateOneWithoutMergesInput
-  asTemplate: ProjectUpdateOneWithoutTemplatesInput
-  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
-  courses: CourseUpdateManyWithoutWorkspaceInput
-  courseOrder: WorkspaceUpdatecourseOrderInput
-  concepts: ConceptUpdateManyWithoutWorkspaceInput
-  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
-  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
-  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
-  mainCourse: CourseUpdateOneInput
-  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
-  courseTags: TagUpdateManyInput
-  conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
-  createdBy: UserUpdateOneRequiredInput
-}
-
-input WorkspaceUpdateWithoutObjectivesDataInput {
-  name: String
-  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
-  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
-  asMerge: ProjectUpdateOneWithoutMergesInput
-  asTemplate: ProjectUpdateOneWithoutTemplatesInput
-  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
-  courses: CourseUpdateManyWithoutWorkspaceInput
-  courseOrder: WorkspaceUpdatecourseOrderInput
-  concepts: ConceptUpdateManyWithoutWorkspaceInput
-  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
-  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
-  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
-  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
-  mainCourse: CourseUpdateOneInput
-  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
-  courseTags: TagUpdateManyInput
-  conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7362,15 +5686,11 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7386,15 +5706,11 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7409,16 +5725,12 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7433,16 +5745,12 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7458,15 +5766,11 @@ input WorkspaceUpdateWithoutTokensDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
-  objectives: ObjectiveUpdateManyWithoutWorkspaceInput
-  objectiveLinks: ObjectiveLinkUpdateManyWithoutWorkspaceInput
-  conceptObjectiveLinks: ConceptObjectiveLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
-  objectiveTags: TagUpdateManyInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -7505,11 +5809,6 @@ input WorkspaceUpsertWithoutConceptLinksInput {
   create: WorkspaceCreateWithoutConceptLinksInput!
 }
 
-input WorkspaceUpsertWithoutConceptObjectiveLinksInput {
-  update: WorkspaceUpdateWithoutConceptObjectiveLinksDataInput!
-  create: WorkspaceCreateWithoutConceptObjectiveLinksInput!
-}
-
 input WorkspaceUpsertWithoutConceptsInput {
   update: WorkspaceUpdateWithoutConceptsDataInput!
   create: WorkspaceCreateWithoutConceptsInput!
@@ -7523,16 +5822,6 @@ input WorkspaceUpsertWithoutCourseLinksInput {
 input WorkspaceUpsertWithoutCoursesInput {
   update: WorkspaceUpdateWithoutCoursesDataInput!
   create: WorkspaceCreateWithoutCoursesInput!
-}
-
-input WorkspaceUpsertWithoutObjectiveLinksInput {
-  update: WorkspaceUpdateWithoutObjectiveLinksDataInput!
-  create: WorkspaceCreateWithoutObjectiveLinksInput!
-}
-
-input WorkspaceUpsertWithoutObjectivesInput {
-  update: WorkspaceUpdateWithoutObjectivesDataInput!
-  create: WorkspaceCreateWithoutObjectivesInput!
 }
 
 input WorkspaceUpsertWithoutParticipantsInput {
@@ -7622,15 +5911,6 @@ input WorkspaceWhereInput {
   courseLinks_every: CourseLinkWhereInput
   courseLinks_some: CourseLinkWhereInput
   courseLinks_none: CourseLinkWhereInput
-  objectives_every: ObjectiveWhereInput
-  objectives_some: ObjectiveWhereInput
-  objectives_none: ObjectiveWhereInput
-  objectiveLinks_every: ObjectiveLinkWhereInput
-  objectiveLinks_some: ObjectiveLinkWhereInput
-  objectiveLinks_none: ObjectiveLinkWhereInput
-  conceptObjectiveLinks_every: ConceptObjectiveLinkWhereInput
-  conceptObjectiveLinks_some: ConceptObjectiveLinkWhereInput
-  conceptObjectiveLinks_none: ConceptObjectiveLinkWhereInput
   participants_every: WorkspaceParticipantWhereInput
   participants_some: WorkspaceParticipantWhereInput
   participants_none: WorkspaceParticipantWhereInput
@@ -7647,9 +5927,6 @@ input WorkspaceWhereInput {
   conceptTags_every: TagWhereInput
   conceptTags_some: TagWhereInput
   conceptTags_none: TagWhereInput
-  objectiveTags_every: TagWhereInput
-  objectiveTags_some: TagWhereInput
-  objectiveTags_none: TagWhereInput
   createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime

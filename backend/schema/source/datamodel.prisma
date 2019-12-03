@@ -75,9 +75,6 @@ type Workspace {
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
-  objectives: [Objective!]! @relation(name:"WorkspaceObjectives")
-  objectiveLinks: [ObjectiveLink!]! @relation(name:"WorkspaceObjectiveLinks")
-  conceptObjectiveLinks: [ConceptObjectiveLink!]! @relation(name: "WorkspaceConceptObjectiveLinks")
 
   # Authorization data
   participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace", onDelete: CASCADE)
@@ -90,7 +87,6 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
   conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
-  objectiveTags: [Tag!] @relation(name: "WorkspaceObjectiveTags")
 
   # Creation data
   createdBy: User!
@@ -191,8 +187,6 @@ type Course {
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
   concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
   conceptOrder: [ID!]! @scalarList(strategy: RELATION)
-  objectives: [Objective!]! @relation(name: "CourseObjectives")
-  objectiveOrder: [ID!]! @scalarList(strategy: RELATION)
 
   # Creation data
   createdBy: User!
@@ -221,11 +215,17 @@ type ConceptLink {
   updatedAt: DateTime! @updatedAt
 }
 
+enum ConceptLevel {
+  OBJECTIVE
+  CONCEPT
+}
 
 type Concept {
   id: ID! @id
   name: String!
   description: String
+  level: ConceptLevel! @default(value: CONCEPT)
+  position: String
   official: Boolean! @default(value: false)
   frozen: Boolean! @default(value: false)
   tags: [Tag!]!
@@ -238,77 +238,10 @@ type Concept {
   # Links
   linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
   linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
-  objectiveLinks: [ConceptObjectiveLink!]! @relation(name: "ConceptToObjective")
 
   # Relations
   course: Course! @relation(name: "ConceptCourses")
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
-
-  # Creation data
-  createdBy: User!
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
-}
-
-
-type Objective {
-  id: ID! @id
-  name: String!
-  description: String
-  official: Boolean! @default(value: false)
-  frozen: Boolean! @default(value: false)
-  tags: [Tag!]!
-
-  # Links
-  linksFromObjective: [ObjectiveLink!]! @relation(name: "FromObjective")
-  linksToObjective: [ObjectiveLink!]! @relation(name: "ToObjective")
-  conceptLinks: [ConceptObjectiveLink!]! @relation(name: "ObjectiveFromConcept")
-
-  # Relations
-  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceObjectives")
-  course: Course! @relation(name: "CourseObjectives")
-
-  # Creation data
-  createdBy: User!
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
-}
-
-
-type ObjectiveLink {
-  id: ID! @id
-  from: Objective! @relation(link: INLINE, name: "FromObjective")
-  to: Objective! @relation(link: INLINE, name: "ToObjective")
-
-  # Meta
-  official: Boolean! @default(value: false)
-  frozen: Boolean! @default(value: false)
-  weight: Int! @default(value: 100)
-  count: Int! @default(value: 1)
-
-  # Relations
-  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceObjectiveLinks")
-
-  # Creation data
-  createdBy: User!
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
-}
-
-
-type ConceptObjectiveLink {
-  id: ID! @id
-  from: Concept! @relation(link: INLINE, name: "ConceptToObjective")
-  to: Objective! @relation(link: INLINE, name: "ObjectiveFromConcept")
-
-  # Meta
-  official: Boolean! @default(value: false)
-  frozen: Boolean! @default(value: false)
-  weight: Int! @default(value: 100)
-  count: Int! @default(value: 1)
-
-  # Relations
-  workspace: Workspace! @relation(link: INLINE, name: "WorkspaceConceptObjectiveLinks")
 
   # Creation data
   createdBy: User!

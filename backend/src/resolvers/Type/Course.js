@@ -6,6 +6,5 @@ export const Course = makeTypeResolvers('course', [
   'linksFromCourse',
   'createdBy',
   'workspace',
-  'objectives',
   'tags'
 ])

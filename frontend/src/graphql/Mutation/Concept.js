@@ -7,10 +7,10 @@ import {
 } from '../Fragment'
 
 const UPDATE_CONCEPT = gql`
-mutation updateConcept($id: ID!, $name:String, $description: String, $official: Boolean, 
-                       $frozen: Boolean, $tags: [TagInput!]) {
-  updateConcept(id: $id, name: $name, description: $description, 
-                official: $official, frozen: $frozen,  tags: $tags) {
+mutation updateConcept($id: ID!, $name:String, $description: String, $position: String,
+                       $official: Boolean, $frozen: Boolean, $tags: [TagInput!]) {
+  updateConcept(id: $id, name: $name, description: $description, position: $position,
+                official: $official, frozen: $frozen, tags: $tags) {
     ...updateConceptData
   }
 }
@@ -18,10 +18,12 @@ ${UPDATE_CONCEPT_FRAGMENT}
 `
 
 const CREATE_CONCEPT = gql`
-mutation createConcept($name: String!, $description: String!, $official: Boolean, $frozen: Boolean,
-                       $workspaceId: ID!, $courseId: ID, $tags: [TagInput!]) {
-  createConcept(name: $name, description: $description, official: $official, frozen: $frozen,
-                workspaceId: $workspaceId, courseId: $courseId, tags:$tags) {
+mutation createConcept($name: String!, $description: String!, $level: ConceptLevel!,
+                       $position: String, $official: Boolean, $frozen: Boolean, $workspaceId: ID!,
+                       $courseId: ID, $tags: [TagInput!]) {
+  createConcept(name: $name, description: $description, level: $level, position: $position,
+                official: $official, frozen: $frozen, workspaceId: $workspaceId,
+                courseId: $courseId, tags:$tags) {
     ...createConceptData
   }
 }

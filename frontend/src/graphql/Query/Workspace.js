@@ -53,28 +53,12 @@ query workspaceById($id: ID!) {
         type
         priority
       }
-      objectiveOrder
-      objectives {
-        id
-        name
-        description
-        official
-        frozen
-        course {
-          id
-        }
-        tags {
-          id
-          name
-          type
-          priority
-        }
-      }
       conceptOrder
       concepts {
         id
         name
         description
+        level
         official
         frozen
         course {

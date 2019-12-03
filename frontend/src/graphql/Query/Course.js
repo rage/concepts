@@ -18,6 +18,8 @@ query courseById($id: ID!) {
       id
       name
       description
+      level
+      position
       official
       frozen
       tags {
@@ -40,6 +42,7 @@ query linksInCourse($courseId: ID!) {
     id
     concepts {
       id
+      level
       linksToConcept {
         id
         official
@@ -74,6 +77,8 @@ fragment courseAndConcepts on Course {
     id
     name
     description
+    level
+    position
     official
     frozen
     tags {

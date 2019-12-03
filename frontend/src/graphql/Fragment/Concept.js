@@ -5,6 +5,8 @@ fragment createConceptData on Concept {
   id
   name
   description
+  level
+  position
   official
   frozen
   tags {
@@ -32,14 +34,6 @@ fragment createConceptData on Concept {
       id
     }
   }
-  objectiveLinks {
-    id
-    official
-    frozen
-    to {
-      id
-    }
-  }
 }
 `
 
@@ -48,6 +42,8 @@ fragment updateConceptData on Concept {
   id
   name
   description
+  level
+  position
   official
   frozen
   tags {

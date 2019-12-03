@@ -53,19 +53,11 @@ var models = [
     embedded: false
   },
   {
+    name: "ConceptLevel",
+    embedded: false
+  },
+  {
     name: "Concept",
-    embedded: false
-  },
-  {
-    name: "Objective",
-    embedded: false
-  },
-  {
-    name: "ObjectiveLink",
-    embedded: false
-  },
-  {
-    name: "ConceptObjectiveLink",
     embedded: false
   },
   {

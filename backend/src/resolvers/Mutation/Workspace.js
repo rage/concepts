@@ -67,6 +67,7 @@ query($id : ID!) {
           id
           name
           description
+          level
           official
           frozen
           tags {

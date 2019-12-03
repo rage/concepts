@@ -20,7 +20,6 @@ type Query {
 
   # Course queries
   courseById(id: ID!): Course!
-  conceptsByCourse(id: ID!): [Concept!]!
 
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace!
@@ -46,29 +45,14 @@ type Mutation {
   updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course!
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, level: ConceptLevel!, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteConcept(id: ID!): DeletedCourseItem!
-  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
-
-  # Objective mutations
-  createObjective(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
-  deleteObjective(id: ID!): DeletedCourseItem!
-  updateObjective(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Objective!
+  updateConcept(id: ID!, name: String, description: String, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
   updateCourseLink(id: ID!, frozen: Boolean, official: Boolean): CourseLink!
   deleteCourseLink(id: ID!): DeletedCourseItem!
-
-  # Objective link mutations
-  createObjectiveLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ObjectiveLink!
-  updateObjectiveLink(id: ID!, frozen: Boolean, official: Boolean): ObjectiveLink!
-  deleteObjectiveLink(id: ID!): DeletedObjectiveLink!
-
-  # Concept objective link mutations
-  createConceptObjectiveLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptObjectiveLink!
-  updateConceptObjectiveLink(id: ID!, frozen: Boolean, official: Boolean): ConceptObjectiveLink!
-  deleteConceptObjectiveLink(id: ID!): DeletedConceptLink!
 
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink!
@@ -134,21 +118,6 @@ type Subscription {
   courseLinkUpdated(workspaceId: ID!): CourseLink!
   courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
 
-  # ObjectivesLinks subscriptions
-  objectiveLinkCreated(workspaceId: ID!): ObjectiveLink!
-  objectiveLinkUpdated(workspaceId: ID!): ObjectiveLink!
-  objectiveLinkDeleted(workspaceId: ID!): DeletedObjectiveLink!
-
-  # ConceptObjectiveLinks subscriptions
-  conceptObjectiveLinkCreated(workspaceId: ID!): ConceptObjectiveLink!
-  conceptObjectiveLinkUpdated(workspaceId: ID!): ConceptObjectiveLink!
-  conceptObjectiveLinkDeleted(workspaceId: ID!): DeletedConceptLink!
-
-  # Objective subscriptions
-  objectiveCreated(workspaceId: ID!): Objective!
-  objectiveUpdated(workspaceId: ID!): Objective!
-  objectiveDeleted(workspaceId: ID!): DeletedCourseItem!
-
   # Workspaces subscriptions
   projectWorkspaceCreated(projectId: ID!): Workspace!
   projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
@@ -208,12 +177,6 @@ type DeletedConceptLink {
   id: ID!
   courseId: ID!
   conceptId: ID!
-}
-
-type DeletedObjectiveLink {
-  id: ID!
-  courseId: ID!
-  objectiveId: ID!
 }
 
 enum AuthType {
@@ -338,9 +301,6 @@ type Workspace {
   concepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
-  objectives: [Objective!]!
-  objectiveLinks: [ObjectiveLink!]!
-  conceptObjectiveLinks: [ConceptObjectiveLink!]!
 
   # Authorization data
   participants: [WorkspaceParticipant!]!
@@ -353,7 +313,6 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!]
   conceptTags: [Tag!]
-  objectiveTags: [Tag!]
 
   # Creation data
   createdBy: User!
@@ -454,8 +413,6 @@ type Course {
   workspace: Workspace!
   concepts: [Concept!]!
   conceptOrder: [ID!]!
-  objectives: [Objective!]!
-  objectiveOrder: [ID!]!
 
   # Creation data
   createdBy: User!
@@ -484,11 +441,17 @@ type ConceptLink {
   updatedAt: DateTime!
 }
 
+enum ConceptLevel {
+  OBJECTIVE
+  CONCEPT
+}
 
 type Concept {
   id: ID!
   name: String!
   description: String
+  level: ConceptLevel!
+  position: String
   official: Boolean!
   frozen: Boolean!
   tags: [Tag!]!
@@ -501,76 +464,9 @@ type Concept {
   # Links
   linksFromConcept: [ConceptLink!]!
   linksToConcept: [ConceptLink!]!
-  objectiveLinks: [ConceptObjectiveLink!]!
 
   # Relations
   course: Course!
-  workspace: Workspace!
-
-  # Creation data
-  createdBy: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-
-type Objective {
-  id: ID!
-  name: String!
-  description: String
-  official: Boolean!
-  frozen: Boolean!
-  tags: [Tag!]!
-
-  # Links
-  linksFromObjective: [ObjectiveLink!]!
-  linksToObjective: [ObjectiveLink!]!
-  conceptLinks: [ConceptObjectiveLink!]!
-
-  # Relations
-  workspace: Workspace!
-  course: Course!
-
-  # Creation data
-  createdBy: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-
-type ObjectiveLink {
-  id: ID!
-  from: Objective!
-  to: Objective!
-
-  # Meta
-  official: Boolean!
-  frozen: Boolean!
-  weight: Int!
-  count: Int!
-
-  # Relations
-  workspace: Workspace!
-
-  # Creation data
-  createdBy: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-
-type ConceptObjectiveLink {
-  id: ID!
-  from: Concept!
-  to: Objective!
-
-  # Meta
-  official: Boolean!
-  frozen: Boolean!
-  weight: Int!
-  count: Int!
-
-  # Relations
   workspace: Workspace!
 
   # Creation data

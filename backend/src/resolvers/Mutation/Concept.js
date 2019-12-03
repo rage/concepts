@@ -78,7 +78,7 @@ const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
   && conceptOrder[0].startsWith('__ORDER_BY__')
 
 export const createConcept = async (root, {
-  name, description, official, frozen,
+  name, description, level, position, official, frozen,
   courseId, workspaceId, tags
 }, context) => {
   await checkAccess(context, {
@@ -93,6 +93,8 @@ export const createConcept = async (root, {
     createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } },
     description,
+    level,
+    position,
     official: Boolean(official),
     frozen: Boolean(frozen),
     course: { connect: { id: courseId } },
@@ -116,14 +118,12 @@ export const createConcept = async (root, {
     })
   }
 
-  // Maybe add conceptObjectiveLink here
-
   pubsub.publish(CONCEPT_CREATED, { conceptCreated: { ...createdConcept, workspaceId } })
   return createdConcept
 }
 
 export const updateConcept = async (root, {
-  id, name, description, official, tags, frozen
+  id, name, description, position, official, tags, frozen
 }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
   await checkAccess(context, {
@@ -154,6 +154,7 @@ export const updateConcept = async (root, {
   }
 
   if (description !== undefined) data.description = description
+  if (position !== undefined) data.position = position
   if (name !== undefined) {
     if (!belongsToTemplate && name !== oldConcept.name) data.official = false
     data.name = name

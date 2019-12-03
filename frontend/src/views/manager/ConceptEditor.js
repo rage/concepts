@@ -16,7 +16,8 @@ const initialState = {
   tags: [],
   bloomTag: '',
   official: undefined,
-  frozen: undefined
+  frozen: undefined,
+  level: 'CONCEPT'
 }
 
 const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel }) => {

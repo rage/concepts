@@ -7,7 +7,7 @@ import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import generateTempId from '../../lib/generateTempId'
 
-const useCreateConceptDialog = (workspaceId, isStaff) => {
+const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
   const { openDialog } = useDialog()
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -18,13 +18,17 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
     update: cache.createConceptUpdate(workspaceId)
   })
 
-  const createOptimisticResponse = ({ courseId, name, official, frozen, description, tags }) => ({
+  const createOptimisticResponse = ({
+    courseId, name, official, frozen, description, tags, level
+  }) => ({
     __typename: 'Mutation',
     createConcept: {
       __typename: 'Concept',
       id: generateTempId(),
       name,
       description,
+      level,
+      position: null,
       official,
       frozen,
       course: {
@@ -49,7 +53,8 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
     requiredVariables: {
       workspaceId,
       courseId,
-      official: false
+      official: false,
+      level
     },
     actionText: 'Create',
     title: 'Add concept',
