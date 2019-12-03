@@ -28,6 +28,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
       name,
       description,
       level,
+      position: null,
       official,
       frozen,
       course: {
