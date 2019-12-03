@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { Typography, Paper } from '@material-ui/core'
+import { Typography, Paper, Tabs, Tab, AppBar} from '@material-ui/core'
 
 import { useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
@@ -73,10 +73,17 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
+const TabContent = ({children, index, value}) => (
+  <div style={{display: index === value ? '': 'none'}}>
+    {children}
+  </div>
+)
+
 const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const { history } = useRouter()
+  const [index, setIndex] = useState(0)
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -147,21 +154,34 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
         />
       </div>
       <div className={classes.newCourse}>
-        {focusedCourse
-          ? <ConceptList
-            workspace={workspaceQuery.data.workspaceById}
-            course={focusedCourse}
-            updateCourse={args => updateCourse({ variables: args }).catch(e)}
-            createConcept={args => createConcept({
-              variables: {
-                workspaceId,
-                courseId: focusedCourse.id,
-                ...args
-              }
-            }).catch(e)}
-            deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-            updateConcept={args => updateConcept({ variables: args }).catch(e)}
-          /> : <Paper elevation={0} />
+        {focusedCourse ? 
+          <Paper elevation={0}>
+            <AppBar position="static">
+              <Tabs value={index} onChange={ (event, newValue) => {setIndex(newValue)}}>
+                <Tab label="Concepts" />
+                <Tab label="Objectives" />
+              </Tabs>
+            </AppBar>
+            <TabContent value={index} index={0}>
+            <ConceptList
+              workspace={workspaceQuery.data.workspaceById}
+              course={focusedCourse}
+              updateCourse={args => updateCourse({ variables: args }).catch(e)}
+              createConcept={args => createConcept({
+                variables: {
+                  workspaceId,
+                  courseId: focusedCourse.id,
+                  ...args
+                }
+              }).catch(e)}
+              deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
+              updateConcept={args => updateConcept({ variables: args }).catch(e)}
+            />
+            </TabContent>
+            <TabContent value={index} index={1}>
+              Objectives
+            </TabContent>
+          </Paper> : <Paper elevation={0} />
         }
       </div>
     </main>
