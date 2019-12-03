@@ -49,7 +49,8 @@ const useCreateConceptDialog = (workspaceId, isStaff) => {
     requiredVariables: {
       workspaceId,
       courseId,
-      official: false
+      official: false,
+      level: 'CONCEPT'
     },
     actionText: 'Create',
     title: 'Add concept',

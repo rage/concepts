@@ -19,6 +19,7 @@ query courseById($id: ID!) {
       name
       description
       level
+      position
       official
       frozen
       tags {
@@ -77,6 +78,7 @@ fragment courseAndConcepts on Course {
     name
     description
     level
+    position
     official
     frozen
     tags {
