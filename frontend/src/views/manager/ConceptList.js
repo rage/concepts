@@ -293,6 +293,7 @@ const ItemList = ({
           'CREATE_CONCEPT_TAGS',
           'CREATE_CONCEPT_SUBMIT')
         }} 
+        action='Create'
         defaultValues={{ official: isTemplate, level }} 
         tagOptions={conceptTags} 
       />

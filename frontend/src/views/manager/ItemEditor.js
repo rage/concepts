@@ -86,13 +86,14 @@ const ItemEditor = ({
 
   const onSubmit = event => {
     event.preventDefault()
+    delete input.bloomTag
     submit({
       ...input,
       tags: selectToBackend(input.tags)
     })
     if (action === 'Create') {
       nameRef.current.focus()
-      setInput({...initialState, ...defaultValues })
+      setInput({ ...initialState, ...defaultValues })
     }
   }
 
