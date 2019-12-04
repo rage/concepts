@@ -1,14 +1,16 @@
 import React, { useState, useRef } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
+import { Menu, MenuItem } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import ConceptNode from './ConceptNode'
 import { ConceptLink } from '../coursemapper/concept'
-import { CREATE_CONCEPT, UPDATE_CONCEPT } from '../../graphql/Mutation'
+import {CREATE_CONCEPT, CREATE_CONCEPT_LINK, UPDATE_CONCEPT} from '../../graphql/Mutation'
 import cache from '../../apollo/update'
+import generateTempId from '../../lib/generateTempId'
 
 const useStyles = makeStyles({
   root: {
@@ -25,7 +27,9 @@ const useStyles = makeStyles({
 
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [adding, setAdding] = useState(null)
+  const [addingLink, setAddingLink] = useState(null)
   const [selecting, setSelecting] = useState(null)
+  const [menu, setMenu] = useState({ open: false })
   const selected = useRef(new Set())
   const concepts = useRef({})
   const selection = useRef({})
@@ -39,6 +43,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
+  })
+
+  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+    update: cache.createConceptLinkUpdate()
   })
 
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
@@ -62,9 +70,29 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
   }
 
+  const finishAddingLink = async to => {
+    await createConceptLink({
+      variables: {
+        from: addingLink,
+        to,
+        workspaceId
+      }
+    })
+    setAddingLink(null)
+  }
+
   const startSelect = evt => {
-    if (evt.target !== main.current || evt.button !== 0) {
+    if (evt.button !== 0) {
       return
+    }
+    if (evt.target !== main.current) {
+      if (addingLink && evt.target.hasAttribute('data-concept-id')) {
+        finishAddingLink(evt.target.getAttribute('data-concept-id'))
+      }
+      return
+    }
+    if (addingLink) {
+      setAddingLink(null)
     }
     const x = evt.pageX - main.current.offsetLeft
     const y = evt.pageY - main.current.offsetTop
@@ -148,6 +176,30 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     setAdding(false)
   }
 
+  const openMenu = id => evt => {
+    setMenu({
+      id,
+      open: true,
+      anchor: {
+        left: evt.clientX - 2,
+        top: evt.clientY - 4
+      }
+    })
+  }
+
+  const closeMenu = () => {
+    setMenu({
+      ...menu,
+      id: null,
+      open: false
+    })
+  }
+
+  const menuAddLink = () => {
+    setAddingLink(menu.id)
+    closeMenu()
+  }
+
   return <main
     className={classes.root} ref={main}
     onDoubleClick={doubleClick}
@@ -155,7 +207,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   >
     {course.concepts.flatMap(concept => [
       <ConceptNode
-        key={concept.id} workspaceId={workspaceId} concept={concept}
+        key={concept.id} workspaceId={workspaceId} concept={concept} openMenu={openMenu(concept.id)}
+        closeMenu={() => menu.id === concept.id && closeMenu()}
         concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
       />,
       ...concept.linksToConcept.map(link => <ConceptLink
@@ -173,6 +226,17 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       concepts={concepts} selected={selected}
       cancel={stopAdding} submit={submitNewConcept}
     />}
+    {addingLink && <ConceptLink
+      active within={document.body} // This needs to be directly in body to work
+      followMouse from={`concept-${addingLink}`} to={`concept-${addingLink}`}
+    />}
+
+    <Menu
+      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+      open={menu.open} onClose={closeMenu}
+    >
+      <MenuItem onClick={menuAddLink}>Add link</MenuItem>
+    </Menu>
   </main>
 }
 

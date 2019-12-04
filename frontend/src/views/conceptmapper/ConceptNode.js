@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { DraggableCore } from 'react-draggable'
 
-import { noPropagation } from '../../lib/eventMiddleware'
+import { noPropagation, noDefault } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +18,9 @@ const useStyles = makeStyles(theme => ({
     '&.selected': {
       border: '3px solid red',
       padding: '4px'
+    },
+    '&:hover': {
+      border: '1px solid red'
     },
     // Put these above the links
     zIndex: 5
@@ -43,12 +46,12 @@ const useStyles = makeStyles(theme => ({
 
 const parsePosition = position => {
   if (!position) {
-    return { x: 0, y: 0, width: 300, height: 34 }
+    return { x: 0, y: 0, width: 200, height: 34 }
   } else if (typeof position !== 'string') {
     return {
       x: position.x || 0,
       y: position.y || 0,
-      width: position.width || 300,
+      width: position.width || 200,
       height: position.height || 34
     }
   }
@@ -56,14 +59,14 @@ const parsePosition = position => {
   return {
     x: parseInt(x) || 0,
     y: parseInt(y) || 0,
-    width: parseInt(w) || 300,
+    width: parseInt(w) || 200,
     height: parseInt(h) || 34
   }
 }
 
 const ConceptNode = ({
   concept, concepts, selected,
-  submit, cancel, isNew = false
+  openMenu, closeMenu, submit, cancel, isNew = false
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
@@ -85,10 +88,6 @@ const ConceptNode = ({
       window.removeEventListener('moveConcept', handleMoveEvent)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useLayoutEffect(() => {
-
   }, [])
 
   const updatePos = ({ deltaX, deltaY }) => {
@@ -202,12 +201,17 @@ const ConceptNode = ({
       })
     }
 
+    const startEditing = () => {
+      closeMenu()
+      setEditing(true)
+    }
+
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop}>
         <div
           ref={node => self.node = node} className={classes.root} id={id}
-          onDoubleClick={noPropagation(() => setEditing(true))}
-          style={positionStyle}
+          data-concept-id={concept.id} style={positionStyle}
+          onDoubleClick={noPropagation(startEditing)} onContextMenu={noDefault(openMenu)}
         >
           {concept.name}
         </div>
