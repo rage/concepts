@@ -198,7 +198,7 @@ const ItemList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`Concepts of ${course.name}`}
+        title={`${level.charAt(0) + level.toLowerCase().slice(1)}s of ${course.name}`}
         action={cardHeaderActions()}
       />
 
@@ -238,7 +238,7 @@ const ItemList = ({
         ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
       >
         {orderMethod !== 'GROUP_BY' ? orderedConcepts.map((concept, conceptIndex) =>
-          includeConcept(concept) &&
+          includeConcept(concept) && concept.level === level &&
           <ConceptListItem
             key={concept.id}
             concept={concept}
@@ -259,7 +259,7 @@ const ItemList = ({
         ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
           const elements = group.filter(concept => includeConcept(concept))
             .map((concept, conceptIndex) =>
-              <ConceptListItem
+              concept.level === level && <ConceptListItem
                 key={concept.id}
                 concept={concept}
                 user={user}
