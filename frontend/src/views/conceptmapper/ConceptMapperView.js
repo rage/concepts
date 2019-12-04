@@ -85,13 +85,14 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     const selLeftEnd = sel.left + sel.width
     const selTopEnd = sel.top + sel.height
     for (const [id, state] of Object.entries(concepts.current)) {
+      if (!state.node) continue
       if (state.x >= sel.left && state.x + state.width <= selLeftEnd
         && state.y >= sel.top && state.y + state.height <= selTopEnd) {
         selected.current.add(id)
-        state.node?.classList.add('selected')
+        state.node.classList.add('selected')
       } else {
         selected.current.delete(id)
-        state.node?.classList.remove('selected')
+        state.node.classList.remove('selected')
       }
     }
   }
@@ -164,6 +165,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
       window.removeEventListener('mousemove', mouseMove)
       window.removeEventListener('mouseup', mouseUp)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (courseQuery.error) {
