@@ -55,13 +55,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const doubleClick = evt => {
     if (evt.target === main.current) {
-      setAdding([{
+      setAdding({
         x: evt.pageX - main.current.offsetLeft - 100,
         y: evt.pageY - main.current.offsetTop - 15
-      }, {
-        width: 200,
-        height: 30
-      }])
+      })
     }
   }
 
@@ -99,10 +96,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       if (state.x >= sel.left && state.x + state.width <= selLeftEnd
           && state.y >= sel.top && state.y + state.height <= selTopEnd) {
         selected.current.add(id)
-        state.node.current.classList.add('selected')
+        state.node.classList.add('selected')
       } else {
         selected.current.delete(id)
-        state.node.current.classList.remove('selected')
+        state.node.classList.remove('selected')
       }
     }
   }

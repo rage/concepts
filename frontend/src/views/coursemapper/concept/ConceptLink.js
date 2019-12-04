@@ -239,7 +239,7 @@ const Line = ({
     recalculate()
   }
 
-  const handleMoveEvent = evt => {
+  const handleConceptMoveEvent = evt => {
     let changed = false, bothChanged = false
     if (evt.detail.id === from || (evt.detail.selected && evt.detail.selected.has(from))) {
       pos.current.x0 += evt.detail.deltaX
@@ -277,13 +277,15 @@ const Line = ({
   useEffect(() => {
     window.addEventListener('resize', handleResize)
     window.addEventListener('redrawConceptLink', handleResize)
-    window.addEventListener('moveConcept', handleMoveEvent)
+    window.addEventListener('resizeConcept', handleConceptMoveEvent)
+    window.addEventListener('moveConcept', handleConceptMoveEvent)
     window.addEventListener('scroll', handleResize, true)
     // componentWillUnmount
     return () => {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('redrawConceptLink', handleResize)
-      window.removeEventListener('moveConcept', handleMoveEvent)
+      window.removeEventListener('resizeConcept', handleConceptMoveEvent)
+      window.removeEventListener('moveConcept', handleConceptMoveEvent)
       window.removeEventListener('scroll', handleResize)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

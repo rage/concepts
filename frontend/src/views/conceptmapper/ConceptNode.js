@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { DraggableCore } from 'react-draggable'
 
@@ -7,17 +7,20 @@ import { noPropagation } from '../../lib/eventMiddleware'
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
-    padding: '5px',
+    padding: '6px',
     backgroundColor: 'white',
     borderRadius: '4px',
     cursor: 'pointer',
     boxSizing: 'border-box',
     border: '1px solid gray',
+    whiteSpace: 'pre-wrap',
     overflow: 'hidden',
     '&.selected': {
-      border: '2px solid red',
+      border: '3px solid red',
       padding: '4px'
-    }
+    },
+    // Put these above the links
+    zIndex: 5
   },
   editing: {
     resize: 'both',
@@ -27,13 +30,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   textarea: {
-    padding: '5px',
+    padding: '6px',
     width: '100%',
     height: '100%',
     border: 'none',
     margin: 0,
-    overflowY: 'auto',
-    scrollbarWidth: 'thin',
+    overflow: 'hidden',
     // Text inputs need font settings to be overridden
     ...theme.typography.body2
   }
@@ -41,18 +43,22 @@ const useStyles = makeStyles(theme => ({
 
 const parsePosition = position => {
   if (!position) {
-    return [{ x: 0, y: 0 }, { maxHeight: 60, maxWidth: 400, width: 'auto', height: 'auto' }]
+    return { x: 0, y: 0, width: 300, height: 34 }
   } else if (typeof position !== 'string') {
-    return position
+    return {
+      x: position.x || 0,
+      y: position.y || 0,
+      width: position.width || 300,
+      height: position.height || 34
+    }
   }
   const [x, y, w, h] = position.split(',')
-  return [{
+  return {
     x: parseInt(x) || 0,
-    y: parseInt(y) || 0
-  }, {
-    width: parseInt(w) || 0,
-    height: parseInt(h) || 0
-  }]
+    y: parseInt(y) || 0,
+    width: parseInt(w) || 300,
+    height: parseInt(h) || 34
+  }
 }
 
 const ConceptNode = ({
@@ -62,18 +68,15 @@ const ConceptNode = ({
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
   const [name, setName] = useState(concept.name)
-  const node = useRef()
-  const textArea = useRef()
-  const pos = useRef()
-  const size = useRef()
-  const prevPosition = useRef()
-  const isResizing = useRef(false)
   const id = `concept-${concept.id}`
 
-  if (concept.position !== prevPosition.current) {
-    [pos.current, size.current] = parsePosition(concept.position)
-    concepts.current[id] = { ...pos.current, ...size.current, name, node }
-    prevPosition.current = concept.position
+  if (!concepts.current[id]) concepts.current[id] = { name }
+  const self = concepts.current[id]
+
+  if (concept.position !== self.prevPosition) {
+    const pos = parsePosition(concept.position)
+    Object.assign(self, pos)
+    self.prevPosition = concept.position
   }
 
   useEffect(() => {
@@ -89,37 +92,57 @@ const ConceptNode = ({
   }, [])
 
   const updatePos = ({ deltaX, deltaY }) => {
-    pos.current.x += deltaX
-    pos.current.y += deltaY
-    node.current.style.left = `${pos.current.x}px`
-    node.current.style.top = `${pos.current.y}px`
-    concepts.current[id].x = pos.current.x
-    concepts.current[id].y = pos.current.y
+    self.x += deltaX
+    self.y += deltaY
+    self.node.style.left = `${self.x}px`
+    self.node.style.top = `${self.y}px`
   }
 
   const handleMoveEvent = evt => evt.detail.id !== id
     && selected.current.has(evt.detail.id) && selected.current.has(id)
     && updatePos(evt.detail)
 
+  const positionString = () => `${self.x},${self.y},${self.width},${self.height}`
+  const positionStyle = {
+    left: self.x,
+    top: self.y,
+    width: self.width,
+    height: self.height
+  }
+
   if (editing) {
     const onChange = evt => {
       setName(evt.target.value)
-      concepts.current[id].name = evt.target.value
+      self.name = evt.target.value
+      const paddingX = self.node.offsetWidth - self.textArea.offsetWidth
+      const paddingY = self.node.offsetHeight - self.textArea.offsetHeight
+      resize(self.textArea.scrollWidth + paddingX, self.textArea.scrollHeight + paddingY)
     }
 
-    const onResizeStart = evt => isResizing.current = evt.target === node.current
+    const resize = (width, height) => {
+      const deltaX = (width - self.width) / 2
+      const deltaY = (height - self.height) / 2
+      self.width = width
+      self.height = height
+
+      window.dispatchEvent(new CustomEvent('resizeConcept', {
+        detail: {
+          id,
+          deltaX,
+          deltaY
+        }
+      }))
+    }
+
+    const onResizeStart = evt => self.isResizing = evt.target === self.node
     const onResize = () => {
-      if (isResizing.current) {
-        size.current.width = node.current.offsetWidth
-        size.current.height = node.current.offsetHeight
-        concepts.current[id].width = size.current.width
-        concepts.current[id].height = size.current.height
+      if (self.isResizing &&
+          (self.width !== self.node.offsetWidth
+          || self.height !== self.node.offsetHeight)) {
+        resize(self.node.offsetWidth, self.node.offsetHeight)
       }
     }
-    const onResizeStop = () => {
-      isResizing.current = false
-      concepts.current[id] = { ...pos.current, ...size.current, name, node }
-    }
+    const onResizeStop = () => self.isResizing = false
 
     const onKeyDown = evt => {
       if (evt.key === 'Enter' && !evt.shiftKey) {
@@ -140,8 +163,8 @@ const ConceptNode = ({
 
     const finishEdit = async () => {
       await submit({
-        name,
-        position: `${pos.current.x},${pos.current.y},${size.current.width},${size.current.height}`
+        name: name.trim(),
+        position: positionString()
       })
       if (!isNew) {
         setEditing(false)
@@ -150,13 +173,13 @@ const ConceptNode = ({
 
     return (
       <div
-        ref={node} className={`${classes.root} ${classes.editing}`} id={id}
-        style={{ left: pos.current.x, top: pos.current.y, ...size.current }}
+        ref={node => self.node = node} className={`${classes.root} ${classes.editing}`} id={id}
+        style={positionStyle}
         onMouseDown={onResizeStart} onMouseMove={onResize} onMouseUp={onResizeStop}
       >
         <textarea
-          ref={textArea} className={classes.textarea} onChange={onChange} onBlur={finishEdit}
-          onKeyDown={onKeyDown} value={name} autoFocus
+          ref={ta => self.textArea = ta} className={classes.textarea} value={name} autoFocus
+          onChange={onChange} onBlur={finishEdit} onKeyDown={onKeyDown}
         />
       </div>
     )
@@ -175,16 +198,16 @@ const ConceptNode = ({
 
     const onDragStop = () => {
       submit({
-        position: `${pos.current.x},${pos.current.y},${size.current.width},${size.current.height}`
+        position: positionString()
       })
     }
 
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop}>
         <div
-          ref={node} className={classes.root} id={id}
+          ref={node => self.node = node} className={classes.root} id={id}
           onDoubleClick={noPropagation(() => setEditing(true))}
-          style={{ left: pos.current.x, top: pos.current.y, ...size.current }}
+          style={positionStyle}
         >
           {concept.name}
         </div>
