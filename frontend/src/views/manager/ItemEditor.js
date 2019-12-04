@@ -114,6 +114,7 @@ const ItemEditor = ({
       <ConnectableTextfield 
         name="name" 
         label={`${levelName} name`}
+        autoFocus={action !== 'Create'}
         inputRef={nameRef} 
         onChange={onChange}
         value={input.name}
@@ -121,7 +122,6 @@ const ItemEditor = ({
       <ConnectableTextfield 
         name="description" 
         label={`${levelName} description`}
-        autoFocus={action !== 'Create'}
         onChange={onChange}
         value={input.description}
       />
