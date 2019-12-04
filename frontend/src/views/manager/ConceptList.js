@@ -10,7 +10,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import groupConcepts from './groupConcepts'
 import MergeDialog from './MergeDialog'
-import ConceptEditor from './ConceptEditor'
+import ItemEditor from './ItemEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
 import { sortedConcepts } from '../../lib/ordering'
@@ -55,9 +55,10 @@ const sortingOptions = {
   CUSTOM: 'Custom'
 }
 
-const ConceptList = ({
+const ItemList = ({
   workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
 }) => {
+  const managerRef = 'manager'
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -166,13 +167,13 @@ const ConceptList = ({
       if (merging) {
         return <>
           <CardHeaderButton
-            bRef={infoBox.ref('manager', 'FINISH_MERGE')}
+            bRef={infoBox.ref(managerRef, 'FINISH_MERGE')}
             onClick={openMergeDialog} disabled={merging.size < 2}
           >
             Merge…
           </CardHeaderButton>
           <CardHeaderButton
-            bRef={infoBox.secondaryRef('manager', 'FINISH_MERGE')} onClick={stopMerging}
+            bRef={infoBox.secondaryRef(managerRef, 'FINISH_MERGE')} onClick={stopMerging}
           >
             Cancel
           </CardHeaderButton>
@@ -180,7 +181,7 @@ const ConceptList = ({
       }
       return (
         <CardHeaderButton
-          bRef={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
+          bRef={infoBox.ref(managerRef, 'START_MERGE')} onClick={startMerging}
           disabled={course.concepts.length < 2}
         >
           Start merge
@@ -198,7 +199,7 @@ const ConceptList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`${level.charAt(0).toUpperCase() + level.substring(1)}s of ${course.name}`}
+        title={`Concepts of ${course.name}`}
         action={cardHeaderActions()}
       />
 
@@ -207,7 +208,7 @@ const ConceptList = ({
           variant='outlined'
           margin='dense'
           label={`Filter ${level}s`}
-          ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
+          ref={infoBox.ref(managerRef, 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
@@ -217,7 +218,7 @@ const ConceptList = ({
           variant='outlined'
           margin='dense'
           label='Sort by'
-          ref={infoBox.ref('manager', 'SORT_CONCEPTS')}
+          ref={infoBox.ref(managerRef, 'SORT_CONCEPTS')}
           value={orderMethod}
           onChange={evt => {
             setOrderMethod(evt.target.value)
@@ -251,8 +252,8 @@ const ConceptList = ({
             setEditing={setEditing}
             sortable={orderMethod === 'CUSTOM' && !course.frozen}
             toggleMergingConcept={toggleMergingConcept}
-            checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-              : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+            checkboxRef={conceptIndex === 0 ? infoBox.ref(managerRef, 'SELECT_MERGE_CONCEPTS')
+              : conceptIndex === 1 ? infoBox.secondaryRef(managerRef, 'SELECT_MERGE_CONCEPTS')
                 : undefined}
             conceptTags={conceptTags}
           />
@@ -270,8 +271,8 @@ const ConceptList = ({
                 setEditing={setEditing}
                 toggleMergingConcept={toggleMergingConcept}
                 divider={false}
-                checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-                  : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+                checkboxRef={conceptIndex === 0 ? infoBox.ref(managerRef, 'SELECT_MERGE_CONCEPTS')
+                  : conceptIndex === 1 ? infoBox.secondaryRef(managerRef, 'SELECT_MERGE_CONCEPTS')
                     : undefined}
                 sortable={false}
                 conceptTags={conceptTags}
@@ -284,15 +285,20 @@ const ConceptList = ({
         }
         )
         }</SortableList>
-      <ConceptEditor level={level} submit={async args => {
+      <ItemEditor submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
-        infoBox.redrawIfOpen('manager',
-          'CREATE_CONCEPT_NAME', 'CREATE_CONCEPT_DESCRIPTION', 'CREATE_CONCEPT_TAGS',
+        infoBox.redrawIfOpen(managerRef,
+          'CREATE_CONCEPT_NAME', 
+          'CREATE_CONCEPT_DESCRIPTION', 
+          'CREATE_CONCEPT_TAGS',
           'CREATE_CONCEPT_SUBMIT')
-      }} defaultValues={{ official: isTemplate }} tagOptions={conceptTags} />
+        }} 
+        defaultValues={{ official: isTemplate, level }} 
+        tagOptions={conceptTags} 
+      />
     </Card>
   )
 }
 
-export default ConceptList
+export default ItemList
