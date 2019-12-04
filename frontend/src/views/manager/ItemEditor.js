@@ -82,7 +82,7 @@ const ItemEditor = ({
   
   const nameRef = useRef()
   const selectRef = useRef(null) 
-  const levelName = input.level.charAt(0).toUpperCase() + input.level.slice(1)
+  const levelName = input.level.charAt(0) + input.level.toLowerCase().slice(1)
 
   const onSubmit = event => {
     event.preventDefault()

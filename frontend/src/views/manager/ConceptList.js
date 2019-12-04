@@ -191,7 +191,6 @@ const ItemList = ({
     return null
   }
 
-  const concepts = course.concepts.filter(concept => concept.level === level.toUpperCase())
   const conceptFilterParsed = parseFilter(conceptFilter)
   const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
 
@@ -207,7 +206,7 @@ const ItemList = ({
         <TextField
           variant='outlined'
           margin='dense'
-          label={`Filter ${level}s`}
+          label={`Filter ${level.toLowerCase()}s`}
           ref={infoBox.ref(managerRef, 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}

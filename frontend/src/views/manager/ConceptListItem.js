@@ -6,7 +6,7 @@ import {
 import { Delete as DeleteIcon, Edit as EditIcon, Lock as LockIcon } from '@material-ui/icons'
 
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
-import ConceptEditor from './ConceptEditor'
+import ItemEditor from './ItemEditor'
 import { Role } from '../../lib/permissions'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 
@@ -99,7 +99,7 @@ const ConceptListItem = ({
         className={editing && editing !== concept.id ? classes.listItemDisabled : null}
       >
         {editing === concept.id ? (
-          <ConceptEditor
+          <ItemEditor
             submit={args => {
               setEditing(null)
               updateConcept({ id: concept.id, ...args })
