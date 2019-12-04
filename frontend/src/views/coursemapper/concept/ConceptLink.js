@@ -117,7 +117,7 @@ export default class ConceptLink extends Component {
   }
 
   detect() {
-    const { from: fromId, to: toId } = this.props
+    const { from: fromId, to: toId, scrollParentRef } = this.props
 
     const fromRef = this.fromRef
     const toRef = this.toRef
@@ -136,10 +136,14 @@ export default class ConceptLink extends Component {
       fromRef.current.classList.add(`linkto-${this.props.toConceptId}`)
       toRef.current.classList.add(`linkto-${this.props.fromConceptId}`)
 
-      const x0 = fromBox.x + (fromBox.width * this.fromAnchor.x) + window.pageXOffset + offset.x0
-      const y0 = fromBox.y + (fromBox.height * this.fromAnchor.y) + window.pageYOffset + offset.y0
-      const x1 = toBox.x + (toBox.width * this.toAnchor.x) + window.pageXOffset + offset.x1
-      const y1 = toBox.y + (toBox.height * this.toAnchor.y) + window.pageYOffset + offset.y1
+      const sp = scrollParentRef?.current
+      const pageXOffset = sp ? sp.scrollLeft : window.pageXOffset
+      const pageYOffset = sp ? sp.scrollTop : window.pageYOffset
+
+      const x0 = fromBox.x + (fromBox.width * this.fromAnchor.x) + pageXOffset + offset.x0
+      const y0 = fromBox.y + (fromBox.height * this.fromAnchor.y) + pageYOffset + offset.y0
+      const x1 = toBox.x + (toBox.width * this.toAnchor.x) + pageXOffset + offset.x1
+      const y1 = toBox.y + (toBox.height * this.toAnchor.y) + pageYOffset + offset.y1
 
       return { x0, y0, x1, y1 }
     }
@@ -195,7 +199,7 @@ const useStyles = makeStyles({
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, linkId, classes: propClasses
+  active, attributes, linkId, classes: propClasses, noListenScroll = false
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
@@ -279,19 +283,23 @@ const Line = ({
     window.addEventListener('redrawConceptLink', handleResize)
     window.addEventListener('resizeConcept', handleConceptMoveEvent)
     window.addEventListener('moveConcept', handleConceptMoveEvent)
-    window.addEventListener('scroll', handleResize, true)
+    if (!noListenScroll) {
+      window.addEventListener('scroll', handleResize, true)
+    }
     // componentWillUnmount
     return () => {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('redrawConceptLink', handleResize)
       window.removeEventListener('resizeConcept', handleConceptMoveEvent)
       window.removeEventListener('moveConcept', handleConceptMoveEvent)
-      window.removeEventListener('scroll', handleResize)
+      if (!noListenScroll) {
+        window.removeEventListener('scroll', handleResize)
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  within = within || container
+  within = (typeof within === 'string' ? document.getElementById(within) : within) || container
 
   // componentDidMount
   useLayoutEffect(() => {

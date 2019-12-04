@@ -15,12 +15,12 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid gray',
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
+    '&:hover': {
+      border: '1px solid red'
+    },
     '&.selected': {
       border: '3px solid red',
       padding: '4px'
-    },
-    '&:hover': {
-      border: '1px solid red'
     },
     // Put these above the links
     zIndex: 5
@@ -161,8 +161,13 @@ const ConceptNode = ({
     }
 
     const finishEdit = async () => {
+      const trimmedName = name.trim()
+      if (trimmedName.length === 0) {
+        cancelEdit()
+        return
+      }
       await submit({
-        name: name.trim(),
+        name: trimmedName,
         position: positionString()
       })
       if (!isNew) {

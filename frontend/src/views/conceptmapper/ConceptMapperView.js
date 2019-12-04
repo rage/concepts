@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Menu, MenuItem } from '@material-ui/core'
@@ -8,41 +8,55 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import ConceptNode from './ConceptNode'
 import { ConceptLink } from '../coursemapper/concept'
-import {CREATE_CONCEPT, CREATE_CONCEPT_LINK, UPDATE_CONCEPT} from '../../graphql/Mutation'
+import {
+  CREATE_CONCEPT,
+  CREATE_CONCEPT_LINK,
+  DELETE_CONCEPT,
+  UPDATE_CONCEPT
+} from '../../graphql/Mutation'
 import cache from '../../apollo/update'
-import generateTempId from '../../lib/generateTempId'
 
 const useStyles = makeStyles({
   root: {
     gridArea: 'content',
     position: 'relative',
-    userSelect: 'none'
+    userSelect: 'none',
+    overflow: 'scroll',
+    scrollbarWidth: 'thin'
   },
   selection: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 0, 0, .25)',
-    border: '4px solid red'
+    border: '4px solid red',
+    display: 'none'
+  },
+  wrapper: {
+
   }
 })
 
-const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
+const ConceptMapperView = ({ workspaceId, courseId }) => {
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLink] = useState(null)
-  const [selecting, setSelecting] = useState(null)
   const [menu, setMenu] = useState({ open: false })
+  const panning = useRef(false)
   const selected = useRef(new Set())
   const concepts = useRef({})
-  const selection = useRef({})
+  const selection = useRef()
   const selectionRef = useRef()
   const main = useRef()
   const classes = useStyles()
+
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    update: cache.createConceptUpdate(workspaceId)
+  })
 
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
 
-  const createConcept = useMutation(CREATE_CONCEPT, {
-    update: cache.createConceptUpdate(workspaceId)
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: cache.deleteConceptUpdate(workspaceId)
   })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
@@ -52,6 +66,105 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId }
   })
+
+  const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
+    const initialValue = selection.current.start[axisKey]
+    if (value > initialValue) {
+      selection.current.pos[posKey] = initialValue + offset
+      selection.current.pos[lenKey] = value - initialValue
+    } else {
+      selection.current.pos[posKey] = value + offset
+      selection.current.pos[lenKey] = initialValue - value
+    }
+    selectionRef.current.style[posKey] = `${selection.current.pos[posKey]}px`
+    selectionRef.current.style[lenKey] = `${selection.current.pos[lenKey]}px`
+  }
+
+  const updateSelected = () => {
+    const sel = selection.current.pos
+    const selLeftEnd = sel.left + sel.width
+    const selTopEnd = sel.top + sel.height
+    for (const [id, state] of Object.entries(concepts.current)) {
+      if (state.x >= sel.left && state.x + state.width <= selLeftEnd
+        && state.y >= sel.top && state.y + state.height <= selTopEnd) {
+        selected.current.add(id)
+        state.node?.classList.add('selected')
+      } else {
+        selected.current.delete(id)
+        state.node?.classList.remove('selected')
+      }
+    }
+  }
+
+  const mouseDown = evt => {
+    if (evt.button !== 0) {
+      return
+    }
+    if (evt.target !== main.current) {
+      if (addingLink && evt.target.hasAttribute('data-concept-id')) {
+        finishAddingLink(evt.target.getAttribute('data-concept-id'))
+      }
+      return
+    }
+    if (addingLink) {
+      setAddingLink(null)
+    }
+    if (evt.shiftKey) {
+      const x = evt.pageX - main.current.offsetLeft
+      const y = evt.pageY - main.current.offsetTop
+      selection.current = {
+        pos: {
+          left: x + main.current.scrollLeft,
+          top: y + main.current.scrollTop,
+          width: 0,
+          height: 0
+        },
+        start: { x, y }
+      }
+      selectionRef.current.style.left = `${selection.current.pos.left}px`
+      selectionRef.current.style.top = `${selection.current.pos.top}px`
+      selectionRef.current.style.width = 0
+      selectionRef.current.style.height = 0
+      selectionRef.current.style.display = 'block'
+      updateSelected()
+    } else {
+      panning.current = true
+    }
+  }
+
+  const mouseMove = evt => {
+    if (panning.current) {
+      main.current.scrollTop -= evt.movementY
+      main.current.scrollLeft -= evt.movementX
+    } else if (selection.current) {
+      updateSelection('x', 'left', 'width',
+        evt.pageX - main.current.offsetLeft,
+        main.current.scrollLeft)
+      updateSelection('y', 'top', 'height',
+        evt.pageY - main.current.offsetTop,
+        main.current.scrollTop)
+      updateSelected()
+    }
+  }
+
+  const mouseUp = () => {
+    if (selection.current) {
+      selection.current = null
+      selectionRef.current.style.display = 'none'
+    } else if (panning.current) {
+      panning.current = false
+    }
+  }
+
+  useEffect(() => {
+    console.log('Adding handlers')
+    window.addEventListener('mousemove', mouseMove)
+    window.addEventListener('mouseup', mouseUp)
+    return () => {
+      window.removeEventListener('mousemove', mouseMove)
+      window.removeEventListener('mouseup', mouseUp)
+    }
+  }, [])
 
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
@@ -64,8 +177,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const doubleClick = evt => {
     if (evt.target === main.current) {
       setAdding({
-        x: evt.pageX - main.current.offsetLeft - 100,
-        y: evt.pageY - main.current.offsetTop - 15
+        x: evt.pageX - main.current.offsetLeft + main.current.scrollLeft - 100,
+        y: evt.pageY - main.current.offsetTop + main.current.scrollTop - 17
       })
     }
   }
@@ -79,73 +192,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       }
     })
     setAddingLink(null)
-  }
-
-  const startSelect = evt => {
-    if (evt.button !== 0) {
-      return
-    }
-    if (evt.target !== main.current) {
-      if (addingLink && evt.target.hasAttribute('data-concept-id')) {
-        finishAddingLink(evt.target.getAttribute('data-concept-id'))
-      }
-      return
-    }
-    if (addingLink) {
-      setAddingLink(null)
-    }
-    const x = evt.pageX - main.current.offsetLeft
-    const y = evt.pageY - main.current.offsetTop
-    selection.current.left = x
-    selection.current.top = y
-    selection.current.right = main.current.offsetWidth - x
-    selection.current.bottom = main.current.offsetHeight - y
-    setSelecting({ x, y })
-    updateSelected()
-  }
-
-  const updateSelection = (key, a, b, value, offset) => {
-    if (value > selecting[key]) {
-      selection.current[a] = selecting[key]
-      selection.current[b] = offset - value
-    } else {
-      selection.current[a] = value
-      selection.current[b] = offset - selecting[key]
-    }
-    selectionRef.current.style[a] = `${selection.current[a]}px`
-    selectionRef.current.style[b] = `${selection.current[b]}px`
-  }
-
-  const updateSelected = () => {
-    const sel = selection.current
-    const selLeftEnd = main.current.offsetWidth - sel.right
-    const selTopEnd = main.current.offsetHeight - sel.bottom
-    for (const [id, state] of Object.entries(concepts.current)) {
-      if (state.x >= sel.left && state.x + state.width <= selLeftEnd
-          && state.y >= sel.top && state.y + state.height <= selTopEnd) {
-        selected.current.add(id)
-        state.node.classList.add('selected')
-      } else {
-        selected.current.delete(id)
-        state.node.classList.remove('selected')
-      }
-    }
-  }
-
-  const select = evt => {
-    if (!selecting || evt.button !== 0) {
-      return
-    }
-    updateSelection('x', 'left', 'right',
-      evt.pageX - main.current.offsetLeft, main.current.offsetWidth)
-    updateSelection('y', 'top', 'bottom',
-      evt.pageY - main.current.offsetTop, main.current.offsetHeight)
-    updateSelected()
-  }
-
-  const stopSelect = () => {
-    selection.current = {}
-    setSelecting(null)
   }
 
   const submitExistingConcept = id => ({ name, position }) => updateConcept({
@@ -200,44 +246,62 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     closeMenu()
   }
 
-  return <main
-    className={classes.root} ref={main}
-    onDoubleClick={doubleClick}
-    onMouseDown={startSelect} onMouseMove={select} onMouseUp={stopSelect}
-  >
-    {course.concepts.flatMap(concept => [
-      <ConceptNode
-        key={concept.id} workspaceId={workspaceId} concept={concept} openMenu={openMenu(concept.id)}
-        closeMenu={() => menu.id === concept.id && closeMenu()}
-        concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
-      />,
-      ...concept.linksToConcept.map(link => <ConceptLink
-        key={link.id} delay={1} active linkId={link.id}
-        from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
-        fromConceptId={concept.id} toConceptId={link.from.id}
-        fromAnchor='center middle' toAnchor='center middle'
-      />)
-    ])}
-    {selecting && <div
-      ref={selectionRef} className={classes.selection} style={{ ...selection.current }}
-    /> }
-    {adding && <ConceptNode
-      isNew concept={{ id: 'new', name: '', position: adding }}
-      concepts={concepts} selected={selected}
-      cancel={stopAdding} submit={submitNewConcept}
-    />}
-    {addingLink && <ConceptLink
-      active within={document.body} // This needs to be directly in body to work
-      followMouse from={`concept-${addingLink}`} to={`concept-${addingLink}`}
-    />}
+  const menuDeleteConcept = () => {
+    deleteConcept({
+      variables: {
+        id: menu.id
+      }
+    })
+    closeMenu()
+  }
 
-    <Menu
-      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-      open={menu.open} onClose={closeMenu}
+  const linkOffsets = {
+    y0: -58,
+    y1: -58
+  }
+
+  return (
+    <main
+      className={classes.root} ref={main}
+      onDoubleClick={doubleClick} onMouseDown={mouseDown}
     >
-      <MenuItem onClick={menuAddLink}>Add link</MenuItem>
-    </Menu>
-  </main>
+      {course.concepts.flatMap(concept => [
+        <ConceptNode
+          key={concept.id} workspaceId={workspaceId} concept={concept}
+          openMenu={openMenu(concept.id)}
+          closeMenu={() => menu.id === concept.id && closeMenu()}
+          concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
+        />,
+        ...concept.linksToConcept.map(link => <ConceptLink
+          key={link.id} delay={1} active linkId={link.id}
+          within='concept-mapper-link-container' posOffsets={linkOffsets}
+          scrollParentRef={main} noListenScroll
+          from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
+          fromConceptId={concept.id} toConceptId={link.from.id}
+          fromAnchor='center middle' toAnchor='center middle'
+        />)
+      ])}
+      <div ref={selectionRef} className={classes.selection} />
+      {adding && <ConceptNode
+        isNew concept={{ id: 'new', name: '', position: adding }}
+        concepts={concepts} selected={selected}
+        cancel={stopAdding} submit={submitNewConcept}
+      />}
+      {addingLink && <ConceptLink
+        active within={document.body}
+        followMouse from={`concept-${addingLink}`} to={`concept-${addingLink}`}
+      />}
+      <div id='concept-mapper-link-container' />
+
+      <Menu
+        keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+        open={menu.open} onClose={closeMenu}
+      >
+        <MenuItem onClick={menuAddLink}>Add link</MenuItem>
+        <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
+      </Menu>
+    </main>
+  )
 }
 
 export default ConceptMapperView
