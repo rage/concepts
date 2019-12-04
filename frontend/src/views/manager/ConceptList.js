@@ -257,9 +257,9 @@ const ItemList = ({
             conceptTags={conceptTags}
           />
         ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
-          const elements = group.filter(concept => includeConcept(concept))
+          const elements = group.filter(concept => includeConcept(concept) && concept.level === level)
             .map((concept, conceptIndex) =>
-              concept.level === level && <ConceptListItem
+             <ConceptListItem
                 key={concept.id}
                 concept={concept}
                 user={user}
