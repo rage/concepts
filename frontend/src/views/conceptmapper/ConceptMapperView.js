@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
@@ -7,6 +7,8 @@ import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
 import ConceptNode from './ConceptNode'
 import { ConceptLink } from '../coursemapper/concept'
+import { CREATE_CONCEPT, UPDATE_CONCEPT } from '../../graphql/Mutation'
+import cache from '../../apollo/update'
 
 const useStyles = makeStyles({
   root: {
@@ -18,21 +20,26 @@ const useStyles = makeStyles({
     position: 'absolute',
     backgroundColor: 'rgba(255, 0, 0, .25)',
     border: '4px solid red'
-  },
-  selectedConcept: {
-    border: '2px solid red',
-    padding: '4px'
   }
 })
 
-const ConceptMapperView = ({ courseId, urlPrefix }) => {
+const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
+  const [adding, setAdding] = useState(null)
+  const [selecting, setSelecting] = useState(null)
   const selected = useRef(new Set())
   const concepts = useRef({})
-  const [selecting, setSelecting] = useState(null)
   const selection = useRef({})
   const selectionRef = useRef()
   const main = useRef()
   const classes = useStyles()
+
+  const updateConcept = useMutation(UPDATE_CONCEPT, {
+    update: cache.updateConceptUpdate(workspaceId)
+  })
+
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    update: cache.createConceptUpdate(workspaceId)
+  })
 
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId }
@@ -46,6 +53,18 @@ const ConceptMapperView = ({ courseId, urlPrefix }) => {
 
   const course = courseQuery.data.courseById
 
+  const doubleClick = evt => {
+    if (evt.target === main.current) {
+      setAdding([{
+        x: evt.pageX - main.current.offsetLeft - 100,
+        y: evt.pageY - main.current.offsetTop - 15
+      }, {
+        width: 200,
+        height: 30
+      }])
+    }
+  }
+
   const startSelect = evt => {
     if (evt.target !== main.current || evt.button !== 0) {
       return
@@ -57,6 +76,7 @@ const ConceptMapperView = ({ courseId, urlPrefix }) => {
     selection.current.right = main.current.offsetWidth - x
     selection.current.bottom = main.current.offsetHeight - y
     setSelecting({ x, y })
+    updateSelected()
   }
 
   const updateSelection = (key, a, b, value, offset) => {
@@ -79,10 +99,10 @@ const ConceptMapperView = ({ courseId, urlPrefix }) => {
       if (state.x >= sel.left && state.x + state.width <= selLeftEnd
           && state.y >= sel.top && state.y + state.height <= selTopEnd) {
         selected.current.add(id)
-        state.node.current.classList.add(classes.selectedConcept)
+        state.node.current.classList.add('selected')
       } else {
         selected.current.delete(id)
-        state.node.current.classList.remove(classes.selectedConcept)
+        state.node.current.classList.remove('selected')
       }
     }
   }
@@ -103,12 +123,44 @@ const ConceptMapperView = ({ courseId, urlPrefix }) => {
     setSelecting(null)
   }
 
+  const submitExistingConcept = id => ({ name, position }) => updateConcept({
+    variables: {
+      id,
+      name,
+      position
+    }
+  })
+
+  const submitNewConcept = ({ name, position }) => {
+    stopAdding()
+    console.log('Submitting concept', name, position)
+    return createConcept({
+      variables: {
+        name,
+        description: '',
+        level: 'CONCEPT',
+        position,
+        workspaceId,
+        courseId
+      }
+    })
+  }
+
+  const stopAdding = () => {
+    delete concepts.current['concept-new']
+    setAdding(false)
+  }
+
   return <main
     className={classes.root} ref={main}
+    onDoubleClick={doubleClick}
     onMouseDown={startSelect} onMouseMove={select} onMouseUp={stopSelect}
   >
     {course.concepts.flatMap(concept => [
-      <ConceptNode key={concept.id} concept={concept} concepts={concepts} selected={selected} />,
+      <ConceptNode
+        key={concept.id} workspaceId={workspaceId} concept={concept}
+        concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
+      />,
       ...concept.linksToConcept.map(link => <ConceptLink
         key={link.id} delay={1} active linkId={link.id}
         from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
@@ -119,6 +171,11 @@ const ConceptMapperView = ({ courseId, urlPrefix }) => {
     {selecting && <div
       ref={selectionRef} className={classes.selection} style={{ ...selection.current }}
     /> }
+    {adding && <ConceptNode
+      isNew concept={{ id: 'new', name: '', position: adding }}
+      concepts={concepts} selected={selected}
+      cancel={stopAdding} submit={submitNewConcept}
+    />}
   </main>
 }
 
