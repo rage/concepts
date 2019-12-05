@@ -18,7 +18,7 @@ import { parseFilter, includeConcept as intIncludeConcept } from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters(), width: '100%',
+    ...theme.mixins.gutters(), height: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',

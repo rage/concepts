@@ -19,7 +19,7 @@ import { useInfoBox } from '../../components/InfoBox'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import CourseList from './CourseList'
-import ConceptList from './ConceptList'
+import ItemList from './ItemList'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -161,7 +161,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
               </Tabs>
             </AppBar>
             <TabContent value={index} index={0}>
-              <ConceptList
+              <ItemList
                 level='CONCEPT'
                 workspace={workspaceQuery.data.workspaceById}
                 course={focusedCourse}
@@ -178,7 +178,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
               />
             </TabContent>
             <TabContent value={index} index={1}>
-              <ConceptList
+              <ItemList
                 level='OBJECTIVE'
                 workspace={workspaceQuery.data.workspaceById}
                 course={focusedCourse}
