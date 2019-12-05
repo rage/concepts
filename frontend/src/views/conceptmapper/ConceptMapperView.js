@@ -12,6 +12,7 @@ import {
   CREATE_CONCEPT,
   CREATE_CONCEPT_LINK,
   DELETE_CONCEPT,
+  DELETE_CONCEPT_LINK,
   UPDATE_CONCEPT
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
@@ -49,7 +50,8 @@ const logToLinear = value =>
 const ConceptMapperView = ({ workspaceId, courseId }) => {
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLink] = useState(null)
-  const [menu, setMenu] = useState({ open: false })
+  const addingLinkRef = useRef()
+  const [menu, setMenu] = useState({ open: null })
   const panning = useRef(false)
   const pan = useRef({ x: 0, y: 0, zoom: 1, linearZoom: logToLinear(1) })
   const selected = useRef(new Set())
@@ -74,6 +76,10 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate()
+  })
+
+  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+    update: cache.deleteConceptLinkUpdate()
   })
 
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
@@ -112,18 +118,31 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     }
   }
 
+  const finishAddingLink = async to => {
+    await createConceptLink({
+      variables: {
+        from: addingLinkRef.current,
+        to,
+        workspaceId
+      }
+    })
+    setAddingLink(null)
+    addingLinkRef.current = null
+  }
+
   const mouseDown = evt => {
     if (evt.button !== 0) {
       return
     }
     if (evt.target !== main.current && evt.target !== root) {
-      if (addingLink && evt.target.hasAttribute('data-concept-id')) {
+      if (addingLinkRef.current && evt.target.hasAttribute('data-concept-id')) {
         finishAddingLink(evt.target.getAttribute('data-concept-id'))
       }
       return
     }
-    if (addingLink) {
+    if (addingLinkRef.current) {
       setAddingLink(null)
+      addingLinkRef.current = null
     }
     if (evt.shiftKey) {
       const x = evt.pageX - main.current.offsetLeft
@@ -199,18 +218,33 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     }
   }
 
+  const openBackgroundMenu = evt => {
+    if (evt.target === main.current || evt.target === root) {
+      setMenu({
+        open: 'background',
+        anchor: {
+          left: evt.clientX - 2,
+          top: evt.clientY - 4
+        }
+      })
+      evt.preventDefault()
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('mousedown', mouseDown)
     window.addEventListener('mousemove', mouseMove)
     window.addEventListener('mouseup', mouseUp)
     window.addEventListener('wheel', mouseWheel)
     window.addEventListener('dblclick', doubleClick)
+    window.addEventListener('contextmenu', openBackgroundMenu)
     return () => {
       window.removeEventListener('mousedown', mouseDown)
       window.removeEventListener('mousemove', mouseMove)
       window.removeEventListener('mouseup', mouseUp)
       window.removeEventListener('wheel', mouseWheel)
       window.removeEventListener('dblclick', doubleClick)
+      window.removeEventListener('contextmenu', openBackgroundMenu)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -223,17 +257,6 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const course = courseQuery.data.courseById
 
-  const finishAddingLink = async to => {
-    await createConceptLink({
-      variables: {
-        from: addingLink,
-        to,
-        workspaceId
-      }
-    })
-    setAddingLink(null)
-  }
-
   const submitExistingConcept = id => ({ name, position }) => updateConcept({
     variables: {
       id,
@@ -244,7 +267,6 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const submitNewConcept = ({ name, position }) => {
     stopAdding()
-    console.log('Submitting concept', name, position)
     return createConcept({
       variables: {
         name,
@@ -259,13 +281,18 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const stopAdding = () => {
     delete concepts.current['concept-new']
-    setAdding(false)
+    setAdding(null)
   }
 
-  const openMenu = id => evt => {
+  const openConceptMenu = id => openMenu('concept', id)
+  const closeConceptMenu = id => () => menu.id === id && closeMenu()
+  const openConceptLinkMenu = id => openMenu('concept-link', id)
+
+  const openMenu = (type, id) => evt => {
+    evt.preventDefault()
     setMenu({
       id,
-      open: true,
+      open: type,
       anchor: {
         left: evt.clientX - 2,
         top: evt.clientY - 4
@@ -283,6 +310,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const menuAddLink = () => {
     setAddingLink(menu.id)
+    addingLinkRef.current = menu.id
     closeMenu()
   }
 
@@ -295,6 +323,23 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     closeMenu()
   }
 
+  const menuDeleteLink = () => {
+    deleteConceptLink({
+      variables: {
+        id: menu.id
+      }
+    })
+    closeMenu()
+  }
+
+  const menuAddConcept = () => {
+    closeMenu()
+    setTimeout(() => setAdding({
+      x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
+      y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
+    }), 0)
+  }
+
   const linkOffsets = {
     y0: -58,
     y1: -58
@@ -305,12 +350,13 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
       {course.concepts.flatMap(concept => [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
-          openMenu={openMenu(concept.id)} closeMenu={() => menu.id === concept.id && closeMenu()}
+          openMenu={openConceptMenu(concept.id)} closeMenu={closeConceptMenu(concept.id)}
           concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
           key={link.id} delay={1} active linkId={link.id}
           within='concept-mapper-link-container' posOffsets={linkOffsets}
+          onContextMenu={openConceptLinkMenu(link.id)}
           scrollParentRef={pan} noListenScroll
           from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
           fromConceptId={concept.id} toConceptId={link.from.id}
@@ -331,10 +377,22 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
       <Menu
         keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-        open={menu.open} onClose={closeMenu}
+        open={menu.open === 'concept'} onClose={closeMenu}
       >
         <MenuItem onClick={menuAddLink}>Add link</MenuItem>
         <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
+      </Menu>
+      <Menu
+        keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+        open={menu.open === 'concept-link'} onClose={closeMenu}
+      >
+        <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
+      </Menu>
+      <Menu
+        keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+        open={menu.open === 'background'} onClose={closeMenu}
+      >
+        <MenuItem onClick={menuAddConcept}>Add concept</MenuItem>
       </Menu>
     </main>
   )
