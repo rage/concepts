@@ -74,9 +74,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const TabContent = ({children, index, value}) => (
-  <div style={{display: index === value ? '': 'none'}}>
-    {children}
-  </div>
+  <> {index === value && children} </>
 )
 
 const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
@@ -155,7 +153,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
       </div>
       <div className={classes.newCourse}>
         {focusedCourse ? 
-          <Paper elevation={0}>
+          <>
             <AppBar position="static">
               <Tabs value={index} onChange={ (event, newValue) => {setIndex(newValue)}}>
                 <Tab label="Concepts" />
@@ -196,7 +194,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
                 updateConcept={args => updateConcept({ variables: args }).catch(e)}
               />
             </TabContent>
-          </Paper> : <Paper elevation={0} />
+          </> : <Paper elevation={0} />
         }
       </div>
     </main>
