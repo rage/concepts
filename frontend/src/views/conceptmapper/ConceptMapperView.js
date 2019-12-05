@@ -21,30 +21,43 @@ const useStyles = makeStyles({
     gridArea: 'content',
     position: 'relative',
     userSelect: 'none',
-    overflow: 'scroll',
-    scrollbarWidth: 'thin'
+    transform: 'translateX(0) translateY(0)',
+    transformOrigin: '0 0'
   },
   selection: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 0, 0, .25)',
     border: '4px solid red',
-    display: 'none'
-  },
-  wrapper: {
-
+    display: 'none',
+    zIndex: 6
   }
 })
+
+const sliderMinLinear = 0
+const sliderMaxLinear = 200
+
+const sliderMinLog = Math.log(0.2)
+const sliderMaxLog = Math.log(5)
+
+const sliderScale = (sliderMaxLog - sliderMinLog) / (sliderMaxLinear - sliderMinLinear)
+
+const linearToLog = position =>
+  Math.exp(sliderMinLog + (sliderScale * (position - sliderMinLinear)))
+const logToLinear = value =>
+  ((Math.log(value) - sliderMinLog) / sliderScale) + sliderMinLinear
 
 const ConceptMapperView = ({ workspaceId, courseId }) => {
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLink] = useState(null)
   const [menu, setMenu] = useState({ open: false })
   const panning = useRef(false)
+  const pan = useRef({ x: 0, y: 0, zoom: 1, linearZoom: logToLinear(1) })
   const selected = useRef(new Set())
   const concepts = useRef({})
   const selection = useRef()
   const selectionRef = useRef()
   const main = useRef()
+  const root = document.getElementById('root')
   const classes = useStyles()
 
   const createConcept = useMutation(CREATE_CONCEPT, {
@@ -101,7 +114,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     if (evt.button !== 0) {
       return
     }
-    if (evt.target !== main.current) {
+    if (evt.target !== main.current && evt.target !== root) {
       if (addingLink && evt.target.hasAttribute('data-concept-id')) {
         finishAddingLink(evt.target.getAttribute('data-concept-id'))
       }
@@ -115,8 +128,8 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
       const y = evt.pageY - main.current.offsetTop
       selection.current = {
         pos: {
-          left: x + main.current.scrollLeft,
-          top: y + main.current.scrollTop,
+          left: x + pan.current.x,
+          top: y + pan.current.y,
           width: 0,
           height: 0
         },
@@ -135,15 +148,17 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const mouseMove = evt => {
     if (panning.current) {
-      main.current.scrollTop -= evt.movementY
-      main.current.scrollLeft -= evt.movementX
+      pan.current.y -= evt.movementY
+      pan.current.x -= evt.movementX
+      main.current.style.transform =
+        `translateX(${-pan.current.x}px) translateY(${-pan.current.y}px) scale(${pan.current.zoom})`
     } else if (selection.current) {
       updateSelection('x', 'left', 'width',
         evt.pageX - main.current.offsetLeft,
-        main.current.scrollLeft)
+        pan.current.x)
       updateSelection('y', 'top', 'height',
         evt.pageY - main.current.offsetTop,
-        main.current.scrollTop)
+        pan.current.y)
       updateSelected()
     }
   }
@@ -157,13 +172,34 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     }
   }
 
+  const mouseWheel = evt => {
+    pan.current.linearZoom -= evt.deltaY
+    pan.current.zoom = linearToLog(pan.current.linearZoom)
+    main.current.style.transform =
+      `translateX(${-pan.current.x}px) translateY(${-pan.current.y}px) scale(${pan.current.zoom})`
+  }
+
+  const doubleClick = evt => {
+    if (evt.target === main.current || evt.target === root) {
+      setAdding({
+        x: evt.pageX - main.current.offsetLeft + pan.current.x - 100,
+        y: evt.pageY - main.current.offsetTop + pan.current.y - 17
+      })
+    }
+  }
+
   useEffect(() => {
-    console.log('Adding handlers')
+    window.addEventListener('mousedown', mouseDown)
     window.addEventListener('mousemove', mouseMove)
     window.addEventListener('mouseup', mouseUp)
+    window.addEventListener('wheel', mouseWheel)
+    window.addEventListener('dblclick', doubleClick)
     return () => {
+      window.removeEventListener('mousedown', mouseDown)
       window.removeEventListener('mousemove', mouseMove)
       window.removeEventListener('mouseup', mouseUp)
+      window.removeEventListener('wheel', mouseWheel)
+      window.removeEventListener('dblclick', doubleClick)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -175,15 +211,6 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   }
 
   const course = courseQuery.data.courseById
-
-  const doubleClick = evt => {
-    if (evt.target === main.current) {
-      setAdding({
-        x: evt.pageX - main.current.offsetLeft + main.current.scrollLeft - 100,
-        y: evt.pageY - main.current.offsetTop + main.current.scrollTop - 17
-      })
-    }
-  }
 
   const finishAddingLink = async to => {
     await createConceptLink({
@@ -263,10 +290,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   }
 
   return (
-    <main
-      className={classes.root} ref={main}
-      onDoubleClick={doubleClick} onMouseDown={mouseDown}
-    >
+    <main className={classes.root} ref={main}>
       {course.concepts.flatMap(concept => [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept}
@@ -277,7 +301,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
         ...concept.linksToConcept.map(link => <ConceptLink
           key={link.id} delay={1} active linkId={link.id}
           within='concept-mapper-link-container' posOffsets={linkOffsets}
-          scrollParentRef={main} noListenScroll
+          scrollParentRef={pan} noListenScroll
           from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
           fromConceptId={concept.id} toConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle'

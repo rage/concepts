@@ -137,8 +137,8 @@ export default class ConceptLink extends Component {
       toRef.current.classList.add(`linkto-${this.props.fromConceptId}`)
 
       const sp = scrollParentRef?.current
-      const pageXOffset = sp ? sp.scrollLeft : window.pageXOffset
-      const pageYOffset = sp ? sp.scrollTop : window.pageYOffset
+      const pageXOffset = sp ? sp.scrollLeft || sp.x : window.pageXOffset
+      const pageYOffset = sp ? sp.scrollTop || sp.y : window.pageYOffset
 
       const x0 = fromBox.x + (fromBox.width * this.fromAnchor.x) + pageXOffset + offset.x0
       const y0 = fromBox.y + (fromBox.height * this.fromAnchor.y) + pageYOffset + offset.y0

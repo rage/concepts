@@ -33,7 +33,11 @@ const useStyles = makeStyles(() => ({
     gridTemplate: `"navbar"  48px
                    "content" auto
                    "bottom-navbar" 56px
-                   / 100vw`
+                   / 100vw`,
+    pointerEvents: 'none',
+    '& > *': {
+      pointerEvents: 'initial'
+    }
   }
 }))
 

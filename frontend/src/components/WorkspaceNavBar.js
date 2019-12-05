@@ -25,7 +25,8 @@ const useStyles = makeStyles({
   root: {
     gridArea: 'bottom-navbar',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    zIndex: 10
   },
   leftPlaceholder: {
     width: '56px',
