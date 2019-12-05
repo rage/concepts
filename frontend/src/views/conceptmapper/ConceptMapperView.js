@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     gridArea: 'content',
     position: 'relative',
     userSelect: 'none',
-    transform: 'translateX(0) translateY(0)',
+    transform: 'translate(0, 0)',
     transformOrigin: '0 0'
   },
   selection: {
@@ -153,7 +153,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
       pan.current.y -= evt.movementY
       pan.current.x -= evt.movementX
       main.current.style.transform =
-        `translateX(${-pan.current.x}px) translateY(${-pan.current.y}px) scale(${pan.current.zoom})`
+        `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
     } else if (selection.current) {
       updateSelection('x', 'left', 'width',
         evt.pageX - main.current.offsetLeft,
@@ -176,16 +176,20 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const mouseWheel = evt => {
     pan.current.linearZoom -= evt.deltaY
+    pan.current.x /= pan.current.zoom
+    pan.current.y /= pan.current.zoom
     pan.current.zoom = linearToLog(pan.current.linearZoom)
+    pan.current.x *= pan.current.zoom
+    pan.current.y *= pan.current.zoom
     main.current.style.transform =
-      `translateX(${-pan.current.x}px) translateY(${-pan.current.y}px) scale(${pan.current.zoom})`
+      `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
   }
 
   const doubleClick = evt => {
     if (evt.target === main.current || evt.target === root) {
       setAdding({
-        x: evt.pageX - main.current.offsetLeft + pan.current.x - 100,
-        y: evt.pageY - main.current.offsetTop + pan.current.y - 17
+        x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
+        y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
       })
     }
   }
