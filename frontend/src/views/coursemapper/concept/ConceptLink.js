@@ -139,7 +139,7 @@ export default class ConceptLink extends Component {
       const sp = scrollParentRef?.current
       const pageXOffset = sp ? sp.scrollLeft || sp.x : window.pageXOffset
       const pageYOffset = sp ? sp.scrollTop || sp.y : window.pageYOffset
-      const zoom = sp?.zoom || 0
+      const zoom = sp?.zoom || 1
 
       const x0 = (fromBox.x + (fromBox.width * this.fromAnchor.x) + pageXOffset + offset.x0) / zoom
       const y0 = (fromBox.y + (fromBox.height * this.fromAnchor.y) + pageYOffset + offset.y0) / zoom
