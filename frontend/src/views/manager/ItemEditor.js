@@ -25,7 +25,7 @@ const initialState = {
   frozen: undefined
 }
 
-const ConnectableSubmitButton = ({ disabled, ref }) => {
+const ConnectableSubmitButton = ({ disabled, ref, action }) => {
   const classes = useStyles()
 
   return (<Button
@@ -35,7 +35,7 @@ const ConnectableSubmitButton = ({ disabled, ref }) => {
     type='submit'
     ref={ref}
     className={classes.submit}>
-      submit
+      { action }
   </Button>)
 }
 
@@ -144,7 +144,7 @@ const ItemEditor = ({
         }}
         menuPortalTarget={document.body}
       />
-      <ConnectableSubmitButton disabled={!input.name}/>
+      <ConnectableSubmitButton disabled={!input.name} action={action}/>
       {cancel &&
         <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
