@@ -89,6 +89,8 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
       selection.current.pos[posKey] = value + offset
       selection.current.pos[lenKey] = initialValue - value
     }
+    selection.current.pos[posKey] /= pan.current.zoom
+    selection.current.pos[lenKey] /= pan.current.zoom
     selectionRef.current.style[posKey] = `${selection.current.pos[posKey]}px`
     selectionRef.current.style[lenKey] = `${selection.current.pos[lenKey]}px`
   }
@@ -293,9 +295,8 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     <main className={classes.root} ref={main}>
       {course.concepts.flatMap(concept => [
         <ConceptNode
-          key={concept.id} workspaceId={workspaceId} concept={concept}
-          openMenu={openMenu(concept.id)}
-          closeMenu={() => menu.id === concept.id && closeMenu()}
+          key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
+          openMenu={openMenu(concept.id)} closeMenu={() => menu.id === concept.id && closeMenu()}
           concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink

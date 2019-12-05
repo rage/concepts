@@ -65,7 +65,7 @@ const parsePosition = position => {
 }
 
 const ConceptNode = ({
-  concept, concepts, selected,
+  concept, concepts, selected, pan,
   openMenu, closeMenu, submit, cancel, isNew = false
 }) => {
   const classes = useStyles()
@@ -189,6 +189,8 @@ const ConceptNode = ({
     )
   } else {
     const onDrag = (evt, { deltaX, deltaY }) => {
+      deltaX /= pan.current.zoom
+      deltaY /= pan.current.zoom
       window.dispatchEvent(new CustomEvent('moveConcept', {
         detail: {
           id,
