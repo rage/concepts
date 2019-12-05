@@ -176,6 +176,11 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
   const mouseWheel = evt => {
     pan.current.linearZoom -= evt.deltaY
+    if (pan.current.linearZoom < sliderMinLinear) {
+      pan.current.linearZoom = sliderMinLinear
+    } else if (pan.current.linearZoom > sliderMaxLinear) {
+      pan.current.linearZoom = sliderMaxLinear
+    }
     pan.current.x /= pan.current.zoom
     pan.current.y /= pan.current.zoom
     pan.current.zoom = linearToLog(pan.current.linearZoom)
