@@ -146,6 +146,7 @@ const ConceptNode = ({
     const onKeyDown = evt => {
       if (evt.key === 'Enter' && !evt.shiftKey) {
         finishEdit()
+        evt.preventDefault()
       } else if (evt.key === 'Escape') {
         cancelEdit()
       }
