@@ -18,7 +18,7 @@ import { parseFilter, includeConcept as intIncludeConcept } from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters(), height: '100%',
+    ...theme.mixins.gutters(),
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
@@ -195,7 +195,7 @@ const ItemList = ({
   const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
 
   return (
-    <Card elevation={0} className={classes.root}>
+    <Card elevation={0} className={classes.root} style={{height: '94%' }} square>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
         title={`${level.charAt(0) + level.toLowerCase().slice(1)}s of ${course.name}`}
