@@ -64,7 +64,7 @@ const CourseList = ({
   const courseTags = backendToSelect(workspace.courseTags)
 
   return (
-    <Card elevation={0} className={classes.root}>
+    <Card elevation={0} className={classes.root} square>
       <CardHeader
         title='Courses'
         action={dirtyOrder ? <>
