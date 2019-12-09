@@ -201,13 +201,17 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
       pan.current.linearZoom = sliderMaxLinear
     }
 
-    const w = main.current.offsetWidth
-    const h = main.current.offsetHeight
-    pan.current.x = (pan.current.x + (w / 2)) / pan.current.zoom
-    pan.current.y = (pan.current.y + (h / 2)) / pan.current.zoom
+    const mouseX = evt.pageX - main.current.offsetLeft
+    const mouseY = evt.pageY - main.current.offsetTop
+    pan.current.x += mouseX
+    pan.current.y += mouseY
+    pan.current.x /= pan.current.zoom
+    pan.current.y /= pan.current.zoom
     pan.current.zoom = linearToLog(pan.current.linearZoom)
-    pan.current.x = (pan.current.x * pan.current.zoom) - (w / 2)
-    pan.current.y = (pan.current.y * pan.current.zoom) - (h / 2)
+    pan.current.x *= pan.current.zoom
+    pan.current.y *= pan.current.zoom
+    pan.current.x -= mouseX
+    pan.current.y -= mouseY
 
     main.current.style.transform =
       `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
