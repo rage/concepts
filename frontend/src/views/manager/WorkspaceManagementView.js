@@ -156,13 +156,13 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
           <>
             <AppBar position="static">
               <Tabs value={index} onChange={ (event, newValue) => {setIndex(newValue)}}>
-                <Tab label="Concepts" />
                 <Tab label="Objectives" />
+                <Tab label="Concepts" />
               </Tabs>
             </AppBar>
             <TabContent value={index} index={0}>
               <ItemList
-                level='CONCEPT'
+                level='OBJECTIVE'
                 workspace={workspaceQuery.data.workspaceById}
                 course={focusedCourse}
                 updateCourse={args => updateCourse({ variables: args }).catch(e)}
@@ -179,7 +179,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
             </TabContent>
             <TabContent value={index} index={1}>
               <ItemList
-                level='OBJECTIVE'
+                level='CONCEPT'
                 workspace={workspaceQuery.data.workspaceById}
                 course={focusedCourse}
                 updateCourse={args => updateCourse({ variables: args }).catch(e)}
