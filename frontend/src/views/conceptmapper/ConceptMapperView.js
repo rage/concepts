@@ -25,6 +25,22 @@ const useStyles = makeStyles({
     transform: 'translate(0, 0)',
     transformOrigin: '0 0'
   },
+  toolbar: {
+    position: 'fixed',
+    left: 0,
+    top: '48px',
+    bottom: '58px',
+    width: '250px',
+    backgroundColor: 'white'
+  },
+  objectives: {
+    position: 'fixed',
+    right: 0,
+    top: '48px',
+    bottom: '58px',
+    width: '300px',
+    backgroundColor: 'white'
+  },
   selection: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 0, 0, .25)',
@@ -203,15 +219,10 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
 
     const mouseX = evt.pageX - main.current.offsetLeft
     const mouseY = evt.pageY - main.current.offsetTop
-    pan.current.x += mouseX
-    pan.current.y += mouseY
-    pan.current.x /= pan.current.zoom
-    pan.current.y /= pan.current.zoom
+    const oldZoom = pan.current.zoom
     pan.current.zoom = linearToLog(pan.current.linearZoom)
-    pan.current.x *= pan.current.zoom
-    pan.current.y *= pan.current.zoom
-    pan.current.x -= mouseX
-    pan.current.y -= mouseY
+    pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
+    pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
 
     main.current.style.transform =
       `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
@@ -353,9 +364,9 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     y1: -58
   }
 
-  return (
+  return <>
     <main className={classes.root} ref={main}>
-      {course.concepts.flatMap(concept => [
+      {course.concepts.flatMap(concept => concept.level === 'CONCEPT' ? [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
           openMenu={openConceptMenu(concept.id)} closeMenu={closeConceptMenu(concept.id)}
@@ -370,8 +381,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
           fromConceptId={concept.id} toConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle'
         />)
-      ])}
-      <div ref={selectionRef} className={classes.selection} />
+      ] : [])}
       {adding && <ConceptNode
         isNew concept={{ id: 'new', name: '', position: adding }}
         concepts={concepts} selected={selected}
@@ -381,29 +391,38 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
         active within={document.body}
         followMouse from={`concept-${addingLink}`} to={`concept-${addingLink}`}
       />}
+      <div ref={selectionRef} className={classes.selection} />
       <div id='concept-mapper-link-container' />
-
-      <Menu
-        keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-        open={menu.open === 'concept'} onClose={closeMenu}
-      >
-        <MenuItem onClick={menuAddLink}>Add link</MenuItem>
-        <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
-      </Menu>
-      <Menu
-        keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-        open={menu.open === 'concept-link'} onClose={closeMenu}
-      >
-        <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
-      </Menu>
-      <Menu
-        keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-        open={menu.open === 'background'} onClose={closeMenu}
-      >
-        <MenuItem onClick={menuAddConcept}>Add concept</MenuItem>
-      </Menu>
     </main>
-  )
+
+    <section className={classes.toolbar}>
+
+    </section>
+
+    <section className={classes.objectives}>
+
+    </section>
+
+    <Menu
+      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+      open={menu.open === 'concept'} onClose={closeMenu}
+    >
+      <MenuItem onClick={menuAddLink}>Add link</MenuItem>
+      <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
+    </Menu>
+    <Menu
+      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+      open={menu.open === 'concept-link'} onClose={closeMenu}
+    >
+      <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
+    </Menu>
+    <Menu
+      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
+      open={menu.open === 'background'} onClose={closeMenu}
+    >
+      <MenuItem onClick={menuAddConcept}>Add concept</MenuItem>
+    </Menu>
+  </>
 }
 
 export default ConceptMapperView
