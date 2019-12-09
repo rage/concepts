@@ -58,7 +58,7 @@ const sortingOptions = {
 const ItemList = ({
   workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
 }) => {
-  const managerRef = 'manager'
+  const managerViewId = 'manager'
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -167,13 +167,13 @@ const ItemList = ({
       if (merging) {
         return <>
           <CardHeaderButton
-            bRef={infoBox.ref(managerRef, 'FINISH_MERGE')}
+            bRef={infoBox.ref(managerViewId, 'FINISH_MERGE')}
             onClick={openMergeDialog} disabled={merging.size < 2}
           >
             Merge…
           </CardHeaderButton>
           <CardHeaderButton
-            bRef={infoBox.secondaryRef(managerRef, 'FINISH_MERGE')} onClick={stopMerging}
+            bRef={infoBox.secondaryRef(managerViewId, 'FINISH_MERGE')} onClick={stopMerging}
           >
             Cancel
           </CardHeaderButton>
@@ -181,7 +181,7 @@ const ItemList = ({
       }
       return (
         <CardHeaderButton
-          bRef={infoBox.ref(managerRef, 'START_MERGE')} onClick={startMerging}
+          bRef={infoBox.ref(managerViewId, 'START_MERGE')} onClick={startMerging}
           disabled={course.concepts.length < 2}
         >
           Start merge
@@ -207,7 +207,7 @@ const ItemList = ({
           variant='outlined'
           margin='dense'
           label={`Filter ${level.toLowerCase()}s`}
-          ref={infoBox.ref(managerRef, 'FILTER_CONCEPTS')}
+          ref={infoBox.ref(managerViewId, 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
@@ -217,7 +217,7 @@ const ItemList = ({
           variant='outlined'
           margin='dense'
           label='Sort by'
-          ref={infoBox.ref(managerRef, 'SORT_CONCEPTS')}
+          ref={infoBox.ref(managerViewId, 'SORT_CONCEPTS')}
           value={orderMethod}
           onChange={evt => {
             setOrderMethod(evt.target.value)
@@ -251,8 +251,8 @@ const ItemList = ({
             setEditing={setEditing}
             sortable={orderMethod === 'CUSTOM' && !course.frozen}
             toggleMergingConcept={toggleMergingConcept}
-            checkboxRef={conceptIndex === 0 ? infoBox.ref(managerRef, 'SELECT_MERGE_CONCEPTS')
-              : conceptIndex === 1 ? infoBox.secondaryRef(managerRef, 'SELECT_MERGE_CONCEPTS')
+            checkboxRef={conceptIndex === 0 ? infoBox.ref(managerViewId, 'SELECT_MERGE_CONCEPTS')
+              : conceptIndex === 1 ? infoBox.secondaryRef(managerViewId, 'SELECT_MERGE_CONCEPTS')
                 : undefined}
             conceptTags={conceptTags}
           />
@@ -270,8 +270,8 @@ const ItemList = ({
                 setEditing={setEditing}
                 toggleMergingConcept={toggleMergingConcept}
                 divider={false}
-                checkboxRef={conceptIndex === 0 ? infoBox.ref(managerRef, 'SELECT_MERGE_CONCEPTS')
-                  : conceptIndex === 1 ? infoBox.secondaryRef(managerRef, 'SELECT_MERGE_CONCEPTS')
+                checkboxRef={conceptIndex === 0 ? infoBox.ref(managerViewId, 'SELECT_MERGE_CONCEPTS')
+                  : conceptIndex === 1 ? infoBox.secondaryRef(managerViewId, 'SELECT_MERGE_CONCEPTS')
                     : undefined}
                 sortable={false}
                 conceptTags={conceptTags}
@@ -287,7 +287,7 @@ const ItemList = ({
       <ItemEditor submit={async args => {
         await createConcept(args)
         listRef.current.scrollTop = listRef.current.scrollHeight
-        infoBox.redrawIfOpen(managerRef,
+        infoBox.redrawIfOpen(managerViewId,
           'CREATE_CONCEPT_NAME', 
           'CREATE_CONCEPT_DESCRIPTION', 
           'CREATE_CONCEPT_TAGS',
