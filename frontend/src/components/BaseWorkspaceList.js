@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
-  RadioButtonChecked, RadioButtonUnchecked
+  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -212,6 +212,11 @@ This will change which template is cloned by users.`)
     history.push(`${urlPrefix}/${menu.workspace.id}/mapper`)
   }
 
+  const handleNavigateConceptMapper = () => {
+    // TODO
+    window.alert('Entering mapper from workspace list is not yet implemented')
+  }
+
   const handleNavigateHeatmap = () => {
     history.push(`${urlPrefix}/${menu.workspace.id}/heatmap`)
   }
@@ -257,9 +262,15 @@ This will change which template is cloned by users.`)
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
         <MenuItem aria-label='Mapper' onClick={handleNavigateMapper}>
           <ListItemIcon>
+            <AccountTreeIcon />
+          </ListItemIcon>
+          Course Mapper
+        </MenuItem>
+        <MenuItem aria-label='Mapper' onClick={handleNavigateConceptMapper}>
+          <ListItemIcon>
             <ShuffleIcon />
           </ListItemIcon>
-          Mapper
+          Concept Mapper
         </MenuItem>
         <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
           <ListItemIcon>
