@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem } from '@material-ui/core'
+import { Menu, MenuItem, InputBase, Select } from '@material-ui/core'
+import useRouter from '../../lib/useRouter'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -30,7 +31,9 @@ const useStyles = makeStyles({
     transformOrigin: '0 0'
   },
   toolbar: {
-
+    position: 'fixed',
+    top: '60px',
+    left: '10px'
   },
   objectives: {
     position: 'fixed',
@@ -62,7 +65,7 @@ const linearToLog = position =>
 const logToLinear = value =>
   ((Math.log(value) - sliderMinLog) / sliderScale) + sliderMinLinear
 
-const ConceptMapperView = ({ workspaceId, courseId }) => {
+const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLink] = useState(null)
   const addingLinkRef = useRef()
@@ -76,6 +79,9 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   const main = useRef()
   const root = document.getElementById('root')
   const classes = useStyles()
+
+  const { history } = useRouter()
+  const [courseSelectOpen, setCourseSelectOpen] = useState(false)
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -277,7 +283,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   }
 
   const course = courseQuery.data.courseById
-  const courses = courseQuery.data.workspaceById.courses
+  const courses = courseQuery.data.courseById.workspace.courses
 
   const submitExistingConcept = id => ({ name, position }) => updateConcept({
     variables: {
@@ -399,7 +405,22 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     </main>
 
     <section className={classes.toolbar}>
-
+        <Select
+          open={courseSelectOpen}
+          value={course.id}
+          MenuProps={{
+            MenuListProps: {
+              onMouseLeave: () => setCourseSelectOpen(false)
+            }
+          }}
+          onMouseEnter={() => setCourseSelectOpen(true)}
+          input={<InputBase/>}
+          onChange={evt => history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)}
+        >
+          {courses.map(course =>
+            <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
+          )}
+        </Select>
     </section>
 
     <section className={classes.objectives}>
