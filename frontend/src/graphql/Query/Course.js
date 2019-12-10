@@ -37,6 +37,15 @@ query courseById($id: ID!) {
 `
 
 const COURSE_BY_ID_WITH_LINKS = gql`
+query workspaceById($workspaceId: ID!) {
+  workspaceById(id: $workspaceId) {
+    courses {
+      id
+      name
+    }
+  }
+}
+
 query courseById($id: ID!) {
   courseById(id: $id) {
     id

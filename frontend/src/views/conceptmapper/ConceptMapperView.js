@@ -30,12 +30,7 @@ const useStyles = makeStyles({
     transformOrigin: '0 0'
   },
   toolbar: {
-    position: 'fixed',
-    left: 0,
-    top: '48px',
-    bottom: '58px',
-    width: '250px',
-    backgroundColor: 'white'
+
   },
   objectives: {
     position: 'fixed',
@@ -282,6 +277,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   }
 
   const course = courseQuery.data.courseById
+  const courses = courseQuery.data.workspaceById.courses
 
   const submitExistingConcept = id => ({ name, position }) => updateConcept({
     variables: {
