@@ -71,12 +71,13 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLink] = useState(null)
   const addingLinkRef = useRef()
-  const [menu, setMenu] = useState({ open: null })
+  const [menu, setMenu] = useState({ open: false })
   const panning = useRef(false)
   const pan = useRef({ x: 0, y: 0, zoom: 1, linearZoom: logToLinear(1) })
+  const edge = useRef({ left: 0, top: 0, right: 0, bottom: 0 })
   const selected = useRef(new Set())
   const concepts = useRef({})
-  const selection = useRef()
+  const selection = useRef(null)
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
@@ -114,17 +115,42 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     variables: { id: courseId }
   })
 
+  const findPanEdges = () => {
+    if (!main.current || !concepts.current) {
+      return
+    }
+    let left = 0, top = 0, right = main.current.offsetWidth, bottom = main.current.offsetHeight
+    const paddingX = main.current.offsetWidth / 2
+    const paddingY = main.current.offsetHeight / 2
+    for (const state of Object.values(concepts.current)) {
+      if (state.x - paddingX <= left) left = state.x - paddingX
+      if (state.x + state.width + paddingX >= right) right = state.x + state.width + paddingX
+      if (state.y - paddingY <= top) top = state.y - paddingY
+      if (state.y + state.height + paddingY >= bottom) bottom = state.y + state.height + paddingY
+    }
+    edge.current = { left, top, right, bottom }
+  }
+
+  const clampPan = () => {
+    const height = main.current.offsetHeight
+    if (pan.current.y < edge.current.top)
+      pan.current.y = edge.current.top
+    else if (pan.current.y + height > edge.current.bottom)
+      pan.current.y = edge.current.bottom - height
+
+    const width = main.current.offsetWidth
+    if (pan.current.x < edge.current.left)
+      pan.current.x = edge.current.left
+    else if (pan.current.x + width > edge.current.right)
+      pan.current.x = edge.current.right - width
+  }
+
   const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
     const initialValue = selection.current.start[axisKey]
-    if (value > initialValue) {
-      selection.current.pos[posKey] = initialValue + offset
-      selection.current.pos[lenKey] = value - initialValue
-    } else {
-      selection.current.pos[posKey] = value + offset
-      selection.current.pos[lenKey] = initialValue - value
-    }
-    selection.current.pos[posKey] /= pan.current.zoom
-    selection.current.pos[lenKey] /= pan.current.zoom
+    const minVal = Math.min(value, initialValue)
+    const maxVal = Math.max(value, initialValue)
+    selection.current.pos[posKey] = (minVal + offset) / pan.current.zoom
+    selection.current.pos[lenKey] = (maxVal - minVal) / pan.current.zoom
     selectionRef.current.style[posKey] = `${selection.current.pos[posKey]}px`
     selectionRef.current.style[lenKey] = `${selection.current.pos[lenKey]}px`
   }
@@ -199,6 +225,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     if (panning.current) {
       pan.current.y -= evt.movementY
       pan.current.x -= evt.movementX
+      clampPan()
       main.current.style.transform =
         `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
     } else if (selection.current) {
@@ -216,6 +243,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     if (selection.current) {
       selection.current = null
       selectionRef.current.style.display = 'none'
+      findPanEdges()
     } else if (panning.current) {
       panning.current = false
     }
@@ -279,6 +307,8 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(findPanEdges, [courseQuery.data.courseById?.concepts])
 
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
