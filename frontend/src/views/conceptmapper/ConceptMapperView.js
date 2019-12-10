@@ -16,6 +16,10 @@ import {
   UPDATE_CONCEPT
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
+import {
+  useManyUpdatingSubscriptions,
+  useUpdatingSubscription
+} from '../../apollo/useUpdatingSubscription'
 
 const useStyles = makeStyles({
   root: {
@@ -77,6 +81,14 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   const main = useRef()
   const root = document.getElementById('root')
   const classes = useStyles()
+
+  useUpdatingSubscription('workspace', 'update', {
+    variables: { workspaceId }
+  })
+
+  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
+    variables: { workspaceId }
+  })
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)

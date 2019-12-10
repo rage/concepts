@@ -208,13 +208,12 @@ This will change which template is cloned by users.`)
     history.push(`${urlPrefix}/${workspaceId}/manager`)
   }
 
-  const handleNavigateMapper = () => {
+  const handleNavigateCourseMapper = () => {
     history.push(`${urlPrefix}/${menu.workspace.id}/mapper`)
   }
 
   const handleNavigateConceptMapper = () => {
-    // TODO
-    window.alert('Entering mapper from workspace list is not yet implemented')
+    history.push(`${urlPrefix}/${menu.workspace.id}/conceptmapper`)
   }
 
   const handleNavigateHeatmap = () => {
@@ -260,7 +259,7 @@ This will change which template is cloned by users.`)
         ))
       }</List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
-        <MenuItem aria-label='Mapper' onClick={handleNavigateMapper}>
+        <MenuItem aria-label='Mapper' onClick={handleNavigateCourseMapper}>
           <ListItemIcon>
             <AccountTreeIcon />
           </ListItemIcon>

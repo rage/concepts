@@ -55,10 +55,8 @@ const workspaceRouter = (prefix) => <>
     />}
   />
   <Route
-    exact path={`${prefix}/:wid/mapper`}
-    render={({ match, location }) =>
-      <MapperRedirectView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
-    }
+    exact path={`${prefix}/:wid/(concept)?mapper`}
+    render={({ match }) => <MapperRedirectView workspaceId={match.params.wid} urlPrefix={prefix} />}
   />
   <Route
     exact path={`${prefix}/:wid/conceptmapper/:cid`}

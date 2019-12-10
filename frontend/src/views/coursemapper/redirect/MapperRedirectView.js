@@ -6,8 +6,10 @@ import { WORKSPACE_BY_ID } from '../../../graphql/Query/Workspace'
 import CreateCourseForm from './CreateCourseForm'
 import NotFoundView from '../../error/NotFoundView'
 import LoadingBar from '../../../components/LoadingBar'
+import useRouter from '../../../lib/useRouter'
 
-const MapperRedirectView = ({ workspaceId, location, urlPrefix }) => {
+const MapperRedirectView = ({ workspaceId, urlPrefix }) => {
+  const { location } = useRouter()
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: {
       id: workspaceId
