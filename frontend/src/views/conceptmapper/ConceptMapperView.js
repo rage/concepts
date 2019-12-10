@@ -106,7 +106,7 @@ const ConceptMapperView = ({ workspaceId, courseId }) => {
   })
 
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
-    variables: { id: courseId }
+    variables: { id: courseId, workspaceId }
   })
 
   const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
