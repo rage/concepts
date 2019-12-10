@@ -67,7 +67,8 @@ const useStyles = makeStyles(() => ({
     }
   },
   conceptNav: {
-    borderRadius: '4px 4px 0 0'
+    borderRadius: '4px 4px 0 0',
+    zIndex: 0
   },
   courseEditor: {
     width: '100%',
@@ -153,7 +154,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
         />
       </div>
       {focusedCourse ? <div className={classes.concepts}>
-        <AppBar position='static' className={classes.conceptNav} elevation={0} style={{ zIndex: 0 }}>
+        <AppBar position='static' className={classes.conceptNav} elevation={0}>
           <Tabs variant='fullWidth' value={level} onChange={(_, newValue) => setLevel(newValue)}>
             <Tab label='Objectives' value='OBJECTIVE' />
             <Tab label='Concepts' value='CONCEPT' />
