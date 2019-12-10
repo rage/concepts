@@ -157,45 +157,26 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
       </div>
       {focusedCourse ? <div className={classes.concepts}>
         <AppBar position='static' className={classes.conceptNav} elevation={0}>
-          <Tabs value={index} onChange={(event, newValue) => setIndex(newValue)}>
+          <Tabs variant='fullWidth' value={index} onChange={(_, newValue) => setIndex(newValue)}>
             <Tab label='Objectives' />
             <Tab label='Concepts' />
           </Tabs>
         </AppBar>
-        <TabContent value={index} index={0}>
-          <ItemList
-            level='OBJECTIVE'
-            workspace={workspaceQuery.data.workspaceById}
-            course={focusedCourse}
-            updateCourse={args => updateCourse({ variables: args }).catch(e)}
-            createConcept={args => createConcept({
-              variables: {
-                workspaceId,
-                courseId: focusedCourse.id,
-                ...args
-              }
-            }).catch(e)}
-            deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-            updateConcept={args => updateConcept({ variables: args }).catch(e)}
-          />
-        </TabContent>
-        <TabContent value={index} index={1}>
-          <ItemList
-            level='CONCEPT'
-            workspace={workspaceQuery.data.workspaceById}
-            course={focusedCourse}
-            updateCourse={args => updateCourse({ variables: args }).catch(e)}
-            createConcept={args => createConcept({
-              variables: {
-                workspaceId,
-                courseId: focusedCourse.id,
-                ...args
-              }
-            }).catch(e)}
-            deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-            updateConcept={args => updateConcept({ variables: args }).catch(e)}
-          />
-        </TabContent>
+        <ItemList
+          level={index === 0 ? 'OBJECTIVE' : 'CONCEPT'}
+          workspace={workspaceQuery.data.workspaceById}
+          course={focusedCourse}
+          updateCourse={args => updateCourse({ variables: args }).catch(e)}
+          createConcept={args => createConcept({
+            variables: {
+              workspaceId,
+              courseId: focusedCourse.id,
+              ...args
+            }
+          }).catch(e)}
+          deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
+          updateConcept={args => updateConcept({ variables: args }).catch(e)}
+        />
       </div> : <div className={classes.concepts} /> }
     </main>
   )
