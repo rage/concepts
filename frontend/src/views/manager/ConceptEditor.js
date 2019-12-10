@@ -76,8 +76,8 @@ const ConceptEditor = ({
   const nameRef = useRef()
   const selectRef = useRef(null)
 
-  const onSubmit = event => {
-    event.preventDefault()
+  const onSubmit = evt => {
+    evt.preventDefault()
     delete input.bloomTag
     submit({
       ...input,
@@ -89,13 +89,13 @@ const ConceptEditor = ({
     }
   }
 
-  const onKeyDown = event => {
-    if (cancel && event.key === 'Escape') {
+  const onKeyDown = evt => {
+    if (cancel && evt.key === 'Escape') {
       cancel()
     }
   }
 
-  const onChange = event => setInput({ ...input, [event.target.name]: event.target.value })
+  const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
 
   return (
     <form
@@ -149,7 +149,7 @@ const ConceptEditor = ({
             control={
               <Checkbox
                 checked={input.official}
-                onChange={event => setInput({ ...input, official: event.target.checked })}
+                onChange={evt => setInput({ ...input, official: evt.target.checked })}
                 value='official'
                 color='primary'
               />
@@ -162,7 +162,7 @@ const ConceptEditor = ({
             control={
               <Checkbox
                 checked={input.frozen}
-                onChange={event => setInput({ ...input, frozen: event.target.checked })}
+                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
                 value='frozen'
                 color='primary'
               />
