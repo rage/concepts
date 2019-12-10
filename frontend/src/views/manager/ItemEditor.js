@@ -1,17 +1,10 @@
 import React, { useRef, useState } from 'react'
-import {
-  Button,
-  Checkbox,
-  FormControl, FormControlLabel,
-  TextField
-} from '@material-ui/core'
+import { Button, Checkbox, FormControl, FormControlLabel, TextField } from '@material-ui/core'
 import Select from 'react-select/creatable'
+
 import { useLoginStateValue } from '../../lib/store'
 import {
-  backendToSelect,
-  selectToBackend,
-  onTagCreate,
-  tagSelectStyles
+  backendToSelect, selectToBackend, onTagCreate, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
 import { Role } from '../../lib/permissions'
 import useStyles from './editorStyles'
@@ -28,15 +21,18 @@ const initialState = {
 const ConnectableSubmitButton = ({ disabled, ref, action }) => {
   const classes = useStyles()
 
-  return (<Button
-    color='primary' 
-    variant='contained' 
-    disabled={disabled} 
-    type='submit'
-    ref={ref}
-    className={classes.submit}>
+  return (
+    <Button
+      color='primary'
+      variant='contained'
+      disabled={disabled}
+      type='submit'
+      ref={ref}
+      className={classes.submit}
+    >
       { action }
-  </Button>)
+    </Button>
+  )
 }
 
 const ConnectableTextfield = ({ value, name, label, inputRef, onChange, autoFocus, ref }) => {
@@ -58,19 +54,19 @@ const ConnectableTextfield = ({ value, name, label, inputRef, onChange, autoFocu
   />)
 }
 
-const StaffArea = ({children}) => {
+const StaffArea = ({ children }) => {
   const [{ user }] = useLoginStateValue()
   return (
     <> { user.role >= Role.STAFF && children } </>
   )
 }
 
-const ItemEditor = ({ 
+const ItemEditor = ({
   submit,
-  cancel, 
+  cancel,
   action,
   tagOptions,
-  defaultValues = {}, 
+  defaultValues = {}
 }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
@@ -79,9 +75,9 @@ const ItemEditor = ({
     ...defaultValues,
     tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
-  
+
   const nameRef = useRef()
-  const selectRef = useRef(null) 
+  const selectRef = useRef(null)
   const levelName = input.level.charAt(0) + input.level.toLowerCase().slice(1)
 
   const onSubmit = event => {
@@ -106,21 +102,21 @@ const ItemEditor = ({
   const onChange = event => setInput({ ...input, [event.target.name]: event.target.value })
 
   return (
-    <form 
+    <form
       className={classes.form}
       onSubmit={onSubmit}
       onKeyDown={onKeyDown}
     >
-      <ConnectableTextfield 
-        name="name" 
+      <ConnectableTextfield
+        name='name'
         label={`${levelName} name`}
         autoFocus={action !== 'Create'}
-        inputRef={nameRef} 
+        inputRef={nameRef}
         onChange={onChange}
         value={input.name}
       />
-      <ConnectableTextfield 
-        name="description" 
+      <ConnectableTextfield
+        name='description'
         label={`${levelName} description`}
         onChange={onChange}
         value={input.description}
@@ -144,14 +140,14 @@ const ItemEditor = ({
         }}
         menuPortalTarget={document.body}
       />
-      <ConnectableSubmitButton disabled={!input.name} action={action}/>
+      <ConnectableSubmitButton disabled={!input.name} action={action} />
       {cancel &&
         <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
         </Button>
       }
 
-      <StaffArea >
+      <StaffArea>
         <FormControl className={classes.formControl}>
           <FormControlLabel
             control={

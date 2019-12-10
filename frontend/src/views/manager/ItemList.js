@@ -19,11 +19,10 @@ import { parseFilter, includeConcept as intIncludeConcept } from './search'
 const useStyles = makeStyles(theme => ({
   root: {
     ...theme.mixins.gutters(),
-    marginLeft: 'auto',
-    marginRight: 'auto',
     boxSizing: 'border-box',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    borderRadius: '0 0 4px 4px'
   },
   headerContent: {
     minWidth: 0
@@ -195,7 +194,7 @@ const ItemList = ({
   const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
 
   return (
-    <Card elevation={0} className={classes.root} style={{height: '94%' }} square>
+    <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
         title={`${level.charAt(0) + level.toLowerCase().slice(1)}s of ${course.name}`}
@@ -259,7 +258,7 @@ const ItemList = ({
         ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
           const elements = group.filter(concept => includeConcept(concept) && concept.level === level)
             .map((concept, conceptIndex) =>
-             <ConceptListItem
+              <ConceptListItem
                 key={concept.id}
                 concept={concept}
                 user={user}
@@ -284,18 +283,19 @@ const ItemList = ({
         }
         )
         }</SortableList>
-      <ItemEditor submit={async args => {
-        await createConcept(args)
-        listRef.current.scrollTop = listRef.current.scrollHeight
-        infoBox.redrawIfOpen(managerViewId,
-          'CREATE_CONCEPT_NAME', 
-          'CREATE_CONCEPT_DESCRIPTION', 
-          'CREATE_CONCEPT_TAGS',
-          'CREATE_CONCEPT_SUBMIT')
-        }} 
+      <ItemEditor
+        submit={async args => {
+          await createConcept(args)
+          listRef.current.scrollTop = listRef.current.scrollHeight
+          infoBox.redrawIfOpen(managerViewId,
+            'CREATE_CONCEPT_NAME',
+            'CREATE_CONCEPT_DESCRIPTION',
+            'CREATE_CONCEPT_TAGS',
+            'CREATE_CONCEPT_SUBMIT')
+        }}
         action='Create'
-        defaultValues={{ official: isTemplate, level }} 
-        tagOptions={conceptTags} 
+        defaultValues={{ official: isTemplate, level }}
+        tagOptions={conceptTags}
       />
     </Card>
   )
