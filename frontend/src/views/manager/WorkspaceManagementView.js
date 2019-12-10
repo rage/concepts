@@ -82,7 +82,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const { history } = useRouter()
-  const [index, setIndex] = useState(0)
+  const [level, setLevel] = useState('OBJECTIVE')
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -153,15 +153,15 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
         />
       </div>
       {focusedCourse ? <div className={classes.concepts}>
-        <AppBar position='static' className={classes.conceptNav} elevation={0}>
-          <Tabs variant='fullWidth' value={index} onChange={(_, newValue) => setIndex(newValue)}>
-            <Tab label='Objectives' />
-            <Tab label='Concepts' />
+        <AppBar position='static' className={classes.conceptNav} elevation={0} style={{ zIndex: 0 }}>
+          <Tabs variant='fullWidth' value={level} onChange={(_, newValue) => setLevel(newValue)}>
+            <Tab label='Objectives' value='OBJECTIVE' />
+            <Tab label='Concepts' value='CONCEPT' />
           </Tabs>
         </AppBar>
         <ConceptList
-          key={index}
-          level={index === 0 ? 'OBJECTIVE' : 'CONCEPT'}
+          key={level}
+          level={level}
           workspace={workspaceQuery.data.workspaceById}
           course={focusedCourse}
           updateCourse={args => updateCourse({ variables: args }).catch(e)}

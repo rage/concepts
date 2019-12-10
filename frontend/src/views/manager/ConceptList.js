@@ -54,10 +54,20 @@ const sortingOptions = {
   CUSTOM: 'Custom'
 }
 
+const CardHeaderButton = React.forwardRef(({
+  children, color = 'primary', onClick, disabled = false
+}, ref) => (
+  <Button
+    style={{ margin: '6px' }} ref={ref} color={color} onClick={!disabled ? onClick : () => { }}
+    disabled={disabled}
+  >
+    {children}
+  </Button>
+))
+
 const ConceptList = ({
   workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
 }) => {
-  const managerViewId = 'manager'
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()
@@ -141,15 +151,6 @@ const ConceptList = ({
     closeMergeDialog()
   }, [course])
 
-  const CardHeaderButton = ({ children, bRef, color = 'primary', onClick, disabled = false }) => (
-    <Button
-      style={{ margin: '6px' }} ref={bRef} color={color} onClick={!disabled ? onClick : () => { }}
-      disabled={disabled}
-    >
-      {children}
-    </Button>
-  )
-
   const cardHeaderActions = () => {
     if (dirtyOrder) {
       return <>
@@ -166,13 +167,13 @@ const ConceptList = ({
       if (merging) {
         return <>
           <CardHeaderButton
-            bRef={infoBox.ref(managerViewId, 'FINISH_MERGE')}
+            ref={infoBox.ref('manager', 'FINISH_MERGE')}
             onClick={openMergeDialog} disabled={merging.size < 2}
           >
             Merge…
           </CardHeaderButton>
           <CardHeaderButton
-            bRef={infoBox.secondaryRef(managerViewId, 'FINISH_MERGE')} onClick={stopMerging}
+            ref={infoBox.secondaryRef('manager', 'FINISH_MERGE')} onClick={stopMerging}
           >
             Cancel
           </CardHeaderButton>
@@ -180,7 +181,7 @@ const ConceptList = ({
       }
       return (
         <CardHeaderButton
-          bRef={infoBox.ref(managerViewId, 'START_MERGE')} onClick={startMerging}
+          ref={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
           disabled={course.concepts.length < 2}
         >
           Start merge
@@ -191,7 +192,9 @@ const ConceptList = ({
   }
 
   const conceptFilterParsed = parseFilter(conceptFilter)
-  const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
+  const includeConcept = concept =>
+    concept.level === level
+    && intIncludeConcept(concept, conceptFilterParsed)
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -206,7 +209,7 @@ const ConceptList = ({
           variant='outlined'
           margin='dense'
           label={`Filter ${level.toLowerCase()}s`}
-          ref={infoBox.ref(managerViewId, 'FILTER_CONCEPTS')}
+          ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
@@ -216,7 +219,7 @@ const ConceptList = ({
           variant='outlined'
           margin='dense'
           label='Sort by'
-          ref={infoBox.ref(managerViewId, 'SORT_CONCEPTS')}
+          ref={infoBox.ref('manager', 'SORT_CONCEPTS')}
           value={orderMethod}
           onChange={evt => {
             setOrderMethod(evt.target.value)
@@ -237,7 +240,7 @@ const ConceptList = ({
         ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
       >
         {orderMethod !== 'GROUP_BY' ? orderedConcepts.map((concept, conceptIndex) =>
-          includeConcept(concept) && concept.level === level &&
+          includeConcept(concept) &&
           <ConceptListItem
             key={concept.id}
             concept={concept}
@@ -250,13 +253,13 @@ const ConceptList = ({
             setEditing={setEditing}
             sortable={orderMethod === 'CUSTOM' && !course.frozen}
             toggleMergingConcept={toggleMergingConcept}
-            checkboxRef={conceptIndex === 0 ? infoBox.ref(managerViewId, 'SELECT_MERGE_CONCEPTS')
-              : conceptIndex === 1 ? infoBox.secondaryRef(managerViewId, 'SELECT_MERGE_CONCEPTS')
+            checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+              : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                 : undefined}
             conceptTags={conceptTags}
           />
         ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
-          const elements = group.filter(concept => includeConcept(concept) && concept.level === level)
+          const elements = group.filter(concept => includeConcept(concept))
             .map((concept, conceptIndex) =>
               <ConceptListItem
                 key={concept.id}
@@ -269,8 +272,8 @@ const ConceptList = ({
                 setEditing={setEditing}
                 toggleMergingConcept={toggleMergingConcept}
                 divider={false}
-                checkboxRef={conceptIndex === 0 ? infoBox.ref(managerViewId, 'SELECT_MERGE_CONCEPTS')
-                  : conceptIndex === 1 ? infoBox.secondaryRef(managerViewId, 'SELECT_MERGE_CONCEPTS')
+                checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+                  : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                     : undefined}
                 sortable={false}
                 conceptTags={conceptTags}
@@ -287,7 +290,7 @@ const ConceptList = ({
         submit={async args => {
           await createConcept(args)
           listRef.current.scrollTop = listRef.current.scrollHeight
-          infoBox.redrawIfOpen(managerViewId,
+          infoBox.redrawIfOpen('manager',
             'CREATE_CONCEPT_NAME',
             'CREATE_CONCEPT_DESCRIPTION',
             'CREATE_CONCEPT_TAGS',
