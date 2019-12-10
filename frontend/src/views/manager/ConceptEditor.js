@@ -75,7 +75,6 @@ const ConceptEditor = ({
 
   const nameRef = useRef()
   const selectRef = useRef(null)
-  const levelName = input.level.charAt(0) + input.level.toLowerCase().slice(1)
 
   const onSubmit = event => {
     event.preventDefault()
@@ -106,7 +105,7 @@ const ConceptEditor = ({
     >
       <ConnectableTextfield
         name='name'
-        label={`${levelName} name`}
+        label={`${input.level.toTitleCase()} name`}
         autoFocus={action !== 'Create'}
         inputRef={nameRef}
         onChange={onChange}
@@ -114,7 +113,7 @@ const ConceptEditor = ({
       />
       <ConnectableTextfield
         name='description'
-        label={`${levelName} description`}
+        label={`${input.level.toTitleCase()} description`}
         onChange={onChange}
         value={input.description}
       />

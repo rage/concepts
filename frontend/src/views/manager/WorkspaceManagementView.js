@@ -78,9 +78,6 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const TabContent = ({ children, index, value }) =>
-  <> {index === value && children} </>
-
 const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -163,6 +160,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
           </Tabs>
         </AppBar>
         <ConceptList
+          key={index}
           level={index === 0 ? 'OBJECTIVE' : 'CONCEPT'}
           workspace={workspaceQuery.data.workspaceById}
           course={focusedCourse}

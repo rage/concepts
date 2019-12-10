@@ -197,7 +197,7 @@ const ConceptList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`${level.charAt(0) + level.toLowerCase().slice(1)}s of ${course.name}`}
+        title={`${level.toTitleCase()}s of ${course.name}`}
         action={cardHeaderActions()}
       />
 
