@@ -10,7 +10,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import groupConcepts from './groupConcepts'
 import MergeDialog from './MergeDialog'
-import ItemEditor from './ItemEditor'
+import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
 import { sortedConcepts } from '../../lib/ordering'
@@ -54,7 +54,7 @@ const sortingOptions = {
   CUSTOM: 'Custom'
 }
 
-const ItemList = ({
+const ConceptList = ({
   workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
 }) => {
   const managerViewId = 'manager'
@@ -283,7 +283,7 @@ const ItemList = ({
         }
         )
         }</SortableList>
-      <ItemEditor
+      <ConceptEditor
         submit={async args => {
           await createConcept(args)
           listRef.current.scrollTop = listRef.current.scrollHeight
@@ -301,4 +301,4 @@ const ItemList = ({
   )
 }
 
-export default ItemList
+export default ConceptList

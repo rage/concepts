@@ -2,10 +2,9 @@ import React, { useRef, useState } from 'react'
 import { Button, Checkbox, FormControl, FormControlLabel, TextField } from '@material-ui/core'
 import Select from 'react-select/creatable'
 
-import { useInfoBox } from '../../components/InfoBox'
 import { useLoginStateValue } from '../../lib/store'
 import {
-  backendToSelect, onTagCreate, selectToBackend, tagSelectStyles
+  backendToSelect, selectToBackend, onTagCreate, tagSelectStyles
 } from '../../dialogs/tagSelectUtils'
 import { Role } from '../../lib/permissions'
 import useStyles from './editorStyles'
@@ -19,20 +18,67 @@ const initialState = {
   frozen: undefined
 }
 
-const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Create', cancel, level }) => {
+const ConnectableSubmitButton = ({ disabled, ref, action }) => {
   const classes = useStyles()
-  const infoBox = useInfoBox()
+
+  return (
+    <Button
+      color='primary'
+      variant='contained'
+      disabled={disabled}
+      type='submit'
+      ref={ref}
+      className={classes.submit}
+    >
+      { action }
+    </Button>
+  )
+}
+
+const ConnectableTextfield = ({ value, name, label, inputRef, onChange, autoFocus, ref }) => {
+  const classes = useStyles()
+
+  return <TextField
+    className={classes.textfield}
+    variant='outlined'
+    margin='dense'
+    name={name}
+    label={label}
+    type='text'
+    value={value}
+    fullWidth
+    inputRef={inputRef}
+    onChange={onChange}
+    autoFocus={autoFocus}
+    ref={ref}
+  />
+}
+
+const StaffOnly = ({ children }) => {
   const [{ user }] = useLoginStateValue()
-  const nameRef = useRef()
+  return user.role >= Role.STAFF && children
+}
+
+const ConceptEditor = ({
+  submit,
+  cancel,
+  action,
+  tagOptions,
+  defaultValues = {}
+}) => {
+  const classes = useStyles()
   const [input, setInput] = useState({
     ...initialState,
     ...defaultValues,
-    level,
     tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
 
-  const onSubmit = evt => {
-    evt.preventDefault()
+  const nameRef = useRef()
+  const selectRef = useRef(null)
+  const levelName = input.level.charAt(0) + input.level.toLowerCase().slice(1)
+
+  const onSubmit = event => {
+    event.preventDefault()
     delete input.bloomTag
     submit({
       ...input,
@@ -44,44 +90,33 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
     }
   }
 
-  const onKeyDown = evt => {
-    if (cancel && evt.key === 'Escape') {
+  const onKeyDown = event => {
+    if (cancel && event.key === 'Escape') {
       cancel()
     }
   }
 
-  const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
-  const capitalizedLevelName = level.charAt(0).toUpperCase() + level.substring(1)
+  const onChange = event => setInput({ ...input, [event.target.name]: event.target.value })
 
-  const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_CONCEPT_TAGS')
-  const selectRef = useRef(null)
   return (
-    <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
-      <TextField
-        className={classes.textfield}
-        variant='outlined'
-        margin='dense'
+    <form
+      className={classes.form}
+      onSubmit={onSubmit}
+      onKeyDown={onKeyDown}
+    >
+      <ConnectableTextfield
         name='name'
-        label={`${capitalizedLevelName} name`}
-        type='text'
-        value={input.name}
-        fullWidth
-        inputRef={nameRef}
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_NAME') : undefined}
+        label={`${levelName} name`}
         autoFocus={action !== 'Create'}
+        inputRef={nameRef}
         onChange={onChange}
+        value={input.name}
       />
-      <TextField
-        className={classes.textfield}
-        variant='outlined'
-        margin='dense'
+      <ConnectableTextfield
         name='description'
-        label={`${capitalizedLevelName} description`}
-        type='text'
-        value={input.description}
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_DESCRIPTION') : undefined}
-        fullWidth
+        label={`${levelName} description`}
         onChange={onChange}
+        value={input.description}
       />
       <Select
         onChange={selected => setInput({ ...input, tags: selected || [] })}
@@ -92,46 +127,30 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         styles={tagSelectStyles}
         options={tagOptions}
         value={input.tags}
-        ref={elem => {
-          if (action === 'Create' && elem?.select?.select) {
-            infoBoxSelectRef(elem.select.select.controlRef)
-            selectRef.current = elem.select.select
-          }
-        }}
-        onMenuOpen={() => {
-          setTimeout(() => {
-            const func = infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS')
-            func(selectRef.current?.menuListRef)
-          }, 0)
-        }}
-        onMenuClose={() => infoBox.secondaryRef('manager', 'CREATE_CONCEPT_TAGS', true)(null)}
         isMulti
         placeholder='Select tags...'
         menuPlacement='auto'
+        ref={element => {
+          if (action === 'Create' && element?.select?.select) {
+            selectRef.current = element.select.select
+          }
+        }}
         menuPortalTarget={document.body}
       />
-      <Button
-        color='primary' variant='contained' disabled={!input.name} type='submit'
-        ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_SUBMIT') : undefined}
-        className={classes.submit}
-      >
-        {action}
-      </Button>
+      <ConnectableSubmitButton disabled={!input.name} action={action} />
       {cancel &&
-      <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
-        Cancel
-      </Button>
+        <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
+          Cancel
+        </Button>
       }
-      {user.role >= Role.STAFF && <>
-        <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_OFFICIAL') : undefined}
-          style={{ verticalAlign: 'middle', marginLeft: '12px' }}
-        >
+
+      <StaffOnly>
+        <FormControl className={classes.formControl}>
           <FormControlLabel
             control={
               <Checkbox
                 checked={input.official}
-                onChange={evt => setInput({ ...input, official: evt.target.checked })}
+                onChange={event => setInput({ ...input, official: event.target.checked })}
                 value='official'
                 color='primary'
               />
@@ -139,15 +158,12 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
             label='Official'
           />
         </FormControl>
-        <FormControl
-          ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_FROZEN') : undefined}
-          style={{ verticalAlign: 'middle', marginLeft: '12px' }}
-        >
+        <FormControl className={classes.formControl}>
           <FormControlLabel
             control={
               <Checkbox
                 checked={input.frozen}
-                onChange={evt => setInput({ ...input, frozen: evt.target.checked })}
+                onChange={event => setInput({ ...input, frozen: event.target.checked })}
                 value='frozen'
                 color='primary'
               />
@@ -155,7 +171,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
             label='Frozen'
           />
         </FormControl>
-      </>}
+      </StaffOnly>
     </form>
   )
 }
