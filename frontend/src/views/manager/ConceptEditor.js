@@ -51,6 +51,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
   }
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
+  const capitalizedLevelName = level.charAt(0).toUpperCase() + level.substring(1)
 
   const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_CONCEPT_TAGS')
   const selectRef = useRef(null)
@@ -61,7 +62,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         variant='outlined'
         margin='dense'
         name='name'
-        label={`${level.charAt(0).toUpperCase() + level.substring(1)} name`}
+        label={`${capitalizedLevelName} name`}
         type='text'
         value={input.name}
         fullWidth
@@ -75,7 +76,7 @@ const ConceptEditor = ({ submit, defaultValues = {}, tagOptions, action = 'Creat
         variant='outlined'
         margin='dense'
         name='description'
-        label={`${level.charAt(0).toUpperCase() + level.substring(1)} description`}
+        label={`${capitalizedLevelName} description`}
         type='text'
         value={input.description}
         ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_CONCEPT_DESCRIPTION') : undefined}
