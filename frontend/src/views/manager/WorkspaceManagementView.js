@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useQuery, useMutation } from 'react-apollo-hooks'
-import { Typography, Paper } from '@material-ui/core'
+import { Typography, Tabs, Tab, AppBar } from '@material-ui/core'
 
 import { useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
@@ -31,8 +31,8 @@ const useStyles = makeStyles(() => ({
     // objects in the parent-level grid.
     overflow: 'hidden',
     gridGap: '16px',
-    gridTemplate: `"header  header"    56px
-                   "courses newCourse" 1fr
+    gridTemplate: `"header  header"   56px
+                   "courses concepts" 1fr
                   / 1fr     1fr`,
     '@media screen and (max-width: 1312px)': {
       width: 'calc(100% - 32px)'
@@ -56,13 +56,19 @@ const useStyles = makeStyles(() => ({
       overflow: 'auto'
     }
   },
-  newCourse: {
-    gridArea: 'newCourse',
+  concepts: {
+    gridArea: 'concepts',
     overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
     '& > div': {
       height: '100%',
       overflow: 'auto'
     }
+  },
+  conceptNav: {
+    borderRadius: '4px 4px 0 0',
+    zIndex: 0
   },
   courseEditor: {
     width: '100%',
@@ -77,6 +83,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const { history } = useRouter()
+  const [level, setLevel] = useState('OBJECTIVE')
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -146,24 +153,30 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
           createCourse={args => createCourse({ variables: { workspaceId, ...args } }).catch(e)}
         />
       </div>
-      <div className={classes.newCourse}>
-        {focusedCourse
-          ? <ConceptList
-            workspace={workspaceQuery.data.workspaceById}
-            course={focusedCourse}
-            updateCourse={args => updateCourse({ variables: args }).catch(e)}
-            createConcept={args => createConcept({
-              variables: {
-                workspaceId,
-                courseId: focusedCourse.id,
-                ...args
-              }
-            }).catch(e)}
-            deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-            updateConcept={args => updateConcept({ variables: args }).catch(e)}
-          /> : <Paper elevation={0} />
-        }
-      </div>
+      {focusedCourse ? <div className={classes.concepts}>
+        <AppBar position='static' className={classes.conceptNav} elevation={0}>
+          <Tabs variant='fullWidth' value={level} onChange={(_, newValue) => setLevel(newValue)}>
+            <Tab label='Objectives' value='OBJECTIVE' />
+            <Tab label='Concepts' value='CONCEPT' />
+          </Tabs>
+        </AppBar>
+        <ConceptList
+          key={level}
+          level={level}
+          workspace={workspaceQuery.data.workspaceById}
+          course={focusedCourse}
+          updateCourse={args => updateCourse({ variables: args }).catch(e)}
+          createConcept={args => createConcept({
+            variables: {
+              workspaceId,
+              courseId: focusedCourse.id,
+              ...args
+            }
+          }).catch(e)}
+          deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
+          updateConcept={args => updateConcept({ variables: args }).catch(e)}
+        />
+      </div> : <div className={classes.concepts} /> }
     </main>
   )
 }
