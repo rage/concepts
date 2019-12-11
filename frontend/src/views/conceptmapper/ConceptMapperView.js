@@ -415,7 +415,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           }}
           onMouseEnter={() => setCourseSelectOpen(true)}
           input={<InputBase/>}
-          onChange={evt => history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)}
+          onChange={evt => {
+            history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)
+            setCourseSelectOpen(false)
+          }}
         >
           {courses.map(course =>
             <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
