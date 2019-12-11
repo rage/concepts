@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, InputBase, Select } from '@material-ui/core'
-import useRouter from '../../lib/useRouter'
+import { Menu, MenuItem, Button } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -21,6 +20,11 @@ import {
   useManyUpdatingSubscriptions,
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
+import ObjectiveList from './ObjectiveList'
+import CourseList from './CourseList'
+import { useCreateConceptDialog } from '../../dialogs/concept'
+import { Role } from '../../lib/permissions'
+import { useLoginStateValue } from '../../lib/store'
 
 const useStyles = makeStyles({
   root: {
@@ -30,18 +34,32 @@ const useStyles = makeStyles({
     transform: 'translate(0, 0)',
     transformOrigin: '0 0'
   },
-  toolbar: {
-    position: 'fixed',
-    top: '60px',
-    left: '10px'
-  },
   objectives: {
     position: 'fixed',
     right: 0,
     top: '48px',
-    bottom: '58px',
-    width: '300px',
-    backgroundColor: 'white'
+    bottom: '56px',
+    minWidth: '350px',
+    width: '25%',
+    padding: '8px',
+
+    display: 'flex',
+    flexDirection: 'column',
+
+    backgroundColor: 'white',
+    '& > $button': {
+      width: '100%',
+      marginTop: '16px'
+    }
+  },
+  objectiveList: {
+    flex: 1
+  },
+  button: {},
+  toolbar: {
+    position: 'fixed',
+    top: '60px',
+    left: '10px'
   },
   selection: {
     position: 'absolute',
@@ -66,6 +84,9 @@ const logToLinear = value =>
   ((Math.log(value) - sliderMinLog) / sliderScale) + sliderMinLinear
 
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
+  const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
+
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLink] = useState(null)
   const addingLinkRef = useRef()
@@ -78,10 +99,9 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
-  const classes = useStyles()
 
-  const { history } = useRouter()
-  const [courseSelectOpen, setCourseSelectOpen] = useState(false)
+  const openCreateObjectiveDialog =
+    useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -313,7 +333,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   }
 
   const openConceptMenu = id => openMenu('concept', id)
-  const closeConceptMenu = id => () => menu.id === id && closeMenu()
+  const closeMenuById = id => () => menu.id === id && closeMenu()
   const openConceptLinkMenu = id => openMenu('concept-link', id)
 
   const openMenu = (type, id) => evt => {
@@ -378,7 +398,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       {course.concepts.flatMap(concept => concept.level === 'CONCEPT' ? [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
-          openMenu={openConceptMenu(concept.id)} closeMenu={closeConceptMenu(concept.id)}
+          openMenu={openConceptMenu(concept.id)} closeMenu={closeMenuById(concept.id)}
           concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
@@ -405,29 +425,22 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     </main>
 
     <section className={classes.toolbar}>
-        <Select
-          open={courseSelectOpen}
-          value={course.id}
-          MenuProps={{
-            MenuListProps: {
-              onMouseLeave: () => setCourseSelectOpen(false)
-            }
-          }}
-          onClick={() => setCourseSelectOpen(true)}
-          input={<InputBase/>}
-          onChange={evt => {
-            history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)
-            setCourseSelectOpen(false)
-          }}
-        >
-          {courses.map(course =>
-            <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-          )}
-        </Select>
+      <CourseList
+        course={course} courses={courses} urlPrefix={urlPrefix} workspaceId={workspaceId}
+      />
     </section>
 
     <section className={classes.objectives}>
-
+      <ObjectiveList
+        openMenu={openMenu} closeMenu={closeMenuById} className={classes.objectiveList}
+        concepts={course.concepts.filter(concept => concept.level === 'OBJECTIVE')}
+      />
+      <Button
+        className={classes.button} onClick={() => openCreateObjectiveDialog(course.id)}
+        variant='contained' color='secondary'
+      >
+        Create objective
+      </Button>
     </section>
 
     <Menu
