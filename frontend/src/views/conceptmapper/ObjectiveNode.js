@@ -1,18 +1,36 @@
 import React from 'react'
-import { IconButton, ListItemText, ListItemSecondaryAction, Typography } from '@material-ui/core'
-import { Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
+import {
+  IconButton,
+  ListItemText,
+  ListItemSecondaryAction,
+  Typography,
+  ListItemIcon
+} from '@material-ui/core'
+import {
+  ArrowLeft as ArrowLeftIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon
+} from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
+import { useMutation } from 'react-apollo-hooks'
 
-import { SortableItem } from '../../lib/sortableMoc'
+import { DragHandle, SortableItem } from '../../lib/sortableMoc'
+import { DELETE_CONCEPT } from '../../graphql/Mutation'
+import cache from '../../apollo/update'
+import { useEditConceptDialog } from '../../dialogs/concept'
+import { Role } from '../../lib/permissions'
+import { useLoginStateValue } from '../../lib/store'
 
 const useStyles = makeStyles(() => ({
   hoverButton: {
     visibility: 'hidden'
   },
   conceptBody: {
-    paddingRight: '56px'
+    paddingRight: '56px',
+    userSelect: 'none'
   },
-  listItemContainer: {
+  root: {
+    listStyle: 'none',
     '&:hover': {
       '& $hoverButton': {
         visibility: 'visible'
@@ -24,20 +42,39 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const ObjectiveNode = ({ concept, index }) => {
+const ObjectiveNode = ({ workspaceId, concept, index }) => {
   const classes = useStyles()
+  const [{ user }] = useLoginStateValue()
+
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: cache.deleteConceptUpdate(workspaceId)
+  })
+
+  const openEditObjectiveDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   const handleDelete = () => {
-    const msg = `Are you sure you want to delete the objetcive ${concept.name}?`
+    const msg = `Are you sure you want to delete the objective ${concept.name}?`
     if (window.confirm(msg)) {
-      deleteConcept(concept.id)
+      deleteConcept({
+        variables: {
+          id: concept.id
+        }
+      })
     }
   }
 
-  const handleEdit = () => alert('Not yet implemented')
+  const handleEdit = () => openEditObjectiveDialog(concept)
 
   return (
-    <SortableItem index={index} classes={{ divider: classes.listItemContainer }}>
+    <SortableItem
+      index={index} classes={{ container: `${classes.root} concept-root` }}
+      ContainerProps={{ 'data-concept-id': concept.id }}
+    >
+      <ListItemIcon>
+        <IconButton onClick={() => alert('Not yet implemented')} className={classes.conceptCircle}>
+          <ArrowLeftIcon viewBox='7 7 10 10' id={`objective-circle-${concept.id}`} />
+        </IconButton>
+      </ListItemIcon>
       <ListItemText className={classes.conceptBody}>
         <Typography variant='h6' className={classes.conceptName}>
           {concept.name}
@@ -53,6 +90,7 @@ const ObjectiveNode = ({ concept, index }) => {
         <IconButton className={classes.hoverButton} onClick={handleEdit}>
           <EditIcon />
         </IconButton>
+        <DragHandle />
       </ListItemSecondaryAction>
     </SortableItem>
   )

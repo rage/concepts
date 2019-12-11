@@ -52,9 +52,6 @@ const useStyles = makeStyles({
       marginTop: '16px'
     }
   },
-  objectiveList: {
-    flex: 1
-  },
   button: {},
   toolbar: {
     position: 'fixed',
@@ -88,8 +85,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [{ user }] = useLoginStateValue()
 
   const [adding, setAdding] = useState(null)
-  const [addingLink, setAddingLink] = useState(null)
+  const [addingLink, setAddingLinkState] = useState(null)
   const addingLinkRef = useRef()
+  const setAddingLink = val => {
+    setAddingLinkState(val)
+    addingLinkRef.current = val
+  }
   const [menu, setMenu] = useState({ open: false })
   const panning = useRef(false)
   const pan = useRef({ x: 0, y: 0, zoom: 1, linearZoom: logToLinear(1) })
@@ -171,7 +172,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       }
     })
     setAddingLink(null)
-    addingLinkRef.current = null
   }
 
   const mouseDown = evt => {
@@ -179,14 +179,14 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       return
     }
     if (evt.target !== main.current && evt.target !== root) {
-      if (addingLinkRef.current && evt.target.hasAttribute('data-concept-id')) {
-        finishAddingLink(evt.target.getAttribute('data-concept-id'))
+      const conceptRoot = evt.target.closest('.concept-root')
+      if (addingLinkRef.current && conceptRoot?.hasAttribute('data-concept-id')) {
+        finishAddingLink(conceptRoot.getAttribute('data-concept-id'))
       }
       return
     }
     if (addingLinkRef.current) {
       setAddingLink(null)
-      addingLinkRef.current = null
     }
     if (evt.shiftKey) {
       const x = evt.pageX - main.current.offsetLeft
@@ -358,7 +358,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const menuAddLink = () => {
     setAddingLink(menu.id)
-    addingLinkRef.current = menu.id
     closeMenu()
   }
 
@@ -433,6 +432,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     <section className={classes.objectives}>
       <ObjectiveList
         openMenu={openMenu} closeMenu={closeMenuById} className={classes.objectiveList}
+        order={course.objectiveOrder} workspaceId={workspaceId}
         concepts={course.concepts.filter(concept => concept.level === 'OBJECTIVE')}
       />
       <Button

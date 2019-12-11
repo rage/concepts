@@ -58,6 +58,7 @@ query courseById($id: ID!) {
       }
     }
     conceptOrder
+    objectiveOrder
     concepts {
       id
       name

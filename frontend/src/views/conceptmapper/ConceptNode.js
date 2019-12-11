@@ -217,7 +217,7 @@ const ConceptNode = ({
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop}>
         <div
-          ref={node => self.node = node} className={classes.root} id={id}
+          ref={node => self.node = node} className={`${classes.root} concept-root`} id={id}
           data-concept-id={concept.id} style={positionStyle}
           onDoubleClick={noPropagation(startEditing)} onContextMenu={noDefault(openMenu)}
         >

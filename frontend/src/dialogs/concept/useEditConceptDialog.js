@@ -46,10 +46,10 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
   }) => openDialog({
     mutation: updateConcept,
     createOptimisticResponse: (args) => createOptimisticResponse({ ...args, level, course }),
-    type: 'Concept',
+    type: level.toTitleCase(),
     requiredVariables: { id, position, official: false },
     actionText: 'Save',
-    title: 'Edit concept',
+    title: `Edit ${level.toLowerCase()}`,
     fields: [{
       name: 'name',
       required: true,
