@@ -13,6 +13,7 @@ fragment coursesForWorkspace on Workspace {
       }
     }
     conceptOrder
+    objectiveOrder
     concepts {
       id
       name

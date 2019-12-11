@@ -78,10 +78,10 @@ const ConceptList = ({
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
   const [conceptFilter, setConceptFilter] = useState('')
 
-  const isOrdered = course.conceptOrder.length === 1
-    && course.conceptOrder[0].startsWith('__ORDER_BY__')
-  const defaultOrderMethod = isOrdered ? course.conceptOrder[0].substr('__ORDER_BY__'.length)
-    : 'CUSTOM'
+  const orderName = `${level.toLowerCase()}Order`
+  const conceptOrder = course[orderName]
+  const isOrdered = conceptOrder.length === 1 && conceptOrder[0].startsWith('__ORDER_BY__')
+  const defaultOrderMethod = isOrdered ? conceptOrder[0].substr('__ORDER_BY__'.length) : 'CUSTOM'
   const [orderedConcepts, setOrderedConcepts] = useState([])
   const [orderMethod, setOrderMethod] = useState(defaultOrderMethod)
   const [dirtyOrder, setDirtyOrder] = useState(null)
@@ -91,9 +91,10 @@ const ConceptList = ({
       setOrderMethod(defaultOrderMethod)
     }
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sortedConcepts(course.concepts, course.conceptOrder, orderMethod))
+      setOrderedConcepts(sortedConcepts(course.concepts.filter(concept => concept.level === level),
+        conceptOrder, orderMethod))
     }
-  }, [course.concepts, course.conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod])
+  }, [course.concepts, conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
@@ -111,7 +112,7 @@ const ConceptList = ({
     setDirtyOrder('loading')
     await updateCourse({
       id: course.id,
-      conceptOrder: orderMethod === 'CUSTOM'
+      [orderName]: orderMethod === 'CUSTOM'
         ? orderedConcepts.map(concept => concept.id)
         : [`__ORDER_BY__${orderMethod}`]
     })

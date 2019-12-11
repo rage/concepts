@@ -18,6 +18,7 @@ fragment createCourseData on Course {
     }
   }
   conceptOrder
+  objectiveOrder
   concepts {
     id
     name
@@ -49,6 +50,7 @@ fragment updateCourseData on Course {
   official
   frozen
   conceptOrder
+  objectiveOrder
   tags {
     id
     name

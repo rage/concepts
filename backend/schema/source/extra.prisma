@@ -42,7 +42,7 @@ type Mutation {
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course!
   deleteCourse(id: ID!): Course!
-  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course!
+  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!], objectiveOrder: [ID!]): Course!
 
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, level: ConceptLevel!, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
