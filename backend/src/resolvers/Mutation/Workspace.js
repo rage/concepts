@@ -63,6 +63,7 @@ query($id : ID!) {
           id
         }
         conceptOrder
+        objectiveOrder
         concepts {
           id
           name
@@ -290,6 +291,10 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
           isAutomaticSorting(course.conceptOrder)
             ? { set: course.conceptOrder }
             : { set: course.conceptOrder.map(makeNewId) },
+        objectiveOrder:
+          isAutomaticSorting(course.objectiveOrder)
+            ? { set: course.objectiveOrder }
+            : { set: course.objectiveOrder.map(makeNewId) },
         concepts: {
           create: course.concepts.map(concept => ({
             id: makeNewId(concept.id),

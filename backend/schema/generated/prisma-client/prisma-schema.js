@@ -1378,6 +1378,7 @@ type Course {
   workspace: Workspace!
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptOrder: [ID!]!
+  objectiveOrder: [ID!]!
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -1406,6 +1407,7 @@ input CourseCreateInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1417,6 +1419,10 @@ input CourseCreateManyWithoutSourceCourseInput {
 input CourseCreateManyWithoutWorkspaceInput {
   create: [CourseCreateWithoutWorkspaceInput!]
   connect: [CourseWhereUniqueInput!]
+}
+
+input CourseCreateobjectiveOrderInput {
+  set: [ID!]
 }
 
 input CourseCreateOneInput {
@@ -1456,6 +1462,7 @@ input CourseCreateWithoutClonesInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1471,6 +1478,7 @@ input CourseCreateWithoutConceptsInput {
   linksToCourse: CourseLinkCreateManyWithoutToInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1486,6 +1494,7 @@ input CourseCreateWithoutLinksFromCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1501,6 +1510,7 @@ input CourseCreateWithoutLinksToCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1516,6 +1526,7 @@ input CourseCreateWithoutSourceCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput!
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1531,6 +1542,7 @@ input CourseCreateWithoutWorkspaceInput {
   linksToCourse: CourseLinkCreateManyWithoutToInput
   concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
 }
 
@@ -1939,6 +1951,7 @@ type CoursePreviousValues {
   official: Boolean!
   frozen: Boolean!
   conceptOrder: [ID!]!
+  objectiveOrder: [ID!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -2031,6 +2044,7 @@ input CourseUpdateDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2046,6 +2060,7 @@ input CourseUpdateInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2054,6 +2069,7 @@ input CourseUpdateManyDataInput {
   official: Boolean
   frozen: Boolean
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
 }
 
 input CourseUpdateManyMutationInput {
@@ -2061,6 +2077,7 @@ input CourseUpdateManyMutationInput {
   official: Boolean
   frozen: Boolean
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
 }
 
 input CourseUpdateManyWithoutSourceCourseInput {
@@ -2090,6 +2107,10 @@ input CourseUpdateManyWithoutWorkspaceInput {
 input CourseUpdateManyWithWhereNestedInput {
   where: CourseScalarWhereInput!
   data: CourseUpdateManyDataInput!
+}
+
+input CourseUpdateobjectiveOrderInput {
+  set: [ID!]
 }
 
 input CourseUpdateOneInput {
@@ -2149,6 +2170,7 @@ input CourseUpdateWithoutClonesDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2163,6 +2185,7 @@ input CourseUpdateWithoutConceptsDataInput {
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2177,6 +2200,7 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2191,6 +2215,7 @@ input CourseUpdateWithoutLinksToCourseDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2205,6 +2230,7 @@ input CourseUpdateWithoutSourceCourseDataInput {
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2219,6 +2245,7 @@ input CourseUpdateWithoutWorkspaceDataInput {
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
 }
 

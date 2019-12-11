@@ -108,12 +108,13 @@ export const createConcept = async (root, {
     }
   }
 
-  const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
+  const orderName = `${level.toLowerCase()}Order`
+  const conceptOrder = await context.prisma.course({ id: courseId })[orderName]()
   if (!isAutomaticSorting(conceptOrder)) {
     await context.prisma.updateCourse({
       where: { id: courseId },
       data: {
-        conceptOrder: { set: conceptOrder.concat([createdConcept.id]) }
+        [orderName]: { set: conceptOrder.concat([createdConcept.id]) }
       }
     })
   }
@@ -178,22 +179,25 @@ export const deleteConcept = async (root, { id }, context) => {
   const toDelete = await context.prisma.concept({ id }).$fragment(`
       fragment ConceptWithCourse on Concept {
         id
+        level
         frozen
         course {
           id
           conceptOrder
+          objectiveOrder
         }
       }
     `)
   if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
   await context.prisma.deleteConcept({ id })
 
-  const conceptOrder = toDelete.course.conceptOrder
+  const orderName = `${toDelete.level.toLowerCase()}Order`
+  const conceptOrder = toDelete.course[orderName]
   if (!isAutomaticSorting(conceptOrder)) {
     await context.prisma.updateCourse({
       where: { id: toDelete.course.id },
       data: {
-        conceptOrder: { set: conceptOrder.filter(conceptId => conceptId !== id) }
+        [orderName]: { set: conceptOrder.filter(conceptId => conceptId !== id) }
       }
     })
   }

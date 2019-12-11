@@ -1,6 +1,5 @@
 import { verifyAndRespondRequest } from '../util/restAuth'
 import { prisma } from '../../schema/generated/prisma-client'
-import { checkAccess, Role, Privilege } from '../util/accessControl'
 import { sortedConcepts, sortedCourses } from '../util/ordering'
 
 const exportQuery = `
@@ -23,6 +22,7 @@ query($wid: ID!) {
       name
       official
       conceptOrder
+      objectiveOrder
       concepts {
         name
         description
@@ -72,13 +72,16 @@ export const exportAPI = async (req, res) => {
   const courseOrder = result.workspace.courseOrder
   delete result.workspace.courseOrder
 
+  const isLevel = level => concept => concept.level === level
+
   res.set('Content-Disposition', `attachment; filename="${result.workspace.workspace}.json"`)
   return res.json({
     ...result.workspace,
     courses: sortedCourses(result.workspace.courses, courseOrder)
-      .map(({ concepts, linksToCourse, conceptOrder, ...course }) => ({
+      .map(({ concepts, linksToCourse, conceptOrder, objectiveOrder, ...course }) => ({
         ...course,
-        concepts: sortedConcepts(concepts, conceptOrder)
+        concepts: sortedConcepts(concepts.filter(isLevel('CONCEPT')), conceptOrder)
+          .concat(sortedConcepts(concepts.filter(isLevel('OBJECTIVE')), objectiveOrder))
           .map(({ linksToConcept, ...concept }) => ({
             ...concept,
             prerequisites: linksToConcept.map(prereqMap)

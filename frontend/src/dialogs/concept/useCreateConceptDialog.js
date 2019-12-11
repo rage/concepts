@@ -49,7 +49,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
   return courseId => openDialog({
     mutation: createConcept,
     createOptimisticResponse,
-    type: 'Concept',
+    type: level.toTitleCase(),
     requiredVariables: {
       workspaceId,
       courseId,
@@ -57,7 +57,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
       level
     },
     actionText: 'Create',
-    title: 'Add concept',
+    title: `Add ${level.toLowerCase()}`,
     fields: [{
       name: 'name',
       required: true

@@ -54,6 +54,7 @@ query workspaceById($id: ID!) {
         priority
       }
       conceptOrder
+      objectiveOrder
       concepts {
         id
         name

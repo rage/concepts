@@ -9,7 +9,7 @@ const getParams = (action, type) => ({
   name: type,
   getMethod: `${type.toCamelCase()}Link`,
   mutateMethod: `${action}${type.toPascalCase()}Link`,
-  pubsubVariableName: `${type.toCamelCase()}${action.toPascalCase()}`,
+  pubsubVariableName: `${type.toCamelCase()}Link${action.toPascalCase()}d`,
   // eslint-disable-next-line import/namespace
   channel: channels[`${type.toUpperSnakeCase()}_LINK_${action.toUpperCase()}D`]
 })

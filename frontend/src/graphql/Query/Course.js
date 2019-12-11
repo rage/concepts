@@ -14,6 +14,7 @@ query courseById($id: ID!) {
       priority
     }
     conceptOrder
+    objectiveOrder
     concepts {
       id
       name
@@ -127,6 +128,7 @@ fragment courseAndConcepts on Course {
     priority
   }
   conceptOrder
+  objectiveOrder
   concepts {
     id
     name

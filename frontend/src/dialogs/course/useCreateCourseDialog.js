@@ -34,6 +34,7 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
       })),
       linksToCourse: [],
       conceptOrder: [],
+      objectiveOrder: [],
       concepts: []
     }
   })

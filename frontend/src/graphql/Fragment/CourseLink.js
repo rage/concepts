@@ -20,6 +20,7 @@ fragment createCourseLinkData on CourseLink {
       priority
     }
     conceptOrder
+    objectiveOrder
     concepts {
       id
       name

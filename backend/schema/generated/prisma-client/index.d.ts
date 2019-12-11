@@ -2079,6 +2079,7 @@ export interface CourseCreateWithoutWorkspaceInput {
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
@@ -2111,6 +2112,7 @@ export interface CourseCreateWithoutClonesInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
@@ -2149,6 +2151,7 @@ export interface CourseCreateWithoutLinksToCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
@@ -2172,6 +2175,7 @@ export interface CourseCreateWithoutSourceCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
@@ -2210,6 +2214,7 @@ export interface CourseCreateWithoutLinksFromCourseInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
@@ -2416,10 +2421,15 @@ export interface CourseCreateWithoutConceptsInput {
   linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
 export interface CourseCreateconceptOrderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
+}
+
+export interface CourseCreateobjectiveOrderInput {
   set?: Maybe<ID_Input[] | ID_Input>;
 }
 
@@ -2561,6 +2571,7 @@ export interface CourseCreateInput {
   workspace: WorkspaceCreateOneWithoutCoursesInput;
   concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
 }
 
@@ -3339,6 +3350,7 @@ export interface CourseUpdateWithoutWorkspaceDataInput {
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -3480,6 +3492,7 @@ export interface CourseUpdateWithoutClonesDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -3539,6 +3552,7 @@ export interface CourseUpdateWithoutLinksToCourseDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -3582,6 +3596,7 @@ export interface CourseUpdateWithoutSourceCourseDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -3641,6 +3656,7 @@ export interface CourseUpdateWithoutLinksFromCourseDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -3942,10 +3958,15 @@ export interface CourseUpdateWithoutConceptsDataInput {
   linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
 export interface CourseUpdateconceptOrderInput {
+  set?: Maybe<ID_Input[] | ID_Input>;
+}
+
+export interface CourseUpdateobjectiveOrderInput {
   set?: Maybe<ID_Input[] | ID_Input>;
 }
 
@@ -4324,6 +4345,7 @@ export interface CourseUpdateDataInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -5670,6 +5692,7 @@ export interface CourseUpdateManyDataInput {
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
 }
 
 export interface CourseUpsertWithoutLinksToCourseInput {
@@ -5901,6 +5924,7 @@ export interface CourseUpdateInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
   concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -5909,6 +5933,7 @@ export interface CourseUpdateManyMutationInput {
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
 }
 
 export interface CourseLinkCreateInput {
@@ -7173,6 +7198,7 @@ export interface Course {
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
+  objectiveOrder: ID_Output[];
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -7230,6 +7256,7 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     last?: Int;
   }) => T;
   conceptOrder: () => Promise<ID_Output[]>;
+  objectiveOrder: () => Promise<ID_Output[]>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -7290,6 +7317,7 @@ export interface CourseSubscription
     last?: Int;
   }) => T;
   conceptOrder: () => Promise<AsyncIterator<ID_Output[]>>;
+  objectiveOrder: () => Promise<AsyncIterator<ID_Output[]>>;
   createdBy: <T = UserSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -7350,6 +7378,7 @@ export interface CourseNullablePromise
     last?: Int;
   }) => T;
   conceptOrder: () => Promise<ID_Output[]>;
+  objectiveOrder: () => Promise<ID_Output[]>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -8854,6 +8883,7 @@ export interface CoursePreviousValues {
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
+  objectiveOrder: ID_Output[];
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -8866,6 +8896,7 @@ export interface CoursePreviousValuesPromise
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   conceptOrder: () => Promise<ID_Output[]>;
+  objectiveOrder: () => Promise<ID_Output[]>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -8878,6 +8909,7 @@ export interface CoursePreviousValuesSubscription
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   conceptOrder: () => Promise<AsyncIterator<ID_Output[]>>;
+  objectiveOrder: () => Promise<AsyncIterator<ID_Output[]>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }

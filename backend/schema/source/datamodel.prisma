@@ -187,6 +187,7 @@ type Course {
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
   concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
   conceptOrder: [ID!]! @scalarList(strategy: RELATION)
+  objectiveOrder: [ID!]! @scalarList(strategy: RELATION)
 
   # Creation data
   createdBy: User!
