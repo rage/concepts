@@ -71,7 +71,7 @@ const ObjectiveNode = ({ workspaceId, concept, index }) => {
       ContainerProps={{ 'data-concept-id': concept.id }}
     >
       <ListItemIcon>
-        <IconButton onClick={() => alert('Not yet implemented')} className={classes.conceptCircle}>
+        <IconButton onClick={() => alert('Not yet implemented')} className={classes.conceptCircle} id={`objective-${concept.id}`}>
           <ArrowLeftIcon viewBox='7 7 10 10' id={`objective-circle-${concept.id}`} />
         </IconButton>
       </ListItemIcon>

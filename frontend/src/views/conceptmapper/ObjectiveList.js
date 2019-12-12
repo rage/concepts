@@ -50,15 +50,14 @@ const ObjectiveList = ({ workspaceId, order, concepts, openMenu, closeMenu }) =>
       )}
     </SortableList>
     {concepts.flatMap(concept => [
-      <ConceptLink key={concept.id} />,
       ...concept.linksToConcept.map(link => <ConceptLink
         key={link.id} delay={1} active linkId={link.id}
         within='concept-mapper-link-container' // posOffsets={linkOffsets}
         onContextMenu={openMenu('concept-link', link.id)}
+        posOffsets={{ x1: +6 }} toAnchor='center middle'
         // scrollParentRef={pan}
         from={`objective-${concept.id}`} to={`concept-${link.from.id}`}
         fromConceptId={concept.id} toConceptId={link.from.id}
-        fromAnchor='center middle' toAnchor='center middle'
       />)
     ])}
   </>
