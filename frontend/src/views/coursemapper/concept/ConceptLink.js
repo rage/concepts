@@ -117,7 +117,9 @@ export default class ConceptLink extends Component {
   }
 
   detect() {
-    const { from: fromId, to: toId, scrollParentRef } = this.props
+    const {
+      from: fromId, to: toId, scrollParentRef, scrollParentFromRef, scrollParentToRef
+    } = this.props
 
     const fromRef = this.fromRef
     const toRef = this.toRef
@@ -131,20 +133,22 @@ export default class ConceptLink extends Component {
     const offset = { x0: 0, y0: 0, x1: 0, y1: 0, ...this.props.posOffsets }
 
     return () => {
-      const fromBox = fromRef.current.getBoundingClientRect()
-      const toBox = toRef.current.getBoundingClientRect()
-      fromRef.current.classList.add(`linkto-${this.props.toConceptId}`)
-      toRef.current.classList.add(`linkto-${this.props.fromConceptId}`)
+      const calculatePosition = (spRef, ref, anchor, dir) => {
+        const sp = (spRef !== undefined ? spRef : scrollParentRef)?.current
+        const pageXOffset = sp ? sp.scrollLeft || sp.x : window.pageXOffset
+        const pageYOffset = sp ? sp.scrollTop || sp.y : window.pageYOffset
+        const zoom = sp?.zoom || 1
+        const box = ref.current.getBoundingClientRect()
+        ref.current.classList.add(`linkto-${this.props[`${dir}ConceptId`]}`)
+        const index = dir === 'to' ? 0 : 1
+        return [
+          (box.x + (box.width * anchor.x) + pageXOffset + offset[`x${index}`]) / zoom,
+          (box.y + (box.height * anchor.y) + pageYOffset + offset[`y${index}`]) / zoom
+        ]
+      }
 
-      const sp = scrollParentRef?.current
-      const pageXOffset = sp ? sp.scrollLeft || sp.x : window.pageXOffset
-      const pageYOffset = sp ? sp.scrollTop || sp.y : window.pageYOffset
-      const zoom = sp?.zoom || 1
-
-      const x0 = (fromBox.x + (fromBox.width * this.fromAnchor.x) + pageXOffset + offset.x0) / zoom
-      const y0 = (fromBox.y + (fromBox.height * this.fromAnchor.y) + pageYOffset + offset.y0) / zoom
-      const x1 = (toBox.x + (toBox.width * this.toAnchor.x) + pageXOffset + offset.x1) / zoom
-      const y1 = (toBox.y + (toBox.height * this.toAnchor.y) + pageYOffset + offset.y1) / zoom
+      const [x0, y0] = calculatePosition(scrollParentFromRef, fromRef, this.fromAnchor, 'from')
+      const [x1, y1] = calculatePosition(scrollParentToRef, toRef, this.toAnchor, 'to')
 
       return { x0, y0, x1, y1 }
     }

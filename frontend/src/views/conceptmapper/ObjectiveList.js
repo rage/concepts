@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   }
 })
 
-const ObjectiveList = ({ workspaceId, order, concepts, openMenu, closeMenu }) => {
+const ObjectiveList = ({ workspaceId, order, concepts, openMenu, closeMenu, pan }) => {
   const classes = useStyles()
 
   const isOrdered = order.length === 1 && order[0].startsWith('__ORDER_BY__')
@@ -52,10 +52,10 @@ const ObjectiveList = ({ workspaceId, order, concepts, openMenu, closeMenu }) =>
     {concepts.flatMap(concept => [
       ...concept.linksToConcept.map(link => <ConceptLink
         key={link.id} delay={1} active linkId={link.id}
-        within='concept-mapper-link-container' // posOffsets={linkOffsets}
+        within='concept-mapper-link-container'
         onContextMenu={openMenu('concept-link', link.id)}
         posOffsets={{ x1: +6 }} toAnchor='center middle'
-        // scrollParentRef={pan}
+        scrollParentRefTo={pan}
         from={`objective-${concept.id}`} to={`concept-${link.from.id}`}
         fromConceptId={concept.id} toConceptId={link.from.id}
       />)

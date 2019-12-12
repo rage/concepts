@@ -432,7 +432,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     <section className={classes.objectives}>
       <ObjectiveList
         openMenu={openMenu} closeMenu={closeMenuById} className={classes.objectiveList}
-        order={course.objectiveOrder} workspaceId={workspaceId}
+        order={course.objectiveOrder} workspaceId={workspaceId} pan={pan}
         concepts={course.concepts.filter(concept => concept.level === 'OBJECTIVE')}
       />
       <Button
