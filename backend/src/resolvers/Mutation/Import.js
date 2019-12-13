@@ -73,6 +73,7 @@ export const importData = async (root, { data }, context) => {
       official: canSetOfficial && Boolean(json.projectId || course.official),
       createdBy: { connect: { id: context.user.id } },
       conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
+      objectiveOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       workspace: { connect: { id: workspace.id } },
       tags: { create: course.tags }
     })
