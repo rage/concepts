@@ -88,7 +88,7 @@ const Course = ({
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
   const course = courseLink.from
   const updateCourseLink = useMutation(UPDATE_COURSE_LINK, {
