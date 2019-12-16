@@ -84,7 +84,7 @@ const ActiveCourse = ({
   const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF, 'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts, course.conceptOrder),
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.conceptOrder),
     [course.concepts, course.conceptOrder])
   const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder),
     [workspace.courses, workspace.courseOrder])
@@ -125,7 +125,7 @@ const ActiveCourse = ({
       </div>
 
       <List className={classes.list}>
-        {orderedConcepts.filter(concept => concept.level === 'OBJECTIVE').map((concept, index) =>
+        {orderedConcepts.map((concept, index) =>
           <Concept
             conceptLinkRef={index === 0
               ? infoBox.secondaryRef('mapper', 'DRAW_LINK') : undefined}

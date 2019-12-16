@@ -115,7 +115,7 @@ const Course = ({
 
   const collapsed = collapsedCourseIds.has(course.id)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts, course.conceptOrder),
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.conceptOrder),
     [course.concepts, course.conceptOrder])
 
   return (
@@ -145,7 +145,7 @@ const Course = ({
 
       {!collapsed && <CardContent className={classes.content}>
         <List className={classes.list}>
-          {orderedConcepts.filter(concept => concept.level === 'OBJECTIVE').map((concept, index) =>
+          {orderedConcepts.map((concept, index) =>
             <Concept concept={concept}
               key={concept.id}
               course={course}
