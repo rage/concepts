@@ -116,7 +116,7 @@ const Course = ({
   const collapsed = collapsedCourseIds.has(course.id)
 
   const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.objectiveOrder),
-    [course.concepts, course.conceptOrder])
+    [course.concepts, course.objectiveOrder])
 
   return (
     <Card elevation={0} className={classes.root}>
