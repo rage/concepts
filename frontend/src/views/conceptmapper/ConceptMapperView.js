@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Button } from '@material-ui/core'
+import { Menu, MenuItem } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -20,7 +20,6 @@ import {
   useManyUpdatingSubscriptions,
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
-import ObjectiveList from './ObjectiveList'
 import CourseList from './CourseList'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { Role } from '../../lib/permissions'
@@ -394,7 +393,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   return <>
     <main className={classes.root} ref={main}>
-      {course.concepts.flatMap(concept => concept.level === 'CONCEPT' ? [
+      {course.concepts.flatMap(concept => [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
           openMenu={openConceptMenu(concept.id)} closeMenu={closeMenuById(concept.id)}
@@ -409,7 +408,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           fromConceptId={concept.id} toConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle'
         />)
-      ] : [])}
+      ])}
       {adding && <ConceptNode
         isNew concept={{ id: 'new', name: '', position: adding }}
         concepts={concepts} selected={selected}
@@ -427,20 +426,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <CourseList
         course={course} courses={courses} urlPrefix={urlPrefix} workspaceId={workspaceId}
       />
-    </section>
-
-    <section className={classes.objectives}>
-      <ObjectiveList
-        openMenu={openMenu} closeMenu={closeMenuById} className={classes.objectiveList}
-        order={course.objectiveOrder} workspaceId={workspaceId} pan={pan}
-        concepts={course.concepts.filter(concept => concept.level === 'OBJECTIVE')}
-      />
-      <Button
-        className={classes.button} onClick={() => openCreateObjectiveDialog(course.id)}
-        variant='contained' color='secondary'
-      >
-        Create objective
-      </Button>
     </section>
 
     <Menu
