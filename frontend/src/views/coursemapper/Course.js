@@ -115,7 +115,7 @@ const Course = ({
 
   const collapsed = collapsedCourseIds.has(course.id)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.conceptOrder),
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.objectiveOrder),
     [course.concepts, course.conceptOrder])
 
   return (
