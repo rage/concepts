@@ -84,7 +84,7 @@ const ActiveCourse = ({
   const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF, 'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.conceptOrder),
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.objectiveOrder),
     [course.concepts, course.conceptOrder])
   const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder),
     [workspace.courses, workspace.courseOrder])
