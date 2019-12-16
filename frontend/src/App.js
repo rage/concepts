@@ -22,6 +22,7 @@ import NotFoundView from './views/error/NotFoundView'
 import PointGroupsView from './views/project/PointGroupsView'
 import MembersView from './views/members/MembersView'
 import UserView from './views/user/UserView'
+import ConceptMapperView from './views/conceptmapper/ConceptMapperView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,7 +33,11 @@ const useStyles = makeStyles(() => ({
     gridTemplate: `"navbar"  48px
                    "content" auto
                    "bottom-navbar" 56px
-                   / 100vw`
+                   / 100vw`,
+    pointerEvents: 'none',
+    '& > *': {
+      pointerEvents: 'initial'
+    }
   }
 }))
 
@@ -50,9 +55,15 @@ const workspaceRouter = (prefix) => <>
     />}
   />
   <Route
-    exact path={`${prefix}/:wid/mapper`}
-    render={({ match, location }) =>
-      <MapperRedirectView workspaceId={match.params.wid} urlPrefix={prefix} location={location} />
+    exact path={`${prefix}/:wid/(concept)?mapper`}
+    render={({ match }) => <MapperRedirectView workspaceId={match.params.wid} urlPrefix={prefix} />}
+  />
+  <Route
+    exact path={`${prefix}/:wid/conceptmapper/:cid`}
+    render={({ match }) =>
+      <ConceptMapperView
+        workspaceId={match.params.wid} courseId={match.params.cid} urlPrefix={prefix}
+      />
     }
   />
   <Route
@@ -67,7 +78,7 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/members`} render={({ match: { params: { wid } } }) =>
     <MembersView workspaceId={wid} />} />
   <Route
-    exact path={`${prefix}/:wid/:page(mapper|graph|heatmap|manager|members)/:cid?`}
+    exact path={`${prefix}/:wid/:page(conceptmapper|mapper|graph|heatmap|manager|members)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>
       <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
     }

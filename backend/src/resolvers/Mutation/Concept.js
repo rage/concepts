@@ -98,7 +98,7 @@ export const createConcept = async (root, {
     official: Boolean(official),
     frozen: Boolean(frozen),
     course: { connect: { id: courseId } },
-    tags: { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
+    tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
   })
 
   if (createdConcept) {
