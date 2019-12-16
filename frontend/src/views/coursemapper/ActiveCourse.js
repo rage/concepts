@@ -125,7 +125,7 @@ const ActiveCourse = ({
       </div>
 
       <List className={classes.list}>
-        {orderedConcepts.map((concept, index) =>
+        {orderedConcepts.filter(concept => concept.level === 'OBJECTIVE').map((concept, index) =>
           <Concept
             conceptLinkRef={index === 0
               ? infoBox.secondaryRef('mapper', 'DRAW_LINK') : undefined}
@@ -151,7 +151,7 @@ const ActiveCourse = ({
         color='secondary'
         ref={infoBox.ref('mapper', 'CREATE_CONCEPT_TARGET')}
       >
-        Add concept
+        Add objective
       </Button>
     </Paper>
   </>

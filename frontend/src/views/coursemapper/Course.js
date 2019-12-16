@@ -145,7 +145,7 @@ const Course = ({
 
       {!collapsed && <CardContent className={classes.content}>
         <List className={classes.list}>
-          {orderedConcepts.map((concept, index) =>
+          {orderedConcepts.filter(concept => concept.level === 'OBJECTIVE').map((concept, index) =>
             <Concept concept={concept}
               key={concept.id}
               course={course}
@@ -167,7 +167,7 @@ const Course = ({
           color='primary'
           ref={createConceptRef}
         >
-          Add concept
+          Add objective
         </Button>
       </CardContent>}
     </Card>
