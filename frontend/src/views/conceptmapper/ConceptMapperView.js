@@ -463,7 +463,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     >
       <MenuItem onClick={menuAddLink}>Add link</MenuItem>
       <MenuItem onClick={menuFlipLevel}>
-        Convert to {oppositeLevel[menu.state?.concept.level]?.toLowerCase()}
+        Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
       <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
       <MenuItem onClick={menuDeselectConcept}>Deselect concept</MenuItem>
