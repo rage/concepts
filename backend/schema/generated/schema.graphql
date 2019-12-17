@@ -47,7 +47,7 @@ type Mutation {
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, level: ConceptLevel!, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteConcept(id: ID!): DeletedCourseItem!
-  updateConcept(id: ID!, name: String, description: String, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  updateConcept(id: ID!, name: String, description: String, level: ConceptLevel, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
