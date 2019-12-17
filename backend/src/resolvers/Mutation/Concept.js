@@ -186,6 +186,53 @@ export const updateConcept = async (root, {
   return updateData
 }
 
+
+export const deleteManyConcepts = async(root, { ids }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.concept({ id: ids[0] }).workspace())
+  const course = nullShield(await context.prisma.concept({ id: ids[0] }).course())
+
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+
+  const idSet = new Set(ids)
+  await context.prisma.updateCourse({
+    where: { id: toDelete.course.id },
+    data: {
+      conceptOrder: { set: course.conceptOrder.filter(conceptId => !idSet.has(conceptId)) },
+      objectiveOrder: { set: course.objectiveOrder.filter(conceptId => !idSet.has(conceptId)) }
+    }
+  })
+
+  const concepts = new Set(await context.prisma.concept({ workspaceId: id }).map(concept => concept.id))
+  for (id of ids) {
+    if (!concepts.has(id)) {
+      return
+    }
+  }
+
+  const result = await context.prisma.deleteManyConcepts({
+    id_in: ids,
+    workspace: {
+      id: workspaceId
+    },
+    course: {
+      id: course.id
+    }
+  })
+
+  // TODO: Add support for mass deletion for pubsubs
+  for (id of ids) {
+    pubsub.publish(CONCEPT_DELETED, {
+      conceptDeleted: { id, courseId: course.id, workspaceId }
+    })
+  }
+
+  return result
+}
+
 export const deleteConcept = async (root, { id }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
   await checkAccess(context, {
