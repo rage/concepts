@@ -124,7 +124,7 @@ export const createConcept = async (root, {
 }
 
 export const updateConcept = async (root, {
-  id, name, description, position, official, tags, frozen
+  id, name, description, level, position, official, tags, frozen
 }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
   await checkAccess(context, {
@@ -152,6 +152,23 @@ export const updateConcept = async (root, {
     tags: await filterTags(tags, oldTags, workspaceId, context, 'conceptTags'),
     official: Boolean(official),
     frozen: Boolean(frozen)
+  }
+
+  if (level !== undefined && level !== oldConcept.level) {
+    data.level = level
+
+    const oldOrderName = `${oldConcept.level.toLowerCase()}Order`
+    const newOrderName = `${level.toLowerCase()}Order`
+    const courseId = oldConcept.course.id
+    const oldOrder = await context.prisma.course({ id: courseId })[oldOrderName]()
+    const newOrder = await context.prisma.course({ id: courseId })[newOrderName]()
+    await context.prisma.updateCourse({
+      where: { id: courseId },
+      data: {
+        [oldOrderName]: { set: oldOrder.filter(concept => concept.id !== id) },
+        [newOrderName]: { set: !isAutomaticSorting(newOrder) ? newOrder.concat([id]) : newOrder }
+      }
+    })
   }
 
   if (description !== undefined) data.description = description
