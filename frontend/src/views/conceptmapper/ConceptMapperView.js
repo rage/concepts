@@ -192,8 +192,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       const y = evt.pageY - main.current.offsetTop
       selection.current = {
         pos: {
-          left: x + pan.current.x,
-          top: y + pan.current.y,
+          left: (x + pan.current.x) / pan.current.zoom,
+          top: (y + pan.current.y) / pan.current.zoom,
           width: 0,
           height: 0
         },
