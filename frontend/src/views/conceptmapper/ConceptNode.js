@@ -212,9 +212,13 @@ const ConceptNode = ({
 
     const onDragStart = evt => {
       if (evt.shiftKey) {
-        selected.current.add(id)
-        self.node.classList.add('selected')
-        evt.stopPropagation()
+        if (selected.current.has(id)) {
+          selected.current.delete(id)
+          self.node.classList.remove('selected')
+        } else {
+          selected.current.add(id)
+          self.node.classList.add('selected')
+        }
         return false
       }
     }
