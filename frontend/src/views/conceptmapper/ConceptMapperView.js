@@ -312,16 +312,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
   })
 
-  const menuConvertObjective = () => {
-    updateConcept({
-      variables: {
-        id: menu.id,
-        level: 'OBJECTIVE'
-      }
-    })
-    closeMenu()
-  }
-
   const submitNewConcept = ({ name, position }) => {
     stopAdding()
     return createConcept({
@@ -349,6 +339,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     evt.preventDefault()
     setMenu({
       id,
+      state: type === 'concept' && concepts.current[`concept-${id}`],
       open: type,
       anchor: {
         left: evt.clientX - 2,
@@ -367,6 +358,34 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const menuAddLink = () => {
     setAddingLink(menu.id)
+    closeMenu()
+  }
+
+  const oppositeLevel = {
+    OBJECTIVE: 'CONCEPT',
+    CONCEPT: 'OBJECTIVE'
+  }
+  const menuFlipLevel = () => {
+    updateConcept({
+      variables: {
+        id: menu.id,
+        level: oppositeLevel[menu.state.concept.level]
+      }
+    })
+    closeMenu()
+  }
+
+  const menuDeselectConcept = () => {
+    menu.state.node.classList.remove('selected')
+    selected.current.delete(`concept-${menu.id}`)
+    closeMenu()
+  }
+
+  const menuDeselectAll = () => {
+    for (const state of Object.values(concepts.current)) {
+      state.node?.classList.remove('selected')
+    }
+    selected.current.clear()
     closeMenu()
   }
 
@@ -443,8 +462,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       open={menu.open === 'concept'} onClose={closeMenu}
     >
       <MenuItem onClick={menuAddLink}>Add link</MenuItem>
-      <MenuItem onClick={menuConvertObjective}>Convert to objective</MenuItem>
+      <MenuItem onClick={menuFlipLevel}>
+        Convert to {oppositeLevel[menu.state?.concept.level]?.toLowerCase()}
+      </MenuItem>
       <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
+      <MenuItem onClick={menuDeselectConcept}>Deselect concept</MenuItem>
+      <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}

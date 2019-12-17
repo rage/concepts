@@ -75,6 +75,7 @@ const ConceptNode = ({
 
   if (!concepts.current[id]) concepts.current[id] = { name }
   const self = concepts.current[id]
+  self.concept = concept
 
   if (concept.position !== self.prevPosition) {
     const pos = parsePosition(concept.position)
