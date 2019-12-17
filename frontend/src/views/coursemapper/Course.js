@@ -88,7 +88,7 @@ const Course = ({
   const [{ user }] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
+  const openCreateConceptDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
   const course = courseLink.from
   const updateCourseLink = useMutation(UPDATE_COURSE_LINK, {
@@ -115,8 +115,8 @@ const Course = ({
 
   const collapsed = collapsedCourseIds.has(course.id)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts, course.conceptOrder),
-    [course.concepts, course.conceptOrder])
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.objectiveOrder),
+    [course.concepts, course.objectiveOrder])
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -167,7 +167,7 @@ const Course = ({
           color='primary'
           ref={createConceptRef}
         >
-          Add concept
+          Add objective
         </Button>
       </CardContent>}
     </Card>

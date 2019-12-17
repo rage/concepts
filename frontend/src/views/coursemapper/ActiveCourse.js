@@ -81,11 +81,11 @@ const ActiveCourse = ({
   const [{ user }] = useLoginStateValue()
   const [selectOpen, setSelectOpen] = useState(false)
 
-  const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF)
+  const openCreateConceptDialog = useCreateConceptDialog(workspace.id, user.role >= Role.STAFF, 'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts, course.conceptOrder),
-    [course.concepts, course.conceptOrder])
+  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'), course.objectiveOrder),
+    [course.concepts, course.objectiveOrder])
   const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder),
     [workspace.courses, workspace.courseOrder])
 
@@ -151,7 +151,7 @@ const ActiveCourse = ({
         color='secondary'
         ref={infoBox.ref('mapper', 'CREATE_CONCEPT_TARGET')}
       >
-        Add concept
+        Add objective
       </Button>
     </Paper>
   </>
