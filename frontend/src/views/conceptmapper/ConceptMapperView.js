@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem } from '@material-ui/core'
+import { Menu, MenuItem, Divider } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -21,7 +21,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import CourseList from './CourseList'
-import { useCreateConceptDialog } from '../../dialogs/concept'
+import { useCreateConceptDialog, useEditConceptDialog } from '../../dialogs/concept'
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 
@@ -102,6 +102,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const openCreateObjectiveDialog =
     useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
+
+  const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -376,8 +378,14 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   }
 
   const menuDeselectConcept = () => {
-    menu.state.node.classList.remove('selected')
-    selected.current.delete(`concept-${menu.id}`)
+    const id = `concept-${menu.id}`
+    if (selected.current.has(id)) {
+      menu.state.node.classList.remove('selected')
+      selected.current.delete(id)
+    } else {
+      menu.state.node.classList.add('selected')
+      selected.current.add(id)
+    }
     closeMenu()
   }
 
@@ -404,6 +412,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         id: menu.id
       }
     })
+    closeMenu()
+  }
+
+  const menuEditConcept = () => {
+    openEditConceptDialog(menu.state.concept)
     closeMenu()
   }
 
@@ -462,12 +475,22 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       open={menu.open === 'concept'} onClose={closeMenu}
     >
       <MenuItem onClick={menuAddLink}>Add link</MenuItem>
+      <MenuItem onClick={menuEditConcept}>Edit</MenuItem>
+      <MenuItem onClick={menuDeleteConcept}>Delete</MenuItem>
+      <MenuItem onClick={menuDeselectConcept}>
+        {selected.current.has(`concept-${menu.id}`) ? 'Deselect' : 'Select'}
+      </MenuItem>
       <MenuItem onClick={menuFlipLevel}>
         Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
-      <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
-      <MenuItem onClick={menuDeselectConcept}>Deselect concept</MenuItem>
-      <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
+      <Divider />
+      <MenuItem onClick={menuDeselectAll} disabled={!selected.current.has(`concept-${menu.id}`)}>
+        Deselect all
+      </MenuItem>
+      <MenuItem disabled>Delete all</MenuItem>
+      <MenuItem disabled>
+        Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
+      </MenuItem>
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
