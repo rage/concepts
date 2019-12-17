@@ -210,13 +210,22 @@ const ConceptNode = ({
       })
     }
 
+    const onDragStart = evt => {
+      if (evt.shiftKey) {
+        selected.current.add(id)
+        self.node.classList.add('selected')
+        evt.stopPropagation()
+        return false
+      }
+    }
+
     const startEditing = () => {
       closeMenu()
       setEditing(true)
     }
 
     return (
-      <DraggableCore onDrag={onDrag} onStop={onDragStop}>
+      <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
         <div
           ref={node => self.node = node} className={`${classes.root} concept-root`} id={id}
           data-concept-id={concept.id} style={positionStyle}
