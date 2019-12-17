@@ -312,6 +312,16 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
   })
 
+  const menuConvertObjective = () => {
+    updateConcept({
+      variables: {
+        id: menu.id,
+        level: 'OBJECTIVE',
+      }
+    })
+    closeMenu()
+  }
+
   const submitNewConcept = ({ name, position }) => {
     stopAdding()
     return createConcept({
@@ -433,6 +443,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       open={menu.open === 'concept'} onClose={closeMenu}
     >
       <MenuItem onClick={menuAddLink}>Add link</MenuItem>
+      <MenuItem onClick={menuConvertObjective}>Convert to objective</MenuItem>
       <MenuItem onClick={menuDeleteConcept}>Delete concept</MenuItem>
     </Menu>
     <Menu
