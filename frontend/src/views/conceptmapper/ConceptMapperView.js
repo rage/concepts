@@ -483,7 +483,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <MenuItem onClick={menuFlipLevel}>
         Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
-      <Divider />
+      <Divider component='li' style={{ margin: '4px 0' }} />
       <MenuItem onClick={menuDeselectAll} disabled={!selected.current.has(`concept-${menu.id}`)}>
         Deselect all
       </MenuItem>
