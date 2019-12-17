@@ -316,7 +316,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     updateConcept({
       variables: {
         id: menu.id,
-        level: 'OBJECTIVE',
+        level: 'OBJECTIVE'
       }
     })
     closeMenu()

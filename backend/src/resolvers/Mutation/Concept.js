@@ -159,7 +159,7 @@ export const updateConcept = async (root, {
 
     const oldOrderName = `${oldConcept.level.toLowerCase()}Order`
     const newOrderName = `${level.toLowerCase()}Order`
-    const courseId = oldConcept.course.id
+    const courseId = await context.prisma.concept({ id }).course().id()
     const oldOrder = await context.prisma.course({ id: courseId })[oldOrderName]()
     const newOrder = await context.prisma.course({ id: courseId })[newOrderName]()
     await context.prisma.updateCourse({
