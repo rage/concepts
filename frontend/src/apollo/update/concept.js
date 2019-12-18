@@ -88,6 +88,46 @@ const deleteConceptUpdate = workspaceId => (store, response) => {
   }
 }
 
+const deleteManyConceptsUpdate = workspaceId => (store, response) => {
+  const deletedConcepts = response.data.deleteManyConcepts
+  const ids = new Set(deletedConcepts.ids)
+  const courseId = deletedConcepts.courseId
+  try {
+    const course = store.readFragment({
+      id: courseId,
+      fragment: COURSE_PREREQ_FRAGMENT
+    })
+    store.writeFragment({
+      id: courseId,
+      fragment: COURSE_PREREQ_FRAGMENT,
+      data: {
+        ...course,
+        concepts: course.concepts.filter(c => !ids.has(c.id))
+      }
+    })
+  } catch (e) {
+    console.error('deleteManyConceptsUpdate', e)
+  }
+
+  if (workspaceId) {
+    try {
+      const dataInStore = store.readQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId }
+      })
+      const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
+      course.concepts = course.concepts.filter(concept => !ids.has(concept.id))
+      client.writeQuery({
+        query: WORKSPACE_BY_ID,
+        variables: { id: workspaceId },
+        data: dataInStore
+      })
+    } catch (e) {
+      console.error('deleteManyConceptsFromByIdUpdate', e)
+    }
+  }
+}
+
 const updateConceptUpdate = workspaceId => (store, response) => {
   const updatedConcept = response.data.updateConcept
   try {
@@ -128,6 +168,7 @@ const updateConceptUpdate = workspaceId => (store, response) => {
 
 export {
   deleteConceptUpdate,
+  deleteManyConceptsUpdate,
   updateConceptUpdate,
   createConceptUpdate
 }

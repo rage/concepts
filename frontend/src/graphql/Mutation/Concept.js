@@ -39,8 +39,18 @@ mutation deleteConcept($id: ID!) {
 ${DELETE_CONCEPT_FRAGMENT}
 `
 
+const DELETE_MANY_CONCEPTS = gql`
+mutation deleteManyConcepts($ids: [ID!]!) {
+  deleteManyConcepts(ids: $ids) {
+    ids
+    courseId
+  }
+}
+`
+
 export {
   CREATE_CONCEPT,
   DELETE_CONCEPT,
-  UPDATE_CONCEPT
+  UPDATE_CONCEPT,
+  DELETE_MANY_CONCEPTS
 }

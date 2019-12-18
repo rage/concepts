@@ -4,7 +4,12 @@ import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
 import pubsub from '../Subscription/pubsub'
-import { CONCEPT_CREATED, CONCEPT_UPDATED, CONCEPT_DELETED } from '../Subscription/channels'
+import {
+  CONCEPT_CREATED,
+  CONCEPT_UPDATED,
+  CONCEPT_DELETED,
+  MANY_CONCEPTS_DELETED
+} from '../Subscription/channels'
 
 const findPointGroups = async (workspaceId, courseId, context) => {
   if (context.role === Role.STUDENT) {
@@ -186,11 +191,8 @@ export const updateConcept = async (root, {
   return updateData
 }
 
-
 export const deleteManyConcepts = async(root, { ids }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.concept({ id: ids[0] }).workspace())
-  const course = nullShield(await context.prisma.concept({ id: ids[0] }).course())
-
   await checkAccess(context, {
     minimumRole: Role.GUEST,
     minimumPrivilege: Privilege.EDIT,
@@ -198,39 +200,32 @@ export const deleteManyConcepts = async(root, { ids }, context) => {
   })
 
   const idSet = new Set(ids)
+  const course = await context.prisma.concept({ id: ids[0] }).course()
   await context.prisma.updateCourse({
-    where: { id: toDelete.course.id },
+    where: { id: course.id },
     data: {
       conceptOrder: { set: course.conceptOrder.filter(conceptId => !idSet.has(conceptId)) },
       objectiveOrder: { set: course.objectiveOrder.filter(conceptId => !idSet.has(conceptId)) }
     }
   })
 
-  const concepts = new Set(await context.prisma.concept({ workspaceId: id }).map(concept => concept.id))
-  for (id of ids) {
-    if (!concepts.has(id)) {
-      return
-    }
-  }
-
   const result = await context.prisma.deleteManyConcepts({
+    // eslint-disable-next-line camelcase
     id_in: ids,
-    workspace: {
-      id: workspaceId
-    },
-    course: {
-      id: course.id
-    }
+    workspace: { id: workspaceId },
+    course: { id: course.id }
   })
 
-  // TODO: Add support for mass deletion for pubsubs
-  for (id of ids) {
-    pubsub.publish(CONCEPT_DELETED, {
-      conceptDeleted: { id, courseId: course.id, workspaceId }
-    })
-  }
+  pubsub.publish(MANY_CONCEPTS_DELETED, {
+    manyConceptsDeleted: { ids, courseId: course.id, workspaceId }
+  })
 
-  return result
+  console.log(result)
+
+  return {
+    courseId: course.id,
+    ids
+  }
 }
 
 export const deleteConcept = async (root, { id }, context) => {

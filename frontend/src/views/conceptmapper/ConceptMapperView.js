@@ -13,7 +13,8 @@ import {
   CREATE_CONCEPT_LINK,
   DELETE_CONCEPT,
   DELETE_CONCEPT_LINK,
-  UPDATE_CONCEPT
+  UPDATE_CONCEPT,
+  DELETE_MANY_CONCEPTS
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import {
@@ -100,18 +101,16 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const main = useRef()
   const root = document.getElementById('root')
 
-  const openCreateObjectiveDialog =
-    useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
+  // const openCreateObjectiveDialog =
+  //   useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
 
   const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
-  useUpdatingSubscription('workspace', 'update', {
-    variables: { workspaceId }
-  })
-
-  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
-    variables: { workspaceId }
-  })
+  const subscriptionArgs = { variables: { workspaceId } }
+  useUpdatingSubscription('workspace', 'update', subscriptionArgs)
+  useUpdatingSubscription('many concepts', 'delete', subscriptionArgs)
+  useManyUpdatingSubscriptions(
+    ['course', 'concept', 'concept link'], ['create', 'delete', 'update'], subscriptionArgs)
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
@@ -123,6 +122,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate(workspaceId)
+  })
+
+  const deleteManyConcepts = useMutation(DELETE_MANY_CONCEPTS, {
+    update: cache.deleteManyConceptsUpdate(workspaceId)
   })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
@@ -297,6 +300,20 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  useEffect(() => {
+    if (selected.current.size === 0) {
+      return
+    }
+    console.log('Using concept set update effect')
+    const conceptSet = new Set(courseQuery.data.courseById?.concepts
+      .map(concept => `concept-${concept.id}`))
+    for (const elem of selected.current) {
+      if (!conceptSet.has(elem)) {
+        selected.current.delete(elem)
+      }
+    }
+  }, [courseQuery.data.courseById?.concepts])
+
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
   } else if (!courseQuery.data.courseById) {
@@ -341,6 +358,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     evt.preventDefault()
     setMenu({
       id,
+      typeId: `${type}-${id}`,
       state: type === 'concept' && concepts.current[`concept-${id}`],
       open: type,
       anchor: {
@@ -358,75 +376,77 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     })
   }
 
-  const menuAddLink = () => {
-    setAddingLink(menu.id)
+  const closeMenuAnd = (func, ...args) => () => {
+    func(...args)
     closeMenu()
   }
+
+  const menuAddLink = closeMenuAnd(setAddingLink, menu.id)
 
   const oppositeLevel = {
     OBJECTIVE: 'CONCEPT',
     CONCEPT: 'OBJECTIVE'
   }
-  const menuFlipLevel = () => {
-    updateConcept({
+
+  const clearSelected = () => {
+    for (const state of Object.values(concepts.current)) {
+      state.node?.classList.remove('selected')
+    }
+    selected.current.clear()
+  }
+
+  const menuFlipLevel = closeMenuAnd(async () => {
+    await updateConcept({
       variables: {
         id: menu.id,
         level: oppositeLevel[menu.state.concept.level]
       }
     })
-    closeMenu()
-  }
+    clearSelected()
+  })
 
-  const menuDeselectConcept = () => {
-    const id = `concept-${menu.id}`
-    if (selected.current.has(id)) {
+  const menuDeselectConcept = closeMenuAnd(() => {
+    if (selected.current.has(menu.typeId)) {
       menu.state.node.classList.remove('selected')
-      selected.current.delete(id)
+      selected.current.delete(menu.typeId)
     } else {
       menu.state.node.classList.add('selected')
-      selected.current.add(id)
+      selected.current.add(menu.typeId)
     }
-    closeMenu()
-  }
+  })
 
-  const menuDeselectAll = () => {
-    for (const state of Object.values(concepts.current)) {
-      state.node?.classList.remove('selected')
-    }
-    selected.current.clear()
-    closeMenu()
-  }
+  const menuDeselectAll = closeMenuAnd(clearSelected)
 
-  const menuDeleteConcept = () => {
-    deleteConcept({
+  const menuDeleteConcept = closeMenuAnd(async () => {
+    await deleteConcept({
       variables: {
         id: menu.id
       }
     })
-    closeMenu()
-  }
+  })
 
-  const menuDeleteLink = () => {
-    deleteConceptLink({
+  const menuDeleteAll = closeMenuAnd(async () => {
+    await deleteManyConcepts({
+      variables: {
+        ids: Array.from(selected.current).map(id => id.substr('concept-'.length))
+      }
+    })
+  })
+
+  const menuDeleteLink = closeMenuAnd(async() => {
+    await deleteConceptLink({
       variables: {
         id: menu.id
       }
     })
-    closeMenu()
-  }
+  })
 
-  const menuEditConcept = () => {
-    openEditConceptDialog(menu.state.concept)
-    closeMenu()
-  }
+  const menuEditConcept = closeMenuAnd(openEditConceptDialog, menu.state?.concept)
 
-  const menuAddConcept = () => {
-    closeMenu()
-    setTimeout(() => setAdding({
-      x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
-      y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
-    }), 0)
-  }
+  const menuAddConcept = closeMenuAnd(setTimeout, () => setAdding({
+    x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
+    y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
+  }), 0)
 
   const linkOffsets = {
     y0: -58,
@@ -478,17 +498,19 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <MenuItem onClick={menuEditConcept}>Edit</MenuItem>
       <MenuItem onClick={menuDeleteConcept}>Delete</MenuItem>
       <MenuItem onClick={menuDeselectConcept}>
-        {selected.current.has(`concept-${menu.id}`) ? 'Deselect' : 'Select'}
+        {selected.current.has(menu.typeId) ? 'Deselect' : 'Select'}
       </MenuItem>
       <MenuItem onClick={menuFlipLevel}>
         Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
       <Divider component='li' style={{ margin: '4px 0' }} />
-      <MenuItem onClick={menuDeselectAll} disabled={!selected.current.has(`concept-${menu.id}`)}>
+      <MenuItem onClick={menuDeselectAll} disabled={!selected.current.has(menu.typeId)}>
         Deselect all
       </MenuItem>
-      <MenuItem disabled>Delete all</MenuItem>
-      <MenuItem disabled>
+      <MenuItem onClick={menuDeleteAll} disabled={!selected.current.has(menu.typeId)}>
+        Delete all
+      </MenuItem>
+      <MenuItem onClick={() => alert('NYI')} disabled={!selected.current.has(menu.typeId)}>
         Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
     </Menu>

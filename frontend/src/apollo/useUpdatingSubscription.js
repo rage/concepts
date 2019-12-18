@@ -17,11 +17,17 @@ export const useManyUpdatingSubscriptions = (namespaces, actions, args) => {
   }
 }
 
+const warned = new Set()
+
 export const useUpdatingSubscription = (namespace, action, args) => {
   const subName = `${namespace.toUpperSnakeCase()}_${action.toUpperSnakeCase()}D_SUBSCRIPTION`
   // eslint-disable-next-line import/namespace
   const subscription = subscriptions[subName]
   if (!subscription) {
+    if (!warned.has(subName)) {
+      warned.add(subName)
+      console.warn(`Subscription ${subName} not found`)
+    }
     return
   }
   const subscriptionDataFieldName = `${namespace.toCamelCase()}${action.toPascalCase()}d`
