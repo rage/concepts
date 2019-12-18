@@ -154,7 +154,7 @@ type WorkspaceUpdate {
   courseOrder: [ID!]
 }
 
-type ConceptInput {
+input ConceptInput {
   id: ID!
   name: String
   description: String
