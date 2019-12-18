@@ -1,7 +1,8 @@
 import { ForbiddenError } from 'apollo-server-core'
 
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
-import { nullShield } from '../../util/errors'
+import { NotFoundError, nullShield } from '../../util/errors'
+import { zip } from '../../util/python'
 import { createMissingTags, filterTags } from './tagUtils'
 import pubsub from '../Subscription/pubsub'
 import {
@@ -129,29 +130,19 @@ export const createConcept = async (root, {
   return createdConcept
 }
 
-export const updateConcept = async (root, {
+const sharedUpdateConcept = async ({
   id, name, description, level, position, official, tags, frozen
-}, context) => {
-  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
-  await checkAccess(context, {
-    minimumRole: Role.GUEST,
-    minimumPrivilege: Privilege.EDIT,
-    workspaceId
-  })
-
-  const oldConcept = await context.prisma.concept({ id })
-
-  if (oldConcept.frozen && frozen !== false)
-    throw new ForbiddenError('This concept is frozen')
+}, oldConcept, workspaceId, belongsToTemplate, levelChange, context) => {
+  if (oldConcept.frozen && frozen !== false) {
+    throw new ForbiddenError(`The concept "${oldConcept.name}" is frozen`)
+  }
   if ((official !== undefined && official !== oldConcept.official)
     || (frozen || oldConcept.frozen)) {
-    await checkAccess(context, {
-      minimumRole: Role.STAFF,
-      workspaceId
-    })
+    if (context.user.role < Role.STAFF) {
+      throw new ForbiddenError('Access denied')
+    }
   }
 
-  const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
   const oldTags = await context.prisma.concept({ id }).tags()
 
   const data = {
@@ -162,7 +153,32 @@ export const updateConcept = async (root, {
 
   if (level !== undefined && level !== oldConcept.level) {
     data.level = level
+    await levelChange(level)
+  }
 
+  if (description !== undefined) data.description = description
+  if (position !== undefined) data.position = position
+  if (name !== undefined) {
+    if (!belongsToTemplate && name !== oldConcept.name) data.official = false
+    data.name = name
+  }
+
+  return data
+}
+
+export const updateConcept = async (root, concept, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+
+  const id = concept.id
+  const oldConcept = await context.prisma.concept({ id })
+  const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
+
+  const levelChange = async level => {
     const oldOrderName = `${oldConcept.level.toLowerCase()}Order`
     const newOrderName = `${level.toLowerCase()}Order`
     const courseId = await context.prisma.concept({ id }).course().id()
@@ -177,17 +193,13 @@ export const updateConcept = async (root, {
     })
   }
 
-  if (description !== undefined) data.description = description
-  if (position !== undefined) data.position = position
-  if (name !== undefined) {
-    if (!belongsToTemplate && name !== oldConcept.name) data.official = false
-    data.name = name
-  }
-
+  const updateArgs = await sharedUpdateConcept(concept, oldConcept,
+    workspaceId, belongsToTemplate, levelChange, context)
   const updateData = await context.prisma.updateConcept({
     where: { id },
-    data
+    data: updateArgs
   })
+
   pubsub.publish(CONCEPT_UPDATED, { conceptUpdated: { ...updateData, workspaceId } })
   return updateData
 }
@@ -230,35 +242,65 @@ export const deleteManyConcepts = async(root, { ids }, context) => {
 }
 
 export const updateManyConcepts = async(root, { concepts }, context) => {
-  const { id: workspaceId } = nullShield(await context.prisma.concept({ id: concepts[0].id }).workspace())
+  const { id: workspaceId } = nullShield(
+    await context.prisma.concept({ id: concepts[0].id }).workspace())
   const { id: courseId } = nullShield(await context.prisma.concept({ id: concepts[0].id }).course())
-  
+
   await checkAccess(context, {
     minimumRole: Role.GUEST,
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  
-  const manyConceptsUpdated = await Promise.all(concepts.map(async concept => {
+
+  const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
+
+  const oldConcepts = await context.prisma.concepts({
+    // eslint-disable-next-line camelcase
+    id_in: concepts.map(concept => concept.id)
+  })
+  if (oldConcepts.length !== concepts.length) {
+    throw new NotFoundError('concept')
+  }
+
+  const toObjective = new Set()
+  const toConcept = new Set()
+  const updateData = await Promise.all(zip(concepts, oldConcepts).map(async args => {
+    const [concept, oldConcept] = args
+    const levelChange = level => {
+      if (level === 'CONCEPT') toConcept.add(concept.id)
+      else toObjective.add(concept.id)
+    }
+    const data = await sharedUpdateConcept(concept, oldConcept,
+      workspaceId, belongsToTemplate, levelChange, context)
     return await context.prisma.updateConcept({
       where: {
         id: concept.id,
-        workspace: {
-          id: workspaceId
-        },
-        course: {
-          id: courseId
-        }
+        workspace: { id: workspaceId },
+        course: { id: courseId }
       },
-      ...concept
+      data
     })
-  })) 
-  
+  }))
+
+  if (toObjective.size > 0 || toConcept.size > 0) {
+    const conceptOrder = await context.prisma.course({ id: courseId }).conceptOrder()
+    const objOrder = await context.prisma.course({ id: courseId }).objectiveOrder()
+    await context.prisma.updateCourse({
+      where: { id: courseId },
+      data: {
+        conceptOrder: { set: conceptOrder.filter(id => !toObjective.has(id)).push(...toConcept) },
+        objectiveOrder: { set: objOrder.filter(id => !toConcept.has(id)).push(...toObjective) }
+      }
+    })
+  }
+
+  updateData.workspaceId = workspaceId
+
   pubsub.publish(MANY_CONCEPTS_UPDATED, {
-    manyConceptsUpdated
+    manyConceptsUpdated: updateData
   })
 
-  return manyConceptsUpdated
+  return updateData
 }
 
 export const deleteConcept = async (root, { id }, context) => {

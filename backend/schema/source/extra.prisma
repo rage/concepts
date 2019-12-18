@@ -105,6 +105,7 @@ type Subscription {
   conceptCreated(workspaceId: ID!): Concept!
   conceptUpdated(workspaceId: ID!): Concept!
   conceptDeleted(workspaceId: ID!): DeletedCourseItem!
+  manyConceptsUpdated(workspaceId: ID!): [Concept!]!
   manyConceptsDeleted(workspaceId: ID!): DeletedCourseItems!
 
   # ConceptLinks subscriptions

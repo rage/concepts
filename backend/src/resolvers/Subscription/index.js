@@ -3,7 +3,7 @@ import { makeSubscriptionResolvers } from './subscriptionUtil'
 
 export default {
   ...makeSubscriptionResolvers('concept', ['create', 'update', 'delete']),
-  ...makeSubscriptionResolvers('many concepts', ['delete']),
+  ...makeSubscriptionResolvers('many concepts', ['update', 'delete']),
   ...makeSubscriptionResolvers('concept link', ['create', 'delete']),
   ...makeSubscriptionResolvers('course', ['create', 'update', 'delete']),
   ...makeSubscriptionResolvers('course link', ['create', 'update', 'delete']),
