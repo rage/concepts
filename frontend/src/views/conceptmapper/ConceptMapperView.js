@@ -390,6 +390,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const clearSelected = () => {
     for (const state of Object.values(concepts.current)) {
+      // eslint-disable-next-line no-unused-expressions
       state.node?.classList.remove('selected')
     }
     selected.current.clear()
