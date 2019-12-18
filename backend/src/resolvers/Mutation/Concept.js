@@ -8,7 +8,8 @@ import {
   CONCEPT_CREATED,
   CONCEPT_UPDATED,
   CONCEPT_DELETED,
-  MANY_CONCEPTS_DELETED
+  MANY_CONCEPTS_DELETED,
+  MANY_CONCEPTS_UPDATED
 } from '../Subscription/channels'
 
 const findPointGroups = async (workspaceId, courseId, context) => {
@@ -226,6 +227,38 @@ export const deleteManyConcepts = async(root, { ids }, context) => {
     courseId: course.id,
     ids
   }
+}
+
+export const updateManyConcepts = async(root, { concepts }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.concept({ id: concepts[0].id }).workspace())
+  const { id: courseId } = nullShield(await context.prisma.concept({ id: concepts[0].id }).course())
+  
+  await checkAccess(context, {
+    minimumRole: Role.GUEST,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+  
+  const manyConceptsUpdated = await Promise.all(concepts.map(async concept => {
+    return await context.prisma.updateConcept({
+      where: {
+        id: concept.id,
+        workspace: {
+          id: workspaceId
+        },
+        course: {
+          id: courseId
+        }
+      },
+      ...concept
+    })
+  })) 
+  
+  pubsub.publish(MANY_CONCEPTS_UPDATED, {
+    manyConceptsUpdated
+  })
+
+  return manyConceptsUpdated
 }
 
 export const deleteConcept = async (root, { id }, context) => {
