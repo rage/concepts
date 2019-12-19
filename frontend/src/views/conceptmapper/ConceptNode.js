@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { DraggableCore } from 'react-draggable'
 
-import { noPropagation, noDefault } from '../../lib/eventMiddleware'
-
 const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
@@ -79,7 +77,7 @@ const parsePosition = position => {
 }
 
 const ConceptNode = ({
-  concept, concepts, selected, pan,
+  concept, concepts, selected, selectNode, deselectNode, pan,
   openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false
 }) => {
   const classes = useStyles()
@@ -196,7 +194,7 @@ const ConceptNode = ({
         cancelEdit()
         return
       }
-      await submit({
+      await submit(concept.id, {
         name: trimmedName,
         position: self.position
       })
@@ -236,7 +234,7 @@ const ConceptNode = ({
       if (selected.current.has(id)) {
         submitAllPosition()
       } else {
-        submit({
+        submit(concept.id, {
           position: self.position
         })
       }
@@ -245,18 +243,17 @@ const ConceptNode = ({
     const onDragStart = evt => {
       if (evt.shiftKey) {
         if (selected.current.has(id)) {
-          selected.current.delete(id)
-          self.node.classList.remove('selected')
+          deselectNode(id, self)
         } else {
-          selected.current.add(id)
-          self.node.classList.add('selected')
+          selectNode(id, self)
         }
         return false
       }
     }
 
-    const startEditing = () => {
-      closeMenu()
+    const startEditing = evt => {
+      evt.stopPropagation()
+      closeMenu(concept.id)
       setEditing(true)
     }
 
@@ -265,8 +262,8 @@ const ConceptNode = ({
         <div
           ref={node => self.node = node} id={id}
           className={`${classes.root} ${classes[concept.level.toLowerCase()]} concept-root`}
-          data-concept-id={concept.id} style={positionStyle}
-          onDoubleClick={noPropagation(startEditing)} onContextMenu={noDefault(openMenu)}
+          data-concept-id={concept.id} style={positionStyle} onDoubleClick={startEditing}
+          onContextMenu={evt => openMenu('concept', concept.id, self, evt)}
         >
           {concept.name}
         </div>
