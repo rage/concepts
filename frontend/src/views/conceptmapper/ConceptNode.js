@@ -79,9 +79,21 @@ const ConceptNode = ({
 
   if (concept.position !== self.prevPosition) {
     const pos = parsePosition(concept.position)
+    const [oldX, oldY, oldWidth, oldHeight] = [self.x, self.y, self.width, self.height]
     Object.assign(self, pos)
     self.position = `${self.x},${self.y},${self.width},${self.height}`
     self.prevPosition = concept.position
+    const deltaX = self.x - oldX + ((self.width - oldWidth) / 2)
+    const deltaY = self.y - oldY + ((self.height - oldHeight) / 2)
+    if (deltaX !== 0 || deltaY !== 0) {
+      window.dispatchEvent(new CustomEvent('resizeConcept', {
+        detail: {
+          id,
+          deltaX,
+          deltaY
+        }
+      }))
+    }
   }
 
   useEffect(() => {
