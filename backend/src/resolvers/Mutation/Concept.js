@@ -234,7 +234,6 @@ export const deleteManyConcepts = async(root, { ids }, context) => {
     manyConceptsDeleted: { ids, courseId: course.id, workspaceId }
   })
 
-  console.log(result)
 
   return {
     courseId: course.id,
