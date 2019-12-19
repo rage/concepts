@@ -510,7 +510,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         />)
       ])}
       {adding && <ConceptNode
-        isNew concept={{ id: 'new', name: '', position: adding }}
+        isNew concept={{ id: 'new', name: '', level: 'CONCEPT', position: adding }}
         concepts={concepts} selected={selected}
         cancel={stopAdding} submit={submitNewConcept}
       />}
@@ -549,16 +549,14 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <MenuItem onClick={menuFlipLevel}>
         Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
-      <Divider component='li' style={{ margin: '4px 0' }} />
-      <MenuItem onClick={menuDeselectAll} disabled={!selected.current.has(menu.typeId)}>
-        Deselect all
-      </MenuItem>
-      <MenuItem onClick={menuDeleteAll} disabled={!selected.current.has(menu.typeId)}>
-        Delete all
-      </MenuItem>
-      <MenuItem onClick={menuFlipAllLevel} disabled={!selected.current.has(menu.typeId)}>
+      {selected.current.has(menu.typeId) && <div style={{ display: 'contents' }}>
+        <Divider component='li' style={{ margin: '4px 0' }} />
+        <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
+        <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
+        <MenuItem onClick={menuFlipAllLevel}>
         Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
-      </MenuItem>
+        </MenuItem>
+      </div>}
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
