@@ -14,7 +14,7 @@ import {
   DELETE_CONCEPT,
   DELETE_CONCEPT_LINK,
   UPDATE_CONCEPT,
-  DELETE_MANY_CONCEPTS
+  DELETE_MANY_CONCEPTS, UPDATE_MANY_CONCEPTS
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import {
@@ -22,7 +22,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import CourseList from './CourseList'
-import { useCreateConceptDialog, useEditConceptDialog } from '../../dialogs/concept'
+import { useEditConceptDialog } from '../../dialogs/concept'
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 
@@ -108,7 +108,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const subscriptionArgs = { variables: { workspaceId } }
   useUpdatingSubscription('workspace', 'update', subscriptionArgs)
-  useUpdatingSubscription('many concepts', 'delete', subscriptionArgs)
+  useManyUpdatingSubscriptions('many concepts', ['delete', 'update'], subscriptionArgs)
   useManyUpdatingSubscriptions(
     ['course', 'concept', 'concept link'], ['create', 'delete', 'update'], subscriptionArgs)
 
@@ -126,6 +126,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const deleteManyConcepts = useMutation(DELETE_MANY_CONCEPTS, {
     update: cache.deleteManyConceptsUpdate(workspaceId)
+  })
+
+  const updateManyConcepts = useMutation(UPDATE_MANY_CONCEPTS, {
+    update: cache.updateManyConceptsUpdate(workspaceId)
   })
 
   const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
@@ -300,19 +304,19 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const courseConcepts = courseQuery.data.courseById?.concepts
   useEffect(() => {
     if (selected.current.size === 0) {
       return
     }
     console.log('Using concept set update effect')
-    const conceptSet = new Set(courseQuery.data.courseById?.concepts
-      .map(concept => `concept-${concept.id}`))
+    const conceptSet = new Set(courseConcepts.map(concept => `concept-${concept.id}`))
     for (const elem of selected.current) {
       if (!conceptSet.has(elem)) {
         selected.current.delete(elem)
       }
     }
-  }, [courseQuery.data.courseById?.concepts])
+  }, [courseConcepts])
 
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
@@ -330,6 +334,18 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       position
     }
   })
+
+  const submitAllPosition = async () => {
+    const data = Array.from(selected.current).map(id => concepts.current[id]).map(state => ({
+      id: state.concept.id,
+      position: state.position
+    }))
+    await updateManyConcepts({
+      variables: {
+        concepts: data
+      }
+    })
+  }
 
   const submitNewConcept = ({ name, position }) => {
     stopAdding()
@@ -461,6 +477,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
           openMenu={openConceptMenu(concept.id)} closeMenu={closeMenuById(concept.id)}
           concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
+          submitAllPosition={submitAllPosition}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
           key={link.id} delay={1} active linkId={link.id}

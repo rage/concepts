@@ -166,9 +166,59 @@ const updateConceptUpdate = workspaceId => (store, response) => {
   }
 }
 
+const updateManyConceptsUpdate = workspaceId => (store, response) => {
+  const updatedConcepts = response.data.updateManyConcepts
+  const courseId = updatedConcepts[0].course.id
+  try {
+    const course = store.readFragment({
+      id: courseId,
+      fragment: COURSE_PREREQ_FRAGMENT
+    })
+    const updatedConceptMap = new Map(updatedConcepts.map(concept => [concept.id, concept]))
+    store.writeFragment({
+      id: courseId,
+      fragment: COURSE_PREREQ_FRAGMENT,
+      data: {
+        ...course,
+        concepts: course.concepts.map(concept => updatedConceptMap.has(concept.id)
+          ? { ...concept, ...updatedConceptMap.get(concept.id) } : concept)
+      }
+    })
+  } catch (e) {
+    console.error('updateManyConceptsUpdate', e)
+  }
+
+  try {
+    const dataInStore = store.readQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId }
+    })
+    const ws = dataInStore.workspaceById
+    const tagIds = new Set(ws.conceptTags.map(tag => tag.id))
+    const tags = [...ws.conceptTags]
+    for (const concept of updatedConcepts) {
+      for (const tag of concept.tags) {
+        if (!tagIds.has(tag.id)) {
+          tagIds.add(tag.id)
+          tags.push(tag)
+        }
+      }
+    }
+    ws.conceptTags = tags
+    client.writeQuery({
+      query: WORKSPACE_BY_ID,
+      variables: { id: workspaceId },
+      data: dataInStore
+    })
+  } catch (e) {
+    console.error('updateManyConceptsUpdate', e)
+  }
+}
+
 export {
   deleteConceptUpdate,
   deleteManyConceptsUpdate,
   updateConceptUpdate,
+  updateManyConceptsUpdate,
   createConceptUpdate
 }

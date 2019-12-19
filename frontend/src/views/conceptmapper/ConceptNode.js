@@ -66,7 +66,7 @@ const parsePosition = position => {
 
 const ConceptNode = ({
   concept, concepts, selected, pan,
-  openMenu, closeMenu, submit, cancel, isNew = false
+  openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
@@ -96,13 +96,13 @@ const ConceptNode = ({
     self.y += deltaY
     self.node.style.left = `${self.x}px`
     self.node.style.top = `${self.y}px`
+    self.position = `${self.x},${self.y},${self.width},${self.height}`
   }
 
   const handleMoveEvent = evt => evt.detail.id !== id
     && selected.current.has(evt.detail.id) && selected.current.has(id)
     && updatePos(evt.detail)
 
-  const positionString = () => `${self.x},${self.y},${self.width},${self.height}`
   const positionStyle = {
     left: self.x,
     top: self.y,
@@ -170,7 +170,7 @@ const ConceptNode = ({
       }
       await submit({
         name: trimmedName,
-        position: positionString()
+        position: self.position
       })
       if (!isNew) {
         setEditing(false)
@@ -205,9 +205,13 @@ const ConceptNode = ({
     }
 
     const onDragStop = () => {
-      submit({
-        position: positionString()
-      })
+      if (selected.current.has(id)) {
+        submitAllPosition()
+      } else {
+        submit({
+          position: self.position
+        })
+      }
     }
 
     const onDragStart = evt => {

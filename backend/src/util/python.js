@@ -7,11 +7,11 @@ export function* zip(arr1, arr2) {
 
 zip.prototype.map = function(fn) {
   const data = []
-  let next = { value: undefined, done: false }
+  let next = this.next()
   let index = 0
   while (!next.done) {
-    next = this.next()
     data.push(fn(next.value, index, this))
+    next = this.next()
     index++
   }
   return data

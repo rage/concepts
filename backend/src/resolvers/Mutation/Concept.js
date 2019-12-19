@@ -167,6 +167,8 @@ const sharedUpdateConcept = async ({
 }
 
 export const updateConcept = async (root, concept, context) => {
+  const id = concept.id
+
   const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
   await checkAccess(context, {
     minimumRole: Role.GUEST,
@@ -174,7 +176,6 @@ export const updateConcept = async (root, concept, context) => {
     workspaceId
   })
 
-  const id = concept.id
   const oldConcept = await context.prisma.concept({ id })
   const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
 
@@ -255,8 +256,10 @@ export const updateManyConcepts = async(root, { concepts }, context) => {
   const belongsToTemplate = await context.prisma.workspace({ id: workspaceId }).asTemplate()
 
   const oldConcepts = await context.prisma.concepts({
-    // eslint-disable-next-line camelcase
-    id_in: concepts.map(concept => concept.id)
+    where: {
+      // eslint-disable-next-line camelcase
+      id_in: concepts.map(concept => concept.id)
+    }
   })
   if (oldConcepts.length !== concepts.length) {
     throw new NotFoundError('concept')
@@ -274,9 +277,10 @@ export const updateManyConcepts = async(root, { concepts }, context) => {
       workspaceId, belongsToTemplate, levelChange, context)
     return await context.prisma.updateConcept({
       where: {
-        id: concept.id,
-        workspace: { id: workspaceId },
-        course: { id: courseId }
+        id: concept.id
+        // TODO verify these too
+        // workspace: { id: workspaceId },
+        // course: { id: courseId }
       },
       data
     })
