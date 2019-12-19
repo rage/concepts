@@ -501,7 +501,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         />)
       ])}
       {adding && <ConceptNode
-        isNew concept={{ id: 'new', name: '', position: adding }}
+        isNew concept={{ id: 'new', name: '', level: 'CONCEPT', position: adding }}
         concepts={concepts} selected={selected}
         cancel={stopAdding} submit={submitNewConcept}
       />}

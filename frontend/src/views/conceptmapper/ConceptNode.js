@@ -15,19 +15,33 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid gray',
     whiteSpace: 'pre-wrap',
     overflow: 'hidden',
-    '&:hover': {
-      border: '1px solid red'
+    '&:hover:not(.selected)': {
+      border: '2px solid limegreen',
+      padding: '5px',
+      '&$objective': {
+        border: '2px solid blue'
+      }
     },
     '&.selected': {
-      border: '3px solid red',
-      padding: '4px'
+      border: '3px solid limegreen',
+      padding: '4px',
+      '&$objective': {
+        border: '3px solid blue'
+      }
     },
     // Put these above the links
     zIndex: 5
   },
+  concept: {},
+  objective: {
+    backgroundColor: 'lightblue'
+  },
   editing: {
     resize: 'both',
-    padding: 0,
+    padding: '0 !important',
+    '&:hover:not(.selected) > $textarea': {
+      padding: '5px'
+    },
     '&.selected > $textarea': {
       padding: '4px'
     }
@@ -193,8 +207,8 @@ const ConceptNode = ({
 
     return (
       <div
-        ref={node => self.node = node} className={`${classes.root} ${classes.editing}`} id={id}
-        style={positionStyle}
+        ref={node => self.node = node} style={positionStyle} id={id}
+        className={`${classes.root} ${classes[concept.level.toLowerCase()]} ${classes.editing}`}
         onMouseDown={onResizeStart} onMouseMove={onResize} onMouseUp={onResizeStop}
       >
         <textarea
@@ -249,7 +263,8 @@ const ConceptNode = ({
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
         <div
-          ref={node => self.node = node} className={`${classes.root} concept-root`} id={id}
+          ref={node => self.node = node} id={id}
+          className={`${classes.root} ${classes[concept.level.toLowerCase()]} concept-root`}
           data-concept-id={concept.id} style={positionStyle}
           onDoubleClick={noPropagation(startEditing)} onContextMenu={noDefault(openMenu)}
         >
