@@ -419,7 +419,18 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         level: oppositeLevel[menu.state.concept.level]
       }
     })
-    clearSelected()
+  })
+
+  const menuFlipAllLevel = closeMenuAnd(async () => {
+    const data = Array.from(selected.current).map(id => ({
+      id: id.substr('concept-'.length),
+      level: oppositeLevel[menu.state.concept.level]
+    }))
+    await updateManyConcepts({
+      variables: {
+        concepts: data
+      }
+    })
   })
 
   const menuDeselectConcept = closeMenuAnd(() => {
@@ -448,6 +459,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         ids: Array.from(selected.current).map(id => id.substr('concept-'.length))
       }
     })
+    clearSelected()
   })
 
   const menuDeleteLink = closeMenuAnd(async() => {
@@ -528,7 +540,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <MenuItem onClick={menuDeleteAll} disabled={!selected.current.has(menu.typeId)}>
         Delete all
       </MenuItem>
-      <MenuItem onClick={() => alert('NYI')} disabled={!selected.current.has(menu.typeId)}>
+      <MenuItem onClick={menuFlipAllLevel} disabled={!selected.current.has(menu.typeId)}>
         Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
     </Menu>
