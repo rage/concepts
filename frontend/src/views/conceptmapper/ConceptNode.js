@@ -125,6 +125,7 @@ const ConceptNode = ({
       const deltaY = (height - self.height) / 2
       self.width = width
       self.height = height
+      self.position = `${self.x},${self.y},${self.width},${self.height}`
 
       window.dispatchEvent(new CustomEvent('resizeConcept', {
         detail: {

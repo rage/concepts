@@ -46,9 +46,7 @@ export const useUpdatingSubscription = (namespace, action, args) => {
     onSubscriptionData: ({ subscriptionData }) => {
       const res = {
         data: {
-          [cacheDataFieldName]: {
-            ...subscriptionData.data[subscriptionDataFieldName]
-          }
+          [cacheDataFieldName]: subscriptionData.data[subscriptionDataFieldName]
         }
       }
       cacheUpdate(client, res)
