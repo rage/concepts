@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -84,6 +84,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
 
+  const [toolbarVisible, setToolbarVisible] = useState(false) 
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLinkState] = useState(null)
   const addingLinkRef = useRef()
@@ -163,9 +164,13 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       if (state.x >= sel.left && state.x + state.width <= selLeftEnd
         && state.y >= sel.top && state.y + state.height <= selTopEnd) {
         selected.current.add(id)
+        setToolbarVisible(true)
         state.node.classList.add('selected')
       } else {
         selected.current.delete(id)
+        if (selected.current.size === 0) {
+          setToolbarVisible(false)
+        }
         state.node.classList.remove('selected')
       }
     }
@@ -436,9 +441,13 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     if (selected.current.has(menu.typeId)) {
       menu.state.node.classList.remove('selected')
       selected.current.delete(menu.typeId)
+      if (selected.current.size === 0) {
+        setToolbarVisible(false)
+      }
     } else {
       menu.state.node.classList.add('selected')
       selected.current.add(menu.typeId)
+      setToolbarVisible(true)
     }
   })
 
@@ -517,6 +526,14 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <CourseList
         course={course} courses={courses} urlPrefix={urlPrefix} workspaceId={workspaceId}
       />
+      {
+        toolbarVisible && <span>
+          <Button> Edit </Button>
+          <Button> Delete </Button>
+          <Button> Deselect </Button>
+          <Button> Convert to concept </Button>
+        </span>
+      }
     </section>
 
     <Menu
