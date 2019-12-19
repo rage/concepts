@@ -66,7 +66,7 @@ const parsePosition = position => {
 
 const ConceptNode = ({
   concept, concepts, selected, pan,
-  openMenu, closeMenu, submit, cancel, isNew = false
+  openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
@@ -75,11 +75,25 @@ const ConceptNode = ({
 
   if (!concepts.current[id]) concepts.current[id] = { name }
   const self = concepts.current[id]
+  self.concept = concept
 
   if (concept.position !== self.prevPosition) {
     const pos = parsePosition(concept.position)
+    const [oldX, oldY, oldWidth, oldHeight] = [self.x, self.y, self.width, self.height]
     Object.assign(self, pos)
+    self.position = `${self.x},${self.y},${self.width},${self.height}`
     self.prevPosition = concept.position
+    const deltaX = self.x - oldX + ((self.width - oldWidth) / 2)
+    const deltaY = self.y - oldY + ((self.height - oldHeight) / 2)
+    if (deltaX !== 0 || deltaY !== 0) {
+      window.dispatchEvent(new CustomEvent('resizeConcept', {
+        detail: {
+          id,
+          deltaX,
+          deltaY
+        }
+      }))
+    }
   }
 
   useEffect(() => {
@@ -95,13 +109,13 @@ const ConceptNode = ({
     self.y += deltaY
     self.node.style.left = `${self.x}px`
     self.node.style.top = `${self.y}px`
+    self.position = `${self.x},${self.y},${self.width},${self.height}`
   }
 
   const handleMoveEvent = evt => evt.detail.id !== id
     && selected.current.has(evt.detail.id) && selected.current.has(id)
     && updatePos(evt.detail)
 
-  const positionString = () => `${self.x},${self.y},${self.width},${self.height}`
   const positionStyle = {
     left: self.x,
     top: self.y,
@@ -123,6 +137,7 @@ const ConceptNode = ({
       const deltaY = (height - self.height) / 2
       self.width = width
       self.height = height
+      self.position = `${self.x},${self.y},${self.width},${self.height}`
 
       window.dispatchEvent(new CustomEvent('resizeConcept', {
         detail: {
@@ -169,7 +184,7 @@ const ConceptNode = ({
       }
       await submit({
         name: trimmedName,
-        position: positionString()
+        position: self.position
       })
       if (!isNew) {
         setEditing(false)
@@ -204,9 +219,26 @@ const ConceptNode = ({
     }
 
     const onDragStop = () => {
-      submit({
-        position: positionString()
-      })
+      if (selected.current.has(id)) {
+        submitAllPosition()
+      } else {
+        submit({
+          position: self.position
+        })
+      }
+    }
+
+    const onDragStart = evt => {
+      if (evt.shiftKey) {
+        if (selected.current.has(id)) {
+          selected.current.delete(id)
+          self.node.classList.remove('selected')
+        } else {
+          selected.current.add(id)
+          self.node.classList.add('selected')
+        }
+        return false
+      }
     }
 
     const startEditing = () => {
@@ -215,7 +247,7 @@ const ConceptNode = ({
     }
 
     return (
-      <DraggableCore onDrag={onDrag} onStop={onDragStop}>
+      <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
         <div
           ref={node => self.node = node} className={`${classes.root} concept-root`} id={id}
           data-concept-id={concept.id} style={positionStyle}

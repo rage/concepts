@@ -47,7 +47,9 @@ type Mutation {
   # Concept mutations
   createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, level: ConceptLevel!, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteConcept(id: ID!): DeletedCourseItem!
-  updateConcept(id: ID!, name: String, description: String, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  updateConcept(id: ID!, name: String, description: String, level: ConceptLevel, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  deleteManyConcepts(ids: [ID!]): DeletedCourseItems!
+  updateManyConcepts(concepts: [ConceptInput!]): [Concept!]
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
@@ -103,6 +105,8 @@ type Subscription {
   conceptCreated(workspaceId: ID!): Concept!
   conceptUpdated(workspaceId: ID!): Concept!
   conceptDeleted(workspaceId: ID!): DeletedCourseItem!
+  manyConceptsUpdated(workspaceId: ID!): [Concept!]!
+  manyConceptsDeleted(workspaceId: ID!): DeletedCourseItems!
 
   # ConceptLinks subscriptions
   conceptLinkCreated(workspaceId: ID!): ConceptLink!
@@ -151,6 +155,17 @@ type WorkspaceUpdate {
   courseOrder: [ID!]
 }
 
+input ConceptInput {
+  id: ID!
+  name: String
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: [TagInput!]
+}
+
 type IDAndPrivilege {
   id: ID!
   privilege: Privilege!
@@ -170,6 +185,11 @@ type LimitedProject {
 
 type DeletedCourseItem {
   id: ID!
+  courseId: ID!
+}
+
+type DeletedCourseItems {
+  ids: [ID!]!
   courseId: ID!
 }
 

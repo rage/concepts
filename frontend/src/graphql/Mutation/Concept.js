@@ -7,9 +7,9 @@ import {
 } from '../Fragment'
 
 const UPDATE_CONCEPT = gql`
-mutation updateConcept($id: ID!, $name:String, $description: String, $position: String,
-                       $official: Boolean, $frozen: Boolean, $tags: [TagInput!]) {
-  updateConcept(id: $id, name: $name, description: $description, position: $position,
+mutation updateConcept($id: ID!, $name:String, $description: String, $level: ConceptLevel, $position: String,
+                       $official: Boolean,  $frozen: Boolean, $tags: [TagInput!]) {
+  updateConcept(id: $id, name: $name, description: $description, level: $level, position: $position,
                 official: $official, frozen: $frozen, tags: $tags) {
     ...updateConceptData
   }
@@ -39,8 +39,28 @@ mutation deleteConcept($id: ID!) {
 ${DELETE_CONCEPT_FRAGMENT}
 `
 
+const DELETE_MANY_CONCEPTS = gql`
+mutation deleteManyConcepts($ids: [ID!]!) {
+  deleteManyConcepts(ids: $ids) {
+    ids
+    courseId
+  }
+}
+`
+
+const UPDATE_MANY_CONCEPTS = gql`
+mutation updateManyConcepts($concepts: [ConceptInput!]!) {
+  updateManyConcepts(concepts: $concepts) {
+    ...updateConceptData
+  }
+}
+${UPDATE_CONCEPT_FRAGMENT}
+`
+
 export {
   CREATE_CONCEPT,
   DELETE_CONCEPT,
-  UPDATE_CONCEPT
+  UPDATE_CONCEPT,
+  DELETE_MANY_CONCEPTS,
+  UPDATE_MANY_CONCEPTS
 }
