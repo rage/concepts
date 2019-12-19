@@ -309,7 +309,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     if (selected.current.size === 0) {
       return
     }
-    console.log('Using concept set update effect')
     const conceptSet = new Set(courseConcepts.map(concept => `concept-${concept.id}`))
     for (const elem of selected.current) {
       if (!conceptSet.has(elem)) {
