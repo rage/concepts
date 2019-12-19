@@ -80,6 +80,7 @@ const ConceptNode = ({
   if (concept.position !== self.prevPosition) {
     const pos = parsePosition(concept.position)
     Object.assign(self, pos)
+    self.position = `${self.x},${self.y},${self.width},${self.height}`
     self.prevPosition = concept.position
   }
 
