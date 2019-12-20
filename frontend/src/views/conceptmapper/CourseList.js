@@ -1,29 +1,32 @@
+import React, { useState, useCallback } from 'react'
 import { InputBase, MenuItem, Select } from '@material-ui/core'
-import React, { useState } from 'react'
 
 import useRouter from '../../lib/useRouter'
 
-const CourseList = ({ course, courses, urlPrefix, workspaceId }) => {
+const CourseList = ({ courseId, courses, urlPrefix, workspaceId }) => {
   const [open, setOpen] = useState(false)
   const { history } = useRouter()
+
+  const onChange = useCallback(evt => {
+    history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)
+    setOpen(false)
+  }, [history, urlPrefix, setOpen, workspaceId])
+
+  const onClose = useCallback(() => setOpen(false), [setOpen])
+  const onOpen = useCallback(() => setOpen(true), [setOpen])
 
   return (
     <Select
       open={open}
-      value={course.id}
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      value={courseId}
+      onClose={onClose}
+      onOpen={onOpen}
       input={<InputBase />}
-      onChange={evt => {
-        history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)
-        setOpen(false)
-      }}
+      onChange={onChange}
     >
-      {courses.map(course =>
-        <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>
-      )}
+      {courses.map(course => <MenuItem key={course.id} value={course.id}>{course.name}</MenuItem>)}
     </Select>
   )
 }
 
-export default CourseList
+export default React.memo(CourseList)

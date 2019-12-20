@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
+import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button, ButtonGroup } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -25,6 +25,7 @@ import CourseList from './CourseList'
 import { useEditConceptDialog } from '../../dialogs/concept'
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
+import useCachedMutation from '../../lib/useCachedMutation'
 
 const useStyles = makeStyles({
   root: {
@@ -58,6 +59,11 @@ const useStyles = makeStyles({
     top: '60px',
     left: '10px'
   },
+  toolbarButtonWrapper: {
+    '& > *': {
+      margin: '0 4px'
+    }
+  },
   selection: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 0, 0, .25)',
@@ -80,10 +86,16 @@ const linearToLog = position =>
 const logToLinear = value =>
   ((Math.log(value) - sliderMinLog) / sliderScale) + sliderMinLinear
 
+const linkOffsets = { y0: -58, y1: -58 }
+
+const oppositeLevel = {
+  OBJECTIVE: 'CONCEPT',
+  CONCEPT: 'OBJECTIVE'
+}
+
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
-
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLinkState] = useState(null)
   const addingLinkRef = useRef()
@@ -97,9 +109,32 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const selected = useRef(new Set())
   const concepts = useRef({})
   const selection = useRef(null)
+  const toolbar = useRef()
+  const toolbarEditButton = useRef()
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
+
+  const selectNode = useCallback((id, state) => {
+    selected.current.add(id)
+    toolbar.current.style.display = 'contents'
+    if (selected.current.size > 1) {
+      toolbarEditButton.current.style.display = 'none'
+    }
+    if (!state) state = concepts.current[id]
+    state.node.classList.add('selected')
+  }, [])
+
+  const deselectNode = useCallback((id, state) => {
+    selected.current.delete(id)
+    if (selected.current.size === 0) {
+      toolbar.current.style.display = 'none'
+    } else if (selected.current.size === 1) {
+      toolbarEditButton.current.style.display = 'inline-flex'
+    }
+    if (!state) state = concepts.current[id]
+    state.node.classList.remove('selected')
+  }, [])
 
   // const openCreateObjectiveDialog =
   //   useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
@@ -112,31 +147,31 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   useManyUpdatingSubscriptions(
     ['course', 'concept', 'concept link'], ['create', 'delete', 'update'], subscriptionArgs)
 
-  const createConcept = useMutation(CREATE_CONCEPT, {
+  const createConcept = useCachedMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
 
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
+  const updateConcept = useCachedMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
 
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
+  const deleteConcept = useCachedMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate(workspaceId)
   })
 
-  const deleteManyConcepts = useMutation(DELETE_MANY_CONCEPTS, {
+  const deleteManyConcepts = useCachedMutation(DELETE_MANY_CONCEPTS, {
     update: cache.deleteManyConceptsUpdate(workspaceId)
   })
 
-  const updateManyConcepts = useMutation(UPDATE_MANY_CONCEPTS, {
+  const updateManyConcepts = useCachedMutation(UPDATE_MANY_CONCEPTS, {
     update: cache.updateManyConceptsUpdate(workspaceId)
   })
 
-  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+  const createConceptLink = useCachedMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate()
   })
 
-  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+  const deleteConceptLink = useCachedMutation(DELETE_CONCEPT_LINK, {
     update: cache.deleteConceptLinkUpdate()
   })
 
@@ -144,149 +179,147 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     variables: { id: courseId, workspaceId }
   })
 
-  const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
-    const initialValue = selection.current.start[axisKey]
-    const minVal = Math.min(value, initialValue)
-    const maxVal = Math.max(value, initialValue)
-    selection.current.pos[posKey] = (minVal + offset) / pan.current.zoom
-    selection.current.pos[lenKey] = (maxVal - minVal) / pan.current.zoom
-    selectionRef.current.style[posKey] = `${selection.current.pos[posKey]}px`
-    selectionRef.current.style[lenKey] = `${selection.current.pos[lenKey]}px`
-  }
+  useEffect(() => {
+    const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
+      const initialValue = selection.current.start[axisKey]
+      const minVal = Math.min(value, initialValue)
+      const maxVal = Math.max(value, initialValue)
+      selection.current.pos[posKey] = (minVal + offset) / pan.current.zoom
+      selection.current.pos[lenKey] = (maxVal - minVal) / pan.current.zoom
+      selectionRef.current.style[posKey] = `${selection.current.pos[posKey]}px`
+      selectionRef.current.style[lenKey] = `${selection.current.pos[lenKey]}px`
+    }
 
-  const updateSelected = () => {
-    const sel = selection.current.pos
-    const selLeftEnd = sel.left + sel.width
-    const selTopEnd = sel.top + sel.height
-    for (const [id, state] of Object.entries(concepts.current)) {
-      if (!state.node) continue
-      if (state.x >= sel.left && state.x + state.width <= selLeftEnd
-        && state.y >= sel.top && state.y + state.height <= selTopEnd) {
-        selected.current.add(id)
-        state.node.classList.add('selected')
-      } else {
-        selected.current.delete(id)
-        state.node.classList.remove('selected')
+    const updateSelected = () => {
+      const sel = selection.current.pos
+      const selLeftEnd = sel.left + sel.width
+      const selTopEnd = sel.top + sel.height
+      for (const [id, state] of Object.entries(concepts.current)) {
+        if (!state.node) continue
+        if (state.x >= sel.left && state.x + state.width <= selLeftEnd
+          && state.y >= sel.top && state.y + state.height <= selTopEnd) {
+          selectNode(id)
+        } else {
+          deselectNode(id)
+        }
       }
     }
-  }
 
-  const finishAddingLink = async to => {
-    await createConceptLink({
-      variables: {
-        from: addingLinkRef.current,
-        to,
-        workspaceId
-      }
-    })
-    setAddingLink(null)
-  }
-
-  const mouseDown = evt => {
-    if (evt.button !== 0) {
-      return
-    }
-    if (evt.target !== main.current && evt.target !== root) {
-      const conceptRoot = evt.target.closest('.concept-root')
-      if (addingLinkRef.current && conceptRoot?.hasAttribute('data-concept-id')) {
-        finishAddingLink(conceptRoot.getAttribute('data-concept-id'))
-      }
-      return
-    }
-    if (addingLinkRef.current) {
-      setAddingLink(null)
-    }
-    if (evt.shiftKey) {
-      const x = evt.pageX - main.current.offsetLeft
-      const y = evt.pageY - main.current.offsetTop
-      selection.current = {
-        pos: {
-          left: (x + pan.current.x) / pan.current.zoom,
-          top: (y + pan.current.y) / pan.current.zoom,
-          width: 0,
-          height: 0
-        },
-        start: { x, y }
-      }
-      selectionRef.current.style.left = `${selection.current.pos.left}px`
-      selectionRef.current.style.top = `${selection.current.pos.top}px`
-      selectionRef.current.style.width = 0
-      selectionRef.current.style.height = 0
-      selectionRef.current.style.display = 'block'
-      updateSelected()
-    } else {
-      panning.current = true
-    }
-  }
-
-  const mouseMove = evt => {
-    if (panning.current) {
-      pan.current.y -= evt.movementY
-      pan.current.x -= evt.movementX
-      main.current.style.transform =
-        `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
-    } else if (selection.current) {
-      updateSelection('x', 'left', 'width',
-        evt.pageX - main.current.offsetLeft,
-        pan.current.x)
-      updateSelection('y', 'top', 'height',
-        evt.pageY - main.current.offsetTop,
-        pan.current.y)
-      updateSelected()
-    }
-  }
-
-  const mouseUp = () => {
-    if (selection.current) {
-      selection.current = null
-      selectionRef.current.style.display = 'none'
-    } else if (panning.current) {
-      panning.current = false
-    }
-  }
-
-  const mouseWheel = evt => {
-    pan.current.linearZoom -= evt.deltaY
-    if (pan.current.linearZoom < sliderMinLinear) {
-      pan.current.linearZoom = sliderMinLinear
-    } else if (pan.current.linearZoom > sliderMaxLinear) {
-      pan.current.linearZoom = sliderMaxLinear
-    }
-
-    const mouseX = evt.pageX - main.current.offsetLeft
-    const mouseY = evt.pageY - main.current.offsetTop
-    const oldZoom = pan.current.zoom
-    pan.current.zoom = linearToLog(pan.current.linearZoom)
-    pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
-    pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
-
-    main.current.style.transform =
-      `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
-  }
-
-  const doubleClick = evt => {
-    if (evt.target === main.current || evt.target === root) {
-      setAdding({
-        x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
-        y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
-      })
-    }
-  }
-
-  const openBackgroundMenu = evt => {
-    if (evt.target === main.current || evt.target === root) {
-      setMenu({
-        open: 'background',
-        anchor: {
-          left: evt.clientX - 2,
-          top: evt.clientY - 4
+    const finishAddingLink = async to => {
+      await createConceptLink({
+        variables: {
+          from: addingLinkRef.current,
+          to,
+          workspaceId
         }
       })
-      evt.preventDefault()
+      setAddingLink(null)
     }
-  }
 
-  useEffect(() => {
+    const mouseDown = evt => {
+      if (evt.button !== 0) {
+        return
+      }
+      if (evt.target !== main.current && evt.target !== root) {
+        const conceptRoot = evt.target.closest('.concept-root')
+        if (addingLinkRef.current && conceptRoot?.hasAttribute('data-concept-id')) {
+          finishAddingLink(conceptRoot.getAttribute('data-concept-id'))
+        }
+        return
+      }
+      if (addingLinkRef.current) {
+        setAddingLink(null)
+      }
+      if (evt.shiftKey) {
+        const x = evt.pageX - main.current.offsetLeft
+        const y = evt.pageY - main.current.offsetTop
+        selection.current = {
+          pos: {
+            left: (x + pan.current.x) / pan.current.zoom,
+            top: (y + pan.current.y) / pan.current.zoom,
+            width: 0,
+            height: 0
+          },
+          start: { x, y }
+        }
+        selectionRef.current.style.left = `${selection.current.pos.left}px`
+        selectionRef.current.style.top = `${selection.current.pos.top}px`
+        selectionRef.current.style.width = 0
+        selectionRef.current.style.height = 0
+        selectionRef.current.style.display = 'block'
+        updateSelected()
+      } else {
+        panning.current = true
+      }
+    }
+
+    const mouseMove = evt => {
+      if (panning.current) {
+        pan.current.y -= evt.movementY
+        pan.current.x -= evt.movementX
+        main.current.style.transform =
+          `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
+      } else if (selection.current) {
+        updateSelection('x', 'left', 'width',
+          evt.pageX - main.current.offsetLeft,
+          pan.current.x)
+        updateSelection('y', 'top', 'height',
+          evt.pageY - main.current.offsetTop,
+          pan.current.y)
+        updateSelected()
+      }
+    }
+
+    const mouseUp = () => {
+      if (selection.current) {
+        selection.current = null
+        selectionRef.current.style.display = 'none'
+      } else if (panning.current) {
+        panning.current = false
+      }
+    }
+
+    const mouseWheel = evt => {
+      pan.current.linearZoom -= evt.deltaY
+      if (pan.current.linearZoom < sliderMinLinear) {
+        pan.current.linearZoom = sliderMinLinear
+      } else if (pan.current.linearZoom > sliderMaxLinear) {
+        pan.current.linearZoom = sliderMaxLinear
+      }
+
+      const mouseX = evt.pageX - main.current.offsetLeft
+      const mouseY = evt.pageY - main.current.offsetTop
+      const oldZoom = pan.current.zoom
+      pan.current.zoom = linearToLog(pan.current.linearZoom)
+      pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
+      pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
+
+      main.current.style.transform =
+        `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
+    }
+
+    const doubleClick = evt => {
+      if (evt.target === main.current || evt.target === root) {
+        setAdding({
+          x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
+          y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
+        })
+      }
+    }
+
+    const openBackgroundMenu = evt => {
+      if (evt.target === main.current || evt.target === root) {
+        setMenu({
+          open: 'background',
+          anchor: {
+            left: evt.clientX - 2,
+            top: evt.clientY - 4
+          }
+        })
+        evt.preventDefault()
+      }
+    }
+
     window.addEventListener('mousedown', mouseDown)
     window.addEventListener('mousemove', mouseMove)
     window.addEventListener('mouseup', mouseUp)
@@ -317,24 +350,15 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
   }, [courseConcepts])
 
-  if (courseQuery.error) {
-    return <NotFoundView message='Course not found' />
-  } else if (!courseQuery.data.courseById) {
-    return <LoadingBar id='course-view' />
-  }
-
-  const course = courseQuery.data.courseById
-  const courses = courseQuery.data.courseById.workspace.courses
-
-  const submitExistingConcept = id => ({ name, position }) => updateConcept({
+  const submitExistingConcept = useCallback((id, { name, position }) => updateConcept({
     variables: {
       id,
       name,
       position
     }
-  })
+  }), [updateConcept])
 
-  const submitAllPosition = async () => {
+  const submitAllPosition = useCallback(async () => {
     const data = Array.from(selected.current).map(id => concepts.current[id]).map(state => ({
       id: state.concept.id,
       position: state.position
@@ -344,9 +368,14 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         concepts: data
       }
     })
-  }
+  }, [updateManyConcepts])
 
-  const submitNewConcept = ({ name, position }) => {
+  const stopAdding = useCallback(() => {
+    delete concepts.current['concept-new']
+    setAdding(null)
+  }, [setAdding])
+
+  const submitNewConcept = useCallback((_, { name, position }) => {
     stopAdding()
     return createConcept({
       variables: {
@@ -358,137 +387,153 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         courseId
       }
     })
-  }
+  }, [createConcept, stopAdding, courseId, workspaceId])
 
-  const stopAdding = () => {
-    delete concepts.current['concept-new']
-    setAdding(null)
-  }
+  const clearSelected = useCallback(() => {
+    for (const state of Object.values(concepts.current)) {
+      // eslint-disable-next-line no-unused-expressions
+      state.node?.classList.remove('selected')
+    }
+    selected.current.clear()
+    toolbar.current.style.display = 'none'
+  }, [])
 
-  const openConceptMenu = id => openMenu('concept', id)
-  const closeMenuById = id => () => menu.id === id && closeMenu()
-  const openConceptLinkMenu = id => openMenu('concept-link', id)
+  const openConceptLinkMenu = id => evt => openMenu('concept-link', id, null, evt)
 
-  const openMenu = (type, id) => evt => {
+  const openMenu = useCallback((type, id, state, evt) => {
     evt.preventDefault()
     setMenu({
       id,
       typeId: `${type}-${id}`,
-      state: type === 'concept' && concepts.current[`concept-${id}`],
+      state,
       open: type,
       anchor: {
         left: evt.clientX - 2,
         top: evt.clientY - 4
       }
     })
-  }
+  }, [])
 
-  const closeMenu = () => {
+  const closeMenu = useCallback((id) => {
+    if (typeof id === 'string' && menu.id !== id) {
+      return
+    }
     setMenu({
       ...menu,
       id: null,
       open: false
     })
-  }
+  }, [menu])
 
   const closeMenuAnd = (func, ...args) => () => {
     func(...args)
     closeMenu()
   }
 
-  const menuAddLink = closeMenuAnd(setAddingLink, menu.id)
+  const menuAddLink = useCallback(closeMenuAnd(setAddingLink, menu.id),
+    [setAddingLink, menu.id])
 
-  const oppositeLevel = {
-    OBJECTIVE: 'CONCEPT',
-    CONCEPT: 'OBJECTIVE'
-  }
-
-  const clearSelected = () => {
-    for (const state of Object.values(concepts.current)) {
-      // eslint-disable-next-line no-unused-expressions
-      state.node?.classList.remove('selected')
-    }
-    selected.current.clear()
-  }
-
-  const menuFlipLevel = closeMenuAnd(async () => {
+  const menuFlipLevel = useCallback(async () => {
+    closeMenu()
     await updateConcept({
       variables: {
         id: menu.id,
         level: oppositeLevel[menu.state.concept.level]
       }
     })
-  })
+  }, [updateConcept, closeMenu, menu.state, menu.id])
 
-  const menuFlipAllLevel = closeMenuAnd(async () => {
+  const convertAllSelected = useCallback(async level => {
     const data = Array.from(selected.current).map(id => ({
       id: id.substr('concept-'.length),
-      level: oppositeLevel[menu.state.concept.level]
+      level
     }))
     await updateManyConcepts({
       variables: {
         concepts: data
       }
     })
-  })
+  }, [updateManyConcepts])
 
-  const menuDeselectConcept = closeMenuAnd(() => {
+  const menuFlipAllLevel = useCallback(
+    closeMenuAnd(convertAllSelected, oppositeLevel[menu.state?.concept?.level]),
+    [convertAllSelected, closeMenu, menu.state])
+
+  const menuDeselectConcept = useCallback(() => {
     if (selected.current.has(menu.typeId)) {
-      menu.state.node.classList.remove('selected')
-      selected.current.delete(menu.typeId)
+      deselectNode(menu.typeId, menu.state)
     } else {
-      menu.state.node.classList.add('selected')
-      selected.current.add(menu.typeId)
+      selectNode(menu.typeId, menu.state)
     }
-  })
+    closeMenu()
+  }, [selectNode, deselectNode, closeMenu, menu.typeId, menu.state])
 
-  const menuDeselectAll = closeMenuAnd(clearSelected)
+  const menuDeselectAll = useCallback(closeMenuAnd(clearSelected), [clearSelected])
 
-  const menuDeleteConcept = closeMenuAnd(async () => {
+  const menuDeleteConcept = useCallback(async () => {
+    closeMenu()
     await deleteConcept({
       variables: {
         id: menu.id
       }
     })
-  })
+  }, [deleteConcept, closeMenu, menu.id])
 
-  const menuDeleteAll = closeMenuAnd(async () => {
+  const menuDeleteAll = useCallback(async () => {
+    closeMenu()
     await deleteManyConcepts({
       variables: {
         ids: Array.from(selected.current).map(id => id.substr('concept-'.length))
       }
     })
     clearSelected()
-  })
+  }, [deleteManyConcepts, clearSelected, closeMenu])
 
-  const menuDeleteLink = closeMenuAnd(async() => {
+  const menuDeleteLink = useCallback(async() => {
+    closeMenu()
     await deleteConceptLink({
       variables: {
         id: menu.id
       }
     })
-  })
+  }, [deleteConceptLink, closeMenu, menu.id])
 
-  const menuEditConcept = closeMenuAnd(openEditConceptDialog, menu.state?.concept)
+  const menuEditConcept = useCallback(closeMenuAnd(() => openEditConceptDialog(menu.state.concept)),
+    [openEditConceptDialog])
 
-  const menuAddConcept = closeMenuAnd(setTimeout, () => setAdding({
+  const toolbarConvertToConcept = useCallback(() => convertAllSelected('CONCEPT'),
+    [convertAllSelected])
+  const toolbarConvertToObjective = useCallback(() => convertAllSelected('OBJECTIVE'),
+    [convertAllSelected])
+
+  const toolbarEditConcept = useCallback(() => {
+    if (selected.current.size !== 1) {
+      return
+    }
+    openEditConceptDialog(concepts.current[selected.current.values().next().value].concept)
+  }, [openEditConceptDialog])
+
+  const menuAddConcept = useCallback(closeMenuAnd(setTimeout, () => setAdding({
     x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
     y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
-  }), 0)
+  }), 0), [menu.anchor])
 
-  const linkOffsets = {
-    y0: -58,
-    y1: -58
+  if (courseQuery.error) {
+    return <NotFoundView message='Course not found' />
+  } else if (!courseQuery.data.courseById) {
+    return <LoadingBar id='course-view' />
   }
+
+  const course = courseQuery.data.courseById
 
   return <>
     <main className={classes.root} ref={main}>
       {course.concepts.flatMap(concept => [
         <ConceptNode
-          key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan}
-          openMenu={openConceptMenu(concept.id)} closeMenu={closeMenuById(concept.id)}
-          concepts={concepts} selected={selected} submit={submitExistingConcept(concept.id)}
-          submitAllPosition={submitAllPosition}
+          key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan} concepts={concepts}
+          openMenu={openMenu} closeMenu={closeMenu}
+          selected={selected} selectNode={selectNode} deselectNode={deselectNode}
+          submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
           key={link.id} delay={1} active linkId={link.id}
@@ -515,8 +560,23 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
     <section className={classes.toolbar}>
       <CourseList
-        course={course} courses={courses} urlPrefix={urlPrefix} workspaceId={workspaceId}
+        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
+        urlPrefix={urlPrefix} workspaceId={workspaceId}
       />
+      <div style={{ display: 'none' }} className={classes.toolbarButtonWrapper} ref={toolbar}>
+        <Button
+          size='small' variant='outlined' ref={toolbarEditButton} onClick={toolbarEditConcept}
+        >
+          Edit
+        </Button>
+        <Button size='small' variant='outlined' onClick={menuDeleteAll}>Delete</Button>
+        <Button size='small' variant='outlined' onClick={menuDeselectAll}>Deselect</Button>
+        <ButtonGroup size='small' variant='outlined'>
+          <Button disabled style={{ borderRight: 'none' }}>Convert all to</Button>
+          <Button onClick={toolbarConvertToConcept}>concept</Button>
+          <Button onClick={toolbarConvertToObjective}>objective</Button>
+        </ButtonGroup>
+      </div>
     </section>
 
     <Menu
@@ -537,7 +597,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
         <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
         <MenuItem onClick={menuFlipAllLevel}>
-        Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
+          Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
         </MenuItem>
       </div>}
     </Menu>
