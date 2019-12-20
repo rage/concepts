@@ -296,8 +296,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     const doubleClick = evt => {
       if (evt.target === main.current || evt.target === root) {
         setAdding({
-          x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
-          y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
+          position: {
+            x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
+            y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
+          },
+          level: 'CONCEPT'
         })
       }
     }
@@ -371,18 +374,19 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   }, [setAdding])
 
   const submitNewConcept = useCallback((_, { name, position }) => {
+    const level = adding.level
     stopAdding()
     return createConcept({
       variables: {
         name,
         description: '',
-        level: 'CONCEPT',
+        level,
         position,
         workspaceId,
         courseId
       }
     })
-  }, [createConcept, stopAdding, courseId, workspaceId])
+  }, [createConcept, stopAdding, courseId, workspaceId, adding])
 
   const clearSelected = useCallback(() => {
     for (const state of Object.values(concepts.current)) {
@@ -508,10 +512,21 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     openEditConceptDialog(concepts.current[selected.current.values().next().value].concept)
   }, [openEditConceptDialog])
 
-  const menuAddConcept = useCallback(closeMenuAnd(setTimeout, [], () => setAdding({
-    x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
-    y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
-  }), 0), [menu.anchor])
+  const menuAddNode = useCallback(level => () => {
+    closeMenu()
+    setTimeout(() => {
+      setAdding({
+        position: {
+          x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
+          y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
+        },
+        level
+      })
+    }, 0)
+  }, [menu.anchor])
+
+  const menuAddConcept = useCallback(menuAddNode('CONCEPT'), [menuAddNode])
+  const menuAddObjective = useCallback(menuAddNode('OBJECTIVE'), [menuAddNode])
 
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
@@ -541,7 +556,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         />)
       ])}
       {adding && <ConceptNode
-        isNew concept={{ id: 'new', name: '', level: 'CONCEPT', position: adding }}
+        isNew concept={{ id: 'new', name: '', level: 'CONCEPT', ...adding }}
         concepts={concepts} selected={selected}
         cancel={stopAdding} submit={submitNewConcept}
       />}
@@ -600,6 +615,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       open={menu.open === 'background'} onClose={closeMenu}
     >
       <MenuItem onClick={menuAddConcept}>Add concept</MenuItem>
+      <MenuItem onClick={menuAddObjective}>Add objective</MenuItem>
     </Menu>
   </>
 }
