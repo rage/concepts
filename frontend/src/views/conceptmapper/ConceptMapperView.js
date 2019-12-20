@@ -513,7 +513,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     openEditConceptDialog(concepts.current[selected.current.values().next().value].concept)
   }, [openEditConceptDialog])
 
-  const menuAddConcept = useCallback(closeMenuAnd(setTimeout, [], () => setAdding({
+  const menuAddConcept = useCallback(closeMenuAnd(setTimeout, () => setAdding({
     x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
     y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
   }), 0), [menu.anchor])
