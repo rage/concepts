@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button, ButtonGroup } from '@material-ui/core'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -58,6 +58,11 @@ const useStyles = makeStyles({
     position: 'fixed',
     top: '60px',
     left: '10px'
+  },
+  toolbarButtonWrapper: {
+    '& > *': {
+      margin: '0 4px'
+    }
   },
   selection: {
     position: 'absolute',
@@ -558,12 +563,19 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
         urlPrefix={urlPrefix} workspaceId={workspaceId}
       />
-      <div style={{ display: 'none' }} ref={toolbar}>
-        <Button ref={toolbarEditButton} onClick={toolbarEditConcept}>Edit</Button>
-        <Button onClick={menuDeleteAll}>Delete</Button>
-        <Button onClick={menuDeselectAll}>Deselect</Button>
-        <Button onClick={toolbarConvertToConcept}>Convert all to concept</Button>
-        <Button onClick={toolbarConvertToObjective}>Convert all to objective</Button>
+      <div style={{ display: 'none' }} className={classes.toolbarButtonWrapper} ref={toolbar}>
+        <Button
+          size='small' variant='outlined' ref={toolbarEditButton} onClick={toolbarEditConcept}
+        >
+          Edit
+        </Button>
+        <Button size='small' variant='outlined' onClick={menuDeleteAll}>Delete</Button>
+        <Button size='small' variant='outlined' onClick={menuDeselectAll}>Deselect</Button>
+        <ButtonGroup size='small' variant='outlined'>
+          <Button disabled style={{ borderRight: 'none' }}>Convert all to</Button>
+          <Button onClick={toolbarConvertToConcept}>concept</Button>
+          <Button onClick={toolbarConvertToObjective}>objective</Button>
+        </ButtonGroup>
       </div>
     </section>
 
