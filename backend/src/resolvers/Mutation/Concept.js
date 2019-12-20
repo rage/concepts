@@ -223,7 +223,7 @@ export const deleteManyConcepts = async(root, { ids }, context) => {
     }
   })
 
-  const result = await context.prisma.deleteManyConcepts({
+  await context.prisma.deleteManyConcepts({
     // eslint-disable-next-line camelcase
     id_in: ids,
     workspace: { id: workspaceId },
@@ -233,7 +233,6 @@ export const deleteManyConcepts = async(root, { ids }, context) => {
   pubsub.publish(MANY_CONCEPTS_DELETED, {
     manyConceptsDeleted: { ids, courseId: course.id, workspaceId }
   })
-
 
   return {
     courseId: course.id,

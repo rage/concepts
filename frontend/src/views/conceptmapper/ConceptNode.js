@@ -206,7 +206,8 @@ const ConceptNode = ({
     return (
       <div
         ref={node => self.node = node} style={positionStyle} id={id}
-        className={`${classes.root} ${classes[concept.level.toLowerCase()]} ${classes.editing}`}
+        className={`${classes.root} ${classes[concept.level.toLowerCase()]} ${classes.editing}
+          ${selected.current.has(id) ? 'selected' : ''}`}
         onMouseDown={onResizeStart} onMouseMove={onResize} onMouseUp={onResizeStop}
       >
         <textarea
@@ -261,7 +262,8 @@ const ConceptNode = ({
       <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
         <div
           ref={node => self.node = node} id={id}
-          className={`${classes.root} ${classes[concept.level.toLowerCase()]} concept-root`}
+          className={`${classes.root} ${classes[concept.level.toLowerCase()]} concept-root
+            ${selected.current.has(id) ? 'selected' : ''}`}
           data-concept-id={concept.id} style={positionStyle} onDoubleClick={startEditing}
           onContextMenu={evt => openMenu('concept', concept.id, self, evt)}
         >

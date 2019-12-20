@@ -105,6 +105,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const concepts = useRef({})
   const selection = useRef(null)
   const toolbar = useRef()
+  const toolbarEditButton = useRef()
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
@@ -112,6 +113,9 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const selectNode = useCallback((id, state) => {
     selected.current.add(id)
     toolbar.current.style.display = 'contents'
+    if (selected.current.size > 1) {
+      toolbarEditButton.current.style.display = 'none'
+    }
     if (!state) state = concepts.current[id]
     state.node.classList.add('selected')
   }, [])
@@ -120,6 +124,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     selected.current.delete(id)
     if (selected.current.size === 0) {
       toolbar.current.style.display = 'none'
+    } else if (selected.current.size === 1) {
+      toolbarEditButton.current.style.display = 'inline-flex'
     }
     if (!state) state = concepts.current[id]
     state.node.classList.remove('selected')
@@ -432,18 +438,21 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     })
   }, [updateConcept, closeMenu, menu.state, menu.id])
 
-  const menuFlipAllLevel = useCallback(async () => {
+  const convertAllSelected = useCallback(async level => {
     const data = Array.from(selected.current).map(id => ({
       id: id.substr('concept-'.length),
-      level: oppositeLevel[menu.state.concept.level]
+      level
     }))
-    closeMenu()
     await updateManyConcepts({
       variables: {
         concepts: data
       }
     })
-  }, [updateManyConcepts, closeMenu, menu.state])
+  }, [updateManyConcepts])
+
+  const menuFlipAllLevel = useCallback(
+    closeMenuAnd(convertAllSelected, oppositeLevel[menu.state?.concept?.level]),
+    [convertAllSelected, closeMenu, menu.state])
 
   const menuDeselectConcept = useCallback(() => {
     if (selected.current.has(menu.typeId)) {
@@ -484,7 +493,20 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     })
   }, [deleteConceptLink, closeMenu, menu.id])
 
-  const menuEditConcept = useCallback(closeMenuAnd(openEditConceptDialog), [openEditConceptDialog])
+  const menuEditConcept = useCallback(closeMenuAnd(() => openEditConceptDialog(menu.state.concept)),
+    [openEditConceptDialog])
+
+  const toolbarConvertToConcept = useCallback(() => convertAllSelected('CONCEPT'),
+    [convertAllSelected])
+  const toolbarConvertToObjective = useCallback(() => convertAllSelected('OBJECTIVE'),
+    [convertAllSelected])
+
+  const toolbarEditConcept = useCallback(() => {
+    if (selected.current.size !== 1) {
+      return
+    }
+    openEditConceptDialog(concepts.current[selected.current.values().next().value].concept)
+  }, [openEditConceptDialog])
 
   const menuAddConcept = useCallback(closeMenuAnd(setTimeout, [], () => setAdding({
     x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
@@ -537,10 +559,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         urlPrefix={urlPrefix} workspaceId={workspaceId}
       />
       <div style={{ display: 'none' }} ref={toolbar}>
-        <Button>Edit</Button>
-        <Button>Delete</Button>
-        <Button>Deselect</Button>
-        <Button>Convert to concept</Button>
+        <Button ref={toolbarEditButton} onClick={toolbarEditConcept}>Edit</Button>
+        <Button onClick={menuDeleteAll}>Delete</Button>
+        <Button onClick={menuDeselectAll}>Deselect</Button>
+        <Button onClick={toolbarConvertToConcept}>Convert all to concept</Button>
+        <Button onClick={toolbarConvertToObjective}>Convert all to objective</Button>
       </div>
     </section>
 
@@ -562,7 +585,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
         <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
         <MenuItem onClick={menuFlipAllLevel}>
-        Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
+          Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
         </MenuItem>
       </div>}
     </Menu>
