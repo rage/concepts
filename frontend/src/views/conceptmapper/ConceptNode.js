@@ -96,6 +96,7 @@ const ConceptNode = ({
     if (name !== concept.name) {
       setName(concept.name)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [concept.name])
 
   if (!concepts.current[id]) concepts.current[id] = { name }

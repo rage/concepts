@@ -535,7 +535,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         courseId
       })
     }, 0)
-  }, [menu.anchor, closeMenu])
+  }, [menu.anchor, closeMenu, courseId])
 
   const menuAddConcept = useCallback(menuAddNode('CONCEPT'), [menuAddNode])
   const menuAddObjective = useCallback(menuAddNode('OBJECTIVE'), [menuAddNode])
