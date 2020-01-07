@@ -22,7 +22,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import CourseList from './CourseList'
-import { useEditConceptDialog } from '../../dialogs/concept'
+import { useEditConceptDialog, useCreateConceptDialog } from '../../dialogs/concept'
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
@@ -137,8 +137,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     state.node.classList.remove('selected')
   }, [])
 
-  // const openCreateObjectiveDialog =
-  //   useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
+  const openCreateObjectiveDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
@@ -306,7 +305,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
             x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
             y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
           },
-          level: 'CONCEPT'
+          level: 'CONCEPT',
+          courseId
         })
       }
     }
@@ -526,7 +526,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
           y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
         },
-        level
+        level,
+        courseId
       })
     }, 0)
   }, [menu.anchor, closeMenu])
@@ -547,7 +548,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       {course.concepts.flatMap(concept => [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan} concepts={concepts}
-          openMenu={openMenu} closeMenu={closeMenu} openEditConceptDialog={openEditConceptDialog}
+          openMenu={openMenu} closeMenu={closeMenu} openConceptDialog={openEditConceptDialog}
           selected={selected} selectNode={selectNode} deselectNode={deselectNode}
           submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
@@ -565,6 +566,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         isNew concept={{ id: 'new', name: '', level: 'CONCEPT', ...adding }}
         concepts={concepts} selected={selected}
         cancel={stopAdding} submit={submitNewConcept}
+        openConceptDialog={openCreateObjectiveDialog}
       />}
       {addingLink && <ConceptLink
         active within={document.body}

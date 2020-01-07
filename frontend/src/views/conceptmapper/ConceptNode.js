@@ -84,12 +84,18 @@ const parsePosition = position => {
 const ConceptNode = ({
   concept, concepts, selected, selectNode, deselectNode, pan,
   openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false,
-  openEditConceptDialog
+  openConceptDialog
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
   const [name, setName] = useState(concept.name)
   const id = `concept-${concept.id}`
+
+  useEffect(() => {
+    if (name !== concept.name) {
+      setName(concept.name)
+    }
+  }, [concept.name])
 
   if (!concepts.current[id]) concepts.current[id] = { name }
   const self = concepts.current[id]
@@ -192,6 +198,9 @@ const ConceptNode = ({
         cancel()
       }
       if (!isNew) {
+        if (name !== concept.name) {
+          setName(concept.name)
+        }
         setEditing(false)
       }
     }
@@ -219,7 +228,7 @@ const ConceptNode = ({
       cancelEdit()
       // TODO we should reset self.position and related fields here, since if the user cancels the
       //      edit dialog, the resizing will never be saved on the server.
-      openEditConceptDialog({ ...self.concept, position: self.position, name })
+      openConceptDialog({ ...self.concept, position: self.position, name })
     }
 
     const expandButtonStyle = {
