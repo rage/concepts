@@ -2,12 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Menu, MenuItem, Divider, Button, ButtonGroup } from '@material-ui/core'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import Popper from '@material-ui/core/Popper'
-import Grow from '@material-ui/core/Grow'
-import Paper from '@material-ui/core/Paper'
-import MenuList from '@material-ui/core/MenuList'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -100,6 +95,8 @@ const oppositeLevel = {
   CONCEPT: 'OBJECTIVE'
 }
 
+const conversionOptions = ['CONCEPT', 'OBJECTIVE']
+
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
@@ -122,35 +119,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const main = useRef()
   const root = document.getElementById('root')
 
-  const conversionOptions = ['concept', 'objective']
-  const [conversionIndex, setConversionIndex] = useState(0)
+  const [conversionTarget, setConversionTarget] = useState('CONCEPT')
   const conversionDialogRef = useRef(null)
   const [conversionDialogOpen, setConversionDialogOpen] = useState(false)
 
-
-  const selectConversionIndex = (event, index) => {
-    setConversionIndex(index)
-    setConversionDialogOpen(false)
-  }
-
   const toggleConversionDialog = () => {
     setConversionDialogOpen(conversionDialogOpen => !conversionDialogOpen)
-  }
-
-  const handleConversionDialogClose = event => {
-    if (conversionDialogRef.current && conversionDialogRef.current.contains(event.target)) {
-      return
-    }
-
-    setConversionDialogOpen(false)
-  }
-
-  const toolbarConvert = () => {
-    if (conversionOptions[conversionIndex] === 'concept') {
-      toolbarConvertToConcept()
-    } else if (conversionOptions[conversionIndex] === 'objective') {
-      toolbarConvertToObjective()
-    }
   }
 
   const selectNode = useCallback((id, state) => {
@@ -543,10 +517,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const menuEditConcept = useCallback(closeMenuAnd(() => openEditConceptDialog(menu.state.concept)),
     [openEditConceptDialog])
 
-  const toolbarConvertToConcept = useCallback(() => convertAllSelected('CONCEPT'),
-    [convertAllSelected])
-  const toolbarConvertToObjective = useCallback(() => convertAllSelected('OBJECTIVE'),
-    [convertAllSelected])
+  const toolbarConvert = useCallback(() => convertAllSelected(conversionTarget),
+    [convertAllSelected, conversionTarget])
 
   const toolbarEditConcept = useCallback(() => {
     if (selected.current.size !== 1) {
@@ -628,42 +600,36 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         <Button size='small' variant='outlined' onClick={menuDeselectAll}>Deselect</Button>
 
         <ButtonGroup size='small' ref={conversionDialogRef} variant='outlined'>
-          <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>Convert all to {conversionOptions[conversionIndex]}S</Button>
+          <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>
+            Convert all to {conversionTarget}s
+          </Button>
           <Button onClick={toggleConversionDialog}>
-            <ArrowDropDownIcon/>
+            <ArrowDropDownIcon />
           </Button>
         </ButtonGroup>
-
       </div>
     </section>
 
-    <Popper open={conversionDialogOpen} anchorEl={conversionDialogRef.current} transition>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleConversionDialogClose}>
-                  <MenuList id="split-button-menu">
-                    {conversionOptions.map((option, index) => (
-                      <MenuItem
-                        key={option}
-                        disabled={index === 2}
-                        selected={index === conversionIndex}
-                        onClick={event => selectConversionIndex(event, index)}
-                      >
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
+    <Menu
+      open={conversionDialogOpen} onClose={() => setConversionDialogOpen(false)}
+      anchorEl={conversionDialogRef.current}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+      {conversionOptions.map(option => (
+        <MenuItem
+          key={option}
+          selected={option === conversionTarget}
+          onClick={() => {
+            setConversionTarget(option)
+            setConversionDialogOpen(false)
+          }}
+        >
+          {option}
+        </MenuItem>
+      ))}
+    </Menu>
 
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
