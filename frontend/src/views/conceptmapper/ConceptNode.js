@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute'
   },
   textarea: {
+    resize:'none',
     padding: '6px',
     width: '100%',
     height: '100%',
