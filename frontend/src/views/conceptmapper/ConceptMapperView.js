@@ -597,7 +597,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
         <ButtonGroup size='small' ref={conversionDialogRef} variant='outlined'>
           <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>
-            Convert all to {conversionTarget}s
+            Convert all to {conversionTarget}
           </Button>
           <Button onClick={() => setConversionDialogOpen(true)}>
             <ArrowDropDownIcon />
