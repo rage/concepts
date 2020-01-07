@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute'
   },
   textarea: {
+    resize: 'none',
     padding: '6px',
     width: '100%',
     height: '100%',
@@ -95,6 +96,7 @@ const ConceptNode = ({
     if (name !== concept.name) {
       setName(concept.name)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [concept.name])
 
   if (!concepts.current[id]) concepts.current[id] = { name }

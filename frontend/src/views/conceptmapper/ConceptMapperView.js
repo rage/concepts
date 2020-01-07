@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Menu, MenuItem, Divider, Button, ButtonGroup } from '@material-ui/core'
+import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -94,6 +95,8 @@ const oppositeLevel = {
   CONCEPT: 'OBJECTIVE'
 }
 
+const conversionOptions = ['CONCEPT', 'OBJECTIVE']
+
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
@@ -115,6 +118,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
+
+  const [conversionTarget, setConversionTarget] = useState('CONCEPT')
+  const conversionDialogRef = useRef(null)
+  const [conversionDialogOpen, setConversionDialogOpen] = useState(false)
 
   const selectNode = useCallback((id, state) => {
     selected.current.add(id)
@@ -506,10 +513,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const menuEditConcept = useCallback(closeMenuAnd(() => openEditConceptDialog(menu.state.concept)),
     [openEditConceptDialog])
 
-  const toolbarConvertToConcept = useCallback(() => convertAllSelected('CONCEPT'),
-    [convertAllSelected])
-  const toolbarConvertToObjective = useCallback(() => convertAllSelected('OBJECTIVE'),
-    [convertAllSelected])
+  const toolbarConvert = useCallback(() => convertAllSelected(conversionTarget),
+    [convertAllSelected, conversionTarget])
 
   const toolbarEditConcept = useCallback(() => {
     if (selected.current.size !== 1) {
@@ -530,7 +535,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         courseId
       })
     }, 0)
-  }, [menu.anchor, closeMenu])
+  }, [menu.anchor, closeMenu, courseId])
 
   const menuAddConcept = useCallback(menuAddNode('CONCEPT'), [menuAddNode])
   const menuAddObjective = useCallback(menuAddNode('OBJECTIVE'), [menuAddNode])
@@ -589,13 +594,38 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         </Button>
         <Button size='small' variant='outlined' onClick={menuDeleteAll}>Delete</Button>
         <Button size='small' variant='outlined' onClick={menuDeselectAll}>Deselect</Button>
-        <ButtonGroup size='small' variant='outlined'>
-          <Button disabled style={{ borderRight: 'none' }}>Convert all to</Button>
-          <Button onClick={toolbarConvertToConcept}>concept</Button>
-          <Button onClick={toolbarConvertToObjective}>objective</Button>
+
+        <ButtonGroup size='small' ref={conversionDialogRef} variant='outlined'>
+          <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>
+            Convert all to {conversionTarget}
+          </Button>
+          <Button onClick={() => setConversionDialogOpen(true)}>
+            <ArrowDropDownIcon />
+          </Button>
         </ButtonGroup>
       </div>
     </section>
+
+    <Menu
+      open={conversionDialogOpen} onClose={() => setConversionDialogOpen(false)}
+      anchorEl={conversionDialogRef.current}
+      getContentAnchorEl={null}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
+      {conversionOptions.map(option => (
+        <MenuItem
+          key={option}
+          selected={option === conversionTarget}
+          onClick={() => {
+            setConversionTarget(option)
+            setConversionDialogOpen(false)
+          }}
+        >
+          {option.toTitleCase()}
+        </MenuItem>
+      ))}
+    </Menu>
 
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
