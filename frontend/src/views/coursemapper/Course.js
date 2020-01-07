@@ -162,7 +162,7 @@ const Course = ({
         </List>
         <Button
           className={`${classes.button} focusOverlayScrollParent`}
-          onClick={() => openCreateConceptDialog(course.id)}
+          onClick={() => openCreateConceptDialog({ courseId: course.id })}
           variant='contained'
           color='primary'
           ref={createConceptRef}

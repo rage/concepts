@@ -146,7 +146,7 @@ const ActiveCourse = ({
 
       <Button
         className={classes.button}
-        onClick={() => openCreateConceptDialog(course.id)}
+        onClick={() => openCreateConceptDialog({ courseId: course.id })}
         variant='contained'
         color='secondary'
         ref={infoBox.ref('mapper', 'CREATE_CONCEPT_TARGET')}
