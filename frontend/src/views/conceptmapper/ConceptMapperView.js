@@ -57,7 +57,8 @@ const useStyles = makeStyles({
   toolbar: {
     position: 'fixed',
     top: '60px',
-    left: '10px'
+    left: '10px',
+    userSelect: 'none'
   },
   toolbarButtonWrapper: {
     '& > *': {
@@ -342,7 +343,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const courseConcepts = courseQuery.data.courseById?.concepts
   useEffect(() => {
-    if (selected.current.size === 0) {
+    if (!courseConcepts || selected.current.size === 0) {
       return
     }
     const conceptSet = new Set(courseConcepts.map(concept => `concept-${concept.id}`))
@@ -546,7 +547,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       {course.concepts.flatMap(concept => [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan} concepts={concepts}
-          openMenu={openMenu} closeMenu={closeMenu}
+          openMenu={openMenu} closeMenu={closeMenu} openEditConceptDialog={openEditConceptDialog}
           selected={selected} selectNode={selectNode} deselectNode={deselectNode}
           submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
@@ -607,14 +608,16 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <MenuItem onClick={menuFlipLevel}>
         Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
-      {selected.current.has(menu.typeId) && <div style={{ display: 'contents' }}>
-        <Divider component='li' style={{ margin: '4px 0' }} />
-        <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
-        <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
-        <MenuItem onClick={menuFlipAllLevel}>
+      {selected.current.has(menu.typeId) && selected.current.size > 1 && (
+        <div style={{ display: 'contents' }}>
+          <Divider component='li' style={{ margin: '4px 0' }} />
+          <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
+          <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
+          <MenuItem onClick={menuFlipAllLevel}>
           Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
-        </MenuItem>
-      </div>}
+          </MenuItem>
+        </div>
+      )}
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}

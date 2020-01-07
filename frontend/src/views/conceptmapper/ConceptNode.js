@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { IconButton } from '@material-ui/core'
+import { ZoomOutMap } from '@material-ui/icons'
 import { DraggableCore } from 'react-draggable'
 
 const useStyles = makeStyles(theme => ({
@@ -44,6 +46,9 @@ const useStyles = makeStyles(theme => ({
       padding: '4px'
     }
   },
+  editExpandButton: {
+    position: 'absolute'
+  },
   textarea: {
     padding: '6px',
     width: '100%',
@@ -78,7 +83,8 @@ const parsePosition = position => {
 
 const ConceptNode = ({
   concept, concepts, selected, selectNode, deselectNode, pan,
-  openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false
+  openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false,
+  openEditConceptDialog
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
@@ -150,6 +156,8 @@ const ConceptNode = ({
       self.width = width
       self.height = height
       self.position = `${self.x},${self.y},${self.width},${self.height}`
+      self.expandButton.style.left = `${self.x + self.width + 4}px`
+      self.expandButton.style.top = `${self.y + (self.height / 2) - 15}px`
 
       window.dispatchEvent(new CustomEvent('resizeConcept', {
         detail: {
@@ -188,22 +196,38 @@ const ConceptNode = ({
       }
     }
 
-    const finishEdit = async () => {
+    const finishEdit = evt => {
+      if (evt && evt.relatedTarget === self.expandButton) {
+        return
+      }
       const trimmedName = name.trim()
-      if (trimmedName.length === 0) {
+      if (trimmedName.length === 0 || trimmedName === concept.name) {
         cancelEdit()
         return
       }
-      await submit(concept.id, {
+      submit(concept.id, {
         name: trimmedName,
         position: self.position
+      }).then(() => {
+        if (!isNew) {
+          setEditing(false)
+        }
       })
-      if (!isNew) {
-        setEditing(false)
-      }
     }
 
-    return (
+    const expandEdit = () => {
+      cancelEdit()
+      // TODO we should reset self.position and related fields here, since if the user cancels the
+      //      edit dialog, the resizing will never be saved on the server.
+      openEditConceptDialog({ ...self.concept, position: self.position, name })
+    }
+
+    const expandButtonStyle = {
+      left: positionStyle.left + positionStyle.width + 4,
+      top: positionStyle.top + (positionStyle.height / 2) - 15
+    }
+
+    return <>
       <div
         ref={node => self.node = node} style={positionStyle} id={id}
         className={`${classes.root} ${classes[concept.level.toLowerCase()]} ${classes.editing}
@@ -215,7 +239,13 @@ const ConceptNode = ({
           onChange={onChange} onBlur={finishEdit} onKeyDown={onKeyDown}
         />
       </div>
-    )
+      <IconButton
+        ref={btn => self.expandButton = btn} size='small' className={classes.editExpandButton}
+        style={expandButtonStyle} onClick={expandEdit}
+      >
+        <ZoomOutMap />
+      </IconButton>
+    </>
   } else {
     const onDrag = (evt, { deltaX, deltaY }) => {
       deltaX /= pan.current.zoom
