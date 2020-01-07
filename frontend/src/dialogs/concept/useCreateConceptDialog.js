@@ -7,7 +7,7 @@ import tagSelectProps, { backendToSelect } from '../tagSelectUtils'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import generateTempId from '../../lib/generateTempId'
 
-const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
+const useCreateConceptDialog = (workspaceId, isStaff, defaultLevel = 'CONCEPT') => {
   const { openDialog } = useDialog()
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
@@ -19,7 +19,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
   })
 
   const createOptimisticResponse = ({
-    courseId, name, official, frozen, description, tags, level
+    courseId, name, official, frozen, description, tags, level, position
   }) => ({
     __typename: 'Mutation',
     createConcept: {
@@ -28,7 +28,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
       name,
       description,
       level,
-      position: null,
+      position,
       official,
       frozen,
       course: {
@@ -46,7 +46,9 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
     }
   })
 
-  return courseId => openDialog({
+  return ({
+    courseId, level = defaultLevel, name = '', description = '', position = null
+  }) => openDialog({
     mutation: createConcept,
     createOptimisticResponse,
     type: level.toTitleCase(),
@@ -54,16 +56,19 @@ const useCreateConceptDialog = (workspaceId, isStaff, level = 'CONCEPT') => {
       workspaceId,
       courseId,
       official: false,
+      position,
       level
     },
     actionText: 'Create',
     title: `Add ${level.toLowerCase()}`,
     fields: [{
       name: 'name',
-      required: true
+      required: true,
+      defaultValue: name
     }, {
       name: 'description',
-      multiline: true
+      multiline: true,
+      defaultValue: description
     },
     {
       name: 'official',

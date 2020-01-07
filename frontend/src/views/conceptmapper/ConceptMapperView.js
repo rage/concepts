@@ -22,7 +22,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import CourseList from './CourseList'
-import { useEditConceptDialog } from '../../dialogs/concept'
+import { useEditConceptDialog, useCreateConceptDialog } from '../../dialogs/concept'
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
@@ -57,7 +57,8 @@ const useStyles = makeStyles({
   toolbar: {
     position: 'fixed',
     top: '60px',
-    left: '10px'
+    left: '10px',
+    userSelect: 'none'
   },
   toolbarButtonWrapper: {
     '& > *': {
@@ -136,8 +137,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     state.node.classList.remove('selected')
   }, [])
 
-  // const openCreateObjectiveDialog =
-  //   useCreateConceptDialog(workspaceId, user.role >= Role.STAFF, 'OBJECTIVE')
+  const openCreateObjectiveDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
 
   const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
@@ -301,8 +301,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     const doubleClick = evt => {
       if (evt.target === main.current || evt.target === root) {
         setAdding({
-          x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
-          y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
+          position: {
+            x: ((evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 100,
+            y: ((evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 17
+          },
+          level: 'CONCEPT',
+          courseId
         })
       }
     }
@@ -339,7 +343,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const courseConcepts = courseQuery.data.courseById?.concepts
   useEffect(() => {
-    if (selected.current.size === 0) {
+    if (!courseConcepts || selected.current.size === 0) {
       return
     }
     const conceptSet = new Set(courseConcepts.map(concept => `concept-${concept.id}`))
@@ -376,18 +380,19 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   }, [setAdding])
 
   const submitNewConcept = useCallback((_, { name, position }) => {
+    const level = adding.level
     stopAdding()
     return createConcept({
       variables: {
         name,
         description: '',
-        level: 'CONCEPT',
+        level,
         position,
         workspaceId,
         courseId
       }
     })
-  }, [createConcept, stopAdding, courseId, workspaceId])
+  }, [createConcept, stopAdding, courseId, workspaceId, adding])
 
   const clearSelected = useCallback(() => {
     for (const state of Object.values(concepts.current)) {
@@ -513,10 +518,22 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     openEditConceptDialog(concepts.current[selected.current.values().next().value].concept)
   }, [openEditConceptDialog])
 
-  const menuAddConcept = useCallback(closeMenuAnd(setTimeout, () => setAdding({
-    x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
-    y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
-  }), 0), [menu.anchor])
+  const menuAddNode = useCallback(level => () => {
+    closeMenu()
+    setTimeout(() => {
+      setAdding({
+        position: {
+          x: ((menu.anchor.left - main.current.offsetLeft + pan.current.x) / pan.current.zoom) - 98,
+          y: ((menu.anchor.top - main.current.offsetTop + pan.current.y) / pan.current.zoom) - 13
+        },
+        level,
+        courseId
+      })
+    }, 0)
+  }, [menu.anchor, closeMenu])
+
+  const menuAddConcept = useCallback(menuAddNode('CONCEPT'), [menuAddNode])
+  const menuAddObjective = useCallback(menuAddNode('OBJECTIVE'), [menuAddNode])
 
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
@@ -531,7 +548,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       {course.concepts.flatMap(concept => [
         <ConceptNode
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan} concepts={concepts}
-          openMenu={openMenu} closeMenu={closeMenu}
+          openMenu={openMenu} closeMenu={closeMenu} openConceptDialog={openEditConceptDialog}
           selected={selected} selectNode={selectNode} deselectNode={deselectNode}
           submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
@@ -546,9 +563,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         />)
       ])}
       {adding && <ConceptNode
-        isNew concept={{ id: 'new', name: '', level: 'CONCEPT', position: adding }}
+        isNew concept={{ id: 'new', name: '', level: 'CONCEPT', ...adding }}
         concepts={concepts} selected={selected}
         cancel={stopAdding} submit={submitNewConcept}
+        openConceptDialog={openCreateObjectiveDialog}
       />}
       {addingLink && <ConceptLink
         active within={document.body}
@@ -592,14 +610,16 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       <MenuItem onClick={menuFlipLevel}>
         Convert to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
       </MenuItem>
-      {selected.current.has(menu.typeId) && <div style={{ display: 'contents' }}>
-        <Divider component='li' style={{ margin: '4px 0' }} />
-        <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
-        <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
-        <MenuItem onClick={menuFlipAllLevel}>
+      {selected.current.has(menu.typeId) && selected.current.size > 1 && (
+        <div style={{ display: 'contents' }}>
+          <Divider component='li' style={{ margin: '4px 0' }} />
+          <MenuItem onClick={menuDeselectAll}>Deselect all</MenuItem>
+          <MenuItem onClick={menuDeleteAll}>Delete all</MenuItem>
+          <MenuItem onClick={menuFlipAllLevel}>
           Convert all to {oppositeLevel[menu.state?.concept?.level]?.toLowerCase()}
-        </MenuItem>
-      </div>}
+          </MenuItem>
+        </div>
+      )}
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
@@ -612,6 +632,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       open={menu.open === 'background'} onClose={closeMenu}
     >
       <MenuItem onClick={menuAddConcept}>Add concept</MenuItem>
+      <MenuItem onClick={menuAddObjective}>Add objective</MenuItem>
     </Menu>
   </>
 }
