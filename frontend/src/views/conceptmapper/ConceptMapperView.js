@@ -626,7 +626,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
             setConversionDialogOpen(false)
           }}
         >
-          {option}
+          {option.toTitleCase()}
         </MenuItem>
       ))}
     </Menu>
