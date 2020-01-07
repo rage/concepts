@@ -123,10 +123,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const conversionDialogRef = useRef(null)
   const [conversionDialogOpen, setConversionDialogOpen] = useState(false)
 
-  const toggleConversionDialog = () => {
-    setConversionDialogOpen(conversionDialogOpen => !conversionDialogOpen)
-  }
-
   const selectNode = useCallback((id, state) => {
     selected.current.add(id)
     toolbar.current.style.display = 'contents'
@@ -603,7 +599,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>
             Convert all to {conversionTarget}s
           </Button>
-          <Button onClick={toggleConversionDialog}>
+          <Button onClick={() => setConversionDialogOpen(true)}>
             <ArrowDropDownIcon />
           </Button>
         </ButtonGroup>
