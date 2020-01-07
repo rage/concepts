@@ -262,6 +262,8 @@ export const updateManyConcepts = async(root, { concepts }, context) => {
   if (oldConcepts.length !== concepts.length) {
     throw new NotFoundError('concept')
   }
+  concepts.sort((a, b) => a.id > b.id)
+  oldConcepts.sort((a, b) => a.id > b.id)
 
   const toObjective = new Set()
   const toConcept = new Set()
