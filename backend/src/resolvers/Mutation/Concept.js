@@ -108,26 +108,51 @@ export const createConcept = async (root, {
     tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
   })
 
-  if (createdConcept) {
-    const pointGroups = await findPointGroups(workspaceId, courseId, context)
-    if (pointGroups && pointGroups.length > 0) {
-      await updatePointGroups(pointGroups, context)
-    }
-  }
-
-  const orderName = `${level.toLowerCase()}Order`
-  const conceptOrder = await context.prisma.course({ id: courseId })[orderName]()
-  if (!isAutomaticSorting(conceptOrder)) {
-    await context.prisma.updateCourse({
-      where: { id: courseId },
+  if (level === 'COMMON') {
+    await context.prisma.updateWorkspace({
+      where: { id: workspaceId },
       data: {
-        [orderName]: { set: conceptOrder.concat([createdConcept.id]) }
+        commonConcepts: { connect: { id: createConcept.id } }
       }
     })
+  } else {
+    if (createdConcept) {
+      const pointGroups = await findPointGroups(workspaceId, courseId, context)
+      if (pointGroups && pointGroups.length > 0) {
+        await updatePointGroups(pointGroups, context)
+      }
+    }
+
+    const orderName = `${level.toLowerCase()}Order`
+    const conceptOrder = await context.prisma.course({ id: courseId })[orderName]()
+    if (!isAutomaticSorting(conceptOrder)) {
+      await context.prisma.updateCourse({
+        where: { id: courseId },
+        data: {
+          [orderName]: { set: conceptOrder.concat([createdConcept.id]) }
+        }
+      })
+    }
   }
 
   pubsub.publish(CONCEPT_CREATED, { conceptCreated: { ...createdConcept, workspaceId } })
   return createdConcept
+}
+
+export const createConceptFromCommon = async (root, { conceptId, courseId }, context, ...rest) => {
+  const { id: workspaceId } = nullShield(
+    await context.prisma.concept({ id: conceptId }).workspace())
+  const concept = nullShield(await context.prisma.concept({ id: conceptId }))
+  if (concept.level === 'COMMON') {
+    return createConcept(root, {
+      name: concept.name,
+      level: 'OBJECTIVE',
+      courseId,
+      workspaceId
+    }, context, ...rest)
+  } else {
+    throw new ForbiddenError(`The concept "${concept.name}" is not a common concept`)
+  }
 }
 
 const sharedUpdateConcept = async ({
@@ -152,6 +177,10 @@ const sharedUpdateConcept = async ({
   }
 
   if (level !== undefined && level !== oldConcept.level) {
+    if (oldConcept.level === 'COMMON') {
+      // TODO Maybe allow for changing the level?
+      throw new ForbiddenError('Cannot change the level of a common concept.')
+    }
     data.level = level
     await levelChange(level)
   }
