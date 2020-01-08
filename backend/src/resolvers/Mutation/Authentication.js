@@ -5,8 +5,9 @@ import { checkAccess, Privilege, Role } from '../../util/accessControl'
 import { verify as verifyGoogle } from '../../util/googleAuth'
 import * as tmc from '../../util/tmcAuthentication'
 import { makeMockWorkspaceForUser, signOrCreateUser } from '../../util/createUser'
-import { parseToken } from '../../middleware/authentication'
+import { getLastSeenMeta } from '../../middleware/authentication'
 import { NotFoundError } from '../../util/errors'
+import makeSecret from '../../util/secret'
 
 const getData = async (prisma, type, titleType, id) => new Map(
   (await prisma
@@ -40,13 +41,16 @@ const mergeData = async (prisma, oldUserId, curUserId, type) => {
 }
 
 export const createGuest = async (root, args, context) => {
+  const token = makeSecret(64)
   const guest = await context.prisma.createUser({
-    role: Role.GUEST.toString()
+    role: Role.GUEST.toString(),
+    tokens: {
+      create: [{
+        token,
+        ...getLastSeenMeta(context)
+      }]
+    }
   })
-  const token = jwt.sign({
-    role: guest.role,
-    id: guest.id
-  }, process.env.SECRET)
   await makeMockWorkspaceForUser(context.prisma, guest.id)
   return {
     token,
@@ -88,7 +92,12 @@ export const login = async (root, args, context) => {
   const tmcId = userDetails.id
   return await signOrCreateUser({ tmcId }, {
     role: (userDetails?.administrator ? Role.ADMIN : Role.STUDENT).toString()
-  }, context.prisma)
+  }, context)
+}
+
+export const logout = async (root, args, context) => {
+  await context.prisma.deleteAccessToken({ token: context.token })
+  return true
 }
 
 export const loginGoogle = async (root, args, context) => {
@@ -98,27 +107,24 @@ export const loginGoogle = async (root, args, context) => {
   } catch {
     return new AuthenticationError('Invalid Google token')
   }
-  return await signOrCreateUser({ googleId: data.sub }, {}, context.prisma)
+  return await signOrCreateUser({ googleId: data.sub }, {}, context)
 }
 
 export const mergeUser = async (root, { accessToken }, context) => {
   if (!context.user) {
     return new AuthenticationError('Must be logged in')
   }
-  const oldUserId = parseToken(accessToken).id
-  const curUserId = context.user.id
+  const oldUser = await context.prisma.token({ token: accessToken }).user()
+  const curUser = await context.prisma.user({ id: context.user.id })
 
-  await mergeData(context.prisma, oldUserId, curUserId, 'workspace')
-  await mergeData(context.prisma, oldUserId, curUserId, 'project')
-
-  const oldUser = await context.prisma.user({ id: oldUserId })
-  const curUser = await context.prisma.user({ id: curUserId })
+  await mergeData(context.prisma, oldUser.id, curUser.id, 'workspace')
+  await mergeData(context.prisma, oldUser.id, curUser.id, 'project')
 
   // TODO this leaves a partly orphaned user, we should instead replace ALL references to the
   //      user with the new user and then delete this user.
   await context.prisma.updateUser({
     where: {
-      id: oldUserId
+      id: oldUser.id
     },
     data: {
       tmcId: null,
@@ -127,11 +133,18 @@ export const mergeUser = async (root, { accessToken }, context) => {
       deactivated: true
     }
   })
+  await context.prisma.deleteManyAccessTokens({
+    where: {
+      user: {
+        id: oldUser.id
+      }
+    }
+  })
 
   const oldRole = Role.fromString(oldUser.role)
   const curRole = Role.fromString(curUser.role)
   return await context.prisma.updateUser({
-    where: { id: curUserId },
+    where: { id: curUser.id },
     data: {
       role: (oldRole > curRole ? oldRole : curRole).toString(),
       tmcId: curUser.tmcId || oldUser.tmcId,

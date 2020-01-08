@@ -9,6 +9,10 @@ var models = [
     embedded: false
   },
   {
+    name: "AccessToken",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },

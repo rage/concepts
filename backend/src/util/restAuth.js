@@ -1,6 +1,5 @@
 import { AuthenticationError, ForbiddenError } from 'apollo-server-core'
-
-import { parseToken } from '../middleware/authentication'
+import jwt from 'jsonwebtoken'
 
 const HEADER_PREFIX = 'Bearer '.toLowerCase()
 
@@ -33,7 +32,13 @@ export const verifyRequest = (req, type) => {
     throw new AuthenticationError('Authorization header missing or invalid')
   }
 
-  const tokenData = parseToken(token)
+  let tokenData
+  try {
+    tokenData = jwt.verify(token, process.env.SECRET)
+  } catch (e) {
+    console.log(e)
+    throw new AuthenticationError('Bad token')
+  }
   if (tokenData.type !== type) {
     throw new ForbiddenError(`Token does not have access to ${typeData.action}`)
   } else if (tokenData[typeData.tokenIdKey] !== id) {

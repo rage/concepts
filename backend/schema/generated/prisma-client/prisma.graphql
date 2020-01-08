@@ -1,3 +1,305 @@
+type AccessToken {
+  id: ID!
+  token: String!
+  user: User!
+  createdAt: DateTime!
+  lastSeenTime: DateTime!
+  lastSeenAgent: String!
+  lastSeenAddress: String!
+}
+
+type AccessTokenConnection {
+  pageInfo: PageInfo!
+  edges: [AccessTokenEdge]!
+  aggregate: AggregateAccessToken!
+}
+
+input AccessTokenCreateInput {
+  id: ID
+  token: String!
+  user: UserCreateOneWithoutTokensInput!
+  lastSeenAgent: String!
+  lastSeenAddress: String!
+}
+
+input AccessTokenCreateManyWithoutUserInput {
+  create: [AccessTokenCreateWithoutUserInput!]
+  connect: [AccessTokenWhereUniqueInput!]
+}
+
+input AccessTokenCreateWithoutUserInput {
+  id: ID
+  token: String!
+  lastSeenAgent: String!
+  lastSeenAddress: String!
+}
+
+type AccessTokenEdge {
+  node: AccessToken!
+  cursor: String!
+}
+
+enum AccessTokenOrderByInput {
+  id_ASC
+  id_DESC
+  token_ASC
+  token_DESC
+  createdAt_ASC
+  createdAt_DESC
+  lastSeenTime_ASC
+  lastSeenTime_DESC
+  lastSeenAgent_ASC
+  lastSeenAgent_DESC
+  lastSeenAddress_ASC
+  lastSeenAddress_DESC
+}
+
+type AccessTokenPreviousValues {
+  id: ID!
+  token: String!
+  createdAt: DateTime!
+  lastSeenTime: DateTime!
+  lastSeenAgent: String!
+  lastSeenAddress: String!
+}
+
+input AccessTokenScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  token: String
+  token_not: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_lt: String
+  token_lte: String
+  token_gt: String
+  token_gte: String
+  token_contains: String
+  token_not_contains: String
+  token_starts_with: String
+  token_not_starts_with: String
+  token_ends_with: String
+  token_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  lastSeenTime: DateTime
+  lastSeenTime_not: DateTime
+  lastSeenTime_in: [DateTime!]
+  lastSeenTime_not_in: [DateTime!]
+  lastSeenTime_lt: DateTime
+  lastSeenTime_lte: DateTime
+  lastSeenTime_gt: DateTime
+  lastSeenTime_gte: DateTime
+  lastSeenAgent: String
+  lastSeenAgent_not: String
+  lastSeenAgent_in: [String!]
+  lastSeenAgent_not_in: [String!]
+  lastSeenAgent_lt: String
+  lastSeenAgent_lte: String
+  lastSeenAgent_gt: String
+  lastSeenAgent_gte: String
+  lastSeenAgent_contains: String
+  lastSeenAgent_not_contains: String
+  lastSeenAgent_starts_with: String
+  lastSeenAgent_not_starts_with: String
+  lastSeenAgent_ends_with: String
+  lastSeenAgent_not_ends_with: String
+  lastSeenAddress: String
+  lastSeenAddress_not: String
+  lastSeenAddress_in: [String!]
+  lastSeenAddress_not_in: [String!]
+  lastSeenAddress_lt: String
+  lastSeenAddress_lte: String
+  lastSeenAddress_gt: String
+  lastSeenAddress_gte: String
+  lastSeenAddress_contains: String
+  lastSeenAddress_not_contains: String
+  lastSeenAddress_starts_with: String
+  lastSeenAddress_not_starts_with: String
+  lastSeenAddress_ends_with: String
+  lastSeenAddress_not_ends_with: String
+  AND: [AccessTokenScalarWhereInput!]
+  OR: [AccessTokenScalarWhereInput!]
+  NOT: [AccessTokenScalarWhereInput!]
+}
+
+type AccessTokenSubscriptionPayload {
+  mutation: MutationType!
+  node: AccessToken
+  updatedFields: [String!]
+  previousValues: AccessTokenPreviousValues
+}
+
+input AccessTokenSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: AccessTokenWhereInput
+  AND: [AccessTokenSubscriptionWhereInput!]
+  OR: [AccessTokenSubscriptionWhereInput!]
+  NOT: [AccessTokenSubscriptionWhereInput!]
+}
+
+input AccessTokenUpdateInput {
+  token: String
+  user: UserUpdateOneRequiredWithoutTokensInput
+  lastSeenAgent: String
+  lastSeenAddress: String
+}
+
+input AccessTokenUpdateManyDataInput {
+  token: String
+  lastSeenAgent: String
+  lastSeenAddress: String
+}
+
+input AccessTokenUpdateManyMutationInput {
+  token: String
+  lastSeenAgent: String
+  lastSeenAddress: String
+}
+
+input AccessTokenUpdateManyWithoutUserInput {
+  create: [AccessTokenCreateWithoutUserInput!]
+  delete: [AccessTokenWhereUniqueInput!]
+  connect: [AccessTokenWhereUniqueInput!]
+  set: [AccessTokenWhereUniqueInput!]
+  disconnect: [AccessTokenWhereUniqueInput!]
+  update: [AccessTokenUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [AccessTokenUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [AccessTokenScalarWhereInput!]
+  updateMany: [AccessTokenUpdateManyWithWhereNestedInput!]
+}
+
+input AccessTokenUpdateManyWithWhereNestedInput {
+  where: AccessTokenScalarWhereInput!
+  data: AccessTokenUpdateManyDataInput!
+}
+
+input AccessTokenUpdateWithoutUserDataInput {
+  token: String
+  lastSeenAgent: String
+  lastSeenAddress: String
+}
+
+input AccessTokenUpdateWithWhereUniqueWithoutUserInput {
+  where: AccessTokenWhereUniqueInput!
+  data: AccessTokenUpdateWithoutUserDataInput!
+}
+
+input AccessTokenUpsertWithWhereUniqueWithoutUserInput {
+  where: AccessTokenWhereUniqueInput!
+  update: AccessTokenUpdateWithoutUserDataInput!
+  create: AccessTokenCreateWithoutUserInput!
+}
+
+input AccessTokenWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  token: String
+  token_not: String
+  token_in: [String!]
+  token_not_in: [String!]
+  token_lt: String
+  token_lte: String
+  token_gt: String
+  token_gte: String
+  token_contains: String
+  token_not_contains: String
+  token_starts_with: String
+  token_not_starts_with: String
+  token_ends_with: String
+  token_not_ends_with: String
+  user: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  lastSeenTime: DateTime
+  lastSeenTime_not: DateTime
+  lastSeenTime_in: [DateTime!]
+  lastSeenTime_not_in: [DateTime!]
+  lastSeenTime_lt: DateTime
+  lastSeenTime_lte: DateTime
+  lastSeenTime_gt: DateTime
+  lastSeenTime_gte: DateTime
+  lastSeenAgent: String
+  lastSeenAgent_not: String
+  lastSeenAgent_in: [String!]
+  lastSeenAgent_not_in: [String!]
+  lastSeenAgent_lt: String
+  lastSeenAgent_lte: String
+  lastSeenAgent_gt: String
+  lastSeenAgent_gte: String
+  lastSeenAgent_contains: String
+  lastSeenAgent_not_contains: String
+  lastSeenAgent_starts_with: String
+  lastSeenAgent_not_starts_with: String
+  lastSeenAgent_ends_with: String
+  lastSeenAgent_not_ends_with: String
+  lastSeenAddress: String
+  lastSeenAddress_not: String
+  lastSeenAddress_in: [String!]
+  lastSeenAddress_not_in: [String!]
+  lastSeenAddress_lt: String
+  lastSeenAddress_lte: String
+  lastSeenAddress_gt: String
+  lastSeenAddress_gte: String
+  lastSeenAddress_contains: String
+  lastSeenAddress_not_contains: String
+  lastSeenAddress_starts_with: String
+  lastSeenAddress_not_starts_with: String
+  lastSeenAddress_ends_with: String
+  lastSeenAddress_not_ends_with: String
+  AND: [AccessTokenWhereInput!]
+  OR: [AccessTokenWhereInput!]
+  NOT: [AccessTokenWhereInput!]
+}
+
+input AccessTokenWhereUniqueInput {
+  id: ID
+  token: String
+}
+
+type AggregateAccessToken {
+  count: Int!
+}
+
 type AggregateCompletion {
   count: Int!
 }
@@ -2372,6 +2674,12 @@ scalar DateTime
 scalar Long
 
 type Mutation {
+  createAccessToken(data: AccessTokenCreateInput!): AccessToken!
+  updateAccessToken(data: AccessTokenUpdateInput!, where: AccessTokenWhereUniqueInput!): AccessToken
+  updateManyAccessTokens(data: AccessTokenUpdateManyMutationInput!, where: AccessTokenWhereInput): BatchPayload!
+  upsertAccessToken(where: AccessTokenWhereUniqueInput!, create: AccessTokenCreateInput!, update: AccessTokenUpdateInput!): AccessToken!
+  deleteAccessToken(where: AccessTokenWhereUniqueInput!): AccessToken
+  deleteManyAccessTokens(where: AccessTokenWhereInput): BatchPayload!
   createCompletion(data: CompletionCreateInput!): Completion!
   updateCompletion(data: CompletionUpdateInput!, where: CompletionWhereUniqueInput!): Completion
   updateManyCompletions(data: CompletionUpdateManyMutationInput!, where: CompletionWhereInput): BatchPayload!
@@ -3733,6 +4041,9 @@ input ProjectWhereUniqueInput {
 }
 
 type Query {
+  accessToken(where: AccessTokenWhereUniqueInput!): AccessToken
+  accessTokens(where: AccessTokenWhereInput, orderBy: AccessTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AccessToken]!
+  accessTokensConnection(where: AccessTokenWhereInput, orderBy: AccessTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccessTokenConnection!
   completion(where: CompletionWhereUniqueInput!): Completion
   completions(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Completion]!
   completionsConnection(where: CompletionWhereInput, orderBy: CompletionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CompletionConnection!
@@ -3786,6 +4097,7 @@ enum Role {
 }
 
 type Subscription {
+  accessToken(where: AccessTokenSubscriptionWhereInput): AccessTokenSubscriptionPayload
   completion(where: CompletionSubscriptionWhereInput): CompletionSubscriptionPayload
   concept(where: ConceptSubscriptionWhereInput): ConceptSubscriptionPayload
   conceptLink(where: ConceptLinkSubscriptionWhereInput): ConceptLinkSubscriptionPayload
@@ -4083,10 +4395,10 @@ type User {
   googleId: String
   role: Role!
   deactivated: Boolean!
+  tokens(where: AccessTokenWhereInput, orderBy: AccessTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [AccessToken!]
   workspaceParticipations(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   projectParticipations(where: ProjectParticipantWhereInput, orderBy: ProjectParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ProjectParticipant!]
   seenGuides: [String!]!
-  lastActivity: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -4104,10 +4416,10 @@ input UserCreateInput {
   googleId: String
   role: Role!
   deactivated: Boolean
+  tokens: AccessTokenCreateManyWithoutUserInput
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   seenGuides: UserCreateseenGuidesInput
-  lastActivity: DateTime
 }
 
 input UserCreateOneInput {
@@ -4117,6 +4429,11 @@ input UserCreateOneInput {
 
 input UserCreateOneWithoutProjectParticipationsInput {
   create: UserCreateWithoutProjectParticipationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutTokensInput {
+  create: UserCreateWithoutTokensInput
   connect: UserWhereUniqueInput
 }
 
@@ -4136,9 +4453,21 @@ input UserCreateWithoutProjectParticipationsInput {
   googleId: String
   role: Role!
   deactivated: Boolean
+  tokens: AccessTokenCreateManyWithoutUserInput
   workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
   seenGuides: UserCreateseenGuidesInput
-  lastActivity: DateTime
+}
+
+input UserCreateWithoutTokensInput {
+  id: ID
+  tmcId: Int
+  hakaId: String
+  googleId: String
+  role: Role!
+  deactivated: Boolean
+  workspaceParticipations: WorkspaceParticipantCreateManyWithoutUserInput
+  projectParticipations: ProjectParticipantCreateManyWithoutUserInput
+  seenGuides: UserCreateseenGuidesInput
 }
 
 input UserCreateWithoutWorkspaceParticipationsInput {
@@ -4148,9 +4477,9 @@ input UserCreateWithoutWorkspaceParticipationsInput {
   googleId: String
   role: Role!
   deactivated: Boolean
+  tokens: AccessTokenCreateManyWithoutUserInput
   projectParticipations: ProjectParticipantCreateManyWithoutUserInput
   seenGuides: UserCreateseenGuidesInput
-  lastActivity: DateTime
 }
 
 type UserEdge {
@@ -4171,8 +4500,6 @@ enum UserOrderByInput {
   role_DESC
   deactivated_ASC
   deactivated_DESC
-  lastActivity_ASC
-  lastActivity_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -4187,7 +4514,6 @@ type UserPreviousValues {
   role: Role!
   deactivated: Boolean!
   seenGuides: [String!]!
-  lastActivity: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -4216,10 +4542,10 @@ input UserUpdateDataInput {
   googleId: String
   role: Role
   deactivated: Boolean
+  tokens: AccessTokenUpdateManyWithoutUserInput
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   seenGuides: UserUpdateseenGuidesInput
-  lastActivity: DateTime
 }
 
 input UserUpdateInput {
@@ -4228,10 +4554,10 @@ input UserUpdateInput {
   googleId: String
   role: Role
   deactivated: Boolean
+  tokens: AccessTokenUpdateManyWithoutUserInput
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   seenGuides: UserUpdateseenGuidesInput
-  lastActivity: DateTime
 }
 
 input UserUpdateManyMutationInput {
@@ -4241,7 +4567,6 @@ input UserUpdateManyMutationInput {
   role: Role
   deactivated: Boolean
   seenGuides: UserUpdateseenGuidesInput
-  lastActivity: DateTime
 }
 
 input UserUpdateOneRequiredInput {
@@ -4255,6 +4580,13 @@ input UserUpdateOneRequiredWithoutProjectParticipationsInput {
   create: UserCreateWithoutProjectParticipationsInput
   update: UserUpdateWithoutProjectParticipationsDataInput
   upsert: UserUpsertWithoutProjectParticipationsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutTokensInput {
+  create: UserCreateWithoutTokensInput
+  update: UserUpdateWithoutTokensDataInput
+  upsert: UserUpsertWithoutTokensInput
   connect: UserWhereUniqueInput
 }
 
@@ -4275,9 +4607,20 @@ input UserUpdateWithoutProjectParticipationsDataInput {
   googleId: String
   role: Role
   deactivated: Boolean
+  tokens: AccessTokenUpdateManyWithoutUserInput
   workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
   seenGuides: UserUpdateseenGuidesInput
-  lastActivity: DateTime
+}
+
+input UserUpdateWithoutTokensDataInput {
+  tmcId: Int
+  hakaId: String
+  googleId: String
+  role: Role
+  deactivated: Boolean
+  workspaceParticipations: WorkspaceParticipantUpdateManyWithoutUserInput
+  projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
+  seenGuides: UserUpdateseenGuidesInput
 }
 
 input UserUpdateWithoutWorkspaceParticipationsDataInput {
@@ -4286,9 +4629,9 @@ input UserUpdateWithoutWorkspaceParticipationsDataInput {
   googleId: String
   role: Role
   deactivated: Boolean
+  tokens: AccessTokenUpdateManyWithoutUserInput
   projectParticipations: ProjectParticipantUpdateManyWithoutUserInput
   seenGuides: UserUpdateseenGuidesInput
-  lastActivity: DateTime
 }
 
 input UserUpsertNestedInput {
@@ -4299,6 +4642,11 @@ input UserUpsertNestedInput {
 input UserUpsertWithoutProjectParticipationsInput {
   update: UserUpdateWithoutProjectParticipationsDataInput!
   create: UserCreateWithoutProjectParticipationsInput!
+}
+
+input UserUpsertWithoutTokensInput {
+  update: UserUpdateWithoutTokensDataInput!
+  create: UserCreateWithoutTokensInput!
 }
 
 input UserUpsertWithoutWorkspaceParticipationsInput {
@@ -4363,20 +4711,15 @@ input UserWhereInput {
   role_not_in: [Role!]
   deactivated: Boolean
   deactivated_not: Boolean
+  tokens_every: AccessTokenWhereInput
+  tokens_some: AccessTokenWhereInput
+  tokens_none: AccessTokenWhereInput
   workspaceParticipations_every: WorkspaceParticipantWhereInput
   workspaceParticipations_some: WorkspaceParticipantWhereInput
   workspaceParticipations_none: WorkspaceParticipantWhereInput
   projectParticipations_every: ProjectParticipantWhereInput
   projectParticipations_some: ProjectParticipantWhereInput
   projectParticipations_none: ProjectParticipantWhereInput
-  lastActivity: DateTime
-  lastActivity_not: DateTime
-  lastActivity_in: [DateTime!]
-  lastActivity_not_in: [DateTime!]
-  lastActivity_lt: DateTime
-  lastActivity_lte: DateTime
-  lastActivity_gt: DateTime
-  lastActivity_gte: DateTime
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
