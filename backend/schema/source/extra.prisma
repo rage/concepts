@@ -31,6 +31,7 @@ type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload!
   loginGoogle(idToken: String!): AuthPayload!
+  logout: Boolean!
   mergeUser(accessToken: String!): User!
   disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload!
