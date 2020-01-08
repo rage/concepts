@@ -10,6 +10,7 @@ export const Workspace = makeTypeResolvers('workspace', [
   'conceptLinks',
   'courseLinks',
   'concepts',
+  'commonConcepts',
   'clones',
   'mainCourse',
   'courseTags',
