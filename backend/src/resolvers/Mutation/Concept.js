@@ -358,15 +358,17 @@ export const deleteConcept = async (root, { id }, context) => {
   if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
   await context.prisma.deleteConcept({ id })
 
-  const orderName = `${toDelete.level.toLowerCase()}Order`
-  const conceptOrder = toDelete.course[orderName]
-  if (!isAutomaticSorting(conceptOrder)) {
-    await context.prisma.updateCourse({
-      where: { id: toDelete.course.id },
-      data: {
-        [orderName]: { set: conceptOrder.filter(conceptId => conceptId !== id) }
-      }
-    })
+  if (toDelete.level !== 'COMMON') {
+    const orderName = `${toDelete.level.toLowerCase()}Order`
+    const conceptOrder = toDelete.course[orderName]
+    if (!isAutomaticSorting(conceptOrder)) {
+      await context.prisma.updateCourse({
+        where: { id: toDelete.course.id },
+        data: {
+          [orderName]: { set: conceptOrder.filter(conceptId => conceptId !== id) }
+        }
+      })
+    }
   }
   pubsub.publish(CONCEPT_DELETED, {
     conceptDeleted: { id: toDelete.id, courseId: toDelete.course.id, workspaceId }

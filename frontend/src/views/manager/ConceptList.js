@@ -97,7 +97,7 @@ const ConceptList = ({
       setOrderedConcepts(sortedConcepts(course.concepts.filter(concept => concept.level === level),
         conceptOrder, orderMethod))
     }
-  }, [course.concepts, conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod, level])
+  }, [course.concepts, conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod, level, sortable])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {

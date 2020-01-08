@@ -36,8 +36,12 @@ const createConceptUpdate = workspaceId => (store, response) => {
     if (!includedIn(course.concepts, addedConcept)) {
       course.concepts = course.concepts.concat(addedConcept)
     }
+    if (addedConcept.level === 'COMMON' && !includedIn(ws.commonConcepts, addedConcept)) {
+      ws.commonConcepts = ws.commonConcepts.concat(addedConcept)
+    }
     ws.conceptTags = ws.conceptTags.concat(
       addedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
+
     client.writeQuery({
       query: WORKSPACE_BY_ID,
       variables: { id: workspaceId },
@@ -77,6 +81,8 @@ const deleteConceptUpdate = workspaceId => (store, response) => {
       const courseId = deletedConcept.courseId
       const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
       course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+      dataInStore.workspaceById.commonConcepts = dataInStore.workspaceById.commonConcepts
+        .filter(concept => concept.id !== deletedConcept.id)
       client.writeQuery({
         query: WORKSPACE_BY_ID,
         variables: { id: workspaceId },
@@ -156,6 +162,10 @@ const updateConceptUpdate = workspaceId => (store, response) => {
     const ws = dataInStore.workspaceById
     ws.conceptTags = ws.conceptTags.concat(
       updatedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
+    if (updatedConcept.level === 'COMMON') {
+      ws.commonConcepts = ws.commonConcepts.map(c =>
+        c.id === updatedConcept.id ? { ...c, updatedConcept } : c)
+    }
     client.writeQuery({
       query: WORKSPACE_BY_ID,
       variables: { id: workspaceId },
