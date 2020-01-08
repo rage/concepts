@@ -47,7 +47,7 @@ const Notification = ({ contextRef }) => {
           state.onClick()
           close()
         }} color="primary">
-          { state.type }
+          Ok
         </Button>
       </DialogActions>
     </Dialog>
