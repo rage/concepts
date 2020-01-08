@@ -484,15 +484,23 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const menuDeleteConcept = useCallback(async () => {
     closeMenu()
+    const ok = window.confirm(`Are you sure you want to delete ${menu.state.concept.name}?`)
+    if (!ok) {
+      return
+    }
     await deleteConcept({
       variables: {
         id: menu.id
       }
     })
-  }, [deleteConcept, closeMenu, menu.id])
+  }, [deleteConcept, closeMenu, menu])
 
   const menuDeleteAll = useCallback(async () => {
     closeMenu()
+    const ok = window.confirm('Are you sure you want to delete the selected concepts?')
+    if (!ok) {
+      return
+    }
     await deleteManyConcepts({
       variables: {
         ids: Array.from(selected.current).map(id => id.substr('concept-'.length))
