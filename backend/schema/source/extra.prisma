@@ -50,6 +50,7 @@ type Mutation {
   updateConcept(id: ID!, name: String, description: String, level: ConceptLevel, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteManyConcepts(ids: [ID!]): DeletedCourseItems!
   updateManyConcepts(concepts: [ConceptInput!]): [Concept!]
+  createConceptFromCommon(conceptId: ID!, courseId: ID): Concept!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
@@ -79,10 +80,10 @@ type Mutation {
 
   # PointGroup
   createPointGroup(name: String!, startDate: String!, endDate: String!, maxPoints: Int!,
-    pointsPerConcept: Float!, courseId: ID!, workspaceId: ID!): PointGroup!
+  pointsPerConcept: Float!, courseId: ID!, workspaceId: ID!): PointGroup!
   deletePointGroup(id: ID!): PointGroup!
   updatePointGroup(id: ID!, name: String, startDate: String, endDate: String, maxPoints: Int,
-    pointsPerConcept: Float): PointGroup!
+  pointsPerConcept: Float): PointGroup!
 
   # Porting mutations
   importData(data: String!): Workspace!

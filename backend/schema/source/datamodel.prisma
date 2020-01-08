@@ -245,7 +245,7 @@ type Concept {
   linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
 
   # Relations
-  course: Course! @relation(name: "ConceptCourses")
+  course: Course @relation(name: "ConceptCourses")
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
 
   # Creation data
