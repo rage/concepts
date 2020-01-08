@@ -149,7 +149,7 @@ export const createConceptFromCommon = async (root, { conceptId, courseId }, con
       level: 'OBJECTIVE',
       courseId,
       workspaceId
-    }, ...rest)
+    }, context, ...rest)
   } else {
     throw new ForbiddenError(`The concept "${concept.name}" is not a common concept`)
   }
