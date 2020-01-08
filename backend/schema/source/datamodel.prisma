@@ -73,6 +73,7 @@ type Workspace {
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
   courseOrder: [ID!]! @scalarList(strategy: RELATION)
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
+  commonConcepts: [Concept!]! @relation(name:"CommonConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
 
@@ -219,6 +220,7 @@ type ConceptLink {
 enum ConceptLevel {
   OBJECTIVE
   CONCEPT
+  COMMON
 }
 
 type Concept {
@@ -235,6 +237,8 @@ type Concept {
   # Source data
   sourceConcept: Concept @relation(name: "ConceptClones")
   clones: [Concept!]! @relation(name: "ConceptClones")
+  sourceCommon: Concept @relation(name: "CommonClones")
+  commonClones: [Concept!]! @relation(name: "CommonClones")
 
   # Links
   linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
