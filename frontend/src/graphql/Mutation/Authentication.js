@@ -48,6 +48,12 @@ mutation authenticateGoogleUser($idToken: String!) {
 ${AUTH_FRAGMENT}
 `
 
+const LOGOUT = gql`
+mutation logout {
+  logout
+}
+`
+
 const MERGE_USER = gql`
 mutation mergeUser($accessToken: String!) {
   mergeUser(accessToken: $accessToken) {
@@ -75,6 +81,7 @@ mutation createLinkToken($linkType: LinkType!, $id: ID!) {
 export {
   AUTHENTICATE,
   AUTHENTICATE_GOOGLE,
+  LOGOUT,
   CREATE_GUEST_ACCOUNT,
   MERGE_USER,
   DISCONNECT_AUTH,

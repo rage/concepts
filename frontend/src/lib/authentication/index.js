@@ -6,6 +6,7 @@ import * as google from './google'
 import * as haka from './haka'
 import * as guest from './guest'
 import { GET_CURRENT_USER } from '../../graphql/Query'
+import { LOGOUT } from '../../graphql/Mutation'
 import { noReturn } from '../eventMiddleware'
 
 class Auth {
@@ -31,6 +32,7 @@ class Auth {
   static fromString = str => Auth.idMap.get(str)
 
   static async signOut() {
+    await client.mutate({ mutation: LOGOUT })
     await client.clearStore()
     const { type } = JSON.parse(window.localStorage.currentUser || '{}')
     await Auth.fromString(type).signOut()
