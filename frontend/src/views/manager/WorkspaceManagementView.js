@@ -158,6 +158,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
           <Tabs variant='fullWidth' value={level} onChange={(_, newValue) => setLevel(newValue)}>
             <Tab label='Objectives' value='OBJECTIVE' />
             <Tab label='Concepts' value='CONCEPT' />
+            <Tab label='Common' value='COMMON' />
           </Tabs>
         </AppBar>
         <ConceptList
@@ -173,6 +174,7 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
               ...args
             }
           }).catch(e)}
+          sortable={level !== 'COMMON'}
           deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
           updateConcept={args => updateConcept({ variables: args }).catch(e)}
         />

@@ -112,7 +112,7 @@ export const createConcept = async (root, {
     await context.prisma.updateWorkspace({
       where: { id: workspaceId },
       data: {
-        commonConcepts: { connect: { id: createConcept.id } }
+        commonConcepts: { connect: { id: createdConcept.id } }
       }
     })
   } else {

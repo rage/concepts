@@ -37,8 +37,10 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '8px'
   },
   filterText: {
-    flex: 1,
-    marginRight: '8px'
+    flex: 1
+  },
+  sortSelect: {
+    marginLeft: '8px'
   },
   list: {
     overflow: 'auto'
@@ -66,7 +68,7 @@ const CardHeaderButton = React.forwardRef(({
 ))
 
 const ConceptList = ({
-  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
+  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level, sortable
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -80,13 +82,14 @@ const ConceptList = ({
 
   const orderName = `${level.toLowerCase()}Order`
   const conceptOrder = course[orderName]
-  const isOrdered = conceptOrder.length === 1 && conceptOrder[0].startsWith('__ORDER_BY__')
+  const isOrdered = conceptOrder?.length === 1 && conceptOrder[0].startsWith('__ORDER_BY__')
   const defaultOrderMethod = isOrdered ? conceptOrder[0].substr('__ORDER_BY__'.length) : 'CUSTOM'
   const [orderedConcepts, setOrderedConcepts] = useState([])
   const [orderMethod, setOrderMethod] = useState(defaultOrderMethod)
   const [dirtyOrder, setDirtyOrder] = useState(null)
 
   useEffect(() => {
+    if (!sortable) return
     if (!dirtyOrder && defaultOrderMethod !== orderMethod) {
       setOrderMethod(defaultOrderMethod)
     }
@@ -197,6 +200,79 @@ const ConceptList = ({
     concept.level === level
     && intIncludeConcept(concept, conceptFilterParsed)
 
+  let conceptsToShow
+  if (level === 'COMMON') {
+    conceptsToShow = workspace.commonConcepts?.map((concept, conceptIndex) =>
+      includeConcept(concept) &&
+      <ConceptListItem
+        key={concept.id}
+        concept={concept}
+        user={user}
+        editing={editing}
+        index={conceptIndex}
+        deleteConcept={deleteConcept}
+        updateConcept={updateConcept}
+        merging={merging}
+        setEditing={setEditing}
+        sortable={false}
+        toggleMergingConcept={toggleMergingConcept}
+        checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+          : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+            : undefined}
+        conceptTags={conceptTags}
+      />
+    )
+  } else if (orderMethod !== 'GROUP_BY') {
+    conceptsToShow = orderedConcepts.map((concept, conceptIndex) =>
+      includeConcept(concept) &&
+      <ConceptListItem
+        key={concept.id}
+        concept={concept}
+        user={user}
+        editing={editing}
+        index={conceptIndex}
+        deleteConcept={deleteConcept}
+        updateConcept={updateConcept}
+        merging={merging}
+        setEditing={setEditing}
+        sortable={sortable && orderMethod === 'CUSTOM' && !course.frozen}
+        toggleMergingConcept={toggleMergingConcept}
+        checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+          : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+            : undefined}
+        conceptTags={conceptTags}
+      />
+    )
+  } else {
+    groupConcepts(course.concepts).flatMap((group, index, array) => {
+      const elements = group.filter(concept => includeConcept(concept))
+        .map((concept, conceptIndex) =>
+          <ConceptListItem
+            key={concept.id}
+            concept={concept}
+            user={user}
+            editing={editing}
+            deleteConcept={deleteConcept}
+            updateConcept={updateConcept}
+            merging={merging}
+            setEditing={setEditing}
+            toggleMergingConcept={toggleMergingConcept}
+            divider={false}
+            checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
+              : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
+                : undefined}
+            sortable={false}
+            conceptTags={conceptTags}
+          />
+        )
+      if (elements.length !== 0 && index < array.length - 1) {
+        elements.push([<hr key={index} />])
+      }
+      return elements
+    }
+    )
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -215,22 +291,25 @@ const ConceptList = ({
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
         />
-        <TextField
-          select
-          variant='outlined'
-          margin='dense'
-          label='Sort by'
-          ref={infoBox.ref('manager', 'SORT_CONCEPTS')}
-          value={orderMethod}
-          onChange={evt => {
-            setOrderMethod(evt.target.value)
-            setDirtyOrder(true)
-          }}
-        >
-          {Object.entries(sortingOptions).map(([key, label]) =>
-            <MenuItem key={key} value={key}>{label}</MenuItem>
-          )}
-        </TextField>
+        { sortable &&
+          <TextField
+            select
+            variant='outlined'
+            margin='dense'
+            label='Sort by'
+            ref={infoBox.ref('manager', 'SORT_CONCEPTS')}
+            value={orderMethod}
+            onChange={evt => {
+              setOrderMethod(evt.target.value)
+              setDirtyOrder(true)
+            }}
+            className={classes.sortSelect}
+          >
+            {Object.entries(sortingOptions).map(([key, label]) =>
+              <MenuItem key={key} value={key}>{label}</MenuItem>
+            )}
+          </TextField>
+        }
       </div>
 
       {mergeDialogOpen !== null && <MergeDialog
@@ -240,53 +319,8 @@ const ConceptList = ({
       <SortableList
         ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
       >
-        {orderMethod !== 'GROUP_BY' ? orderedConcepts.map((concept, conceptIndex) =>
-          includeConcept(concept) &&
-          <ConceptListItem
-            key={concept.id}
-            concept={concept}
-            user={user}
-            editing={editing}
-            index={conceptIndex}
-            deleteConcept={deleteConcept}
-            updateConcept={updateConcept}
-            merging={merging}
-            setEditing={setEditing}
-            sortable={orderMethod === 'CUSTOM' && !course.frozen}
-            toggleMergingConcept={toggleMergingConcept}
-            checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-              : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
-                : undefined}
-            conceptTags={conceptTags}
-          />
-        ) : groupConcepts(course.concepts).flatMap((group, index, array) => {
-          const elements = group.filter(concept => includeConcept(concept))
-            .map((concept, conceptIndex) =>
-              <ConceptListItem
-                key={concept.id}
-                concept={concept}
-                user={user}
-                editing={editing}
-                deleteConcept={deleteConcept}
-                updateConcept={updateConcept}
-                merging={merging}
-                setEditing={setEditing}
-                toggleMergingConcept={toggleMergingConcept}
-                divider={false}
-                checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-                  : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
-                    : undefined}
-                sortable={false}
-                conceptTags={conceptTags}
-              />
-            )
-          if (elements.length !== 0 && index < array.length - 1) {
-            elements.push([<hr key={index} />])
-          }
-          return elements
-        }
-        )
-        }</SortableList>
+        {conceptsToShow}
+      </SortableList>
       <ConceptEditor
         submit={async args => {
           await createConcept(args)
