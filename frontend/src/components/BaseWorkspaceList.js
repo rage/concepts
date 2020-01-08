@@ -15,6 +15,7 @@ import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../lib/store'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
+import { useConfirm } from '../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,6 +68,7 @@ const BaseWorkspaceList = ({
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
   const infoBox = useInfoBox()
+  const confirm = useConfirm()
 
   const handleCreateOpen = () => {
     handleMenuClose()
@@ -168,8 +170,12 @@ const BaseWorkspaceList = ({
   const handleDelete = async () => {
     handleMenuClose()
 
-    const willDelete = window.confirm(`Are you sure you want to delete this ${TYPE_NAMES[type]}?`)
-    if (willDelete) {
+    const ok = await confirm({
+      title: 'Confirm deletion',
+      message: `Are you sure you want to delete this ${TYPE_NAMES[type]}?`
+    })
+
+    if (ok) {
       try {
         await deleteWorkspace({
           variables: { id: menu.workspace.id }
