@@ -7,7 +7,8 @@ import {
 import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
-  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon
+  MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon,
+  AccountTree as AccountTreeIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -25,7 +26,8 @@ const useStyles = makeStyles({
   root: {
     gridArea: 'bottom-navbar',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    zIndex: 10
   },
   leftPlaceholder: {
     width: '56px',
@@ -128,7 +130,9 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   }
 
   const onChange = (event, newPage) => {
-    const cid = courseId && (newPage === 'mapper' || newPage === 'manager') ? `/${courseId}` : ''
+    const cid = courseId
+      && (newPage === 'mapper' || newPage === 'conceptmapper' || newPage === 'manager')
+      ? `/${courseId}` : ''
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
@@ -141,7 +145,9 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
       <div className={classes.leftPlaceholder} />
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
         <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
-        <BottomNavigationAction value='mapper' label='Course Mapper' icon={<ShuffleIcon />} />
+        <BottomNavigationAction value='mapper' label='Course Mapper' icon={<AccountTreeIcon />} />
+        <BottomNavigationAction
+          value='conceptmapper' label='Concept Mapper' icon={<ShuffleIcon />} />
         <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
         <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
         {isOwner &&

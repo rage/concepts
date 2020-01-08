@@ -20,7 +20,6 @@ type Query {
 
   # Course queries
   courseById(id: ID!): Course!
-  conceptsByCourse(id: ID!): [Concept!]!
 
   # Sharing
   peekToken(id: ID!): ProjectOrWorkspace!
@@ -32,6 +31,7 @@ type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload!
   loginGoogle(idToken: String!): AuthPayload!
+  logout: Boolean!
   mergeUser(accessToken: String!): User!
   disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload!
@@ -43,12 +43,14 @@ type Mutation {
   # Course mutations
   createCourse(name: String!, workspaceId: ID!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Course!
   deleteCourse(id: ID!): Course!
-  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!]): Course!
+  updateCourse(id: ID!, name: String, official: Boolean, frozen: Boolean, tags: [TagInput!], conceptOrder: [ID!], objectiveOrder: [ID!]): Course!
 
   # Concept mutations
-  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  createConcept(name: String!, courseId: ID, workspaceId: ID!, description: String, level: ConceptLevel!, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteConcept(id: ID!): DeletedCourseItem!
-  updateConcept(id: ID!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  updateConcept(id: ID!, name: String, description: String, level: ConceptLevel, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  deleteManyConcepts(ids: [ID!]): DeletedCourseItems!
+  updateManyConcepts(concepts: [ConceptInput!]): [Concept!]
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
@@ -104,6 +106,8 @@ type Subscription {
   conceptCreated(workspaceId: ID!): Concept!
   conceptUpdated(workspaceId: ID!): Concept!
   conceptDeleted(workspaceId: ID!): DeletedCourseItem!
+  manyConceptsUpdated(workspaceId: ID!): [Concept!]!
+  manyConceptsDeleted(workspaceId: ID!): DeletedCourseItems!
 
   # ConceptLinks subscriptions
   conceptLinkCreated(workspaceId: ID!): ConceptLink!
@@ -152,6 +156,17 @@ type WorkspaceUpdate {
   courseOrder: [ID!]
 }
 
+input ConceptInput {
+  id: ID!
+  name: String
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: [TagInput!]
+}
+
 type IDAndPrivilege {
   id: ID!
   privilege: Privilege!
@@ -171,6 +186,11 @@ type LimitedProject {
 
 type DeletedCourseItem {
   id: ID!
+  courseId: ID!
+}
+
+type DeletedCourseItems {
+  ids: [ID!]!
   courseId: ID!
 }
 

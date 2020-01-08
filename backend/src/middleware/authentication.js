@@ -1,5 +1,4 @@
 import { AuthenticationError } from 'apollo-server-core'
-import jwt from 'jsonwebtoken'
 
 import { Role } from '../util/accessControl'
 
@@ -29,33 +28,34 @@ export const authenticate = async (resolve, root, args, context, info) => {
   return await resolve(root, args, context, info)
 }
 
-export const parseToken = token => {
-  try {
-    return jwt.verify(token, process.env.SECRET)
-  } catch (e) {
-    console.log(e)
-    throw new AuthenticationError('Bad token')
-  }
-}
-
 export const getUser = async (token, context, prisma) => {
-  const id = parseToken(token).id
-  if (!id) {
-    throw new AuthenticationError('Invalid token: no ID found')
-  }
-  const user = await prisma.user({ id })
+  const user = await prisma.accessToken({ token }).user()
   if (!user) {
-    throw new AuthenticationError('Invalid token: user not found')
+    throw new AuthenticationError('Invalid access token')
   } else if (user.deactivated) {
     throw new AuthenticationError('Invalid token: user is deactivated')
   }
 
+  context.token = token
   context.user = user
   context.role = Role.fromString(user.role, Role.GUEST)
 
-  // Update last activity of the user
-  await prisma.updateUser({
-    where: { id: context.user.id },
-    data: { lastActivity: new Date().toISOString() }
+  // Update token last seen location
+  await prisma.updateAccessToken({
+    where: { token },
+    data: getLastSeenMeta(context)
   })
+}
+
+export const getLastSeenMeta = context => {
+  if (context.request) {
+    return {
+      lastSeenAgent: context.request.header('User-Agent'),
+      lastSeenAddress: context.request.header('X-Forwarded-For')
+        || context.request.connection.remoteAddress
+    }
+  } else if (context.connection) {
+    // TODO websocket last seen address
+  }
+  return {}
 }

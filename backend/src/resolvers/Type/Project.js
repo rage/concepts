@@ -17,6 +17,7 @@ export const Project = makeTypeResolvers('project', [
   'workspaces',
   'templates',
   'merges',
+  'createdBy',
   'activeTemplate',
   {
     name: 'tokens',

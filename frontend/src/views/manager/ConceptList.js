@@ -18,12 +18,11 @@ import { parseFilter, includeConcept as intIncludeConcept } from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    ...theme.mixins.gutters(), width: '100%',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    ...theme.mixins.gutters(),
     boxSizing: 'border-box',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    borderRadius: '0 0 4px 4px'
   },
   headerContent: {
     minWidth: 0
@@ -55,8 +54,19 @@ const sortingOptions = {
   CUSTOM: 'Custom'
 }
 
+const CardHeaderButton = React.forwardRef(({
+  children, color = 'primary', onClick, disabled = false
+}, ref) => (
+  <Button
+    style={{ margin: '6px' }} ref={ref} color={color} onClick={!disabled ? onClick : () => { }}
+    disabled={disabled}
+  >
+    {children}
+  </Button>
+))
+
 const ConceptList = ({
-  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept
+  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -68,10 +78,10 @@ const ConceptList = ({
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
   const [conceptFilter, setConceptFilter] = useState('')
 
-  const isOrdered = course.conceptOrder.length === 1
-    && course.conceptOrder[0].startsWith('__ORDER_BY__')
-  const defaultOrderMethod = isOrdered ? course.conceptOrder[0].substr('__ORDER_BY__'.length)
-    : 'CUSTOM'
+  const orderName = `${level.toLowerCase()}Order`
+  const conceptOrder = course[orderName]
+  const isOrdered = conceptOrder.length === 1 && conceptOrder[0].startsWith('__ORDER_BY__')
+  const defaultOrderMethod = isOrdered ? conceptOrder[0].substr('__ORDER_BY__'.length) : 'CUSTOM'
   const [orderedConcepts, setOrderedConcepts] = useState([])
   const [orderMethod, setOrderMethod] = useState(defaultOrderMethod)
   const [dirtyOrder, setDirtyOrder] = useState(null)
@@ -81,9 +91,10 @@ const ConceptList = ({
       setOrderMethod(defaultOrderMethod)
     }
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sortedConcepts(course.concepts, course.conceptOrder, orderMethod))
+      setOrderedConcepts(sortedConcepts(course.concepts.filter(concept => concept.level === level),
+        conceptOrder, orderMethod))
     }
-  }, [course.concepts, course.conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod])
+  }, [course.concepts, conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod, level])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     ReactDOM.unstable_batchedUpdates(() => {
@@ -101,7 +112,7 @@ const ConceptList = ({
     setDirtyOrder('loading')
     await updateCourse({
       id: course.id,
-      conceptOrder: orderMethod === 'CUSTOM'
+      [orderName]: orderMethod === 'CUSTOM'
         ? orderedConcepts.map(concept => concept.id)
         : [`__ORDER_BY__${orderMethod}`]
     })
@@ -141,15 +152,6 @@ const ConceptList = ({
     closeMergeDialog()
   }, [course])
 
-  const CardHeaderButton = ({ children, bRef, color = 'primary', onClick, disabled = false }) => (
-    <Button
-      style={{ margin: '6px' }} ref={bRef} color={color} onClick={!disabled ? onClick : () => { }}
-      disabled={disabled}
-    >
-      {children}
-    </Button>
-  )
-
   const cardHeaderActions = () => {
     if (dirtyOrder) {
       return <>
@@ -166,13 +168,13 @@ const ConceptList = ({
       if (merging) {
         return <>
           <CardHeaderButton
-            bRef={infoBox.ref('manager', 'FINISH_MERGE')}
+            ref={infoBox.ref('manager', 'FINISH_MERGE')}
             onClick={openMergeDialog} disabled={merging.size < 2}
           >
             Merge…
           </CardHeaderButton>
           <CardHeaderButton
-            bRef={infoBox.secondaryRef('manager', 'FINISH_MERGE')} onClick={stopMerging}
+            ref={infoBox.secondaryRef('manager', 'FINISH_MERGE')} onClick={stopMerging}
           >
             Cancel
           </CardHeaderButton>
@@ -180,7 +182,7 @@ const ConceptList = ({
       }
       return (
         <CardHeaderButton
-          bRef={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
+          ref={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
           disabled={course.concepts.length < 2}
         >
           Start merge
@@ -191,13 +193,15 @@ const ConceptList = ({
   }
 
   const conceptFilterParsed = parseFilter(conceptFilter)
-  const includeConcept = concept => intIncludeConcept(concept, conceptFilterParsed)
+  const includeConcept = concept =>
+    concept.level === level
+    && intIncludeConcept(concept, conceptFilterParsed)
 
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`Concepts of ${course.name}`}
+        title={`${level.toTitleCase()}s of ${course.name}`}
         action={cardHeaderActions()}
       />
 
@@ -205,7 +209,7 @@ const ConceptList = ({
         <TextField
           variant='outlined'
           margin='dense'
-          label='Filter concepts'
+          label={`Filter ${level.toLowerCase()}s`}
           ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
@@ -283,13 +287,20 @@ const ConceptList = ({
         }
         )
         }</SortableList>
-      <ConceptEditor submit={async args => {
-        await createConcept(args)
-        listRef.current.scrollTop = listRef.current.scrollHeight
-        infoBox.redrawIfOpen('manager',
-          'CREATE_CONCEPT_NAME', 'CREATE_CONCEPT_DESCRIPTION', 'CREATE_CONCEPT_TAGS',
-          'CREATE_CONCEPT_SUBMIT')
-      }} defaultValues={{ official: isTemplate }} tagOptions={conceptTags} />
+      <ConceptEditor
+        submit={async args => {
+          await createConcept(args)
+          listRef.current.scrollTop = listRef.current.scrollHeight
+          infoBox.redrawIfOpen('manager',
+            'CREATE_CONCEPT_NAME',
+            'CREATE_CONCEPT_DESCRIPTION',
+            'CREATE_CONCEPT_TAGS',
+            'CREATE_CONCEPT_SUBMIT')
+        }}
+        action='Create'
+        defaultValues={{ official: isTemplate, level }}
+        tagOptions={conceptTags}
+      />
     </Card>
   )
 }

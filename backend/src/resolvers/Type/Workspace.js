@@ -14,6 +14,7 @@ export const Workspace = makeTypeResolvers('workspace', [
   'mainCourse',
   'courseTags',
   'conceptTags',
+  'createdBy',
   {
     name: 'pointGroups',
     checkPrivilegeArgs: root => ({

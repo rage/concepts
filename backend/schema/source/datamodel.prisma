@@ -1,5 +1,6 @@
 scalar DateTime
 
+
 type User {
   id: ID! @id
   tmcId: Int @unique
@@ -7,12 +8,28 @@ type User {
   googleId: String @unique
   role: Role!
   deactivated: Boolean! @default(value: false)
+  tokens: [AccessToken!]! @relation(name: "UserTokens")
+
+  # Relations
   workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser", onDelete: CASCADE)
   projectParticipations: [ProjectParticipant!]! @relation(name:"ProjectParticipantUser", onDelete: CASCADE)
+
+  # Activity meta
+  seenGuides: [String!]! @scalarList(strategy: RELATION)
+
+  # Creation data
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  lastActivity: DateTime
-  seenGuides: [String!]! @scalarList(strategy:"RELATION")
+}
+
+type AccessToken {
+  id: ID! @id
+  token: String! @unique
+  user: User! @relation(name: "UserTokens")
+  createdAt: DateTime! @createdAt
+  lastSeenTime: DateTime! @updatedAt
+  lastSeenAgent: String!
+  lastSeenAddress: String!
 }
 
 enum Role {
@@ -32,183 +49,260 @@ enum Privilege {
 type Project {
   id: ID! @id
   name: String!
+
+  # Relations
   workspaces: [Workspace!]! @relation(name: "UserWorkspaces")
   activeTemplate: Workspace @relation(link: INLINE, name:"Template")
   templates: [Workspace!]! @relation(name:"Templates")
   merges: [Workspace!]! @relation(name:"Merges")
+
+  # Authorization data
   participants: [ProjectParticipant!]! @relation(name: "ProjectParticipantProject", onDelete: CASCADE)
   tokens: [ProjectToken!]! @relation(name: "ProjectAccessToken", onDelete: CASCADE)
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
 
+
 type Workspace {
   id: ID! @id
   name: String!
+
+  # Workspace metadata
   sourceProject: Project @relation(name: "UserWorkspaces")
   sourceTemplate: Workspace @relation(name: "TemplateClones")
   asMerge: Project @relation(name:"Merges")
   asTemplate: Project @relation(name:"Templates")
   clones: [Workspace!]! @relation(name: "TemplateClones")
+
+  # Relations
   courses: [Course!]! @relation(name:"WorkspaceCourses", onDelete: CASCADE)
-  courseOrder: [ID!]! @scalarList(strategy:"RELATION")
+  courseOrder: [ID!]! @scalarList(strategy: RELATION)
   concepts: [Concept!]! @relation(name:"WorkspaceConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
+
+  # Authorization data
   participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace", onDelete: CASCADE)
   tokens: [WorkspaceToken!]! @relation(name: "WorkspaceAccessToken", onDelete: CASCADE)
+
+  # Completion data
   mainCourse: Course @relation(link: INLINE, name: "MainCourse")
   pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup")
+
+  # Shared metadata
   courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
   conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
+
 
 type WorkspaceParticipant {
   id: ID! @id
   privilege: Privilege!
+
+  # Relations
   workspace: Workspace! @relation(name:"WorkspaceParticipantWorkspace")
   token: WorkspaceToken @relation(name:"WorkspaceParticipationToken")
   user: User! @relation(name:"WorkspaceParticipantUser")
+
+  # Creation data
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
 
+
 type ProjectParticipant {
   id: ID! @id
   privilege: Privilege!
+
+  # Relations
   project: Project! @relation(name:"ProjectParticipantProject")
   token: ProjectToken @relation(name:"ProjectParticipationToken")
   user: User! @relation(name:"ProjectParticipantUser")
+
+  # Creation data
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
+
 
 type WorkspaceToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
+
+  # Relations
   workspace: Workspace! @relation(name: "WorkspaceAccessToken")
   participants: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipationToken", onDelete: CASCADE)
 }
+
 
 type ProjectToken {
   id: ID! @id
   privilege: Privilege!
   revoked: Boolean!
+
+  # Relations
   project: Project! @relation(name: "ProjectAccessToken")
   participants: [ProjectParticipant!]! @relation(name:"ProjectParticipationToken", onDelete: CASCADE)
 }
+
 
 type CourseLink {
   id: ID! @id
   from: Course! @relation(link: INLINE, name: "FromCourse")
   to: Course! @relation(link: INLINE, name: "ToCourse")
+
+  # Meta
   official: Boolean! @default(value: false)
   frozen: Boolean! @default(value: false)
-  createdBy: User!
-  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
+
+  # Relations
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
+
 
 type Course {
   id: ID! @id
   name: String!
   official: Boolean! @default(value: false)
   frozen: Boolean! @default(value: false)
-  createdBy: User!
+  tags: [Tag!]!
+
+  # Source data
   sourceCourse: Course @relation(name: "CourseClones")
   clones: [Course!]! @relation(name: "CourseClones")
+
+  # Links
   linksFromCourse: [CourseLink!]! @relation(name: "FromCourse", onDelete: CASCADE)
   linksToCourse: [CourseLink!]! @relation(name: "ToCourse", onDelete: CASCADE)
-  concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
-  conceptOrder: [ID!]! @scalarList(strategy:"RELATION")
+
+  # Relations
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourses")
-  tags: [Tag!]!
+  concepts: [Concept!]! @relation(name:"ConceptCourses", onDelete: CASCADE)
+  conceptOrder: [ID!]! @scalarList(strategy: RELATION)
+  objectiveOrder: [ID!]! @scalarList(strategy: RELATION)
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
+
 
 type ConceptLink {
   id: ID! @id
   from: Concept! @relation(link: INLINE, name: "FromConcept")
   to: Concept! @relation(link: INLINE, name: "ToConcept")
+
+  # Meta
   official: Boolean! @default(value: false)
   frozen: Boolean! @default(value: false)
-  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
-  createdBy: User!
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
+
+  # Relations
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+}
+
+enum ConceptLevel {
+  OBJECTIVE
+  CONCEPT
 }
 
 type Concept {
   id: ID! @id
   name: String!
   description: String
+  level: ConceptLevel! @default(value: CONCEPT)
+  position: String
   official: Boolean! @default(value: false)
   frozen: Boolean! @default(value: false)
-  createdBy: User!
-  sourceConcept: Concept @relation(name: "ConceptClones")
-  clones: [Concept!]! @relation(name: "ConceptClones")
-  linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
-  linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
-  course: Course! @relation(name: "ConceptCourses")
-  resources: [Resource!]!
-  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
   tags: [Tag!]!
   count: Int! @default(value: 1)
+
+  # Source data
+  sourceConcept: Concept @relation(name: "ConceptClones")
+  clones: [Concept!]! @relation(name: "ConceptClones")
+
+  # Links
+  linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
+  linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
+
+  # Relations
+  course: Course! @relation(name: "ConceptCourses")
+  workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
 
+
 type PointGroup {
   id: ID! @id
   name: String!
+
+  # Timing
   startDate: DateTime!
   endDate: DateTime!
+
+  # Meta
   maxPoints: Int! @default(value: 1)
+  pointsPerConcept: Float! @default(value: 0.5)
+
+  # Relations
   workspace: Workspace! @relation(name: "WorkspacePointGroup")
   course: Course! @relation(link: INLINE, name: "CoursePointGroup")
-  pointsPerConcept: Float! @default(value: 0.5)
   completions: [Completion!]! @relation(name: "PointGroupCompletions", onDelete: CASCADE)
+
+  # Creation data
+  createdBy: User!
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
+
 
 type Completion {
   id: ID! @id
   user: User!
   conceptAmount: Int! @default(value: 0)
+  pointGroup: PointGroup! @relation(name: "PointGroupCompletions")
+
+  # Creation data
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  pointGroup: PointGroup! @relation(name: "PointGroupCompletions")
 }
+
 
 type Tag {
   id: ID! @id
   name: String!
   type: String! @default(value: "custom")
   priority: Int! @default(value: 0)
+
+  # Creation data
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-}
-
-type Resource {
-  id: ID! @id
-  concept: Concept!
-  name: String!
-  description: String!
-  urls: [URL!]!
-}
-
-type URL {
-  id: ID! @id
-  address: String!
-  resource: Resource!
 }

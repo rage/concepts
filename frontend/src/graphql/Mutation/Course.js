@@ -18,9 +18,10 @@ ${CREATE_COURSE_FRAGMENT}
 
 const UPDATE_COURSE = gql`
 mutation updateCourse($id: ID!, $name: String, $official: Boolean,
-                      $frozen: Boolean, $tags: [TagInput!], $conceptOrder: [ID!]) {
+                      $frozen: Boolean, $tags: [TagInput!], $conceptOrder: [ID!],
+                      $objectiveOrder: [ID!]) {
   updateCourse(id: $id, name: $name, official: $official, frozen: $frozen, tags: $tags,
-               conceptOrder: $conceptOrder) {
+               conceptOrder: $conceptOrder, objectiveOrder: $objectiveOrder) {
     ...updateCourseData
   }
 }

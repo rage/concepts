@@ -5,14 +5,6 @@ mutation importData($data: String!) {
   importData(data: $data) {
     id
     name
-    courses {
-      id
-      name
-      concepts {
-        id
-        name
-      }
-    }
     asTemplate {
       id
     }

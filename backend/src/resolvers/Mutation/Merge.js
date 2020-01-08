@@ -5,8 +5,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { Role, Privilege, checkAccess } from '../../util/accessControl'
 import { NotFoundError } from '../../util/errors'
 import makeSecret from '../../util/secret'
-import { pubsub } from '../Subscription/config'
-import { PROJECT_WORKSPACE_CREATED } from '../Subscription/config/channels'
+import pubsub from '../Subscription/pubsub'
+import { PROJECT_WORKSPACE_CREATED } from '../Subscription/channels'
 
 const workspaceDataForMerge = `
 query($id: ID!) {
@@ -32,6 +32,7 @@ query($id: ID!) {
             id
             name
             description
+            level
             official
             frozen
             linksToConcept {
@@ -60,6 +61,7 @@ query($conceptIds: [ID!]!) {
     id
     name
     description
+    level
     official
     frozen
     linksFromConcept {
@@ -165,8 +167,10 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
 
       for (const concept of course.concepts) {
         // TODO merge conflicting descriptions?
+        // TODO separate conflicting levels?
         const updatedConcept = setDefault(updatedCourse.concepts, concept.name, {
           description: concept.description,
+          level: concept.level,
           official: concept.official,
           frozen: concept.frozen,
           course: course.name,
@@ -186,6 +190,7 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
   const mergedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    createdBy: { connect: { id: context.user.id } },
     asMerge: { connect: { id: projectId } },
     sourceTemplate: { connect: { id: templateId } },
     participants: {

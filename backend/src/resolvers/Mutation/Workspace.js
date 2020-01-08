@@ -1,10 +1,10 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import makeSecret from '../../util/secret'
 import bloom from '../../static/bloom'
-import { pubsub } from '../Subscription/config'
+import pubsub from '../Subscription/pubsub'
 import {
   WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
-} from '../Subscription/config/channels'
+} from '../Subscription/channels'
 
 const workspaceAllDataQuery = `
 query($id : ID!) {
@@ -63,10 +63,12 @@ query($id : ID!) {
           id
         }
         conceptOrder
+        objectiveOrder
         concepts {
           id
           name
           description
+          level
           official
           frozen
           tags {
@@ -86,6 +88,7 @@ export const createWorkspace = async (root, { name }, context) => {
   await checkAccess(context, { minimumRole: Role.GUEST })
   return await context.prisma.createWorkspace({
     name: name,
+    createdBy: { connect: { id: context.user.id } },
     participants: {
       create: [{
         privilege: Privilege.OWNER.toString(),
@@ -144,6 +147,7 @@ export const createTemplateWorkspace = async (root, { name, projectId }, context
   await checkAccess(context, { minimumRole: Role.STAFF })
   const createdTemplateWorkspace = await context.prisma.createWorkspace({
     name,
+    createdBy: { connect: { id: context.user.id } },
     asTemplate: {
       connect: { id: projectId }
     },
@@ -246,6 +250,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
+    createdBy: { connect: { id: context.user.id } },
     courseOrder: {
       set: templateWorkspace.courseOrder.map(makeNewId)
     },
@@ -286,6 +291,10 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
           isAutomaticSorting(course.conceptOrder)
             ? { set: course.conceptOrder }
             : { set: course.conceptOrder.map(makeNewId) },
+        objectiveOrder:
+          isAutomaticSorting(course.objectiveOrder)
+            ? { set: course.objectiveOrder }
+            : { set: course.objectiveOrder.map(makeNewId) },
         concepts: {
           create: course.concepts.map(concept => ({
             id: makeNewId(concept.id),

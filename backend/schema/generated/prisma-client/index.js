@@ -9,6 +9,10 @@ var models = [
     embedded: false
   },
   {
+    name: "AccessToken",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },
@@ -53,6 +57,10 @@ var models = [
     embedded: false
   },
   {
+    name: "ConceptLevel",
+    embedded: false
+  },
+  {
     name: "Concept",
     embedded: false
   },
@@ -66,14 +74,6 @@ var models = [
   },
   {
     name: "Tag",
-    embedded: false
-  },
-  {
-    name: "Resource",
-    embedded: false
-  },
-  {
-    name: "URL",
     embedded: false
   }
 ];

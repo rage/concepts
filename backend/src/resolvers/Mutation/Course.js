@@ -3,8 +3,8 @@ import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import { nullShield } from '../../util/errors'
 import { createMissingTags, filterTags } from './tagUtils'
-import { pubsub } from '../Subscription/config'
-import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/config/channels'
+import pubsub from '../Subscription/pubsub'
+import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/channels'
 
 export const createCourse = async (root, {
   name, workspaceId, official, frozen, tags
@@ -23,6 +23,7 @@ export const createCourse = async (root, {
     frozen: Boolean(frozen),
     createdBy: { connect: { id: context.user.id } },
     conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
+    objectiveOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
     workspace: { connect: { id: workspaceId } },
     tags: { connect: await createMissingTags(tags, workspaceId, context, 'courseTags') }
   })
@@ -69,7 +70,7 @@ export const deleteCourse = async (root, { id }, context) => {
 }
 
 export const updateCourse = async (root, {
-  id, name, official, frozen, tags, conceptOrder
+  id, name, official, frozen, tags, conceptOrder, objectiveOrder
 }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
   await checkAccess(context, {
@@ -98,9 +99,10 @@ export const updateCourse = async (root, {
     frozen: Boolean(frozen)
   }
   if (conceptOrder !== undefined) {
-    data.conceptOrder = {
-      set: conceptOrder
-    }
+    data.conceptOrder = { set: conceptOrder }
+  }
+  if (objectiveOrder !== undefined) {
+    data.objectiveOrder = { set: objectiveOrder }
   }
   if (name !== undefined) {
     if (!belongsToTemplate && name !== oldCourse.name) data.official = false

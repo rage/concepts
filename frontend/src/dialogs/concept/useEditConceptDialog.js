@@ -18,7 +18,9 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
     update: cache.updateConceptUpdate(workspaceId)
   })
 
-  const createOptimisticResponse = ({ id, name, official, frozen, description, tags, course }) => ({
+  const createOptimisticResponse = ({
+    id, name, official, frozen, description, level, position, tags, course
+  }) => ({
     __typename: 'Mutation',
     updateConcept: {
       __typename: 'Concept',
@@ -28,6 +30,8 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
       official,
       frozen,
       course,
+      level,
+      position,
       tags: tags.map(tag => ({
         ...tag,
         __typename: 'Tag',
@@ -37,13 +41,15 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
     }
   })
 
-  return ({ id, name, description, tags, official, frozen, course }) => openDialog({
+  return ({
+    id, name, description, level, position, tags, official, frozen, course
+  }) => openDialog({
     mutation: updateConcept,
-    createOptimisticResponse: (args) => createOptimisticResponse({ ...args, course }),
-    type: 'Concept',
-    requiredVariables: { id, official: false },
+    createOptimisticResponse: (args) => createOptimisticResponse({ ...args, level, course }),
+    type: level.toTitleCase(),
+    requiredVariables: { id, position, official: false },
     actionText: 'Save',
-    title: 'Edit concept',
+    title: `Edit ${level.toLowerCase()}`,
     fields: [{
       name: 'name',
       required: true,

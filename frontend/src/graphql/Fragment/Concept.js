@@ -5,6 +5,8 @@ fragment createConceptData on Concept {
   id
   name
   description
+  level
+  position
   official
   frozen
   tags {
@@ -40,6 +42,8 @@ fragment updateConceptData on Concept {
   id
   name
   description
+  level
+  position
   official
   frozen
   tags {

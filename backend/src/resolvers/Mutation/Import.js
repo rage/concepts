@@ -52,6 +52,7 @@ export const importData = async (root, { data }, context) => {
   } else if (json.workspace) {
     workspace = await context.prisma.createWorkspace({
       name: json.workspace,
+      createdBy: { connect: { id: context.user.id } },
       participants: {
         create: [{
           privilege: Privilege.OWNER.toString(),
@@ -72,6 +73,7 @@ export const importData = async (root, { data }, context) => {
       official: canSetOfficial && Boolean(json.projectId || course.official),
       createdBy: { connect: { id: context.user.id } },
       conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
+      objectiveOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       workspace: { connect: { id: workspace.id } },
       tags: { create: course.tags }
     })
@@ -80,6 +82,7 @@ export const importData = async (root, { data }, context) => {
       context.prisma.createConcept({
         name: concept.name,
         description: concept.description,
+        level: concept.level,
         official: canSetOfficial && Boolean(json.projectId || concept.official),
         createdBy: { connect: { id: context.user.id } },
         workspace: { connect: { id: workspace.id } },

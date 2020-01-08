@@ -13,10 +13,13 @@ fragment coursesForWorkspace on Workspace {
       }
     }
     conceptOrder
+    objectiveOrder
     concepts {
       id
       name
       description
+      level
+      position
       course {
         id
       }

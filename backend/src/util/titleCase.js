@@ -32,5 +32,5 @@ String.prototype.toCamelCase = function() {
 }
 
 String.prototype.toUpperSnakeCase = function() {
-  return this.toUpperCase().replace(' ', '_')
+  return this.toUpperCase().replace(/ /g, '_')
 }

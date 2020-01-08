@@ -20,10 +20,13 @@ fragment createCourseLinkData on CourseLink {
       priority
     }
     conceptOrder
+    objectiveOrder
     concepts {
       id
       name
       description
+      level
+      position
       official
       frozen
       course {

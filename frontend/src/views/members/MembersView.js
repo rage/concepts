@@ -13,7 +13,6 @@ import EditableTable, { Type } from '../../components/EditableTable'
 import { useLoginStateValue } from '../../lib/store'
 import { DELETE_PARTICIPANT, UPDATE_PARTICIPANT } from '../../graphql/Mutation'
 import useRouter from '../../lib/useRouter'
-import cache from '../../apollo/update'
 import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'

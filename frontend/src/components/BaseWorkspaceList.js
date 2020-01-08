@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
-  RadioButtonChecked, RadioButtonUnchecked
+  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -208,8 +208,12 @@ This will change which template is cloned by users.`)
     history.push(`${urlPrefix}/${workspaceId}/manager`)
   }
 
-  const handleNavigateMapper = () => {
+  const handleNavigateCourseMapper = () => {
     history.push(`${urlPrefix}/${menu.workspace.id}/mapper`)
+  }
+
+  const handleNavigateConceptMapper = () => {
+    history.push(`${urlPrefix}/${menu.workspace.id}/conceptmapper`)
   }
 
   const handleNavigateHeatmap = () => {
@@ -255,11 +259,17 @@ This will change which template is cloned by users.`)
         ))
       }</List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
-        <MenuItem aria-label='Mapper' onClick={handleNavigateMapper}>
+        <MenuItem aria-label='Mapper' onClick={handleNavigateCourseMapper}>
+          <ListItemIcon>
+            <AccountTreeIcon />
+          </ListItemIcon>
+          Course Mapper
+        </MenuItem>
+        <MenuItem aria-label='Mapper' onClick={handleNavigateConceptMapper}>
           <ListItemIcon>
             <ShuffleIcon />
           </ListItemIcon>
-          Mapper
+          Concept Mapper
         </MenuItem>
         <MenuItem aria-label='Heatmap' onClick={handleNavigateHeatmap}>
           <ListItemIcon>
