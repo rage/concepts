@@ -17,6 +17,7 @@ import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
 import { sortedCourses } from '../../lib/ordering'
+import {useConfirm} from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,6 +68,7 @@ const PrerequisiteCourse = ({
 }) => {
   const classes = useStyles()
   const { history } = useRouter()
+  const confirm = useConfirm()
 
   const [, messageDispatch] = useMessageStateValue()
   const [{ user }] = useLoginStateValue()
@@ -85,31 +87,36 @@ const PrerequisiteCourse = ({
     update: cache.deleteCourseUpdate(workspace.id, activeCourseId)
   })
 
-  const deleteCourse = () => {
+  const deleteCourse = async () => {
     try {
-      const willDelete = window.confirm('Are you sure you want to delete this course?')
-      if (willDelete) {
-        deleteCourseMutation({
-          variables: {
+      const ok = await confirm({
+        title: 'Confirm deletion',
+        message: 'Are you sure you want to delete this course?',
+        confirm: 'Yes, delete',
+        cancel: 'No, cancel'
+      })
+      if (!ok) {
+        return
+      }
+      await deleteCourseMutation({
+        variables: {
+          id: course.id
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          deleteCourse: {
+            __typename: 'Course',
             id: course.id
-          },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            deleteCourse: {
-              __typename: 'Course',
-              id: course.id
-            }
           }
-        }).then(() => {
-          if (activeCourseId === course.id) {
-            if (workspace.courses.length > 1) {
-              const nextCourse = workspace.courses.find(c => c.id !== course.id)
-              history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
-            } else {
-              history.push(`${urlPrefix}/${workspace.id}/mapper`)
-            }
-          }
-        })
+        }
+      })
+      if (activeCourseId === course.id) {
+        if (workspace.courses.length > 1) {
+          const nextCourse = workspace.courses.find(c => c.id !== course.id)
+          history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
+        } else {
+          history.push(`${urlPrefix}/${workspace.id}/mapper`)
+        }
       }
     } catch (ex) { }
   }

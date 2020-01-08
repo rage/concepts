@@ -10,6 +10,7 @@ import useRouter from '../../lib/useRouter'
 import { DISCONNECT_AUTH, MERGE_USER } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { useLoginDialog } from '../../dialogs/authentication'
+import { useAlert, useConfirm } from '../../dialogs/alert'
 
 const useStyles = makeStyles({
   wrapper: {
@@ -125,6 +126,8 @@ const JSONObject = ({ data, className }) => (
 const UserView = () => {
   const classes = useStyles()
   const { history } = useRouter()
+  const confirm = useConfirm()
+  const alert = useAlert()
 
   const [data, dispatch] = useLoginStateValue()
   const [, messageDispatch] = useMessageStateValue()
@@ -153,10 +156,19 @@ const UserView = () => {
   }
 
   const deleteAccount = async () => {
-    if (!window.confirm('Are you sure you want to permanently delete your account?')) {
+    const ok = await confirm({
+      title: 'Confirm deletion',
+      message: 'Are you sure you want to delete your account?',
+      confirm: 'Yes, delete',
+      cancel: 'No, cancel'
+    })
+    if (!ok) {
       return
     }
-    window.alert('Not yet implemented')
+    await alert({
+      title: 'Not yet implemented',
+      message: 'Account deletion is not yet implemented. Please contact mooc@cs.helsinki.fi to delete your account.'
+    })
   }
 
   const connectToken = async (accessToken, type, displayname) => {
