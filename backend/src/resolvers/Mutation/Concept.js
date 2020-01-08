@@ -177,6 +177,10 @@ const sharedUpdateConcept = async ({
   }
 
   if (level !== undefined && level !== oldConcept.level) {
+    if (oldConcept.level === 'COMMON') {
+      // TODO Maybe allow for changing the level?
+      throw new ForbiddenError('Cannot change the level of a common concept.')
+    }
     data.level = level
     await levelChange(level)
   }
