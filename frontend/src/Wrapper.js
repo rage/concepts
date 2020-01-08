@@ -14,6 +14,7 @@ import InfoSnackbar from './components/InfoSnackbar'
 import { DialogProvider } from './dialogs'
 import { LoadingProvider } from './components/LoadingBar'
 import { IntroDialogProvider } from './dialogs/intro/IntroDialogProvider'
+import { NotificationProvider } from './components/notification/NotificationProvider'
 import WindowTooSmall, { MIN_WIDTH } from './views/WindowTooSmall'
 
 const ConceptsWrapper = () => {
@@ -36,7 +37,9 @@ const ConceptsWrapper = () => {
                   <FocusOverlayProvider>
                     <InfoBoxProvider>
                       <LoadingProvider>
-                        <App />
+                        <NotificationProvider>
+                          <App />
+                        </NotificationProvider>
                       </LoadingProvider>
                     </InfoBoxProvider>
                   </FocusOverlayProvider>
