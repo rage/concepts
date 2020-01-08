@@ -4,7 +4,7 @@ import useRouter from '../../lib/useRouter'
 import Alert from './Alert'
 
 export const AlertContext = createContext({})
-export const useAlert = () => useContext(AlertContext)
+export const useAlertDialog = () => useContext(AlertContext)
 
 export const AlertProvider = ({ children }) => {
   const { history } = useRouter()
