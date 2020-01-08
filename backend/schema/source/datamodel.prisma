@@ -8,6 +8,7 @@ type User {
   googleId: String @unique
   role: Role!
   deactivated: Boolean! @default(value: false)
+  tokens: [AccessToken!]! @relation(name: "UserTokens")
 
   # Relations
   workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser", onDelete: CASCADE)
@@ -15,13 +16,21 @@ type User {
 
   # Activity meta
   seenGuides: [String!]! @scalarList(strategy: RELATION)
-  lastActivity: DateTime
 
   # Creation data
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
 
+type AccessToken {
+  id: ID! @id
+  token: String! @unique
+  user: User! @relation(name: "UserTokens")
+  createdAt: DateTime! @createdAt
+  lastSeenTime: DateTime! @updatedAt
+  lastSeenAgent: String!
+  lastSeenAddress: String!
+}
 
 enum Role {
   GUEST

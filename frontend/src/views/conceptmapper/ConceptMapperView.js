@@ -188,13 +188,14 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   useEffect(() => {
     const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
-      const initialValue = selection.current.start[axisKey]
+      const sel = selection.current, pn = pan.current
+      const initialValue = (sel.start[axisKey] * pn.zoom) - pn[axisKey]
       const minVal = Math.min(value, initialValue)
       const maxVal = Math.max(value, initialValue)
-      selection.current.pos[posKey] = (minVal + offset) / pan.current.zoom
-      selection.current.pos[lenKey] = (maxVal - minVal) / pan.current.zoom
-      selectionRef.current.style[posKey] = `${selection.current.pos[posKey]}px`
-      selectionRef.current.style[lenKey] = `${selection.current.pos[lenKey]}px`
+      sel.pos[posKey] = (minVal + offset) / pn.zoom
+      sel.pos[lenKey] = (maxVal - minVal) / pn.zoom
+      selectionRef.current.style[posKey] = `${sel.pos[posKey]}px`
+      selectionRef.current.style[lenKey] = `${sel.pos[lenKey]}px`
     }
 
     const updateSelected = () => {
@@ -238,12 +239,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         setAddingLink(null)
       }
       if (evt.shiftKey) {
-        const x = evt.pageX - main.current.offsetLeft
-        const y = evt.pageY - main.current.offsetTop
+        const x = (evt.pageX - main.current.offsetLeft + pan.current.x) / pan.current.zoom
+        const y = (evt.pageY - main.current.offsetTop + pan.current.y) / pan.current.zoom
         selection.current = {
           pos: {
-            left: (x + pan.current.x) / pan.current.zoom,
-            top: (y + pan.current.y) / pan.current.zoom,
+            left: x,
+            top: y,
             width: 0,
             height: 0
           },

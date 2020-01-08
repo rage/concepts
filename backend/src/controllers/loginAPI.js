@@ -41,7 +41,7 @@ export const loginAPIAssert = async (req, res) => {
       [displayName]: dn
     } = response.extract.attributes
     const hakaId = timestamp ? `${timestamp}:${principalName}` : principalName
-    const data = await signOrCreateUser({ hakaId }, {}, prisma)
+    const data = await signOrCreateUser({ hakaId }, {}, { prisma, request: req })
     if (!data) {
       return res.redirect(loginFail)
     }

@@ -31,6 +31,7 @@ type Mutation {
   # Authentication mutation
   login(tmcToken: String!): AuthPayload!
   loginGoogle(idToken: String!): AuthPayload!
+  logout: Boolean!
   mergeUser(accessToken: String!): User!
   disconnectAuth(authType: AuthType!): User!
   createGuest: AuthPayload!
@@ -255,6 +256,7 @@ type User {
   googleId: String
   role: Role!
   deactivated: Boolean!
+  tokens: [AccessToken!]!
 
   # Relations
   workspaceParticipations: [WorkspaceParticipant!]!
@@ -262,13 +264,21 @@ type User {
 
   # Activity meta
   seenGuides: [String!]!
-  lastActivity: DateTime
 
   # Creation data
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
+type AccessToken {
+  id: ID!
+  token: String!
+  user: User!
+  createdAt: DateTime!
+  lastSeenTime: DateTime!
+  lastSeenAgent: String!
+  lastSeenAddress: String!
+}
 
 enum Role {
   GUEST
