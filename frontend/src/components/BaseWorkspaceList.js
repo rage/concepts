@@ -172,7 +172,9 @@ const BaseWorkspaceList = ({
 
     const ok = await confirm({
       title: 'Confirm deletion',
-      message: `Are you sure you want to delete this ${TYPE_NAMES[type]}?`
+      message: `Are you sure you want to delete this ${TYPE_NAMES[type]}?`,
+      confirm: 'Yes, delete',
+      cancel: 'No, cancel'
     })
 
     if (ok) {
@@ -193,9 +195,13 @@ const BaseWorkspaceList = ({
     handleMenuClose()
 
     if (activeTemplate && menu.workspace.id !== activeTemplate.id) {
-      const change = window.confirm(
-        `Are you sure that you want to switch the active template? 
-This will change which template is cloned by users.`)
+      const change = await confirm({
+        title: 'Confirm active template switch',
+        message: `Are you sure that you want to switch the active template? 
+This will change which template is cloned by users.`,
+        confirm: 'Yes, switch',
+        cancel: 'No, cancel'
+      })
       if (!change) return
     }
     try {
