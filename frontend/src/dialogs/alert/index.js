@@ -11,5 +11,5 @@ export const useAlert = () => {
 export const useConfirm = () => {
   const { open } = useAlertDialog()
   return ({ type = 'warning', confirm = 'OK', cancel = 'Cancel', title, message, ...args }) =>
-    open({ type, confirm, cancel, title, message, ...args })
+    open({ type, confirm, cancel, title, message, confirmColor: 'secondary', ...args })
 }

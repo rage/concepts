@@ -13,7 +13,9 @@ const defaultValues = {
   title: '',
   message: '',
   cancel: '',
-  confirm: 'OK'
+  confirm: 'OK',
+  confirmColor: 'primary',
+  cancelColor: 'primary'
 }
 
 const useStyles = makeStyles({
@@ -55,12 +57,16 @@ const Alert = ({ contextRef }) => {
       </DialogContent>}
 
       <DialogActions>
-        {state.cancel && <Button onClick={contextRef.current.reject} color='primary'>
-          {state.cancel}
-        </Button>}
-        <Button onClick={contextRef.current.resolve} color='primary'>
-          {state.confirm}
-        </Button>
+        {state.cancel &&
+          <Button onClick={contextRef.current.reject} color={state.cancelColor}>
+            {state.cancel}
+          </Button>
+        }
+        {state.confirm &&
+          <Button onClick={contextRef.current.resolve} color={state.confirmColor}>
+            {state.confirm}
+          </Button>
+        }
       </DialogActions>
     </Dialog>
   )
