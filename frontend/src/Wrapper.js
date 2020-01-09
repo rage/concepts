@@ -32,19 +32,19 @@ const ConceptsWrapper = () => {
             <LoginStateProvider>
               <CssBaseline />
               <InfoSnackbar />
-              <DialogProvider>
-                <IntroDialogProvider>
-                  <FocusOverlayProvider>
-                    <InfoBoxProvider>
-                      <LoadingProvider>
-                        <AlertProvider>
+              <AlertProvider>
+                <DialogProvider>
+                  <IntroDialogProvider>
+                    <FocusOverlayProvider>
+                      <InfoBoxProvider>
+                        <LoadingProvider>
                           <App />
-                        </AlertProvider>
-                      </LoadingProvider>
-                    </InfoBoxProvider>
-                  </FocusOverlayProvider>
-                </IntroDialogProvider>
-              </DialogProvider>
+                        </LoadingProvider>
+                      </InfoBoxProvider>
+                    </FocusOverlayProvider>
+                  </IntroDialogProvider>
+                </DialogProvider>
+              </AlertProvider>
             </LoginStateProvider>
           </MessagingStateProvider>
         </MuiPickersUtilsProvider>
