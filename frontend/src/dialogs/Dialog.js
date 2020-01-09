@@ -8,6 +8,7 @@ import Select from 'react-select/creatable'
 import { useMessageStateValue } from '../lib/store'
 import { noDefault } from '../lib/eventMiddleware'
 import '../lib/deferred'
+import { useAlert } from './alert'
 
 const blankState = () => ({
   open: false,
@@ -37,6 +38,7 @@ const OptionalForm = ({ enable, onSubmit, children }) => {
 
 const Dialog = ({ contextRef }) => {
   const stateChange = useRef(-1)
+  const alert = useAlert()
   const [state, setState] = useState(blankState())
   const [inputState, setInputState] = useState(null)
   const [, messageDispatch] = useMessageStateValue()
@@ -96,7 +98,7 @@ const Dialog = ({ contextRef }) => {
       if (key.list && !variables[key.list]) variables[key.list] = []
       if (!data) {
         if (key.required) {
-          window.alert(`${state.type} needs a ${key.name}!`)
+          alert({ title: `${state.type} needs a ${key.name}!` })
           return
         }
         if (key.omitEmpty) continue
