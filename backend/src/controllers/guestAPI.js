@@ -24,10 +24,10 @@ const EXPIRATION_IN_DAYS = 200
  * @param {Date} today today time in millis
  * @param {int} duration duration of days
  */
-const isExpired = (lastSeenTime, today, duration) => {
+const isExpired = (lastSeenTime, today) => {
   const time = new Date(lastSeenTime)
   const elapsedDays = (today.getTime() - time.getTime()) / 86400000
-  return elapsedDays <= duration
+  return elapsedDays <= EXPIRATION_IN_DAYS
 }
 
 const deactivateGuest = async (id) => {
@@ -55,7 +55,7 @@ export const guestAPI = async (req, res) => {
 
     // Check for expired tokens
     for (let token of guest.tokens) {
-      if (isExpired(token.lastSeenTime, today, EXPIRATION_IN_DAYS)) {
+      if (isExpired(token.lastSeenTime, today)) {
         deactivateGuest(guest.id)
         message.guestsDeactivated++
         break
