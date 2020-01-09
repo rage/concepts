@@ -10,7 +10,7 @@ import useRouter from '../../lib/useRouter'
 import { DISCONNECT_AUTH, MERGE_USER } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER, WORKSPACES_FOR_USER } from '../../graphql/Query'
 import { useLoginDialog } from '../../dialogs/authentication'
-import { useAlert, useConfirm } from '../../dialogs/alert'
+import { useAlert, useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles({
   wrapper: {
@@ -126,7 +126,7 @@ const JSONObject = ({ data, className }) => (
 const UserView = () => {
   const classes = useStyles()
   const { history } = useRouter()
-  const confirm = useConfirm()
+  const confirmDelete = useConfirmDelete()
   const alert = useAlert()
 
   const [data, dispatch] = useLoginStateValue()
@@ -156,13 +156,7 @@ const UserView = () => {
   }
 
   const deleteAccount = async () => {
-    const ok = await confirm({
-      title: 'Confirm deletion',
-      message: 'Are you sure you want to delete your account?',
-      confirm: 'Yes, delete',
-      cancel: 'No, cancel'
-    })
-    if (!ok) {
+    if (!await confirmDelete('Are you sure you want to delete your account?')) {
       return
     }
     await alert({

@@ -15,7 +15,7 @@ import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../lib/store'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
-import { useConfirm } from '../dialogs/alert'
+import { useConfirm, useConfirmDelete } from '../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -68,6 +68,7 @@ const BaseWorkspaceList = ({
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
   const infoBox = useInfoBox()
+  const confirmDelete = useConfirmDelete()
   const confirm = useConfirm()
 
   const handleCreateOpen = () => {
@@ -170,24 +171,18 @@ const BaseWorkspaceList = ({
   const handleDelete = async () => {
     handleMenuClose()
 
-    const ok = await confirm({
-      title: 'Confirm deletion',
-      message: `Are you sure you want to delete this ${TYPE_NAMES[type]}?`,
-      confirm: 'Yes, delete',
-      cancel: 'No, cancel'
-    })
-
-    if (ok) {
-      try {
-        await deleteWorkspace({
-          variables: { id: menu.workspace.id }
-        })
-      } catch (err) {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
-      }
+    if (!await confirmDelete(`Are you sure you want to delete this ${TYPE_NAMES[type]}?`)) {
+      return
+    }
+    try {
+      await deleteWorkspace({
+        variables: { id: menu.workspace.id }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
     }
   }
 

@@ -11,7 +11,7 @@ import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/proj
 import { DELETE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'
 import useRouter from '../../lib/useRouter'
-import {useConfirm} from '../../dialogs/alert'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 const ProjectList = ({ projects }) => {
   const classes = useStyles()
   const { history } = useRouter()
-  const confirm = useConfirm()
+  const confirmDelete = useConfirmDelete()
 
   const [, messageDispatch] = useMessageStateValue()
 
@@ -51,13 +51,7 @@ const ProjectList = ({ projects }) => {
   })
 
   const handleDelete = async (id) => {
-    const ok = await confirm({
-      title: 'Confirm deletion',
-      message: 'Are you sure you want to delete this project?',
-      confirm: 'Yes, delete',
-      cancel: 'No, cancel'
-    })
-    if (!ok) {
+    if (!await confirmDelete('Are you sure you want to delete this project?')) {
       return
     }
     try {

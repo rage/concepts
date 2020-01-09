@@ -48,7 +48,7 @@ const Alert = ({ contextRef }) => {
   }
 
   return (
-    <Dialog onClose={contextRef.current.close} open={state.open} className={classes[state.type]}>
+    <Dialog onClose={contextRef.current.reject} open={state.open} className={classes[state.type]}>
       <DialogTitle>{state.title}</DialogTitle>
       {state.message && <DialogContent>
         <Typography gutterBottom>

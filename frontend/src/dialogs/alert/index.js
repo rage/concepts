@@ -13,3 +13,13 @@ export const useConfirm = () => {
   return ({ type = 'warning', confirm = 'OK', cancel = 'Cancel', title, message, ...args }) =>
     open({ type, confirm, cancel, title, message, confirmColor: 'secondary', ...args })
 }
+
+export const useConfirmDelete = () => {
+  const open = useConfirm()
+  return (message) => open({
+    title: 'Confirm deletion',
+    message,
+    confirm: 'Yes, delete',
+    cancel: 'No, cancel'
+  })
+}

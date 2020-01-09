@@ -17,7 +17,7 @@ import { useShareDialog } from '../dialogs/sharing'
 import useEditProjectDialog from '../dialogs/project/useEditProjectDialog'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
-import {useConfirm} from '../dialogs/alert'
+import { useConfirmDelete } from '../dialogs/alert'
 
 const useStyles = makeStyles({
   root: {
@@ -46,7 +46,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   const [, messageDispatch] = useMessageStateValue()
   const [menuAnchor, setMenuAnchor] = useState(null)
   const infoBox = useInfoBox()
-  const confirm = useConfirm()
+  const confirmDelete = useConfirmDelete()
 
   const projectQuery = useQuery(PROJECT_BY_ID, {
     variables: { id: projectId }
@@ -74,13 +74,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   const handleDelete = async () => {
     setMenuAnchor(null)
 
-    const ok = await confirm({
-      title: 'Confirm deletion',
-      message: 'Are you sure you want to delete this project?',
-      confirm: 'Yes, delete',
-      cancel: 'No, cancel'
-    })
-    if (!ok) {
+    if (!await confirmDelete('Are you sure you want to delete this project?')) {
       return
     }
     try {

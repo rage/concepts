@@ -7,7 +7,8 @@ import { Role } from '../../lib/permissions'
 import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
-import {noPropagation} from '../../lib/eventMiddleware'
+import { noPropagation } from '../../lib/eventMiddleware'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   listItemActive: {
@@ -44,11 +45,11 @@ const CourseListItem = ({
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
+  const confirmDelete = useConfirmDelete()
 
-  const handleDelete = noPropagation(() => {
-    const msg = `Are you sure you want to delete the course ${course.name}?`
-    if (window.confirm(msg)) {
-      deleteCourse(course.id)
+  const handleDelete = noPropagation(async () => {
+    if (await confirmDelete(`Are you sure you want to delete the course ${course.name}?`)) {
+      await deleteCourse(course.id)
     }
   })
   const handleEdit = noPropagation(() => setEditing(course.id))

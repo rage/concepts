@@ -17,7 +17,7 @@ import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
 import { sortedCourses } from '../../lib/ordering'
-import {useConfirm} from '../../dialogs/alert'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -68,7 +68,7 @@ const PrerequisiteCourse = ({
 }) => {
   const classes = useStyles()
   const { history } = useRouter()
-  const confirm = useConfirm()
+  const confirmDelete = useConfirmDelete()
 
   const [, messageDispatch] = useMessageStateValue()
   const [{ user }] = useLoginStateValue()
@@ -88,16 +88,10 @@ const PrerequisiteCourse = ({
   })
 
   const deleteCourse = async () => {
+    if (!await confirmDelete('Are you sure you want to delete this course?')) {
+      return
+    }
     try {
-      const ok = await confirm({
-        title: 'Confirm deletion',
-        message: 'Are you sure you want to delete this course?',
-        confirm: 'Yes, delete',
-        cancel: 'No, cancel'
-      })
-      if (!ok) {
-        return
-      }
       await deleteCourseMutation({
         variables: {
           id: course.id
