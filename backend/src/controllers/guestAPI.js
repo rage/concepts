@@ -26,7 +26,7 @@ const EXPIRATION_IN_DAYS = 200
 const isExpired = (lastSeenTime, today) => {
   const time = new Date(lastSeenTime)
   const elapsedDays = (today.getTime() - time.getTime()) / 86400000
-  return elapsedDays <= EXPIRATION_IN_DAYS
+  return elapsedDays >= EXPIRATION_IN_DAYS
 }
 
 const deactivateGuest = async (id) => {
