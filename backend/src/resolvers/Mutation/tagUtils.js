@@ -1,4 +1,7 @@
 export const createMissingTags = async (tags, workspaceId, context, field) => {
+  if (!tags) {
+    return []
+  }
   const tagsToCreate = tags.filter(tag => !tag.id)
   if (tagsToCreate.length > 0) {
     const createdTags = await Promise.all(tagsToCreate.map(tag => context.prisma.createTag(tag)))

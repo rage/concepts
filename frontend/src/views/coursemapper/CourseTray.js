@@ -17,6 +17,7 @@ import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
 import { sortedCourses } from '../../lib/ordering'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,6 +68,7 @@ const PrerequisiteCourse = ({
 }) => {
   const classes = useStyles()
   const { history } = useRouter()
+  const confirmDelete = useConfirmDelete()
 
   const [, messageDispatch] = useMessageStateValue()
   const [{ user }] = useLoginStateValue()
@@ -85,31 +87,30 @@ const PrerequisiteCourse = ({
     update: cache.deleteCourseUpdate(workspace.id, activeCourseId)
   })
 
-  const deleteCourse = () => {
+  const deleteCourse = async () => {
+    if (!await confirmDelete('Are you sure you want to delete this course?')) {
+      return
+    }
     try {
-      const willDelete = window.confirm('Are you sure you want to delete this course?')
-      if (willDelete) {
-        deleteCourseMutation({
-          variables: {
+      await deleteCourseMutation({
+        variables: {
+          id: course.id
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          deleteCourse: {
+            __typename: 'Course',
             id: course.id
-          },
-          optimisticResponse: {
-            __typename: 'Mutation',
-            deleteCourse: {
-              __typename: 'Course',
-              id: course.id
-            }
           }
-        }).then(() => {
-          if (activeCourseId === course.id) {
-            if (workspace.courses.length > 1) {
-              const nextCourse = workspace.courses.find(c => c.id !== course.id)
-              history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
-            } else {
-              history.push(`${urlPrefix}/${workspace.id}/mapper`)
-            }
-          }
-        })
+        }
+      })
+      if (activeCourseId === course.id) {
+        if (workspace.courses.length > 1) {
+          const nextCourse = workspace.courses.find(c => c.id !== course.id)
+          history.push(`${urlPrefix}/${workspace.id}/mapper/${nextCourse.id}`)
+        } else {
+          history.push(`${urlPrefix}/${workspace.id}/mapper`)
+        }
       }
     } catch (ex) { }
   }

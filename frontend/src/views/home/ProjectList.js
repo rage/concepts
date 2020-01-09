@@ -11,6 +11,7 @@ import { useCreateProjectDialog, useEditProjectDialog } from '../../dialogs/proj
 import { DELETE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'
 import useRouter from '../../lib/useRouter'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 const ProjectList = ({ projects }) => {
   const classes = useStyles()
   const { history } = useRouter()
+  const confirmDelete = useConfirmDelete()
 
   const [, messageDispatch] = useMessageStateValue()
 
@@ -49,18 +51,18 @@ const ProjectList = ({ projects }) => {
   })
 
   const handleDelete = async (id) => {
-    const willDelete = window.confirm('Are you sure you want to delete this project?')
-    if (willDelete) {
-      try {
-        await deleteProject({
-          variables: { id }
-        })
-      } catch (err) {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
-      }
+    if (!await confirmDelete('Are you sure you want to delete this project?')) {
+      return
+    }
+    try {
+      await deleteProject({
+        variables: { id }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
     }
   }
 

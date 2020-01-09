@@ -2,12 +2,10 @@ import client from '../../apollo/apolloClient'
 import { AUTHENTICATE_GOOGLE } from '../../graphql/Mutation'
 import { GET_GOOGLE_CLIENT_ID } from '../../graphql/Query'
 
+import '../../lib/deferred'
+
 window._googleAuthEnabled = null
-let _resolve
-window._googleAuthEnabledPromise = new Promise(resolve => {
-  _resolve = resolve
-})
-window._googleAuthEnabledPromise.resolve = _resolve
+window._googleAuthEnabledPromise = Promise.defer()
 
 const asyncify = (fn, ...args) =>
   new Promise(resolve =>

@@ -27,6 +27,7 @@ import { useEditConceptDialog, useCreateConceptDialog } from '../../dialogs/conc
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles({
   root: {
@@ -99,6 +100,7 @@ const conversionOptions = ['CONCEPT', 'OBJECTIVE']
 
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
+  const confirmDelete = useConfirmDelete()
   const [{ user }] = useLoginStateValue()
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLinkState] = useState(null)
@@ -485,8 +487,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const menuDeleteConcept = useCallback(async () => {
     closeMenu()
-    const ok = window.confirm(`Are you sure you want to delete ${menu.state.concept.name}?`)
-    if (!ok) {
+    if (!await confirmDelete(`Are you sure you want to delete ${menu.state.concept.name}?`)) {
       return
     }
     await deleteConcept({
@@ -494,12 +495,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         id: menu.id
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteConcept, closeMenu, menu])
 
   const menuDeleteAll = useCallback(async () => {
     closeMenu()
-    const ok = window.confirm('Are you sure you want to delete the selected concepts?')
-    if (!ok) {
+    if (!await confirmDelete('Are you sure you want to delete the selected concepts?')) {
       return
     }
     await deleteManyConcepts({
@@ -508,6 +509,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       }
     })
     clearSelected()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteManyConcepts, clearSelected, closeMenu])
 
   const menuDeleteLink = useCallback(async() => {
