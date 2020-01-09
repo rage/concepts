@@ -16,6 +16,7 @@ import useRouter from '../../lib/useRouter'
 import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
+import { useConfirm } from '../../dialogs/alert'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -66,6 +67,7 @@ const MembersView = ({ projectId, workspaceId }) => {
   const classes = useStyles()
   const [{ user }] = useLoginStateValue()
   const { history } = useRouter()
+  const confirm = useConfirm()
 
   const mainQueryType = projectId ? PROJECT_BY_ID : WORKSPACE_BY_ID
   const memberQueryType = projectId ? PROJECT_BY_ID_MEMBER_INFO : WORKSPACE_BY_ID_MEMBER_INFO
@@ -83,7 +85,6 @@ const MembersView = ({ projectId, workspaceId }) => {
   useUpdatingSubscription(`${type} member`, 'delete', {
     variables: { [`${type}Id`]: id }
   })
-
 
   const mainQuery = useQuery(mainQueryType, {
     variables: { id }
@@ -136,8 +137,14 @@ const MembersView = ({ projectId, workspaceId }) => {
         }))}
         deleteMutation={async ({ id }) => {
           const data = memberData.find(member => member.participantId === id)
-          if (!window.confirm(`Are you sure you want to remove ${
-            data?.id === user.id ? 'yourself' : data?.id || id} from this project?`)) {
+          const ok = await confirm({
+            title: 'Confirm participant removal',
+            message: `Are you sure you want to remove ${
+              data?.id === user.id ? 'yourself' : data?.id || id} from this project?`,
+            confirm: 'Yes, remove',
+            cancel: 'No, cancel'
+          })
+          if (!ok) {
             return
           }
           await deleteParticipant({
