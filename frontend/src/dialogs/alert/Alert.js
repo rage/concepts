@@ -4,6 +4,8 @@ import {
   Typography, Dialog, DialogTitle, DialogActions, DialogContent, Button
 } from '@material-ui/core'
 
+import '../../lib/deferred'
+
 // Types: info, warning
 const defaultValues = {
   open: false,
@@ -14,42 +16,43 @@ const defaultValues = {
   confirm: 'OK'
 }
 
-const classes = makeStyles({
+const useStyles = makeStyles({
 
 })
 
 const Alert = ({ contextRef }) => {
+  const classes = useStyles()
   const [state, setState] = useState({ ...defaultValues })
 
   contextRef.current = {
     open(args) {
-      let _resolve
-      const promise = new Promise(resolve => _resolve = resolve)
-      promise.resolve = _resolve
+      const promise = Promise.defer()
       setState({ ...defaultValues, ...args, promise, open: true })
       return promise
     },
-    close() {
-      setState({ ...state, open: false })
+    close(value) {
+      if (!state.promise) {
+        return
+      }
+      state.promise.resolve(value)
+      setState({ ...state, promise: null, open: false })
     },
     resolve() {
-      state.promise.resolve(true)
-      contextRef.current.close()
+      contextRef.current.close(true)
     },
     reject() {
-      state.promise.resolve(false)
-      contextRef.current.close()
+      contextRef.current.close(false)
     }
   }
 
   return (
     <Dialog onClose={contextRef.current.close} open={state.open} className={classes[state.type]}>
       <DialogTitle>{state.title}</DialogTitle>
-      <DialogContent>
+      {state.message && <DialogContent>
         <Typography gutterBottom>
           {state.message}
         </Typography>
-      </DialogContent>
+      </DialogContent>}
 
       <DialogActions>
         {state.cancel && <Button onClick={contextRef.current.reject} color='primary'>
