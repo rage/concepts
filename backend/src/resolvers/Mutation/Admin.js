@@ -46,7 +46,7 @@ const deactivateGuest = async (id, context) => {
   }
 }
 
-export const guestAPI = async (root, args, context) => {
+export const cleanGuests = async (root, args, context) => {
   if (context.role < Role.ADMIN) {
     throw new ForbiddenError('Access denied')
   }
