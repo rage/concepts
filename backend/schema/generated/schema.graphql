@@ -456,6 +456,9 @@ type Course {
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  # Goals
+  goalLinks: [GoalLink!]!
 }
 
 
@@ -482,6 +485,13 @@ type ConceptLink {
 enum ConceptLevel {
   OBJECTIVE
   CONCEPT
+  GOAL
+}
+
+type GoalLink {
+  id: ID!
+  course: Course!
+  concept: Concept!
 }
 
 type Concept {

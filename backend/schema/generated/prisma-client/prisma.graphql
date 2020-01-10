@@ -320,6 +320,10 @@ type AggregateCourseLink {
   count: Int!
 }
 
+type AggregateGoalLink {
+  count: Int!
+}
+
 type AggregatePointGroup {
   count: Int!
 }
@@ -636,6 +640,11 @@ input ConceptCreateManyWithoutWorkspaceInput {
   connect: [ConceptWhereUniqueInput!]
 }
 
+input ConceptCreateOneInput {
+  create: ConceptCreateInput
+  connect: ConceptWhereUniqueInput
+}
+
 input ConceptCreateOneWithoutClonesInput {
   create: ConceptCreateWithoutClonesInput
   connect: ConceptWhereUniqueInput
@@ -767,6 +776,7 @@ type ConceptEdge {
 enum ConceptLevel {
   OBJECTIVE
   CONCEPT
+  GOAL
 }
 
 type ConceptLink {
@@ -1296,6 +1306,24 @@ input ConceptSubscriptionWhereInput {
   NOT: [ConceptSubscriptionWhereInput!]
 }
 
+input ConceptUpdateDataInput {
+  name: String
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagUpdateManyInput
+  count: Int
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneRequiredWithoutConceptsInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
 input ConceptUpdateInput {
   name: String
   description: String
@@ -1373,6 +1401,13 @@ input ConceptUpdateManyWithoutWorkspaceInput {
 input ConceptUpdateManyWithWhereNestedInput {
   where: ConceptScalarWhereInput!
   data: ConceptUpdateManyDataInput!
+}
+
+input ConceptUpdateOneRequiredInput {
+  create: ConceptCreateInput
+  update: ConceptUpdateDataInput
+  upsert: ConceptUpsertNestedInput
+  connect: ConceptWhereUniqueInput
 }
 
 input ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
@@ -1513,6 +1548,11 @@ input ConceptUpdateWithWhereUniqueWithoutSourceConceptInput {
 input ConceptUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: ConceptWhereUniqueInput!
   data: ConceptUpdateWithoutWorkspaceDataInput!
+}
+
+input ConceptUpsertNestedInput {
+  update: ConceptUpdateDataInput!
+  create: ConceptCreateInput!
 }
 
 input ConceptUpsertWithoutClonesInput {
@@ -1679,6 +1719,7 @@ type Course {
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+  goalLinks(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GoalLink!]
 }
 
 type CourseConnection {
@@ -1706,6 +1747,7 @@ input CourseCreateInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateManyWithoutSourceCourseInput {
@@ -1737,6 +1779,11 @@ input CourseCreateOneWithoutConceptsInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseCreateOneWithoutGoalLinksInput {
+  create: CourseCreateWithoutGoalLinksInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseCreateOneWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   connect: CourseWhereUniqueInput
@@ -1761,6 +1808,7 @@ input CourseCreateWithoutClonesInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutConceptsInput {
@@ -1774,6 +1822,24 @@ input CourseCreateWithoutConceptsInput {
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
+  conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
+  createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
+}
+
+input CourseCreateWithoutGoalLinksInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  tags: TagCreateManyInput
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
@@ -1793,6 +1859,7 @@ input CourseCreateWithoutLinksFromCourseInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutLinksToCourseInput {
@@ -1809,6 +1876,7 @@ input CourseCreateWithoutLinksToCourseInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutSourceCourseInput {
@@ -1825,6 +1893,7 @@ input CourseCreateWithoutSourceCourseInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutWorkspaceInput {
@@ -1841,6 +1910,7 @@ input CourseCreateWithoutWorkspaceInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 type CourseEdge {
@@ -2343,6 +2413,7 @@ input CourseUpdateDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateInput {
@@ -2359,6 +2430,7 @@ input CourseUpdateInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateManyDataInput {
@@ -2433,6 +2505,13 @@ input CourseUpdateOneRequiredWithoutConceptsInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseUpdateOneRequiredWithoutGoalLinksInput {
+  create: CourseCreateWithoutGoalLinksInput
+  update: CourseUpdateWithoutGoalLinksDataInput
+  upsert: CourseUpsertWithoutGoalLinksInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseUpdateOneRequiredWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   update: CourseUpdateWithoutLinksFromCourseDataInput
@@ -2469,6 +2548,7 @@ input CourseUpdateWithoutClonesDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutConceptsDataInput {
@@ -2481,6 +2561,23 @@ input CourseUpdateWithoutConceptsDataInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
+  createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
+}
+
+input CourseUpdateWithoutGoalLinksDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagUpdateManyInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
@@ -2499,6 +2596,7 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutLinksToCourseDataInput {
@@ -2514,6 +2612,7 @@ input CourseUpdateWithoutLinksToCourseDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutSourceCourseDataInput {
@@ -2529,6 +2628,7 @@ input CourseUpdateWithoutSourceCourseDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutWorkspaceDataInput {
@@ -2544,6 +2644,7 @@ input CourseUpdateWithoutWorkspaceDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithWhereUniqueWithoutSourceCourseInput {
@@ -2569,6 +2670,11 @@ input CourseUpsertWithoutClonesInput {
 input CourseUpsertWithoutConceptsInput {
   update: CourseUpdateWithoutConceptsDataInput!
   create: CourseCreateWithoutConceptsInput!
+}
+
+input CourseUpsertWithoutGoalLinksInput {
+  update: CourseUpdateWithoutGoalLinksDataInput!
+  create: CourseCreateWithoutGoalLinksInput!
 }
 
 input CourseUpsertWithoutLinksFromCourseInput {
@@ -2660,6 +2766,9 @@ input CourseWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  goalLinks_every: GoalLinkWhereInput
+  goalLinks_some: GoalLinkWhereInput
+  goalLinks_none: GoalLinkWhereInput
   AND: [CourseWhereInput!]
   OR: [CourseWhereInput!]
   NOT: [CourseWhereInput!]
@@ -2670,6 +2779,143 @@ input CourseWhereUniqueInput {
 }
 
 scalar DateTime
+
+type GoalLink {
+  id: ID!
+  course: Course!
+  concept: Concept!
+}
+
+type GoalLinkConnection {
+  pageInfo: PageInfo!
+  edges: [GoalLinkEdge]!
+  aggregate: AggregateGoalLink!
+}
+
+input GoalLinkCreateInput {
+  id: ID
+  course: CourseCreateOneWithoutGoalLinksInput!
+  concept: ConceptCreateOneInput!
+}
+
+input GoalLinkCreateManyWithoutCourseInput {
+  create: [GoalLinkCreateWithoutCourseInput!]
+  connect: [GoalLinkWhereUniqueInput!]
+}
+
+input GoalLinkCreateWithoutCourseInput {
+  id: ID
+  concept: ConceptCreateOneInput!
+}
+
+type GoalLinkEdge {
+  node: GoalLink!
+  cursor: String!
+}
+
+enum GoalLinkOrderByInput {
+  id_ASC
+  id_DESC
+}
+
+type GoalLinkPreviousValues {
+  id: ID!
+}
+
+input GoalLinkScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  AND: [GoalLinkScalarWhereInput!]
+  OR: [GoalLinkScalarWhereInput!]
+  NOT: [GoalLinkScalarWhereInput!]
+}
+
+type GoalLinkSubscriptionPayload {
+  mutation: MutationType!
+  node: GoalLink
+  updatedFields: [String!]
+  previousValues: GoalLinkPreviousValues
+}
+
+input GoalLinkSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: GoalLinkWhereInput
+  AND: [GoalLinkSubscriptionWhereInput!]
+  OR: [GoalLinkSubscriptionWhereInput!]
+  NOT: [GoalLinkSubscriptionWhereInput!]
+}
+
+input GoalLinkUpdateInput {
+  course: CourseUpdateOneRequiredWithoutGoalLinksInput
+  concept: ConceptUpdateOneRequiredInput
+}
+
+input GoalLinkUpdateManyWithoutCourseInput {
+  create: [GoalLinkCreateWithoutCourseInput!]
+  delete: [GoalLinkWhereUniqueInput!]
+  connect: [GoalLinkWhereUniqueInput!]
+  set: [GoalLinkWhereUniqueInput!]
+  disconnect: [GoalLinkWhereUniqueInput!]
+  update: [GoalLinkUpdateWithWhereUniqueWithoutCourseInput!]
+  upsert: [GoalLinkUpsertWithWhereUniqueWithoutCourseInput!]
+  deleteMany: [GoalLinkScalarWhereInput!]
+}
+
+input GoalLinkUpdateWithoutCourseDataInput {
+  concept: ConceptUpdateOneRequiredInput
+}
+
+input GoalLinkUpdateWithWhereUniqueWithoutCourseInput {
+  where: GoalLinkWhereUniqueInput!
+  data: GoalLinkUpdateWithoutCourseDataInput!
+}
+
+input GoalLinkUpsertWithWhereUniqueWithoutCourseInput {
+  where: GoalLinkWhereUniqueInput!
+  update: GoalLinkUpdateWithoutCourseDataInput!
+  create: GoalLinkCreateWithoutCourseInput!
+}
+
+input GoalLinkWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  course: CourseWhereInput
+  concept: ConceptWhereInput
+  AND: [GoalLinkWhereInput!]
+  OR: [GoalLinkWhereInput!]
+  NOT: [GoalLinkWhereInput!]
+}
+
+input GoalLinkWhereUniqueInput {
+  id: ID
+}
 
 scalar Long
 
@@ -2710,6 +2956,11 @@ type Mutation {
   upsertCourseLink(where: CourseLinkWhereUniqueInput!, create: CourseLinkCreateInput!, update: CourseLinkUpdateInput!): CourseLink!
   deleteCourseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   deleteManyCourseLinks(where: CourseLinkWhereInput): BatchPayload!
+  createGoalLink(data: GoalLinkCreateInput!): GoalLink!
+  updateGoalLink(data: GoalLinkUpdateInput!, where: GoalLinkWhereUniqueInput!): GoalLink
+  upsertGoalLink(where: GoalLinkWhereUniqueInput!, create: GoalLinkCreateInput!, update: GoalLinkUpdateInput!): GoalLink!
+  deleteGoalLink(where: GoalLinkWhereUniqueInput!): GoalLink
+  deleteManyGoalLinks(where: GoalLinkWhereInput): BatchPayload!
   createPointGroup(data: PointGroupCreateInput!): PointGroup!
   updatePointGroup(data: PointGroupUpdateInput!, where: PointGroupWhereUniqueInput!): PointGroup
   updateManyPointGroups(data: PointGroupUpdateManyMutationInput!, where: PointGroupWhereInput): BatchPayload!
@@ -4059,6 +4310,9 @@ type Query {
   courseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink]!
   courseLinksConnection(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseLinkConnection!
+  goalLink(where: GoalLinkWhereUniqueInput!): GoalLink
+  goalLinks(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GoalLink]!
+  goalLinksConnection(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GoalLinkConnection!
   pointGroup(where: PointGroupWhereUniqueInput!): PointGroup
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup]!
   pointGroupsConnection(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PointGroupConnection!
@@ -4103,6 +4357,7 @@ type Subscription {
   conceptLink(where: ConceptLinkSubscriptionWhereInput): ConceptLinkSubscriptionPayload
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   courseLink(where: CourseLinkSubscriptionWhereInput): CourseLinkSubscriptionPayload
+  goalLink(where: GoalLinkSubscriptionWhereInput): GoalLinkSubscriptionPayload
   pointGroup(where: PointGroupSubscriptionWhereInput): PointGroupSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
   projectParticipant(where: ProjectParticipantSubscriptionWhereInput): ProjectParticipantSubscriptionPayload
