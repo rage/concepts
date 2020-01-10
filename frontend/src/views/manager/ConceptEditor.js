@@ -1,6 +1,10 @@
 import React, { useRef, useState } from 'react'
-import { Button, Checkbox, FormControl, FormControlLabel, TextField } from '@material-ui/core'
+import {
+  Button, Checkbox, FormControl, FormControlLabel,
+  TextField
+} from '@material-ui/core'
 import Select from 'react-select/creatable'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import { useLoginStateValue } from '../../lib/store'
 import {
@@ -59,12 +63,19 @@ const StaffOnly = ({ children }) => {
   return user.role >= Role.STAFF && children
 }
 
+const conceptsToSelect = concepts => concepts ? concepts.map(concept => ({
+  value: concept.id,
+  label: concept.name,
+  id: concept.id
+})) : []
+
 const ConceptEditor = ({
   submit,
   cancel,
   action,
   tagOptions,
-  defaultValues = {}
+  defaultValues = {},
+  workspace
 }) => {
   const classes = useStyles()
   const [input, setInput] = useState({
@@ -97,12 +108,21 @@ const ConceptEditor = ({
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
 
+  console.log('hello')
   return (
     <form
       className={classes.form}
       onSubmit={onSubmit}
       onKeyDown={onKeyDown}
     >
+      <Autocomplete
+        id='common-concept-complete'
+        freeSolo
+        options={workspace.commonConcepts.map(concept => concept.name)}
+        renderInput={params =>
+          <TextField {...params} label='freeSolo' margin='normal' variant='outlined' fullWidth />
+        }
+      />
       <ConnectableTextfield
         name='name'
         label={`${input.level.toTitleCase()} name`}

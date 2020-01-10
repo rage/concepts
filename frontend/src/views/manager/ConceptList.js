@@ -334,6 +334,7 @@ const ConceptList = ({
         action='Create'
         defaultValues={{ official: isTemplate, level }}
         tagOptions={conceptTags}
+        workspace={workspace}
       />
     </Card>
   )
