@@ -8,7 +8,7 @@ type User {
   googleId: String @unique
   role: Role!
   deactivated: Boolean! @default(value: false)
-  tokens: [AccessToken!]! @relation(name: "UserTokens")
+  tokens: [AccessToken!]! @relation(name: "UserTokens", onDelete: CASCADE)
 
   # Relations
   workspaceParticipations: [WorkspaceParticipant!]! @relation(name:"WorkspaceParticipantUser", onDelete: CASCADE)
