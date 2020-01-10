@@ -13,7 +13,6 @@ import resolvers from './resolvers'
 import { progressAPI, pointsAPI } from './controllers/pointsAPI'
 import { exportAPI } from './controllers/exportAPI'
 import { loginAPIRedirect, loginAPIAssert, loginAPIMetadata } from './controllers/loginAPI'
-import { guestAPI } from './controllers/guestAPI' 
 
 const options = {
   endpoint: '/graphql',
@@ -32,9 +31,6 @@ const server = new GraphQLServer({
   }),
   middlewares: [authenticate]
 })
-
-// Guest 
-server.express.post('/api/guests/clean', guestAPI)
 
 // Points for completions
 server.express.get('/api/projects/:pid/courses/:cid/progress', cors(), progressAPI)
