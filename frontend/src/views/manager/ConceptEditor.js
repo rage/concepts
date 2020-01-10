@@ -4,7 +4,7 @@ import {
   TextField
 } from '@material-ui/core'
 import Select from 'react-select/creatable'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 
 import { useLoginStateValue } from '../../lib/store'
 import {
@@ -15,6 +15,8 @@ import useStyles from './editorStyles'
 
 const initialState = {
   name: '',
+  common: null,
+  useCommon: false,
   description: '',
   tags: [],
   bloomTag: '',
@@ -63,12 +65,6 @@ const StaffOnly = ({ children }) => {
   return user.role >= Role.STAFF && children
 }
 
-const conceptsToSelect = concepts => concepts ? concepts.map(concept => ({
-  value: concept.id,
-  label: concept.name,
-  id: concept.id
-})) : []
-
 const ConceptEditor = ({
   submit,
   cancel,
@@ -88,8 +84,14 @@ const ConceptEditor = ({
   const selectRef = useRef(null)
 
   const onSubmit = evt => {
+    console.log(input)
     evt.preventDefault()
+    if (input.useCommon) {
+      // TODO use input.common
+    }
     delete input.bloomTag
+    delete input.common
+    delete input.useCommon
     submit({
       ...input,
       tags: selectToBackend(input.tags)
@@ -107,8 +109,14 @@ const ConceptEditor = ({
   }
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
+  const onNameInputChange = evt => setInput({ ...input, useCommon: false, name: evt.target.value })
+  const onNameSelect = (_, newValue) => setInput({
+    ...input,
+    useCommon: true,
+    common: newValue || null,
+    name: newValue?.name || ''
+  })
 
-  console.log('hello')
   return (
     <form
       className={classes.form}
@@ -116,20 +124,23 @@ const ConceptEditor = ({
       onKeyDown={onKeyDown}
     >
       <Autocomplete
-        id='common-concept-complete'
         freeSolo
-        options={workspace.commonConcepts.map(concept => concept.name)}
+        //TODO maybe exclude common concepts that have already been copied to this course
+        options={workspace.commonConcepts}
+        getOptionLabel={concept => concept.name || concept}
+        filterOptions={createFilterOptions({
+          stringify: concept => concept.name
+        })}
+        onChange={onNameSelect}
+        value={input.common}
         renderInput={params =>
-          <TextField {...params} label='freeSolo' margin='normal' variant='outlined' fullWidth />
+          <TextField
+            {...params} value={input.name} onChange={onNameInputChange} fullWidth name='name'
+            label={`${input.level.toTitleCase()} name`} margin='dense' variant='outlined'
+            // TODO this autofocus means the autocomplete box gets opened automatically
+            inputRef={nameRef} autoFocus={action !== 'Create'}
+          />
         }
-      />
-      <ConnectableTextfield
-        name='name'
-        label={`${input.level.toTitleCase()} name`}
-        autoFocus={action !== 'Create'}
-        inputRef={nameRef}
-        onChange={onChange}
-        value={input.name}
       />
       <ConnectableTextfield
         name='description'
