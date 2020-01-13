@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button, ButtonGroup } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
@@ -73,6 +73,15 @@ const useStyles = makeStyles({
     border: '4px solid red',
     display: 'none',
     zIndex: 6
+  },
+  emptyText: {
+    position: 'fixed',
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    pointerEvents: 'none !important'
   }
 })
 
@@ -389,19 +398,18 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     setAdding(null)
   }, [setAdding])
 
-  const submitNewConcept = useCallback((_, { name, position }) => {
-    const level = adding.level
-    stopAdding()
-    return createConcept({
+  const submitNewConcept = useCallback(async (_, { name, position }) => {
+    await createConcept({
       variables: {
         name,
         description: '',
-        level,
+        level: adding.level,
         position,
         workspaceId,
         courseId
       }
     })
+    stopAdding()
   }, [createConcept, stopAdding, courseId, workspaceId, adding])
 
   const clearSelected = useCallback(() => {
@@ -590,6 +598,9 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       />}
       <div ref={selectionRef} className={classes.selection} />
       <div id='concept-mapper-link-container' />
+      {course.concepts.length === 0 && !adding && <div className={classes.emptyText}>
+        <Typography variant='h3' component='h3'>Double click to add a new concept</Typography>
+      </div>}
     </main>
 
     <section className={classes.toolbar}>
