@@ -19,7 +19,7 @@ import useEditWorkspaceDialog from '../dialogs/workspace/useEditWorkspaceDialog'
 import { useMessageStateValue, useLoginStateValue } from '../lib/store'
 import { useShareDialog } from '../dialogs/sharing'
 import { useInfoBox } from './InfoBox'
-import { useIntroDialog } from '../dialogs/intro/IntroDialogProvider'
+import { useIntroDialog } from '../dialogs/intro'
 import useRouter from '../lib/useRouter'
 
 const useStyles = makeStyles({

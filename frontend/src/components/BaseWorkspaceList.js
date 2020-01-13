@@ -15,6 +15,7 @@ import { exportWorkspace } from './WorkspaceNavBar'
 import { useMessageStateValue } from '../lib/store'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
+import { useConfirm, useConfirmDelete } from '../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,6 +68,8 @@ const BaseWorkspaceList = ({
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
   const infoBox = useInfoBox()
+  const confirmDelete = useConfirmDelete()
+  const confirm = useConfirm()
 
   const handleCreateOpen = () => {
     handleMenuClose()
@@ -168,18 +171,18 @@ const BaseWorkspaceList = ({
   const handleDelete = async () => {
     handleMenuClose()
 
-    const willDelete = window.confirm(`Are you sure you want to delete this ${TYPE_NAMES[type]}?`)
-    if (willDelete) {
-      try {
-        await deleteWorkspace({
-          variables: { id: menu.workspace.id }
-        })
-      } catch (err) {
-        messageDispatch({
-          type: 'setError',
-          data: 'Access denied'
-        })
-      }
+    if (!await confirmDelete(`Are you sure you want to delete this ${TYPE_NAMES[type]}?`)) {
+      return
+    }
+    try {
+      await deleteWorkspace({
+        variables: { id: menu.workspace.id }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: 'Access denied'
+      })
     }
   }
 
@@ -187,9 +190,13 @@ const BaseWorkspaceList = ({
     handleMenuClose()
 
     if (activeTemplate && menu.workspace.id !== activeTemplate.id) {
-      const change = window.confirm(
-        `Are you sure that you want to switch the active template? 
-This will change which template is cloned by users.`)
+      const change = await confirm({
+        title: 'Confirm active template switch',
+        message: `Are you sure that you want to switch the active template? 
+This will change which template is cloned by users.`,
+        confirm: 'Yes, switch',
+        cancel: 'No, cancel'
+      })
       if (!change) return
     }
     try {

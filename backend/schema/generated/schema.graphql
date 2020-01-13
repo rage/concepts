@@ -37,6 +37,8 @@ type Mutation {
   createGuest: AuthPayload!
   createLinkToken(linkType: LinkType!, id: ID!, expiry: DateTime): String!
 
+  cleanGuests: GuestCleanResult!
+
   # User
   updateSeenGuides(id: ID!, seenGuides: [String!]): User!
 
@@ -140,6 +142,11 @@ type Subscription {
   projectMemberCreated(projectId: ID!): ProjectParticipant!
   projectMemberDeleted(projectId: ID!): ProjectParticipant!
   projectMemberUpdated(projectId: ID!): ProjectParticipant!
+}
+
+type GuestCleanResult {
+    deactivated: [String!]
+    errors: Int!
 }
 
 enum LinkType {

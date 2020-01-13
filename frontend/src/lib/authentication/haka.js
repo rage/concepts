@@ -1,12 +1,10 @@
 import client from '../../apollo/apolloClient'
 import { GET_HAKA_LOGIN_URL } from '../../graphql/Query'
 
+import '../../lib/deferred'
+
 window._hakaAuthEnabled = null
-let _resolve
-window._hakaAuthEnabledPromise = new Promise(resolve => {
-  _resolve = resolve
-})
-window._hakaAuthEnabledPromise.resolve = _resolve
+window._hakaAuthEnabledPromise = Promise.defer()
 
 async function waitForHaka() {
   if (window._hakaAuthEnabled !== null) {

@@ -18,6 +18,7 @@ import { useEditConceptDialog } from '../../../dialogs/concept'
 import { noPropagation } from '../../../lib/eventMiddleware'
 import generateTempId from '../../../lib/generateTempId'
 import ConceptToolTipContent from '../../../components/ConceptTooltipContent'
+import { useConfirmDelete } from '../../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -76,6 +77,7 @@ const Concept = ({
 }) => {
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
+  const confirmDelete = useConfirmDelete()
 
   const [, messageDispatch] = useMessageStateValue()
   const [{ user, loggedIn }] = useLoginStateValue()
@@ -161,9 +163,8 @@ const Concept = ({
   const handleMenuClose = () => setState({ anchorEl: null })
 
   const handleDeleteConcept = async () => {
-    const willDelete = window.confirm(`Are you sure you want to delete ${concept.name}?`)
     handleMenuClose()
-    if (!willDelete) {
+    if (!await confirmDelete(`Are you sure you want to delete ${concept.name}?`)) {
       return
     }
     try {
