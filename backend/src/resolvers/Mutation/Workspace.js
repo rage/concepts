@@ -13,6 +13,20 @@ query($id : ID!) {
       id
       name
       courseOrder
+      commonConcepts {
+        id
+        name
+        description
+        level
+        official
+        frozen
+        tags {
+          id
+        }
+        createdBy {
+          id
+        }
+      }
       conceptLinks {
         official
         frozen
@@ -72,6 +86,9 @@ query($id : ID!) {
           official
           frozen
           tags {
+            id
+          }
+          sourceCommon {
             id
           }
           createdBy {
@@ -278,6 +295,19 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
         id: makeNewId(tag.id)
       }))
     },
+    commonConcepts: {
+      connect: templateWorkspace.commonConcepts.map(concept => ({
+        id: makeNewId(concept.id),
+        name: concept.name,
+        description: concept.description,
+        official: concept.official,
+        frozen: true,
+        tags: { connect: concept.tags.map(tag => ({ id: makeNewId(tag.id) })) },
+        createdBy: { connect: { id: concept.createdBy.id } },
+        workspace: { connect: { id: workspaceId } },
+        sourceConcept: { connect: { id: concept.id } }
+      }))
+    },
     courses: {
       create: templateWorkspace.courses.map(course => ({
         id: makeNewId(course.id),
@@ -305,7 +335,9 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
             tags: { connect: concept.tags.map(tag => ({ id: makeNewId(tag.id) })) },
             createdBy: { connect: { id: concept.createdBy.id } },
             workspace: { connect: { id: workspaceId } },
-            sourceConcept: { connect: { id: concept.id } }
+            sourceConcept: { connect: { id: concept.id } },
+            sourceCommon: concept.sourceCommon
+              && { connect: { id: makeNewId(concept.sourceCommon.id) } }
           }))
         }
       }))

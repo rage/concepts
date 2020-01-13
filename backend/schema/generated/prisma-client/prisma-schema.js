@@ -596,9 +596,11 @@ type Concept {
   count: Int!
   sourceConcept: Concept
   clones(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  sourceCommon: Concept
+  commonClones(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   linksFromConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   linksToConcept(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
-  course: Course!
+  course: Course
   workspace: Workspace!
   createdBy: User!
   createdAt: DateTime!
@@ -623,15 +625,27 @@ input ConceptCreateInput {
   count: Int
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  course: CourseCreateOneWithoutConceptsInput!
+  course: CourseCreateOneWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
 
+input ConceptCreateManyInput {
+  create: [ConceptCreateInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
 input ConceptCreateManyWithoutCourseInput {
   create: [ConceptCreateWithoutCourseInput!]
+  connect: [ConceptWhereUniqueInput!]
+}
+
+input ConceptCreateManyWithoutSourceCommonInput {
+  create: [ConceptCreateWithoutSourceCommonInput!]
   connect: [ConceptWhereUniqueInput!]
 }
 
@@ -652,6 +666,11 @@ input ConceptCreateOneInput {
 
 input ConceptCreateOneWithoutClonesInput {
   create: ConceptCreateWithoutClonesInput
+  connect: ConceptWhereUniqueInput
+}
+
+input ConceptCreateOneWithoutCommonClonesInput {
+  create: ConceptCreateWithoutCommonClonesInput
   connect: ConceptWhereUniqueInput
 }
 
@@ -676,9 +695,31 @@ input ConceptCreateWithoutClonesInput {
   tags: TagCreateManyInput
   count: Int
   sourceConcept: ConceptCreateOneWithoutClonesInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  course: CourseCreateOneWithoutConceptsInput!
+  course: CourseCreateOneWithoutConceptsInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  createdBy: UserCreateOneInput!
+}
+
+input ConceptCreateWithoutCommonClonesInput {
+  id: ID
+  name: String!
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagCreateManyInput
+  count: Int
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
@@ -695,6 +736,8 @@ input ConceptCreateWithoutCourseInput {
   count: Int
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
@@ -713,8 +756,10 @@ input ConceptCreateWithoutLinksFromConceptInput {
   count: Int
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  course: CourseCreateOneWithoutConceptsInput!
+  course: CourseCreateOneWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
@@ -731,8 +776,30 @@ input ConceptCreateWithoutLinksToConceptInput {
   count: Int
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
-  course: CourseCreateOneWithoutConceptsInput!
+  course: CourseCreateOneWithoutConceptsInput
+  workspace: WorkspaceCreateOneWithoutConceptsInput!
+  createdBy: UserCreateOneInput!
+}
+
+input ConceptCreateWithoutSourceCommonInput {
+  id: ID
+  name: String!
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagCreateManyInput
+  count: Int
+  sourceConcept: ConceptCreateOneWithoutClonesInput
+  clones: ConceptCreateManyWithoutSourceConceptInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
+  linksFromConcept: ConceptLinkCreateManyWithoutFromInput
+  linksToConcept: ConceptLinkCreateManyWithoutToInput
+  course: CourseCreateOneWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
@@ -748,9 +815,11 @@ input ConceptCreateWithoutSourceConceptInput {
   tags: TagCreateManyInput
   count: Int
   clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  course: CourseCreateOneWithoutConceptsInput!
+  course: CourseCreateOneWithoutConceptsInput
   workspace: WorkspaceCreateOneWithoutConceptsInput!
   createdBy: UserCreateOneInput!
 }
@@ -767,9 +836,11 @@ input ConceptCreateWithoutWorkspaceInput {
   count: Int
   sourceConcept: ConceptCreateOneWithoutClonesInput
   clones: ConceptCreateManyWithoutSourceConceptInput
+  sourceCommon: ConceptCreateOneWithoutCommonClonesInput
+  commonClones: ConceptCreateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkCreateManyWithoutFromInput
   linksToConcept: ConceptLinkCreateManyWithoutToInput
-  course: CourseCreateOneWithoutConceptsInput!
+  course: CourseCreateOneWithoutConceptsInput
   createdBy: UserCreateOneInput!
 }
 
@@ -782,6 +853,7 @@ enum ConceptLevel {
   OBJECTIVE
   CONCEPT
   GOAL
+  COMMON
 }
 
 type ConceptLink {
@@ -1322,9 +1394,11 @@ input ConceptUpdateDataInput {
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1340,9 +1414,11 @@ input ConceptUpdateInput {
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1355,6 +1431,18 @@ input ConceptUpdateManyDataInput {
   official: Boolean
   frozen: Boolean
   count: Int
+}
+
+input ConceptUpdateManyInput {
+  create: [ConceptCreateInput!]
+  update: [ConceptUpdateWithWhereUniqueNestedInput!]
+  upsert: [ConceptUpsertWithWhereUniqueNestedInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
 }
 
 input ConceptUpdateManyMutationInput {
@@ -1375,6 +1463,18 @@ input ConceptUpdateManyWithoutCourseInput {
   disconnect: [ConceptWhereUniqueInput!]
   update: [ConceptUpdateWithWhereUniqueWithoutCourseInput!]
   upsert: [ConceptUpsertWithWhereUniqueWithoutCourseInput!]
+  deleteMany: [ConceptScalarWhereInput!]
+  updateMany: [ConceptUpdateManyWithWhereNestedInput!]
+}
+
+input ConceptUpdateManyWithoutSourceCommonInput {
+  create: [ConceptCreateWithoutSourceCommonInput!]
+  delete: [ConceptWhereUniqueInput!]
+  connect: [ConceptWhereUniqueInput!]
+  set: [ConceptWhereUniqueInput!]
+  disconnect: [ConceptWhereUniqueInput!]
+  update: [ConceptUpdateWithWhereUniqueWithoutSourceCommonInput!]
+  upsert: [ConceptUpsertWithWhereUniqueWithoutSourceCommonInput!]
   deleteMany: [ConceptScalarWhereInput!]
   updateMany: [ConceptUpdateManyWithWhereNestedInput!]
 }
@@ -1438,6 +1538,15 @@ input ConceptUpdateOneWithoutClonesInput {
   connect: ConceptWhereUniqueInput
 }
 
+input ConceptUpdateOneWithoutCommonClonesInput {
+  create: ConceptCreateWithoutCommonClonesInput
+  update: ConceptUpdateWithoutCommonClonesDataInput
+  upsert: ConceptUpsertWithoutCommonClonesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ConceptWhereUniqueInput
+}
+
 input ConceptUpdateWithoutClonesDataInput {
   name: String
   description: String
@@ -1448,9 +1557,30 @@ input ConceptUpdateWithoutClonesDataInput {
   tags: TagUpdateManyInput
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input ConceptUpdateWithoutCommonClonesDataInput {
+  name: String
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagUpdateManyInput
+  count: Int
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1466,6 +1596,8 @@ input ConceptUpdateWithoutCourseDataInput {
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
@@ -1483,8 +1615,10 @@ input ConceptUpdateWithoutLinksFromConceptDataInput {
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1500,8 +1634,29 @@ input ConceptUpdateWithoutLinksToConceptDataInput {
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
+  workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input ConceptUpdateWithoutSourceCommonDataInput {
+  name: String
+  description: String
+  level: ConceptLevel
+  position: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagUpdateManyInput
+  count: Int
+  sourceConcept: ConceptUpdateOneWithoutClonesInput
+  clones: ConceptUpdateManyWithoutSourceConceptInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
+  linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
+  linksToConcept: ConceptLinkUpdateManyWithoutToInput
+  course: CourseUpdateOneWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1516,9 +1671,11 @@ input ConceptUpdateWithoutSourceConceptDataInput {
   tags: TagUpdateManyInput
   count: Int
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
   workspace: WorkspaceUpdateOneRequiredWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1534,15 +1691,27 @@ input ConceptUpdateWithoutWorkspaceDataInput {
   count: Int
   sourceConcept: ConceptUpdateOneWithoutClonesInput
   clones: ConceptUpdateManyWithoutSourceConceptInput
+  sourceCommon: ConceptUpdateOneWithoutCommonClonesInput
+  commonClones: ConceptUpdateManyWithoutSourceCommonInput
   linksFromConcept: ConceptLinkUpdateManyWithoutFromInput
   linksToConcept: ConceptLinkUpdateManyWithoutToInput
-  course: CourseUpdateOneRequiredWithoutConceptsInput
+  course: CourseUpdateOneWithoutConceptsInput
   createdBy: UserUpdateOneRequiredInput
+}
+
+input ConceptUpdateWithWhereUniqueNestedInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateDataInput!
 }
 
 input ConceptUpdateWithWhereUniqueWithoutCourseInput {
   where: ConceptWhereUniqueInput!
   data: ConceptUpdateWithoutCourseDataInput!
+}
+
+input ConceptUpdateWithWhereUniqueWithoutSourceCommonInput {
+  where: ConceptWhereUniqueInput!
+  data: ConceptUpdateWithoutSourceCommonDataInput!
 }
 
 input ConceptUpdateWithWhereUniqueWithoutSourceConceptInput {
@@ -1565,6 +1734,11 @@ input ConceptUpsertWithoutClonesInput {
   create: ConceptCreateWithoutClonesInput!
 }
 
+input ConceptUpsertWithoutCommonClonesInput {
+  update: ConceptUpdateWithoutCommonClonesDataInput!
+  create: ConceptCreateWithoutCommonClonesInput!
+}
+
 input ConceptUpsertWithoutLinksFromConceptInput {
   update: ConceptUpdateWithoutLinksFromConceptDataInput!
   create: ConceptCreateWithoutLinksFromConceptInput!
@@ -1575,10 +1749,22 @@ input ConceptUpsertWithoutLinksToConceptInput {
   create: ConceptCreateWithoutLinksToConceptInput!
 }
 
+input ConceptUpsertWithWhereUniqueNestedInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateDataInput!
+  create: ConceptCreateInput!
+}
+
 input ConceptUpsertWithWhereUniqueWithoutCourseInput {
   where: ConceptWhereUniqueInput!
   update: ConceptUpdateWithoutCourseDataInput!
   create: ConceptCreateWithoutCourseInput!
+}
+
+input ConceptUpsertWithWhereUniqueWithoutSourceCommonInput {
+  where: ConceptWhereUniqueInput!
+  update: ConceptUpdateWithoutSourceCommonDataInput!
+  create: ConceptCreateWithoutSourceCommonInput!
 }
 
 input ConceptUpsertWithWhereUniqueWithoutSourceConceptInput {
@@ -1673,6 +1859,10 @@ input ConceptWhereInput {
   clones_every: ConceptWhereInput
   clones_some: ConceptWhereInput
   clones_none: ConceptWhereInput
+  sourceCommon: ConceptWhereInput
+  commonClones_every: ConceptWhereInput
+  commonClones_some: ConceptWhereInput
+  commonClones_none: ConceptWhereInput
   linksFromConcept_every: ConceptLinkWhereInput
   linksFromConcept_some: ConceptLinkWhereInput
   linksFromConcept_none: ConceptLinkWhereInput
@@ -2503,13 +2693,6 @@ input CourseUpdateOneRequiredInput {
   connect: CourseWhereUniqueInput
 }
 
-input CourseUpdateOneRequiredWithoutConceptsInput {
-  create: CourseCreateWithoutConceptsInput
-  update: CourseUpdateWithoutConceptsDataInput
-  upsert: CourseUpsertWithoutConceptsInput
-  connect: CourseWhereUniqueInput
-}
-
 input CourseUpdateOneRequiredWithoutGoalLinksInput {
   create: CourseCreateWithoutGoalLinksInput
   update: CourseUpdateWithoutGoalLinksDataInput
@@ -2535,6 +2718,15 @@ input CourseUpdateOneWithoutClonesInput {
   create: CourseCreateWithoutClonesInput
   update: CourseUpdateWithoutClonesDataInput
   upsert: CourseUpsertWithoutClonesInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: CourseWhereUniqueInput
+}
+
+input CourseUpdateOneWithoutConceptsInput {
+  create: CourseCreateWithoutConceptsInput
+  update: CourseUpdateWithoutConceptsDataInput
+  upsert: CourseUpsertWithoutConceptsInput
   delete: Boolean
   disconnect: Boolean
   connect: CourseWhereUniqueInput
@@ -5019,6 +5211,7 @@ type Workspace {
   courses(where: CourseWhereInput, orderBy: CourseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Course!]
   courseOrder: [ID!]!
   concepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
+  commonConcepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
@@ -5053,6 +5246,7 @@ input WorkspaceCreateInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5139,6 +5333,7 @@ input WorkspaceCreateWithoutAsMergeInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5160,6 +5355,7 @@ input WorkspaceCreateWithoutAsTemplateInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5181,6 +5377,7 @@ input WorkspaceCreateWithoutClonesInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5203,6 +5400,7 @@ input WorkspaceCreateWithoutConceptLinksInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5223,6 +5421,7 @@ input WorkspaceCreateWithoutConceptsInput {
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5245,6 +5444,7 @@ input WorkspaceCreateWithoutCourseLinksInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5265,6 +5465,7 @@ input WorkspaceCreateWithoutCoursesInput {
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5287,6 +5488,7 @@ input WorkspaceCreateWithoutParticipantsInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5308,6 +5510,7 @@ input WorkspaceCreateWithoutPointGroupsInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5328,6 +5531,7 @@ input WorkspaceCreateWithoutSourceProjectInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5349,6 +5553,7 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5371,6 +5576,7 @@ input WorkspaceCreateWithoutTokensInput {
   courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
@@ -5997,6 +6203,7 @@ input WorkspaceUpdateDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6018,6 +6225,7 @@ input WorkspaceUpdateInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6168,6 +6376,7 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6188,6 +6397,7 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6208,6 +6418,7 @@ input WorkspaceUpdateWithoutClonesDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6229,6 +6440,7 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6248,6 +6460,7 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6269,6 +6482,7 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6288,6 +6502,7 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6309,6 +6524,7 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6329,6 +6545,7 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6348,6 +6565,7 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6368,6 +6586,7 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6389,6 +6608,7 @@ input WorkspaceUpdateWithoutTokensDataInput {
   courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
@@ -6530,6 +6750,9 @@ input WorkspaceWhereInput {
   concepts_every: ConceptWhereInput
   concepts_some: ConceptWhereInput
   concepts_none: ConceptWhereInput
+  commonConcepts_every: ConceptWhereInput
+  commonConcepts_some: ConceptWhereInput
+  commonConcepts_none: ConceptWhereInput
   conceptLinks_every: ConceptLinkWhereInput
   conceptLinks_some: ConceptLinkWhereInput
   conceptLinks_none: ConceptLinkWhereInput
