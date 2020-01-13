@@ -398,19 +398,18 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     setAdding(null)
   }, [setAdding])
 
-  const submitNewConcept = useCallback((_, { name, position }) => {
-    const level = adding.level
-    stopAdding()
-    return createConcept({
+  const submitNewConcept = useCallback(async (_, { name, position }) => {
+    await createConcept({
       variables: {
         name,
         description: '',
-        level,
+        level: adding.level,
         position,
         workspaceId,
         courseId
       }
     })
+    stopAdding()
   }, [createConcept, stopAdding, courseId, workspaceId, adding])
 
   const clearSelected = useCallback(() => {
