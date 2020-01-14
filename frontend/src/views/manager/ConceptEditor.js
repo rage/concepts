@@ -85,7 +85,7 @@ const ConceptEditor = ({
 
   const onSubmit = evt => {
     console.log(input)
-    evt.preventDefault()
+    if (evt) evt.preventDefault()
     if (input.useCommon) {
       // TODO use input.common
     }
@@ -108,14 +108,22 @@ const ConceptEditor = ({
     }
   }
 
+  console.log(JSON.stringify(input))
+
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
   const onNameInputChange = evt => setInput({ ...input, useCommon: false, name: evt.target.value })
-  const onNameSelect = (_, newValue) => setInput({
-    ...input,
-    useCommon: true,
-    common: newValue || null,
-    name: newValue?.name || ''
-  })
+  const onNameSelect = (_, newValue) => {
+    if (typeof newValue !== 'object' && newValue !== null) {
+      onSubmit()
+    } else {
+      setInput({
+        ...input,
+        useCommon: true,
+        common: newValue || null,
+        name: newValue?.name || ''
+      })
+    }
+  }
 
   return (
     <form
@@ -127,15 +135,17 @@ const ConceptEditor = ({
         freeSolo
         //TODO maybe exclude common concepts that have already been copied to this course
         options={workspace.commonConcepts}
-        getOptionLabel={concept => concept.name || concept}
+        getOptionLabel={concept => concept.name || 'undefined'}
         filterOptions={createFilterOptions({
-          stringify: concept => concept.name
+          stringify: concept => concept.name || 'undefined'
         })}
         onChange={onNameSelect}
         value={input.common}
+        inputValue={input.name}
+        onInputChange={onNameInputChange}
         renderInput={params =>
           <TextField
-            {...params} value={input.name} onChange={onNameInputChange} fullWidth name='name'
+            {...params} fullWidth name='name'
             label={`${input.level.toTitleCase()} name`} margin='dense' variant='outlined'
             // TODO this autofocus means the autocomplete box gets opened automatically
             inputRef={nameRef} autoFocus={action !== 'Create'}
@@ -167,7 +177,7 @@ const ConceptEditor = ({
         }}
         menuPortalTarget={document.body}
       />
-      <ConnectableSubmitButton disabled={!input.name} action={action} />
+      <ConnectableSubmitButton disabled={!input.name && !input.common} action={action} />
       {cancel &&
         <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel
