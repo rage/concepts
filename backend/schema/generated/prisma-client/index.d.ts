@@ -1776,7 +1776,7 @@ export interface GoalLinkWhereInput {
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
   course?: Maybe<CourseWhereInput>;
-  concept?: Maybe<ConceptWhereInput>;
+  goal?: Maybe<ConceptWhereInput>;
   AND?: Maybe<GoalLinkWhereInput[] | GoalLinkWhereInput>;
   OR?: Maybe<GoalLinkWhereInput[] | GoalLinkWhereInput>;
   NOT?: Maybe<GoalLinkWhereInput[] | GoalLinkWhereInput>;
@@ -3020,7 +3020,7 @@ export interface GoalLinkCreateManyWithoutCourseInput {
 
 export interface GoalLinkCreateWithoutCourseInput {
   id?: Maybe<ID_Input>;
-  concept: ConceptCreateOneInput;
+  goal: ConceptCreateOneInput;
 }
 
 export interface ConceptCreateOneInput {
@@ -5272,7 +5272,7 @@ export interface GoalLinkUpdateWithWhereUniqueWithoutCourseInput {
 }
 
 export interface GoalLinkUpdateWithoutCourseDataInput {
-  concept?: Maybe<ConceptUpdateOneRequiredInput>;
+  goal?: Maybe<ConceptUpdateOneRequiredInput>;
 }
 
 export interface ConceptUpdateOneRequiredInput {
@@ -6739,7 +6739,7 @@ export interface CourseLinkUpdateManyMutationInput {
 export interface GoalLinkCreateInput {
   id?: Maybe<ID_Input>;
   course: CourseCreateOneWithoutGoalLinksInput;
-  concept: ConceptCreateOneInput;
+  goal: ConceptCreateOneInput;
 }
 
 export interface CourseCreateOneWithoutGoalLinksInput {
@@ -6766,7 +6766,7 @@ export interface CourseCreateWithoutGoalLinksInput {
 
 export interface GoalLinkUpdateInput {
   course?: Maybe<CourseUpdateOneRequiredWithoutGoalLinksInput>;
-  concept?: Maybe<ConceptUpdateOneRequiredInput>;
+  goal?: Maybe<ConceptUpdateOneRequiredInput>;
 }
 
 export interface CourseUpdateOneRequiredWithoutGoalLinksInput {
@@ -8694,7 +8694,7 @@ export interface GoalLink {
 export interface GoalLinkPromise extends Promise<GoalLink>, Fragmentable {
   id: () => Promise<ID_Output>;
   course: <T = CoursePromise>() => T;
-  concept: <T = ConceptPromise>() => T;
+  goal: <T = ConceptPromise>() => T;
 }
 
 export interface GoalLinkSubscription
@@ -8702,7 +8702,7 @@ export interface GoalLinkSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   course: <T = CourseSubscription>() => T;
-  concept: <T = ConceptSubscription>() => T;
+  goal: <T = ConceptSubscription>() => T;
 }
 
 export interface GoalLinkNullablePromise
@@ -8710,7 +8710,7 @@ export interface GoalLinkNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   course: <T = CoursePromise>() => T;
-  concept: <T = ConceptPromise>() => T;
+  goal: <T = ConceptPromise>() => T;
 }
 
 export interface WorkspaceToken {

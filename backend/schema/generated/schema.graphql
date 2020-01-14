@@ -494,7 +494,7 @@ enum ConceptLevel {
 type GoalLink {
   id: ID!
   course: Course!
-  concept: Concept!
+  goal: Concept!
 }
 
 type Concept {

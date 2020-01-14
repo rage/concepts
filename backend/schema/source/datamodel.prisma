@@ -239,7 +239,7 @@ enum ConceptLevel {
 type GoalLink {
   id: ID! @id
   course: Course! @relation(name: "GoalConceptsOfCourse")
-  concept: Concept! @relation(name: "GoalConcept")
+  goal: Concept! @relation(name: "GoalConcept")
 }
 
 type Concept {

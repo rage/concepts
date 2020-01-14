@@ -2980,7 +2980,7 @@ scalar DateTime
 type GoalLink {
   id: ID!
   course: Course!
-  concept: Concept!
+  goal: Concept!
 }
 
 type GoalLinkConnection {
@@ -2992,7 +2992,7 @@ type GoalLinkConnection {
 input GoalLinkCreateInput {
   id: ID
   course: CourseCreateOneWithoutGoalLinksInput!
-  concept: ConceptCreateOneInput!
+  goal: ConceptCreateOneInput!
 }
 
 input GoalLinkCreateManyWithoutCourseInput {
@@ -3002,7 +3002,7 @@ input GoalLinkCreateManyWithoutCourseInput {
 
 input GoalLinkCreateWithoutCourseInput {
   id: ID
-  concept: ConceptCreateOneInput!
+  goal: ConceptCreateOneInput!
 }
 
 type GoalLinkEdge {
@@ -3059,7 +3059,7 @@ input GoalLinkSubscriptionWhereInput {
 
 input GoalLinkUpdateInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
-  concept: ConceptUpdateOneRequiredInput
+  goal: ConceptUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateManyWithoutCourseInput {
@@ -3074,7 +3074,7 @@ input GoalLinkUpdateManyWithoutCourseInput {
 }
 
 input GoalLinkUpdateWithoutCourseDataInput {
-  concept: ConceptUpdateOneRequiredInput
+  goal: ConceptUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateWithWhereUniqueWithoutCourseInput {
@@ -3104,7 +3104,7 @@ input GoalLinkWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   course: CourseWhereInput
-  concept: ConceptWhereInput
+  goal: ConceptWhereInput
   AND: [GoalLinkWhereInput!]
   OR: [GoalLinkWhereInput!]
   NOT: [GoalLinkWhereInput!]
