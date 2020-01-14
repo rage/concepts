@@ -45,6 +45,7 @@
   },
   "scripts": {
     "build": "./build.sh",
+    "start": "./watch.sh",
     "snowpack": "snowpack --dest ./dist/web_modules"
   },
   "browserslist": {
