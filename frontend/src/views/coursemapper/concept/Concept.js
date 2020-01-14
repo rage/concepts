@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton
+  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Tooltip
 } from '@material-ui/core'
 import {
   MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon
 } from '@material-ui/icons'
-import Tooltip from '@material-ui/core/Tooltip'
 
 import { Role } from '../../../lib/permissions'
 import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
