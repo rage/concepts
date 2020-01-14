@@ -1,0 +1,8 @@
+FROM node:12-alpine
+
+VOLUME /concepts/frontend
+WORKDIR /concepts/frontend/snowpack
+
+ENTRYPOINT ["/bin/sh", "-c"]
+USER 1000
+CMD ["yarn && yarn snowpack && yarn start"]

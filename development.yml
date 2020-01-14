@@ -1,17 +1,21 @@
 version: '3.7'
 
 services:
+  nginx:
+    image: nginx:alpine
+    restart: always
+    volumes:
+    - ./frontend/snowpack/dist:/var/www/html:ro
+    - ./frontend/public:/var/public:ro
+    - ./nginx.dev.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+    - 8080:80
   frontend:
     image: concepts_frontend
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: snowpack/Dockerfile.dev
     restart: always
-    ports:
-      - 8080:3000
-    environment:
-      PROXY: http://backend:4000
-      PRISMA_PROXY: http://prisma:4466
     volumes:
       - ./frontend:/concepts/frontend
       - ./backend/src/static/port.schema.json:/concepts/backend/src/static/port.schema.json
@@ -39,8 +43,6 @@ services:
       #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka_test_metadata_signed.xml
       #SAML_DIR: /concepts/backend/saml
       #SAML_FINISH_URL: https://concepts.cs.helsinki.fi/login
-    ports:
-      - 8081:4000
     volumes:
       - ./backend:/concepts/backend
     depends_on:
