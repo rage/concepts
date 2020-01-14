@@ -1,8 +1,10 @@
 FROM node:12-alpine
 
+RUN apk add --no-cache bash
+
 VOLUME /concepts/frontend
 WORKDIR /concepts/frontend/snowpack
 
-ENTRYPOINT ["/bin/sh", "-c"]
 USER 1000
+ENTRYPOINT ["/bin/bash", "-c"]
 CMD ["yarn && yarn snowpack && yarn start"]
