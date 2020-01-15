@@ -11,7 +11,7 @@ cd ../../../
 # pwd: frontend
 yarn link react && yarn link react-dom && yarn link react-is && yarn link prop-types
 yarn
-./node_modules/.bin/snowpack --dest ./snowpack/dist
+./node_modules/.bin/snowpack --dest ./snowpack/dist/web_modules
 cd snowpack/
 # pwd: snowpack
 ./scripts/build-static.sh
