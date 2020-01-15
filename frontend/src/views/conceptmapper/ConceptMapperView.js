@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography, Slider } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
@@ -58,7 +58,7 @@ const useStyles = makeStyles({
   button: {},
   toolbar: {
     position: 'fixed',
-    top: '60px',
+    top: '50px',
     left: '10px',
     userSelect: 'none'
   },
@@ -66,6 +66,13 @@ const useStyles = makeStyles({
     '& > *': {
       margin: '0 4px'
     }
+  },
+  sliderWrapper: {
+    top: '110px',
+    left: '10px',
+    height: '300px',
+    position: 'absolute',
+    zIndex: 10
   },
   selection: {
     position: 'absolute',
@@ -107,6 +114,25 @@ const oppositeLevel = {
 
 const conversionOptions = ['CONCEPT', 'OBJECTIVE']
 
+const HackyStatefulSlider = ({ value, hackyRef, ...args }) => {
+  const ref = useRef()
+  hackyRef.current = {
+    setValue(val) {
+      const styleVal = `${val / 2}%`
+      for (const child of ref.current.children) {
+        if (child.classList.contains('MuiSlider-track')) {
+          child.style.height = styleVal
+        } else if (child.classList.contains('MuiSlider-thumb')) {
+          child.style.bottom = styleVal
+        } else if (child.nodeName === 'INPUT') {
+          child.value = val
+        }
+      }
+    }
+  }
+  return <Slider value={value} ref={ref} {...args}/>
+}
+
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
@@ -126,6 +152,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const selection = useRef(null)
   const toolbar = useRef()
   const toolbarEditButton = useRef()
+  const hackySliderRef = useRef()
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
@@ -196,6 +223,30 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId, workspaceId }
   })
+
+  const adjustZoom = useCallback((delta, mouseX = null, mouseY = null) => {
+    pan.current.linearZoom -= delta
+    if (pan.current.linearZoom < sliderMinLinear) {
+      pan.current.linearZoom = sliderMinLinear
+    } else if (pan.current.linearZoom > sliderMaxLinear) {
+      pan.current.linearZoom = sliderMaxLinear
+    }
+
+    const oldZoom = pan.current.zoom
+    pan.current.zoom = linearToLog(pan.current.linearZoom)
+    if (mouseX === null) {
+      mouseX = main.current.offsetWidth / 2
+    }
+    if (mouseY === null) {
+      mouseY = main.current.offsetHeight / 2
+    }
+    pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
+    pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
+
+    main.current.style.transform =
+      `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
+    hackySliderRef.current.setValue(pan.current.linearZoom)
+  }, [])
 
   useEffect(() => {
     const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
@@ -299,22 +350,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
 
     const mouseWheel = evt => {
-      pan.current.linearZoom -= evt.deltaY
-      if (pan.current.linearZoom < sliderMinLinear) {
-        pan.current.linearZoom = sliderMinLinear
-      } else if (pan.current.linearZoom > sliderMaxLinear) {
-        pan.current.linearZoom = sliderMaxLinear
-      }
-
       const mouseX = evt.pageX - main.current.offsetLeft
       const mouseY = evt.pageY - main.current.offsetTop
-      const oldZoom = pan.current.zoom
-      pan.current.zoom = linearToLog(pan.current.linearZoom)
-      pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
-      pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
-
-      main.current.style.transform =
-        `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
+      const delta = evt.deltaY
+      adjustZoom(delta, mouseX, mouseY)
     }
 
     const doubleClick = evt => {
@@ -625,6 +664,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
             <ArrowDropDownIcon />
           </Button>
         </ButtonGroup>
+      </div>
+      <div className={classes.sliderWrapper}>
+        <HackyStatefulSlider
+          orientation='vertical' value={pan.current.linearZoom} hackyRef={hackySliderRef}
+          onChange={(_, newValue) => adjustZoom(pan.current.linearZoom - newValue)} max={200}
+        />
       </div>
     </section>
 
