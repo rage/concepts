@@ -11,7 +11,12 @@ cd ../../../
 # pwd: frontend
 yarn link react && yarn link react-dom && yarn link react-is && yarn link prop-types
 yarn
-./node_modules/.bin/snowpack --dest ./snowpack/dist/web_modules
+splock=$(cat snowpack.lock 2>/dev/null)
+shasum=$(sha256sum yarn.lock)
+if [[ "$splock" != "$shasum" ]]; then
+	echo "$shasum" > snowpack.lock
+	./node_modules/.bin/snowpack --dest ./snowpack/dist/web_modules
+fi
 cd snowpack/
 # pwd: snowpack
 ./scripts/build-static.sh
