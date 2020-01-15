@@ -7,4 +7,4 @@ WORKDIR /concepts/frontend/snowpack
 
 USER 1000
 ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["yarn && yarn snowpack && yarn start"]
+CMD ["./scripts/docker-init.sh"]

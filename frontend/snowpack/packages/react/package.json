@@ -1,0 +1,7 @@
+{
+  "name": "react",
+  "version": "16.12.0",
+  "description": "React is a JavaScript library for building user interfaces.",
+  "module": "main.js",
+  "private": true
+}

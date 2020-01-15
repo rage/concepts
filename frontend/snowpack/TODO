@@ -1,1 +1,0 @@
-When React starts providing ESM builds, the separate package.json should be removed.

@@ -1,0 +1,7 @@
+{
+  "name": "react-is",
+  "version": "16.12.0",
+  "description": "Brand checking of React Elements.",
+  "module": "main.js",
+  "private": true
+}
