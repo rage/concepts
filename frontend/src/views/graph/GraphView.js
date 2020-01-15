@@ -7,7 +7,6 @@ import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
 import Tippy from 'tippy.js'
-import 'tippy.js/themes/light.css'
 
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
