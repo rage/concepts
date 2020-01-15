@@ -95,7 +95,8 @@ export const createConcept = async (root, {
   })
 
   if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
-  const createdConcept = await context.prisma.createConcept({
+  
+  const conceptData = {
     name,
     createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } },
@@ -104,9 +105,14 @@ export const createConcept = async (root, {
     position,
     official: Boolean(official),
     frozen: Boolean(frozen),
-    course: { connect: { id: courseId } },
     tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
-  })
+  }
+
+  if (Boolean(courseId)) {
+    conceptData.course = { connect: { id: courseId } }
+  }
+  
+  const createdConcept = await context.prisma.createConcept(conceptData)
 
   if (level === 'COMMON') {
     await context.prisma.updateWorkspace({
@@ -115,7 +121,7 @@ export const createConcept = async (root, {
         commonConcepts: { connect: { id: createConcept.id } }
       }
     })
-  } else {
+  } else if (level !== 'GOAL')  {
     if (createdConcept) {
       const pointGroups = await findPointGroups(workspaceId, courseId, context)
       if (pointGroups && pointGroups.length > 0) {
