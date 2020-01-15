@@ -1,3 +1,3 @@
-export * from 'https://unpkg.com/es-react/dev/prop-types.js'
-import def from 'https://unpkg.com/es-react/dev/prop-types.js'
+export * from 'es-react/dev/prop-types.js'
+import def from 'es-react/dev/prop-types.js'
 export default def

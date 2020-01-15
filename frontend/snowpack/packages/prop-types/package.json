@@ -3,5 +3,8 @@
   "version": "15.7.2",
   "description": "Runtime type checking for React props and similar objects.",
   "module": "main.js",
+  "dependencies": {
+    "es-react": "16.12.0"
+  },
   "private": true
 }

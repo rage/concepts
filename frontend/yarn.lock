@@ -5080,6 +5080,11 @@ es-abstract@^1.17.0, es-abstract@^1.17.0-next.1:
     string.prototype.trimleft "^2.1.1"
     string.prototype.trimright "^2.1.1"
 
+es-react@16.12.0:
+  version "16.12.0"
+  resolved "https://registry.yarnpkg.com/es-react/-/es-react-16.12.0.tgz#62e579b650d3f1ae4812510b401d0821ef00afde"
+  integrity sha512-PZIIb/GuJVbZQucX610xnMzbTyRtjkD5w3GhHZYk7AYGY9gzebB17S+eUtNg7KLj1VHcbqzEpJZj+nuor79Bqg==
+
 es-to-primitive@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/es-to-primitive/-/es-to-primitive-1.2.1.tgz#e55cd4c9cdc188bcefb03b366c736323fc5c898a"

@@ -73,7 +73,8 @@
     "color-contrast-checker": "^1.5.0",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-react-hooks": "^2.0.1",
-    "snowpack": "^1.0.5"
+    "snowpack": "^1.0.5",
+    "es-react": "16.12.0"
   },
   "snowpack": {
     "webDependencies": [
@@ -116,7 +117,11 @@
       "react-window",
       "subscriptions-transport-ws",
       "tippy.js",
-      "tmc-client-js"
+      "tmc-client-js",
+      "es-react/dev/react.js",
+      "es-react/dev/react-dom.js",
+      "es-react/dev/react-is.js",
+      "es-react/dev/prop-types.js"
     ]
   }
 }
