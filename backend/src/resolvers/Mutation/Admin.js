@@ -48,7 +48,7 @@ export const systemCleanup = async (root, args, { prisma, role }) => {
   }
 
   const maxDate = new Date()
-  maxDate.setDate(maxDate.getDate() + EXPIRATION_IN_DAYS)
+  maxDate.setDate(maxDate.getDate() - EXPIRATION_IN_DAYS)
 
   const { updateManyUsers } = await prisma.$graphql(deactivateInactiveGuests, { maxDate })
   const { deleteManyWorkspaceParticipants } = await prisma.$graphql(deleteWorkspaceParticipations)
