@@ -2,63 +2,61 @@ import { ForbiddenError } from 'apollo-server-core'
 
 import { Role } from '../../util/permissions'
 
-const guestQuery = `
-query {
-  users (where: { 
-    role: GUEST, 
-    deactivated: false 
+const deactivateInactiveGuests = `
+mutation($maxDate: DateTime!) {
+  updateManyUsers(where: {
+    role: GUEST,
+    deactivated: false,
+    tokens_every: {
+      lastSeenTime_lt: $maxDate
+    }
+  }, data: {
+    deactivated: true
   }) {
-    id
-    role
-    tokens {
-      id 
-      lastSeenTime
-    } 
+    count
+  }
+}
+`
+
+const deleteWorkspaceParticipations = `
+mutation {
+  deleteManyWorkspaceParticipants(where: {
+    user: { deactivated: true }
+  }) {
+    count
+  }
+}
+`
+
+const deleteAbandonedWorkspaces = `
+mutation {
+  deleteManyWorkspaces(where: {
+    participants_none: {
+      id_not: null
+    }
+  }) {
+    count
   }
 }
 `
 
 const EXPIRATION_IN_DAYS = 30
-const DAY = 24 * 60 * 60 * 1000
 
-const isExpired = lastSeenTime => {
-  const time = new Date(lastSeenTime)
-  const elapsedDays = (Date.now() - time.getTime()) / DAY
-  return elapsedDays >= EXPIRATION_IN_DAYS
-}
-
-const deactivateGuest = async (id, context) => {
-  try {
-    await context.prisma.updateUser({
-      where: { id },
-      data: { deactivated: true }
-    })
-    await context.prisma.deleteManyWorkspaceParticipants({
-      user: { id }
-    })
-    await context.prisma.deleteManyProjectParticipants({
-      user: { id }
-    })
-    return id
-  } catch (e) {
-    console.error('Error deactivating guest:', e)
-    return false
-  }
-}
-
-export const cleanGuests = async (root, args, context) => {
-  if (context.role < Role.ADMIN) {
+export const systemCleanup = async (root, args, { prisma, role }) => {
+  if (role < Role.ADMIN) {
     throw new ForbiddenError('Access denied')
   }
-  const { users } = await context.prisma.$graphql(guestQuery)
 
-  const deactivations = await Promise.all(users
-    .map(guest => guest.tokens.find(token =>
-      !isExpired(token.lastSeenTime)) ? null : deactivateGuest(guest.id, context))
-    .filter(promise => Boolean(promise)))
+  const maxDate = new Date()
+  maxDate.setDate(maxDate.getDate() + EXPIRATION_IN_DAYS)
+
+  const { updateManyUsers } = await prisma.$graphql(deactivateInactiveGuests, { maxDate })
+  const { deleteManyWorkspaceParticipants } = await prisma.$graphql(deleteWorkspaceParticipations)
+  const { deleteManyWorkspaces } = await prisma.$graphql(deleteAbandonedWorkspaces)
 
   return {
-    deactivated: deactivations.filter(id => Boolean(id)),
-    errors: deactivations.filter(id => !id).length
+    deactivatedCount: updateManyUsers.count,
+    deletedParticipationCount: deleteManyWorkspaceParticipants.count,
+    deletedWorkspaceCount: deleteManyWorkspaces.count
   }
 }
