@@ -71,7 +71,8 @@ const ConceptEditor = ({
   action,
   tagOptions,
   defaultValues = {},
-  workspace
+  commonConcepts,
+  commonSubmit
 }) => {
   const classes = useStyles()
   const [input, setInput] = useState({
@@ -87,15 +88,25 @@ const ConceptEditor = ({
     console.log(input)
     if (evt) evt.preventDefault()
     if (input.useCommon) {
+      const commonConceptId = input.common.id
+      delete input.bloomTag
+      delete input.common
+      delete input.useCommon
+      commonSubmit({
+        ...input,
+        conceptId: commonConceptId,
+        tags: selectToBackend(input.tags)
+      })
       // TODO use input.common
+    } else {
+      delete input.bloomTag
+      delete input.common
+      delete input.useCommon
+      submit({
+        ...input,
+        tags: selectToBackend(input.tags)
+      })
     }
-    delete input.bloomTag
-    delete input.common
-    delete input.useCommon
-    submit({
-      ...input,
-      tags: selectToBackend(input.tags)
-    })
     if (action === 'Create') {
       nameRef.current.focus()
       setInput({ ...initialState, ...defaultValues })
@@ -134,7 +145,7 @@ const ConceptEditor = ({
       <Autocomplete
         freeSolo
         //TODO maybe exclude common concepts that have already been copied to this course
-        options={workspace.commonConcepts}
+        options={action === 'Create' ? commonConcepts : []}
         getOptionLabel={concept => concept.name || 'undefined'}
         filterOptions={createFilterOptions({
           stringify: concept => concept.name || 'undefined'
@@ -142,11 +153,11 @@ const ConceptEditor = ({
         onChange={onNameSelect}
         value={input.common}
         inputValue={input.name}
-        onInputChange={onNameInputChange}
         renderInput={params =>
           <TextField
             {...params} fullWidth name='name'
-            label={`${input.level.toTitleCase()} name`} margin='dense' variant='outlined'
+            label={`${input.level.toTitleCase()} name`} onChange={onNameInputChange}
+            margin='dense' variant='outlined'
             // TODO this autofocus means the autocomplete box gets opened automatically
             inputRef={nameRef} autoFocus={action !== 'Create'}
           />

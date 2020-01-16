@@ -68,7 +68,9 @@ const CardHeaderButton = React.forwardRef(({
 ))
 
 const ConceptList = ({
-  workspace, course, updateCourse, createConcept, updateConcept, deleteConcept, level, sortable
+  workspace, course, updateCourse, createConcept,
+  createConceptFromCommon, updateConcept, deleteConcept,
+  level, sortable
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -200,6 +202,15 @@ const ConceptList = ({
     concept.level === level
     && intIncludeConcept(concept, conceptFilterParsed)
 
+  const scrollTopToCurrentHeight = () => {
+    listRef.current.scrollTop = listRef.current.scrollHeight
+    infoBox.redrawIfOpen('manager',
+      'CREATE_CONCEPT_NAME',
+      'CREATE_CONCEPT_DESCRIPTION',
+      'CREATE_CONCEPT_TAGS',
+      'CREATE_CONCEPT_SUBMIT')
+  }
+
   let conceptsToShow
   if (level === 'COMMON') {
     conceptsToShow = workspace.commonConcepts?.map((concept, conceptIndex) =>
@@ -220,6 +231,7 @@ const ConceptList = ({
           : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
             : undefined}
         conceptTags={conceptTags}
+        commonConcepts={workspace.commonConcepts}
       />
     )
   } else if (orderMethod !== 'GROUP_BY') {
@@ -241,6 +253,7 @@ const ConceptList = ({
           : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
             : undefined}
         conceptTags={conceptTags}
+        commonConcepts={workspace.commmonConcepts}
       />
     )
   } else {
@@ -263,6 +276,7 @@ const ConceptList = ({
                 : undefined}
             sortable={false}
             conceptTags={conceptTags}
+            commonConcepts={workspace.commonConcepts}
           />
         )
       if (elements.length !== 0 && index < array.length - 1) {
@@ -324,17 +338,16 @@ const ConceptList = ({
       <ConceptEditor
         submit={async args => {
           await createConcept(args)
-          listRef.current.scrollTop = listRef.current.scrollHeight
-          infoBox.redrawIfOpen('manager',
-            'CREATE_CONCEPT_NAME',
-            'CREATE_CONCEPT_DESCRIPTION',
-            'CREATE_CONCEPT_TAGS',
-            'CREATE_CONCEPT_SUBMIT')
+          scrollTopToCurrentHeight()
+        }}
+        commonSubmit={async args => {
+          await createConceptFromCommon(args)
+          scrollTopToCurrentHeight()
         }}
         action='Create'
         defaultValues={{ official: isTemplate, level }}
         tagOptions={conceptTags}
-        workspace={workspace}
+        commonConcepts={workspace.commonConcepts}
       />
     </Card>
   )

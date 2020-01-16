@@ -8,7 +8,7 @@ import useRouter from '../../lib/useRouter'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import {
   CREATE_CONCEPT, CREATE_COURSE, DELETE_CONCEPT, DELETE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE,
-  UPDATE_WORKSPACE
+  UPDATE_WORKSPACE, CREATE_CONCEPT_FROM_COMMON
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import {
@@ -113,6 +113,9 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
+  const createConceptFromCommon = useMutation(CREATE_CONCEPT_FROM_COMMON, {
+    update: cache.createConceptUpdate(workspaceId)
+  })
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
@@ -170,6 +173,12 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
           createConcept={args => createConcept({
             variables: {
               workspaceId,
+              courseId: focusedCourse.id,
+              ...args
+            }
+          }).catch(e)}
+          createConceptFromCommon={args => createConceptFromCommon({
+            variables: {
               courseId: focusedCourse.id,
               ...args
             }
