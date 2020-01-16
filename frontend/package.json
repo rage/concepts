@@ -5,7 +5,7 @@
   "description": "Concept mapping platform for education - frontend module",
   "private": true,
   "dependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
     "@date-io/moment": "^1.3.9",
     "@material-ui/core": "^4.0.1",
     "@material-ui/icons": "^4.0.1",
@@ -61,14 +61,67 @@
     ],
     "development": [
       "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 firefox version"
     ]
   },
   "proxy": "http://backend:4000",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
     "color-contrast-checker": "^1.5.0",
     "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-react-hooks": "^2.0.1"
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "snowpack": "^1.0.5",
+    "es-react": "16.12.0"
+  },
+  "snowpack": {
+    "webDependencies": [
+      "@date-io/moment",
+      "@material-ui/core",
+      "@material-ui/core/styles",
+      "@material-ui/core/colors",
+      "@material-ui/icons",
+      "@material-ui/pickers",
+      "@sentry/browser",
+      "ajv",
+      "apollo-cache-inmemory",
+      "apollo-client",
+      "apollo-link",
+      "apollo-link-error",
+      "apollo-link-http",
+      "apollo-link-state",
+      "apollo-link-ws",
+      "apollo-utilities",
+      "chroma-js",
+      "customize-cra",
+      "cytoscape",
+      "cytoscape-klay",
+      "cytoscape-popper",
+      "fast-levenshtein",
+      "graphql",
+      "graphql-tag",
+      "moment",
+      "qs",
+      "react",
+      "react-apollo-hooks",
+      "react-dom",
+      "react-draggable",
+      "react-measure",
+      "react-modal",
+      "react-router-dom",
+      "react-select",
+      "react-select/creatable",
+      "react-sortable-hoc",
+      "react-window",
+      "subscriptions-transport-ws",
+      "tippy.js",
+      "tmc-client-js",
+      "es-react/dev/react.js",
+      "es-react/dev/react-dom.js",
+      "es-react/dev/react-is.js",
+      "es-react/dev/prop-types.js"
+    ]
   }
 }
