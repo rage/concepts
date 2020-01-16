@@ -117,7 +117,8 @@ export const Type = {
 }
 
 const EditableTable = ({
-  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled, title, createButtonTitle
+  columns, rows, AdditionalAction, createMutation, updateMutation, deleteMutation, disabled, title,
+  createButtonTitle
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(null)
@@ -142,9 +143,9 @@ const EditableTable = ({
   }
 
   const createButton = (
-      <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
-        <AddIcon />
-      </IconButton>
+    <IconButton aria-label='Add' disabled={disabled} onClick={() => setEditing(NEW_ROW)}>
+      <AddIcon />
+    </IconButton>
   )
 
   return (
@@ -153,12 +154,12 @@ const EditableTable = ({
         action={(createMutation || AdditionalAction) && <div className={classes.buttonGroup}>
           {AdditionalAction && <AdditionalAction />}
           {createMutation &&
-            Boolean(createButtonTitle) ? 
-              <Tooltip title={createButtonTitle}>
-                <span>
-                  {createButton}
-                </span>
-              </Tooltip> : createButton
+            Boolean(createButtonTitle) ?
+            <Tooltip title={createButtonTitle}>
+              <span>
+                {createButton}
+              </span>
+            </Tooltip> : createButton
           }
         </div>}
         title={title}
@@ -224,22 +225,22 @@ const EditTableRow = ({ columns, classes, state, setState, disabled, submit, can
 const DisplayTableRow = ({
   columns, classes, data, editing, setEditing, disabled, iconColor, deleteRow
 }) => (
-    <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
-      {columns.map(col => !col.hidden && (
-        <TableCell key={col.field} className={classes.tableCell}>
-          <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
-        </TableCell>
-      ))}
-      <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
-        <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
-          <EditIcon />
-        </IconButton>
-        <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
-          <DeleteIcon />
-        </IconButton>
+  <TableRow className={editing && editing !== data.id ? classes.tableRowDisabled : ''}>
+    {columns.map(col => !col.hidden && (
+      <TableCell key={col.field} className={classes.tableCell}>
+        <col.type.DisplayComponent classes={classes} col={col} value={data[col.field]} />
       </TableCell>
-    </TableRow>
-  )
+    ))}
+    <TableCell className={classes.tableCell} align='right' style={{ minWidth: '120px' }}>
+      <IconButton color={iconColor} disabled={disabled} onClick={() => setEditing(data.id)}>
+        <EditIcon />
+      </IconButton>
+      <IconButton color={iconColor} disabled={disabled} onClick={() => deleteRow(data.id)}>
+        <DeleteIcon />
+      </IconButton>
+    </TableCell>
+  </TableRow>
+)
 
 const EditableTableRow = ({
   data, columns, disabled, editing, setEditing, updateMutation, deleteMutation

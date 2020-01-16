@@ -22,7 +22,9 @@ const generic = (action, fn) => type => {
   }
 }
 
-export const createLink = generic('create', async (root, { workspaceId, official, from, to }, context) => {
+export const createLink = generic('create', async (root, {
+  workspaceId, official, from, to
+}, context) => {
   await checkAccess(context, {
     minimumRole: official ? Role.STAFF : Role.GUEST,
     minimumPrivilege: Privilege.EDIT,

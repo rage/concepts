@@ -161,7 +161,8 @@ const UserView = () => {
     }
     await alert({
       title: 'Not yet implemented',
-      message: 'Account deletion is not yet implemented. Please contact mooc@cs.helsinki.fi to delete your account.'
+      message: 'Account deletion is not yet implemented. ' +
+        'Please contact mooc@cs.helsinki.fi to delete your account.'
     })
   }
 
