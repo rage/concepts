@@ -14,7 +14,8 @@ export const createGoalLink = async (root, {goalId, courseId, workspaceId}, cont
   }
   return await context.prisma.createGoalLink({
     goalId,
-    courseId
+    courseId,
+    workspaceId
   })
 }
 

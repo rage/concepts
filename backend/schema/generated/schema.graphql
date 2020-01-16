@@ -345,6 +345,7 @@ type Workspace {
   commonConcepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  goalLinks: [GoalLink!]!
 
   # Authorization data
   participants: [WorkspaceParticipant!]!
@@ -500,6 +501,7 @@ type GoalLink {
   id: ID!
   course: Course!
   goal: Concept!
+  workspace: Workspace!
 }
 
 type Concept {
