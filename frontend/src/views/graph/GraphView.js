@@ -587,7 +587,8 @@ const GraphView = ({ workspaceId }) => {
             title='There are new changes to graph.'
           >
             <Button
-              className={classes.button} variant='outlined' color='secondary' onClick={redrawEverything}
+              className={classes.button} variant='outlined' color='secondary'
+              onClick={redrawEverything}
             >
               Refresh
             </Button>

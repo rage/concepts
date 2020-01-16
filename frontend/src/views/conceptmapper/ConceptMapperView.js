@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography, Slider } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
@@ -28,6 +28,7 @@ import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
 import { useConfirmDelete } from '../../dialogs/alert'
+import HackySlider from './HackySlider'
 
 const useStyles = makeStyles({
   root: {
@@ -58,17 +59,16 @@ const useStyles = makeStyles({
   button: {},
   toolbar: {
     position: 'fixed',
-    top: '50px',
+    top: '60px',
     left: '10px',
-    userSelect: 'none'
+    userSelect: 'none',
+    display: 'flex'
   },
-  toolbarButtonWrapper: {
-    '& > *': {
-      margin: '0 4px'
-    }
+  toolbarButton: {
+    margin: '0 4px'
   },
   sliderWrapper: {
-    top: '110px',
+    top: '65px',
     left: '10px',
     height: '300px',
     position: 'absolute',
@@ -114,25 +114,6 @@ const oppositeLevel = {
 
 const conversionOptions = ['CONCEPT', 'OBJECTIVE']
 
-const HackyStatefulSlider = ({ value, hackyRef, ...args }) => {
-  const ref = useRef()
-  hackyRef.current = {
-    setValue(val) {
-      const styleVal = `${val / 2}%`
-      for (const child of ref.current.children) {
-        if (child.classList.contains('MuiSlider-track')) {
-          child.style.height = styleVal
-        } else if (child.classList.contains('MuiSlider-thumb')) {
-          child.style.bottom = styleVal
-        } else if (child.nodeName === 'INPUT') {
-          child.value = val
-        }
-      }
-    }
-  }
-  return <Slider value={value} ref={ref} {...args}/>
-}
-
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
@@ -160,27 +141,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [conversionTarget, setConversionTarget] = useState('CONCEPT')
   const conversionDialogRef = useRef(null)
   const [conversionDialogOpen, setConversionDialogOpen] = useState(false)
-
-  const selectNode = useCallback((id, state) => {
-    selected.current.add(id)
-    toolbar.current.style.display = 'contents'
-    if (selected.current.size > 1) {
-      toolbarEditButton.current.style.display = 'none'
-    }
-    if (!state) state = concepts.current[id]
-    state.node.classList.add('selected')
-  }, [])
-
-  const deselectNode = useCallback((id, state) => {
-    selected.current.delete(id)
-    if (selected.current.size === 0) {
-      toolbar.current.style.display = 'none'
-    } else if (selected.current.size === 1) {
-      toolbarEditButton.current.style.display = 'inline-flex'
-    }
-    if (!state) state = concepts.current[id]
-    state.node.classList.remove('selected')
-  }, [])
 
   const openCreateObjectiveDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
 
@@ -223,6 +183,36 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId, workspaceId }
   })
+
+  const selectNode = useCallback((id, state) => {
+    selected.current.add(id)
+    toolbar.current.style.display = 'contents'
+    if (selected.current.size > 1) {
+      toolbarEditButton.current.style.display = 'none'
+    }
+    if (!state) state = concepts.current[id]
+    state.node.classList.add('selected')
+  }, [])
+
+  const deselectNode = useCallback((id, state) => {
+    selected.current.delete(id)
+    if (selected.current.size === 0) {
+      toolbar.current.style.display = 'none'
+    } else if (selected.current.size === 1) {
+      toolbarEditButton.current.style.display = 'inline-flex'
+    }
+    if (!state) state = concepts.current[id]
+    state.node.classList.remove('selected')
+  }, [])
+
+  const resetZoom = useCallback(() => {
+    pan.current.zoom = 1
+    pan.current.linearZoom = logToLinear(1)
+    pan.current.x = 0
+    pan.current.y = 0
+    main.current.style.transform = 'translate(0px, 0px) scale(1)'
+    hackySliderRef.current.setValue(pan.current.linearZoom)
+  }, [])
 
   const adjustZoom = useCallback((delta, mouseX = null, mouseY = null) => {
     pan.current.linearZoom -= delta
@@ -645,18 +635,34 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     <section className={classes.toolbar}>
       <CourseList
         courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
-        urlPrefix={urlPrefix} workspaceId={workspaceId}
+        urlPrefix={urlPrefix} workspaceId={workspaceId} className={classes.toolbarButton}
       />
-      <div style={{ display: 'none' }} className={classes.toolbarButtonWrapper} ref={toolbar}>
+      <Button variant='outlined' onClick={resetZoom} className={classes.toolbarButton}>
+        Reset zoom
+      </Button>
+      <div style={{ display: 'none' }} ref={toolbar}>
         <Button
-          size='small' variant='outlined' ref={toolbarEditButton} onClick={toolbarEditConcept}
+          variant='outlined' ref={toolbarEditButton} onClick={toolbarEditConcept}
+          className={classes.toolbarButton}
         >
           Edit
         </Button>
-        <Button size='small' variant='outlined' onClick={menuDeleteAll}>Delete</Button>
-        <Button size='small' variant='outlined' onClick={menuDeselectAll}>Deselect</Button>
+        <Button
+          variant='outlined' onClick={menuDeleteAll} className={classes.toolbarButton}
+        >
+          Delete
+        </Button>
+        <Button
+          variant='outlined' onClick={menuDeselectAll}
+          className={classes.toolbarButton}
+        >
+          Deselect
+        </Button>
 
-        <ButtonGroup size='small' ref={conversionDialogRef} variant='outlined'>
+        <ButtonGroup
+          ref={conversionDialogRef} variant='outlined'
+          className={classes.toolbarButton}
+        >
           <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>
             Convert all to {conversionTarget}
           </Button>
@@ -666,7 +672,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         </ButtonGroup>
       </div>
       <div className={classes.sliderWrapper}>
-        <HackyStatefulSlider
+        <HackySlider
           orientation='vertical' value={pan.current.linearZoom} hackyRef={hackySliderRef}
           onChange={(_, newValue) => adjustZoom(pan.current.linearZoom - newValue)} max={200}
         />

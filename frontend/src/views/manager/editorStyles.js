@@ -13,9 +13,9 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: '100%'
   },
-  formControl: { 
-    verticalAlign: 'middle', 
-    marginLeft: '12px' 
+  formControl: {
+    verticalAlign: 'middle',
+    marginLeft: '12px'
   }
 }))
 
