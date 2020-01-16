@@ -16,8 +16,8 @@ const CourseList = ({ courseId, courses, urlPrefix, workspaceId, className }) =>
     setOpen(false)
   }, [history, urlPrefix, setOpen, workspaceId])
 
-  const onClose = useCallback(() => setOpen(false), [setOpen])
-  const onOpen = useCallback(() => setOpen(true), [setOpen])
+  const onClose = useCallback(() => setOpen(false), [])
+  const onOpen = useCallback(() => setOpen(true), [])
 
   return (
     <FormControl variant='outlined' margin='dense' className={className}>
