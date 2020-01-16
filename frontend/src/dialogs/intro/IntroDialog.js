@@ -3,11 +3,10 @@ import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText,
   DialogTitle, FormControlLabel, Button, Checkbox, FormControl
 } from '@material-ui/core'
+import { useApolloClient } from 'react-apollo-hooks'
 
 import { useLoginStateValue } from '../../lib/store'
 import introContent from '../../static/introContent'
-import { useApolloClient } from 'react-apollo-hooks'
-
 import { UPDATE_SEEN_GUIDES } from '../../graphql/Mutation'
 
 const mapObject = (obj, func) => Object.fromEntries(Object.entries(obj)
@@ -67,10 +66,12 @@ const IntroDialog = ({ contextRef }) => {
       try {
         response = await client.mutate({
           mutation: UPDATE_SEEN_GUIDES,
-          variables: { id: user.id, seenGuides: [
-            ...currentUser.user.seenGuides,
-            `${state.currentView}.${state.currentGuide}`
-          ]}
+          variables: {
+            id: user.id, seenGuides: [
+              ...currentUser.user.seenGuides,
+              `${state.currentView}.${state.currentGuide}`
+            ]
+          }
         })
       } catch {}
     }

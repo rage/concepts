@@ -7,8 +7,9 @@ import {
 } from '../Fragment'
 
 const UPDATE_CONCEPT = gql`
-mutation updateConcept($id: ID!, $name:String, $description: String, $level: ConceptLevel, $position: String,
-                       $official: Boolean,  $frozen: Boolean, $tags: [TagInput!]) {
+mutation updateConcept($id: ID!, $name:String, $description: String, $level: ConceptLevel,
+                       $position: String, $official: Boolean,  $frozen: Boolean, $tags: [TagInput!]
+                       ) {
   updateConcept(id: $id, name: $name, description: $description, level: $level, position: $position,
                 official: $official, frozen: $frozen, tags: $tags) {
     ...updateConceptData

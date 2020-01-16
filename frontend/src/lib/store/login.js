@@ -18,7 +18,7 @@ const fixData = data => ({
 })
 
 const updateSeenGuides = (data, newSeenGuides) => ({
-  ...data, 
+  ...data,
   user: { ...data.user, seenGuides: newSeenGuides }
 })
 
@@ -37,7 +37,8 @@ const loginReducers = {
   guideSeen: (state, { data }) => {
     if (data.newSeenGuides) {
       const userData = fixData(JSON.parse(window.localStorage.currentUser))
-      window.localStorage.currentUser = JSON.stringify(updateSeenGuides(userData, data.newSeenGuides))
+      window.localStorage.currentUser = JSON
+        .stringify(updateSeenGuides(userData, data.newSeenGuides))
     }
     return {
       ...state,
