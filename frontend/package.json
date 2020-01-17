@@ -84,6 +84,7 @@
       "@material-ui/core/styles",
       "@material-ui/core/colors",
       "@material-ui/icons",
+      "@material-ui/lab/Autocomplete",
       "@material-ui/pickers",
       "@sentry/browser",
       "ajv",

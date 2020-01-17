@@ -12,7 +12,7 @@ cd ../../../
 yarn link react && yarn link react-dom && yarn link react-is && yarn link prop-types
 yarn
 splock=$(cat snowpack.lock 2>/dev/null)
-shasum=$(sha256sum yarn.lock)
+shasum=$(sha256sum yarn.lock package.json)
 if [[ "$splock" != "$shasum" ]]; then
 	echo "$shasum" > snowpack.lock
 	./node_modules/.bin/snowpack --dest ./snowpack/dist/web_modules
