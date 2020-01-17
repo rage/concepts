@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button, ButtonGroup } from '@material-ui/core'
+import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
@@ -27,6 +27,8 @@ import { useEditConceptDialog, useCreateConceptDialog } from '../../dialogs/conc
 import { Role } from '../../lib/permissions'
 import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
+import { useConfirmDelete } from '../../dialogs/alert'
+import HackySlider from './HackySlider'
 
 const useStyles = makeStyles({
   root: {
@@ -59,12 +61,18 @@ const useStyles = makeStyles({
     position: 'fixed',
     top: '60px',
     left: '10px',
-    userSelect: 'none'
+    userSelect: 'none',
+    display: 'flex'
   },
-  toolbarButtonWrapper: {
-    '& > *': {
-      margin: '0 4px'
-    }
+  toolbarButton: {
+    margin: '0 4px'
+  },
+  sliderWrapper: {
+    top: '65px',
+    left: '10px',
+    height: '300px',
+    position: 'absolute',
+    zIndex: 10
   },
   selection: {
     position: 'absolute',
@@ -72,6 +80,15 @@ const useStyles = makeStyles({
     border: '4px solid red',
     display: 'none',
     zIndex: 6
+  },
+  emptyText: {
+    position: 'fixed',
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    pointerEvents: 'none !important'
   }
 })
 
@@ -99,6 +116,7 @@ const conversionOptions = ['CONCEPT', 'OBJECTIVE']
 
 const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
+  const confirmDelete = useConfirmDelete()
   const [{ user }] = useLoginStateValue()
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLinkState] = useState(null)
@@ -115,6 +133,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const selection = useRef(null)
   const toolbar = useRef()
   const toolbarEditButton = useRef()
+  const hackySliderRef = useRef()
   const selectionRef = useRef()
   const main = useRef()
   const root = document.getElementById('root')
@@ -122,27 +141,6 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [conversionTarget, setConversionTarget] = useState('CONCEPT')
   const conversionDialogRef = useRef(null)
   const [conversionDialogOpen, setConversionDialogOpen] = useState(false)
-
-  const selectNode = useCallback((id, state) => {
-    selected.current.add(id)
-    toolbar.current.style.display = 'contents'
-    if (selected.current.size > 1) {
-      toolbarEditButton.current.style.display = 'none'
-    }
-    if (!state) state = concepts.current[id]
-    state.node.classList.add('selected')
-  }, [])
-
-  const deselectNode = useCallback((id, state) => {
-    selected.current.delete(id)
-    if (selected.current.size === 0) {
-      toolbar.current.style.display = 'none'
-    } else if (selected.current.size === 1) {
-      toolbarEditButton.current.style.display = 'inline-flex'
-    }
-    if (!state) state = concepts.current[id]
-    state.node.classList.remove('selected')
-  }, [])
 
   const openCreateObjectiveDialog = useCreateConceptDialog(workspaceId, user.role >= Role.STAFF)
 
@@ -185,6 +183,60 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId, workspaceId }
   })
+
+  const selectNode = useCallback((id, state) => {
+    selected.current.add(id)
+    toolbar.current.style.display = 'contents'
+    if (selected.current.size > 1) {
+      toolbarEditButton.current.style.display = 'none'
+    }
+    if (!state) state = concepts.current[id]
+    state.node.classList.add('selected')
+  }, [])
+
+  const deselectNode = useCallback((id, state) => {
+    selected.current.delete(id)
+    if (selected.current.size === 0) {
+      toolbar.current.style.display = 'none'
+    } else if (selected.current.size === 1) {
+      toolbarEditButton.current.style.display = 'inline-flex'
+    }
+    if (!state) state = concepts.current[id]
+    state.node.classList.remove('selected')
+  }, [])
+
+  const resetZoom = useCallback(() => {
+    pan.current.zoom = 1
+    pan.current.linearZoom = logToLinear(1)
+    pan.current.x = 0
+    pan.current.y = 0
+    main.current.style.transform = 'translate(0px, 0px) scale(1)'
+    hackySliderRef.current.setValue(pan.current.linearZoom)
+  }, [])
+
+  const adjustZoom = useCallback((delta, mouseX = null, mouseY = null) => {
+    pan.current.linearZoom -= delta
+    if (pan.current.linearZoom < sliderMinLinear) {
+      pan.current.linearZoom = sliderMinLinear
+    } else if (pan.current.linearZoom > sliderMaxLinear) {
+      pan.current.linearZoom = sliderMaxLinear
+    }
+
+    const oldZoom = pan.current.zoom
+    pan.current.zoom = linearToLog(pan.current.linearZoom)
+    if (mouseX === null) {
+      mouseX = main.current.offsetWidth / 2
+    }
+    if (mouseY === null) {
+      mouseY = main.current.offsetHeight / 2
+    }
+    pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
+    pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
+
+    main.current.style.transform =
+      `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
+    hackySliderRef.current.setValue(pan.current.linearZoom)
+  }, [])
 
   useEffect(() => {
     const updateSelection = (axisKey, posKey, lenKey, value, offset) => {
@@ -288,22 +340,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
 
     const mouseWheel = evt => {
-      pan.current.linearZoom -= evt.deltaY
-      if (pan.current.linearZoom < sliderMinLinear) {
-        pan.current.linearZoom = sliderMinLinear
-      } else if (pan.current.linearZoom > sliderMaxLinear) {
-        pan.current.linearZoom = sliderMaxLinear
-      }
-
       const mouseX = evt.pageX - main.current.offsetLeft
       const mouseY = evt.pageY - main.current.offsetTop
-      const oldZoom = pan.current.zoom
-      pan.current.zoom = linearToLog(pan.current.linearZoom)
-      pan.current.x = ((pan.current.x + mouseX) / oldZoom * pan.current.zoom) - mouseX
-      pan.current.y = ((pan.current.y + mouseY) / oldZoom * pan.current.zoom) - mouseY
-
-      main.current.style.transform =
-        `translate(${-pan.current.x}px, ${-pan.current.y}px) scale(${pan.current.zoom})`
+      const delta = evt.deltaY
+      adjustZoom(delta, mouseX, mouseY)
     }
 
     const doubleClick = evt => {
@@ -387,19 +427,18 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     setAdding(null)
   }, [setAdding])
 
-  const submitNewConcept = useCallback((_, { name, position }) => {
-    const level = adding.level
-    stopAdding()
-    return createConcept({
+  const submitNewConcept = useCallback(async (_, { name, position }) => {
+    await createConcept({
       variables: {
         name,
         description: '',
-        level,
+        level: adding.level,
         position,
         workspaceId,
         courseId
       }
     })
+    stopAdding()
   }, [createConcept, stopAdding, courseId, workspaceId, adding])
 
   const clearSelected = useCallback(() => {
@@ -485,8 +524,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   const menuDeleteConcept = useCallback(async () => {
     closeMenu()
-    const ok = window.confirm(`Are you sure you want to delete ${menu.state.concept.name}?`)
-    if (!ok) {
+    if (!await confirmDelete(`Are you sure you want to delete ${menu.state.concept.name}?`)) {
       return
     }
     await deleteConcept({
@@ -494,12 +532,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         id: menu.id
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteConcept, closeMenu, menu])
 
   const menuDeleteAll = useCallback(async () => {
     closeMenu()
-    const ok = window.confirm('Are you sure you want to delete the selected concepts?')
-    if (!ok) {
+    if (!await confirmDelete('Are you sure you want to delete the selected concepts?')) {
       return
     }
     await deleteManyConcepts({
@@ -508,6 +546,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       }
     })
     clearSelected()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deleteManyConcepts, clearSelected, closeMenu])
 
   const menuDeleteLink = useCallback(async() => {
@@ -588,23 +627,42 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       />}
       <div ref={selectionRef} className={classes.selection} />
       <div id='concept-mapper-link-container' />
+      {course.concepts.length === 0 && !adding && <div className={classes.emptyText}>
+        <Typography variant='h3' component='h3'>Double click to add a new concept</Typography>
+      </div>}
     </main>
 
     <section className={classes.toolbar}>
       <CourseList
         courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
-        urlPrefix={urlPrefix} workspaceId={workspaceId}
+        urlPrefix={urlPrefix} workspaceId={workspaceId} className={classes.toolbarButton}
       />
-      <div style={{ display: 'none' }} className={classes.toolbarButtonWrapper} ref={toolbar}>
+      <Button variant='outlined' onClick={resetZoom} className={classes.toolbarButton}>
+        Reset zoom
+      </Button>
+      <div style={{ display: 'none' }} ref={toolbar}>
         <Button
-          size='small' variant='outlined' ref={toolbarEditButton} onClick={toolbarEditConcept}
+          variant='outlined' ref={toolbarEditButton} onClick={toolbarEditConcept}
+          className={classes.toolbarButton}
         >
           Edit
         </Button>
-        <Button size='small' variant='outlined' onClick={menuDeleteAll}>Delete</Button>
-        <Button size='small' variant='outlined' onClick={menuDeselectAll}>Deselect</Button>
+        <Button
+          variant='outlined' onClick={menuDeleteAll} className={classes.toolbarButton}
+        >
+          Delete
+        </Button>
+        <Button
+          variant='outlined' onClick={menuDeselectAll}
+          className={classes.toolbarButton}
+        >
+          Deselect
+        </Button>
 
-        <ButtonGroup size='small' ref={conversionDialogRef} variant='outlined'>
+        <ButtonGroup
+          ref={conversionDialogRef} variant='outlined'
+          className={classes.toolbarButton}
+        >
           <Button style={{ borderRight: 'none' }} onClick={toolbarConvert}>
             Convert all to {conversionTarget}
           </Button>
@@ -612,6 +670,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
             <ArrowDropDownIcon />
           </Button>
         </ButtonGroup>
+      </div>
+      <div className={classes.sliderWrapper}>
+        <HackySlider
+          orientation='vertical' value={pan.current.linearZoom} hackyRef={hackySliderRef}
+          onChange={(_, newValue) => adjustZoom(pan.current.linearZoom - newValue)} max={200}
+        />
       </div>
     </section>
 

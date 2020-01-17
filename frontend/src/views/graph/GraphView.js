@@ -7,7 +7,6 @@ import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
 import Tippy from 'tippy.js'
-import 'tippy.js/themes/light.css'
 
 import {
   WORKSPACE_COURSES_AND_CONCEPTS
@@ -588,7 +587,8 @@ const GraphView = ({ workspaceId }) => {
             title='There are new changes to graph.'
           >
             <Button
-              className={classes.button} variant='outlined' color='secondary' onClick={redrawEverything}
+              className={classes.button} variant='outlined' color='secondary'
+              onClick={redrawEverything}
             >
               Refresh
             </Button>

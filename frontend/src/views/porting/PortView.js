@@ -16,6 +16,8 @@ import {
 import { useMessageStateValue } from '../../lib/store'
 import cache from '../../apollo/update'
 import { getImportErrorMessage } from '../../lib/errorParse'
+import { noDefault } from '../../lib/eventMiddleware'
+import { useConfirm } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   jsonField: {
@@ -132,6 +134,7 @@ const validateData = ajv.compile(schema)
 
 const PortView = () => {
   const classes = useStyles()
+  const confirm = useConfirm()
   const [data, setData] = useState('')
   const [buttonText, setButtonText] = useState('Import')
   const [success, setSuccess] = useState(false)
@@ -183,25 +186,34 @@ const PortView = () => {
     if (event.target.files.length === 0) return
     const fileReader = new FileReader()
 
-    fileReader.onload = (event) => {
-      event.preventDefault()
+    fileReader.onload = noDefault(async () => {
       const content = fileReader.result
       // eslint-disable-next-line no-control-regex
       if (/[\u0000-\u0008\u000B-\u000C\u000E-\u001F]/.test(content)) {
-        const confirm = window.confirm('File contains unprintable characters, continue?')
-        if (!confirm) {
+        const ignoreUnprintable = await confirm({
+          confirm: 'Continue anyway',
+          title: 'File contains unprintable characters',
+          message: "The file contains characters that shouldn't appear in Concepts exports. " +
+            'This usually means you picked the wrong file.'
+        })
+        if (!ignoreUnprintable) {
           return
         }
       }
       if (content.length > 50 * 1024) {
-        const sendDirectly = window.confirm('File too big, send directly?')
+        const sendDirectly = await confirm({
+          confirm: 'Send directly',
+          title: 'File too big',
+          message: 'The file is too big to be rendered locally. Would you like to send it ' +
+            'directly to the server without previewing first?'
+        })
         if (sendDirectly) {
-          sendData(content)
+          await sendData(content)
         }
       } else {
         setData(content)
       }
-    }
+    })
 
     fileReader.readAsText(event.target.files[0])
   }

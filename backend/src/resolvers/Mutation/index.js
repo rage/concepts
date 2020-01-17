@@ -1,3 +1,4 @@
+export * from './Admin'
 export * from './Authentication'
 export * from './Course'
 export * from './CourseLink'

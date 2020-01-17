@@ -9,6 +9,7 @@ import { DragHandle, SortableItem } from '../../lib/sortableMoc'
 import ConceptEditor from './ConceptEditor'
 import { Role } from '../../lib/permissions'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   hoverButton: {
@@ -66,12 +67,12 @@ const ConceptListItem = ({
   commonConcepts
 }) => {
   const classes = useStyles()
+  const confirmDelete = useConfirmDelete()
   const ItemClass = sortable ? SortableItem : ListItem
 
-  const handleDelete = () => {
-    const msg = `Are you sure you want to delete the concept ${concept.name}?`
-    if (window.confirm(msg)) {
-      deleteConcept(concept.id)
+  const handleDelete = async () => {
+    if (await confirmDelete(`Are you sure you want to delete the concept ${concept.name}?`)) {
+      await deleteConcept(concept.id)
     }
   }
   const handleEdit = () => setEditing(concept.id)

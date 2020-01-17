@@ -12,6 +12,7 @@ import { Role } from '../lib/permissions'
 import { useFocusOverlay } from './FocusOverlay'
 import userGuide from '../static/userGuide'
 import { useLoginStateValue } from '../lib/store'
+import { useAlert } from '../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -146,6 +147,7 @@ const InfoBox = ({ contextRef }) => {
     open: false
   })
   const classes = useStyles()
+  const alert = useAlert()
   const overlay = useFocusOverlay()
   const [{ user }] = useLoginStateValue()
   filterUserGuide(user?.role || Role.VISITOR)
@@ -210,7 +212,7 @@ const InfoBox = ({ contextRef }) => {
     },
     open() {
       if (!currentUserGuide) {
-        window.alert('User guide not available in this view')
+        alert({ title: 'User guide not available in this view' })
         return
       }
       if (!local.isValidStep(currentStep.current)) {
@@ -230,7 +232,7 @@ const InfoBox = ({ contextRef }) => {
           }
         }
         if (currentStep.current === start) {
-          window.alert('User guide not available in this view')
+          alert({ title: 'User guide not available in this view' })
           return
         }
       }

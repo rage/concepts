@@ -7,6 +7,8 @@ import Select from 'react-select/creatable'
 
 import { useMessageStateValue } from '../lib/store'
 import { noDefault } from '../lib/eventMiddleware'
+import '../lib/deferred'
+import { useAlert } from './alert'
 
 const blankState = () => ({
   open: false,
@@ -21,7 +23,8 @@ const blankState = () => ({
   CustomActions: null,
   customActionsProps: null,
   type: '',
-  promise: null
+  promise: null,
+  rejectPromise: false
 })
 
 const OptionalForm = ({ enable, onSubmit, children }) => {
@@ -35,6 +38,7 @@ const OptionalForm = ({ enable, onSubmit, children }) => {
 
 const Dialog = ({ contextRef }) => {
   const stateChange = useRef(-1)
+  const alert = useAlert()
   const [state, setState] = useState(blankState())
   const [inputState, setInputState] = useState(null)
   const [, messageDispatch] = useMessageStateValue()
@@ -47,7 +51,11 @@ const Dialog = ({ contextRef }) => {
       return
     }
     clearTimeout(stateChange.current)
-    state.promise.reject(new Error('Dialog closed'))
+    if (state.rejectPromise) {
+      state.promise.reject(new Error('Dialog closed'))
+    } else {
+      state.promise.resolve(null)
+    }
     setState({ ...state, open: false })
     stateChange.current = setTimeout(() => {
       setState(blankState())
@@ -90,7 +98,7 @@ const Dialog = ({ contextRef }) => {
       if (key.list && !variables[key.list]) variables[key.list] = []
       if (!data) {
         if (key.required) {
-          window.alert(`${state.type} needs a ${key.name}!`)
+          alert({ title: `${state.type} needs a ${key.name}!` })
           return
         }
         if (key.omitEmpty) continue
@@ -127,13 +135,7 @@ const Dialog = ({ contextRef }) => {
       setInputState(Object.fromEntries(fields.map(key =>
         [key.name, key.type === 'checkbox' ? setCheckboxValue(key) : key.defaultValue || ''])))
     }
-    let _resolve, _reject
-    const promise = new Promise((resolve, reject) => {
-      _resolve = resolve
-      _reject = reject
-    })
-    promise.resolve = _resolve
-    promise.reject = rejectPromise ? _reject : _resolve
+    const promise = Promise.defer()
     setState({
       open: true,
       submitDisabled: false,
@@ -148,6 +150,7 @@ const Dialog = ({ contextRef }) => {
       content: content || [],
       CustomActions,
       customActionsProps,
+      rejectPromise,
       type,
       promise
     })

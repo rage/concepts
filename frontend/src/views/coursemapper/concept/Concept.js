@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom'
 import { useMutation } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton
+  ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Tooltip
 } from '@material-ui/core'
 import {
   MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon
 } from '@material-ui/icons'
-import Tooltip from '@material-ui/core/Tooltip'
 
 import { Role } from '../../../lib/permissions'
 import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
@@ -18,6 +17,7 @@ import { useEditConceptDialog } from '../../../dialogs/concept'
 import { noPropagation } from '../../../lib/eventMiddleware'
 import generateTempId from '../../../lib/generateTempId'
 import ConceptToolTipContent from '../../../components/ConceptTooltipContent'
+import { useConfirmDelete } from '../../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -76,6 +76,7 @@ const Concept = ({
 }) => {
   const [state, setState] = useState({ anchorEl: null })
   const classes = useStyles()
+  const confirmDelete = useConfirmDelete()
 
   const [, messageDispatch] = useMessageStateValue()
   const [{ user, loggedIn }] = useLoginStateValue()
@@ -161,9 +162,8 @@ const Concept = ({
   const handleMenuClose = () => setState({ anchorEl: null })
 
   const handleDeleteConcept = async () => {
-    const willDelete = window.confirm(`Are you sure you want to delete ${concept.name}?`)
     handleMenuClose()
-    if (!willDelete) {
+    if (!await confirmDelete(`Are you sure you want to delete ${concept.name}?`)) {
       return
     }
     try {

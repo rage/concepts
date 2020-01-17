@@ -10,7 +10,7 @@ import { MERGE_USER } from '../../graphql/Mutation'
 import Auth, { useAuthState } from '../../lib/authentication'
 import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import useRouter from '../../lib/useRouter'
-import { ReactComponent as HakaIcon } from '../../static/haka.svg'
+import HakaIcon from './HakaIcon'
 import { noDefault } from '../../lib/eventMiddleware'
 import LoadingBar from '../../components/LoadingBar'
 
