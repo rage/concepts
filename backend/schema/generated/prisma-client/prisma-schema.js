@@ -2982,6 +2982,9 @@ type GoalLink {
   course: Course!
   goal: Concept!
   workspace: Workspace!
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type GoalLinkConnection {
@@ -2995,6 +2998,7 @@ input GoalLinkCreateInput {
   course: CourseCreateOneWithoutGoalLinksInput!
   goal: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  createdBy: UserCreateOneInput!
 }
 
 input GoalLinkCreateManyWithoutCourseInput {
@@ -3011,12 +3015,14 @@ input GoalLinkCreateWithoutCourseInput {
   id: ID
   goal: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  createdBy: UserCreateOneInput!
 }
 
 input GoalLinkCreateWithoutWorkspaceInput {
   id: ID
   course: CourseCreateOneWithoutGoalLinksInput!
   goal: ConceptCreateOneInput!
+  createdBy: UserCreateOneInput!
 }
 
 type GoalLinkEdge {
@@ -3027,10 +3033,16 @@ type GoalLinkEdge {
 enum GoalLinkOrderByInput {
   id_ASC
   id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type GoalLinkPreviousValues {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input GoalLinkScalarWhereInput {
@@ -3048,6 +3060,22 @@ input GoalLinkScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [GoalLinkScalarWhereInput!]
   OR: [GoalLinkScalarWhereInput!]
   NOT: [GoalLinkScalarWhereInput!]
@@ -3075,6 +3103,7 @@ input GoalLinkUpdateInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
   goal: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  createdBy: UserUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateManyWithoutCourseInput {
@@ -3102,11 +3131,13 @@ input GoalLinkUpdateManyWithoutWorkspaceInput {
 input GoalLinkUpdateWithoutCourseDataInput {
   goal: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  createdBy: UserUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateWithoutWorkspaceDataInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
   goal: ConceptUpdateOneRequiredInput
+  createdBy: UserUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateWithWhereUniqueWithoutCourseInput {
@@ -3149,6 +3180,23 @@ input GoalLinkWhereInput {
   course: CourseWhereInput
   goal: ConceptWhereInput
   workspace: WorkspaceWhereInput
+  createdBy: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [GoalLinkWhereInput!]
   OR: [GoalLinkWhereInput!]
   NOT: [GoalLinkWhereInput!]

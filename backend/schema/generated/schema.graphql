@@ -130,6 +130,10 @@ type Subscription {
   courseLinkUpdated(workspaceId: ID!): CourseLink!
   courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
 
+  # GoalLink subscriptions
+  goalLinkCreated(workspaceId: ID!): GoalLink!
+  goalLinkDeleted(workspaceId: ID!): DeletedGoalLinkItem!
+
   # Workspaces subscriptions
   projectWorkspaceCreated(projectId: ID!): Workspace!
   projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
@@ -204,6 +208,12 @@ type DeletedCourseItem {
 
 type DeletedCourseItems {
   ids: [ID!]!
+  courseId: ID!
+}
+
+type DeletedGoalLinkItem {
+  id: ID!
+  workspaceId: ID!
   courseId: ID!
 }
 
@@ -502,6 +512,10 @@ type GoalLink {
   course: Course!
   goal: Concept!
   workspace: Workspace!
+
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Concept {

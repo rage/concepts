@@ -23,7 +23,7 @@ export const createGoalLink = async (root, { goalId, courseId, workspaceId }, co
   })
 
   pubsub.publish(channels.GOAL_LINK_CREATED, {
-    goalLinkCreated: { ...createdLink, workspaceId }
+    goalLinkCreated: { ...createdLink }
   })
   return createdLink
 }
@@ -35,9 +35,12 @@ export const deleteGoalLink = async (root, { id }, context) => {
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  await context.prisma.deleteGoalLink({ id })
-  // TODO
-  /*pubsub.publish(channels.GOAL_LINK_DELETED, {
-    goalLinkDeleted: { workspaceId }
-  })*/
+  const { id, courseId } = await context.prisma.deleteGoalLink({ id })
+  pubsub.publish(channels.GOAL_LINK_DELETED, {
+    goalLinkDeleted: { 
+      id,  
+      workspaceId,
+      courseId
+    }
+  })
 }
