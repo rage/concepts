@@ -1,30 +1,43 @@
 import { ForbiddenError } from 'apollo-server-core'
-import { checkAccess, Role, Privilege } from '../../util/accessControl'
 
-export const createGoalLink = async (root, {goalId, courseId, workspaceId}, context) => {
+import { nullShield } from '../../util/errors'
+import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import pubsub from '../Subscription/pubsub'
+import * as channels from '../Subscription/channels'
+
+export const createGoalLink = async (root, { goalId, courseId, workspaceId }, context) => {
   await checkAccess(context, {
     minimumRole: Role.STAFF,
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  const course = nullShield(await context.prisma.course({ id: cousreId }))
   const goal = nullShield(await context.prisma.concept({ id: goalId }))
   if (goal.level !== 'GOAL') {
-    throw new ForbiddenError("Concept does not have level of GOAL")
+    throw new ForbiddenError("Can't create goal link to a non-goal concept")
   }
-  return await context.prisma.createGoalLink({
+  const createdLink = await context.prisma.createGoalLink({
     goalId,
     courseId,
-    workspaceId
+    workspaceId,
+    createdBy: { connect: { id: context.user.id } }
   })
+
+  pubsub.publish(channels.GOAL_LINK_CREATED, {
+    goalLinkCreated: { ...createdLink, workspaceId }
+  })
+  return createdLink
 }
 
-export const deleteGoalLink = async (root, {id}, context) => {
-  const { id: workspaceId } = nullShield(await context.prisma.concept({ id: ids[0] }).workspace())
+export const deleteGoalLink = async (root, { id }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
   await checkAccess({
     minimumRole: Role.STAFF,
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  return await context.prisma.deleteGoalLink({ id })
+  await context.prisma.deleteGoalLink({ id })
+  // TODO
+  /*pubsub.publish(channels.GOAL_LINK_DELETED, {
+    goalLinkDeleted: { workspaceId }
+  })*/
 }

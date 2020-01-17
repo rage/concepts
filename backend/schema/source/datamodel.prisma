@@ -242,6 +242,10 @@ type GoalLink {
   course: Course! @relation(name: "GoalConceptsOfCourse")
   goal: Concept! @relation(name: "GoalConcept")
   workspace: Workspace! @relation(name: "WorkspaceGoals")
+
+  createdBy: User!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Concept {
