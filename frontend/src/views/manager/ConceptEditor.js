@@ -85,7 +85,6 @@ const ConceptEditor = ({
   const selectRef = useRef(null)
 
   const onSubmit = evt => {
-    console.log(input)
     if (evt) evt.preventDefault()
     if (input.useCommon) {
       const commonConceptId = input.common.id
@@ -119,8 +118,6 @@ const ConceptEditor = ({
     }
   }
 
-  console.log(JSON.stringify(input))
-
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
   const onNameInputChange = evt => setInput({ ...input, useCommon: false, name: evt.target.value })
   const onNameSelect = (_, newValue) => {
@@ -136,6 +133,10 @@ const ConceptEditor = ({
     }
   }
 
+  const showCommonOptions = action === 'Create'
+    && defaultValues.level !== 'COMMON'
+    && input?.name?.length > 0
+
   return (
     <form
       className={classes.form}
@@ -145,7 +146,7 @@ const ConceptEditor = ({
       <Autocomplete
         freeSolo
         //TODO maybe exclude common concepts that have already been copied to this course
-        options={action === 'Create' ? commonConcepts : []}
+        options={showCommonOptions ? commonConcepts : []}
         getOptionLabel={concept => concept.name || 'undefined'}
         filterOptions={createFilterOptions({
           stringify: concept => concept.name || 'undefined'
@@ -153,6 +154,7 @@ const ConceptEditor = ({
         onChange={onNameSelect}
         value={input.common}
         inputValue={input.name}
+        disableClearable
         renderInput={params =>
           <TextField
             {...params} fullWidth name='name'

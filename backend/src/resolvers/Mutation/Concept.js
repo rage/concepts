@@ -145,11 +145,12 @@ export const createConceptFromCommon = async (root, {
   const { id: workspaceId } = nullShield(
     await context.prisma.concept({ id: conceptId }).workspace())
   const concept = nullShield(await context.prisma.concept({ id: conceptId }))
+  const oldTags = nullShield(await context.prisma.concept({ id: conceptId }).tags())
   if (concept.level === 'COMMON') {
     return createConcept(root, {
       name: concept.name,
       description: description || concept.description,
-      tags: tags && [...tags, ...concept.tags],
+      tags: tags ? [...tags, ...oldTags] : oldTags,
       official,
       frozen,
       level,
