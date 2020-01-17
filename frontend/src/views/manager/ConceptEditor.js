@@ -16,7 +16,6 @@ import useStyles from './editorStyles'
 const initialState = {
   name: '',
   common: null,
-  useCommon: false,
   description: '',
   tags: [],
   bloomTag: '',
@@ -86,7 +85,7 @@ const ConceptEditor = ({
 
   const onSubmit = evt => {
     if (evt) evt.preventDefault()
-    if (input.useCommon) {
+    if (input.common) {
       input.conceptId = input.common.id
     }
     input.tags = selectToBackend(input.tags)
@@ -107,14 +106,13 @@ const ConceptEditor = ({
   }
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
-  const onNameInputChange = evt => setInput({ ...input, useCommon: false, name: evt.target.value })
+  const onNameInputChange = evt => setInput({ ...input, common: null, name: evt.target.value })
   const onNameSelect = (_, newValue) => {
     if (typeof newValue !== 'object' && newValue !== null) {
       onSubmit()
     } else {
       setInput({
         ...input,
-        useCommon: true,
         common: newValue || null,
         name: newValue?.name || ''
       })
