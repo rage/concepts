@@ -85,14 +85,15 @@ const ConceptEditor = ({
 
   const onSubmit = evt => {
     if (evt) evt.preventDefault()
+    let submitFunc = submit
     if (input.common) {
       input.conceptId = input.common.id
+      submitFunc = commonSubmit
     }
     input.tags = selectToBackend(input.tags)
     delete input.bloomTag
     delete input.common
-    delete input.useCommon
-    submit(input)
+    submitFunc(input)
     if (action === 'Create') {
       nameRef.current.focus()
       setInput({ ...initialState, ...defaultValues })
