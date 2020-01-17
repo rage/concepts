@@ -109,10 +109,10 @@ export const createConcept = async (root, {
   }
 
   if (courseId) {
-    await checkAcess(context, { minimumRole: Role.STAFF, workspaceId })
     conceptData.course = { connect: { id: courseId } }
   } else {
     if (level !== 'GOAL') throw ForbiddenError('Only goals may have a course id.')
+    await checkAcess(context, { minimumRole: Role.STAFF, workspaceId })
   }
   const createdConcept = await context.prisma.createConcept(conceptData)
 
