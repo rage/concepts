@@ -195,7 +195,7 @@ type LimitedProject {
 
 type DeletedCourseItem {
   id: ID!
-  courseId: ID!
+  courseId: ID
 }
 
 type DeletedCourseItems {

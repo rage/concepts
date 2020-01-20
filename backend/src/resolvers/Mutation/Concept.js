@@ -381,10 +381,10 @@ export const deleteConcept = async (root, { id }, context) => {
     }
   }
   pubsub.publish(CONCEPT_DELETED, {
-    conceptDeleted: { id: toDelete.id, courseId: toDelete.course.id, workspaceId }
+    conceptDeleted: { id: toDelete.id, courseId: toDelete.course?.id, workspaceId }
   })
   return {
     id: toDelete.id,
-    courseId: toDelete.course.id
+    courseId: toDelete.course?.id
   }
 }

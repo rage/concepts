@@ -5,24 +5,26 @@ const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
 const createConceptUpdate = workspaceId => (store, response) => {
-  const addedConcept = response.data.createConcept
-  try {
-    const course = store.readFragment({
-      id: addedConcept.course.id,
-      fragment: COURSE_PREREQ_FRAGMENT
-    })
-    if (!includedIn(course.concepts, addedConcept)) {
-      store.writeFragment({
+  const addedConcept = response.data.createConcept || response.data.createConceptFromCommon
+  if (addedConcept.level !== 'COMMON') {
+    try {
+      const course = store.readFragment({
         id: addedConcept.course.id,
-        fragment: COURSE_PREREQ_FRAGMENT,
-        data: {
-          ...course,
-          concepts: [...course.concepts, addedConcept]
-        }
+        fragment: COURSE_PREREQ_FRAGMENT
       })
+      if (!includedIn(course.concepts, addedConcept)) {
+        store.writeFragment({
+          id: addedConcept.course.id,
+          fragment: COURSE_PREREQ_FRAGMENT,
+          data: {
+            ...course,
+            concepts: [...course.concepts, addedConcept]
+          }
+        })
+      }
+    } catch (e) {
+      console.error('createConceptUpdate', e)
     }
-  } catch (e) {
-    console.error('createConceptUpdate', e)
   }
 
   try {
@@ -31,13 +33,16 @@ const createConceptUpdate = workspaceId => (store, response) => {
       variables: { id: workspaceId }
     })
     const ws = dataInStore.workspaceById
-    const courseId = addedConcept.course.id
-    const course = ws.courses.find(course => course.id === courseId)
-    if (!includedIn(course.concepts, addedConcept)) {
-      course.concepts = course.concepts.concat(addedConcept)
-    }
-    if (addedConcept.level === 'COMMON' && !includedIn(ws.commonConcepts, addedConcept)) {
-      ws.commonConcepts = ws.commonConcepts.concat(addedConcept)
+    if (addedConcept.level === 'COMMON') {
+      if (!includedIn(ws.commonConcepts, addedConcept)) {
+        ws.commonConcepts = ws.commonConcepts.concat(addedConcept)
+      }
+    } else {
+      const courseId = addedConcept.course.id
+      const course = ws.courses.find(course => course.id === courseId)
+      if (!includedIn(course.concepts, addedConcept)) {
+        course.concepts = course.concepts.concat(addedConcept)
+      }
     }
     ws.conceptTags = ws.conceptTags.concat(
       addedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
@@ -53,22 +58,24 @@ const createConceptUpdate = workspaceId => (store, response) => {
 }
 
 const deleteConceptUpdate = workspaceId => (store, response) => {
-  try {
-    const deletedConcept = response.data.deleteConcept
-    const course = store.readFragment({
-      id: deletedConcept.courseId,
-      fragment: COURSE_PREREQ_FRAGMENT
-    })
-    store.writeFragment({
-      id: deletedConcept.courseId,
-      fragment: COURSE_PREREQ_FRAGMENT,
-      data: {
-        ...course,
-        concepts: course.concepts.filter(c => c.id !== deletedConcept.id)
-      }
-    })
-  } catch (e) {
-    console.error('deleteConceptUpdate', e)
+  const deletedConcept = response.data.deleteConcept
+  if (deletedConcept.courseId) {
+    try {
+      const course = store.readFragment({
+        id: deletedConcept.courseId,
+        fragment: COURSE_PREREQ_FRAGMENT
+      })
+      store.writeFragment({
+        id: deletedConcept.courseId,
+        fragment: COURSE_PREREQ_FRAGMENT,
+        data: {
+          ...course,
+          concepts: course.concepts.filter(c => c.id !== deletedConcept.id)
+        }
+      })
+    } catch (e) {
+      console.error('deleteConceptUpdate', e)
+    }
   }
 
   if (workspaceId) {
@@ -77,10 +84,11 @@ const deleteConceptUpdate = workspaceId => (store, response) => {
         query: WORKSPACE_BY_ID,
         variables: { id: workspaceId }
       })
-      const deletedConcept = response.data.deleteConcept
-      const courseId = deletedConcept.courseId
-      const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
-      course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+      if (deletedConcept.courseId) {
+        const courseId = deletedConcept.courseId
+        const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
+        course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+      }
       dataInStore.workspaceById.commonConcepts = dataInStore.workspaceById.commonConcepts
         .filter(concept => concept.id !== deletedConcept.id)
       client.writeQuery({
@@ -136,22 +144,24 @@ const deleteManyConceptsUpdate = workspaceId => (store, response) => {
 
 const updateConceptUpdate = workspaceId => (store, response) => {
   const updatedConcept = response.data.updateConcept
-  try {
-    const course = store.readFragment({
-      id: updatedConcept.course.id,
-      fragment: COURSE_PREREQ_FRAGMENT
-    })
-    store.writeFragment({
-      id: updatedConcept.course.id,
-      fragment: COURSE_PREREQ_FRAGMENT,
-      data: {
-        ...course,
-        concepts: course.concepts.map(c =>
-          c.id === updatedConcept.id ? { ...c, updatedConcept } : c)
-      }
-    })
-  } catch (e) {
-    console.error('updateConceptUpdate', e)
+  if (updatedConcept.course) {
+    try {
+      const course = store.readFragment({
+        id: updatedConcept.course.id,
+        fragment: COURSE_PREREQ_FRAGMENT
+      })
+      store.writeFragment({
+        id: updatedConcept.course.id,
+        fragment: COURSE_PREREQ_FRAGMENT,
+        data: {
+          ...course,
+          concepts: course.concepts.map(c =>
+            c.id === updatedConcept.id ? { ...c, updatedConcept } : c)
+        }
+      })
+    } catch (e) {
+      console.error('updateConceptUpdate', e)
+    }
   }
 
   try {
