@@ -58,10 +58,24 @@ mutation updateManyConcepts($concepts: [ConceptInput!]!) {
 ${UPDATE_CONCEPT_FRAGMENT}
 `
 
+const CREATE_CONCEPT_FROM_COMMON = gql`
+mutation createConceptFromCommon($description: String!, $level: ConceptLevel!,
+                       $official: Boolean, $frozen: Boolean, $conceptId: ID!, 
+                       $courseId: ID!, $tags: [TagInput!]) {
+  createConceptFromCommon(description: $description, level: $level,
+                official: $official, frozen: $frozen, conceptId: $conceptId,
+                courseId: $courseId, tags:$tags) {
+    ...createConceptData
+  }
+}
+${CREATE_CONCEPT_FRAGMENT}
+`
+
 export {
   CREATE_CONCEPT,
   DELETE_CONCEPT,
   UPDATE_CONCEPT,
   DELETE_MANY_CONCEPTS,
-  UPDATE_MANY_CONCEPTS
+  UPDATE_MANY_CONCEPTS,
+  CREATE_CONCEPT_FROM_COMMON
 }

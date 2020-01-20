@@ -63,7 +63,8 @@ const ConceptListItem = ({
   divider = true,
   checkboxRef,
   conceptTags,
-  sortable = true
+  sortable = true,
+  commonConcepts
 }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
@@ -109,6 +110,7 @@ const ConceptListItem = ({
             defaultValues={concept}
             action='Save'
             tagOptions={conceptTags}
+            commonConcepts={commonConcepts}
           />
         ) : <>
           <ListItemText className={`${classes.conceptBody} ${sortable ? classes.sortable : ''}`}>

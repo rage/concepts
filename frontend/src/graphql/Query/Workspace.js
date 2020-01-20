@@ -42,6 +42,20 @@ query workspaceById($id: ID!) {
       priority
     }
     courseOrder
+    commonConcepts {
+      id
+      name
+      description
+      level
+      official
+      frozen
+      tags {
+        id
+        name
+        type
+        priority
+      }
+    }
     courses {
       id
       name
