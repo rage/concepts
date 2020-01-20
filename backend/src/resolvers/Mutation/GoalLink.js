@@ -15,11 +15,12 @@ export const createGoalLink = async (root, { goalId, courseId, workspaceId }, co
   if (goal.level !== 'GOAL') {
     throw new ForbiddenError("Can't create goal link to a non-goal concept")
   }
+
   const createdLink = await context.prisma.createGoalLink({
-    goalId,
-    courseId,
-    workspaceId,
-    createdBy: { connect: { id: context.user.id } }
+    goal: { connect: { id: goalId }},
+    course: { connect: { id: courseId }},
+    workspace: { connect: { id: workspaceId }},
+    createdBy: { connect: { id: context.user.id }}
   })
 
   pubsub.publish(channels.GOAL_LINK_CREATED, {
@@ -35,12 +36,15 @@ export const deleteGoalLink = async (root, { id }, context) => {
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  const { id, courseId } = await context.prisma.deleteGoalLink({ id })
+  const { id: courseId } = await context.prisma.concept({ id }).course()
+  await context.prisma.deleteGoalLink({ id })
+  const goalLinkDeleted = { 
+    id,
+    workspaceId,
+    courseId
+  }
   pubsub.publish(channels.GOAL_LINK_DELETED, {
-    goalLinkDeleted: { 
-      id,  
-      workspaceId,
-      courseId
-    }
+    goalLinkDeleted
   })
+  return goalLinkDeleted
 }
