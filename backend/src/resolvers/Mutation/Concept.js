@@ -95,7 +95,7 @@ export const createConcept = async (root, {
   })
 
   if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
-  const createdConcept = await context.prisma.createConcept({
+  const args = {
     name,
     createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } },
@@ -104,9 +104,12 @@ export const createConcept = async (root, {
     position,
     official: Boolean(official),
     frozen: Boolean(frozen),
-    course: { connect: { id: courseId } },
     tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
-  })
+  }
+  if (level !== 'COMMON') {
+    args.course = { connect: { id: courseId } }
+  }
+  const createdConcept = await context.prisma.createConcept(args)
 
   if (level === 'COMMON') {
     await context.prisma.updateWorkspace({

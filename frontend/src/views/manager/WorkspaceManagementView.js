@@ -51,6 +51,8 @@ const useStyles = makeStyles(() => ({
   courses: {
     gridArea: 'courses',
     overflow: 'hidden',
+    backgroundColor: 'white',
+    borderRadius: '4px',
     '& > div': {
       height: '100%',
       overflow: 'auto'
@@ -61,6 +63,8 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: 'white',
+    borderRadius: '4px',
     '& > div': {
       height: '100%',
       overflow: 'auto'
@@ -79,11 +83,66 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
+const CoursePanel = ({ workspaceId, workspaceQuery, focusedCourse, commons = false }) => {
+  const classes = useStyles()
+  const [level, setLevel] = useState('OBJECTIVE')
+  const [, messageDispatch] = useMessageStateValue()
+
+  const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    update: cache.createConceptUpdate(workspaceId)
+  })
+  const createConceptFromCommon = useMutation(CREATE_CONCEPT_FROM_COMMON, {
+    update: cache.createConceptUpdate(workspaceId)
+  })
+  const updateConcept = useMutation(UPDATE_CONCEPT, {
+    update: cache.updateConceptUpdate(workspaceId)
+  })
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
+    update: cache.deleteConceptUpdate(workspaceId)
+  })
+
+  const e = err => messageDispatch({
+    type: 'setError',
+    data: err.message
+  })
+
+  return <>
+    {!commons && <AppBar position='static' className={classes.conceptNav} elevation={0}>
+      <Tabs variant='fullWidth' value={level} onChange={(_, newValue) => setLevel(newValue)}>
+        <Tab label='Objectives' value='OBJECTIVE' />
+        <Tab label='Concepts' value='CONCEPT' />
+      </Tabs>
+    </AppBar>}
+    <ConceptList
+      level={commons ? 'COMMON' : level}
+      workspace={workspaceQuery.data.workspaceById}
+      course={focusedCourse}
+      updateCourse={args => updateCourse({ variables: args }).catch(e)}
+      createConcept={args => createConcept({
+        variables: {
+          workspaceId,
+          courseId: focusedCourse?.id,
+          ...args
+        }
+      }).catch(e)}
+      createConceptFromCommon={args => createConceptFromCommon({
+        variables: {
+          courseId: focusedCourse.id,
+          ...args
+        }
+      }).catch(e)}
+      sortable={!commons}
+      deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
+      updateConcept={args => updateConcept({ variables: args }).catch(e)}
+    />
+  </>
+}
+
 const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const { history } = useRouter()
-  const [level, setLevel] = useState('OBJECTIVE')
 
   useUpdatingSubscription('workspace', 'update', {
     variables: { workspaceId }
@@ -110,18 +169,6 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
   const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
-  const createConcept = useMutation(CREATE_CONCEPT, {
-    update: cache.createConceptUpdate(workspaceId)
-  })
-  const createConceptFromCommon = useMutation(CREATE_CONCEPT_FROM_COMMON, {
-    update: cache.createConceptUpdate(workspaceId)
-  })
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
-    update: cache.updateConceptUpdate(workspaceId)
-  })
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
-    update: cache.deleteConceptUpdate(workspaceId)
-  })
 
   if (workspaceQuery.loading) {
     return <LoadingBar id='workspace-management' />
@@ -135,7 +182,8 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   })
 
   const workspace = workspaceQuery.data.workspaceById
-  const focusedCourse = courseId && workspace.courses.find(c => c.id === courseId)
+  const focusedCourse = courseId && (courseId === 'common' ? 'COMMON'
+    : workspace.courses.find(c => c.id === courseId))
   if (courseId && !focusedCourse) {
     history.replace(urlPrefix)
   }
@@ -156,38 +204,12 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
           createCourse={args => createCourse({ variables: { workspaceId, ...args } }).catch(e)}
         />
       </div>
-      {focusedCourse ? <div className={classes.concepts}>
-        <AppBar position='static' className={classes.conceptNav} elevation={0}>
-          <Tabs variant='fullWidth' value={level} onChange={(_, newValue) => setLevel(newValue)}>
-            <Tab label='Objectives' value='OBJECTIVE' />
-            <Tab label='Concepts' value='CONCEPT' />
-            <Tab label='Common' value='COMMON' />
-          </Tabs>
-        </AppBar>
-        <ConceptList
-          key={level}
-          level={level}
-          workspace={workspaceQuery.data.workspaceById}
-          course={focusedCourse}
-          updateCourse={args => updateCourse({ variables: args }).catch(e)}
-          createConcept={args => createConcept({
-            variables: {
-              workspaceId,
-              courseId: focusedCourse.id,
-              ...args
-            }
-          }).catch(e)}
-          createConceptFromCommon={args => createConceptFromCommon({
-            variables: {
-              courseId: focusedCourse.id,
-              ...args
-            }
-          }).catch(e)}
-          sortable={level !== 'COMMON'}
-          deleteConcept={id => deleteConcept({ variables: { id } }).catch(e)}
-          updateConcept={args => updateConcept({ variables: args }).catch(e)}
-        />
-      </div> : <div className={classes.concepts} /> }
+      <div className={classes.concepts}>
+        {focusedCourse && <CoursePanel
+          workspaceId={workspaceId} workspaceQuery={workspaceQuery} focusedCourse={focusedCourse}
+          commons={focusedCourse === 'COMMON'}
+        />}
+      </div>
     </main>
   )
 }

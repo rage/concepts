@@ -184,15 +184,16 @@ const ConceptList = ({
             Cancel
           </CardHeaderButton>
         </>
+      } else if (level !== 'COMMON') {
+        return (
+          <CardHeaderButton
+            ref={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
+            disabled={course.concepts.length < 2}
+          >
+            Start merge
+          </CardHeaderButton>
+        )
       }
-      return (
-        <CardHeaderButton
-          ref={infoBox.ref('manager', 'START_MERGE')} onClick={startMerging}
-          disabled={course.concepts.length < 2}
-        >
-          Start merge
-        </CardHeaderButton>
-      )
     }
     return null
   }
@@ -211,87 +212,62 @@ const ConceptList = ({
       'CREATE_CONCEPT_SUBMIT')
   }
 
+  const conceptArgs = {
+    user, editing, deleteConcept, updateConcept, merging, setEditing, conceptTags,
+    toggleMergingConcept, commonConcepts: level !== 'COMMON' ? workspace.commonConcepts : []
+  }
   let conceptsToShow
-  if (level === 'COMMON') {
-    conceptsToShow = workspace.commonConcepts?.map((concept, conceptIndex) =>
+  if (orderMethod !== 'GROUP_BY') {
+    const conceptList = level === 'COMMON' ? workspace.commonConcepts || [] : orderedConcepts
+    conceptsToShow = conceptList.map((concept, conceptIndex) =>
       includeConcept(concept) &&
       <ConceptListItem
+        {...conceptArgs}
         key={concept.id}
         concept={concept}
-        user={user}
-        editing={editing}
         index={conceptIndex}
-        deleteConcept={deleteConcept}
-        updateConcept={updateConcept}
-        merging={merging}
-        setEditing={setEditing}
-        sortable={false}
-        toggleMergingConcept={toggleMergingConcept}
-        checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
-          : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
-            : undefined}
-        conceptTags={conceptTags}
-        commonConcepts={workspace.commonConcepts}
-      />
-    )
-  } else if (orderMethod !== 'GROUP_BY') {
-    conceptsToShow = orderedConcepts.map((concept, conceptIndex) =>
-      includeConcept(concept) &&
-      <ConceptListItem
-        key={concept.id}
-        concept={concept}
-        user={user}
-        editing={editing}
-        index={conceptIndex}
-        deleteConcept={deleteConcept}
-        updateConcept={updateConcept}
-        merging={merging}
-        setEditing={setEditing}
         sortable={sortable && orderMethod === 'CUSTOM' && !course.frozen}
         toggleMergingConcept={toggleMergingConcept}
         checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
           : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
             : undefined}
-        conceptTags={conceptTags}
-        commonConcepts={workspace.commmonConcepts}
       />
     )
   } else {
-    groupConcepts(course.concepts).flatMap((group, index, array) => {
+    const conceptList = level === 'COMMON' ? workspace.commonConcepts : course.concepts
+    groupConcepts(conceptList).flatMap((group, index, array) => {
       const elements = group.filter(concept => includeConcept(concept))
         .map((concept, conceptIndex) =>
           <ConceptListItem
+            {...conceptArgs}
             key={concept.id}
             concept={concept}
-            user={user}
-            editing={editing}
-            deleteConcept={deleteConcept}
-            updateConcept={updateConcept}
-            merging={merging}
-            setEditing={setEditing}
-            toggleMergingConcept={toggleMergingConcept}
             divider={false}
             checkboxRef={conceptIndex === 0 ? infoBox.ref('manager', 'SELECT_MERGE_CONCEPTS')
               : conceptIndex === 1 ? infoBox.secondaryRef('manager', 'SELECT_MERGE_CONCEPTS')
                 : undefined}
             sortable={false}
-            conceptTags={conceptTags}
-            commonConcepts={workspace.commonConcepts}
           />
         )
       if (elements.length !== 0 && index < array.length - 1) {
         elements.push([<hr key={index} />])
       }
       return elements
-    }
-    )
+    })
   }
+
+  const title = level === 'COMMON'
+    ? `Common concepts of ${workspace.name}`
+    : `${level.toTitleCase()}s of ${course.name}`
+  const filterLabel = level === 'COMMON'
+    ? 'Filter common concepts'
+    : `Filter ${level.toLowerCase()}s`
 
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`${level.toTitleCase()}s of ${course.name}`}
+        title={title}
         action={cardHeaderActions()}
       />
 
@@ -299,7 +275,7 @@ const ConceptList = ({
         <TextField
           variant='outlined'
           margin='dense'
-          label={`Filter ${level.toLowerCase()}s`}
+          label={filterLabel}
           ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
