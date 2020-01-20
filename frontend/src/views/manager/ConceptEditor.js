@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import {
   Button, Checkbox, FormControl, FormControlLabel,
   TextField
@@ -79,6 +79,11 @@ const ConceptEditor = ({
     ...defaultValues,
     tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
+  useEffect(() => setInput({
+    ...initialState,
+    ...defaultValues,
+    tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
+  }), [defaultValues])
 
   const nameRef = useRef()
   const selectRef = useRef(null)
