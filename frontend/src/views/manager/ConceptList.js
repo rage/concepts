@@ -308,7 +308,7 @@ const ConceptList = ({
         open={mergeDialogOpen.open}
       />}
       {conceptsToShow.length === 0 ? (
-        <Typography variant='h5' align='center' gutterBottom>
+        <Typography variant='h6' align='center' gutterBottom color='textSecondary'>
             Add new {nameMap[level].toLowerCase()} below
         </Typography>
       ) : (

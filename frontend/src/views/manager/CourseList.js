@@ -92,7 +92,7 @@ const CourseList = ({
         </>}
       />
       {orderedCourses.length === 0 ? (
-        <Typography variant='h5' align='center' gutterBottom>
+        <Typography variant='h6' align='center' gutterBottom color='textSecondary'>
           Add new courses below
         </Typography>
       ) : (
