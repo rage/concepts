@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Card, CardHeader, Button, CircularProgress } from '@material-ui/core'
+import { Card, CardHeader, Button, CircularProgress, Typography } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
 import { useLoginStateValue } from '../../lib/store'
@@ -91,19 +91,25 @@ const CourseList = ({
           </Button>
         </>}
       />
-      <SortableList
-        ref={listRef} className={classes.list} useDragHandle lockAxis='y'
-        onSortEnd={onSortEnd}
-      >
-        {orderedCourses.map((course, index) => (
-          <CourseListItem
-            course={course} user={user} index={index} editing={editing} setEditing={setEditing}
-            focusedCourseId={focusedCourseId} setFocusedCourseId={setFocusedCourseId}
-            updateCourse={updateCourse} deleteCourse={deleteCourse} courseTags={courseTags}
-            key={course.id}
-          />
-        ))}
-      </SortableList>
+      {orderedCourses.length === 0 ? (
+        <Typography variant='h5' align='center' gutterBottom>
+          Add new courses below
+        </Typography>
+      ) : (
+        <SortableList
+          ref={listRef} className={classes.list} useDragHandle lockAxis='y'
+          onSortEnd={onSortEnd}
+        >
+          {orderedCourses.map((course, index) => (
+            <CourseListItem
+              course={course} user={user} index={index} editing={editing} setEditing={setEditing}
+              focusedCourseId={focusedCourseId} setFocusedCourseId={setFocusedCourseId}
+              updateCourse={updateCourse} deleteCourse={deleteCourse} courseTags={courseTags}
+              key={course.id}
+            />
+          ))}
+        </SortableList>
+      )}
       <CourseEditor submit={async args => {
         await createCourse(args)
         if (listRef.current?.node) {
