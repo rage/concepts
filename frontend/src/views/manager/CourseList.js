@@ -6,11 +6,12 @@ import ReactDOM from 'react-dom'
 import { useLoginStateValue } from '../../lib/store'
 import arrayShift from '../../lib/arrayShift'
 import { SortableList } from '../../lib/sortableMoc'
+import { sortedCourses } from '../../lib/ordering'
+import { Role } from '../../lib/permissions'
 import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
-import { sortedCourses } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,7 +47,7 @@ const CourseList = ({
   }, [workspace.courses, workspace.courseOrder, dirtyOrder])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
-    ReactDOM.unstable_batchedUpdates(() => {
+    oldIndex !== newIndex && ReactDOM.unstable_batchedUpdates(() => {
       setOrderedCourses(items => arrayShift(items, oldIndex, newIndex))
       if (!dirtyOrder) setDirtyOrder('yes')
     })
@@ -67,6 +68,7 @@ const CourseList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         title='Courses'
+        className={classes.header}
         action={dirtyOrder ? <>
           <Button
             color='secondary' onClick={() => setDirtyOrder(null)}
@@ -80,7 +82,14 @@ const CourseList = ({
           >
             {dirtyOrder === 'loading' ? <CircularProgress /> : 'Save'}
           </Button>
-        </> : undefined}
+        </> : user.role >= Role.STAFF && <>
+          <Button
+            color='primary' onClick={() => setFocusedCourseId('common')} style={{ margin: '6px' }}
+            disabled={focusedCourseId === 'common'}
+          >
+            View common concepts
+          </Button>
+        </>}
       />
       <SortableList
         ref={listRef} className={classes.list} useDragHandle lockAxis='y'

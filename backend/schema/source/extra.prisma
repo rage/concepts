@@ -53,7 +53,7 @@ type Mutation {
   updateConcept(id: ID!, name: String, description: String, level: ConceptLevel, position: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
   deleteManyConcepts(ids: [ID!]): DeletedCourseItems!
   updateManyConcepts(concepts: [ConceptInput!]): [Concept!]
-  createConceptFromCommon(conceptId: ID!, courseId: ID): Concept!
+  createConceptFromCommon(conceptId: ID!, courseId: ID!, description: String, level: ConceptLevel!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
   createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): CourseLink!
@@ -203,7 +203,7 @@ type LimitedProject {
 
 type DeletedCourseItem {
   id: ID!
-  courseId: ID!
+  courseId: ID
 }
 
 type DeletedCourseItems {

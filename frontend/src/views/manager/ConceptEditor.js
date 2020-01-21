@@ -1,6 +1,10 @@
-import React, { useRef, useState } from 'react'
-import { Button, Checkbox, FormControl, FormControlLabel, TextField } from '@material-ui/core'
+import React, { useRef, useState, useEffect } from 'react'
+import {
+  Button, Checkbox, FormControl, FormControlLabel,
+  TextField
+} from '@material-ui/core'
 import Select from 'react-select/creatable'
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete'
 
 import { useLoginStateValue } from '../../lib/store'
 import {
@@ -11,6 +15,7 @@ import useStyles from './editorStyles'
 
 const initialState = {
   name: '',
+  common: null,
   description: '',
   tags: [],
   bloomTag: '',
@@ -64,7 +69,9 @@ const ConceptEditor = ({
   cancel,
   action,
   tagOptions,
-  defaultValues = {}
+  defaultValues = {},
+  commonConcepts,
+  commonSubmit
 }) => {
   const classes = useStyles()
   const [input, setInput] = useState({
@@ -72,17 +79,26 @@ const ConceptEditor = ({
     ...defaultValues,
     tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
   })
+  useEffect(() => setInput({
+    ...initialState,
+    ...defaultValues,
+    tags: defaultValues.tags ? backendToSelect(defaultValues.tags) : []
+  }), [defaultValues])
 
   const nameRef = useRef()
   const selectRef = useRef(null)
 
   const onSubmit = evt => {
-    evt.preventDefault()
+    if (evt) evt.preventDefault()
+    let submitFunc = submit
+    if (input.common) {
+      input.conceptId = input.common.id
+      submitFunc = commonSubmit
+    }
+    input.tags = selectToBackend(input.tags)
     delete input.bloomTag
-    submit({
-      ...input,
-      tags: selectToBackend(input.tags)
-    })
+    delete input.common
+    submitFunc(input)
     if (action === 'Create') {
       nameRef.current.focus()
       setInput({ ...initialState, ...defaultValues })
@@ -96,6 +112,22 @@ const ConceptEditor = ({
   }
 
   const onChange = evt => setInput({ ...input, [evt.target.name]: evt.target.value })
+  const onNameInputChange = evt => setInput({ ...input, common: null, name: evt.target.value })
+  const onNameSelect = (_, newValue) => {
+    if (typeof newValue !== 'object' && newValue !== null) {
+      onSubmit()
+    } else {
+      setInput({
+        ...input,
+        common: newValue || null,
+        name: newValue?.name || ''
+      })
+    }
+  }
+
+  const showCommonOptions = action === 'Create'
+    && defaultValues.level !== 'COMMON'
+    && input?.name?.length > 0
 
   return (
     <form
@@ -103,13 +135,27 @@ const ConceptEditor = ({
       onSubmit={onSubmit}
       onKeyDown={onKeyDown}
     >
-      <ConnectableTextfield
-        name='name'
-        label={`${input.level.toTitleCase()} name`}
-        autoFocus={action !== 'Create'}
-        inputRef={nameRef}
-        onChange={onChange}
-        value={input.name}
+      <Autocomplete
+        freeSolo
+        //TODO maybe exclude common concepts that have already been copied to this course
+        options={showCommonOptions ? commonConcepts : []}
+        getOptionLabel={concept => concept.name || 'undefined'}
+        filterOptions={createFilterOptions({
+          stringify: concept => concept.name || 'undefined'
+        })}
+        onChange={onNameSelect}
+        value={input.common}
+        inputValue={input.name}
+        disableClearable
+        renderInput={params =>
+          <TextField
+            {...params} fullWidth name='name'
+            label={`${input.level.toTitleCase()} name`} onChange={onNameInputChange}
+            margin='dense' variant='outlined'
+            // TODO this autofocus means the autocomplete box gets opened automatically
+            inputRef={nameRef} autoFocus={action !== 'Create'}
+          />
+        }
       />
       <ConnectableTextfield
         name='description'
@@ -136,7 +182,7 @@ const ConceptEditor = ({
         }}
         menuPortalTarget={document.body}
       />
-      <ConnectableSubmitButton disabled={!input.name} action={action} />
+      <ConnectableSubmitButton disabled={!input.name && !input.common} action={action} />
       {cancel &&
         <Button color='primary' variant='contained' onClick={cancel} className={classes.cancel}>
           Cancel

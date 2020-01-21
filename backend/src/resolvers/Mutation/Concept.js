@@ -95,8 +95,7 @@ export const createConcept = async (root, {
   })
 
   if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
-
-  const conceptData = {
+  const args = {
     name,
     createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } },
@@ -109,18 +108,21 @@ export const createConcept = async (root, {
   }
 
   if (courseId) {
-    conceptData.course = { connect: { id: courseId } }
+    args.course = { connect: { id: courseId } }
   } else {
     if (level !== 'GOAL') throw ForbiddenError('Only goals may have a course id.')
     await checkAcess(context, { minimumRole: Role.STAFF, workspaceId })
   }
-  const createdConcept = await context.prisma.createConcept(conceptData)
+  if (level !== 'COMMON') {
+    args.course = { connect: { id: courseId } }
+  }
+  const createdConcept = await context.prisma.createConcept(args)
 
   if (level === 'COMMON') {
     await context.prisma.updateWorkspace({
       where: { id: workspaceId },
       data: {
-        commonConcepts: { connect: { id: createConcept.id } }
+        commonConcepts: { connect: { id: createdConcept.id } }
       }
     })
   } else if (level !== 'GOAL') {
@@ -147,14 +149,21 @@ export const createConcept = async (root, {
   return createdConcept
 }
 
-export const createConceptFromCommon = async (root, { conceptId, courseId }, context, ...rest) => {
+export const createConceptFromCommon = async (root, {
+  conceptId, courseId, level, description, tags, official, frozen
+}, context, ...rest) => {
   const { id: workspaceId } = nullShield(
     await context.prisma.concept({ id: conceptId }).workspace())
   const concept = nullShield(await context.prisma.concept({ id: conceptId }))
+  const oldTags = nullShield(await context.prisma.concept({ id: conceptId }).tags())
   if (concept.level === 'COMMON') {
     return createConcept(root, {
       name: concept.name,
-      level: 'OBJECTIVE',
+      description: description || concept.description,
+      tags: tags ? [...tags, ...oldTags] : oldTags,
+      official,
+      frozen,
+      level,
       courseId,
       workspaceId
     }, context, ...rest)
@@ -366,21 +375,23 @@ export const deleteConcept = async (root, { id }, context) => {
   if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
   await context.prisma.deleteConcept({ id })
 
-  const orderName = `${toDelete.level.toLowerCase()}Order`
-  const conceptOrder = toDelete.course[orderName]
-  if (!isAutomaticSorting(conceptOrder)) {
-    await context.prisma.updateCourse({
-      where: { id: toDelete.course.id },
-      data: {
-        [orderName]: { set: conceptOrder.filter(conceptId => conceptId !== id) }
-      }
-    })
+  if (toDelete.level !== 'COMMON') {
+    const orderName = `${toDelete.level.toLowerCase()}Order`
+    const conceptOrder = toDelete.course[orderName]
+    if (!isAutomaticSorting(conceptOrder)) {
+      await context.prisma.updateCourse({
+        where: { id: toDelete.course.id },
+        data: {
+          [orderName]: { set: conceptOrder.filter(conceptId => conceptId !== id) }
+        }
+      })
+    }
   }
   pubsub.publish(CONCEPT_DELETED, {
-    conceptDeleted: { id: toDelete.id, courseId: toDelete.course.id, workspaceId }
+    conceptDeleted: { id: toDelete.id, courseId: toDelete.course?.id, workspaceId }
   })
   return {
     id: toDelete.id,
-    courseId: toDelete.course.id
+    courseId: toDelete.course?.id
   }
 }
