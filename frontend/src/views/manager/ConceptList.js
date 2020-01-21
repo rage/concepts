@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, TextField, Card, CardHeader, MenuItem, CircularProgress } from '@material-ui/core'
+import {
+  Button, TextField, Card, CardHeader, MenuItem, CircularProgress, Typography
+} from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
 import { Role } from '../../lib/permissions'
@@ -66,6 +68,12 @@ const CardHeaderButton = React.forwardRef(({
     {children}
   </Button>
 ))
+
+const nameMap = {
+  CONCEPT: 'Concepts',
+  OBJECTIVE: 'Objectives',
+  COMMON: 'Common concepts'
+}
 
 const ConceptList = ({
   workspace, course, updateCourse, createConcept,
@@ -256,18 +264,11 @@ const ConceptList = ({
     })
   }
 
-  const title = level === 'COMMON'
-    ? `Common concepts of ${workspace.name}`
-    : `${level.toTitleCase()}s of ${course.name}`
-  const filterLabel = level === 'COMMON'
-    ? 'Filter common concepts'
-    : `Filter ${level.toLowerCase()}s`
-
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={title}
+        title={`${nameMap[level]} of ${workspace.name}`}
         action={cardHeaderActions()}
       />
 
@@ -275,7 +276,7 @@ const ConceptList = ({
         <TextField
           variant='outlined'
           margin='dense'
-          label={filterLabel}
+          label={`Filter ${nameMap[level].toLowerCase()}`}
           ref={infoBox.ref('manager', 'FILTER_CONCEPTS')}
           value={conceptFilter}
           onChange={evt => setConceptFilter(evt.target.value)}
@@ -306,11 +307,17 @@ const ConceptList = ({
         workspace={workspace} courseId={course.id} conceptIds={merging} close={closeMergeDialog}
         open={mergeDialogOpen.open}
       />}
-      <SortableList
-        ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
-      >
-        {conceptsToShow}
-      </SortableList>
+      {conceptsToShow.length === 0 ? (
+        <Typography variant='h6' align='center' gutterBottom color='textSecondary'>
+            Add new {nameMap[level].toLowerCase()} below
+        </Typography>
+      ) : (
+        <SortableList
+          ref={listRef} className={classes.list} useDragHandle lockAxis='y' onSortEnd={onSortEnd}
+        >
+          {conceptsToShow}
+        </SortableList>
+      )}
       <ConceptEditor
         submit={async args => {
           await createConcept(args)
