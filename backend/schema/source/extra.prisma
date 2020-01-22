@@ -66,7 +66,7 @@ type Mutation {
 
   # Goal link mutations
   createGoalLink(goalId: ID!, courseId: ID!, workspaceId: ID!): GoalLink!
-  deleteGoalLink(id: ID!): GoalLink!
+  deleteGoalLink(id: ID!): DeletedGoalLinkItem!
 
   # Project mutations
   createProject(name: String!): Project!

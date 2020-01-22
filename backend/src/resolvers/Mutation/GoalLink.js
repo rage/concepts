@@ -30,13 +30,13 @@ export const createGoalLink = async (root, { goalId, courseId, workspaceId }, co
 }
 
 export const deleteGoalLink = async (root, { id }, context) => {
-  const { id: workspaceId } = nullShield(await context.prisma.concept({ id }).workspace())
-  await checkAccess({
+  const { id: workspaceId } = nullShield(await context.prisma.goalLink({ id }).workspace())
+  await checkAccess(context, {
     minimumRole: Role.STAFF,
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  const { id: courseId } = await context.prisma.concept({ id }).course()
+  const { id: courseId } = await context.prisma.goalLink({ id }).course()
   await context.prisma.deleteGoalLink({ id })
   const goalLinkDeleted = { 
     id,
