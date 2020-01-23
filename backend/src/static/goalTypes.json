@@ -1,0 +1,12 @@
+[
+  {
+    "name": "KNOWLEDGE",
+    "type": "goal",
+    "priority": 100
+  },
+  {
+    "name": "SKILL",
+    "type": "goal",
+    "priority": 200
+  }
+]

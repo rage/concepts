@@ -1,6 +1,7 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import makeSecret from '../../util/secret'
 import bloom from '../../static/bloom'
+import goalTypes from '../../static/goalTypes'
 import pubsub from '../Subscription/pubsub'
 import {
   WORKSPACE_UPDATED, WORKSPACE_DELETED, PROJECT_WORKSPACE_CREATED
@@ -115,7 +116,7 @@ export const createWorkspace = async (root, { name }, context) => {
       }]
     },
     conceptTags: {
-      create: bloom
+      create: [...bloom, ...goalTypes]
     }
   })
 }
@@ -169,7 +170,7 @@ export const createTemplateWorkspace = async (root, { name, projectId }, context
       connect: { id: projectId }
     },
     conceptTags: {
-      create: bloom
+      create: [...bloom, ...goalTypes]
     },
     participants: {
       create: [{
