@@ -64,6 +64,10 @@ type Mutation {
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean): ConceptLink!
   deleteConceptLink(id: ID!): DeletedConceptLink!
 
+  # Goal link mutations
+  createGoalLink(goalId: ID!, courseId: ID!, workspaceId: ID!): GoalLink!
+  deleteGoalLink(id: ID!): DeletedGoalLinkItem!
+
   # Project mutations
   createProject(name: String!): Project!
   updateProject(id: ID!, name: String!): Project!
@@ -125,6 +129,10 @@ type Subscription {
   courseLinkCreated(workspaceId: ID!): CourseLink!
   courseLinkUpdated(workspaceId: ID!): CourseLink!
   courseLinkDeleted(workspaceId: ID!): DeletedCourseItem!
+
+  # GoalLink subscriptions
+  goalLinkCreated(workspaceId: ID!): GoalLink!
+  goalLinkDeleted(workspaceId: ID!): DeletedGoalLinkItem!
 
   # Workspaces subscriptions
   projectWorkspaceCreated(projectId: ID!): Workspace!
@@ -200,6 +208,12 @@ type DeletedCourseItem {
 
 type DeletedCourseItems {
   ids: [ID!]!
+  courseId: ID!
+}
+
+type DeletedGoalLinkItem {
+  id: ID!
+  workspaceId: ID!
   courseId: ID!
 }
 
@@ -341,6 +355,7 @@ type Workspace {
   commonConcepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  goalLinks: [GoalLink!]!
 
   # Authorization data
   participants: [WorkspaceParticipant!]!
@@ -459,6 +474,9 @@ type Course {
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  # Goals
+  goalLinks: [GoalLink!]!
 }
 
 
@@ -485,7 +503,19 @@ type ConceptLink {
 enum ConceptLevel {
   OBJECTIVE
   CONCEPT
+  GOAL
   COMMON
+}
+
+type GoalLink {
+  id: ID!
+  course: Course!
+  goal: Concept!
+  workspace: Workspace!
+
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Concept {

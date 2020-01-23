@@ -320,6 +320,10 @@ type AggregateCourseLink {
   count: Int!
 }
 
+type AggregateGoalLink {
+  count: Int!
+}
+
 type AggregatePointGroup {
   count: Int!
 }
@@ -650,6 +654,11 @@ input ConceptCreateManyWithoutWorkspaceInput {
   connect: [ConceptWhereUniqueInput!]
 }
 
+input ConceptCreateOneInput {
+  create: ConceptCreateInput
+  connect: ConceptWhereUniqueInput
+}
+
 input ConceptCreateOneWithoutClonesInput {
   create: ConceptCreateWithoutClonesInput
   connect: ConceptWhereUniqueInput
@@ -838,6 +847,7 @@ type ConceptEdge {
 enum ConceptLevel {
   OBJECTIVE
   CONCEPT
+  GOAL
   COMMON
 }
 
@@ -1493,6 +1503,13 @@ input ConceptUpdateManyWithWhereNestedInput {
   data: ConceptUpdateManyDataInput!
 }
 
+input ConceptUpdateOneRequiredInput {
+  create: ConceptCreateInput
+  update: ConceptUpdateDataInput
+  upsert: ConceptUpsertNestedInput
+  connect: ConceptWhereUniqueInput
+}
+
 input ConceptUpdateOneRequiredWithoutLinksFromConceptInput {
   create: ConceptCreateWithoutLinksFromConceptInput
   update: ConceptUpdateWithoutLinksFromConceptDataInput
@@ -1702,6 +1719,11 @@ input ConceptUpdateWithWhereUniqueWithoutWorkspaceInput {
   data: ConceptUpdateWithoutWorkspaceDataInput!
 }
 
+input ConceptUpsertNestedInput {
+  update: ConceptUpdateDataInput!
+  create: ConceptCreateInput!
+}
+
 input ConceptUpsertWithoutClonesInput {
   update: ConceptUpdateWithoutClonesDataInput!
   create: ConceptCreateWithoutClonesInput!
@@ -1887,6 +1909,7 @@ type Course {
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+  goalLinks(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GoalLink!]
 }
 
 type CourseConnection {
@@ -1914,6 +1937,7 @@ input CourseCreateInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateManyWithoutSourceCourseInput {
@@ -1945,6 +1969,11 @@ input CourseCreateOneWithoutConceptsInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseCreateOneWithoutGoalLinksInput {
+  create: CourseCreateWithoutGoalLinksInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseCreateOneWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   connect: CourseWhereUniqueInput
@@ -1969,6 +1998,7 @@ input CourseCreateWithoutClonesInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutConceptsInput {
@@ -1982,6 +2012,24 @@ input CourseCreateWithoutConceptsInput {
   linksFromCourse: CourseLinkCreateManyWithoutFromInput
   linksToCourse: CourseLinkCreateManyWithoutToInput
   workspace: WorkspaceCreateOneWithoutCoursesInput!
+  conceptOrder: CourseCreateconceptOrderInput
+  objectiveOrder: CourseCreateobjectiveOrderInput
+  createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
+}
+
+input CourseCreateWithoutGoalLinksInput {
+  id: ID
+  name: String!
+  official: Boolean
+  frozen: Boolean
+  tags: TagCreateManyInput
+  sourceCourse: CourseCreateOneWithoutClonesInput
+  clones: CourseCreateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkCreateManyWithoutFromInput
+  linksToCourse: CourseLinkCreateManyWithoutToInput
+  workspace: WorkspaceCreateOneWithoutCoursesInput!
+  concepts: ConceptCreateManyWithoutCourseInput
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
@@ -2001,6 +2049,7 @@ input CourseCreateWithoutLinksFromCourseInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutLinksToCourseInput {
@@ -2017,6 +2066,7 @@ input CourseCreateWithoutLinksToCourseInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutSourceCourseInput {
@@ -2033,6 +2083,7 @@ input CourseCreateWithoutSourceCourseInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 input CourseCreateWithoutWorkspaceInput {
@@ -2049,6 +2100,7 @@ input CourseCreateWithoutWorkspaceInput {
   conceptOrder: CourseCreateconceptOrderInput
   objectiveOrder: CourseCreateobjectiveOrderInput
   createdBy: UserCreateOneInput!
+  goalLinks: GoalLinkCreateManyWithoutCourseInput
 }
 
 type CourseEdge {
@@ -2551,6 +2603,7 @@ input CourseUpdateDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateInput {
@@ -2567,6 +2620,7 @@ input CourseUpdateInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateManyDataInput {
@@ -2634,6 +2688,13 @@ input CourseUpdateOneRequiredInput {
   connect: CourseWhereUniqueInput
 }
 
+input CourseUpdateOneRequiredWithoutGoalLinksInput {
+  create: CourseCreateWithoutGoalLinksInput
+  update: CourseUpdateWithoutGoalLinksDataInput
+  upsert: CourseUpsertWithoutGoalLinksInput
+  connect: CourseWhereUniqueInput
+}
+
 input CourseUpdateOneRequiredWithoutLinksFromCourseInput {
   create: CourseCreateWithoutLinksFromCourseInput
   update: CourseUpdateWithoutLinksFromCourseDataInput
@@ -2679,6 +2740,7 @@ input CourseUpdateWithoutClonesDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutConceptsDataInput {
@@ -2691,6 +2753,23 @@ input CourseUpdateWithoutConceptsDataInput {
   linksFromCourse: CourseLinkUpdateManyWithoutFromInput
   linksToCourse: CourseLinkUpdateManyWithoutToInput
   workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  conceptOrder: CourseUpdateconceptOrderInput
+  objectiveOrder: CourseUpdateobjectiveOrderInput
+  createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
+}
+
+input CourseUpdateWithoutGoalLinksDataInput {
+  name: String
+  official: Boolean
+  frozen: Boolean
+  tags: TagUpdateManyInput
+  sourceCourse: CourseUpdateOneWithoutClonesInput
+  clones: CourseUpdateManyWithoutSourceCourseInput
+  linksFromCourse: CourseLinkUpdateManyWithoutFromInput
+  linksToCourse: CourseLinkUpdateManyWithoutToInput
+  workspace: WorkspaceUpdateOneRequiredWithoutCoursesInput
+  concepts: ConceptUpdateManyWithoutCourseInput
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
@@ -2709,6 +2788,7 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutLinksToCourseDataInput {
@@ -2724,6 +2804,7 @@ input CourseUpdateWithoutLinksToCourseDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutSourceCourseDataInput {
@@ -2739,6 +2820,7 @@ input CourseUpdateWithoutSourceCourseDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithoutWorkspaceDataInput {
@@ -2754,6 +2836,7 @@ input CourseUpdateWithoutWorkspaceDataInput {
   conceptOrder: CourseUpdateconceptOrderInput
   objectiveOrder: CourseUpdateobjectiveOrderInput
   createdBy: UserUpdateOneRequiredInput
+  goalLinks: GoalLinkUpdateManyWithoutCourseInput
 }
 
 input CourseUpdateWithWhereUniqueWithoutSourceCourseInput {
@@ -2779,6 +2862,11 @@ input CourseUpsertWithoutClonesInput {
 input CourseUpsertWithoutConceptsInput {
   update: CourseUpdateWithoutConceptsDataInput!
   create: CourseCreateWithoutConceptsInput!
+}
+
+input CourseUpsertWithoutGoalLinksInput {
+  update: CourseUpdateWithoutGoalLinksDataInput!
+  create: CourseCreateWithoutGoalLinksInput!
 }
 
 input CourseUpsertWithoutLinksFromCourseInput {
@@ -2870,6 +2958,9 @@ input CourseWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  goalLinks_every: GoalLinkWhereInput
+  goalLinks_some: GoalLinkWhereInput
+  goalLinks_none: GoalLinkWhereInput
   AND: [CourseWhereInput!]
   OR: [CourseWhereInput!]
   NOT: [CourseWhereInput!]
@@ -2880,6 +2971,235 @@ input CourseWhereUniqueInput {
 }
 
 scalar DateTime
+
+type GoalLink {
+  id: ID!
+  course: Course!
+  goal: Concept!
+  workspace: Workspace!
+  createdBy: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type GoalLinkConnection {
+  pageInfo: PageInfo!
+  edges: [GoalLinkEdge]!
+  aggregate: AggregateGoalLink!
+}
+
+input GoalLinkCreateInput {
+  id: ID
+  course: CourseCreateOneWithoutGoalLinksInput!
+  goal: ConceptCreateOneInput!
+  workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  createdBy: UserCreateOneInput!
+}
+
+input GoalLinkCreateManyWithoutCourseInput {
+  create: [GoalLinkCreateWithoutCourseInput!]
+  connect: [GoalLinkWhereUniqueInput!]
+}
+
+input GoalLinkCreateManyWithoutWorkspaceInput {
+  create: [GoalLinkCreateWithoutWorkspaceInput!]
+  connect: [GoalLinkWhereUniqueInput!]
+}
+
+input GoalLinkCreateWithoutCourseInput {
+  id: ID
+  goal: ConceptCreateOneInput!
+  workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  createdBy: UserCreateOneInput!
+}
+
+input GoalLinkCreateWithoutWorkspaceInput {
+  id: ID
+  course: CourseCreateOneWithoutGoalLinksInput!
+  goal: ConceptCreateOneInput!
+  createdBy: UserCreateOneInput!
+}
+
+type GoalLinkEdge {
+  node: GoalLink!
+  cursor: String!
+}
+
+enum GoalLinkOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type GoalLinkPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input GoalLinkScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [GoalLinkScalarWhereInput!]
+  OR: [GoalLinkScalarWhereInput!]
+  NOT: [GoalLinkScalarWhereInput!]
+}
+
+type GoalLinkSubscriptionPayload {
+  mutation: MutationType!
+  node: GoalLink
+  updatedFields: [String!]
+  previousValues: GoalLinkPreviousValues
+}
+
+input GoalLinkSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: GoalLinkWhereInput
+  AND: [GoalLinkSubscriptionWhereInput!]
+  OR: [GoalLinkSubscriptionWhereInput!]
+  NOT: [GoalLinkSubscriptionWhereInput!]
+}
+
+input GoalLinkUpdateInput {
+  course: CourseUpdateOneRequiredWithoutGoalLinksInput
+  goal: ConceptUpdateOneRequiredInput
+  workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input GoalLinkUpdateManyWithoutCourseInput {
+  create: [GoalLinkCreateWithoutCourseInput!]
+  delete: [GoalLinkWhereUniqueInput!]
+  connect: [GoalLinkWhereUniqueInput!]
+  set: [GoalLinkWhereUniqueInput!]
+  disconnect: [GoalLinkWhereUniqueInput!]
+  update: [GoalLinkUpdateWithWhereUniqueWithoutCourseInput!]
+  upsert: [GoalLinkUpsertWithWhereUniqueWithoutCourseInput!]
+  deleteMany: [GoalLinkScalarWhereInput!]
+}
+
+input GoalLinkUpdateManyWithoutWorkspaceInput {
+  create: [GoalLinkCreateWithoutWorkspaceInput!]
+  delete: [GoalLinkWhereUniqueInput!]
+  connect: [GoalLinkWhereUniqueInput!]
+  set: [GoalLinkWhereUniqueInput!]
+  disconnect: [GoalLinkWhereUniqueInput!]
+  update: [GoalLinkUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [GoalLinkUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [GoalLinkScalarWhereInput!]
+}
+
+input GoalLinkUpdateWithoutCourseDataInput {
+  goal: ConceptUpdateOneRequiredInput
+  workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input GoalLinkUpdateWithoutWorkspaceDataInput {
+  course: CourseUpdateOneRequiredWithoutGoalLinksInput
+  goal: ConceptUpdateOneRequiredInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input GoalLinkUpdateWithWhereUniqueWithoutCourseInput {
+  where: GoalLinkWhereUniqueInput!
+  data: GoalLinkUpdateWithoutCourseDataInput!
+}
+
+input GoalLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: GoalLinkWhereUniqueInput!
+  data: GoalLinkUpdateWithoutWorkspaceDataInput!
+}
+
+input GoalLinkUpsertWithWhereUniqueWithoutCourseInput {
+  where: GoalLinkWhereUniqueInput!
+  update: GoalLinkUpdateWithoutCourseDataInput!
+  create: GoalLinkCreateWithoutCourseInput!
+}
+
+input GoalLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: GoalLinkWhereUniqueInput!
+  update: GoalLinkUpdateWithoutWorkspaceDataInput!
+  create: GoalLinkCreateWithoutWorkspaceInput!
+}
+
+input GoalLinkWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  course: CourseWhereInput
+  goal: ConceptWhereInput
+  workspace: WorkspaceWhereInput
+  createdBy: UserWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [GoalLinkWhereInput!]
+  OR: [GoalLinkWhereInput!]
+  NOT: [GoalLinkWhereInput!]
+}
+
+input GoalLinkWhereUniqueInput {
+  id: ID
+}
 
 scalar Long
 
@@ -2920,6 +3240,11 @@ type Mutation {
   upsertCourseLink(where: CourseLinkWhereUniqueInput!, create: CourseLinkCreateInput!, update: CourseLinkUpdateInput!): CourseLink!
   deleteCourseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   deleteManyCourseLinks(where: CourseLinkWhereInput): BatchPayload!
+  createGoalLink(data: GoalLinkCreateInput!): GoalLink!
+  updateGoalLink(data: GoalLinkUpdateInput!, where: GoalLinkWhereUniqueInput!): GoalLink
+  upsertGoalLink(where: GoalLinkWhereUniqueInput!, create: GoalLinkCreateInput!, update: GoalLinkUpdateInput!): GoalLink!
+  deleteGoalLink(where: GoalLinkWhereUniqueInput!): GoalLink
+  deleteManyGoalLinks(where: GoalLinkWhereInput): BatchPayload!
   createPointGroup(data: PointGroupCreateInput!): PointGroup!
   updatePointGroup(data: PointGroupUpdateInput!, where: PointGroupWhereUniqueInput!): PointGroup
   updateManyPointGroups(data: PointGroupUpdateManyMutationInput!, where: PointGroupWhereInput): BatchPayload!
@@ -4269,6 +4594,9 @@ type Query {
   courseLink(where: CourseLinkWhereUniqueInput!): CourseLink
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink]!
   courseLinksConnection(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CourseLinkConnection!
+  goalLink(where: GoalLinkWhereUniqueInput!): GoalLink
+  goalLinks(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GoalLink]!
+  goalLinksConnection(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GoalLinkConnection!
   pointGroup(where: PointGroupWhereUniqueInput!): PointGroup
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup]!
   pointGroupsConnection(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PointGroupConnection!
@@ -4313,6 +4641,7 @@ type Subscription {
   conceptLink(where: ConceptLinkSubscriptionWhereInput): ConceptLinkSubscriptionPayload
   course(where: CourseSubscriptionWhereInput): CourseSubscriptionPayload
   courseLink(where: CourseLinkSubscriptionWhereInput): CourseLinkSubscriptionPayload
+  goalLink(where: GoalLinkSubscriptionWhereInput): GoalLinkSubscriptionPayload
   pointGroup(where: PointGroupSubscriptionWhereInput): PointGroupSubscriptionPayload
   project(where: ProjectSubscriptionWhereInput): ProjectSubscriptionPayload
   projectParticipant(where: ProjectParticipantSubscriptionWhereInput): ProjectParticipantSubscriptionPayload
@@ -4972,6 +5301,7 @@ type Workspace {
   commonConcepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
+  goalLinks(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GoalLink!]
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   tokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken!]
   mainCourse: Course
@@ -5007,6 +5337,7 @@ input WorkspaceCreateInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5066,6 +5397,11 @@ input WorkspaceCreateOneWithoutCoursesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceCreateOneWithoutGoalLinksInput {
+  create: WorkspaceCreateWithoutGoalLinksInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceCreateOneWithoutParticipantsInput {
   create: WorkspaceCreateWithoutParticipantsInput
   connect: WorkspaceWhereUniqueInput
@@ -5094,6 +5430,7 @@ input WorkspaceCreateWithoutAsMergeInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5116,6 +5453,7 @@ input WorkspaceCreateWithoutAsTemplateInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5138,6 +5476,7 @@ input WorkspaceCreateWithoutClonesInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5160,6 +5499,7 @@ input WorkspaceCreateWithoutConceptLinksInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   commonConcepts: ConceptCreateManyInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5182,6 +5522,7 @@ input WorkspaceCreateWithoutConceptsInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5204,6 +5545,7 @@ input WorkspaceCreateWithoutCourseLinksInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5221,6 +5563,30 @@ input WorkspaceCreateWithoutCoursesInput {
   asMerge: ProjectCreateOneWithoutMergesInput
   asTemplate: ProjectCreateOneWithoutTemplatesInput
   clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courseOrder: WorkspaceCreatecourseOrderInput
+  concepts: ConceptCreateManyWithoutWorkspaceInput
+  commonConcepts: ConceptCreateManyInput
+  conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
+  mainCourse: CourseCreateOneInput
+  pointGroups: PointGroupCreateManyWithoutWorkspaceInput
+  courseTags: TagCreateManyInput
+  conceptTags: TagCreateManyInput
+  createdBy: UserCreateOneInput!
+}
+
+input WorkspaceCreateWithoutGoalLinksInput {
+  id: ID
+  name: String!
+  sourceProject: ProjectCreateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceCreateOneWithoutClonesInput
+  asMerge: ProjectCreateOneWithoutMergesInput
+  asTemplate: ProjectCreateOneWithoutTemplatesInput
+  clones: WorkspaceCreateManyWithoutSourceTemplateInput
+  courses: CourseCreateManyWithoutWorkspaceInput
   courseOrder: WorkspaceCreatecourseOrderInput
   concepts: ConceptCreateManyWithoutWorkspaceInput
   commonConcepts: ConceptCreateManyInput
@@ -5249,6 +5615,7 @@ input WorkspaceCreateWithoutParticipantsInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
@@ -5271,6 +5638,7 @@ input WorkspaceCreateWithoutPointGroupsInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5292,6 +5660,7 @@ input WorkspaceCreateWithoutSourceProjectInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5314,6 +5683,7 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5337,6 +5707,7 @@ input WorkspaceCreateWithoutTokensInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
@@ -5964,6 +6335,7 @@ input WorkspaceUpdateDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -5986,6 +6358,7 @@ input WorkspaceUpdateInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6095,6 +6468,13 @@ input WorkspaceUpdateOneRequiredWithoutCoursesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
+input WorkspaceUpdateOneRequiredWithoutGoalLinksInput {
+  create: WorkspaceCreateWithoutGoalLinksInput
+  update: WorkspaceUpdateWithoutGoalLinksDataInput
+  upsert: WorkspaceUpsertWithoutGoalLinksInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceUpdateOneRequiredWithoutParticipantsInput {
   create: WorkspaceCreateWithoutParticipantsInput
   update: WorkspaceUpdateWithoutParticipantsDataInput
@@ -6137,6 +6517,7 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6158,6 +6539,7 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6179,6 +6561,7 @@ input WorkspaceUpdateWithoutClonesDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6200,6 +6583,7 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   commonConcepts: ConceptUpdateManyInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6221,6 +6605,7 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6242,6 +6627,7 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6258,6 +6644,29 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   asMerge: ProjectUpdateOneWithoutMergesInput
   asTemplate: ProjectUpdateOneWithoutTemplatesInput
   clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courseOrder: WorkspaceUpdatecourseOrderInput
+  concepts: ConceptUpdateManyWithoutWorkspaceInput
+  commonConcepts: ConceptUpdateManyInput
+  conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
+  participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
+  tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
+  mainCourse: CourseUpdateOneInput
+  pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
+  courseTags: TagUpdateManyInput
+  conceptTags: TagUpdateManyInput
+  createdBy: UserUpdateOneRequiredInput
+}
+
+input WorkspaceUpdateWithoutGoalLinksDataInput {
+  name: String
+  sourceProject: ProjectUpdateOneWithoutWorkspacesInput
+  sourceTemplate: WorkspaceUpdateOneWithoutClonesInput
+  asMerge: ProjectUpdateOneWithoutMergesInput
+  asTemplate: ProjectUpdateOneWithoutTemplatesInput
+  clones: WorkspaceUpdateManyWithoutSourceTemplateInput
+  courses: CourseUpdateManyWithoutWorkspaceInput
   courseOrder: WorkspaceUpdatecourseOrderInput
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   commonConcepts: ConceptUpdateManyInput
@@ -6285,6 +6694,7 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
@@ -6306,6 +6716,7 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6326,6 +6737,7 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6347,6 +6759,7 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6369,6 +6782,7 @@ input WorkspaceUpdateWithoutTokensDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
@@ -6425,6 +6839,11 @@ input WorkspaceUpsertWithoutCourseLinksInput {
 input WorkspaceUpsertWithoutCoursesInput {
   update: WorkspaceUpdateWithoutCoursesDataInput!
   create: WorkspaceCreateWithoutCoursesInput!
+}
+
+input WorkspaceUpsertWithoutGoalLinksInput {
+  update: WorkspaceUpdateWithoutGoalLinksDataInput!
+  create: WorkspaceCreateWithoutGoalLinksInput!
 }
 
 input WorkspaceUpsertWithoutParticipantsInput {
@@ -6517,6 +6936,9 @@ input WorkspaceWhereInput {
   courseLinks_every: CourseLinkWhereInput
   courseLinks_some: CourseLinkWhereInput
   courseLinks_none: CourseLinkWhereInput
+  goalLinks_every: GoalLinkWhereInput
+  goalLinks_some: GoalLinkWhereInput
+  goalLinks_none: GoalLinkWhereInput
   participants_every: WorkspaceParticipantWhereInput
   participants_some: WorkspaceParticipantWhereInput
   participants_none: WorkspaceParticipantWhereInput

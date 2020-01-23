@@ -106,6 +106,13 @@ export const createConcept = async (root, {
     frozen: Boolean(frozen),
     tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
   }
+
+  if (courseId) {
+    args.course = { connect: { id: courseId } }
+  } else {
+    if (level !== 'GOAL') throw ForbiddenError('Only goals may have a course id.')
+    await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
+  }
   if (level !== 'COMMON') {
     args.course = { connect: { id: courseId } }
   }
@@ -118,7 +125,7 @@ export const createConcept = async (root, {
         commonConcepts: { connect: { id: createdConcept.id } }
       }
     })
-  } else {
+  } else if (level !== 'GOAL') {
     if (createdConcept) {
       const pointGroups = await findPointGroups(workspaceId, courseId, context)
       if (pointGroups && pointGroups.length > 0) {
