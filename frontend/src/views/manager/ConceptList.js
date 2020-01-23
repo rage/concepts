@@ -268,7 +268,7 @@ const ConceptList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`${nameMap[level]} of ${workspace.name}`}
+        title={`${nameMap[level]} of ${level === 'COMMON' ? workspace.name : course.name}`}
         action={cardHeaderActions()}
       />
 
