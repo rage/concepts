@@ -133,7 +133,7 @@ const ConceptList = ({
   }
 
   const isTemplate = Boolean(workspace.asTemplate ?.id)
-  const conceptTags = backendToSelect(workspace.conceptTags)
+  const conceptTags = backendToSelect(workspace.conceptTags.filter(tag => tag.type !== 'goal'))
 
   const startMerging = () => {
     setEditing(null)
