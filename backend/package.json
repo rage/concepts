@@ -35,6 +35,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@babel/preset-env": "^7.6.2",
     "babel-eslint": "^10.0.3",
+    "babel-watch": "^7.0.0",
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.18.0",
     "nodemon": "^2.0.2"
@@ -44,6 +45,6 @@
     "start": "ENVIRONMENT=production node src/index.js",
     "build": "babel src --out-dir dist && mkdir -p dist/static/ && cp -raf src/static/* dist/static/",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "ENVIRONMENT=development nodemon --exec babel-node src/index.js"
+    "watch": "ENVIRONMENT=development babel-watch src/index.js"
   }
 }
