@@ -17,10 +17,10 @@ export const createGoalLink = async (root, { goalId, courseId, workspaceId }, co
   }
 
   const createdLink = await context.prisma.createGoalLink({
-    goal: { connect: { id: goalId }},
-    course: { connect: { id: courseId }},
-    workspace: { connect: { id: workspaceId }},
-    createdBy: { connect: { id: context.user.id }}
+    goal: { connect: { id: goalId } },
+    course: { connect: { id: courseId } },
+    workspace: { connect: { id: workspaceId } },
+    createdBy: { connect: { id: context.user.id } }
   })
 
   pubsub.publish(channels.GOAL_LINK_CREATED, {
@@ -38,7 +38,7 @@ export const deleteGoalLink = async (root, { id }, context) => {
   })
   const { id: courseId } = await context.prisma.goalLink({ id }).course()
   await context.prisma.deleteGoalLink({ id })
-  const goalLinkDeleted = { 
+  const goalLinkDeleted = {
     id,
     workspaceId,
     courseId

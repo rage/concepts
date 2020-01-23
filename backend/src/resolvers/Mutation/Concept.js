@@ -111,7 +111,7 @@ export const createConcept = async (root, {
     args.course = { connect: { id: courseId } }
   } else {
     if (level !== 'GOAL') throw ForbiddenError('Only goals may have a course id.')
-    await checkAcess(context, { minimumRole: Role.STAFF, workspaceId })
+    await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
   }
   if (level !== 'COMMON') {
     args.course = { connect: { id: courseId } }
