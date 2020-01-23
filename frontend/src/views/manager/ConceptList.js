@@ -133,7 +133,7 @@ const ConceptList = ({
   }
 
   const isTemplate = Boolean(workspace.asTemplate ?.id)
-  const conceptTags = backendToSelect(workspace.conceptTags)
+  const conceptTags = backendToSelect(workspace.conceptTags.filter(tag => tag.type !== 'goal'))
 
   const startMerging = () => {
     setEditing(null)
@@ -268,7 +268,7 @@ const ConceptList = ({
     <Card elevation={0} className={classes.root}>
       <CardHeader
         classes={{ title: classes.header, content: classes.headerContent }}
-        title={`${nameMap[level]} of ${workspace.name}`}
+        title={`${nameMap[level]} of ${level === 'COMMON' ? workspace.name : course.name}`}
         action={cardHeaderActions()}
       />
 
