@@ -135,7 +135,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
   }
 
   const onChange = (event, newPage) => {
-    const cid = courseId
+    const cid = courseId && courseId !== 'common'
       && (newPage === 'mapper' || newPage === 'conceptmapper' || newPage === 'manager')
       ? `/${courseId}` : ''
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
