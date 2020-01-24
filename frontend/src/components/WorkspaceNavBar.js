@@ -8,7 +8,7 @@ import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon,
-  AccountTree as AccountTreeIcon
+  AccountTree as AccountTreeIcon, School as SchoolIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -155,6 +155,7 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
           value='conceptmapper' label='Concept Mapper' icon={<ShuffleIcon />} />
         <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
         <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
+        <BottomNavigationAction value='goals' label='Goals' icon={<SchoolIcon />} />
       </BottomNavigation>
       <div>
         <Tooltip title='Open the tutorial for this view' placement='top'>

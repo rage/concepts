@@ -23,6 +23,7 @@ import PointGroupsView from './views/project/PointGroupsView'
 import MembersView from './views/members/MembersView'
 import UserView from './views/user/UserView'
 import ConceptMapperView from './views/conceptmapper/ConceptMapperView'
+import GoalView from './views/goals/GoalView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -77,8 +78,10 @@ const workspaceRouter = (prefix) => <>
     <CytoGraphView workspaceId={wid} />} />
   <Route exact path={`${prefix}/:wid/members`} render={({ match: { params: { wid } } }) =>
     <MembersView workspaceId={wid} />} />
+  <Route exact path={`${prefix}/:wid/goals`} render={({ match: { params: { wid }}}) => 
+    <GoalView/> }/>
   <Route
-    exact path={`${prefix}/:wid/:page(conceptmapper|mapper|graph|heatmap|manager|members)/:cid?`}
+    exact path={`${prefix}/:wid/:page(conceptmapper|mapper|graph|heatmap|manager|members|goals)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>
       <WorkspaceNavBar urlPrefix={prefix} workspaceId={wid} courseId={cid} page={page} />
     }
