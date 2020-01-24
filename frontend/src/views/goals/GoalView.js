@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
+import { Card, CardHeader } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,15 +17,14 @@ const useStyles = makeStyles(theme => ({
       width: 'calc(100% - 32px)'
     }
   },
-  emptyBox: {
+  card: {
     ...theme.mixins.gutters(),
     width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
     boxSizing: 'border-box',
     display: 'flex',
-    flexDirection: 'column',
-    border: '1px dashed black'
+    flexDirection: 'column'
   }
 }))
 
@@ -32,9 +32,9 @@ const Goals = () => {
   const classes = useStyles()
 
   return (
-    <div className={classes.emptyBox}>
-      TODO: GOALS
-    </div>
+    <Card elevation={0} className={classes.card}>
+    <CardHeader title='Goals'/>
+  </Card>
   )
 }
 
@@ -42,9 +42,9 @@ const Courses = () => {
   const classes = useStyles() 
 
   return (
-    <div className={classes.emptyBox}>
-      TODO: GOALS
-    </div>
+    <Card elevation={0} className={classes.card}>
+      <CardHeader title='Courses'/>
+    </Card>
   )
 }
 
@@ -53,8 +53,8 @@ const GoalView = () => {
 
   return (
     <div className={classes.root}>
-      <h2> Courses </h2>
-      <h2> Goals </h2>
+      <h1> Goal Mapping </h1>
+      <h2>  </h2>
       <Courses />
       <Goals />
     </div>
