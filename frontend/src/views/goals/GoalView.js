@@ -25,6 +25,9 @@ const useStyles = makeStyles(theme => ({
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column'
+  },
+  title: {
+    gridArea: 'header'
   }
 }))
 
@@ -53,8 +56,7 @@ const GoalView = () => {
 
   return (
     <div className={classes.root}>
-      <h1> Goal Mapping </h1>
-      <h2>  </h2>
+      <h1 className={classes.title}> Goal Mapping </h1>
       <Courses />
       <Goals />
     </div>
