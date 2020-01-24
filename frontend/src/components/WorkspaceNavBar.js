@@ -96,6 +96,11 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
     openShareWorkspaceDialog(workspaceId, Privilege.EDIT)
   }
 
+  const handleMembersOpen = () => {
+    setMenuAnchor(null)
+    history.push(`${urlPrefix}/${workspaceId}/members`)
+  }
+
   const handleDelete = () => {
     setMenuAnchor(null)
     deleteWorkspace({
@@ -150,9 +155,6 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
           value='conceptmapper' label='Concept Mapper' icon={<ShuffleIcon />} />
         <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
         <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
-        {isOwner &&
-          <BottomNavigationAction value='members' label='Members' icon={<GroupIcon />} />
-        }
       </BottomNavigation>
       <div>
         <Tooltip title='Open the tutorial for this view' placement='top'>
@@ -202,6 +204,12 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
             </ListItemIcon>
             Edit
           </MenuItem>
+          {isOwner && <MenuItem aria-label='Members' onClick={handleMembersOpen}>
+            <ListItemIcon>
+              <GroupIcon />
+            </ListItemIcon>
+            Members
+          </MenuItem>}
         </Menu>
       </div>
     </Paper>
