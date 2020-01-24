@@ -11,7 +11,7 @@ import {
   AccountTree as AccountTreeIcon, School as SchoolIcon
 } from '@material-ui/icons'
 
-import { Privilege } from '../lib/permissions'
+import { Privilege, Role } from '../lib/permissions'
 import client from '../apollo/apolloClient'
 import { WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
 import { CREATE_LINK_TOKEN, DELETE_WORKSPACE } from '../graphql/Mutation'
@@ -155,7 +155,9 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
           value='conceptmapper' label='Concept Mapper' icon={<ShuffleIcon />} />
         <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
         <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
-        <BottomNavigationAction value='goals' label='Goals' icon={<SchoolIcon />} />
+        {user.role >= Role.STAFF &&
+          <BottomNavigationAction value='goals' label='Goals' icon={<SchoolIcon />} />
+        }
       </BottomNavigation>
       <div>
         <Tooltip title='Open the tutorial for this view' placement='top'>
