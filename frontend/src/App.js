@@ -79,7 +79,7 @@ const workspaceRouter = (prefix) => <>
   <Route exact path={`${prefix}/:wid/members`} render={({ match: { params: { wid } } }) =>
     <MembersView workspaceId={wid} />} />
   <Route exact path={`${prefix}/:wid/goals`} render={({ match: { params: { wid }}}) => 
-    <GoalView/> }/>
+    <GoalView workspaceId={wid} /> }/>
   <Route
     exact path={`${prefix}/:wid/:page(conceptmapper|mapper|graph|heatmap|manager|members|goals)/:cid?`}
     render={({ match: { params: { wid, cid, page } } }) =>
