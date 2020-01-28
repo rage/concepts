@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column'
   },
+  cardContainer: {
+    overflow: 'scroll'
+  },
   title: {
     gridArea: 'header'
   },
@@ -41,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const CourseItem = ({ name, id }) => {
+const CourseItem = ({ course }) => {
   const classes = useStyles()
 
   const onToggle = () => {
@@ -49,15 +52,15 @@ const CourseItem = ({ name, id }) => {
   }
 
   return (
-    <ListItem divider>
-      <ListItemText>{ name }</ListItemText>
+    <ListItem divider key={course.id}>
+      <ListItemText>{ course.name }</ListItemText>
       <ListItemIcon>
         <IconButton
           onClick={onToggle}
           className={classes.activeCircle}
         >
           <ArrowRightIcon
-            viewBox='7 7 10 10' id={`course-circle-active-${id}`}
+            viewBox='7 7 10 10' id={`course-circle-active-${course.id}`}
             className='course-circle-active' />
         </IconButton>
       </ListItemIcon>
@@ -73,7 +76,7 @@ const GoalItem = ({ name, id }) => {
   }
 
   return (
-    <ListItem divider>
+    <ListItem divider key={id}>
       <ListItemIcon>
         <IconButton
           onClick={onToggle}
@@ -96,7 +99,7 @@ const Goals = ({ goals }) => {
   return (
     <Card elevation={0} className={classes.card}>
     <CardHeader title='Goals'/>
-    <CardContent>
+    <CardContent className={classes.cardContainer}>
       <List>
         {/* MOCK Goals */}
         <GoalItem name="Example Goal" id="12345"/>
@@ -114,12 +117,9 @@ const Courses = ({ courses }) => {
   return (
     <Card elevation={0} className={classes.card}>
       <CardHeader title='Courses'/>
-      <CardContent>
+      <CardContent className={classes.cardContainer}>
         <List>
-          {/* MOCK Courses */}
-          <CourseItem name="Example course" id="12345"/>
-          <CourseItem name="Course 2" id="42345"/>
-          <CourseItem name="Course 6" id="22345"/>
+          { courses.map(course => <CourseItem course={course}/>) }
         </List>
       </CardContent>
     </Card>
@@ -136,7 +136,7 @@ const GoalView = ({ workspaceId }) => {
   return (
     <div className={classes.root}>
       <h1 className={classes.title}> Goal Mapping </h1>
-      <Courses courses={workspaceQuery.data.courses}/>
+      <Courses courses={workspaceQuery.data.workspaceById.courses}/>
       <Goals />
     </div>
   )
