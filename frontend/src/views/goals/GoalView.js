@@ -1,10 +1,18 @@
 import React from 'react'
-import { Card, CardHeader, CardContent, makeStyles, ListItemText, List, ListItem, ListItemIcon, IconButton, Tooltip } from '@material-ui/core'
+import {
+  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton
+} from '@material-ui/core'
 import { ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/core/styles'
+import { useMutation, useQuery } from 'react-apollo-hooks'
+
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
-import { useQuery } from 'react-apollo-hooks'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
+import CourseEditor from '../manager/CourseEditor'
+import ConceptEditor from '../manager/ConceptEditor'
+import { CREATE_CONCEPT } from '../../graphql/Mutation'
+import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,10 +36,11 @@ const useStyles = makeStyles(theme => ({
     marginRight: 'auto',
     boxSizing: 'border-box',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    overflow: 'hidden'
   },
-  cardContainer: {
-    overflow: 'scroll'
+  list: {
+    overflow: 'auto'
   },
   title: {
     gridArea: 'header'
@@ -45,7 +54,6 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-
 const CourseItem = ({ course }) => {
   const classes = useStyles()
 
@@ -55,15 +63,12 @@ const CourseItem = ({ course }) => {
 
   return (
     <ListItem divider key={course.id}>
-      <ListItemText>{ course.name }</ListItemText>
+      <ListItemText>{course.name}</ListItemText>
       <ListItemIcon>
-        <IconButton
-          onClick={onToggle}
-          className={classes.activeCircle}
-        >
+        <IconButton onClick={onToggle} className={classes.activeCircle}>
           <ArrowRightIcon
-            viewBox='7 7 10 10' id={`course-circle-active-${course.id}`}
-            className='course-circle-active' />
+            viewBox='7 7 10 10' id={`course-circle-${course.id}`}
+            className='course-circle' />
         </IconButton>
       </ListItemIcon>
     </ListItem>
@@ -80,13 +85,10 @@ const GoalItem = ({ goal }) => {
   return (
     <ListItem divider key={goal.id}>
       <ListItemIcon>
-        <IconButton
-          onClick={onToggle}
-          className={classes.activeCircle}
-          >
+        <IconButton onClick={onToggle} className={classes.activeCircle}>
           <ArrowLeftIcon
-            viewBox='7 7 10 10' id={`goal-circle-active-${goal.id}`}
-            className='goal-circle-active' />
+            viewBox='7 7 10 10' id={`goal-circle-${goal.id}`}
+            className='goal-circle' />
         </IconButton>
       </ListItemIcon>
       <ListItemText>{ goal.name }</ListItemText>
@@ -94,33 +96,39 @@ const GoalItem = ({ goal }) => {
   )
 }
 
-
-const Goals = ({ goals }) => {
+const Goals = ({ workspaceId, goals }) => {
   const classes = useStyles()
+
+  const createConcept = useMutation(CREATE_CONCEPT, {
+    update: cache.createConceptUpdate(workspaceId)
+  })
 
   return (
     <Card elevation={0} className={classes.card}>
-    <CardHeader title='Goals'/>
-    <CardContent className={classes.cardContainer}>
-      <List>
-        { goals.map(goal => <GoalItem goal={goal} />)}
+      <CardHeader title='Goals' />
+      <List className={classes.list}>
+        {goals.map(goal => <GoalItem key={goal.id} goal={goal} />)}
       </List>
-    </CardContent>
-  </Card>
+      <ConceptEditor submit={args => createConcept({
+        variables: {
+          workspaceId,
+          ...args
+        }
+      })} action='Create' defaultValues={{ level: 'GOAL' }} />
+    </Card>
   )
 }
 
 const Courses = ({ courses }) => {
-  const classes = useStyles() 
+  const classes = useStyles()
 
   return (
     <Card elevation={0} className={classes.card}>
-      <CardHeader title='Courses'/>
-      <CardContent className={classes.cardContainer}>
-        <List>
-          { courses.map(course => <CourseItem course={course}/>) }
-        </List>
-      </CardContent>
+      <CardHeader title='Courses' />
+      <List className={classes.list}>
+        {courses.map(course => <CourseItem key={course.id} course={course} />)}
+      </List>
+      <CourseEditor />
     </Card>
   )
 }
@@ -138,14 +146,14 @@ const GoalView = ({ workspaceId }) => {
     return <NotFoundView message='Workspace not found' />
   }
 
-  const courses = workspaceQuery.data.workspaceById.courses;
-  const goals = workspaceQuery.data.workspaceById.concepts.filter(concept => concept.level === 'GOAL')
+  const courses = workspaceQuery.data.workspaceById.courses
+  const goals = workspaceQuery.data.workspaceById.goals
 
   return (
     <div className={classes.root}>
-      <h1 className={classes.title}> Goal Mapping </h1>
-      <Courses courses={courses}/>
-      <Goals goals={goals} />
+      <h1 className={classes.title}>Goal Mapping</h1>
+      <Courses courses={courses} />
+      <Goals goals={goals} workspaceId={workspaceId} />
     </div>
   )
 }

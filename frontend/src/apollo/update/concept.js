@@ -6,7 +6,7 @@ const includedIn = (set, object) =>
 
 const createConceptUpdate = workspaceId => (store, response) => {
   const addedConcept = response.data.createConcept || response.data.createConceptFromCommon
-  if (addedConcept.level !== 'COMMON') {
+  if (addedConcept.level !== 'COMMON' && addedConcept.level !== 'GOAL') {
     try {
       const course = store.readFragment({
         id: addedConcept.course.id,
@@ -36,6 +36,10 @@ const createConceptUpdate = workspaceId => (store, response) => {
     if (addedConcept.level === 'COMMON') {
       if (!includedIn(ws.commonConcepts, addedConcept)) {
         ws.commonConcepts = ws.commonConcepts.concat(addedConcept)
+      }
+    } else if (addedConcept.level === 'GOAL') {
+      if (!includedIn(ws.goals, addedConcept)) {
+        ws.goals = ws.goals.concat(addedConcept)
       }
     } else {
       const courseId = addedConcept.course.id
