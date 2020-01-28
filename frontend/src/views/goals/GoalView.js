@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton
 } from '@material-ui/core'
@@ -11,7 +11,9 @@ import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import CourseEditor from '../manager/CourseEditor'
 import ConceptEditor from '../manager/ConceptEditor'
-import { CREATE_CONCEPT, CREATE_COURSE } from '../../graphql/Mutation'
+import {
+  CREATE_CONCEPT, CREATE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
+} from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
@@ -98,16 +100,35 @@ const GoalItem = ({ goal }) => {
 
 const Goals = ({ workspaceId, goals }) => {
   const classes = useStyles()
+  const [editing, setEditing] = useState()
 
   const createConcept = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
+  })
+  const updateConcept = useMutation(UPDATE_CONCEPT, {
+    update: cache.updateConceptUpdate(workspaceId)
   })
 
   return (
     <Card elevation={0} className={classes.card}>
       <CardHeader title='Goals' />
       <List className={classes.list}>
-        {goals.map(goal => <GoalItem key={goal.id} goal={goal} />)}
+        {goals.map(goal => editing === goal.id ? (
+          <ConceptEditor
+            submit={args => {
+              setEditing(null)
+              return updateConcept({ variables: args })
+            }}
+            cancel={() => setEditing(null)}
+            defaultValues={goal}
+            action='Save'
+          />
+        ) : (
+          <GoalItem
+            updateConcept={variables => updateConcept({ variables })}
+            key={goal.id} goal={goal}
+          />
+        ))}
       </List>
       <ConceptEditor submit={args => createConcept({
         variables: {
@@ -123,12 +144,15 @@ const Courses = ({ workspaceId, courses }) => {
   const classes = useStyles()
 
   const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
+  const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
 
   return (
     <Card elevation={0} className={classes.card}>
       <CardHeader title='Courses' />
       <List className={classes.list}>
-        {courses.map(course => <CourseItem key={course.id} course={course} />)}
+        {courses.map(course => <CourseItem
+          updateCourse={variables => updateCourse({ variables })}
+          key={course.id} course={course} />)}
       </List>
       <CourseEditor submit={args => createCourse({
         variables: {
