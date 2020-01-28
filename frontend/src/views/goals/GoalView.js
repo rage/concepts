@@ -70,7 +70,7 @@ const CourseItem = ({ course }) => {
   )
 }
 
-const GoalItem = ({ name, id }) => {
+const GoalItem = ({ goal }) => {
   const classes = useStyles()
 
   const onToggle = () => {
@@ -78,18 +78,18 @@ const GoalItem = ({ name, id }) => {
   }
 
   return (
-    <ListItem divider key={id}>
+    <ListItem divider key={goal.id}>
       <ListItemIcon>
         <IconButton
           onClick={onToggle}
           className={classes.activeCircle}
           >
           <ArrowLeftIcon
-            viewBox='7 7 10 10' id={`goal-circle-active-${id}`}
+            viewBox='7 7 10 10' id={`goal-circle-active-${goal.id}`}
             className='goal-circle-active' />
         </IconButton>
       </ListItemIcon>
-      <ListItemText>{ name }</ListItemText>
+      <ListItemText>{ goal.name }</ListItemText>
     </ListItem>
   )
 }
@@ -103,10 +103,7 @@ const Goals = ({ goals }) => {
     <CardHeader title='Goals'/>
     <CardContent className={classes.cardContainer}>
       <List>
-        {/* MOCK Goals */}
-        <GoalItem name="Example Goal" id="12345"/>
-        <GoalItem name="Goal 2" id="42345"/>
-        <GoalItem name="Goal 6" id="22345"/>
+        { goals.map(goal => <GoalItem goal={goal} />)}
       </List>
     </CardContent>
   </Card>
@@ -141,11 +138,14 @@ const GoalView = ({ workspaceId }) => {
     return <NotFoundView message='Workspace not found' />
   }
 
+  const courses = workspaceQuery.data.workspaceById.courses;
+  const goals = workspaceQuery.data.workspaceById.concepts.filter(concept => concept.level === 'GOAL')
+
   return (
     <div className={classes.root}>
       <h1 className={classes.title}> Goal Mapping </h1>
-      <Courses courses={workspaceQuery.data.workspaceById.courses}/>
-      <Goals />
+      <Courses courses={courses}/>
+      <Goals goals={goals} />
     </div>
   )
 }

@@ -29,6 +29,11 @@ query workspaceById($id: ID!) {
     asTemplate {
       id
     }
+    concepts {
+      id
+      name
+      level
+    }
     courseTags {
       id
       name
