@@ -3,6 +3,8 @@ import { Card, CardHeader, CardContent, makeStyles, ListItemText, List, ListItem
 import { ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon } from '@material-ui/icons'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import { useQuery } from 'react-apollo-hooks'
+import LoadingBar from '../../components/LoadingBar'
+import NotFoundView from '../error/NotFoundView'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -132,6 +134,12 @@ const GoalView = ({ workspaceId }) => {
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }
   })
+
+  if (workspaceQuery.loading) {
+    return <LoadingBar id='workspace-management' />
+  } else if (workspaceQuery.error) {
+    return <NotFoundView message='Workspace not found' />
+  }
 
   return (
     <div className={classes.root}>
