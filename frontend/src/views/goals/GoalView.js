@@ -11,7 +11,7 @@ import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import CourseEditor from '../manager/CourseEditor'
 import ConceptEditor from '../manager/ConceptEditor'
-import { CREATE_CONCEPT } from '../../graphql/Mutation'
+import { CREATE_CONCEPT, CREATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 
 const useStyles = makeStyles(theme => ({
@@ -91,7 +91,7 @@ const GoalItem = ({ goal }) => {
             className='goal-circle' />
         </IconButton>
       </ListItemIcon>
-      <ListItemText>{ goal.name }</ListItemText>
+      <ListItemText>{goal.name}</ListItemText>
     </ListItem>
   )
 }
@@ -119,8 +119,10 @@ const Goals = ({ workspaceId, goals }) => {
   )
 }
 
-const Courses = ({ courses }) => {
+const Courses = ({ workspaceId, courses }) => {
   const classes = useStyles()
+
+  const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
 
   return (
     <Card elevation={0} className={classes.card}>
@@ -128,7 +130,12 @@ const Courses = ({ courses }) => {
       <List className={classes.list}>
         {courses.map(course => <CourseItem key={course.id} course={course} />)}
       </List>
-      <CourseEditor />
+      <CourseEditor submit={args => createCourse({
+        variables: {
+          workspaceId,
+          ...args
+        }
+      })} />
     </Card>
   )
 }
@@ -152,7 +159,7 @@ const GoalView = ({ workspaceId }) => {
   return (
     <div className={classes.root}>
       <h1 className={classes.title}>Goal Mapping</h1>
-      <Courses courses={courses} />
+      <Courses courses={courses} workspaceId={workspaceId} />
       <Goals goals={goals} workspaceId={workspaceId} />
     </div>
   )
