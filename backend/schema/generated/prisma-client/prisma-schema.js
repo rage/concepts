@@ -5306,6 +5306,7 @@ type Workspace {
   commonConcepts(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   conceptLinks(where: ConceptLinkWhereInput, orderBy: ConceptLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ConceptLink!]
   courseLinks(where: CourseLinkWhereInput, orderBy: CourseLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CourseLink!]
+  goals(where: ConceptWhereInput, orderBy: ConceptOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Concept!]
   goalLinks(where: GoalLinkWhereInput, orderBy: GoalLinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [GoalLink!]
   participants(where: WorkspaceParticipantWhereInput, orderBy: WorkspaceParticipantOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceParticipant!]
   tokens(where: WorkspaceTokenWhereInput, orderBy: WorkspaceTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceToken!]
@@ -5342,6 +5343,7 @@ input WorkspaceCreateInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5435,6 +5437,7 @@ input WorkspaceCreateWithoutAsMergeInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5458,6 +5461,7 @@ input WorkspaceCreateWithoutAsTemplateInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5481,6 +5485,7 @@ input WorkspaceCreateWithoutClonesInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5504,6 +5509,7 @@ input WorkspaceCreateWithoutConceptLinksInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   commonConcepts: ConceptCreateManyInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5527,6 +5533,7 @@ input WorkspaceCreateWithoutConceptsInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5550,6 +5557,7 @@ input WorkspaceCreateWithoutCourseLinksInput {
   concepts: ConceptCreateManyWithoutWorkspaceInput
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5573,6 +5581,7 @@ input WorkspaceCreateWithoutCoursesInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5597,6 +5606,7 @@ input WorkspaceCreateWithoutGoalLinksInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5620,6 +5630,7 @@ input WorkspaceCreateWithoutParticipantsInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -5643,6 +5654,7 @@ input WorkspaceCreateWithoutPointGroupsInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5665,6 +5677,7 @@ input WorkspaceCreateWithoutSourceProjectInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5688,6 +5701,7 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenCreateManyWithoutWorkspaceInput
@@ -5712,6 +5726,7 @@ input WorkspaceCreateWithoutTokensInput {
   commonConcepts: ConceptCreateManyInput
   conceptLinks: ConceptLinkCreateManyWithoutWorkspaceInput
   courseLinks: CourseLinkCreateManyWithoutWorkspaceInput
+  goals: ConceptCreateManyInput
   goalLinks: GoalLinkCreateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantCreateManyWithoutWorkspaceInput
   mainCourse: CourseCreateOneInput
@@ -6340,6 +6355,7 @@ input WorkspaceUpdateDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6363,6 +6379,7 @@ input WorkspaceUpdateInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6522,6 +6539,7 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6544,6 +6562,7 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6566,6 +6585,7 @@ input WorkspaceUpdateWithoutClonesDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6588,6 +6608,7 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   commonConcepts: ConceptUpdateManyInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6610,6 +6631,7 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6632,6 +6654,7 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   concepts: ConceptUpdateManyWithoutWorkspaceInput
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6654,6 +6677,7 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6677,6 +6701,7 @@ input WorkspaceUpdateWithoutGoalLinksDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6699,6 +6724,7 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6721,6 +6747,7 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6742,6 +6769,7 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6764,6 +6792,7 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   tokens: WorkspaceTokenUpdateManyWithoutWorkspaceInput
@@ -6787,6 +6816,7 @@ input WorkspaceUpdateWithoutTokensDataInput {
   commonConcepts: ConceptUpdateManyInput
   conceptLinks: ConceptLinkUpdateManyWithoutWorkspaceInput
   courseLinks: CourseLinkUpdateManyWithoutWorkspaceInput
+  goals: ConceptUpdateManyInput
   goalLinks: GoalLinkUpdateManyWithoutWorkspaceInput
   participants: WorkspaceParticipantUpdateManyWithoutWorkspaceInput
   mainCourse: CourseUpdateOneInput
@@ -6941,6 +6971,9 @@ input WorkspaceWhereInput {
   courseLinks_every: CourseLinkWhereInput
   courseLinks_some: CourseLinkWhereInput
   courseLinks_none: CourseLinkWhereInput
+  goals_every: ConceptWhereInput
+  goals_some: ConceptWhereInput
+  goals_none: ConceptWhereInput
   goalLinks_every: GoalLinkWhereInput
   goalLinks_some: GoalLinkWhereInput
   goalLinks_none: GoalLinkWhereInput

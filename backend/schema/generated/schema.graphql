@@ -355,6 +355,7 @@ type Workspace {
   commonConcepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  goals: [Concept!]!
   goalLinks: [GoalLink!]!
 
   # Authorization data

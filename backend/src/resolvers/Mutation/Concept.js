@@ -120,14 +120,15 @@ export const createConcept = async (root, {
 
   const createdConcept = await context.prisma.createConcept(args)
 
-  if (level === 'COMMON') {
+  if (level === 'COMMON' || level === 'GOAL') {
+    const key = level === 'COMMON' ? 'commonConcepts' : 'goals'
     await context.prisma.updateWorkspace({
       where: { id: workspaceId },
       data: {
-        commonConcepts: { connect: { id: createdConcept.id } }
+        [key]: { connect: { id: createdConcept.id } }
       }
     })
-  } else if (level !== 'GOAL') {
+  } else {
     if (createdConcept) {
       const pointGroups = await findPointGroups(workspaceId, courseId, context)
       if (pointGroups && pointGroups.length > 0) {

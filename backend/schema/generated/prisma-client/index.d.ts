@@ -1207,6 +1207,9 @@ export interface WorkspaceWhereInput {
   courseLinks_every?: Maybe<CourseLinkWhereInput>;
   courseLinks_some?: Maybe<CourseLinkWhereInput>;
   courseLinks_none?: Maybe<CourseLinkWhereInput>;
+  goals_every?: Maybe<ConceptWhereInput>;
+  goals_some?: Maybe<ConceptWhereInput>;
+  goals_none?: Maybe<ConceptWhereInput>;
   goalLinks_every?: Maybe<GoalLinkWhereInput>;
   goalLinks_some?: Maybe<GoalLinkWhereInput>;
   goalLinks_none?: Maybe<GoalLinkWhereInput>;
@@ -2100,6 +2103,7 @@ export interface WorkspaceCreateWithoutParticipantsInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2144,6 +2148,7 @@ export interface WorkspaceCreateInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2172,6 +2177,7 @@ export interface WorkspaceCreateWithoutClonesInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2219,6 +2225,7 @@ export interface WorkspaceCreateWithoutSourceProjectInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2265,6 +2272,7 @@ export interface WorkspaceCreateWithoutAsMergeInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2296,6 +2304,7 @@ export interface WorkspaceCreateWithoutSourceTemplateInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2487,6 +2496,7 @@ export interface WorkspaceCreateWithoutCoursesInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2795,6 +2805,7 @@ export interface WorkspaceCreateWithoutAsTemplateInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -2892,6 +2903,7 @@ export interface WorkspaceCreateWithoutConceptsInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -3057,6 +3069,7 @@ export interface WorkspaceCreateWithoutTokensInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -3122,6 +3135,7 @@ export interface WorkspaceCreateWithoutGoalLinksInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -3239,6 +3253,7 @@ export interface WorkspaceCreateWithoutConceptLinksInput {
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -3365,6 +3380,7 @@ export interface WorkspaceCreateWithoutCourseLinksInput {
   concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -3472,6 +3488,7 @@ export interface WorkspaceUpdateWithoutParticipantsDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -3522,6 +3539,7 @@ export interface WorkspaceUpdateDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -3553,6 +3571,7 @@ export interface WorkspaceUpdateWithoutClonesDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -3623,6 +3642,7 @@ export interface WorkspaceUpdateWithoutSourceProjectDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -3692,6 +3712,7 @@ export interface WorkspaceUpdateWithoutAsMergeDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -3743,6 +3764,7 @@ export interface WorkspaceUpdateWithoutSourceTemplateDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -4126,6 +4148,7 @@ export interface WorkspaceUpdateWithoutCoursesDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -4697,6 +4720,7 @@ export interface WorkspaceUpdateWithoutAsTemplateDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -4840,6 +4864,7 @@ export interface WorkspaceUpdateWithoutConceptsDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -5439,6 +5464,7 @@ export interface WorkspaceUpdateWithoutTokensDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -5524,6 +5550,7 @@ export interface WorkspaceUpdateWithoutGoalLinksDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -6067,6 +6094,7 @@ export interface WorkspaceUpdateWithoutConceptLinksDataInput {
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -6556,6 +6584,7 @@ export interface WorkspaceUpdateWithoutCourseLinksDataInput {
   concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -6780,6 +6809,7 @@ export interface WorkspaceCreateWithoutPointGroupsInput {
   commonConcepts?: Maybe<ConceptCreateManyInput>;
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
@@ -6833,6 +6863,7 @@ export interface WorkspaceUpdateWithoutPointGroupsDataInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -7133,6 +7164,7 @@ export interface WorkspaceUpdateInput {
   commonConcepts?: Maybe<ConceptUpdateManyInput>;
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
@@ -7737,6 +7769,15 @@ export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  goals: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   goalLinks: <T = FragmentableArray<GoalLink>>(args?: {
     where?: GoalLinkWhereInput;
     orderBy?: GoalLinkOrderByInput;
@@ -7855,6 +7896,15 @@ export interface WorkspaceSubscription
   courseLinks: <T = Promise<AsyncIterator<CourseLinkSubscription>>>(args?: {
     where?: CourseLinkWhereInput;
     orderBy?: CourseLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  goals: <T = Promise<AsyncIterator<ConceptSubscription>>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -7981,6 +8031,15 @@ export interface WorkspaceNullablePromise
   courseLinks: <T = FragmentableArray<CourseLink>>(args?: {
     where?: CourseLinkWhereInput;
     orderBy?: CourseLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  goals: <T = FragmentableArray<Concept>>(args?: {
+    where?: ConceptWhereInput;
+    orderBy?: ConceptOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
