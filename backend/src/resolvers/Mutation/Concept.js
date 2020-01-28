@@ -107,15 +107,17 @@ export const createConcept = async (root, {
     tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
   }
 
-  if (courseId) {
-    args.course = { connect: { id: courseId } }
-  } else {
-    if (level !== 'GOAL') throw ForbiddenError('Only goals may have a course id.')
+  if (level === 'GOAL' || level === 'COMMON') {
+    if (courseId) {
+      throw new ForbiddenError('Goals and common concepts must not have a course ID')
+    }
     await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
-  }
-  if (level !== 'COMMON') {
+  } else if (!courseId) {
+    throw new ForbiddenError('Objectives and concepts must have a course ID')
+  } else {
     args.course = { connect: { id: courseId } }
   }
+
   const createdConcept = await context.prisma.createConcept(args)
 
   if (level === 'COMMON') {
