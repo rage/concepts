@@ -13,9 +13,11 @@ import CourseEditor from '../manager/CourseEditor'
 import ConceptEditor from '../manager/ConceptEditor'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 import {
-  CREATE_CONCEPT, CREATE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
+  CREATE_CONCEPT, DELETE_COURSE, CREATE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE, DELETE_CONCEPT
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
+import { useConfirmDelete } from '../../dialogs/alert'
+import { noPropagation } from '../../lib/eventMiddleware'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -73,16 +75,19 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const CourseItem = ({ course }) => {
+const CourseItem = ({ course, deleteCourse, updateCourse }) => {
   const classes = useStyles()
+  const confirmDelete = useConfirmDelete()
 
   const onToggle = () => {
     // TODO: implement
   }
 
-  const deleteCourse = () => {
-
-  }
+  const handleDelete = noPropagation(async () => {
+    if (await confirmDelete(`Are you sure you want to delete the course ${course.name}?`)) {
+      await deleteCourse(course.id)
+    }
+  })
 
   const editCourse = () => {
 
@@ -92,7 +97,7 @@ const CourseItem = ({ course }) => {
     <ListItem divider key={course.id} className={classes.listItemContainer}>
       <ListItemText>{course.name}</ListItemText>
       <ListItemIcon>
-        <IconButton onClick={deleteCourse} className={classes.hoverButton}>
+        <IconButton onClick={handleDelete} className={classes.hoverButton}>
           <DeleteIcon/>
         </IconButton>
         <IconButton onClick={editCourse} className={classes.hoverButton}>
@@ -108,9 +113,10 @@ const CourseItem = ({ course }) => {
   )
 }
 
-const GoalItem = ({ goal }) => {
+const GoalItem = ({ goal, deleteConcept }) => {
   const classes = useStyles()
-
+  const confirmDelete = useConfirmDelete()
+  
   const onToggle = () => {
     // TODO: implement
   }
@@ -118,10 +124,11 @@ const GoalItem = ({ goal }) => {
   const editGoal = () => {
 
   }
-
-  const deleteGoal = () => {
-
-  }
+  const handleDelete = noPropagation(async () => {
+    if (await confirmDelete(`Are you sure you want to delete the goal ${goal.name}?`)) {
+      await deleteConcept(goal.id)
+    }
+  })
 
   return (
     <ListItem divider key={goal.id} className={classes.listItemContainer}>
@@ -136,7 +143,7 @@ const GoalItem = ({ goal }) => {
         <ConceptToolTipContent tags={goal.tags} description={goal.name}/>
       </ListItemText>
       <ListItemIcon>
-        <IconButton onClick={deleteGoal} className={classes.hoverButton}>
+        <IconButton onClick={handleDelete} className={classes.hoverButton}>
           <DeleteIcon/>
         </IconButton>
         <IconButton onClick={editGoal} className={classes.hoverButton}>
@@ -157,6 +164,9 @@ const Goals = ({ workspaceId, goals }) => {
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
+  const deleteConcept = useMutation(DELETE_CONCEPT,{
+    update: cache.deleteConceptUpdate(workspaceId)
+  })
 
   return (
     <Card elevation={0} className={classes.card}>
@@ -175,6 +185,7 @@ const Goals = ({ workspaceId, goals }) => {
         ) : (
           <GoalItem
             updateConcept={variables => updateConcept({ variables })}
+            deleteConcept={id => deleteConcept({ variables: { id } })}
             key={goal.id} goal={goal}
           />
         ))}
@@ -194,12 +205,14 @@ const Courses = ({ workspaceId, courses }) => {
 
   const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
   const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
-
+  const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
+  
   return (
     <Card elevation={0} className={classes.card}>
       <CardHeader title='Courses' />
       <List className={classes.list}>
         {courses.map(course => <CourseItem
+          deleteCourse={id => deleteCourse({ variables: { id } })}
           updateCourse={variables => updateCourse({ variables })}
           key={course.id} course={course} />)}
       </List>
