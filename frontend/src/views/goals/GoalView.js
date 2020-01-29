@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import {
   Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton, ListItemSecondaryAction
 } from '@material-ui/core'
-import { ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon, Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
+import {
+  ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon, Delete as DeleteIcon, Edit as EditIcon
+} from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 
@@ -213,7 +215,7 @@ const Courses = ({ workspaceId, courses }) => {
             cancel={() => setEditing(null)}
             defaultValues={course}
             action='Save'
-            key={concept.id}
+            key={course.id}
           />
         ) : (
           <CourseItem
