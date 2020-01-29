@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import {
-  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton
+  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton, ListItemSecondaryAction
 } from '@material-ui/core'
-import { ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon } from '@material-ui/icons'
+import { ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon, Delete as DeleteIcon, Edit as EditIcon } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/core/styles'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 
@@ -49,12 +49,28 @@ const useStyles = makeStyles(theme => ({
     gridArea: 'header'
   },
   activeCircle: {
-    zIndex: 2,
-    padding: '4px'
+    zIndex: 2
   },
   circle: {
     zIndex: 2
+  },
+  listItemContainer: {
+    '&:hover': {
+      '& $hoverButton': {
+        visibility: 'visible'
+      },
+      '& $conceptBody': {
+        paddingRight: '104px',
+        '&$sortable': {
+          paddingRight: '160px'
+        }
+      }
+    }
+  },
+  hoverButton: {
+    visibility: 'hidden'
   }
+
 }))
 
 const CourseItem = ({ course }) => {
@@ -64,10 +80,24 @@ const CourseItem = ({ course }) => {
     // TODO: implement
   }
 
+  const deleteCourse = () => {
+
+  }
+
+  const editCourse = () => {
+
+  }
+
   return (
-    <ListItem divider key={course.id}>
+    <ListItem divider key={course.id} className={classes.listItemContainer}>
       <ListItemText>{course.name}</ListItemText>
       <ListItemIcon>
+        <IconButton onClick={deleteCourse} className={classes.hoverButton}>
+          <DeleteIcon/>
+        </IconButton>
+        <IconButton onClick={editCourse} className={classes.hoverButton}>
+          <EditIcon/>
+        </IconButton>
         <IconButton onClick={onToggle} className={classes.activeCircle}>
           <ArrowRightIcon
             viewBox='7 7 10 10' id={`course-circle-${course.id}`}
@@ -85,8 +115,16 @@ const GoalItem = ({ goal }) => {
     // TODO: implement
   }
 
+  const editGoal = () => {
+
+  }
+
+  const deleteGoal = () => {
+
+  }
+
   return (
-    <ListItem divider key={goal.id}>
+    <ListItem divider key={goal.id} className={classes.listItemContainer}>
       <ListItemIcon>
         <IconButton onClick={onToggle} className={classes.activeCircle}>
           <ArrowLeftIcon
@@ -94,7 +132,17 @@ const GoalItem = ({ goal }) => {
             className='goal-circle' />
         </IconButton>
       </ListItemIcon>
-      <ConceptToolTipContent description={goal.name} tags={goal.tags}/>
+      <ListItemText>
+        <ConceptToolTipContent tags={goal.tags} description={goal.name}/>
+      </ListItemText>
+      <ListItemIcon>
+        <IconButton onClick={deleteGoal} className={classes.hoverButton}>
+          <DeleteIcon/>
+        </IconButton>
+        <IconButton onClick={editGoal} className={classes.hoverButton}>
+          <EditIcon/>
+        </IconButton>
+      </ListItemIcon>
     </ListItem>
   )
 }
