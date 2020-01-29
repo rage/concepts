@@ -11,6 +11,7 @@ import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import CourseEditor from '../manager/CourseEditor'
 import ConceptEditor from '../manager/ConceptEditor'
+import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 import {
   CREATE_CONCEPT, CREATE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE
 } from '../../graphql/Mutation'
@@ -93,7 +94,7 @@ const GoalItem = ({ goal }) => {
             className='goal-circle' />
         </IconButton>
       </ListItemIcon>
-      <ListItemText>{goal.name}</ListItemText>
+      <ConceptToolTipContent description={goal.name} tags={goal.tags}/>
     </ListItem>
   )
 }
