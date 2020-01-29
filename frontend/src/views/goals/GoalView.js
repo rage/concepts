@@ -172,6 +172,7 @@ const Goals = ({ workspaceId, goals }) => {
             cancel={() => setEditing(null)}
             defaultValues={goal}
             action='Save'
+            key={goal.id}
           />
         ) : (
           <GoalItem
@@ -212,6 +213,7 @@ const Courses = ({ workspaceId, courses }) => {
             cancel={() => setEditing(null)}
             defaultValues={course}
             action='Save'
+            key={concept.id}
           />
         ) : (
           <CourseItem
