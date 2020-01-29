@@ -378,7 +378,7 @@ export const deleteConcept = async (root, { id }, context) => {
   if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
   await context.prisma.deleteConcept({ id })
 
-  if (toDelete.level !== 'COMMON') {
+  if (toDelete.level !== 'COMMON' && toDelete.level !== 'GOAL') {
     const orderName = `${toDelete.level.toLowerCase()}Order`
     const conceptOrder = toDelete.course[orderName]
     if (!isAutomaticSorting(conceptOrder)) {
