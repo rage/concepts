@@ -57,15 +57,13 @@ const useStyles = makeStyles(theme => ({
     zIndex: 2
   },
   listItemContainer: {
+    padding: '0 16px',
     '&:hover': {
       '& $hoverButton': {
         visibility: 'visible'
       },
       '& $conceptBody': {
-        paddingRight: '104px',
-        '&$sortable': {
-          paddingRight: '160px'
-        }
+        paddingRight: '104px'
       }
     }
   },
@@ -75,7 +73,7 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const CourseItem = ({ course, deleteCourse, updateCourse }) => {
+const CourseItem = ({ course, deleteCourse, setEditing }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
 
@@ -89,19 +87,15 @@ const CourseItem = ({ course, deleteCourse, updateCourse }) => {
     }
   })
 
-  const editCourse = () => {
-
-  }
-
   return (
     <ListItem divider key={course.id} className={classes.listItemContainer}>
       <ListItemText>{course.name}</ListItemText>
       <ListItemIcon>
         <IconButton onClick={handleDelete} className={classes.hoverButton}>
-          <DeleteIcon/>
+          <DeleteIcon />
         </IconButton>
-        <IconButton onClick={editCourse} className={classes.hoverButton}>
-          <EditIcon/>
+        <IconButton onClick={() => setEditing(course.id)} className={classes.hoverButton}>
+          <EditIcon />
         </IconButton>
         <IconButton onClick={onToggle} className={classes.activeCircle}>
           <ArrowRightIcon
@@ -113,17 +107,14 @@ const CourseItem = ({ course, deleteCourse, updateCourse }) => {
   )
 }
 
-const GoalItem = ({ goal, deleteConcept }) => {
+const GoalItem = ({ goal, deleteConcept, setEditing }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
-  
+
   const onToggle = () => {
     // TODO: implement
   }
 
-  const editGoal = () => {
-
-  }
   const handleDelete = noPropagation(async () => {
     if (await confirmDelete(`Are you sure you want to delete the goal ${goal.name}?`)) {
       await deleteConcept(goal.id)
@@ -140,14 +131,14 @@ const GoalItem = ({ goal, deleteConcept }) => {
         </IconButton>
       </ListItemIcon>
       <ListItemText>
-        <ConceptToolTipContent tags={goal.tags} description={goal.name}/>
+        <ConceptToolTipContent tags={goal.tags} description={goal.name} />
       </ListItemText>
       <ListItemIcon>
         <IconButton onClick={handleDelete} className={classes.hoverButton}>
-          <DeleteIcon/>
+          <DeleteIcon />
         </IconButton>
-        <IconButton onClick={editGoal} className={classes.hoverButton}>
-          <EditIcon/>
+        <IconButton onClick={() => setEditing(goal.id)} className={classes.hoverButton}>
+          <EditIcon />
         </IconButton>
       </ListItemIcon>
     </ListItem>
@@ -164,7 +155,7 @@ const Goals = ({ workspaceId, goals }) => {
   const updateConcept = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
-  const deleteConcept = useMutation(DELETE_CONCEPT,{
+  const deleteConcept = useMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate(workspaceId)
   })
 
@@ -186,7 +177,7 @@ const Goals = ({ workspaceId, goals }) => {
           <GoalItem
             updateConcept={variables => updateConcept({ variables })}
             deleteConcept={id => deleteConcept({ variables: { id } })}
-            key={goal.id} goal={goal}
+            key={goal.id} goal={goal} setEditing={setEditing}
           />
         ))}
       </List>
@@ -202,19 +193,31 @@ const Goals = ({ workspaceId, goals }) => {
 
 const Courses = ({ workspaceId, courses }) => {
   const classes = useStyles()
+  const [editing, setEditing] = useState()
 
   const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
   const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
-  
+
   return (
     <Card elevation={0} className={classes.card}>
       <CardHeader title='Courses' />
       <List className={classes.list}>
-        {courses.map(course => <CourseItem
-          deleteCourse={id => deleteCourse({ variables: { id } })}
-          updateCourse={variables => updateCourse({ variables })}
-          key={course.id} course={course} />)}
+        {courses.map(course => editing === course.id ? (
+          <CourseEditor
+            submit={args => {
+              setEditing(null)
+              return updateCourse({ variables: args })
+            }}
+            cancel={() => setEditing(null)}
+            defaultValues={course}
+            action='Save'
+          />
+        ) : (
+          <CourseItem
+            deleteCourse={id => deleteCourse({ variables: { id } })}
+            key={course.id} course={course} setEditing={setEditing} />
+        ))}
       </List>
       <CourseEditor submit={args => createCourse({
         variables: {
