@@ -61,7 +61,7 @@ type Project {
   tokens: [ProjectToken!]! @relation(name: "ProjectAccessToken", onDelete: CASCADE)
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
@@ -101,7 +101,7 @@ type Workspace {
   conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
@@ -299,7 +299,7 @@ type PointGroup {
   completions: [Completion!]! @relation(name: "PointGroupCompletions", onDelete: CASCADE)
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }
