@@ -204,6 +204,7 @@ type LimitedProject {
 type DeletedCourseItem {
   id: ID!
   courseId: ID
+  level: ConceptLevel!
 }
 
 type DeletedCourseItems {

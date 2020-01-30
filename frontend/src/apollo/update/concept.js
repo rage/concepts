@@ -93,6 +93,9 @@ const deleteConceptUpdate = workspaceId => (store, response) => {
         const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
         course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
       }
+      if (deletedConcept.level === 'GOAL') {
+        dataInStore.workspaceById.goals = dataInStore.workspaceById.goals.filter(goal => goal.id !== deletedConcept.id)
+      }
       dataInStore.workspaceById.commonConcepts = dataInStore.workspaceById.commonConcepts
         .filter(concept => concept.id !== deletedConcept.id)
       client.writeQuery({
