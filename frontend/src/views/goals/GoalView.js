@@ -22,6 +22,7 @@ import {
 import cache from '../../apollo/update'
 import { useConfirmDelete } from '../../dialogs/alert'
 import { noPropagation } from '../../lib/eventMiddleware'
+import { ConceptLink } from '../coursemapper/concept'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -77,13 +78,9 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const CourseItem = ({ course, deleteCourse, setEditing }) => {
+const CourseItem = ({ course, deleteCourse, setEditing, setAddingLink }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
-
-  const onToggle = () => {
-    // TODO: implement
-  }
 
   const handleDelete = noPropagation(async () => {
     if (await confirmDelete(`Are you sure you want to delete the course ${course.name}?`)) {
@@ -101,7 +98,10 @@ const CourseItem = ({ course, deleteCourse, setEditing }) => {
         <IconButton onClick={() => setEditing(course.id)} className={classes.hoverButton}>
           <EditIcon />
         </IconButton>
-        <IconButton onClick={onToggle} className={classes.activeCircle}>
+        <IconButton
+          onClick={() => setAddingLink(`course-circle-${course.id}`)}
+          className={classes.activeCircle}
+        >
           <ArrowRightIcon
             viewBox='7 7 10 10' id={`course-circle-${course.id}`}
             className='course-circle' />
@@ -111,13 +111,9 @@ const CourseItem = ({ course, deleteCourse, setEditing }) => {
   )
 }
 
-const GoalItem = ({ goal, deleteConcept, setEditing }) => {
+const GoalItem = ({ goal, deleteConcept, setEditing, setAddingLink }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
-
-  const onToggle = () => {
-    // TODO: implement
-  }
 
   const handleDelete = noPropagation(async () => {
     if (await confirmDelete(`Are you sure you want to delete the goal ${goal.name}?`)) {
@@ -128,7 +124,9 @@ const GoalItem = ({ goal, deleteConcept, setEditing }) => {
   return (
     <ListItem divider key={goal.id} className={classes.listItemContainer}>
       <ListItemIcon>
-        <IconButton onClick={onToggle} className={classes.activeCircle}>
+        <IconButton
+          onClick={() => setAddingLink(`goal-circle-${goal.id}`)} className={classes.activeCircle}
+        >
           <ArrowLeftIcon
             viewBox='7 7 10 10' id={`goal-circle-${goal.id}`}
             className='goal-circle' />
@@ -149,7 +147,7 @@ const GoalItem = ({ goal, deleteConcept, setEditing }) => {
   )
 }
 
-const Goals = ({ workspaceId, goals }) => {
+const Goals = ({ workspaceId, goals, setAddingLink }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -182,7 +180,7 @@ const Goals = ({ workspaceId, goals }) => {
           <GoalItem
             updateConcept={variables => updateConcept({ variables })}
             deleteConcept={id => deleteConcept({ variables: { id } })}
-            key={goal.id} goal={goal} setEditing={setEditing}
+            key={goal.id} goal={goal} setEditing={setEditing} setAddingLink={setAddingLink}
           />
         ))}
       </List>
@@ -196,7 +194,7 @@ const Goals = ({ workspaceId, goals }) => {
   )
 }
 
-const Courses = ({ workspaceId, courses }) => {
+const Courses = ({ workspaceId, courses, setAddingLink }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -222,7 +220,8 @@ const Courses = ({ workspaceId, courses }) => {
         ) : (
           <CourseItem
             deleteCourse={id => deleteCourse({ variables: { id } })}
-            key={course.id} course={course} setEditing={setEditing} />
+            key={course.id} course={course} setEditing={setEditing} setAddingLink={setAddingLink}
+          />
         ))}
       </List>
       <CourseEditor submit={args => createCourse({
@@ -237,6 +236,7 @@ const Courses = ({ workspaceId, courses }) => {
 
 const GoalView = ({ workspaceId }) => {
   const classes = useStyles()
+  const [addingLink, setAddingLink] = useState(null)
 
   const createGoalLink = useMutation(CREATE_GOAL_LINK, {
     update: cache.createGoalLinkUpdate(workspaceId)
@@ -263,8 +263,19 @@ const GoalView = ({ workspaceId }) => {
   return (
     <div className={classes.root}>
       <h1 className={classes.title}>Goal Mapping</h1>
-      <Courses courses={courses} workspaceId={workspaceId} />
-      <Goals goals={goals} workspaceId={workspaceId} />
+      <Courses courses={courses} workspaceId={workspaceId} setAddingLink={setAddingLink} />
+      <Goals goals={goals} workspaceId={workspaceId} setAddingLink={setAddingLink} />
+      <div>
+        {goalLinks.map(link => <ConceptLink
+          key={`goal-link-${link.id}`} delay={1} active linkId={link.id}
+          from={`goal-circle-${link.goal.id}`} to={`course-circle-${link.course.id}`}
+          fromConceptId={link.goal.id} toConceptId={link.course.id}
+          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: -5, x1: +6 }}
+        />)}
+        {addingLink && <ConceptLink
+          delay={1} active from={addingLink} to={addingLink} followMouse
+        />}
+      </div>
     </div>
   )
 }
