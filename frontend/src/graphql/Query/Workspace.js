@@ -61,6 +61,15 @@ query workspaceById($id: ID!) {
         priority
       }
     }
+    goalLinks {
+      id
+      course {
+        id
+      }
+      goal {
+        id
+      }
+    }
     goals {
       id
       name
