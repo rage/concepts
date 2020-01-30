@@ -16,7 +16,7 @@ import ConceptEditor from '../manager/ConceptEditor'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 import {
   CREATE_CONCEPT, UPDATE_CONCEPT, DELETE_CONCEPT,
-  DELETE_COURSE, CREATE_COURSE,  UPDATE_COURSE, 
+  DELETE_COURSE, CREATE_COURSE, UPDATE_COURSE,
   CREATE_GOAL_LINK, DELETE_GOAL_LINK
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'

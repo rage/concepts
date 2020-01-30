@@ -1,7 +1,7 @@
 import client from '../apolloClient'
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 
-const createGoalLinkUpdate = workspaceId => 
+const createGoalLinkUpdate = workspaceId =>
   (store, response) => {
     try {
       const createGoalLink = response.data.createGoalLink
@@ -19,9 +19,9 @@ const createGoalLinkUpdate = workspaceId =>
     } catch (e) {
       console.error('createGoalLinkUpdate', e)
     }
-}
+  }
 
-const deleteGoalLinkUpdate = workspaceId => 
+const deleteGoalLinkUpdate = workspaceId =>
   (store, response) => {
     try {
       const deleteGoalLink = response.data.deleteGoalLink
@@ -39,7 +39,7 @@ const deleteGoalLinkUpdate = workspaceId =>
     } catch (e) {
       console.error('deleteGoalLinkUpdate', e)
     }
-}
+  }
 
 export {
   createGoalLinkUpdate,

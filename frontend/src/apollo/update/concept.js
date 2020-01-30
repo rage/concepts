@@ -94,7 +94,8 @@ const deleteConceptUpdate = workspaceId => (store, response) => {
         course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
       }
       if (deletedConcept.level === 'GOAL') {
-        dataInStore.workspaceById.goals = dataInStore.workspaceById.goals.filter(goal => goal.id !== deletedConcept.id)
+        dataInStore.workspaceById.goals = dataInStore.workspaceById.goals
+          .filter(goal => goal.id !== deletedConcept.id)
       }
       dataInStore.workspaceById.commonConcepts = dataInStore.workspaceById.commonConcepts
         .filter(concept => concept.id !== deletedConcept.id)
