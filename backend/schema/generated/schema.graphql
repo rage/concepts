@@ -332,7 +332,7 @@ type Project {
   tokens: [ProjectToken!]!
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -372,7 +372,7 @@ type Workspace {
   conceptTags: [Tag!]
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -570,7 +570,7 @@ type PointGroup {
   completions: [Completion!]!
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }

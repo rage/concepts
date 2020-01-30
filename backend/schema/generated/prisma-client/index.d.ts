@@ -2110,7 +2110,7 @@ export interface WorkspaceCreateWithoutParticipantsInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ProjectCreateOneWithoutWorkspacesInput {
@@ -2126,7 +2126,7 @@ export interface ProjectCreateWithoutWorkspacesInput {
   merges?: Maybe<WorkspaceCreateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantCreateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenCreateManyWithoutProjectInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateOneInput {
@@ -2156,7 +2156,7 @@ export interface WorkspaceCreateInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateOneWithoutClonesInput {
@@ -2185,7 +2185,7 @@ export interface WorkspaceCreateWithoutClonesInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ProjectCreateOneWithoutMergesInput {
@@ -2201,7 +2201,7 @@ export interface ProjectCreateWithoutMergesInput {
   templates?: Maybe<WorkspaceCreateManyWithoutAsTemplateInput>;
   participants?: Maybe<ProjectParticipantCreateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenCreateManyWithoutProjectInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateManyWithoutSourceProjectInput {
@@ -2233,7 +2233,7 @@ export interface WorkspaceCreateWithoutSourceProjectInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ProjectCreateOneWithoutTemplatesInput {
@@ -2249,7 +2249,7 @@ export interface ProjectCreateWithoutTemplatesInput {
   merges?: Maybe<WorkspaceCreateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantCreateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenCreateManyWithoutProjectInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateManyWithoutAsMergeInput {
@@ -2280,7 +2280,7 @@ export interface WorkspaceCreateWithoutAsMergeInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateManyWithoutSourceTemplateInput {
@@ -2312,7 +2312,7 @@ export interface WorkspaceCreateWithoutSourceTemplateInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface CourseCreateManyWithoutWorkspaceInput {
@@ -2504,7 +2504,7 @@ export interface WorkspaceCreateWithoutCoursesInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreatecourseOrderInput {
@@ -2781,7 +2781,7 @@ export interface ProjectCreateWithoutParticipantsInput {
   templates?: Maybe<WorkspaceCreateManyWithoutAsTemplateInput>;
   merges?: Maybe<WorkspaceCreateManyWithoutAsMergeInput>;
   tokens?: Maybe<ProjectTokenCreateManyWithoutProjectInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateManyWithoutAsTemplateInput {
@@ -2813,7 +2813,7 @@ export interface WorkspaceCreateWithoutAsTemplateInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ConceptCreateManyInput {
@@ -2911,7 +2911,7 @@ export interface WorkspaceCreateWithoutConceptsInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ConceptLinkCreateManyWithoutWorkspaceInput {
@@ -3076,7 +3076,7 @@ export interface WorkspaceCreateWithoutTokensInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface CourseCreateOneInput {
@@ -3142,7 +3142,7 @@ export interface WorkspaceCreateWithoutGoalLinksInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceTokenCreateManyWithoutWorkspaceInput {
@@ -3218,7 +3218,7 @@ export interface PointGroupCreateWithoutWorkspaceInput {
   pointsPerConcept?: Maybe<Float>;
   course: CourseCreateOneInput;
   completions?: Maybe<CompletionCreateManyWithoutPointGroupInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface CompletionCreateManyWithoutPointGroupInput {
@@ -3261,7 +3261,7 @@ export interface WorkspaceCreateWithoutConceptLinksInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ProjectTokenCreateManyWithoutProjectInput {
@@ -3342,7 +3342,7 @@ export interface ProjectCreateWithoutTokensInput {
   templates?: Maybe<WorkspaceCreateManyWithoutAsTemplateInput>;
   merges?: Maybe<WorkspaceCreateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantCreateManyWithoutProjectInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ProjectParticipantCreateManyWithoutProjectInput {
@@ -3388,7 +3388,7 @@ export interface WorkspaceCreateWithoutCourseLinksInput {
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface AccessTokenUpdateInput {
@@ -3495,7 +3495,7 @@ export interface WorkspaceUpdateWithoutParticipantsDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ProjectUpdateOneWithoutWorkspacesInput {
@@ -3514,7 +3514,7 @@ export interface ProjectUpdateWithoutWorkspacesDataInput {
   merges?: Maybe<WorkspaceUpdateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenUpdateManyWithoutProjectInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateOneInput {
@@ -3547,7 +3547,7 @@ export interface WorkspaceUpdateDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateOneWithoutClonesInput {
@@ -3579,7 +3579,7 @@ export interface WorkspaceUpdateWithoutClonesDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ProjectUpdateOneWithoutMergesInput {
@@ -3598,7 +3598,7 @@ export interface ProjectUpdateWithoutMergesDataInput {
   templates?: Maybe<WorkspaceUpdateManyWithoutAsTemplateInput>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenUpdateManyWithoutProjectInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateManyWithoutSourceProjectInput {
@@ -3650,7 +3650,7 @@ export interface WorkspaceUpdateWithoutSourceProjectDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ProjectUpdateOneWithoutTemplatesInput {
@@ -3669,7 +3669,7 @@ export interface ProjectUpdateWithoutTemplatesDataInput {
   merges?: Maybe<WorkspaceUpdateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenUpdateManyWithoutProjectInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateManyWithoutAsMergeInput {
@@ -3720,7 +3720,7 @@ export interface WorkspaceUpdateWithoutAsMergeDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateManyWithoutSourceTemplateInput {
@@ -3772,7 +3772,7 @@ export interface WorkspaceUpdateWithoutSourceTemplateDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface CourseUpdateManyWithoutWorkspaceInput {
@@ -4156,7 +4156,7 @@ export interface WorkspaceUpdateWithoutCoursesDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdatecourseOrderInput {
@@ -4676,7 +4676,7 @@ export interface ProjectUpdateWithoutParticipantsDataInput {
   templates?: Maybe<WorkspaceUpdateManyWithoutAsTemplateInput>;
   merges?: Maybe<WorkspaceUpdateManyWithoutAsMergeInput>;
   tokens?: Maybe<ProjectTokenUpdateManyWithoutProjectInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateManyWithoutAsTemplateInput {
@@ -4728,7 +4728,7 @@ export interface WorkspaceUpdateWithoutAsTemplateDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ConceptUpdateManyInput {
@@ -4872,7 +4872,7 @@ export interface WorkspaceUpdateWithoutConceptsDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ConceptLinkUpdateManyWithoutWorkspaceInput {
@@ -5471,7 +5471,7 @@ export interface WorkspaceUpdateWithoutTokensDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface CourseUpdateOneInput {
@@ -5557,7 +5557,7 @@ export interface WorkspaceUpdateWithoutGoalLinksDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceTokenUpdateManyWithoutWorkspaceInput {
@@ -5829,7 +5829,7 @@ export interface PointGroupUpdateWithoutWorkspaceDataInput {
   pointsPerConcept?: Maybe<Float>;
   course?: Maybe<CourseUpdateOneRequiredInput>;
   completions?: Maybe<CompletionUpdateManyWithoutPointGroupInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface CourseUpdateOneRequiredInput {
@@ -5935,6 +5935,20 @@ export interface CompletionUpdateManyWithWhereNestedInput {
 
 export interface CompletionUpdateManyDataInput {
   conceptAmount?: Maybe<Int>;
+}
+
+export interface UserUpdateOneInput {
+  create?: Maybe<UserCreateInput>;
+  update?: Maybe<UserUpdateDataInput>;
+  upsert?: Maybe<UserUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
 }
 
 export interface PointGroupUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -6102,7 +6116,7 @@ export interface WorkspaceUpdateWithoutConceptLinksDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpsertWithoutConceptLinksInput {
@@ -6436,7 +6450,7 @@ export interface ProjectUpdateWithoutTokensDataInput {
   templates?: Maybe<WorkspaceUpdateManyWithoutAsTemplateInput>;
   merges?: Maybe<WorkspaceUpdateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutProjectInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ProjectParticipantUpdateManyWithoutProjectInput {
@@ -6504,11 +6518,6 @@ export interface ProjectParticipantUpsertWithWhereUniqueWithoutUserInput {
   where: ProjectParticipantWhereUniqueInput;
   update: ProjectParticipantUpdateWithoutUserDataInput;
   create: ProjectParticipantCreateWithoutUserInput;
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
 }
 
 export interface CourseUpsertWithoutConceptsInput {
@@ -6592,7 +6601,7 @@ export interface WorkspaceUpdateWithoutCourseLinksDataInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpsertWithoutCourseLinksInput {
@@ -6787,7 +6796,7 @@ export interface PointGroupCreateWithoutCompletionsInput {
   pointsPerConcept?: Maybe<Float>;
   workspace: WorkspaceCreateOneWithoutPointGroupsInput;
   course: CourseCreateOneInput;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceCreateOneWithoutPointGroupsInput {
@@ -6816,7 +6825,7 @@ export interface WorkspaceCreateWithoutPointGroupsInput {
   mainCourse?: Maybe<CourseCreateOneInput>;
   courseTags?: Maybe<TagCreateManyInput>;
   conceptTags?: Maybe<TagCreateManyInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface CompletionUpdateInput {
@@ -6840,7 +6849,7 @@ export interface PointGroupUpdateWithoutCompletionsDataInput {
   pointsPerConcept?: Maybe<Float>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutPointGroupsInput>;
   course?: Maybe<CourseUpdateOneRequiredInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateOneRequiredWithoutPointGroupsInput {
@@ -6870,7 +6879,7 @@ export interface WorkspaceUpdateWithoutPointGroupsDataInput {
   mainCourse?: Maybe<CourseUpdateOneInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpsertWithoutPointGroupsInput {
@@ -7027,7 +7036,7 @@ export interface PointGroupCreateInput {
   workspace: WorkspaceCreateOneWithoutPointGroupsInput;
   course: CourseCreateOneInput;
   completions?: Maybe<CompletionCreateManyWithoutPointGroupInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface PointGroupUpdateInput {
@@ -7039,7 +7048,7 @@ export interface PointGroupUpdateInput {
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutPointGroupsInput>;
   course?: Maybe<CourseUpdateOneRequiredInput>;
   completions?: Maybe<CompletionUpdateManyWithoutPointGroupInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface PointGroupUpdateManyMutationInput {
@@ -7059,7 +7068,7 @@ export interface ProjectCreateInput {
   merges?: Maybe<WorkspaceCreateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantCreateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenCreateManyWithoutProjectInput>;
-  createdBy: UserCreateOneInput;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface ProjectUpdateInput {
@@ -7070,7 +7079,7 @@ export interface ProjectUpdateInput {
   merges?: Maybe<WorkspaceUpdateManyWithoutAsMergeInput>;
   participants?: Maybe<ProjectParticipantUpdateManyWithoutProjectInput>;
   tokens?: Maybe<ProjectTokenUpdateManyWithoutProjectInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface ProjectUpdateManyMutationInput {
@@ -7172,7 +7181,7 @@ export interface WorkspaceUpdateInput {
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
   courseTags?: Maybe<TagUpdateManyInput>;
   conceptTags?: Maybe<TagUpdateManyInput>;
-  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceUpdateManyMutationInput {
