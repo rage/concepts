@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 const CREATE_GOAL_LINK = gql`
 mutation createGoalLink($goalId: ID!, $courseId: ID!, $workspaceId: ID!) {
   createGoalLink(goalId: $goalId, courseId: $courseId, workspaceId: $workspaceId) {
+    __typename
     id
     course {
       id
@@ -20,6 +21,7 @@ mutation createGoalLink($goalId: ID!, $courseId: ID!, $workspaceId: ID!) {
 const DELETE_GOAL_LINK = gql`
 mutation deleteGoalLink($id: ID!) {
   deleteGoalLink(id: $id) {
+    __typename
     id
     workspaceId
     courseId
