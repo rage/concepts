@@ -15,7 +15,9 @@ import CourseEditor from '../manager/CourseEditor'
 import ConceptEditor from '../manager/ConceptEditor'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 import {
-  CREATE_CONCEPT, DELETE_COURSE, CREATE_COURSE, UPDATE_CONCEPT, UPDATE_COURSE, DELETE_CONCEPT
+  CREATE_CONCEPT, UPDATE_CONCEPT, DELETE_CONCEPT,
+  DELETE_COURSE, CREATE_COURSE,  UPDATE_COURSE, 
+  CREATE_GOAL_LINK, DELETE_GOAL_LINK
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useConfirmDelete } from '../../dialogs/alert'
@@ -235,6 +237,14 @@ const Courses = ({ workspaceId, courses }) => {
 
 const GoalView = ({ workspaceId }) => {
   const classes = useStyles()
+
+  const createGoalLink = useMutation(CREATE_GOAL_LINK, {
+    update: cache.createGoalLinkUpdate(workspaceId)
+  })
+
+  const deleteGoalLink = useMutation(DELETE_GOAL_LINK, {
+    update: cache.deleteGoalLinkUpdate(workspaceId)
+  })
 
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
     variables: { id: workspaceId }

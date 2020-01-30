@@ -6,6 +6,7 @@ import * as workspace from './workspace'
 import * as port from './port'
 import * as project from './project'
 import * as member from './member'
+import * as goalLink from './goalLink'
 
 export default {
   ...concept,
@@ -15,5 +16,6 @@ export default {
   ...workspace,
   ...port,
   ...project,
-  ...member
+  ...member,
+  ...goalLink
 }
