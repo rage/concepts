@@ -256,6 +256,7 @@ const GoalView = ({ workspaceId }) => {
     return <NotFoundView message='Workspace not found' />
   }
 
+  const goalLinks = workspaceQuery.data.workspaceById.goalLinks
   const courses = workspaceQuery.data.workspaceById.courses
   const goals = workspaceQuery.data.workspaceById.goals
 
