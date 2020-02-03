@@ -150,14 +150,14 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
       <div className={classes.leftPlaceholder} />
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
         <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
+        {user.role >= Role.STAFF &&
+          <BottomNavigationAction value='goals' label='Goals' icon={<SchoolIcon />} />
+        }
         <BottomNavigationAction value='mapper' label='Course Mapper' icon={<AccountTreeIcon />} />
         <BottomNavigationAction
           value='conceptmapper' label='Concept Mapper' icon={<ShuffleIcon />} />
         <BottomNavigationAction value='graph' label='Graph' icon={<DeviceHubIcon />} />
         <BottomNavigationAction value='heatmap' label='Heatmap' icon={<GridOnIcon />} />
-        {user.role >= Role.STAFF &&
-          <BottomNavigationAction value='goals' label='Goals' icon={<SchoolIcon />} />
-        }
       </BottomNavigation>
       <div>
         <Tooltip title='Open the tutorial for this view' placement='top'>
