@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton, ListItemSecondaryAction
+  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton
 } from '@material-ui/core'
 import {
   ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon, Delete as DeleteIcon, Edit as EditIcon
@@ -66,9 +66,6 @@ const useStyles = makeStyles(theme => ({
     '&:hover': {
       '& $hoverButton': {
         visibility: 'visible'
-      },
-      '& $conceptBody': {
-        paddingRight: '104px'
       }
     }
   },
@@ -273,7 +270,7 @@ const GoalView = ({ workspaceId }) => {
           fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: -5, x1: +6 }}
         />)}
         {addingLink && <ConceptLink
-          delay={1} active from={addingLink} to={addingLink} followMouse
+          active from={addingLink} to={addingLink} within={document.body} followMouse
         />}
       </div>
     </div>
