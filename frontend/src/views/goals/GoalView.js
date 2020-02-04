@@ -133,7 +133,7 @@ const GoalItem = ({ goal, deleteConcept, setEditing, setAddingLink }) => {
         </IconButton>
       </ListItemIcon>
       <ListItemText>
-        <ConceptToolTipContent tags={goal.tags} description={goal.name} />
+        <ConceptToolTipContent tags={goal.tags} subtitle={goal.description} description={goal.name} />
       </ListItemText>
       <ListItemIcon>
         <IconButton onClick={handleDelete} className={classes.hoverButton}>
