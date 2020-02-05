@@ -207,7 +207,7 @@ type Course {
   updatedAt: DateTime! @updatedAt
 
   # Goals
-  goalLinks: [GoalLink!]! @relation(name: "GoalConceptsOfCourse")
+  goalLinks: [GoalLink!]! @relation(name: "GoalConceptsOfCourse", onDelete: CASCADE)
 }
 
 
