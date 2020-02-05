@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const CourseItem = ({ course, deleteCourse, setEditing, setAddingLink }) => {
+const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
 
@@ -96,7 +96,7 @@ const CourseItem = ({ course, deleteCourse, setEditing, setAddingLink }) => {
           <EditIcon />
         </IconButton>
         <IconButton
-          onClick={() => setAddingLink(`course-circle-${course.id}`)}
+          onClick={onClickCircle('course', course.id)}
           className={classes.activeCircle}
         >
           <ArrowRightIcon
@@ -108,7 +108,7 @@ const CourseItem = ({ course, deleteCourse, setEditing, setAddingLink }) => {
   )
 }
 
-const GoalItem = ({ goal, deleteConcept, setEditing, setAddingLink }) => {
+const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
 
@@ -122,7 +122,7 @@ const GoalItem = ({ goal, deleteConcept, setEditing, setAddingLink }) => {
     <ListItem divider key={goal.id} className={classes.listItemContainer}>
       <ListItemIcon>
         <IconButton
-          onClick={() => setAddingLink(`goal-circle-${goal.id}`)} className={classes.activeCircle}
+          onClick={onClickCircle('goal', goal.id)} className={classes.activeCircle}
         >
           <ArrowLeftIcon
             viewBox='7 7 10 10' id={`goal-circle-${goal.id}`}
@@ -130,7 +130,9 @@ const GoalItem = ({ goal, deleteConcept, setEditing, setAddingLink }) => {
         </IconButton>
       </ListItemIcon>
       <ListItemText>
-        <ConceptToolTipContent tags={goal.tags} subtitle={goal.description} description={goal.name} />
+        <ConceptToolTipContent
+          tags={goal.tags} subtitle={goal.description} description={goal.name}
+        />
       </ListItemText>
       <ListItemIcon>
         <IconButton onClick={handleDelete} className={classes.hoverButton}>
@@ -144,7 +146,7 @@ const GoalItem = ({ goal, deleteConcept, setEditing, setAddingLink }) => {
   )
 }
 
-const Goals = ({ workspaceId, goals, setAddingLink }) => {
+const Goals = ({ workspaceId, goals, onClickCircle }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -177,7 +179,7 @@ const Goals = ({ workspaceId, goals, setAddingLink }) => {
           <GoalItem
             updateConcept={variables => updateConcept({ variables })}
             deleteConcept={id => deleteConcept({ variables: { id } })}
-            key={goal.id} goal={goal} setEditing={setEditing} setAddingLink={setAddingLink}
+            key={goal.id} goal={goal} setEditing={setEditing} onClickCircle={onClickCircle}
           />
         ))}
       </List>
@@ -191,7 +193,7 @@ const Goals = ({ workspaceId, goals, setAddingLink }) => {
   )
 }
 
-const Courses = ({ workspaceId, courses, setAddingLink }) => {
+const Courses = ({ workspaceId, courses, onClickCircle }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -217,7 +219,7 @@ const Courses = ({ workspaceId, courses, setAddingLink }) => {
         ) : (
           <CourseItem
             deleteCourse={id => deleteCourse({ variables: { id } })}
-            key={course.id} course={course} setEditing={setEditing} setAddingLink={setAddingLink}
+            key={course.id} course={course} setEditing={setEditing} onClickCircle={onClickCircle}
           />
         ))}
       </List>
@@ -253,24 +255,42 @@ const GoalView = ({ workspaceId }) => {
     return <NotFoundView message='Workspace not found' />
   }
 
+  const onClickCircle = (type, id) => evt => {
+    evt.stopPropagation()
+    console.log(workspaceId, type, id, addingLink)
+    if (!addingLink) {
+      setAddingLink({ type, id })
+    } else if (type !== addingLink.type) {
+      createGoalLink({
+        variables: {
+          workspaceId,
+          goalId: type === 'goal' ? id : addingLink.id,
+          courseId: type === 'course' ? id : addingLink.id
+        }
+      }).catch(console.error)
+    }
+  }
+
   const goalLinks = workspaceQuery.data.workspaceById.goalLinks
   const courses = workspaceQuery.data.workspaceById.courses
   const goals = workspaceQuery.data.workspaceById.goals
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onClick={() => setAddingLink(null)}>
       <h1 className={classes.title}>Goal Mapping</h1>
-      <Courses courses={courses} workspaceId={workspaceId} setAddingLink={setAddingLink} />
-      <Goals goals={goals} workspaceId={workspaceId} setAddingLink={setAddingLink} />
+      <Courses courses={courses} workspaceId={workspaceId} onClickCircle={onClickCircle} />
+      <Goals goals={goals} workspaceId={workspaceId} onClickCircle={onClickCircle} />
       <div>
         {goalLinks.map(link => <ConceptLink
           key={`goal-link-${link.id}`} delay={1} active linkId={link.id}
           from={`goal-circle-${link.goal.id}`} to={`course-circle-${link.course.id}`}
           fromConceptId={link.goal.id} toConceptId={link.course.id}
-          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: -5, x1: +6 }}
+          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: +6, x1: -5 }}
         />)}
         {addingLink && <ConceptLink
-          active from={addingLink} to={addingLink} within={document.body} followMouse
+          active within={document.body} followMouse
+          from={`${addingLink.type}-circle-${addingLink.id}`}
+          to={`${addingLink.type}-circle-${addingLink.id}`}
         />}
       </div>
     </div>
