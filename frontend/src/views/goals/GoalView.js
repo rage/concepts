@@ -267,7 +267,9 @@ const GoalView = ({ workspaceId }) => {
           goalId: type === 'goal' ? id : addingLink.id,
           courseId: type === 'course' ? id : addingLink.id
         }
-      }).catch(console.error)
+      })
+        .catch(console.error)
+        .finally(() => setAddingLink(null))
     }
   }
 
