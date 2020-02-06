@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton
+  Card, CardHeader, ListItemText, List, ListItem, ListItemIcon, IconButton, MenuItem, Menu
 } from '@material-ui/core'
 import {
   ArrowRight as ArrowRightIcon, ArrowLeft as ArrowLeftIcon, Delete as DeleteIcon, Edit as EditIcon
@@ -236,6 +236,7 @@ const Courses = ({ workspaceId, courses, onClickCircle }) => {
 const GoalView = ({ workspaceId }) => {
   const classes = useStyles()
   const [addingLink, setAddingLink] = useState(null)
+  const [menu, setMenu] = useState({ open: false })
 
   const createGoalLink = useMutation(CREATE_GOAL_LINK, {
     update: cache.createGoalLinkUpdate(workspaceId)
@@ -253,6 +254,23 @@ const GoalView = ({ workspaceId }) => {
     return <LoadingBar id='workspace-management' />
   } else if (workspaceQuery.error) {
     return <NotFoundView message='Workspace not found' />
+  }
+
+  const openMenu = (evt, id) => {
+    evt.preventDefault()
+    setMenu({
+      open: true,
+      id,
+      anchor: {
+        left: evt.pageX + window.pageXOffset,
+        top: evt.pageY + window.pageYOffset
+      }
+    })
+  }
+  const closeMenu = () => setMenu({ ...menu, open: false })
+  const deleteLink = () => {
+    deleteGoalLink({ variables: { id: menu.id } })
+    closeMenu()
   }
 
   const onClickCircle = (type, id) => evt => {
@@ -287,7 +305,8 @@ const GoalView = ({ workspaceId }) => {
           key={`goal-link-${link.id}`} delay={1} active linkId={link.id}
           from={`goal-circle-${link.goal.id}`} to={`course-circle-${link.course.id}`}
           fromConceptId={link.goal.id} toConceptId={link.course.id}
-          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: +6, x1: -5 }}
+          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: +5, x1: -6 }}
+          onContextMenu={openMenu}
         />)}
         {addingLink && <ConceptLink
           active within={document.body} followMouse
@@ -295,6 +314,22 @@ const GoalView = ({ workspaceId }) => {
           to={`${addingLink.type}-circle-${addingLink.id}`}
         />}
       </div>
+      <Menu
+        anchorReference='anchorPosition'
+        anchorPosition={menu.anchor}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        open={menu.open}
+        onClose={closeMenu}
+      >
+        <MenuItem onClick={deleteLink}>Delete link</MenuItem>
+      </Menu>
     </div>
   )
 }
