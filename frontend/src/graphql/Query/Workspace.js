@@ -34,6 +34,12 @@ query workspaceById($id: ID!) {
       name
       level
     }
+    goalTags {
+      id
+      name
+      type
+      priority
+    }
     courseTags {
       id
       name

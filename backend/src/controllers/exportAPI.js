@@ -17,6 +17,11 @@ query($wid: ID!) {
       type
       priority
     }
+    goalTags {
+      name
+      type
+      priority
+    }
     courseOrder
     courses {
       name

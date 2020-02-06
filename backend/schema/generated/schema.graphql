@@ -370,6 +370,7 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!]
   conceptTags: [Tag!]
+  goalTags: [Tag!]
 
   # Creation data
   createdBy: User

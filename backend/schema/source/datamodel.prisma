@@ -99,6 +99,7 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
   conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
+  goalTags: [Tag!] @relation(name: "WorkspaceGoalTags")
 
   # Creation data
   createdBy: User

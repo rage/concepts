@@ -5318,6 +5318,7 @@ type Workspace {
   pointGroups(where: PointGroupWhereInput, orderBy: PointGroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PointGroup!]
   courseTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
   conceptTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
+  goalTags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
   createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -5355,6 +5356,7 @@ input WorkspaceCreateInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5449,6 +5451,7 @@ input WorkspaceCreateWithoutAsMergeInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5473,6 +5476,7 @@ input WorkspaceCreateWithoutAsTemplateInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5497,6 +5501,7 @@ input WorkspaceCreateWithoutClonesInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5521,6 +5526,7 @@ input WorkspaceCreateWithoutConceptLinksInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5545,6 +5551,7 @@ input WorkspaceCreateWithoutConceptsInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5569,6 +5576,7 @@ input WorkspaceCreateWithoutCourseLinksInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5593,6 +5601,7 @@ input WorkspaceCreateWithoutCoursesInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5617,6 +5626,7 @@ input WorkspaceCreateWithoutGoalLinksInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5641,6 +5651,7 @@ input WorkspaceCreateWithoutParticipantsInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5665,6 +5676,7 @@ input WorkspaceCreateWithoutPointGroupsInput {
   mainCourse: CourseCreateOneInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5689,6 +5701,7 @@ input WorkspaceCreateWithoutSourceProjectInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5713,6 +5726,7 @@ input WorkspaceCreateWithoutSourceTemplateInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -5737,6 +5751,7 @@ input WorkspaceCreateWithoutTokensInput {
   pointGroups: PointGroupCreateManyWithoutWorkspaceInput
   courseTags: TagCreateManyInput
   conceptTags: TagCreateManyInput
+  goalTags: TagCreateManyInput
   createdBy: UserCreateOneInput
 }
 
@@ -6367,6 +6382,7 @@ input WorkspaceUpdateDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6391,6 +6407,7 @@ input WorkspaceUpdateInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6551,6 +6568,7 @@ input WorkspaceUpdateWithoutAsMergeDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6574,6 +6592,7 @@ input WorkspaceUpdateWithoutAsTemplateDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6597,6 +6616,7 @@ input WorkspaceUpdateWithoutClonesDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6620,6 +6640,7 @@ input WorkspaceUpdateWithoutConceptLinksDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6643,6 +6664,7 @@ input WorkspaceUpdateWithoutConceptsDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6666,6 +6688,7 @@ input WorkspaceUpdateWithoutCourseLinksDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6689,6 +6712,7 @@ input WorkspaceUpdateWithoutCoursesDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6712,6 +6736,7 @@ input WorkspaceUpdateWithoutGoalLinksDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6735,6 +6760,7 @@ input WorkspaceUpdateWithoutParticipantsDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6758,6 +6784,7 @@ input WorkspaceUpdateWithoutPointGroupsDataInput {
   mainCourse: CourseUpdateOneInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6781,6 +6808,7 @@ input WorkspaceUpdateWithoutSourceProjectDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6804,6 +6832,7 @@ input WorkspaceUpdateWithoutSourceTemplateDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6827,6 +6856,7 @@ input WorkspaceUpdateWithoutTokensDataInput {
   pointGroups: PointGroupUpdateManyWithoutWorkspaceInput
   courseTags: TagUpdateManyInput
   conceptTags: TagUpdateManyInput
+  goalTags: TagUpdateManyInput
   createdBy: UserUpdateOneInput
 }
 
@@ -6997,6 +7027,9 @@ input WorkspaceWhereInput {
   conceptTags_every: TagWhereInput
   conceptTags_some: TagWhereInput
   conceptTags_none: TagWhereInput
+  goalTags_every: TagWhereInput
+  goalTags_some: TagWhereInput
+  goalTags_none: TagWhereInput
   createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime

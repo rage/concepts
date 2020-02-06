@@ -103,8 +103,7 @@ export const createConcept = async (root, {
     level,
     position,
     official: Boolean(official),
-    frozen: Boolean(frozen),
-    tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
+    frozen: Boolean(frozen)
   }
 
   if (level === 'GOAL' || level === 'COMMON') {
@@ -116,6 +115,17 @@ export const createConcept = async (root, {
     throw new ForbiddenError('Objectives and concepts must have a course ID')
   } else {
     args.course = { connect: { id: courseId } }
+  }
+
+
+  if (level === 'GOAL') {
+    args.tags = tags && { 
+      connect: await createMissingTags(tags, workspaceId, context, 'goalTags') 
+    }
+  } else {
+    args.tags = tags && { 
+      connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') 
+    }
   }
 
   const createdConcept = await context.prisma.createConcept(args)
