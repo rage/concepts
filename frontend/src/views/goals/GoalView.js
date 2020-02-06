@@ -23,6 +23,8 @@ import cache from '../../apollo/update'
 import { useConfirmDelete } from '../../dialogs/alert'
 import { noPropagation } from '../../lib/eventMiddleware'
 import { ConceptLink } from '../coursemapper/concept'
+import { backendToSelect } from '../../dialogs/tagSelectUtils'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -146,7 +148,7 @@ const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle }) => {
   )
 }
 
-const Goals = ({ workspaceId, goals, onClickCircle }) => {
+const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -170,6 +172,7 @@ const Goals = ({ workspaceId, goals, onClickCircle }) => {
               setEditing(null)
               return updateConcept({ variables: args })
             }}
+            tagOptions={tagOptions}
             cancel={() => setEditing(null)}
             defaultValues={goal}
             action='Save'
@@ -188,12 +191,12 @@ const Goals = ({ workspaceId, goals, onClickCircle }) => {
           workspaceId,
           ...args
         }
-      })} action='Create' defaultValues={{ level: 'GOAL' }} />
+      })} action='Create' tagOptions={tagOptions} defaultValues={{ level: 'GOAL' }} />
     </Card>
   )
 }
 
-const Courses = ({ workspaceId, courses, onClickCircle }) => {
+const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -211,6 +214,7 @@ const Courses = ({ workspaceId, courses, onClickCircle }) => {
               setEditing(null)
               return updateCourse({ variables: args })
             }}
+            tagOptions={tagOptions}
             cancel={() => setEditing(null)}
             defaultValues={course}
             action='Save'
@@ -223,7 +227,7 @@ const Courses = ({ workspaceId, courses, onClickCircle }) => {
           />
         ))}
       </List>
-      <CourseEditor submit={args => createCourse({
+      <CourseEditor tagOptions={tagOptions} submit={args => createCourse({
         variables: {
           workspaceId,
           ...args
@@ -295,11 +299,14 @@ const GoalView = ({ workspaceId }) => {
   const courses = workspaceQuery.data.workspaceById.courses
   const goals = workspaceQuery.data.workspaceById.goals
 
+  const goalTags = backendToSelect(workspaceQuery.data.workspaceById.goalTags)
+  const courseTags = backendToSelect(workspaceQuery.data.workspaceById.courseTags)
+
   return (
     <div className={classes.root} onClick={() => setAddingLink(null)}>
       <h1 className={classes.title}>Goal Mapping</h1>
-      <Courses courses={courses} workspaceId={workspaceId} onClickCircle={onClickCircle} />
-      <Goals goals={goals} workspaceId={workspaceId} onClickCircle={onClickCircle} />
+      <Courses courses={courses} workspaceId={workspaceId} tagOptions={courseTags} onClickCircle={onClickCircle} />
+      <Goals goals={goals} workspaceId={workspaceId} tagOptions={goalTags} onClickCircle={onClickCircle} />
       <div>
         {goalLinks.map(link => <ConceptLink
           key={`goal-link-${link.id}`} delay={1} active linkId={link.id}
