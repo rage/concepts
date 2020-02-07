@@ -18,6 +18,7 @@ export const Workspace = makeTypeResolvers('workspace', [
   'createdBy',
   'goals',
   'goalLinks',
+  'goalTags',
   {
     name: 'pointGroups',
     checkPrivilegeArgs: root => ({
