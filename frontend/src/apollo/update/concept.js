@@ -48,9 +48,13 @@ const createConceptUpdate = workspaceId => (store, response) => {
         course.concepts = course.concepts.concat(addedConcept)
       }
     }
-    ws.conceptTags = ws.conceptTags.concat(
-      addedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
-
+    if (addedConcept.level !== 'GOAL') {
+      ws.conceptTags = ws.conceptTags.concat(
+        addedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
+    } else {
+      ws.goalTags = ws.goalTags.concat(
+        addedConcept.tags.filter(tag => !ws.goalTags.find(ctag => ctag.id === tag.id)))
+    }
     client.writeQuery({
       query: WORKSPACE_BY_ID,
       variables: { id: workspaceId },
