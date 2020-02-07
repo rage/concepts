@@ -9,7 +9,7 @@ import React from 'react'
 import { useConfirmDelete } from '../../dialogs/alert'
 import { noPropagation } from '../../lib/eventMiddleware'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
-import { useStyles } from './GoalView'
+import { useStyles } from './styles'
 
 export const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle }) => {
   const classes = useStyles()

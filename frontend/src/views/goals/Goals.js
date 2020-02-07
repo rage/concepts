@@ -5,8 +5,8 @@ import { Card, CardHeader, List } from '@material-ui/core'
 import { CREATE_CONCEPT, DELETE_CONCEPT, UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import ConceptEditor from '../manager/ConceptEditor'
-import { useStyles } from './GoalView'
 import { GoalItem } from './GoalItem'
+import { useStyles } from './styles'
 
 export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
   const classes = useStyles()

@@ -5,8 +5,8 @@ import { Card, CardHeader, List } from '@material-ui/core'
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import CourseEditor from '../manager/CourseEditor'
-import { useStyles } from './GoalView'
 import { CourseItem } from './CourseItem'
+import { useStyles } from './styles'
 
 export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => {
   const classes = useStyles()

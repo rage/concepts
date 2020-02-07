@@ -8,7 +8,7 @@ import React from 'react'
 
 import { noPropagation } from '../../lib/eventMiddleware'
 import { useConfirmDelete } from '../../dialogs/alert'
-import { useStyles } from './GoalView'
+import { useStyles } from './styles'
 
 export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle }) => {
   const classes = useStyles()
