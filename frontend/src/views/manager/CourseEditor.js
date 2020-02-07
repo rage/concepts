@@ -17,7 +17,9 @@ const initialState = {
   tags: []
 }
 
-const CourseEditor = ({ submit, defaultValues, tagOptions, action = 'Create', cancel }) => {
+const CourseEditor = ({
+  submit, defaultValues = {}, tagOptions = [], action = 'Create', cancel
+}) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
   const [{ user }] = useLoginStateValue()

@@ -8,10 +8,10 @@ import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon,
-  AccountTree as AccountTreeIcon
+  AccountTree as AccountTreeIcon, School as SchoolIcon
 } from '@material-ui/icons'
 
-import { Privilege } from '../lib/permissions'
+import { Privilege, Role } from '../lib/permissions'
 import client from '../apollo/apolloClient'
 import { WORKSPACE_BY_ID, WORKSPACES_FOR_USER } from '../graphql/Query'
 import { CREATE_LINK_TOKEN, DELETE_WORKSPACE } from '../graphql/Mutation'
@@ -150,6 +150,9 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
       <div className={classes.leftPlaceholder} />
       <BottomNavigation showLabels value={page} onChange={onChange} className={classes.navbar}>
         <BottomNavigationAction value='manager' label='Manager' icon={<VerticalSplitIcon />} />
+        {user.role >= Role.STAFF &&
+          <BottomNavigationAction value='goals' label='Goals' icon={<SchoolIcon />} />
+        }
         <BottomNavigationAction value='mapper' label='Course Mapper' icon={<AccountTreeIcon />} />
         <BottomNavigationAction
           value='conceptmapper' label='Concept Mapper' icon={<ShuffleIcon />} />

@@ -77,7 +77,7 @@ const MapperLinks = ({
           from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
           fromConceptId={concept.id} toConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
-          posOffsets={{ x0: -5, x1: +6 }}
+          posOffsets={{ x0: +5, x1: -6 }}
           classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)
           && !focusedConceptIds.has(link.from.id)
             ? {

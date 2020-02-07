@@ -3,11 +3,16 @@ import { Chip, Typography } from '@material-ui/core'
 
 import { getTagColor } from '../dialogs/tagSelectUtils'
 
-const ConceptToolTipContent = ({ description, tags }) => (
+const ConceptToolTipContent = ({ description, subtitle, tags }) => (
   <div style={{ padding: '2px' }}>
     <Typography variant='body1'>
       {description}
     </Typography>
+    {
+      subtitle && <Typography variant='subtitle2' color='textSecondary' noWrap>
+        {subtitle}
+      </Typography>
+    }
     {tags.map(tag =>
       <Chip
         style={{

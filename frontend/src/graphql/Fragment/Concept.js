@@ -62,6 +62,7 @@ const DELETE_CONCEPT_FRAGMENT = gql`
 fragment deleteConceptData on DeletedCourseItem {
   id
   courseId
+  level
 }
 `
 

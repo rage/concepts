@@ -85,7 +85,8 @@ type Workspace {
   commonConcepts: [Concept!]! @relation(name:"CommonConcepts", onDelete: CASCADE)
   conceptLinks: [ConceptLink!]! @relation(name:"WorkspaceConceptLinks", onDelete: CASCADE)
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
-  goalLinks: [GoalLink!]! @relation(name: "WorkspaceGoals")
+  goals: [Concept!]! @relation(name: "WorkspaceGoals", onDelete: CASCADE)
+  goalLinks: [GoalLink!]! @relation(name: "WorkspaceGoalLinks", onDelete: CASCADE)
 
   # Authorization data
   participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace", onDelete: CASCADE)
@@ -98,6 +99,7 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")
   conceptTags: [Tag!] @relation(name: "WorkspaceConceptTags")
+  goalTags: [Tag!] @relation(name: "WorkspaceGoalTags")
 
   # Creation data
   createdBy: User
@@ -206,7 +208,7 @@ type Course {
   updatedAt: DateTime! @updatedAt
 
   # Goals
-  goalLinks: [GoalLink!]! @relation(name: "GoalConceptsOfCourse")
+  goalLinks: [GoalLink!]! @relation(name: "GoalConceptsOfCourse", onDelete: CASCADE)
 }
 
 
@@ -241,7 +243,7 @@ type GoalLink {
   id: ID! @id
   course: Course! @relation(name: "GoalConceptsOfCourse")
   goal: Concept! @relation(name: "GoalConcept")
-  workspace: Workspace! @relation(name: "WorkspaceGoals")
+  workspace: Workspace! @relation(name: "WorkspaceGoalLinks")
 
   createdBy: User!
   createdAt: DateTime! @createdAt

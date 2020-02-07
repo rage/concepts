@@ -103,8 +103,7 @@ export const createConcept = async (root, {
     level,
     position,
     official: Boolean(official),
-    frozen: Boolean(frozen),
-    tags: tags && { connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') }
+    frozen: Boolean(frozen)
   }
 
   if (level === 'GOAL' || level === 'COMMON') {
@@ -118,16 +117,28 @@ export const createConcept = async (root, {
     args.course = { connect: { id: courseId } }
   }
 
+
+  if (level === 'GOAL') {
+    args.tags = tags && { 
+      connect: await createMissingTags(tags, workspaceId, context, 'goalTags') 
+    }
+  } else {
+    args.tags = tags && { 
+      connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') 
+    }
+  }
+
   const createdConcept = await context.prisma.createConcept(args)
 
-  if (level === 'COMMON') {
+  if (level === 'COMMON' || level === 'GOAL') {
+    const key = level === 'COMMON' ? 'commonConcepts' : 'goals'
     await context.prisma.updateWorkspace({
       where: { id: workspaceId },
       data: {
-        commonConcepts: { connect: { id: createdConcept.id } }
+        [key]: { connect: { id: createdConcept.id } }
       }
     })
-  } else if (level !== 'GOAL') {
+  } else {
     if (createdConcept) {
       const pointGroups = await findPointGroups(workspaceId, courseId, context)
       if (pointGroups && pointGroups.length > 0) {
@@ -377,7 +388,7 @@ export const deleteConcept = async (root, { id }, context) => {
   if (toDelete.frozen) throw new ForbiddenError('This concept is frozen')
   await context.prisma.deleteConcept({ id })
 
-  if (toDelete.level !== 'COMMON') {
+  if (toDelete.level !== 'COMMON' && toDelete.level !== 'GOAL') {
     const orderName = `${toDelete.level.toLowerCase()}Order`
     const conceptOrder = toDelete.course[orderName]
     if (!isAutomaticSorting(conceptOrder)) {
@@ -390,10 +401,16 @@ export const deleteConcept = async (root, { id }, context) => {
     }
   }
   pubsub.publish(CONCEPT_DELETED, {
-    conceptDeleted: { id: toDelete.id, courseId: toDelete.course?.id, workspaceId }
+    conceptDeleted: { 
+      id: toDelete.id, 
+      courseId: toDelete.course?.id, 
+      workspaceId, 
+      level: toDelete.level 
+    }
   })
   return {
     id: toDelete.id,
-    courseId: toDelete.course?.id
+    courseId: toDelete.course?.id,
+    level: toDelete.level
   }
 }

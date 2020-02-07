@@ -68,9 +68,9 @@ const ConceptEditor = ({
   submit,
   cancel,
   action,
-  tagOptions,
+  tagOptions = [],
   defaultValues = {},
-  commonConcepts,
+  commonConcepts = [],
   commonSubmit
 }) => {
   const classes = useStyles()
@@ -126,7 +126,7 @@ const ConceptEditor = ({
   }
 
   const showCommonOptions = action === 'Create'
-    && defaultValues.level !== 'COMMON'
+    && defaultValues.level !== 'COMMON' && defaultValues.level !== 'GOAL'
     && input?.name?.length > 0
 
   return (

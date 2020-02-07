@@ -29,6 +29,17 @@ query workspaceById($id: ID!) {
     asTemplate {
       id
     }
+    concepts {
+      id
+      name
+      level
+    }
+    goalTags {
+      id
+      name
+      type
+      priority
+    }
     courseTags {
       id
       name
@@ -43,6 +54,29 @@ query workspaceById($id: ID!) {
     }
     courseOrder
     commonConcepts {
+      id
+      name
+      description
+      level
+      official
+      frozen
+      tags {
+        id
+        name
+        type
+        priority
+      }
+    }
+    goalLinks {
+      id
+      course {
+        id
+      }
+      goal {
+        id
+      }
+    }
+    goals {
       id
       name
       description

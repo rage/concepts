@@ -116,7 +116,10 @@ export const createWorkspace = async (root, { name }, context) => {
       }]
     },
     conceptTags: {
-      create: [...bloom, ...goalTypes]
+      create: bloom
+    },
+    goalTags: {
+      create: goalTypes
     }
   })
 }

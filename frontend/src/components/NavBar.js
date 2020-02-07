@@ -77,6 +77,11 @@ const parseWorkspacePath = (workspaceId, path, prefix) => {
       name: 'Common concepts',
       link: `${prefix}/manager/common`
     }] : [])
+  case 'goals':
+    return [{
+      name: 'Goals',
+      link: `${prefix}/goals`
+    }]
   case 'members':
     return [{
       name: 'Members',

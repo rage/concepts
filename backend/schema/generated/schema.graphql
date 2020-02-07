@@ -204,6 +204,7 @@ type LimitedProject {
 type DeletedCourseItem {
   id: ID!
   courseId: ID
+  level: ConceptLevel!
 }
 
 type DeletedCourseItems {
@@ -331,7 +332,7 @@ type Project {
   tokens: [ProjectToken!]!
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -355,6 +356,7 @@ type Workspace {
   commonConcepts: [Concept!]!
   conceptLinks: [ConceptLink!]!
   courseLinks: [CourseLink!]!
+  goals: [Concept!]!
   goalLinks: [GoalLink!]!
 
   # Authorization data
@@ -368,9 +370,10 @@ type Workspace {
   # Shared metadata
   courseTags: [Tag!]
   conceptTags: [Tag!]
+  goalTags: [Tag!]
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -568,7 +571,7 @@ type PointGroup {
   completions: [Completion!]!
 
   # Creation data
-  createdBy: User!
+  createdBy: User
   createdAt: DateTime!
   updatedAt: DateTime!
 }

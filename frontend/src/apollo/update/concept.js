@@ -6,7 +6,7 @@ const includedIn = (set, object) =>
 
 const createConceptUpdate = workspaceId => (store, response) => {
   const addedConcept = response.data.createConcept || response.data.createConceptFromCommon
-  if (addedConcept.level !== 'COMMON') {
+  if (addedConcept.level !== 'COMMON' && addedConcept.level !== 'GOAL') {
     try {
       const course = store.readFragment({
         id: addedConcept.course.id,
@@ -37,6 +37,10 @@ const createConceptUpdate = workspaceId => (store, response) => {
       if (!includedIn(ws.commonConcepts, addedConcept)) {
         ws.commonConcepts = ws.commonConcepts.concat(addedConcept)
       }
+    } else if (addedConcept.level === 'GOAL') {
+      if (!includedIn(ws.goals, addedConcept)) {
+        ws.goals = ws.goals.concat(addedConcept)
+      }
     } else {
       const courseId = addedConcept.course.id
       const course = ws.courses.find(course => course.id === courseId)
@@ -44,9 +48,13 @@ const createConceptUpdate = workspaceId => (store, response) => {
         course.concepts = course.concepts.concat(addedConcept)
       }
     }
-    ws.conceptTags = ws.conceptTags.concat(
-      addedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
-
+    if (addedConcept.level !== 'GOAL') {
+      ws.conceptTags = ws.conceptTags.concat(
+        addedConcept.tags.filter(tag => !ws.conceptTags.find(ctag => ctag.id === tag.id)))
+    } else {
+      ws.goalTags = ws.goalTags.concat(
+        addedConcept.tags.filter(tag => !ws.goalTags.find(ctag => ctag.id === tag.id)))
+    }
     client.writeQuery({
       query: WORKSPACE_BY_ID,
       variables: { id: workspaceId },
@@ -88,6 +96,10 @@ const deleteConceptUpdate = workspaceId => (store, response) => {
         const courseId = deletedConcept.courseId
         const course = dataInStore.workspaceById.courses.find(course => course.id === courseId)
         course.concepts = course.concepts.filter(concept => concept.id !== deletedConcept.id)
+      }
+      if (deletedConcept.level === 'GOAL') {
+        dataInStore.workspaceById.goals = dataInStore.workspaceById.goals
+          .filter(goal => goal.id !== deletedConcept.id)
       }
       dataInStore.workspaceById.commonConcepts = dataInStore.workspaceById.commonConcepts
         .filter(concept => concept.id !== deletedConcept.id)
