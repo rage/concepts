@@ -224,7 +224,7 @@ const ConceptList = ({
     user, editing, deleteConcept, updateConcept, merging, setEditing, conceptTags,
     toggleMergingConcept, commonConcepts: level !== 'COMMON' ? workspace.commonConcepts : []
   }
-  let conceptsToShow
+  let conceptsToShow = []
   if (orderMethod !== 'GROUP_BY') {
     const conceptList = level === 'COMMON' ? workspace.commonConcepts || [] : orderedConcepts
     conceptsToShow = conceptList.map((concept, conceptIndex) =>
@@ -243,7 +243,7 @@ const ConceptList = ({
     )
   } else {
     const conceptList = level === 'COMMON' ? workspace.commonConcepts : course.concepts
-    groupConcepts(conceptList).flatMap((group, index, array) => {
+    conceptsToShow = groupConcepts(conceptList).flatMap((group, index, array) => {
       const elements = group.filter(concept => includeConcept(concept))
         .map((concept, conceptIndex) =>
           <ConceptListItem
