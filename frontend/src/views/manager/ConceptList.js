@@ -243,7 +243,7 @@ const ConceptList = ({
     )
   } else {
     const conceptList = level === 'COMMON' ? workspace.commonConcepts : course.concepts
-    groupConcepts(conceptList).flatMap((group, index, array) => {
+    conceptsToShow = groupConcepts(conceptList).flatMap((group, index, array) => {
       const elements = group.filter(concept => includeConcept(concept))
         .map((concept, conceptIndex) =>
           <ConceptListItem
