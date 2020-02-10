@@ -224,7 +224,7 @@ const ConceptList = ({
     user, editing, deleteConcept, updateConcept, merging, setEditing, conceptTags,
     toggleMergingConcept, commonConcepts: level !== 'COMMON' ? workspace.commonConcepts : []
   }
-  let conceptsToShow = []
+  let conceptsToShow
   if (orderMethod !== 'GROUP_BY') {
     const conceptList = level === 'COMMON' ? workspace.commonConcepts || [] : orderedConcepts
     conceptsToShow = conceptList.map((concept, conceptIndex) =>
