@@ -60,7 +60,8 @@ export const importData = async (root, { data }, context) => {
         }]
       },
       courseTags: { create: json.courseTags },
-      conceptTags: { create: json.conceptTags }
+      conceptTags: { create: json.conceptTags },
+      goalTags: { create: json.goalTags }
     })
   }
 
