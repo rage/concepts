@@ -5,6 +5,7 @@ fragment createCourseLinkData on CourseLink {
   id
   official
   frozen
+  text
   to {
     id
   }
@@ -64,6 +65,7 @@ fragment updateCourseLinkData on CourseLink {
   id
   official
   frozen
+  text
   to {
     id
   }
