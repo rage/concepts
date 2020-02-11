@@ -189,12 +189,14 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
             </ListItemIcon>
             Export
           </MenuItem>
-          <MenuItem aria-label='Share link' onClick={handleShareOpen}>
-            <ListItemIcon>
-              <ShareIcon />
-            </ListItemIcon>
-            Share link
-          </MenuItem>
+          { isOwner && 
+            <MenuItem aria-label='Share link' onClick={handleShareOpen}>
+              <ListItemIcon>
+                <ShareIcon />
+              </ListItemIcon>
+              Share link
+            </MenuItem>
+          }
           <MenuItem aria-label='Delete' onClick={handleDelete}>
             <ListItemIcon>
               <DeleteIcon />
