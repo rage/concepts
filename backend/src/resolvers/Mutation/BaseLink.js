@@ -23,7 +23,7 @@ const generic = (action, fn) => type => {
 }
 
 export const createLink = generic('create', async (root, {
-  workspaceId, official, from, to
+  workspaceId, official, from, to, text
 }, context) => {
   await checkAccess(context, {
     minimumRole: official ? Role.STAFF : Role.GUEST,
@@ -43,6 +43,7 @@ export const createLink = generic('create', async (root, {
     to: { connect: { id: to } },
     from: { connect: { id: from } },
     official: Boolean(official),
+    text,
     createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } }
   })
@@ -52,7 +53,9 @@ export const createLink = generic('create', async (root, {
   return createdLink
 })
 
-export const updateLink = generic('update', async (root, { id, frozen, official }, context) => {
+export const updateLink = generic('update', async (root, {
+  id, frozen, official, text
+}, context) => {
   const { id: workspaceId } = nullShield(
     await context.prisma[context.type.getMethod]({ id }).workspace())
   await checkAccess(context, {
@@ -65,7 +68,7 @@ export const updateLink = generic('update', async (root, { id, frozen, official 
 
   const updatedLink = await context.prisma[context.type.mutateMethod]({
     where: { id },
-    data: { frozen, official }
+    data: { frozen, official, text }
   })
   pubsub.publish(context.type.channel, {
     [context.type.pubsubVariableName]: { ...updatedLink, workspaceId }

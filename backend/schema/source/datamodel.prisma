@@ -170,6 +170,7 @@ type CourseLink {
   frozen: Boolean! @default(value: false)
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
+  text: String
 
   # Relations
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceCourseLinks")
@@ -222,6 +223,7 @@ type ConceptLink {
   frozen: Boolean! @default(value: false)
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
+  text: String
 
   # Relations
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
@@ -244,6 +246,7 @@ type GoalLink {
   course: Course! @relation(name: "GoalConceptsOfCourse")
   goal: Concept! @relation(name: "GoalConcept")
   workspace: Workspace! @relation(name: "WorkspaceGoalLinks")
+  text: String
 
   createdBy: User!
   createdAt: DateTime! @createdAt

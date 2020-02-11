@@ -5,7 +5,7 @@ import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import pubsub from '../Subscription/pubsub'
 import * as channels from '../Subscription/channels'
 
-export const createGoalLink = async (root, { goalId, courseId, workspaceId }, context) => {
+export const createGoalLink = async (root, { goalId, courseId, workspaceId, text }, context) => {
   await checkAccess(context, {
     minimumRole: Role.STAFF,
     minimumPrivilege: Privilege.EDIT,
@@ -20,7 +20,8 @@ export const createGoalLink = async (root, { goalId, courseId, workspaceId }, co
     goal: { connect: { id: goalId } },
     course: { connect: { id: courseId } },
     workspace: { connect: { id: workspaceId } },
-    createdBy: { connect: { id: context.user.id } }
+    createdBy: { connect: { id: context.user.id } },
+    text
   })
 
   pubsub.publish(channels.GOAL_LINK_CREATED, {
