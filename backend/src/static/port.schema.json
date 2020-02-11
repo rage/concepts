@@ -74,6 +74,9 @@
       ],
       "minLength": 1
     },
+    "goalTags": {
+      "$ref": "#/definitions/tags"
+    },
     "courseTags": {
       "$ref": "#/definitions/tags"
     },
@@ -163,6 +166,16 @@
                 },
                 "tags": {
                   "$ref": "#/definitions/tags"
+                },
+                "level": {
+                  "type": "string",
+                  "description": "level of the concept",
+                  "enum": [
+                    "CONCEPT",
+                    "OBJECTIVE",
+                    "GOAL",
+                    "COMMON"
+                  ]
                 },
                 "official": {
                   "type": "boolean",
