@@ -170,10 +170,11 @@
                 "level": {
                   "type": "string",
                   "description": "level of the concept",
-                  "examples": [
+                  "enum": [
                     "CONCEPT",
                     "OBJECTIVE",
-                    "GOAL"
+                    "GOAL",
+                    "COMMON"
                   ]
                 },
                 "official": {
