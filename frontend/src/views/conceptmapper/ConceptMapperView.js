@@ -622,8 +622,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         openConceptDialog={openCreateObjectiveDialog}
       />}
       {addingLink && <ConceptLink
-        active within={document.body}
-        followMouse from={`concept-${addingLink}`} to={`concept-${addingLink}`}
+        active within={document.body} followMouse from={`concept-${addingLink}`}
       />}
       <div ref={selectionRef} className={classes.selection} />
       <div id='concept-mapper-link-container' />

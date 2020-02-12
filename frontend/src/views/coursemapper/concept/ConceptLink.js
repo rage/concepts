@@ -118,7 +118,7 @@ export default class ConceptLink extends Component {
 
   detect() {
     const {
-      from: fromId, to: toId, scrollParentRef, scrollParentFromRef, scrollParentToRef
+      from: fromId, to: toId, scrollParentRef, scrollParentFromRef, scrollParentToRef, followMouse
     } = this.props
 
     const fromRef = this.fromRef
@@ -126,7 +126,7 @@ export default class ConceptLink extends Component {
 
     fromRef.current = document.getElementById(fromId)
     toRef.current = document.getElementById(toId)
-    if (!fromRef.current || !toRef.current) {
+    if (!followMouse && (!fromRef.current || !toRef.current)) {
       return false
     }
 
@@ -134,6 +134,9 @@ export default class ConceptLink extends Component {
 
     return () => {
       const calculatePosition = (spRef, ref, anchor, dir) => {
+        if (!ref.current) {
+          return [undefined, undefined]
+        }
         const sp = (spRef !== undefined ? spRef : scrollParentRef)?.current
         const pageXOffset = sp ? sp.scrollLeft || sp.x : window.pageXOffset
         const pageYOffset = sp ? sp.scrollTop || sp.y : window.pageYOffset
@@ -183,7 +186,7 @@ const useStyles = makeStyles({
 
       borderWidth: '7px',
       borderStyle: 'solid',
-      borderColor: 'transparent #f1f1f1 transparent transparent',
+      borderColor: 'transparent transparent transparent #f1f1f1',
       marginTop: '-7px'
     }
   },
@@ -197,14 +200,14 @@ const useStyles = makeStyles({
   },
   activeWrapper: {
     '&:before': {
-      borderRightColor: 'red'
+      borderLeftColor: 'red'
     }
   }
 })
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, linkId, classes: propClasses, noListenScroll = false
+  active, attributes, text = 'Hello world', linkId, classes: propClasses, noListenScroll = false
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
@@ -213,12 +216,21 @@ const Line = ({
   const pos = useRef({ x0, y0, x1, y1 })
 
   const calculate = () => {
-    const { x0, y0, x1, y1 } = pos.current
-    const dy = (dyn.current.y || y1) - y0
-    const dx = (dyn.current.x || x1) - x0
+    let { x0: x, y0: y, x1: dx, y1: dy } = pos.current
+    if (dyn.current.x) {
+      if (!x && !y) {
+        x = dyn.current.x
+        y = dyn.current.y
+      } else {
+        dx = dyn.current.x
+        dy = dyn.current.y
+      }
+    }
+    dx -= x
+    dy -= y
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
     const length = Math.sqrt((dx * dx) + (dy * dy))
-    return { x: x0, y: y0, angle, length }
+    return { x, y, angle, length }
   }
 
   const recalculate = () => {
@@ -345,7 +357,8 @@ const Line = ({
     ...commonStyle,
     top: 0,
     left: 0,
-    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`
+    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`,
+    textAlign: 'center'
   }
 
   const hoverAreaWidth = 15
@@ -376,7 +389,9 @@ const Line = ({
             onClick={evt => onContextMenu(evt, linkId)}
           />
         }
-        <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`} />
+        <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`}>
+          <div>{text}</div>
+        </div>
       </div>
     </div>
   )

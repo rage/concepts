@@ -74,10 +74,10 @@ const MapperLinks = ({
             focusedConceptIds.has(concept.id) || focusedConceptIds.has(link.from.id)
           ))}
           linkId={link.id}
-          from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-          fromConceptId={concept.id} toConceptId={link.from.id}
+          to={`concept-circle-active-${concept.id}`} from={`concept-circle-${link.from.id}`}
+          toConceptId={concept.id} fromConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
-          posOffsets={{ x0: +5, x1: -6 }}
+          posOffsets={{ x0: -6, x1: +5 }}
           classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)
           && !focusedConceptIds.has(link.from.id)
             ? {
@@ -113,8 +113,12 @@ const MapperLinks = ({
     </Menu>
     {addingLink && <ConceptLink
       active within={document.body} // This needs to be directly in body to work
-      from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-      followMouse posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
+      from={addingLink.type === 'concept-circle' && `${addingLink.type}-${addingLink.id}`}
+      to={addingLink.type === 'concept-circle-active' && `${addingLink.type}-${addingLink.id}`}
+      followMouse posOffsets={{
+        x0: addingLink.type === 'concept-circle-active' ? -7 : 0,
+        x1: addingLink.type === 'concept-circle' ? 7 : 0
+      }}
     />}
   </div>
 }
