@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { Component, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
@@ -207,10 +207,11 @@ const useStyles = makeStyles({
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, text = 'Hello world', linkId, classes: propClasses, noListenScroll = false
+  active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
+  const [editText, setEditText] = useState(text || '')
 
   const dyn = useRef({ x: null, y: null })
   const pos = useRef({ x0, y0, x1, y1 })
@@ -359,8 +360,7 @@ const Line = ({
     ...commonStyle,
     top: 0,
     left: 0,
-    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`,
-    textAlign: 'center'
+    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`
   }
 
   const hoverAreaWidth = 15
@@ -377,7 +377,30 @@ const Line = ({
 
   const textStyle = {
     display: 'block',
-    transform: Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)'
+    transform: Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)',
+    width: '100%',
+    textAlign: 'center'
+  }
+
+  const textEditStyle = {
+    ...textStyle,
+    border: 'none',
+    background: 'none',
+    pointerEvents: 'initial'
+  }
+
+  const editKeyDown = evt => {
+    if (evt.key === 'Enter' && !evt.shiftKey) {
+      evt.preventDefault()
+      stopEdit(linkId, editText)
+    } else if (evt.key === 'Escape') {
+      editBlur()
+    }
+  }
+
+  const editBlur = () => {
+    stopEdit(linkId)
+    setEditText(text)
   }
 
   // We need a wrapper element to prevent an exception when then
@@ -397,7 +420,14 @@ const Line = ({
           />
         }
         <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`}>
-          <span className='link-text-rotate' style={textStyle}>{text}</span>
+          {editing
+            ? (
+              <input
+                className='link-text-rotate' style={textEditStyle} placeholder='Enter link text'
+                value={editText} onChange={evt => setEditText(evt.target.value)} autoFocus
+                onKeyDown={editKeyDown} /*onBlur={editBlur}*/
+              />
+            ) : <span className='link-text-rotate' style={textStyle}>{text}</span>}
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ fragment createConceptData on Concept {
     id
     official
     frozen
+    text
     to {
       id
     }
@@ -30,6 +31,7 @@ fragment createConceptData on Concept {
     id
     official
     frozen
+    text
     from {
       id
     }

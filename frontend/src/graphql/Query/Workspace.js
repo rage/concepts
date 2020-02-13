@@ -69,6 +69,7 @@ query workspaceById($id: ID!) {
     }
     goalLinks {
       id
+      text
       course {
         id
       }

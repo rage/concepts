@@ -1,5 +1,5 @@
-import { createLink, deleteLink } from './BaseLink'
+import { createLink, updateLink, deleteLink } from './BaseLink'
 
 export const createConceptLink = createLink('concept')
-export const updateConceptLink = createLink('concept')
+export const updateConceptLink = updateLink('concept')
 export const deleteConceptLink = deleteLink('concept')

@@ -80,6 +80,7 @@ query courseById($id: ID!) {
         id
         official
         frozen
+        text
         from {
           course {
             id
@@ -103,6 +104,7 @@ query linksInCourse($courseId: ID!) {
         id
         official
         frozen
+        text
         from {
           course {
             id
@@ -162,6 +164,7 @@ query courseAndPrerequisites($courseId: ID!) {
       id
       official
       frozen
+      text
       from {
         id
         __typename
