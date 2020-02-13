@@ -626,8 +626,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           within='concept-mapper-link-container' posOffsets={linkOffsets}
           onContextMenu={openConceptLinkMenu(link.id)}
           scrollParentRef={pan} noListenScroll
-          from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
-          fromConceptId={concept.id} toConceptId={link.from.id}
+          to={`concept-${concept.id}`} from={`concept-${link.from.id}`}
+          toConceptId={concept.id} fromConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle'
         />)
       ])}
