@@ -180,7 +180,7 @@ const useStyles = makeStyles({
       content: '""',
       position: 'absolute',
       top: '50%',
-      right: '50%',
+      right: 'calc(50% - 11px)',
       width: 0,
       height: 0,
 
