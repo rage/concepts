@@ -380,7 +380,11 @@ const Line = ({
     transform: Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)',
     width: '100%',
     textAlign: 'center',
-    color: active ? 'inherit' : 'rgba(117, 117, 117, 0.5)'
+    color: active ? 'inherit' : 'rgba(117, 117, 117, 0.5)',
+
+    lineHeight: '20px',
+    letterSpacing: '0.15px',
+    fontSize: '14px'
   }
 
   const textEditStyle = {
@@ -388,7 +392,8 @@ const Line = ({
     border: 'none',
     background: 'none',
     pointerEvents: 'initial',
-    fontSize: '14px'
+
+    lineHeight: '18px'
   }
 
   const editKeyDown = evt => {
