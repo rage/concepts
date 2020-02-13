@@ -247,6 +247,8 @@ const Line = ({
     for (const elem of el.current.getElementsByTagName('div')) {
       elem.style.width = `${length}px`
     }
+    const text = el.current.getElementsByClassName('link-text-rotate')[0]
+    text.style.transform = Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)'
   }
 
   const handleMouse = evt => {
@@ -373,6 +375,11 @@ const Line = ({
     transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth / 2)}px)`
   }
 
+  const textStyle = {
+    display: 'block',
+    transform: Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)'
+  }
+
   // We need a wrapper element to prevent an exception when then
   // React component is removed. This is because we manually
   // move the rendered DOM element after creation.
@@ -390,7 +397,7 @@ const Line = ({
           />
         }
         <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`}>
-          <div>{text}</div>
+          <span className='link-text-rotate' style={textStyle}>{text}</span>
         </div>
       </div>
     </div>
