@@ -58,6 +58,7 @@ export const updateLink = generic('update', async (root, {
 }, context) => {
   const { id: workspaceId } = nullShield(
     await context.prisma[context.type.getMethod]({ id }).workspace())
+  // TODO text should be editable by non-staff users
   await checkAccess(context, {
     minimumRole: Role.STAFF,
     minimumPrivilege: Privilege.EDIT,

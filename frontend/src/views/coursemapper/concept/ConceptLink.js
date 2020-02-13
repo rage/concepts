@@ -379,14 +379,16 @@ const Line = ({
     display: 'block',
     transform: Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)',
     width: '100%',
-    textAlign: 'center'
+    textAlign: 'center',
+    color: active ? 'inherit' : 'rgba(117, 117, 117, 0.5)'
   }
 
   const textEditStyle = {
     ...textStyle,
     border: 'none',
     background: 'none',
-    pointerEvents: 'initial'
+    pointerEvents: 'initial',
+    fontSize: '14px'
   }
 
   const editKeyDown = evt => {
@@ -425,7 +427,7 @@ const Line = ({
               <input
                 className='link-text-rotate' style={textEditStyle} placeholder='Enter link text'
                 value={editText} onChange={evt => setEditText(evt.target.value)} autoFocus
-                onKeyDown={editKeyDown} /*onBlur={editBlur}*/
+                onKeyDown={editKeyDown} onBlur={editBlur}
               />
             ) : <span className='link-text-rotate' style={textStyle}>{text}</span>}
         </div>
