@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { Component, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 const defaultAnchor = { x: 0.5, y: 0.5 }
@@ -118,7 +118,7 @@ export default class ConceptLink extends Component {
 
   detect() {
     const {
-      from: fromId, to: toId, scrollParentRef, scrollParentFromRef, scrollParentToRef
+      from: fromId, to: toId, scrollParentRef, scrollParentFromRef, scrollParentToRef, followMouse
     } = this.props
 
     const fromRef = this.fromRef
@@ -126,7 +126,7 @@ export default class ConceptLink extends Component {
 
     fromRef.current = document.getElementById(fromId)
     toRef.current = document.getElementById(toId)
-    if (!fromRef.current || !toRef.current) {
+    if (!followMouse && (!fromRef.current || !toRef.current)) {
       return false
     }
 
@@ -134,6 +134,9 @@ export default class ConceptLink extends Component {
 
     return () => {
       const calculatePosition = (spRef, ref, anchor, dir) => {
+        if (!ref.current) {
+          return [undefined, undefined]
+        }
         const sp = (spRef !== undefined ? spRef : scrollParentRef)?.current
         const pageXOffset = sp ? sp.scrollLeft || sp.x : window.pageXOffset
         const pageYOffset = sp ? sp.scrollTop || sp.y : window.pageYOffset
@@ -177,13 +180,13 @@ const useStyles = makeStyles({
       content: '""',
       position: 'absolute',
       top: '50%',
-      right: '50%',
+      right: 'calc(50% - 11px)',
       width: 0,
       height: 0,
 
       borderWidth: '7px',
       borderStyle: 'solid',
-      borderColor: 'transparent #f1f1f1 transparent transparent',
+      borderColor: 'transparent transparent transparent #f1f1f1',
       marginTop: '-7px'
     }
   },
@@ -197,28 +200,38 @@ const useStyles = makeStyles({
   },
   activeWrapper: {
     '&:before': {
-      borderRightColor: 'red'
+      borderLeftColor: 'red'
     }
   }
 })
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, linkId, classes: propClasses, noListenScroll = false
+  active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
+  const [editText, setEditText] = useState(text || '')
 
   const dyn = useRef({ x: null, y: null })
   const pos = useRef({ x0, y0, x1, y1 })
 
   const calculate = () => {
-    const { x0, y0, x1, y1 } = pos.current
-    const dy = (dyn.current.y || y1) - y0
-    const dx = (dyn.current.x || x1) - x0
+    let { x0: x, y0: y, x1: dx, y1: dy } = pos.current
+    if (dyn.current.x) {
+      if (!x && !y) {
+        x = dyn.current.x
+        y = dyn.current.y
+      } else {
+        dx = dyn.current.x
+        dy = dyn.current.y
+      }
+    }
+    dx -= x
+    dy -= y
     const angle = Math.atan2(dy, dx) * 180 / Math.PI
     const length = Math.sqrt((dx * dx) + (dy * dy))
-    return { x: x0, y: y0, angle, length }
+    return { x, y, angle, length }
   }
 
   const recalculate = () => {
@@ -235,6 +248,8 @@ const Line = ({
     for (const elem of el.current.getElementsByTagName('div')) {
       elem.style.width = `${length}px`
     }
+    const text = el.current.getElementsByClassName('link-text-rotate')[0]
+    text.style.transform = Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)'
   }
 
   const handleMouse = evt => {
@@ -360,6 +375,41 @@ const Line = ({
     transform: `translateX(${hoverAreaOffset}px) translateY(-${Math.floor(hoverAreaWidth / 2)}px)`
   }
 
+  const textStyle = {
+    display: 'block',
+    transform: Math.abs(angle) > 90 ? 'rotate(180deg)' : 'translateY(-25px)',
+    width: '100%',
+    textAlign: 'center',
+    color: active ? 'inherit' : 'rgba(117, 117, 117, 0.5)',
+
+    lineHeight: '20px',
+    letterSpacing: '0.15px',
+    fontSize: '14px'
+  }
+
+  const textEditStyle = {
+    ...textStyle,
+    border: 'none',
+    background: 'none',
+    pointerEvents: 'initial',
+
+    lineHeight: '18px'
+  }
+
+  const editKeyDown = evt => {
+    if (evt.key === 'Enter' && !evt.shiftKey) {
+      evt.preventDefault()
+      stopEdit(linkId, editText)
+    } else if (evt.key === 'Escape') {
+      editBlur()
+    }
+  }
+
+  const editBlur = () => {
+    stopEdit(linkId)
+    setEditText(text)
+  }
+
   // We need a wrapper element to prevent an exception when then
   // React component is removed. This is because we manually
   // move the rendered DOM element after creation.
@@ -376,7 +426,16 @@ const Line = ({
             onClick={evt => onContextMenu(evt, linkId)}
           />
         }
-        <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`} />
+        <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`}>
+          {editing
+            ? (
+              <input
+                className='link-text-rotate' style={textEditStyle} placeholder='Enter link text'
+                value={editText} onChange={evt => setEditText(evt.target.value)} autoFocus
+                onKeyDown={editKeyDown} onBlur={editBlur}
+              />
+            ) : <span className='link-text-rotate' style={textStyle}>{text}</span>}
+        </div>
       </div>
     </div>
   )

@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import React, { useRef, useState } from 'react'
+import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles, Menu, MenuItem } from '@material-ui/core'
 
 import { ConceptLink } from './concept'
 import { LINKS_IN_COURSE } from '../../graphql/Query'
+import { UPDATE_CONCEPT_LINK } from '../../graphql/Mutation'
 
 const useStyles = makeStyles({
   root: {
@@ -57,6 +58,7 @@ const MapperLinks = ({
 }) => {
   const classes = useStyles()
   const conceptLinkMenuRef = useRef()
+  const [editingLink, setEditingLink] = useState(null)
 
   const linkQuery = useQuery(LINKS_IN_COURSE, {
     variables: { courseId }
@@ -64,6 +66,20 @@ const MapperLinks = ({
 
   const showLink = link => courseLinkMap.has(link.from.course.id)
     && !collapsedCourseIds.has(link.from.course.id)
+
+  const updateLink = useMutation(UPDATE_CONCEPT_LINK)
+
+  const editLink = () => {
+    setEditingLink(conceptLinkMenu.linkId)
+    handleMenuClose()
+  }
+
+  const stopEdit = (id, text) => {
+    if (typeof text === 'string') {
+      updateLink({ variables: { id, text } })
+    }
+    setEditingLink(null)
+  }
 
   return <div style={{ display: 'contents' }}>
     {linkQuery.data.linksInCourse?.concepts.map(concept =>
@@ -73,11 +89,11 @@ const MapperLinks = ({
           active={flashingLink === link.id || (!addingLink && (
             focusedConceptIds.has(concept.id) || focusedConceptIds.has(link.from.id)
           ))}
-          linkId={link.id}
-          from={`concept-circle-active-${concept.id}`} to={`concept-circle-${link.from.id}`}
-          fromConceptId={concept.id} toConceptId={link.from.id}
+          linkId={link.id} text={link.text} editing={editingLink === link.id} stopEdit={stopEdit}
+          to={`concept-circle-active-${concept.id}`} from={`concept-circle-${link.from.id}`}
+          toConceptId={concept.id} fromConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
-          posOffsets={{ x0: +5, x1: -6 }}
+          posOffsets={{ x0: -6, x1: +5 }}
           classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)
           && !focusedConceptIds.has(link.from.id)
             ? {
@@ -110,11 +126,16 @@ const MapperLinks = ({
       onClose={handleMenuClose}
     >
       <MenuItem onClick={deleteLink}>Delete link</MenuItem>
+      <MenuItem onClick={editLink}>Edit link text</MenuItem>
     </Menu>
     {addingLink && <ConceptLink
       active within={document.body} // This needs to be directly in body to work
-      from={`${addingLink.type}-${addingLink.id}`} to={`${addingLink.type}-${addingLink.id}`}
-      followMouse posOffsets={{ x0: addingLink.type === 'concept-circle-active' ? -7 : 7 }}
+      from={addingLink.type === 'concept-circle' && `${addingLink.type}-${addingLink.id}`}
+      to={addingLink.type === 'concept-circle-active' && `${addingLink.type}-${addingLink.id}`}
+      followMouse posOffsets={{
+        x0: addingLink.type === 'concept-circle-active' ? -7 : 0,
+        x1: addingLink.type === 'concept-circle' ? 7 : 0
+      }}
     />}
   </div>
 }

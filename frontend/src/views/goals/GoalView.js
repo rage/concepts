@@ -55,7 +55,6 @@ const GoalView = ({ workspaceId }) => {
 
   const onClickCircle = (type, id) => evt => {
     evt.stopPropagation()
-    console.log(workspaceId, type, id, addingLink)
     if (!addingLink) {
       setAddingLink({ type, id })
     } else if (type !== addingLink.type) {

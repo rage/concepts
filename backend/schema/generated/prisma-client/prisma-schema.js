@@ -864,6 +864,7 @@ type ConceptLink {
   frozen: Boolean!
   weight: Int!
   count: Int!
+  text: String
   workspace: Workspace!
   createdBy: User!
   createdAt: DateTime!
@@ -884,6 +885,7 @@ input ConceptLinkCreateInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -910,6 +912,7 @@ input ConceptLinkCreateWithoutFromInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -921,6 +924,7 @@ input ConceptLinkCreateWithoutToInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -933,6 +937,7 @@ input ConceptLinkCreateWithoutWorkspaceInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   createdBy: UserCreateOneInput!
 }
 
@@ -952,6 +957,8 @@ enum ConceptLinkOrderByInput {
   weight_DESC
   count_ASC
   count_DESC
+  text_ASC
+  text_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -964,6 +971,7 @@ type ConceptLinkPreviousValues {
   frozen: Boolean!
   weight: Int!
   count: Int!
+  text: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1003,6 +1011,20 @@ input ConceptLinkScalarWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -1049,6 +1071,7 @@ input ConceptLinkUpdateInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1058,6 +1081,7 @@ input ConceptLinkUpdateManyDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
 }
 
 input ConceptLinkUpdateManyMutationInput {
@@ -1065,6 +1089,7 @@ input ConceptLinkUpdateManyMutationInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
 }
 
 input ConceptLinkUpdateManyWithoutFromInput {
@@ -1114,6 +1139,7 @@ input ConceptLinkUpdateWithoutFromDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1124,6 +1150,7 @@ input ConceptLinkUpdateWithoutToDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1135,6 +1162,7 @@ input ConceptLinkUpdateWithoutWorkspaceDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -1208,6 +1236,20 @@ input ConceptLinkWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
   workspace: WorkspaceWhereInput
   createdBy: UserWhereInput
   createdAt: DateTime
@@ -2121,6 +2163,7 @@ type CourseLink {
   frozen: Boolean!
   weight: Int!
   count: Int!
+  text: String
   workspace: Workspace!
   createdBy: User!
   createdAt: DateTime!
@@ -2141,6 +2184,7 @@ input CourseLinkCreateInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -2167,6 +2211,7 @@ input CourseLinkCreateWithoutFromInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -2178,6 +2223,7 @@ input CourseLinkCreateWithoutToInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceCreateOneWithoutCourseLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -2190,6 +2236,7 @@ input CourseLinkCreateWithoutWorkspaceInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   createdBy: UserCreateOneInput!
 }
 
@@ -2209,6 +2256,8 @@ enum CourseLinkOrderByInput {
   weight_DESC
   count_ASC
   count_DESC
+  text_ASC
+  text_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -2221,6 +2270,7 @@ type CourseLinkPreviousValues {
   frozen: Boolean!
   weight: Int!
   count: Int!
+  text: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -2260,6 +2310,20 @@ input CourseLinkScalarWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2306,6 +2370,7 @@ input CourseLinkUpdateInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -2315,6 +2380,7 @@ input CourseLinkUpdateManyDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
 }
 
 input CourseLinkUpdateManyMutationInput {
@@ -2322,6 +2388,7 @@ input CourseLinkUpdateManyMutationInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
 }
 
 input CourseLinkUpdateManyWithoutFromInput {
@@ -2371,6 +2438,7 @@ input CourseLinkUpdateWithoutFromDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -2381,6 +2449,7 @@ input CourseLinkUpdateWithoutToDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   workspace: WorkspaceUpdateOneRequiredWithoutCourseLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -2392,6 +2461,7 @@ input CourseLinkUpdateWithoutWorkspaceDataInput {
   frozen: Boolean
   weight: Int
   count: Int
+  text: String
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -2465,6 +2535,20 @@ input CourseLinkWhereInput {
   count_lte: Int
   count_gt: Int
   count_gte: Int
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
   workspace: WorkspaceWhereInput
   createdBy: UserWhereInput
   createdAt: DateTime
@@ -2982,6 +3066,7 @@ type GoalLink {
   course: Course!
   goal: Concept!
   workspace: Workspace!
+  text: String
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -2998,6 +3083,7 @@ input GoalLinkCreateInput {
   course: CourseCreateOneWithoutGoalLinksInput!
   goal: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  text: String
   createdBy: UserCreateOneInput!
 }
 
@@ -3015,6 +3101,7 @@ input GoalLinkCreateWithoutCourseInput {
   id: ID
   goal: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  text: String
   createdBy: UserCreateOneInput!
 }
 
@@ -3022,6 +3109,7 @@ input GoalLinkCreateWithoutWorkspaceInput {
   id: ID
   course: CourseCreateOneWithoutGoalLinksInput!
   goal: ConceptCreateOneInput!
+  text: String
   createdBy: UserCreateOneInput!
 }
 
@@ -3033,6 +3121,8 @@ type GoalLinkEdge {
 enum GoalLinkOrderByInput {
   id_ASC
   id_DESC
+  text_ASC
+  text_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -3041,6 +3131,7 @@ enum GoalLinkOrderByInput {
 
 type GoalLinkPreviousValues {
   id: ID!
+  text: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -3060,6 +3151,20 @@ input GoalLinkScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -3103,7 +3208,16 @@ input GoalLinkUpdateInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
   goal: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  text: String
   createdBy: UserUpdateOneRequiredInput
+}
+
+input GoalLinkUpdateManyDataInput {
+  text: String
+}
+
+input GoalLinkUpdateManyMutationInput {
+  text: String
 }
 
 input GoalLinkUpdateManyWithoutCourseInput {
@@ -3115,6 +3229,7 @@ input GoalLinkUpdateManyWithoutCourseInput {
   update: [GoalLinkUpdateWithWhereUniqueWithoutCourseInput!]
   upsert: [GoalLinkUpsertWithWhereUniqueWithoutCourseInput!]
   deleteMany: [GoalLinkScalarWhereInput!]
+  updateMany: [GoalLinkUpdateManyWithWhereNestedInput!]
 }
 
 input GoalLinkUpdateManyWithoutWorkspaceInput {
@@ -3126,17 +3241,25 @@ input GoalLinkUpdateManyWithoutWorkspaceInput {
   update: [GoalLinkUpdateWithWhereUniqueWithoutWorkspaceInput!]
   upsert: [GoalLinkUpsertWithWhereUniqueWithoutWorkspaceInput!]
   deleteMany: [GoalLinkScalarWhereInput!]
+  updateMany: [GoalLinkUpdateManyWithWhereNestedInput!]
+}
+
+input GoalLinkUpdateManyWithWhereNestedInput {
+  where: GoalLinkScalarWhereInput!
+  data: GoalLinkUpdateManyDataInput!
 }
 
 input GoalLinkUpdateWithoutCourseDataInput {
   goal: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  text: String
   createdBy: UserUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateWithoutWorkspaceDataInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
   goal: ConceptUpdateOneRequiredInput
+  text: String
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -3180,6 +3303,20 @@ input GoalLinkWhereInput {
   course: CourseWhereInput
   goal: ConceptWhereInput
   workspace: WorkspaceWhereInput
+  text: String
+  text_not: String
+  text_in: [String!]
+  text_not_in: [String!]
+  text_lt: String
+  text_lte: String
+  text_gt: String
+  text_gte: String
+  text_contains: String
+  text_not_contains: String
+  text_starts_with: String
+  text_not_starts_with: String
+  text_ends_with: String
+  text_not_ends_with: String
   createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
@@ -3247,6 +3384,7 @@ type Mutation {
   deleteManyCourseLinks(where: CourseLinkWhereInput): BatchPayload!
   createGoalLink(data: GoalLinkCreateInput!): GoalLink!
   updateGoalLink(data: GoalLinkUpdateInput!, where: GoalLinkWhereUniqueInput!): GoalLink
+  updateManyGoalLinks(data: GoalLinkUpdateManyMutationInput!, where: GoalLinkWhereInput): BatchPayload!
   upsertGoalLink(where: GoalLinkWhereUniqueInput!, create: GoalLinkCreateInput!, update: GoalLinkUpdateInput!): GoalLink!
   deleteGoalLink(where: GoalLinkWhereUniqueInput!): GoalLink
   deleteManyGoalLinks(where: GoalLinkWhereInput): BatchPayload!

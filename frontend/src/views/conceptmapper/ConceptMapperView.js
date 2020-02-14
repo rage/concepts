@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
@@ -15,7 +15,7 @@ import {
   DELETE_CONCEPT,
   DELETE_CONCEPT_LINK,
   UPDATE_CONCEPT,
-  DELETE_MANY_CONCEPTS, UPDATE_MANY_CONCEPTS
+  DELETE_MANY_CONCEPTS, UPDATE_MANY_CONCEPTS, UPDATE_CONCEPT_LINK
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import {
@@ -120,6 +120,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [{ user }] = useLoginStateValue()
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLinkState] = useState(null)
+  const [editingLink, setEditingLink] = useState(null)
   const addingLinkRef = useRef()
   const setAddingLink = val => {
     setAddingLinkState(val)
@@ -179,6 +180,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const deleteConceptLink = useCachedMutation(DELETE_CONCEPT_LINK, {
     update: cache.deleteConceptLinkUpdate()
   })
+
+  const updateConceptLink = useMutation(UPDATE_CONCEPT_LINK)
 
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId, workspaceId }
@@ -571,6 +574,18 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     openEditConceptDialog(concepts.current[selected.current.values().next().value].concept)
   }, [openEditConceptDialog])
 
+  const menuEditLink = useCallback(() => {
+    closeMenu()
+    setEditingLink(menu.id)
+  }, [closeMenu, menu.id])
+
+  const stopLinkEdit = useCallback(async (id, text) => {
+    setEditingLink(null)
+    if (typeof text === 'string') {
+      await updateConceptLink({ variables: { id, text } })
+    }
+  }, [updateConceptLink])
+
   const menuAddNode = useCallback(level => () => {
     closeMenu()
     setTimeout(() => {
@@ -606,12 +621,13 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
-          key={link.id} delay={1} active linkId={link.id}
+          key={link.id} delay={1} active linkId={link.id} text={link.text}
+          editing={editingLink === link.id} stopEdit={stopLinkEdit}
           within='concept-mapper-link-container' posOffsets={linkOffsets}
           onContextMenu={openConceptLinkMenu(link.id)}
           scrollParentRef={pan} noListenScroll
-          from={`concept-${concept.id}`} to={`concept-${link.from.id}`}
-          fromConceptId={concept.id} toConceptId={link.from.id}
+          to={`concept-${concept.id}`} from={`concept-${link.from.id}`}
+          toConceptId={concept.id} fromConceptId={link.from.id}
           fromAnchor='center middle' toAnchor='center middle'
         />)
       ])}
@@ -622,8 +638,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         openConceptDialog={openCreateObjectiveDialog}
       />}
       {addingLink && <ConceptLink
-        active within={document.body}
-        followMouse from={`concept-${addingLink}`} to={`concept-${addingLink}`}
+        active within={document.body} followMouse from={`concept-${addingLink}`}
       />}
       <div ref={selectionRef} className={classes.selection} />
       <div id='concept-mapper-link-container' />
@@ -729,6 +744,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       open={menu.open === 'concept-link'} onClose={closeMenu}
     >
       <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
+      <MenuItem onClick={menuEditLink}>Edit link text</MenuItem>
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}

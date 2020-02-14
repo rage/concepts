@@ -4,5 +4,6 @@ export const ConceptLink = makeTypeResolvers('conceptLink', [
   'to',
   'from',
   'createdBy',
-  'workspace'
+  'workspace',
+  'text'
 ])

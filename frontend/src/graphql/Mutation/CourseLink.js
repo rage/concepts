@@ -7,8 +7,10 @@ import {
 } from '../Fragment'
 
 const CREATE_COURSE_LINK = gql`
-mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean) {
-  createCourseLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official) {
+mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean,
+                          $text: String) {
+  createCourseLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official,
+                   text: $text) {
     ...createCourseLinkData
   }
 }
@@ -16,8 +18,8 @@ ${CREATE_COURSE_LINK_FRAGMENT}
 `
 
 const UPDATE_COURSE_LINK = gql`
-mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean) {
-  updateCourseLink(id: $id, official: $official, frozen: $frozen) {
+mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean, $text: String) {
+  updateCourseLink(id: $id, official: $official, frozen: $frozen, text: $text) {
     ...updateCourseLinkData
   }
 }

@@ -5,6 +5,7 @@ mutation createGoalLink($goalId: ID!, $courseId: ID!, $workspaceId: ID!) {
   createGoalLink(goalId: $goalId, courseId: $courseId, workspaceId: $workspaceId) {
     __typename
     id
+    text
     course {
       id
     }

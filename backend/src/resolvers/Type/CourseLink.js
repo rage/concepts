@@ -4,5 +4,6 @@ export const CourseLink = makeTypeResolvers('courseLink', [
   'to',
   'from',
   'createdBy',
-  'workspace'
+  'workspace',
+  'text'
 ])
