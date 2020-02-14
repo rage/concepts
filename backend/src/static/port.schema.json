@@ -164,6 +164,10 @@
                   ],
                   "minLength": 1
                 },
+                "position": {
+                  "type": "string",
+                  "description": "Position of concept"
+                },
                 "tags": {
                   "$ref": "#/definitions/tags"
                 },

@@ -84,6 +84,7 @@ export const importData = async (root, { data }, context) => {
         name: concept.name,
         description: concept.description,
         level: concept.level,
+        position: concept.position,
         official: canSetOfficial && Boolean(json.projectId || concept.official),
         createdBy: { connect: { id: context.user.id } },
         workspace: { connect: { id: workspace.id } },
