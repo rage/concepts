@@ -31,6 +31,7 @@ query($wid: ID!) {
       concepts {
         name
         description
+        position
         level
         official
         linksToConcept {
