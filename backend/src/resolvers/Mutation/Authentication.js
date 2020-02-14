@@ -114,7 +114,7 @@ export const mergeUser = async (root, { accessToken }, context) => {
   if (!context.user) {
     return new AuthenticationError('Must be logged in')
   }
-  const oldUser = await context.prisma.token({ token: accessToken }).user()
+  const oldUser = await context.prisma.accessToken({ token: accessToken }).user()
   const curUser = await context.prisma.user({ id: context.user.id })
 
   await mergeData(context.prisma, oldUser.id, curUser.id, 'workspace')
@@ -134,10 +134,8 @@ export const mergeUser = async (root, { accessToken }, context) => {
     }
   })
   await context.prisma.deleteManyAccessTokens({
-    where: {
-      user: {
-        id: oldUser.id
-      }
+    user: {
+      id: oldUser.id
     }
   })
 
