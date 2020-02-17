@@ -3,7 +3,7 @@ import { MenuItem, Select, FormControl, InputLabel } from '@material-ui/core'
 
 import useRouter from '../../lib/useRouter'
 
-const CourseList = ({ courseId, courses, urlPrefix, workspaceId, className }) => {
+const CourseList = ({ courseId, courses, urlPrefix, workspaceId, className, resetZoom }) => {
   const [open, setOpen] = useState(false)
   const { history } = useRouter()
 
@@ -14,6 +14,7 @@ const CourseList = ({ courseId, courses, urlPrefix, workspaceId, className }) =>
   const onChange = useCallback(evt => {
     history.push(`${urlPrefix}/${workspaceId}/conceptmapper/${evt.target.value}`)
     setOpen(false)
+    resetZoom()
   }, [history, urlPrefix, setOpen, workspaceId])
 
   const onClose = useCallback(() => setOpen(false), [])

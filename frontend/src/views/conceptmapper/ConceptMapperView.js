@@ -649,7 +649,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
     <section className={classes.toolbar}>
       <CourseList
-        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
+        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses} resetZoom={resetZoom}
         urlPrefix={urlPrefix} workspaceId={workspaceId} className={classes.toolbarButton}
       />
       <Button variant='outlined' onClick={resetZoom} className={classes.toolbarButton}>
