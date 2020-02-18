@@ -56,17 +56,17 @@ type Mutation {
   createConceptFromCommon(conceptId: ID!, courseId: ID!, description: String, level: ConceptLevel!, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
 
   # Course link mutations
-  createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean, text: String): CourseLink!
-  updateCourseLink(id: ID!, frozen: Boolean, official: Boolean, text: String): CourseLink!
+  createCourseLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean, text: String, weight: Int): CourseLink!
+  updateCourseLink(id: ID!, frozen: Boolean, official: Boolean, text: String, weight: Int): CourseLink!
   deleteCourseLink(id: ID!): DeletedCourseItem!
 
   # Concept link mutations
-  createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean, text: String): ConceptLink!
-  updateConceptLink(id: ID!, official: Boolean, text: String): ConceptLink!
+  createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean, text: String, weight: Int): ConceptLink!
+  updateConceptLink(id: ID!, official: Boolean, text: String, weight: Int): ConceptLink!
   deleteConceptLink(id: ID!): DeletedConceptLink!
 
   # Goal link mutations
-  createGoalLink(goalId: ID!, courseId: ID!, workspaceId: ID!, text: String): GoalLink!
+  createGoalLink(goalId: ID!, courseId: ID!, workspaceId: ID!, text: String, weight: Int): GoalLink!
   deleteGoalLink(id: ID!): DeletedGoalLinkItem!
 
   # Project mutations

@@ -207,7 +207,8 @@ const useStyles = makeStyles({
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit
+  active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit,
+  weight
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
@@ -355,7 +356,7 @@ const Line = ({
     transformOrigin: '0 0'
   }
 
-  const lineWidth = 3
+  const lineWidth = (Math.min(Math.max(weight, 25), 200) / 25) - 1
   const innerStyle = {
     ...commonStyle,
     top: 0,
@@ -363,7 +364,7 @@ const Line = ({
     transform: `translateY(-${Math.floor(lineWidth / 2)}px)`
   }
 
-  const hoverAreaWidth = 15
+  const hoverAreaWidth = 12 + lineWidth
   const hoverAreaOffset = 10
 
   const hoverAreaStyle = {

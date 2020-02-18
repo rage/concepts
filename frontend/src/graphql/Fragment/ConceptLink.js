@@ -6,6 +6,7 @@ fragment createConceptLinkData on ConceptLink {
   official
   frozen
   text
+  weight
   to {
     id
     course {
@@ -27,6 +28,7 @@ fragment updateConceptLinkData on ConceptLink {
   official
   frozen
   text
+  weight
   to {
     id
     course {

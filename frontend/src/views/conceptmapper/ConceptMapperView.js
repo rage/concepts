@@ -621,7 +621,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
-          key={link.id} delay={1} active linkId={link.id} text={link.text}
+          key={link.id} delay={1} active linkId={link.id} text={link.text} weight={link.weight}
           editing={editingLink === link.id} stopEdit={stopLinkEdit}
           within='concept-mapper-link-container' posOffsets={linkOffsets}
           onContextMenu={openConceptLinkMenu(link.id)}

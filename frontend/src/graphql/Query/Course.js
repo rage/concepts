@@ -81,6 +81,7 @@ query courseById($id: ID!) {
         official
         frozen
         text
+        weight
         from {
           course {
             id
@@ -105,6 +106,7 @@ query linksInCourse($courseId: ID!) {
         official
         frozen
         text
+        weight
         from {
           course {
             id
@@ -165,6 +167,7 @@ query courseAndPrerequisites($courseId: ID!) {
       official
       frozen
       text
+      weight
       from {
         id
         __typename

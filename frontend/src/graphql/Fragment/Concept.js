@@ -23,6 +23,7 @@ fragment createConceptData on Concept {
     official
     frozen
     text
+    weight
     to {
       id
     }
@@ -32,6 +33,7 @@ fragment createConceptData on Concept {
     official
     frozen
     text
+    weight
     from {
       id
     }

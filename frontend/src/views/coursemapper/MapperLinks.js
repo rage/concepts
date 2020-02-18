@@ -91,7 +91,7 @@ const MapperLinks = ({
           ))}
           linkId={link.id} text={link.text} editing={editingLink === link.id} stopEdit={stopEdit}
           to={`concept-circle-active-${concept.id}`} from={`concept-circle-${link.from.id}`}
-          toConceptId={concept.id} fromConceptId={link.from.id}
+          toConceptId={concept.id} fromConceptId={link.from.id} weight={link.weight}
           fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
           posOffsets={{ x0: -6, x1: +5 }}
           classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)

@@ -23,7 +23,7 @@ const generic = (action, fn) => type => {
 }
 
 export const createLink = generic('create', async (root, {
-  workspaceId, official, from, to, text
+  workspaceId, official, from, to, text, weight
 }, context) => {
   await checkAccess(context, {
     minimumRole: official ? Role.STAFF : Role.GUEST,
@@ -43,7 +43,7 @@ export const createLink = generic('create', async (root, {
     to: { connect: { id: to } },
     from: { connect: { id: from } },
     official: Boolean(official),
-    text,
+    text, weight,
     createdBy: { connect: { id: context.user.id } },
     workspace: { connect: { id: workspaceId } }
   })
@@ -54,22 +54,28 @@ export const createLink = generic('create', async (root, {
 })
 
 export const updateLink = generic('update', async (root, {
-  id, frozen, official, text
+  id, frozen, official, text, weight
 }, context) => {
   const { id: workspaceId } = nullShield(
     await context.prisma[context.type.getMethod]({ id }).workspace())
-  // TODO text should be editable by non-staff users
   await checkAccess(context, {
-    minimumRole: Role.STAFF,
+    minimumRole: Role.GUEST,
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
   const oldLink = await context.prisma[context.type.getMethod]({ id })
   if (oldLink.frozen && frozen !== false) throw new ForbiddenError('This link is frozen')
 
+  if ((official !== undefined && official !== oldLink.official)
+    || (frozen || oldLink.frozen)) {
+    if (context.user.role < Role.STAFF) {
+      throw new ForbiddenError('Access denied')
+    }
+  }
+
   const updatedLink = await context.prisma[context.type.mutateMethod]({
     where: { id },
-    data: { frozen, official, text }
+    data: { frozen, official, text, weight }
   })
   pubsub.publish(context.type.channel, {
     [context.type.pubsubVariableName]: { ...updatedLink, workspaceId }
