@@ -62,7 +62,7 @@ type Mutation {
 
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean, text: String): ConceptLink!
-  updateConceptLink(id: ID!, official: Boolean, text: String): ConceptLink!
+  updateConceptLink(id: ID!, official: Boolean, text: String, level: PrerequisiteLevel): ConceptLink!
   deleteConceptLink(id: ID!): DeletedConceptLink!
 
   # Goal link mutations

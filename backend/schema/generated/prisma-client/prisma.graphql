@@ -860,6 +860,7 @@ type ConceptLink {
   weight: Int!
   count: Int!
   text: String
+  level: PrerequisiteLevel!
   workspace: Workspace!
   createdBy: User!
   createdAt: DateTime!
@@ -881,6 +882,7 @@ input ConceptLinkCreateInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -908,6 +910,7 @@ input ConceptLinkCreateWithoutFromInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -920,6 +923,7 @@ input ConceptLinkCreateWithoutToInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   workspace: WorkspaceCreateOneWithoutConceptLinksInput!
   createdBy: UserCreateOneInput!
 }
@@ -933,6 +937,7 @@ input ConceptLinkCreateWithoutWorkspaceInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   createdBy: UserCreateOneInput!
 }
 
@@ -954,6 +959,8 @@ enum ConceptLinkOrderByInput {
   count_DESC
   text_ASC
   text_DESC
+  level_ASC
+  level_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -967,6 +974,7 @@ type ConceptLinkPreviousValues {
   weight: Int!
   count: Int!
   text: String
+  level: PrerequisiteLevel!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -1020,6 +1028,10 @@ input ConceptLinkScalarWhereInput {
   text_not_starts_with: String
   text_ends_with: String
   text_not_ends_with: String
+  level: PrerequisiteLevel
+  level_not: PrerequisiteLevel
+  level_in: [PrerequisiteLevel!]
+  level_not_in: [PrerequisiteLevel!]
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -1067,6 +1079,7 @@ input ConceptLinkUpdateInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1077,6 +1090,7 @@ input ConceptLinkUpdateManyDataInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
 }
 
 input ConceptLinkUpdateManyMutationInput {
@@ -1085,6 +1099,7 @@ input ConceptLinkUpdateManyMutationInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
 }
 
 input ConceptLinkUpdateManyWithoutFromInput {
@@ -1135,6 +1150,7 @@ input ConceptLinkUpdateWithoutFromDataInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1146,6 +1162,7 @@ input ConceptLinkUpdateWithoutToDataInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   workspace: WorkspaceUpdateOneRequiredWithoutConceptLinksInput
   createdBy: UserUpdateOneRequiredInput
 }
@@ -1158,6 +1175,7 @@ input ConceptLinkUpdateWithoutWorkspaceDataInput {
   weight: Int
   count: Int
   text: String
+  level: PrerequisiteLevel
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -1245,6 +1263,10 @@ input ConceptLinkWhereInput {
   text_not_starts_with: String
   text_ends_with: String
   text_not_ends_with: String
+  level: PrerequisiteLevel
+  level_not: PrerequisiteLevel
+  level_in: [PrerequisiteLevel!]
+  level_not_in: [PrerequisiteLevel!]
   workspace: WorkspaceWhereInput
   createdBy: UserWhereInput
   createdAt: DateTime
@@ -3839,6 +3861,11 @@ input PointGroupWhereInput {
 
 input PointGroupWhereUniqueInput {
   id: ID
+}
+
+enum PrerequisiteLevel {
+  USEFUL
+  OBLIGATORY
 }
 
 enum Privilege {

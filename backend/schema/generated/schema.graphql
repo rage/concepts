@@ -62,7 +62,7 @@ type Mutation {
 
   # Concept link mutations
   createConceptLink(to: ID!, from: ID!, workspaceId: ID!, official: Boolean, text: String): ConceptLink!
-  updateConceptLink(id: ID!, official: Boolean, text: String): ConceptLink!
+  updateConceptLink(id: ID!, official: Boolean, text: String, level: PrerequisiteLevel): ConceptLink!
   deleteConceptLink(id: ID!): DeletedConceptLink!
 
   # Goal link mutations
@@ -496,6 +496,7 @@ type ConceptLink {
   weight: Int!
   count: Int!
   text: String
+  level: PrerequisiteLevel!
 
   # Relations
   workspace: Workspace!
@@ -511,6 +512,11 @@ enum ConceptLevel {
   CONCEPT
   GOAL
   COMMON
+}
+
+enum PrerequisiteLevel {
+  USEFUL,
+  OBLIGATORY
 }
 
 type GoalLink {

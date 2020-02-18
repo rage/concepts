@@ -224,6 +224,7 @@ type ConceptLink {
   weight: Int! @default(value: 100)
   count: Int! @default(value: 1)
   text: String
+  level: PrerequisiteLevel! @default(value: OBLIGATORY)
 
   # Relations
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConceptLinks")
@@ -239,6 +240,11 @@ enum ConceptLevel {
   CONCEPT
   GOAL
   COMMON
+}
+
+enum PrerequisiteLevel {
+  USEFUL,
+  OBLIGATORY
 }
 
 type GoalLink {

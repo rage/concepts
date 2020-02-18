@@ -61,6 +61,10 @@ var models = [
     embedded: false
   },
   {
+    name: "PrerequisiteLevel",
+    embedded: false
+  },
+  {
     name: "GoalLink",
     embedded: false
   },
