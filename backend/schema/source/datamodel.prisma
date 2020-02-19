@@ -87,6 +87,7 @@ type Workspace {
   courseLinks: [CourseLink!]! @relation(name:"WorkspaceCourseLinks", onDelete: CASCADE)
   goals: [Concept!]! @relation(name: "WorkspaceGoals", onDelete: CASCADE)
   goalLinks: [GoalLink!]! @relation(name: "WorkspaceGoalLinks", onDelete: CASCADE)
+  objectiveLinks: [ObjectiveLink!]! @relation(name: "WorkspaceObjectiveLinks", onDelete: CASCADE)
 
   # Authorization data
   participants: [WorkspaceParticipant!]! @relation(name: "WorkspaceParticipantWorkspace", onDelete: CASCADE)
@@ -210,6 +211,7 @@ type Course {
 
   # Goals
   goalLinks: [GoalLink!]! @relation(name: "GoalConceptsOfCourse", onDelete: CASCADE)
+  objectiveLinks: [ObjectiveLink!]! @relation(name: "ObjectiveLinksToCourse", onDelete: CASCADE)
 }
 
 
@@ -239,6 +241,18 @@ enum ConceptLevel {
   CONCEPT
   GOAL
   COMMON
+}
+
+type ObjectiveLink {
+  id: ID! @id
+  course: Course! @relation(name: "ObjectiveLinksToCourse")
+  goal: Concept! @relation(name: "ObjectiveLink")
+  workspace: Workspace! @relation(name: "WorkspaceObjectiveLinks")
+  text: String
+
+  createdBy: User!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type GoalLink {
