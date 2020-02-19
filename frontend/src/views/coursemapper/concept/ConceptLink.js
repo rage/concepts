@@ -356,12 +356,13 @@ const Line = ({
     transformOrigin: '0 0'
   }
 
-  const lineWidth = (Math.min(Math.max(weight, 25), 200) / 25) - 1
+  const lineWidth = Math.min(Math.max(weight / 25, 1), 7) - 1
   const innerStyle = {
     ...commonStyle,
     top: 0,
     left: 0,
-    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`
+    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`,
+    borderTopWidth: lineWidth
   }
 
   const hoverAreaWidth = 12 + lineWidth
