@@ -1,6 +1,9 @@
 import React, { useRef, useState } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
-import { makeStyles, Menu, MenuItem } from '@material-ui/core'
+import { IconButton, makeStyles, Menu, MenuItem } from '@material-ui/core'
+import {
+  Star as StarIcon, StarBorder as StarBorderIcon, StarHalf as StarHalfIcon
+} from '@material-ui/icons'
 
 import { ConceptLink } from './concept'
 import { LINKS_IN_COURSE } from '../../graphql/Query'
@@ -54,7 +57,7 @@ const useStyles = makeStyles({
 
 const MapperLinks = ({
   courseId, flashingLink, addingLink, focusedConceptIds, conceptLinkMenu, courseLinkMap,
-  collapsedCourseIds, handleMenuOpen, handleMenuClose, deleteLink
+  collapsedCourseIds, handleMenuOpen, handleMenuClose, deleteLink, updateLink, setWeight
 }) => {
   const classes = useStyles()
   const conceptLinkMenuRef = useRef()
@@ -66,8 +69,6 @@ const MapperLinks = ({
 
   const showLink = link => courseLinkMap.has(link.from.course.id)
     && !collapsedCourseIds.has(link.from.course.id)
-
-  const updateLink = useMutation(UPDATE_CONCEPT_LINK)
 
   const editLink = () => {
     setEditingLink(conceptLinkMenu.linkId)
@@ -91,7 +92,7 @@ const MapperLinks = ({
           ))}
           linkId={link.id} text={link.text} editing={editingLink === link.id} stopEdit={stopEdit}
           to={`concept-circle-active-${concept.id}`} from={`concept-circle-${link.from.id}`}
-          toConceptId={concept.id} fromConceptId={link.from.id}
+          toConceptId={concept.id} fromConceptId={link.from.id} weight={link.weight}
           fromAnchor='center middle' toAnchor='center middle' onContextMenu={handleMenuOpen}
           posOffsets={{ x0: -6, x1: +5 }}
           classes={flashingLink === link.id && !focusedConceptIds.has(concept.id)
@@ -112,22 +113,12 @@ const MapperLinks = ({
       top: `${conceptLinkMenu ? conceptLinkMenu.y : -1}px`,
       left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
     }} />
-    <Menu
-      anchorEl={conceptLinkMenuRef.current}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'left'
-      }}
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'left'
-      }}
-      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={deleteLink}>Delete link</MenuItem>
-      <MenuItem onClick={editLink}>Edit link text</MenuItem>
-    </Menu>
+    <LinkMenu
+      anchorEl={conceptLinkMenuRef.current} anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)} onClose={handleMenuClose}
+      deleteLink={deleteLink} editLink={editLink} setWeight={setWeight} weight={conceptLinkMenu?.weight}
+    />
     {addingLink && <ConceptLink
       active within={document.body} // This needs to be directly in body to work
       from={addingLink.type === 'concept-circle' && `${addingLink.type}-${addingLink.id}`}
@@ -139,5 +130,23 @@ const MapperLinks = ({
     />}
   </div>
 }
+
+export const LinkMenu = ({ deleteLink, editLink, weight, setWeight, ...args }) => (
+  <Menu {...args}>
+    <MenuItem onClick={deleteLink}>Delete link</MenuItem>
+    <MenuItem onClick={editLink}>Edit link text</MenuItem>
+    <MenuItem dense>
+      <IconButton color={weight === 50 ? 'secondary' : undefined} onClick={setWeight(50)}>
+        <StarBorderIcon />
+      </IconButton>
+      <IconButton color={weight === 100 ? 'secondary' : undefined} onClick={setWeight(100)}>
+        <StarHalfIcon />
+      </IconButton>
+      <IconButton color={weight === 150 ? 'secondary' : undefined} onClick={setWeight(150)}>
+        <StarIcon />
+      </IconButton>
+    </MenuItem>
+  </Menu>
+)
 
 export default MapperLinks

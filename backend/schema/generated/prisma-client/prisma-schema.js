@@ -3143,6 +3143,7 @@ type GoalLink {
   course: Course!
   goal: Concept!
   workspace: Workspace!
+  weight: Int!
   text: String
   createdBy: User!
   createdAt: DateTime!
@@ -3160,6 +3161,7 @@ input GoalLinkCreateInput {
   course: CourseCreateOneWithoutGoalLinksInput!
   goal: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  weight: Int
   text: String
   createdBy: UserCreateOneInput!
 }
@@ -3178,6 +3180,7 @@ input GoalLinkCreateWithoutCourseInput {
   id: ID
   goal: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutGoalLinksInput!
+  weight: Int
   text: String
   createdBy: UserCreateOneInput!
 }
@@ -3186,6 +3189,7 @@ input GoalLinkCreateWithoutWorkspaceInput {
   id: ID
   course: CourseCreateOneWithoutGoalLinksInput!
   goal: ConceptCreateOneInput!
+  weight: Int
   text: String
   createdBy: UserCreateOneInput!
 }
@@ -3198,6 +3202,8 @@ type GoalLinkEdge {
 enum GoalLinkOrderByInput {
   id_ASC
   id_DESC
+  weight_ASC
+  weight_DESC
   text_ASC
   text_DESC
   createdAt_ASC
@@ -3208,6 +3214,7 @@ enum GoalLinkOrderByInput {
 
 type GoalLinkPreviousValues {
   id: ID!
+  weight: Int!
   text: String
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -3228,6 +3235,14 @@ input GoalLinkScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   text: String
   text_not: String
   text_in: [String!]
@@ -3285,15 +3300,18 @@ input GoalLinkUpdateInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
   goal: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  weight: Int
   text: String
   createdBy: UserUpdateOneRequiredInput
 }
 
 input GoalLinkUpdateManyDataInput {
+  weight: Int
   text: String
 }
 
 input GoalLinkUpdateManyMutationInput {
+  weight: Int
   text: String
 }
 
@@ -3329,6 +3347,7 @@ input GoalLinkUpdateManyWithWhereNestedInput {
 input GoalLinkUpdateWithoutCourseDataInput {
   goal: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutGoalLinksInput
+  weight: Int
   text: String
   createdBy: UserUpdateOneRequiredInput
 }
@@ -3336,6 +3355,7 @@ input GoalLinkUpdateWithoutCourseDataInput {
 input GoalLinkUpdateWithoutWorkspaceDataInput {
   course: CourseUpdateOneRequiredWithoutGoalLinksInput
   goal: ConceptUpdateOneRequiredInput
+  weight: Int
   text: String
   createdBy: UserUpdateOneRequiredInput
 }
@@ -3380,6 +3400,14 @@ input GoalLinkWhereInput {
   course: CourseWhereInput
   goal: ConceptWhereInput
   workspace: WorkspaceWhereInput
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   text: String
   text_not: String
   text_in: [String!]

@@ -8,9 +8,9 @@ import {
 
 const CREATE_COURSE_LINK = gql`
 mutation createCourseLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean,
-                          $text: String) {
+                          $text: String, $weight: Int) {
   createCourseLink(to:$to, from:$from, workspaceId: $workspaceId, official: $official,
-                   text: $text) {
+                   text: $text, weight: $weight) {
     ...createCourseLinkData
   }
 }
@@ -18,8 +18,9 @@ ${CREATE_COURSE_LINK_FRAGMENT}
 `
 
 const UPDATE_COURSE_LINK = gql`
-mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean, $text: String) {
-  updateCourseLink(id: $id, official: $official, frozen: $frozen, text: $text) {
+mutation updateCourseLink($id: ID!, $frozen: Boolean, $official: Boolean, $text: String,
+                          $weight: Int) {
+  updateCourseLink(id: $id, official: $official, frozen: $frozen, text: $text, weight: $weight) {
     ...updateCourseLinkData
   }
 }

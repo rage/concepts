@@ -6,9 +6,9 @@ import {
 
 const CREATE_CONCEPT_LINK = gql`
 mutation createConceptLink($to: ID!, $from: ID!, $workspaceId: ID!, $official: Boolean,
-                           $text: String) {
+                           $text: String, $weight: Int) {
   createConceptLink(to: $to, from: $from, workspaceId: $workspaceId, official: $official,
-                    text: $text) {
+                    text: $text, weight: $weight) {
     ...createConceptLinkData
   }
 }
@@ -16,8 +16,8 @@ ${CREATE_CONCEPT_LINK_FRAGMENT}
 `
 
 const UPDATE_CONCEPT_LINK = gql`
-mutation updateConceptLink($id: ID!, $official: Boolean, $text: String) {
-  updateConceptLink(id: $id, official: $official, text: $text) {
+mutation updateConceptLink($id: ID!, $official: Boolean, $text: String, $weight: Int) {
+  updateConceptLink(id: $id, official: $official, text: $text, weight: $weight) {
     ...updateConceptLinkData
   }
 }
