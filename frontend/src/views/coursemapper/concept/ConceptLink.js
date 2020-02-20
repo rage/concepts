@@ -208,7 +208,7 @@ const useStyles = makeStyles({
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
   active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit,
-  weight
+  weight = 100
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
