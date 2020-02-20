@@ -1,13 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import {
-  Menu, MenuItem, Divider, Button, ButtonGroup, Typography, IconButton
-} from '@material-ui/core'
-import {
-  ArrowDropDown as ArrowDropDownIcon, Star as StarIcon, StarBorder as StarBorderIcon,
-  StarHalf as StarHalfIcon
-} from '@material-ui/icons'
+import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
+import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -34,6 +29,7 @@ import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
 import { useConfirmDelete } from '../../dialogs/alert'
 import HackySlider from './HackySlider'
+import { LinkMenu } from '../coursemapper/MapperLinks'
 
 const useStyles = makeStyles({
   root: {
@@ -750,33 +746,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         </div>
       )}
     </Menu>
-    <Menu
-      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-      open={menu.open === 'concept-link'} onClose={closeMenu}
-    >
-      <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
-      <MenuItem onClick={menuEditLink}>Edit link text</MenuItem>
-      <MenuItem dense>
-        <IconButton
-          color={menu.state?.weight === 50 ? 'secondary' : undefined}
-          onClick={menuSetWeight(50)}
-        >
-          <StarBorderIcon />
-        </IconButton>
-        <IconButton
-          color={menu.state?.weight === 100 ? 'secondary' : undefined}
-          onClick={menuSetWeight(100)}
-        >
-          <StarHalfIcon />
-        </IconButton>
-        <IconButton
-          color={menu.state?.weight === 150 ? 'secondary' : undefined}
-          onClick={menuSetWeight(150)}
-        >
-          <StarIcon />
-        </IconButton>
-      </MenuItem>
-    </Menu>
+    <LinkMenu
+      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor} onClose={closeMenu}
+      open={menu.open === 'concept-link'} editLink={menuEditLink} deleteLink={menuDeleteLink}
+      weight={menu.state?.weight} setWeight={menuSetWeight}
+    />
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
       open={menu.open === 'background'} onClose={closeMenu}

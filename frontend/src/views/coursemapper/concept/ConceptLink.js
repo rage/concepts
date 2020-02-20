@@ -424,8 +424,8 @@ const Line = ({
         {(active && !followMouse) &&
           <div
             style={hoverAreaStyle} className={classes.hover}
-            onContextMenu={evt => onContextMenu(evt, linkId)}
-            onClick={evt => onContextMenu(evt, linkId)}
+            onContextMenu={evt => onContextMenu(evt, linkId, weight)}
+            onClick={evt => onContextMenu(evt, linkId, weight)}
           />
         }
         <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`}>
