@@ -1,8 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useMutation, useQuery } from 'react-apollo-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
-import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
+import {
+  Menu, MenuItem, Divider, Button, ButtonGroup, Typography, IconButton
+} from '@material-ui/core'
+import {
+  ArrowDropDown as ArrowDropDownIcon, Star as StarIcon, StarBorder as StarBorderIcon,
+  StarHalf as StarHalfIcon
+} from '@material-ui/icons'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -453,7 +458,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     toolbar.current.style.display = 'none'
   }, [])
 
-  const openConceptLinkMenu = id => evt => openMenu('concept-link', id, null, evt)
+  const openConceptLinkMenu = link => evt => openMenu('concept-link', link.id, link, evt)
 
   const openMenu = useCallback((type, id, state, evt) => {
     evt.preventDefault()
@@ -579,6 +584,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     setEditingLink(menu.id)
   }, [closeMenu, menu.id])
 
+  const menuSetWeight = weight => async () => {
+    await updateConceptLink({ variables: { id: menu.id, weight } })
+    closeMenu()
+  }
+
   const stopLinkEdit = useCallback(async (id, text) => {
     setEditingLink(null)
     if (typeof text === 'string') {
@@ -624,7 +634,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           key={link.id} delay={1} active linkId={link.id} text={link.text} weight={link.weight}
           editing={editingLink === link.id} stopEdit={stopLinkEdit}
           within='concept-mapper-link-container' posOffsets={linkOffsets}
-          onContextMenu={openConceptLinkMenu(link.id)}
+          onContextMenu={openConceptLinkMenu(link)}
           scrollParentRef={pan} noListenScroll
           to={`concept-${concept.id}`} from={`concept-${link.from.id}`}
           toConceptId={concept.id} fromConceptId={link.from.id}
@@ -649,8 +659,9 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
     <section className={classes.toolbar}>
       <CourseList
-        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses} resetZoom={resetZoom}
+        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
         urlPrefix={urlPrefix} workspaceId={workspaceId} className={classes.toolbarButton}
+        resetZoom={resetZoom}
       />
       <Button variant='outlined' onClick={resetZoom} className={classes.toolbarButton}>
         Reset zoom
@@ -745,6 +756,26 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     >
       <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
       <MenuItem onClick={menuEditLink}>Edit link text</MenuItem>
+      <MenuItem dense>
+        <IconButton
+          color={menu.state?.weight === 50 ? 'secondary' : undefined}
+          onClick={menuSetWeight(50)}
+        >
+          <StarBorderIcon />
+        </IconButton>
+        <IconButton
+          color={menu.state?.weight === 100 ? 'secondary' : undefined}
+          onClick={menuSetWeight(100)}
+        >
+          <StarHalfIcon />
+        </IconButton>
+        <IconButton
+          color={menu.state?.weight === 150 ? 'secondary' : undefined}
+          onClick={menuSetWeight(150)}
+        >
+          <StarIcon />
+        </IconButton>
+      </MenuItem>
     </Menu>
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
