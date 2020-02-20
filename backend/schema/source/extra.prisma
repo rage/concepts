@@ -135,6 +135,10 @@ type Subscription {
   goalLinkCreated(workspaceId: ID!): GoalLink!
   goalLinkDeleted(workspaceId: ID!): DeletedGoalLinkItem!
 
+  # ObjectiveLink subscriptions
+  objectiveLinkCreated(workspaceId: ID!): ObjectiveLink!
+  objectiveLinkDeleted(workspaceId: ID!): DeletedGoalLinkItem!
+
   # Workspaces subscriptions
   projectWorkspaceCreated(projectId: ID!): Workspace!
   projectWorkspaceUpdated(projectId: ID!): WorkspaceUpdate!
