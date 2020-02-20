@@ -246,7 +246,7 @@ enum ConceptLevel {
 type ObjectiveLink {
   id: ID! @id
   course: Course! @relation(name: "ObjectiveLinksToCourse")
-  goal: Concept! @relation(name: "ObjectiveLink")
+  objective: Concept! @relation(name: "ObjectiveLink")
   workspace: Workspace! @relation(name: "WorkspaceObjectiveLinks")
   text: String
 

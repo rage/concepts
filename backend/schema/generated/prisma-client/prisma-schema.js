@@ -3540,7 +3540,7 @@ interface Node {
 type ObjectiveLink {
   id: ID!
   course: Course!
-  goal: Concept!
+  objective: Concept!
   workspace: Workspace!
   text: String
   createdBy: User!
@@ -3557,7 +3557,7 @@ type ObjectiveLinkConnection {
 input ObjectiveLinkCreateInput {
   id: ID
   course: CourseCreateOneWithoutObjectiveLinksInput!
-  goal: ConceptCreateOneInput!
+  objective: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
   text: String
   createdBy: UserCreateOneInput!
@@ -3575,7 +3575,7 @@ input ObjectiveLinkCreateManyWithoutWorkspaceInput {
 
 input ObjectiveLinkCreateWithoutCourseInput {
   id: ID
-  goal: ConceptCreateOneInput!
+  objective: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
   text: String
   createdBy: UserCreateOneInput!
@@ -3584,7 +3584,7 @@ input ObjectiveLinkCreateWithoutCourseInput {
 input ObjectiveLinkCreateWithoutWorkspaceInput {
   id: ID
   course: CourseCreateOneWithoutObjectiveLinksInput!
-  goal: ConceptCreateOneInput!
+  objective: ConceptCreateOneInput!
   text: String
   createdBy: UserCreateOneInput!
 }
@@ -3682,7 +3682,7 @@ input ObjectiveLinkSubscriptionWhereInput {
 
 input ObjectiveLinkUpdateInput {
   course: CourseUpdateOneRequiredWithoutObjectiveLinksInput
-  goal: ConceptUpdateOneRequiredInput
+  objective: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
   text: String
   createdBy: UserUpdateOneRequiredInput
@@ -3726,7 +3726,7 @@ input ObjectiveLinkUpdateManyWithWhereNestedInput {
 }
 
 input ObjectiveLinkUpdateWithoutCourseDataInput {
-  goal: ConceptUpdateOneRequiredInput
+  objective: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
   text: String
   createdBy: UserUpdateOneRequiredInput
@@ -3734,7 +3734,7 @@ input ObjectiveLinkUpdateWithoutCourseDataInput {
 
 input ObjectiveLinkUpdateWithoutWorkspaceDataInput {
   course: CourseUpdateOneRequiredWithoutObjectiveLinksInput
-  goal: ConceptUpdateOneRequiredInput
+  objective: ConceptUpdateOneRequiredInput
   text: String
   createdBy: UserUpdateOneRequiredInput
 }
@@ -3777,7 +3777,7 @@ input ObjectiveLinkWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   course: CourseWhereInput
-  goal: ConceptWhereInput
+  objective: ConceptWhereInput
   workspace: WorkspaceWhereInput
   text: String
   text_not: String

@@ -1944,7 +1944,7 @@ export interface ObjectiveLinkWhereInput {
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
   course?: Maybe<CourseWhereInput>;
-  goal?: Maybe<ConceptWhereInput>;
+  objective?: Maybe<ConceptWhereInput>;
   workspace?: Maybe<WorkspaceWhereInput>;
   text?: Maybe<String>;
   text_not?: Maybe<String>;
@@ -3233,7 +3233,7 @@ export interface ObjectiveLinkCreateManyWithoutCourseInput {
 
 export interface ObjectiveLinkCreateWithoutCourseInput {
   id?: Maybe<ID_Input>;
-  goal: ConceptCreateOneInput;
+  objective: ConceptCreateOneInput;
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput;
   text?: Maybe<String>;
   createdBy: UserCreateOneInput;
@@ -3349,7 +3349,7 @@ export interface ObjectiveLinkCreateManyWithoutWorkspaceInput {
 export interface ObjectiveLinkCreateWithoutWorkspaceInput {
   id?: Maybe<ID_Input>;
   course: CourseCreateOneWithoutObjectiveLinksInput;
-  goal: ConceptCreateOneInput;
+  objective: ConceptCreateOneInput;
   text?: Maybe<String>;
   createdBy: UserCreateOneInput;
 }
@@ -5730,7 +5730,7 @@ export interface ObjectiveLinkUpdateWithWhereUniqueWithoutCourseInput {
 }
 
 export interface ObjectiveLinkUpdateWithoutCourseDataInput {
-  goal?: Maybe<ConceptUpdateOneRequiredInput>;
+  objective?: Maybe<ConceptUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput>;
   text?: Maybe<String>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
@@ -5916,7 +5916,7 @@ export interface ObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
 
 export interface ObjectiveLinkUpdateWithoutWorkspaceDataInput {
   course?: Maybe<CourseUpdateOneRequiredWithoutObjectiveLinksInput>;
-  goal?: Maybe<ConceptUpdateOneRequiredInput>;
+  objective?: Maybe<ConceptUpdateOneRequiredInput>;
   text?: Maybe<String>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
@@ -7680,7 +7680,7 @@ export interface GoalLinkUpdateManyMutationInput {
 export interface ObjectiveLinkCreateInput {
   id?: Maybe<ID_Input>;
   course: CourseCreateOneWithoutObjectiveLinksInput;
-  goal: ConceptCreateOneInput;
+  objective: ConceptCreateOneInput;
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput;
   text?: Maybe<String>;
   createdBy: UserCreateOneInput;
@@ -7688,7 +7688,7 @@ export interface ObjectiveLinkCreateInput {
 
 export interface ObjectiveLinkUpdateInput {
   course?: Maybe<CourseUpdateOneRequiredWithoutObjectiveLinksInput>;
-  goal?: Maybe<ConceptUpdateOneRequiredInput>;
+  objective?: Maybe<ConceptUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput>;
   text?: Maybe<String>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
@@ -9812,7 +9812,7 @@ export interface ObjectiveLinkPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   course: <T = CoursePromise>() => T;
-  goal: <T = ConceptPromise>() => T;
+  objective: <T = ConceptPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   text: () => Promise<String>;
   createdBy: <T = UserPromise>() => T;
@@ -9825,7 +9825,7 @@ export interface ObjectiveLinkSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   course: <T = CourseSubscription>() => T;
-  goal: <T = ConceptSubscription>() => T;
+  objective: <T = ConceptSubscription>() => T;
   workspace: <T = WorkspaceSubscription>() => T;
   text: () => Promise<AsyncIterator<String>>;
   createdBy: <T = UserSubscription>() => T;
@@ -9838,7 +9838,7 @@ export interface ObjectiveLinkNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   course: <T = CoursePromise>() => T;
-  goal: <T = ConceptPromise>() => T;
+  objective: <T = ConceptPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   text: () => Promise<String>;
   createdBy: <T = UserPromise>() => T;

@@ -526,7 +526,7 @@ enum ConceptLevel {
 type ObjectiveLink {
   id: ID!
   course: Course!
-  goal: Concept!
+  objective: Concept!
   workspace: Workspace!
   text: String
 

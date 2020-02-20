@@ -1,6 +1,8 @@
 import { ForbiddenError } from 'apollo-server-core'
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import pubsub from '../Subscription/pubsub'
+import { nullShield } from '../../util/errors'
+import * as channels from '../Subscription/channels'
 
 const createObjectiveLink = async(root, { objectiveId, courseId, workspaceId, text }, context) => {
   await checkAccess(context, {
