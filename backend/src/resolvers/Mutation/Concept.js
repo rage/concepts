@@ -117,14 +117,13 @@ export const createConcept = async (root, {
     args.course = { connect: { id: courseId } }
   }
 
-
   if (level === 'GOAL') {
-    args.tags = tags && { 
-      connect: await createMissingTags(tags, workspaceId, context, 'goalTags') 
+    args.tags = tags && {
+      connect: await createMissingTags(tags, workspaceId, context, 'goalTags')
     }
   } else {
-    args.tags = tags && { 
-      connect: await createMissingTags(tags, workspaceId, context, 'conceptTags') 
+    args.tags = tags && {
+      connect: await createMissingTags(tags, workspaceId, context, 'conceptTags')
     }
   }
 
@@ -401,11 +400,11 @@ export const deleteConcept = async (root, { id }, context) => {
     }
   }
   pubsub.publish(CONCEPT_DELETED, {
-    conceptDeleted: { 
-      id: toDelete.id, 
-      courseId: toDelete.course?.id, 
-      workspaceId, 
-      level: toDelete.level 
+    conceptDeleted: {
+      id: toDelete.id,
+      courseId: toDelete.course?.id,
+      workspaceId,
+      level: toDelete.level
     }
   })
   return {

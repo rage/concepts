@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useMutation } from 'react-apollo-hooks'
 
-import { DELETE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
+import { DELETE_CONCEPT_LINK, UPDATE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
 import PrerequisiteContainer from './PrerequisiteContainer'
@@ -39,18 +39,20 @@ const CourseContainer = ({
     update: cache.updateCourseUpdate(workspace.id)
   })
 
-  const handleMenuOpen = (event, linkId) => {
+  const handleMenuOpen = (event, linkId, weight) => {
     event.preventDefault()
     setConceptLinkMenu({
       x: event.pageX + window.pageXOffset,
       y: event.pageY + 32 + window.pageYOffset,
-      linkId
+      linkId, weight
     })
   }
 
   const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
     update: cache.deleteConceptLinkUpdate()
   })
+
+  const updateConceptLink = useMutation(UPDATE_CONCEPT_LINK)
 
   const handleMenuClose = () => {
     setConceptLinkMenu(null)
@@ -62,6 +64,11 @@ const CourseContainer = ({
         id: conceptLinkMenu.linkId
       }
     })
+    setConceptLinkMenu(null)
+  }
+
+  const setWeight = weight => async () => {
+    await updateConceptLink({ variables: { id: conceptLinkMenu.linkId, weight } })
     setConceptLinkMenu(null)
   }
 
@@ -124,6 +131,7 @@ const CourseContainer = ({
       focusedConceptIds={focusedConceptIds} conceptLinkMenu={conceptLinkMenu}
       courseLinkMap={courseLinkMap} collapsedCourseIds={collapsedCourseIds}
       handleMenuOpen={handleMenuOpen} handleMenuClose={handleMenuClose} deleteLink={deleteLink}
+      setWeight={setWeight} updateLink={updateConceptLink}
     />
   </>
 }

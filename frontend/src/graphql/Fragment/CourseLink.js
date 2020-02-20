@@ -6,6 +6,7 @@ fragment createCourseLinkData on CourseLink {
   official
   frozen
   text
+  weight
   to {
     id
   }
@@ -44,6 +45,7 @@ fragment createCourseLinkData on CourseLink {
         official
         frozen
         text
+        weight
         from {
           id
         }
@@ -53,6 +55,7 @@ fragment createCourseLinkData on CourseLink {
         official
         frozen
         text
+        weight
         to {
           id
         }
@@ -68,6 +71,7 @@ fragment updateCourseLinkData on CourseLink {
   official
   frozen
   text
+  weight
   to {
     id
   }

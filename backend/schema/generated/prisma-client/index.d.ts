@@ -875,6 +875,8 @@ export type ConceptLinkOrderByInput =
 export type GoalLinkOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "weight_ASC"
+  | "weight_DESC"
   | "text_ASC"
   | "text_DESC"
   | "createdAt_ASC"
@@ -1831,6 +1833,14 @@ export interface GoalLinkWhereInput {
   course?: Maybe<CourseWhereInput>;
   goal?: Maybe<ConceptWhereInput>;
   workspace?: Maybe<WorkspaceWhereInput>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
   text?: Maybe<String>;
   text_not?: Maybe<String>;
   text_in?: Maybe<String[] | String>;
@@ -3033,6 +3043,7 @@ export interface GoalLinkCreateWithoutWorkspaceInput {
   id?: Maybe<ID_Input>;
   course: CourseCreateOneWithoutGoalLinksInput;
   goal: ConceptCreateOneInput;
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
   createdBy: UserCreateOneInput;
 }
@@ -3185,6 +3196,7 @@ export interface GoalLinkCreateWithoutCourseInput {
   id?: Maybe<ID_Input>;
   goal: ConceptCreateOneInput;
   workspace: WorkspaceCreateOneWithoutGoalLinksInput;
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
   createdBy: UserCreateOneInput;
 }
@@ -5257,6 +5269,7 @@ export interface GoalLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
 export interface GoalLinkUpdateWithoutWorkspaceDataInput {
   course?: Maybe<CourseUpdateOneRequiredWithoutGoalLinksInput>;
   goal?: Maybe<ConceptUpdateOneRequiredInput>;
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
@@ -5484,6 +5497,14 @@ export interface GoalLinkScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
   text?: Maybe<String>;
   text_not?: Maybe<String>;
   text_in?: Maybe<String[] | String>;
@@ -5525,6 +5546,7 @@ export interface GoalLinkUpdateManyWithWhereNestedInput {
 }
 
 export interface GoalLinkUpdateManyDataInput {
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
 }
 
@@ -5681,6 +5703,7 @@ export interface GoalLinkUpdateWithWhereUniqueWithoutCourseInput {
 export interface GoalLinkUpdateWithoutCourseDataInput {
   goal?: Maybe<ConceptUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutGoalLinksInput>;
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
@@ -7182,6 +7205,7 @@ export interface GoalLinkCreateInput {
   course: CourseCreateOneWithoutGoalLinksInput;
   goal: ConceptCreateOneInput;
   workspace: WorkspaceCreateOneWithoutGoalLinksInput;
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
   createdBy: UserCreateOneInput;
 }
@@ -7190,11 +7214,13 @@ export interface GoalLinkUpdateInput {
   course?: Maybe<CourseUpdateOneRequiredWithoutGoalLinksInput>;
   goal?: Maybe<ConceptUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutGoalLinksInput>;
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
 export interface GoalLinkUpdateManyMutationInput {
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
 }
 
@@ -9182,6 +9208,7 @@ export interface ConceptLinkNullablePromise
 
 export interface GoalLink {
   id: ID_Output;
+  weight: Int;
   text?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -9192,6 +9219,7 @@ export interface GoalLinkPromise extends Promise<GoalLink>, Fragmentable {
   course: <T = CoursePromise>() => T;
   goal: <T = ConceptPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
+  weight: () => Promise<Int>;
   text: () => Promise<String>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
@@ -9205,6 +9233,7 @@ export interface GoalLinkSubscription
   course: <T = CourseSubscription>() => T;
   goal: <T = ConceptSubscription>() => T;
   workspace: <T = WorkspaceSubscription>() => T;
+  weight: () => Promise<AsyncIterator<Int>>;
   text: () => Promise<AsyncIterator<String>>;
   createdBy: <T = UserSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -9218,6 +9247,7 @@ export interface GoalLinkNullablePromise
   course: <T = CoursePromise>() => T;
   goal: <T = ConceptPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
+  weight: () => Promise<Int>;
   text: () => Promise<String>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
@@ -10724,6 +10754,7 @@ export interface GoalLinkSubscriptionPayloadSubscription
 
 export interface GoalLinkPreviousValues {
   id: ID_Output;
+  weight: Int;
   text?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
@@ -10733,6 +10764,7 @@ export interface GoalLinkPreviousValuesPromise
   extends Promise<GoalLinkPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  weight: () => Promise<Int>;
   text: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -10742,6 +10774,7 @@ export interface GoalLinkPreviousValuesSubscription
   extends Promise<AsyncIterator<GoalLinkPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  weight: () => Promise<AsyncIterator<Int>>;
   text: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;

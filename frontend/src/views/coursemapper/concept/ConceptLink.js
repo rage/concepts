@@ -207,7 +207,8 @@ const useStyles = makeStyles({
 
 const Line = ({
   x0, y0, x1, y1, from, to, followMouse, within, refreshPoints, onContextMenu, linkRef, zIndex,
-  active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit
+  active, attributes, text, linkId, classes: propClasses, noListenScroll = false, editing, stopEdit,
+  weight
 }) => {
   const classes = useStyles({ classes: propClasses })
   const el = useRef(null)
@@ -355,15 +356,16 @@ const Line = ({
     transformOrigin: '0 0'
   }
 
-  const lineWidth = 3
+  const lineWidth = Math.min(Math.max(weight / 25, 1), 7) - 1
   const innerStyle = {
     ...commonStyle,
     top: 0,
     left: 0,
-    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`
+    transform: `translateY(-${Math.floor(lineWidth / 2)}px)`,
+    borderTopWidth: lineWidth
   }
 
-  const hoverAreaWidth = 15
+  const hoverAreaWidth = 12 + lineWidth
   const hoverAreaOffset = 10
 
   const hoverAreaStyle = {
@@ -422,8 +424,8 @@ const Line = ({
         {(active && !followMouse) &&
           <div
             style={hoverAreaStyle} className={classes.hover}
-            onContextMenu={evt => onContextMenu(evt, linkId)}
-            onClick={evt => onContextMenu(evt, linkId)}
+            onContextMenu={evt => onContextMenu(evt, linkId, weight)}
+            onClick={evt => onContextMenu(evt, linkId, weight)}
           />
         }
         <div style={innerStyle} className={`${classes.line} ${active ? classes.activeLine : ''}`}>

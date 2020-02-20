@@ -29,6 +29,7 @@ import { useLoginStateValue } from '../../lib/store'
 import useCachedMutation from '../../lib/useCachedMutation'
 import { useConfirmDelete } from '../../dialogs/alert'
 import HackySlider from './HackySlider'
+import { LinkMenu } from '../coursemapper/MapperLinks'
 
 const useStyles = makeStyles({
   root: {
@@ -453,7 +454,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     toolbar.current.style.display = 'none'
   }, [])
 
-  const openConceptLinkMenu = id => evt => openMenu('concept-link', id, null, evt)
+  const openConceptLinkMenu = link => evt => openMenu('concept-link', link.id, link, evt)
 
   const openMenu = useCallback((type, id, state, evt) => {
     evt.preventDefault()
@@ -579,6 +580,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     setEditingLink(menu.id)
   }, [closeMenu, menu.id])
 
+  const menuSetWeight = weight => async () => {
+    await updateConceptLink({ variables: { id: menu.id, weight } })
+    closeMenu()
+  }
+
   const stopLinkEdit = useCallback(async (id, text) => {
     setEditingLink(null)
     if (typeof text === 'string') {
@@ -621,10 +627,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           submit={submitExistingConcept} submitAllPosition={submitAllPosition}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
-          key={link.id} delay={1} active linkId={link.id} text={link.text}
+          key={link.id} delay={1} active linkId={link.id} text={link.text} weight={link.weight}
           editing={editingLink === link.id} stopEdit={stopLinkEdit}
           within='concept-mapper-link-container' posOffsets={linkOffsets}
-          onContextMenu={openConceptLinkMenu(link.id)}
+          onContextMenu={openConceptLinkMenu(link)}
           scrollParentRef={pan} noListenScroll
           to={`concept-${concept.id}`} from={`concept-${link.from.id}`}
           toConceptId={concept.id} fromConceptId={link.from.id}
@@ -649,8 +655,9 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
     <section className={classes.toolbar}>
       <CourseList
-        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses} resetZoom={resetZoom}
+        courseId={course.id} courses={courseQuery.data.courseById.workspace.courses}
         urlPrefix={urlPrefix} workspaceId={workspaceId} className={classes.toolbarButton}
+        resetZoom={resetZoom}
       />
       <Button variant='outlined' onClick={resetZoom} className={classes.toolbarButton}>
         Reset zoom
@@ -739,13 +746,11 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         </div>
       )}
     </Menu>
-    <Menu
-      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
-      open={menu.open === 'concept-link'} onClose={closeMenu}
-    >
-      <MenuItem onClick={menuDeleteLink}>Delete link</MenuItem>
-      <MenuItem onClick={menuEditLink}>Edit link text</MenuItem>
-    </Menu>
+    <LinkMenu
+      keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor} onClose={closeMenu}
+      open={menu.open === 'concept-link'} editLink={menuEditLink} deleteLink={menuDeleteLink}
+      weight={menu.state?.weight} setWeight={menuSetWeight}
+    />
     <Menu
       keepMounted anchorReference='anchorPosition' anchorPosition={menu.anchor}
       open={menu.open === 'background'} onClose={closeMenu}

@@ -246,6 +246,7 @@ type GoalLink {
   course: Course! @relation(name: "GoalConceptsOfCourse")
   goal: Concept! @relation(name: "GoalConcept")
   workspace: Workspace! @relation(name: "WorkspaceGoalLinks")
+  weight: Int! @default(value: 100)
   text: String
 
   createdBy: User!
