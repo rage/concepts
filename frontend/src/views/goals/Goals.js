@@ -23,7 +23,7 @@ export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
   })
 
   return (
-    <Card elevation={0} className={classes.card}>
+    <Card elevation={0} className={`${classes.card} ${classes.goals}`}>
       <CardHeader title='Goals' />
       <List className={classes.list}>
         {goals.map(goal => editing === goal.id ? (
