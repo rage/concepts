@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p dist/public dist/static dist/views/graph
 cat ../public/index.html \
   | sed 's/%PUBLIC_URL%//g' \
   | sed -E 's#(</body>)#  <script src="/index.js" type="module"></script>\n  \1#' \
