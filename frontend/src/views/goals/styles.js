@@ -11,7 +11,7 @@ export const useStyles = makeStyles(theme => ({
     gridTemplate: `"header  header header" 56px
                    "courses space  goals"  1fr
                   / 1fr     128px  1fr`,
-    '@media screen and (max-width: 1312px)': {
+    '@media screen and (max-width: 1440px)': {
       width: 'calc(100% - 32px)'
     }
   },
