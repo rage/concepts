@@ -71,6 +71,7 @@ type Mutation {
 
   # Objective link mutations
   createObjectiveLink(objectiveId: ID!, courseId: ID!, workspaceId: ID!, text: String): ObjectiveLink!
+  updateObjectiveLink(id: ID!, text: String, weight: Int): ObjectiveLink!
   deleteObjectiveLink(id: ID!): DeletedGoalLinkItem!
   
   # Project mutations
@@ -141,6 +142,7 @@ type Subscription {
 
   # ObjectiveLink subscriptions
   objectiveLinkCreated(workspaceId: ID!): ObjectiveLink!
+  objectiveLinkUpdated(workspaceId: ID!): ObjectiveLink!
   objectiveLinkDeleted(workspaceId: ID!): DeletedGoalLinkItem!
 
   # Workspaces subscriptions

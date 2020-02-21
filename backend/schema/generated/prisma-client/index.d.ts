@@ -934,6 +934,8 @@ export type ObjectiveLinkOrderByInput =
   | "id_DESC"
   | "text_ASC"
   | "text_DESC"
+  | "weight_ASC"
+  | "weight_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1970,6 +1972,14 @@ export interface ObjectiveLinkWhereInput {
   text_not_starts_with?: Maybe<String>;
   text_ends_with?: Maybe<String>;
   text_not_ends_with?: Maybe<String>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
   createdBy?: Maybe<UserWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
@@ -3247,6 +3257,7 @@ export interface ObjectiveLinkCreateWithoutCourseInput {
   objective: ConceptCreateOneInput;
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput;
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
   createdBy: UserCreateOneInput;
 }
 
@@ -3362,6 +3373,7 @@ export interface ObjectiveLinkCreateWithoutWorkspaceInput {
   course: CourseCreateOneWithoutObjectiveLinksInput;
   objective: ConceptCreateOneInput;
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
   createdBy: UserCreateOneInput;
 }
 
@@ -5705,98 +5717,7 @@ export interface ConceptUpdateManyDataInput {
   count?: Maybe<Int>;
 }
 
-export interface CourseUpsertWithoutGoalLinksInput {
-  update: CourseUpdateWithoutGoalLinksDataInput;
-  create: CourseCreateWithoutGoalLinksInput;
-}
-
-export interface ConceptUpdateOneRequiredInput {
-  create?: Maybe<ConceptCreateInput>;
-  update?: Maybe<ConceptUpdateDataInput>;
-  upsert?: Maybe<ConceptUpsertNestedInput>;
-  connect?: Maybe<ConceptWhereUniqueInput>;
-}
-
-export interface ConceptUpsertNestedInput {
-  update: ConceptUpdateDataInput;
-  create: ConceptCreateInput;
-}
-
-export interface GoalLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: GoalLinkWhereUniqueInput;
-  update: GoalLinkUpdateWithoutWorkspaceDataInput;
-  create: GoalLinkCreateWithoutWorkspaceInput;
-}
-
-export interface GoalLinkScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  weight?: Maybe<Int>;
-  weight_not?: Maybe<Int>;
-  weight_in?: Maybe<Int[] | Int>;
-  weight_not_in?: Maybe<Int[] | Int>;
-  weight_lt?: Maybe<Int>;
-  weight_lte?: Maybe<Int>;
-  weight_gt?: Maybe<Int>;
-  weight_gte?: Maybe<Int>;
-  text?: Maybe<String>;
-  text_not?: Maybe<String>;
-  text_in?: Maybe<String[] | String>;
-  text_not_in?: Maybe<String[] | String>;
-  text_lt?: Maybe<String>;
-  text_lte?: Maybe<String>;
-  text_gt?: Maybe<String>;
-  text_gte?: Maybe<String>;
-  text_contains?: Maybe<String>;
-  text_not_contains?: Maybe<String>;
-  text_starts_with?: Maybe<String>;
-  text_not_starts_with?: Maybe<String>;
-  text_ends_with?: Maybe<String>;
-  text_not_ends_with?: Maybe<String>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
-  OR?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
-  NOT?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
-}
-
-export interface GoalLinkUpdateManyWithWhereNestedInput {
-  where: GoalLinkScalarWhereInput;
-  data: GoalLinkUpdateManyDataInput;
-}
-
-export interface GoalLinkUpdateManyDataInput {
-  weight?: Maybe<Int>;
-  text?: Maybe<String>;
-}
-
-export interface WorkspaceParticipantUpdateManyWithoutWorkspaceInput {
+export interface ObjectiveLinkUpdateManyWithoutCourseInput {
   create?: Maybe<
     | ObjectiveLinkCreateWithoutCourseInput[]
     | ObjectiveLinkCreateWithoutCourseInput
@@ -5837,6 +5758,7 @@ export interface ObjectiveLinkUpdateWithoutCourseDataInput {
   objective?: Maybe<ConceptUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput>;
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -6022,6 +5944,7 @@ export interface ObjectiveLinkUpdateWithoutWorkspaceDataInput {
   course?: Maybe<CourseUpdateOneRequiredWithoutObjectiveLinksInput>;
   objective?: Maybe<ConceptUpdateOneRequiredInput>;
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
@@ -6662,6 +6585,14 @@ export interface GoalLinkScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
   text?: Maybe<String>;
   text_not?: Maybe<String>;
   text_in?: Maybe<String[] | String>;
@@ -6703,6 +6634,7 @@ export interface GoalLinkUpdateManyWithWhereNestedInput {
 }
 
 export interface GoalLinkUpdateManyDataInput {
+  weight?: Maybe<Int>;
   text?: Maybe<String>;
 }
 
@@ -6746,6 +6678,14 @@ export interface ObjectiveLinkScalarWhereInput {
   text_not_starts_with?: Maybe<String>;
   text_ends_with?: Maybe<String>;
   text_not_ends_with?: Maybe<String>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -6774,6 +6714,7 @@ export interface ObjectiveLinkUpdateManyWithWhereNestedInput {
 
 export interface ObjectiveLinkUpdateManyDataInput {
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
 }
 
 export interface WorkspaceUpsertWithoutTokensInput {
@@ -7791,6 +7732,7 @@ export interface ObjectiveLinkCreateInput {
   objective: ConceptCreateOneInput;
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput;
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
   createdBy: UserCreateOneInput;
 }
 
@@ -7799,11 +7741,13 @@ export interface ObjectiveLinkUpdateInput {
   objective?: Maybe<ConceptUpdateOneRequiredInput>;
   workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput>;
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
 export interface ObjectiveLinkUpdateManyMutationInput {
   text?: Maybe<String>;
+  weight?: Maybe<Int>;
 }
 
 export interface PointGroupCreateInput {
@@ -9915,6 +9859,7 @@ export interface GoalLinkNullablePromise
 export interface ObjectiveLink {
   id: ID_Output;
   text?: String;
+  weight: Int;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -9927,6 +9872,7 @@ export interface ObjectiveLinkPromise
   objective: <T = ConceptPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   text: () => Promise<String>;
+  weight: () => Promise<Int>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -9940,6 +9886,7 @@ export interface ObjectiveLinkSubscription
   objective: <T = ConceptSubscription>() => T;
   workspace: <T = WorkspaceSubscription>() => T;
   text: () => Promise<AsyncIterator<String>>;
+  weight: () => Promise<AsyncIterator<Int>>;
   createdBy: <T = UserSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -9953,6 +9900,7 @@ export interface ObjectiveLinkNullablePromise
   objective: <T = ConceptPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   text: () => Promise<String>;
+  weight: () => Promise<Int>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -11568,6 +11516,7 @@ export interface ObjectiveLinkSubscriptionPayloadSubscription
 export interface ObjectiveLinkPreviousValues {
   id: ID_Output;
   text?: String;
+  weight: Int;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -11577,6 +11526,7 @@ export interface ObjectiveLinkPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   text: () => Promise<String>;
+  weight: () => Promise<Int>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -11586,6 +11536,7 @@ export interface ObjectiveLinkPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   text: () => Promise<AsyncIterator<String>>;
+  weight: () => Promise<AsyncIterator<Int>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }

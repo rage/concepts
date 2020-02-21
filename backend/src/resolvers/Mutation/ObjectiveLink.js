@@ -48,8 +48,37 @@ const deleteObjectiveLink = async(root, { id }, context) => {
   return objectiveLinkDeleted
 }
 
+const updateObjectiveLink = async(root, { id, text, weight }, context) => {
+  const { id: workspaceId } = nullShield(await context.prisma.objectiveLink({ id }).workspace())
+  await checkAccess(context, {
+    minimumRole: Role.STAFF,
+    minimumPrivilege: Privilege.EDIT,
+    workspaceId
+  })
+  const objective = nullShield(await context.prisma.objectiveLink({ id }))
+
+  if (text) {
+    objective.text = text
+  }
+
+  if (weight) {
+    objective.weight = weight
+  }
+
+  const objectiveLinkUpdated = await context.prisma.updateObjectiveLink({
+    where: { id },
+    data: objective
+  })
+
+  pubsub.publish(channels.OBJECTIVE_LINK_UPDATED, {
+    objectiveLinkUpdated
+  })
+
+  return objectiveLinkUpdated
+}
 
 export {
   createObjectiveLink,
-  deleteObjectiveLink
+  deleteObjectiveLink,
+  updateObjectiveLink
 }

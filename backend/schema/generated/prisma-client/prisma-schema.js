@@ -3571,6 +3571,7 @@ type ObjectiveLink {
   objective: Concept!
   workspace: Workspace!
   text: String
+  weight: Int!
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -3588,6 +3589,7 @@ input ObjectiveLinkCreateInput {
   objective: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
   text: String
+  weight: Int
   createdBy: UserCreateOneInput!
 }
 
@@ -3606,6 +3608,7 @@ input ObjectiveLinkCreateWithoutCourseInput {
   objective: ConceptCreateOneInput!
   workspace: WorkspaceCreateOneWithoutObjectiveLinksInput!
   text: String
+  weight: Int
   createdBy: UserCreateOneInput!
 }
 
@@ -3614,6 +3617,7 @@ input ObjectiveLinkCreateWithoutWorkspaceInput {
   course: CourseCreateOneWithoutObjectiveLinksInput!
   objective: ConceptCreateOneInput!
   text: String
+  weight: Int
   createdBy: UserCreateOneInput!
 }
 
@@ -3627,6 +3631,8 @@ enum ObjectiveLinkOrderByInput {
   id_DESC
   text_ASC
   text_DESC
+  weight_ASC
+  weight_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -3636,6 +3642,7 @@ enum ObjectiveLinkOrderByInput {
 type ObjectiveLinkPreviousValues {
   id: ID!
   text: String
+  weight: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -3669,6 +3676,14 @@ input ObjectiveLinkScalarWhereInput {
   text_not_starts_with: String
   text_ends_with: String
   text_not_ends_with: String
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -3713,15 +3728,18 @@ input ObjectiveLinkUpdateInput {
   objective: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
   text: String
+  weight: Int
   createdBy: UserUpdateOneRequiredInput
 }
 
 input ObjectiveLinkUpdateManyDataInput {
   text: String
+  weight: Int
 }
 
 input ObjectiveLinkUpdateManyMutationInput {
   text: String
+  weight: Int
 }
 
 input ObjectiveLinkUpdateManyWithoutCourseInput {
@@ -3757,6 +3775,7 @@ input ObjectiveLinkUpdateWithoutCourseDataInput {
   objective: ConceptUpdateOneRequiredInput
   workspace: WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput
   text: String
+  weight: Int
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -3764,6 +3783,7 @@ input ObjectiveLinkUpdateWithoutWorkspaceDataInput {
   course: CourseUpdateOneRequiredWithoutObjectiveLinksInput
   objective: ConceptUpdateOneRequiredInput
   text: String
+  weight: Int
   createdBy: UserUpdateOneRequiredInput
 }
 
@@ -3821,6 +3841,14 @@ input ObjectiveLinkWhereInput {
   text_not_starts_with: String
   text_ends_with: String
   text_not_ends_with: String
+  weight: Int
+  weight_not: Int
+  weight_in: [Int!]
+  weight_not_in: [Int!]
+  weight_lt: Int
+  weight_lte: Int
+  weight_gt: Int
+  weight_gte: Int
   createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime

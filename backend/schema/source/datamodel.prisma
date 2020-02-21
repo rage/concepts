@@ -249,6 +249,7 @@ type ObjectiveLink {
   objective: Concept! @relation(name: "ObjectiveLink")
   workspace: Workspace! @relation(name: "WorkspaceObjectiveLinks")
   text: String
+  weight: Int! @default(value: 100)
 
   createdBy: User!
   createdAt: DateTime! @createdAt
