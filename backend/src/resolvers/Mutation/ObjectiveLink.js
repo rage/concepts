@@ -55,19 +55,19 @@ const updateObjectiveLink = async(root, { id, text, weight }, context) => {
     minimumPrivilege: Privilege.EDIT,
     workspaceId
   })
-  const objective = nullShield(await context.prisma.objectiveLink({ id }))
 
+  const data = {}
   if (text) {
-    objective.text = text
+    data.text = text
   }
 
   if (weight) {
-    objective.weight = weight
+    data.weight = weight
   }
 
   const objectiveLinkUpdated = await context.prisma.updateObjectiveLink({
     where: { id },
-    data: objective
+    data
   })
 
   pubsub.publish(channels.OBJECTIVE_LINK_UPDATED, {
