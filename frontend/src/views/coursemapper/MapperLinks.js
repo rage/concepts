@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useQuery } from 'react-apollo-hooks'
-import { IconButton, makeStyles, Menu, MenuItem } from '@material-ui/core'
+import { IconButton, makeStyles, Menu, MenuItem, Tooltip } from '@material-ui/core'
 import {
   Star as StarIcon, StarBorder as StarBorderIcon, StarHalf as StarHalfIcon
 } from '@material-ui/icons'
@@ -113,14 +113,13 @@ const MapperLinks = ({
       left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
     }} />
     <LinkMenu
-      anchorEl={conceptLinkMenuRef.current} anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      anchorEl={conceptLinkMenuRef.current}
+      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
       onClose={handleMenuClose}
+      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
       deleteLink={deleteLink}
-      editLink={editLink}
-      setWeight={setWeight}
-      weight={conceptLinkMenu?.weight}
+      editLink={editLink} setWeight={setWeight} weight={conceptLinkMenu?.weight}
     />
     {addingLink && <ConceptLink
       active within={document.body} // This needs to be directly in body to work
@@ -140,13 +139,13 @@ export const LinkMenu = ({ deleteLink, editLink, weight, setWeight, ...args }) =
     <MenuItem onClick={editLink}>Edit link text</MenuItem>
     <MenuItem dense>
       <IconButton color={weight === 50 ? 'secondary' : undefined} onClick={setWeight(50)}>
-        <StarBorderIcon />
+        <Tooltip arrow title='Optional'><StarBorderIcon /></Tooltip>
       </IconButton>
       <IconButton color={weight === 100 ? 'secondary' : undefined} onClick={setWeight(100)}>
-        <StarHalfIcon />
+        <Tooltip arrow title='Recommended'><StarHalfIcon /></Tooltip>
       </IconButton>
       <IconButton color={weight === 150 ? 'secondary' : undefined} onClick={setWeight(150)}>
-        <StarIcon />
+        <Tooltip arrow title='Mandatory'><StarIcon /></Tooltip>
       </IconButton>
     </MenuItem>
   </Menu>
