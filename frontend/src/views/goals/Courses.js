@@ -17,7 +17,7 @@ export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => 
   const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
 
   return (
-    <Card elevation={0} className={classes.card}>
+    <Card elevation={0} className={`${classes.card} ${classes.courses}`}>
       <CardHeader title='Courses' />
       <List className={classes.list}>
         {courses.map(course => editing === course.id ? (

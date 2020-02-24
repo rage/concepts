@@ -81,6 +81,7 @@ const GoalView = ({ workspaceId }) => {
     <div className={classes.root} onClick={() => setAddingLink(null)}>
       <h1 className={classes.title}>Goal Mapping</h1>
       <Courses courses={courses} workspaceId={workspaceId} tagOptions={courseTags} onClickCircle={onClickCircle} />
+      <div style={{gridArea: 'space'}} />
       <Goals goals={goals} workspaceId={workspaceId} tagOptions={goalTags} onClickCircle={onClickCircle} />
       <div>
         {goalLinks.map(link => <ConceptLink
