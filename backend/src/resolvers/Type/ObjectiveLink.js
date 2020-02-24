@@ -4,6 +4,5 @@ export const ObjectiveLink = makeTypeResolvers('objectiveLink', [
   'objective',
   'course',
   'workspace',
-  'createdBy',
-  'text'
+  'createdBy'
 ])
