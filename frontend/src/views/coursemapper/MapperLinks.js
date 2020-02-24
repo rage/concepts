@@ -137,13 +137,13 @@ export const LinkMenu = ({ deleteLink, editLink, weight, setWeight, ...args }) =
     <MenuItem onClick={editLink}>Edit link text</MenuItem>
     <MenuItem dense>
       <IconButton color={weight === 50 ? 'secondary' : undefined} onClick={setWeight(50)}>
-        <Tooltip title='Optional'><StarBorderIcon /></Tooltip>
+        <Tooltip arrow title='Optional'><StarBorderIcon /></Tooltip>
       </IconButton>
       <IconButton color={weight === 100 ? 'secondary' : undefined} onClick={setWeight(100)}>
-        <Tooltip title='Recommended'><StarHalfIcon /></Tooltip>
+        <Tooltip arrow title='Recommended'><StarHalfIcon /></Tooltip>
       </IconButton>
       <IconButton color={weight === 150 ? 'secondary' : undefined} onClick={setWeight(150)}>
-        <Tooltip title='Mandatory'><StarIcon /></Tooltip>
+        <Tooltip arrow title='Mandatory'><StarIcon /></Tooltip>
       </IconButton>
     </MenuItem>
   </Menu>
