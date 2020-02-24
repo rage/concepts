@@ -1,7 +1,8 @@
 import gql from 'graphql-tag'
 
 const CREATE_OBJECTIVE_LINK = gql`
-mutation createObjectiveLink($objectiveId: ID!, $courseId: ID!, $workspaceId: ID!) {
+mutation createObjectiveLink($objectiveId: ID!, $courseId: ID!, $workspaceId: ID!, text: String, weight: Int) {
+  createObjectiveLink(objectiveId: $objectiveId, courseId: $courseId, workspaceId: $workspaceId, text: $text, weight: $weight) {
     __typename
     id
     text
@@ -15,6 +16,7 @@ mutation createObjectiveLink($objectiveId: ID!, $courseId: ID!, $workspaceId: ID
     workspace {
       id
     }
+  }
 }
 `
 
