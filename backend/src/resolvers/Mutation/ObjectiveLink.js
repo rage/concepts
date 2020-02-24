@@ -1,4 +1,5 @@
 import { ForbiddenError } from 'apollo-server-core'
+
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import pubsub from '../Subscription/pubsub'
 import { nullShield } from '../../util/errors'
@@ -16,11 +17,11 @@ const createObjectiveLink = async(root, { objectiveId, courseId, workspaceId, te
   }
 
   const createdLink = await context.prisma.createObjectiveLink({
-    objective: { connect: { id: objectiveId }},
-    course: { connect: { id: courseId }},
-    workspace: { connect: { id: workspaceId }},
-    createdBy: { connect: { id: context.user.id }},
-    text, 
+    objective: { connect: { id: objectiveId } },
+    course: { connect: { id: courseId } },
+    workspace: { connect: { id: workspaceId } },
+    createdBy: { connect: { id: context.user.id } },
+    text,
     weight
   })
 
@@ -41,7 +42,7 @@ const deleteObjectiveLink = async(root, { id }, context) => {
   const { id: courseId } = await context.prisma.objectiveLink({ id }).course()
   await context.prisma.deleteObjectiveLink({ id })
   const objectiveLinkDeleted = { id, workspaceId, courseId }
-  
+
   pubsub.publish(channels.OBJECTIVE_LINK_DELETED, {
     objectiveLinkDeleted
   })
