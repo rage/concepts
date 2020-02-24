@@ -5,8 +5,8 @@ mutation createObjectiveLink(
   $objectiveId: ID!, 
   $courseId: ID!, 
   $workspaceId: ID!, 
-  text: String, 
-  weight: Int
+  $text: String,
+  $weight: Int
 ) {
   createObjectiveLink(
     objectiveId: $objectiveId, 
