@@ -30,7 +30,7 @@ mutation deleteObjectiveLink($id: ID!) {
 `
 
 const UPDATE_OBJECTIVE_LINK = gql`
-mutation updateObjectiveLink($id: ID!, text: String, weight: int) {
+mutation updateObjectiveLink($id: ID!, $text: String, $weight: int) {
   updateObjectiveLink(id: $id, text: $text, weight: $weight) {
     __typename
     id
