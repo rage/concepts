@@ -23,6 +23,7 @@ export interface Exists {
   course: (where?: CourseWhereInput) => Promise<boolean>;
   courseLink: (where?: CourseLinkWhereInput) => Promise<boolean>;
   goalLink: (where?: GoalLinkWhereInput) => Promise<boolean>;
+  objectiveLink: (where?: ObjectiveLinkWhereInput) => Promise<boolean>;
   pointGroup: (where?: PointGroupWhereInput) => Promise<boolean>;
   project: (where?: ProjectWhereInput) => Promise<boolean>;
   projectParticipant: (
@@ -194,6 +195,27 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => GoalLinkConnectionPromise;
+  objectiveLink: (
+    where: ObjectiveLinkWhereUniqueInput
+  ) => ObjectiveLinkNullablePromise;
+  objectiveLinks: (args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<ObjectiveLink>;
+  objectiveLinksConnection: (args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => ObjectiveLinkConnectionPromise;
   pointGroup: (where: PointGroupWhereUniqueInput) => PointGroupNullablePromise;
   pointGroups: (args?: {
     where?: PointGroupWhereInput;
@@ -495,6 +517,26 @@ export interface Prisma {
   }) => GoalLinkPromise;
   deleteGoalLink: (where: GoalLinkWhereUniqueInput) => GoalLinkPromise;
   deleteManyGoalLinks: (where?: GoalLinkWhereInput) => BatchPayloadPromise;
+  createObjectiveLink: (data: ObjectiveLinkCreateInput) => ObjectiveLinkPromise;
+  updateObjectiveLink: (args: {
+    data: ObjectiveLinkUpdateInput;
+    where: ObjectiveLinkWhereUniqueInput;
+  }) => ObjectiveLinkPromise;
+  updateManyObjectiveLinks: (args: {
+    data: ObjectiveLinkUpdateManyMutationInput;
+    where?: ObjectiveLinkWhereInput;
+  }) => BatchPayloadPromise;
+  upsertObjectiveLink: (args: {
+    where: ObjectiveLinkWhereUniqueInput;
+    create: ObjectiveLinkCreateInput;
+    update: ObjectiveLinkUpdateInput;
+  }) => ObjectiveLinkPromise;
+  deleteObjectiveLink: (
+    where: ObjectiveLinkWhereUniqueInput
+  ) => ObjectiveLinkPromise;
+  deleteManyObjectiveLinks: (
+    where?: ObjectiveLinkWhereInput
+  ) => BatchPayloadPromise;
   createPointGroup: (data: PointGroupCreateInput) => PointGroupPromise;
   updatePointGroup: (args: {
     data: PointGroupUpdateInput;
@@ -691,6 +733,9 @@ export interface Subscription {
   goalLink: (
     where?: GoalLinkSubscriptionWhereInput
   ) => GoalLinkSubscriptionPayloadSubscription;
+  objectiveLink: (
+    where?: ObjectiveLinkSubscriptionWhereInput
+  ) => ObjectiveLinkSubscriptionPayloadSubscription;
   pointGroup: (
     where?: PointGroupSubscriptionWhereInput
   ) => PointGroupSubscriptionPayloadSubscription;
@@ -879,6 +924,18 @@ export type GoalLinkOrderByInput =
   | "weight_DESC"
   | "text_ASC"
   | "text_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type ObjectiveLinkOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "text_ASC"
+  | "text_DESC"
+  | "weight_ASC"
+  | "weight_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1225,6 +1282,9 @@ export interface WorkspaceWhereInput {
   goalLinks_every?: Maybe<GoalLinkWhereInput>;
   goalLinks_some?: Maybe<GoalLinkWhereInput>;
   goalLinks_none?: Maybe<GoalLinkWhereInput>;
+  objectiveLinks_every?: Maybe<ObjectiveLinkWhereInput>;
+  objectiveLinks_some?: Maybe<ObjectiveLinkWhereInput>;
+  objectiveLinks_none?: Maybe<ObjectiveLinkWhereInput>;
   participants_every?: Maybe<WorkspaceParticipantWhereInput>;
   participants_some?: Maybe<WorkspaceParticipantWhereInput>;
   participants_none?: Maybe<WorkspaceParticipantWhereInput>;
@@ -1476,6 +1536,9 @@ export interface CourseWhereInput {
   goalLinks_every?: Maybe<GoalLinkWhereInput>;
   goalLinks_some?: Maybe<GoalLinkWhereInput>;
   goalLinks_none?: Maybe<GoalLinkWhereInput>;
+  objectiveLinks_every?: Maybe<ObjectiveLinkWhereInput>;
+  objectiveLinks_some?: Maybe<ObjectiveLinkWhereInput>;
+  objectiveLinks_none?: Maybe<ObjectiveLinkWhereInput>;
   AND?: Maybe<CourseWhereInput[] | CourseWhereInput>;
   OR?: Maybe<CourseWhereInput[] | CourseWhereInput>;
   NOT?: Maybe<CourseWhereInput[] | CourseWhereInput>;
@@ -1877,6 +1940,68 @@ export interface GoalLinkWhereInput {
   NOT?: Maybe<GoalLinkWhereInput[] | GoalLinkWhereInput>;
 }
 
+export interface ObjectiveLinkWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  course?: Maybe<CourseWhereInput>;
+  objective?: Maybe<ConceptWhereInput>;
+  workspace?: Maybe<WorkspaceWhereInput>;
+  text?: Maybe<String>;
+  text_not?: Maybe<String>;
+  text_in?: Maybe<String[] | String>;
+  text_not_in?: Maybe<String[] | String>;
+  text_lt?: Maybe<String>;
+  text_lte?: Maybe<String>;
+  text_gt?: Maybe<String>;
+  text_gte?: Maybe<String>;
+  text_contains?: Maybe<String>;
+  text_not_contains?: Maybe<String>;
+  text_starts_with?: Maybe<String>;
+  text_not_starts_with?: Maybe<String>;
+  text_ends_with?: Maybe<String>;
+  text_not_ends_with?: Maybe<String>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
+  createdBy?: Maybe<UserWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<ObjectiveLinkWhereInput[] | ObjectiveLinkWhereInput>;
+  OR?: Maybe<ObjectiveLinkWhereInput[] | ObjectiveLinkWhereInput>;
+  NOT?: Maybe<ObjectiveLinkWhereInput[] | ObjectiveLinkWhereInput>;
+}
+
 export interface WorkspaceTokenWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
@@ -2065,6 +2190,10 @@ export type GoalLinkWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
 
+export type ObjectiveLinkWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
 export type PointGroupWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
@@ -2170,6 +2299,7 @@ export interface WorkspaceCreateWithoutParticipantsInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
@@ -2216,6 +2346,7 @@ export interface WorkspaceCreateInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2246,6 +2377,7 @@ export interface WorkspaceCreateWithoutClonesInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2295,6 +2427,7 @@ export interface WorkspaceCreateWithoutSourceProjectInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2343,6 +2476,7 @@ export interface WorkspaceCreateWithoutAsMergeInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2376,6 +2510,7 @@ export interface WorkspaceCreateWithoutSourceTemplateInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2408,6 +2543,7 @@ export interface CourseCreateWithoutWorkspaceInput {
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface TagCreateManyInput {
@@ -2442,6 +2578,7 @@ export interface CourseCreateWithoutClonesInput {
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface CourseLinkCreateManyWithoutFromInput {
@@ -2483,6 +2620,7 @@ export interface CourseCreateWithoutLinksToCourseInput {
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface CourseCreateManyWithoutSourceCourseInput {
@@ -2508,6 +2646,7 @@ export interface CourseCreateWithoutSourceCourseInput {
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface CourseLinkCreateManyWithoutToInput {
@@ -2549,6 +2688,7 @@ export interface CourseCreateWithoutLinksFromCourseInput {
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface WorkspaceCreateOneWithoutCoursesInput {
@@ -2571,6 +2711,7 @@ export interface WorkspaceCreateWithoutCoursesInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2782,6 +2923,7 @@ export interface CourseCreateWithoutConceptsInput {
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface CourseCreateconceptOrderInput {
@@ -2882,6 +3024,7 @@ export interface WorkspaceCreateWithoutAsTemplateInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -2982,6 +3125,7 @@ export interface WorkspaceCreateWithoutConceptsInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -3068,6 +3212,7 @@ export interface CourseCreateWithoutGoalLinksInput {
   conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
   objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
   createdBy: UserCreateOneInput;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
 }
 
 export interface ConceptCreateManyWithoutCourseInput {
@@ -3097,9 +3242,59 @@ export interface ConceptCreateWithoutCourseInput {
   createdBy: UserCreateOneInput;
 }
 
+export interface ObjectiveLinkCreateManyWithoutCourseInput {
+  create?: Maybe<
+    | ObjectiveLinkCreateWithoutCourseInput[]
+    | ObjectiveLinkCreateWithoutCourseInput
+  >;
+  connect?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+}
+
+export interface ObjectiveLinkCreateWithoutCourseInput {
+  id?: Maybe<ID_Input>;
+  objective: ConceptCreateOneInput;
+  workspace: WorkspaceCreateOneWithoutObjectiveLinksInput;
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+  createdBy: UserCreateOneInput;
+}
+
 export interface ConceptCreateOneInput {
   create?: Maybe<ConceptCreateInput>;
   connect?: Maybe<ConceptWhereUniqueInput>;
+}
+
+export interface WorkspaceCreateOneWithoutObjectiveLinksInput {
+  create?: Maybe<WorkspaceCreateWithoutObjectiveLinksInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export interface WorkspaceCreateWithoutObjectiveLinksInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  sourceProject?: Maybe<ProjectCreateOneWithoutWorkspacesInput>;
+  sourceTemplate?: Maybe<WorkspaceCreateOneWithoutClonesInput>;
+  asMerge?: Maybe<ProjectCreateOneWithoutMergesInput>;
+  asTemplate?: Maybe<ProjectCreateOneWithoutTemplatesInput>;
+  clones?: Maybe<WorkspaceCreateManyWithoutSourceTemplateInput>;
+  courses?: Maybe<CourseCreateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceCreatecourseOrderInput>;
+  concepts?: Maybe<ConceptCreateManyWithoutWorkspaceInput>;
+  commonConcepts?: Maybe<ConceptCreateManyInput>;
+  conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
+  courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptCreateManyInput>;
+  goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
+  tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
+  mainCourse?: Maybe<CourseCreateOneInput>;
+  pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
+  courseTags?: Maybe<TagCreateManyInput>;
+  conceptTags?: Maybe<TagCreateManyInput>;
+  goalTags?: Maybe<TagCreateManyInput>;
+  createdBy?: Maybe<UserCreateOneInput>;
 }
 
 export interface WorkspaceParticipantCreateManyWithoutWorkspaceInput {
@@ -3153,6 +3348,7 @@ export interface WorkspaceCreateWithoutTokensInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
   pointGroups?: Maybe<PointGroupCreateManyWithoutWorkspaceInput>;
@@ -3162,12 +3358,31 @@ export interface WorkspaceCreateWithoutTokensInput {
   createdBy?: Maybe<UserCreateOneInput>;
 }
 
-export interface CourseCreateOneInput {
-  create?: Maybe<CourseCreateInput>;
+export interface ObjectiveLinkCreateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    | ObjectiveLinkCreateWithoutWorkspaceInput[]
+    | ObjectiveLinkCreateWithoutWorkspaceInput
+  >;
+  connect?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+}
+
+export interface ObjectiveLinkCreateWithoutWorkspaceInput {
+  id?: Maybe<ID_Input>;
+  course: CourseCreateOneWithoutObjectiveLinksInput;
+  objective: ConceptCreateOneInput;
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+  createdBy: UserCreateOneInput;
+}
+
+export interface CourseCreateOneWithoutObjectiveLinksInput {
+  create?: Maybe<CourseCreateWithoutObjectiveLinksInput>;
   connect?: Maybe<CourseWhereUniqueInput>;
 }
 
-export interface CourseCreateInput {
+export interface CourseCreateWithoutObjectiveLinksInput {
   id?: Maybe<ID_Input>;
   name: String;
   official?: Maybe<Boolean>;
@@ -3221,6 +3436,7 @@ export interface WorkspaceCreateWithoutGoalLinksInput {
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -3287,6 +3503,30 @@ export interface UserCreateseenGuidesInput {
   set?: Maybe<String[] | String>;
 }
 
+export interface CourseCreateOneInput {
+  create?: Maybe<CourseCreateInput>;
+  connect?: Maybe<CourseWhereUniqueInput>;
+}
+
+export interface CourseCreateInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  official?: Maybe<Boolean>;
+  frozen?: Maybe<Boolean>;
+  tags?: Maybe<TagCreateManyInput>;
+  sourceCourse?: Maybe<CourseCreateOneWithoutClonesInput>;
+  clones?: Maybe<CourseCreateManyWithoutSourceCourseInput>;
+  linksFromCourse?: Maybe<CourseLinkCreateManyWithoutFromInput>;
+  linksToCourse?: Maybe<CourseLinkCreateManyWithoutToInput>;
+  workspace: WorkspaceCreateOneWithoutCoursesInput;
+  concepts?: Maybe<ConceptCreateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseCreateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseCreateobjectiveOrderInput>;
+  createdBy: UserCreateOneInput;
+  goalLinks?: Maybe<GoalLinkCreateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutCourseInput>;
+}
+
 export interface PointGroupCreateManyWithoutWorkspaceInput {
   create?: Maybe<
     | PointGroupCreateWithoutWorkspaceInput[]
@@ -3341,6 +3581,7 @@ export interface WorkspaceCreateWithoutConceptLinksInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -3469,6 +3710,7 @@ export interface WorkspaceCreateWithoutCourseLinksInput {
   conceptLinks?: Maybe<ConceptLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -3578,6 +3820,7 @@ export interface WorkspaceUpdateWithoutParticipantsDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
@@ -3630,6 +3873,7 @@ export interface WorkspaceUpdateDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -3663,6 +3907,7 @@ export interface WorkspaceUpdateWithoutClonesDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -3735,6 +3980,7 @@ export interface WorkspaceUpdateWithoutSourceProjectDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -3806,6 +4052,7 @@ export interface WorkspaceUpdateWithoutAsMergeDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -3859,6 +4106,7 @@ export interface WorkspaceUpdateWithoutSourceTemplateDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -3911,6 +4159,7 @@ export interface CourseUpdateWithoutWorkspaceDataInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface TagUpdateManyInput {
@@ -4054,6 +4303,7 @@ export interface CourseUpdateWithoutClonesDataInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface CourseLinkUpdateManyWithoutFromInput {
@@ -4116,6 +4366,7 @@ export interface CourseUpdateWithoutLinksToCourseDataInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface CourseUpdateManyWithoutSourceCourseInput {
@@ -4161,6 +4412,7 @@ export interface CourseUpdateWithoutSourceCourseDataInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface CourseLinkUpdateManyWithoutToInput {
@@ -4223,6 +4475,7 @@ export interface CourseUpdateWithoutLinksFromCourseDataInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface WorkspaceUpdateOneRequiredWithoutCoursesInput {
@@ -4246,6 +4499,7 @@ export interface WorkspaceUpdateWithoutCoursesDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -4551,6 +4805,7 @@ export interface CourseUpdateWithoutConceptsDataInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface CourseUpdateconceptOrderInput {
@@ -4820,6 +5075,7 @@ export interface WorkspaceUpdateWithoutAsTemplateDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -4966,6 +5222,7 @@ export interface WorkspaceUpdateWithoutConceptsDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -5295,6 +5552,7 @@ export interface CourseUpdateWithoutGoalLinksDataInput {
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface ConceptUpdateManyWithoutCourseInput {
@@ -5459,9 +5717,49 @@ export interface ConceptUpdateManyDataInput {
   count?: Maybe<Int>;
 }
 
-export interface CourseUpsertWithoutGoalLinksInput {
-  update: CourseUpdateWithoutGoalLinksDataInput;
-  create: CourseCreateWithoutGoalLinksInput;
+export interface ObjectiveLinkUpdateManyWithoutCourseInput {
+  create?: Maybe<
+    | ObjectiveLinkCreateWithoutCourseInput[]
+    | ObjectiveLinkCreateWithoutCourseInput
+  >;
+  delete?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+  connect?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+  set?: Maybe<ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput>;
+  disconnect?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+  update?: Maybe<
+    | ObjectiveLinkUpdateWithWhereUniqueWithoutCourseInput[]
+    | ObjectiveLinkUpdateWithWhereUniqueWithoutCourseInput
+  >;
+  upsert?: Maybe<
+    | ObjectiveLinkUpsertWithWhereUniqueWithoutCourseInput[]
+    | ObjectiveLinkUpsertWithWhereUniqueWithoutCourseInput
+  >;
+  deleteMany?: Maybe<
+    ObjectiveLinkScalarWhereInput[] | ObjectiveLinkScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | ObjectiveLinkUpdateManyWithWhereNestedInput[]
+    | ObjectiveLinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ObjectiveLinkUpdateWithWhereUniqueWithoutCourseInput {
+  where: ObjectiveLinkWhereUniqueInput;
+  data: ObjectiveLinkUpdateWithoutCourseDataInput;
+}
+
+export interface ObjectiveLinkUpdateWithoutCourseDataInput {
+  objective?: Maybe<ConceptUpdateOneRequiredInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput>;
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+  createdBy?: Maybe<UserUpdateOneRequiredInput>;
 }
 
 export interface ConceptUpdateOneRequiredInput {
@@ -5476,78 +5774,36 @@ export interface ConceptUpsertNestedInput {
   create: ConceptCreateInput;
 }
 
-export interface GoalLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: GoalLinkWhereUniqueInput;
-  update: GoalLinkUpdateWithoutWorkspaceDataInput;
-  create: GoalLinkCreateWithoutWorkspaceInput;
+export interface WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput {
+  create?: Maybe<WorkspaceCreateWithoutObjectiveLinksInput>;
+  update?: Maybe<WorkspaceUpdateWithoutObjectiveLinksDataInput>;
+  upsert?: Maybe<WorkspaceUpsertWithoutObjectiveLinksInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
 }
 
-export interface GoalLinkScalarWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  weight?: Maybe<Int>;
-  weight_not?: Maybe<Int>;
-  weight_in?: Maybe<Int[] | Int>;
-  weight_not_in?: Maybe<Int[] | Int>;
-  weight_lt?: Maybe<Int>;
-  weight_lte?: Maybe<Int>;
-  weight_gt?: Maybe<Int>;
-  weight_gte?: Maybe<Int>;
-  text?: Maybe<String>;
-  text_not?: Maybe<String>;
-  text_in?: Maybe<String[] | String>;
-  text_not_in?: Maybe<String[] | String>;
-  text_lt?: Maybe<String>;
-  text_lte?: Maybe<String>;
-  text_gt?: Maybe<String>;
-  text_gte?: Maybe<String>;
-  text_contains?: Maybe<String>;
-  text_not_contains?: Maybe<String>;
-  text_starts_with?: Maybe<String>;
-  text_not_starts_with?: Maybe<String>;
-  text_ends_with?: Maybe<String>;
-  text_not_ends_with?: Maybe<String>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
-  OR?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
-  NOT?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
-}
-
-export interface GoalLinkUpdateManyWithWhereNestedInput {
-  where: GoalLinkScalarWhereInput;
-  data: GoalLinkUpdateManyDataInput;
-}
-
-export interface GoalLinkUpdateManyDataInput {
-  weight?: Maybe<Int>;
-  text?: Maybe<String>;
+export interface WorkspaceUpdateWithoutObjectiveLinksDataInput {
+  name?: Maybe<String>;
+  sourceProject?: Maybe<ProjectUpdateOneWithoutWorkspacesInput>;
+  sourceTemplate?: Maybe<WorkspaceUpdateOneWithoutClonesInput>;
+  asMerge?: Maybe<ProjectUpdateOneWithoutMergesInput>;
+  asTemplate?: Maybe<ProjectUpdateOneWithoutTemplatesInput>;
+  clones?: Maybe<WorkspaceUpdateManyWithoutSourceTemplateInput>;
+  courses?: Maybe<CourseUpdateManyWithoutWorkspaceInput>;
+  courseOrder?: Maybe<WorkspaceUpdatecourseOrderInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutWorkspaceInput>;
+  commonConcepts?: Maybe<ConceptUpdateManyInput>;
+  conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
+  courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
+  goals?: Maybe<ConceptUpdateManyInput>;
+  goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
+  tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
+  mainCourse?: Maybe<CourseUpdateOneInput>;
+  pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
+  courseTags?: Maybe<TagUpdateManyInput>;
+  conceptTags?: Maybe<TagUpdateManyInput>;
+  goalTags?: Maybe<TagUpdateManyInput>;
+  createdBy?: Maybe<UserUpdateOneInput>;
 }
 
 export interface WorkspaceParticipantUpdateManyWithoutWorkspaceInput {
@@ -5637,6 +5893,7 @@ export interface WorkspaceUpdateWithoutTokensDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
   pointGroups?: Maybe<PointGroupUpdateManyWithoutWorkspaceInput>;
@@ -5646,16 +5903,59 @@ export interface WorkspaceUpdateWithoutTokensDataInput {
   createdBy?: Maybe<UserUpdateOneInput>;
 }
 
-export interface CourseUpdateOneInput {
-  create?: Maybe<CourseCreateInput>;
-  update?: Maybe<CourseUpdateDataInput>;
-  upsert?: Maybe<CourseUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
+export interface ObjectiveLinkUpdateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    | ObjectiveLinkCreateWithoutWorkspaceInput[]
+    | ObjectiveLinkCreateWithoutWorkspaceInput
+  >;
+  delete?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+  connect?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+  set?: Maybe<ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput>;
+  disconnect?: Maybe<
+    ObjectiveLinkWhereUniqueInput[] | ObjectiveLinkWhereUniqueInput
+  >;
+  update?: Maybe<
+    | ObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | ObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput
+  >;
+  upsert?: Maybe<
+    | ObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | ObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput
+  >;
+  deleteMany?: Maybe<
+    ObjectiveLinkScalarWhereInput[] | ObjectiveLinkScalarWhereInput
+  >;
+  updateMany?: Maybe<
+    | ObjectiveLinkUpdateManyWithWhereNestedInput[]
+    | ObjectiveLinkUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ObjectiveLinkUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: ObjectiveLinkWhereUniqueInput;
+  data: ObjectiveLinkUpdateWithoutWorkspaceDataInput;
+}
+
+export interface ObjectiveLinkUpdateWithoutWorkspaceDataInput {
+  course?: Maybe<CourseUpdateOneRequiredWithoutObjectiveLinksInput>;
+  objective?: Maybe<ConceptUpdateOneRequiredInput>;
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+}
+
+export interface CourseUpdateOneRequiredWithoutObjectiveLinksInput {
+  create?: Maybe<CourseCreateWithoutObjectiveLinksInput>;
+  update?: Maybe<CourseUpdateWithoutObjectiveLinksDataInput>;
+  upsert?: Maybe<CourseUpsertWithoutObjectiveLinksInput>;
   connect?: Maybe<CourseWhereUniqueInput>;
 }
 
-export interface CourseUpdateDataInput {
+export interface CourseUpdateWithoutObjectiveLinksDataInput {
   name?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
@@ -5729,6 +6029,7 @@ export interface WorkspaceUpdateWithoutGoalLinksDataInput {
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -5971,6 +6272,38 @@ export interface WorkspaceTokenUpdateManyDataInput {
   revoked?: Maybe<Boolean>;
 }
 
+export interface CourseUpdateOneInput {
+  create?: Maybe<CourseCreateInput>;
+  update?: Maybe<CourseUpdateDataInput>;
+  upsert?: Maybe<CourseUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<CourseWhereUniqueInput>;
+}
+
+export interface CourseUpdateDataInput {
+  name?: Maybe<String>;
+  official?: Maybe<Boolean>;
+  frozen?: Maybe<Boolean>;
+  tags?: Maybe<TagUpdateManyInput>;
+  sourceCourse?: Maybe<CourseUpdateOneWithoutClonesInput>;
+  clones?: Maybe<CourseUpdateManyWithoutSourceCourseInput>;
+  linksFromCourse?: Maybe<CourseLinkUpdateManyWithoutFromInput>;
+  linksToCourse?: Maybe<CourseLinkUpdateManyWithoutToInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutCoursesInput>;
+  concepts?: Maybe<ConceptUpdateManyWithoutCourseInput>;
+  conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
+  objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
+  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+  goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
+}
+
+export interface CourseUpsertNestedInput {
+  update: CourseUpdateDataInput;
+  create: CourseCreateInput;
+}
+
 export interface PointGroupUpdateManyWithoutWorkspaceInput {
   create?: Maybe<
     | PointGroupCreateWithoutWorkspaceInput[]
@@ -6016,11 +6349,6 @@ export interface CourseUpdateOneRequiredInput {
   update?: Maybe<CourseUpdateDataInput>;
   upsert?: Maybe<CourseUpsertNestedInput>;
   connect?: Maybe<CourseWhereUniqueInput>;
-}
-
-export interface CourseUpsertNestedInput {
-  update: CourseUpdateDataInput;
-  create: CourseCreateInput;
 }
 
 export interface CompletionUpdateManyWithoutPointGroupInput {
@@ -6242,6 +6570,153 @@ export interface GoalLinkUpsertWithWhereUniqueWithoutCourseInput {
   create: GoalLinkCreateWithoutCourseInput;
 }
 
+export interface GoalLinkScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
+  text?: Maybe<String>;
+  text_not?: Maybe<String>;
+  text_in?: Maybe<String[] | String>;
+  text_not_in?: Maybe<String[] | String>;
+  text_lt?: Maybe<String>;
+  text_lte?: Maybe<String>;
+  text_gt?: Maybe<String>;
+  text_gte?: Maybe<String>;
+  text_contains?: Maybe<String>;
+  text_not_contains?: Maybe<String>;
+  text_starts_with?: Maybe<String>;
+  text_not_starts_with?: Maybe<String>;
+  text_ends_with?: Maybe<String>;
+  text_not_ends_with?: Maybe<String>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
+  OR?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
+  NOT?: Maybe<GoalLinkScalarWhereInput[] | GoalLinkScalarWhereInput>;
+}
+
+export interface GoalLinkUpdateManyWithWhereNestedInput {
+  where: GoalLinkScalarWhereInput;
+  data: GoalLinkUpdateManyDataInput;
+}
+
+export interface GoalLinkUpdateManyDataInput {
+  weight?: Maybe<Int>;
+  text?: Maybe<String>;
+}
+
+export interface CourseUpsertWithoutObjectiveLinksInput {
+  update: CourseUpdateWithoutObjectiveLinksDataInput;
+  create: CourseCreateWithoutObjectiveLinksInput;
+}
+
+export interface ObjectiveLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: ObjectiveLinkWhereUniqueInput;
+  update: ObjectiveLinkUpdateWithoutWorkspaceDataInput;
+  create: ObjectiveLinkCreateWithoutWorkspaceInput;
+}
+
+export interface ObjectiveLinkScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  text?: Maybe<String>;
+  text_not?: Maybe<String>;
+  text_in?: Maybe<String[] | String>;
+  text_not_in?: Maybe<String[] | String>;
+  text_lt?: Maybe<String>;
+  text_lte?: Maybe<String>;
+  text_gt?: Maybe<String>;
+  text_gte?: Maybe<String>;
+  text_contains?: Maybe<String>;
+  text_not_contains?: Maybe<String>;
+  text_starts_with?: Maybe<String>;
+  text_not_starts_with?: Maybe<String>;
+  text_ends_with?: Maybe<String>;
+  text_not_ends_with?: Maybe<String>;
+  weight?: Maybe<Int>;
+  weight_not?: Maybe<Int>;
+  weight_in?: Maybe<Int[] | Int>;
+  weight_not_in?: Maybe<Int[] | Int>;
+  weight_lt?: Maybe<Int>;
+  weight_lte?: Maybe<Int>;
+  weight_gt?: Maybe<Int>;
+  weight_gte?: Maybe<Int>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<ObjectiveLinkScalarWhereInput[] | ObjectiveLinkScalarWhereInput>;
+  OR?: Maybe<ObjectiveLinkScalarWhereInput[] | ObjectiveLinkScalarWhereInput>;
+  NOT?: Maybe<ObjectiveLinkScalarWhereInput[] | ObjectiveLinkScalarWhereInput>;
+}
+
+export interface ObjectiveLinkUpdateManyWithWhereNestedInput {
+  where: ObjectiveLinkScalarWhereInput;
+  data: ObjectiveLinkUpdateManyDataInput;
+}
+
+export interface ObjectiveLinkUpdateManyDataInput {
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+}
+
 export interface WorkspaceUpsertWithoutTokensInput {
   update: WorkspaceUpdateWithoutTokensDataInput;
   create: WorkspaceCreateWithoutTokensInput;
@@ -6256,6 +6731,28 @@ export interface WorkspaceParticipantUpsertWithWhereUniqueWithoutWorkspaceInput 
   where: WorkspaceParticipantWhereUniqueInput;
   update: WorkspaceParticipantUpdateWithoutWorkspaceDataInput;
   create: WorkspaceParticipantCreateWithoutWorkspaceInput;
+}
+
+export interface WorkspaceUpsertWithoutObjectiveLinksInput {
+  update: WorkspaceUpdateWithoutObjectiveLinksDataInput;
+  create: WorkspaceCreateWithoutObjectiveLinksInput;
+}
+
+export interface ObjectiveLinkUpsertWithWhereUniqueWithoutCourseInput {
+  where: ObjectiveLinkWhereUniqueInput;
+  update: ObjectiveLinkUpdateWithoutCourseDataInput;
+  create: ObjectiveLinkCreateWithoutCourseInput;
+}
+
+export interface CourseUpsertWithoutGoalLinksInput {
+  update: CourseUpdateWithoutGoalLinksDataInput;
+  create: CourseCreateWithoutGoalLinksInput;
+}
+
+export interface GoalLinkUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: GoalLinkWhereUniqueInput;
+  update: GoalLinkUpdateWithoutWorkspaceDataInput;
+  create: GoalLinkCreateWithoutWorkspaceInput;
 }
 
 export interface WorkspaceUpsertWithoutConceptsInput {
@@ -6289,6 +6786,7 @@ export interface WorkspaceUpdateWithoutConceptLinksDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -6775,6 +7273,7 @@ export interface WorkspaceUpdateWithoutCourseLinksDataInput {
   conceptLinks?: Maybe<ConceptLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -7001,6 +7500,7 @@ export interface WorkspaceCreateWithoutPointGroupsInput {
   courseLinks?: Maybe<CourseLinkCreateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptCreateManyInput>;
   goalLinks?: Maybe<GoalLinkCreateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkCreateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantCreateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenCreateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseCreateOneInput>;
@@ -7056,6 +7556,7 @@ export interface WorkspaceUpdateWithoutPointGroupsDataInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -7157,6 +7658,7 @@ export interface CourseUpdateInput {
   objectiveOrder?: Maybe<CourseUpdateobjectiveOrderInput>;
   createdBy?: Maybe<UserUpdateOneRequiredInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutCourseInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutCourseInput>;
 }
 
 export interface CourseUpdateManyMutationInput {
@@ -7222,6 +7724,30 @@ export interface GoalLinkUpdateInput {
 export interface GoalLinkUpdateManyMutationInput {
   weight?: Maybe<Int>;
   text?: Maybe<String>;
+}
+
+export interface ObjectiveLinkCreateInput {
+  id?: Maybe<ID_Input>;
+  course: CourseCreateOneWithoutObjectiveLinksInput;
+  objective: ConceptCreateOneInput;
+  workspace: WorkspaceCreateOneWithoutObjectiveLinksInput;
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+  createdBy: UserCreateOneInput;
+}
+
+export interface ObjectiveLinkUpdateInput {
+  course?: Maybe<CourseUpdateOneRequiredWithoutObjectiveLinksInput>;
+  objective?: Maybe<ConceptUpdateOneRequiredInput>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutObjectiveLinksInput>;
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
+  createdBy?: Maybe<UserUpdateOneRequiredInput>;
+}
+
+export interface ObjectiveLinkUpdateManyMutationInput {
+  text?: Maybe<String>;
+  weight?: Maybe<Int>;
 }
 
 export interface PointGroupCreateInput {
@@ -7373,6 +7899,7 @@ export interface WorkspaceUpdateInput {
   courseLinks?: Maybe<CourseLinkUpdateManyWithoutWorkspaceInput>;
   goals?: Maybe<ConceptUpdateManyInput>;
   goalLinks?: Maybe<GoalLinkUpdateManyWithoutWorkspaceInput>;
+  objectiveLinks?: Maybe<ObjectiveLinkUpdateManyWithoutWorkspaceInput>;
   participants?: Maybe<WorkspaceParticipantUpdateManyWithoutWorkspaceInput>;
   tokens?: Maybe<WorkspaceTokenUpdateManyWithoutWorkspaceInput>;
   mainCourse?: Maybe<CourseUpdateOneInput>;
@@ -7529,6 +8056,23 @@ export interface GoalLinkSubscriptionWhereInput {
   OR?: Maybe<GoalLinkSubscriptionWhereInput[] | GoalLinkSubscriptionWhereInput>;
   NOT?: Maybe<
     GoalLinkSubscriptionWhereInput[] | GoalLinkSubscriptionWhereInput
+  >;
+}
+
+export interface ObjectiveLinkSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ObjectiveLinkWhereInput>;
+  AND?: Maybe<
+    ObjectiveLinkSubscriptionWhereInput[] | ObjectiveLinkSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    ObjectiveLinkSubscriptionWhereInput[] | ObjectiveLinkSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    ObjectiveLinkSubscriptionWhereInput[] | ObjectiveLinkSubscriptionWhereInput
   >;
 }
 
@@ -7995,6 +8539,15 @@ export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  objectiveLinks: <T = FragmentableArray<ObjectiveLink>>(args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   participants: <T = FragmentableArray<WorkspaceParticipant>>(args?: {
     where?: WorkspaceParticipantWhereInput;
     orderBy?: WorkspaceParticipantOrderByInput;
@@ -8131,6 +8684,17 @@ export interface WorkspaceSubscription
   goalLinks: <T = Promise<AsyncIterator<GoalLinkSubscription>>>(args?: {
     where?: GoalLinkWhereInput;
     orderBy?: GoalLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  objectiveLinks: <
+    T = Promise<AsyncIterator<ObjectiveLinkSubscription>>
+  >(args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -8275,6 +8839,15 @@ export interface WorkspaceNullablePromise
   goalLinks: <T = FragmentableArray<GoalLink>>(args?: {
     where?: GoalLinkWhereInput;
     orderBy?: GoalLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  objectiveLinks: <T = FragmentableArray<ObjectiveLink>>(args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -8698,6 +9271,15 @@ export interface CoursePromise extends Promise<Course>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  objectiveLinks: <T = FragmentableArray<ObjectiveLink>>(args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface CourseSubscription
@@ -8768,6 +9350,17 @@ export interface CourseSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  objectiveLinks: <
+    T = Promise<AsyncIterator<ObjectiveLinkSubscription>>
+  >(args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
 }
 
 export interface CourseNullablePromise
@@ -8832,6 +9425,15 @@ export interface CourseNullablePromise
   goalLinks: <T = FragmentableArray<GoalLink>>(args?: {
     where?: GoalLinkWhereInput;
     orderBy?: GoalLinkOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  objectiveLinks: <T = FragmentableArray<ObjectiveLink>>(args?: {
+    where?: ObjectiveLinkWhereInput;
+    orderBy?: ObjectiveLinkOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -9249,6 +9851,56 @@ export interface GoalLinkNullablePromise
   workspace: <T = WorkspacePromise>() => T;
   weight: () => Promise<Int>;
   text: () => Promise<String>;
+  createdBy: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ObjectiveLink {
+  id: ID_Output;
+  text?: String;
+  weight: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface ObjectiveLinkPromise
+  extends Promise<ObjectiveLink>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  course: <T = CoursePromise>() => T;
+  objective: <T = ConceptPromise>() => T;
+  workspace: <T = WorkspacePromise>() => T;
+  text: () => Promise<String>;
+  weight: () => Promise<Int>;
+  createdBy: <T = UserPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ObjectiveLinkSubscription
+  extends Promise<AsyncIterator<ObjectiveLink>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  course: <T = CourseSubscription>() => T;
+  objective: <T = ConceptSubscription>() => T;
+  workspace: <T = WorkspaceSubscription>() => T;
+  text: () => Promise<AsyncIterator<String>>;
+  weight: () => Promise<AsyncIterator<Int>>;
+  createdBy: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface ObjectiveLinkNullablePromise
+  extends Promise<ObjectiveLink | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  course: <T = CoursePromise>() => T;
+  objective: <T = ConceptPromise>() => T;
+  workspace: <T = WorkspacePromise>() => T;
+  text: () => Promise<String>;
+  weight: () => Promise<Int>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -9845,6 +10497,62 @@ export interface AggregateGoalLinkPromise
 
 export interface AggregateGoalLinkSubscription
   extends Promise<AsyncIterator<AggregateGoalLink>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ObjectiveLinkConnection {
+  pageInfo: PageInfo;
+  edges: ObjectiveLinkEdge[];
+}
+
+export interface ObjectiveLinkConnectionPromise
+  extends Promise<ObjectiveLinkConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ObjectiveLinkEdge>>() => T;
+  aggregate: <T = AggregateObjectiveLinkPromise>() => T;
+}
+
+export interface ObjectiveLinkConnectionSubscription
+  extends Promise<AsyncIterator<ObjectiveLinkConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ObjectiveLinkEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateObjectiveLinkSubscription>() => T;
+}
+
+export interface ObjectiveLinkEdge {
+  node: ObjectiveLink;
+  cursor: String;
+}
+
+export interface ObjectiveLinkEdgePromise
+  extends Promise<ObjectiveLinkEdge>,
+    Fragmentable {
+  node: <T = ObjectiveLinkPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ObjectiveLinkEdgeSubscription
+  extends Promise<AsyncIterator<ObjectiveLinkEdge>>,
+    Fragmentable {
+  node: <T = ObjectiveLinkSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateObjectiveLink {
+  count: Int;
+}
+
+export interface AggregateObjectiveLinkPromise
+  extends Promise<AggregateObjectiveLink>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateObjectiveLinkSubscription
+  extends Promise<AsyncIterator<AggregateObjectiveLink>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -10780,6 +11488,59 @@ export interface GoalLinkPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
+export interface ObjectiveLinkSubscriptionPayload {
+  mutation: MutationType;
+  node: ObjectiveLink;
+  updatedFields: String[];
+  previousValues: ObjectiveLinkPreviousValues;
+}
+
+export interface ObjectiveLinkSubscriptionPayloadPromise
+  extends Promise<ObjectiveLinkSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ObjectiveLinkPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ObjectiveLinkPreviousValuesPromise>() => T;
+}
+
+export interface ObjectiveLinkSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ObjectiveLinkSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ObjectiveLinkSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ObjectiveLinkPreviousValuesSubscription>() => T;
+}
+
+export interface ObjectiveLinkPreviousValues {
+  id: ID_Output;
+  text?: String;
+  weight: Int;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface ObjectiveLinkPreviousValuesPromise
+  extends Promise<ObjectiveLinkPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  text: () => Promise<String>;
+  weight: () => Promise<Int>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ObjectiveLinkPreviousValuesSubscription
+  extends Promise<AsyncIterator<ObjectiveLinkPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  text: () => Promise<AsyncIterator<String>>;
+  weight: () => Promise<AsyncIterator<Int>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
 export interface PointGroupSubscriptionPayload {
   mutation: MutationType;
   node: PointGroup;
@@ -11357,6 +12118,10 @@ export const models: Model[] = [
   },
   {
     name: "ConceptLevel",
+    embedded: false
+  },
+  {
+    name: "ObjectiveLink",
     embedded: false
   },
   {

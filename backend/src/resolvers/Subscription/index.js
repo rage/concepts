@@ -13,5 +13,6 @@ export default {
     'projectId', 'projectId', canViewProject),
   ...makeSubscriptionResolvers('project workspace', ['create', 'update', 'delete'],
     'pId', 'projectId', canViewProject),
-  ...makeSubscriptionResolvers('goal link', ['create', 'delete'])
+  ...makeSubscriptionResolvers('goal link', ['create', 'delete']),
+  ...makeSubscriptionResolvers('objective link', ['create', 'delete'])
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useQuery } from 'react-apollo-hooks'
 import { IconButton, makeStyles, Menu, MenuItem, Tooltip } from '@material-ui/core'
 import {
   Star as StarIcon, StarBorder as StarBorderIcon, StarHalf as StarHalfIcon
@@ -7,7 +7,6 @@ import {
 
 import { ConceptLink } from './concept'
 import { LINKS_IN_COURSE } from '../../graphql/Query'
-import { UPDATE_CONCEPT_LINK } from '../../graphql/Mutation'
 
 const useStyles = makeStyles({
   root: {
@@ -114,9 +113,12 @@ const MapperLinks = ({
       left: `${conceptLinkMenu ? conceptLinkMenu.x : -1}px`
     }} />
     <LinkMenu
-      anchorEl={conceptLinkMenuRef.current} anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'left' }} onClose={handleMenuClose}
-      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)} deleteLink={deleteLink}
+      anchorEl={conceptLinkMenuRef.current}
+      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      onClose={handleMenuClose}
+      open={Boolean(conceptLinkMenu) && Boolean(conceptLinkMenuRef.current)}
+      deleteLink={deleteLink}
       editLink={editLink} setWeight={setWeight} weight={conceptLinkMenu?.weight}
     />
     {addingLink && <ConceptLink

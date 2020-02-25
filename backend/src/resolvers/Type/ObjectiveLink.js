@@ -1,7 +1,7 @@
 import makeTypeResolvers from './typeutil'
 
-export const GoalLink = makeTypeResolvers('goalLink', [
-  'goal',
+export const ObjectiveLink = makeTypeResolvers('objectiveLink', [
+  'objective',
   'course',
   'workspace',
   'createdBy'

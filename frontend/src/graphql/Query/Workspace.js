@@ -77,6 +77,17 @@ query workspaceById($id: ID!) {
         id
       }
     }
+    objectiveLinks {
+      id
+      text
+      weight
+      course {
+        id
+      }
+      objective {
+        id
+      }
+    }
     goals {
       id
       name

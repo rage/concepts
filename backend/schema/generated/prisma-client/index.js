@@ -61,6 +61,10 @@ var models = [
     embedded: false
   },
   {
+    name: "ObjectiveLink",
+    embedded: false
+  },
+  {
     name: "GoalLink",
     embedded: false
   },
