@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { Button, Tooltip } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'

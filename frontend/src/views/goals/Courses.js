@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { Card, CardHeader, List } from '@material-ui/core'
 
 import { CREATE_COURSE, DELETE_COURSE, UPDATE_COURSE } from '../../graphql/Mutation'

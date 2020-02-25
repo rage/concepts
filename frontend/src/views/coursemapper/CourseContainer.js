@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { DELETE_CONCEPT_LINK, UPDATE_CONCEPT_LINK, UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'

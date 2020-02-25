@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 const useCachedMutation = (mutation, args, deps = []) =>
   // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'

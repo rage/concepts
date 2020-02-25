@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
 import { Privilege } from '../../lib/permissions'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField, MenuItem, Tooltip, IconButton } from '@material-ui/core'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { ArchiveRounded } from '@material-ui/icons'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'

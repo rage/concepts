@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Typography, CircularProgress } from '@material-ui/core'
 import Ajv from 'ajv'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import cache from '../../apollo/update'
 import schema from '../../static/port.schema'

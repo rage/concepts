@@ -3,7 +3,7 @@ import {
   List, ListItem, ListItemText, Typography, Button, Container, Paper, TextField, Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import { CLONE_TEMPLATE_WORKSPACE, USE_SHARE_LINK } from '../../graphql/Mutation'
 import { PEEK_ACTIVE_TEMPLATE, WORKSPACE_BY_SOURCE_TEMPLATE } from '../../graphql/Query'
@@ -56,12 +56,12 @@ const CloneView = ({ token, peek, projectId }) => {
     variables: { id: projectId }
   })
 
-  const skip = !projectId || !peekTemplate.data?.limitedProjectById?.activeTemplateId
+  const skip = !projectId || !peekTemplate.data?.limitedProjectById.activeTemplateId
 
   const workspace = useQuery(WORKSPACE_BY_SOURCE_TEMPLATE, {
     skip,
     variables: {
-      sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
+      sourceId: peekTemplate.data?.limitedProjectById.activeTemplateId
     }
   })
 
@@ -71,7 +71,7 @@ const CloneView = ({ token, peek, projectId }) => {
     refetchQueries: !skip ? [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE,
       variables: {
-        sourceId: peekTemplate.data?.limitedProjectById?.activeTemplateId
+        sourceId: peekTemplate.data?.limitedProjectById.activeTemplateId
       }
     }] : []
   })
@@ -128,7 +128,7 @@ const CloneView = ({ token, peek, projectId }) => {
     : peek.data.peekShareLink
 
   const inputDisabled = Boolean(peekData && !peekData.activeTemplateId)
-    || loading || Boolean(workspace.data?.workspaceBySourceTemplate?.id)
+    || loading || Boolean(workspace.data?.workspaceBySourceTemplate.id)
 
   return (
     <Container component='main' maxWidth='xs'>

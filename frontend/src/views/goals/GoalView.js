@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import LoadingBar from '../../components/LoadingBar'

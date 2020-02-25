@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import {
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button
 } from '@material-ui/core'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 
 import { Privilege, Role } from '../../lib/permissions'
 import { USE_SHARE_LINK } from '../../graphql/Mutation'

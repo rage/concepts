@@ -1,4 +1,4 @@
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { UPDATE_WORKSPACE } from '../../graphql/Mutation'
 import { WORKSPACES_FOR_USER, WORKSPACE_BY_ID } from '../../graphql/Query'

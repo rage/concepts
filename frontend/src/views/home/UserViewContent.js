@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles, IconButton, Tooltip } from '@material-ui/core'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { HelpOutline as HelpIcon } from '@material-ui/icons'
 
 import { Role } from '../../lib/permissions'
@@ -52,8 +52,7 @@ const UserViewContent = ({ user }) => {
     return () => infoBox.unsetView('home')
   }, [infoBox])
 
-  if (!workspaceQuery.data.workspacesForUser ||
-      (user.role >= Role.STAFF && !projectQuery.data.projectsForUser)) {
+  if (!workspaceQuery.loading || (user.role >= Role.STAFF && !projectQuery.loading)) {
     return <LoadingBar id='main-view' />
   }
 

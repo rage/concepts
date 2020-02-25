@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon, Tooltip
@@ -141,9 +141,8 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
     history.push(`${urlPrefix}/${workspaceId}/${newPage}${cid}`)
   }
 
-  const isOwner = Privilege.fromString(
-    workspaceQuery.data.workspaceById?.participants.find(pcp => pcp.user.id === user.id)?.privilege
-  ) === Privilege.OWNER
+  const isOwner = Privilege.fromString(workspaceQuery.data?.workspaceById.participants
+    .find(pcp => pcp.user.id === user.id)?.privilege) === Privilege.OWNER
 
   return (
     <Paper component='footer' className={classes.root} square>

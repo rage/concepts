@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core'
 import {
@@ -79,11 +79,9 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
     variables: { id: courseId }
   })
 
-  const courseLinks = prereqQuery.data.courseAndPrerequisites?.linksToCourse
+  const courseLinks = prereqQuery.data?.courseAndPrerequisites.linksToCourse
   const courseLinkMap = useMemo(
     () => new Map(courseLinks?.map(link => [link.from.id, link.id])), [courseLinks])
-  const course = courseQuery.data.courseById
-  const workspace = workspaceQuery.data.workspaceById
 
   const handleTrayToggle = () => {
     setCourseTrayOpen(!courseTrayOpen)
@@ -95,12 +93,13 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   if (workspaceQuery.error) {
     return <NotFoundView message='Workspace not found' />
-  } else if (courseQuery.error) {
+  } else if (courseQuery.error || prereqQuery.error) {
     return <NotFoundView message='Course not found' />
-  } else if (!prereqQuery.data.courseAndPrerequisites || !courseQuery.data.courseById
-      || !workspaceQuery.data.workspaceById) {
+  } else if (prereqQuery.loading || courseQuery.loading || workspaceQuery.loading) {
     return <LoadingBar id='course-view' />
   }
+  const course = courseQuery.data.courseById
+  const workspace = workspaceQuery.data.workspaceById
 
   return (
     <main className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>

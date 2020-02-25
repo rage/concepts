@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon, Tooltip
@@ -99,7 +99,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   }
 
   const isOwner = Privilege.fromString(
-    projectQuery.data.projectById?.participants.find(pcp => pcp.user.id === user.id)?.privilege
+    projectQuery.data?.projectById.participants.find(pcp => pcp.user.id === user.id)?.privilege
   ) === Privilege.OWNER
 
   return (

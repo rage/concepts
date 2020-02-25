@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { Typography, Tabs, Tab, AppBar } from '@material-ui/core'
 
 import { useMessageStateValue } from '../../lib/store'

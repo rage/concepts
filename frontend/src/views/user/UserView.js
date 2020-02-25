@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Button, CircularProgress, Typography } from '@material-ui/core'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import { Role } from '../../lib/permissions'

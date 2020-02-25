@@ -1,4 +1,4 @@
-import { useSubscription } from 'react-apollo-hooks'
+import { useSubscription } from '@apollo/react-hooks'
 
 import client from './apolloClient'
 import cache from './update'
