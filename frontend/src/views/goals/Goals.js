@@ -12,13 +12,13 @@ export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
-  const createConcept = useMutation(CREATE_CONCEPT, {
+  const [createConcept] = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
+  const [updateConcept] = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
+  const [deleteConcept] = useMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate(workspaceId)
   })
 

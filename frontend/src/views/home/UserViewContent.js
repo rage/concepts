@@ -52,7 +52,7 @@ const UserViewContent = ({ user }) => {
     return () => infoBox.unsetView('home')
   }, [infoBox])
 
-  if (!workspaceQuery.loading || (user.role >= Role.STAFF && !projectQuery.loading)) {
+  if (workspaceQuery.loading || (user.role >= Role.STAFF && projectQuery.loading)) {
     return <LoadingBar id='main-view' />
   }
 

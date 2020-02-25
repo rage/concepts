@@ -7,7 +7,7 @@ import WorkspaceCreationActions from '../workspace/WorkspaceCreationActions'
 
 const useCreateTemplateDialog = projectId => {
   const { openDialog } = useDialog()
-  const createTemplateWorkspace = useMutation(CREATE_TEMPLATE_WORKSPACE, {
+  const [createTemplateWorkspace] = useMutation(CREATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]

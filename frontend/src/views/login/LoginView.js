@@ -71,7 +71,7 @@ const LoginView = () => {
   const showGuestButton = Boolean(location.state)
   const nextPath = location.state ? location.state.from.pathname : '/'
 
-  const mergeUser = useMutation(MERGE_USER)
+  const [mergeUser] = useMutation(MERGE_USER)
 
   if (loadingHaka) {
     return <LoadingBar id='login-haka' />

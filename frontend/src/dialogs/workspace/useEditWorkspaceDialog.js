@@ -6,7 +6,7 @@ import { useDialog } from '../DialogProvider'
 
 const useEditWorkspaceDialog = refetchWorkspaceId => {
   const { openDialog } = useDialog()
-  const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
+  const [updateWorkspace] = useMutation(UPDATE_WORKSPACE, {
     refetchQueries: refetchWorkspaceId
       ? [{ query: WORKSPACE_BY_ID, variables: { id: refetchWorkspaceId } }]
       : [{ query: WORKSPACES_FOR_USER }]

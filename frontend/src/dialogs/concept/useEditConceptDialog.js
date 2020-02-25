@@ -14,7 +14,7 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
     variables: { id: workspaceId }
   })
 
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
+  const [updateConcept] = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
 

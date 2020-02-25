@@ -52,7 +52,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
     variables: { id: projectId }
   })
 
-  const deleteProject = useMutation(DELETE_PROJECT, {
+  const [deleteProject] = useMutation(DELETE_PROJECT, {
     refetchQueries: [
       { query: PROJECTS_FOR_USER }
     ]

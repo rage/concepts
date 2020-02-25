@@ -6,7 +6,7 @@ import { useDialog } from '../DialogProvider'
 
 const useCreateProjectDialog = () => {
   const { openDialog } = useDialog()
-  const createProject = useMutation(CREATE_PROJECT, {
+  const [createProject] = useMutation(CREATE_PROJECT, {
     refetchQueries: [
       { query: PROJECTS_FOR_USER }
     ]

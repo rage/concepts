@@ -35,7 +35,7 @@ const CourseContainer = ({
     return () => infoBox.unsetView('mapper')
   }, [infoBox])
 
-  const updateCourse = useMutation(UPDATE_COURSE, {
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspace.id)
   })
 
@@ -48,11 +48,11 @@ const CourseContainer = ({
     })
   }
 
-  const deleteConceptLink = useMutation(DELETE_CONCEPT_LINK, {
+  const [deleteConceptLink] = useMutation(DELETE_CONCEPT_LINK, {
     update: cache.deleteConceptLinkUpdate()
   })
 
-  const updateConceptLink = useMutation(UPDATE_CONCEPT_LINK)
+  const [updateConceptLink] = useMutation(UPDATE_CONCEPT_LINK)
 
   const handleMenuClose = () => {
     setConceptLinkMenu(null)

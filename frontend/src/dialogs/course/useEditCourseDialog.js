@@ -14,7 +14,7 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     variables: { id: workspaceId }
   })
 
-  const updateCourse = useMutation(UPDATE_COURSE, {
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
   })
 

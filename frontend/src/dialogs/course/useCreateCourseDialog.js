@@ -14,7 +14,7 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
     variables: { id: workspaceId }
   })
 
-  const createCourse = useMutation(CREATE_COURSE, {
+  const [createCourse] = useMutation(CREATE_COURSE, {
     update: cache.createCourseUpdate(workspaceId)
   })
 

@@ -76,6 +76,7 @@ const Dialog = ({ contextRef }) => {
     try {
       await state.mutation(mutationArgs)
     } catch (e) {
+      console.error('Error in dialog mutation:', e)
       messageDispatch({
         type: 'setError',
         data: 'Access denied'

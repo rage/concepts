@@ -281,7 +281,7 @@ const HeatmapView = ({ workspaceId, urlPrefix }) => {
 
   if (workspaceCourseQuery.error) {
     return <NotFoundView message='Workspace not found' />
-  } else if (!workspaceCourseQuery.loading) {
+  } else if (workspaceCourseQuery.loading) {
     return <LoadingBar id='heatmap-view' />
   }
 

@@ -83,7 +83,7 @@ const PrerequisiteCourse = ({
     setAnchorEl(null)
   }
 
-  const deleteCourseMutation = useMutation(DELETE_COURSE, {
+  const [deleteCourseMutation] = useMutation(DELETE_COURSE, {
     update: cache.deleteCourseUpdate(workspace.id, activeCourseId)
   })
 
@@ -171,11 +171,11 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
   const openCreateCourseDialog = useCreateCourseDialog(workspace.id, user.role >= Role.STAFF)
 
-  const createCourseLink = useMutation(CREATE_COURSE_LINK, {
+  const [createCourseLink] = useMutation(CREATE_COURSE_LINK, {
     update: cache.createCourseLinkUpdate(workspace.id)
   })
 
-  const deleteCourseLink = useMutation(DELETE_COURSE_LINK, {
+  const [deleteCourseLink] = useMutation(DELETE_COURSE_LINK, {
     update: cache.deleteCourseLinkUpdate(workspace.id)
   })
 

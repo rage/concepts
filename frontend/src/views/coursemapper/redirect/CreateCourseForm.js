@@ -35,7 +35,7 @@ const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
 
-  const createCourse = useMutation(CREATE_COURSE, {
+  const [createCourse] = useMutation(CREATE_COURSE, {
     update: cache.createCourseUpdate(workspaceId)
   })
 

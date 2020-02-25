@@ -100,14 +100,14 @@ const MembersView = ({ projectId, workspaceId }) => {
 
   const memberData = memberQuery.data && memberQuery.data[`${type}MemberInfo`]
 
-  const updateParticipant = useMutation(UPDATE_PARTICIPANT, {
+  const [updateParticipant] = useMutation(UPDATE_PARTICIPANT, {
     refetchQueries: [{
       query: memberQueryType,
       variables: { id }
     }]
   })
 
-  const deleteParticipant = useMutation(DELETE_PARTICIPANT, {
+  const [deleteParticipant] = useMutation(DELETE_PARTICIPANT, {
     refetchQueries: [{
       query: memberQueryType,
       variables: { id }

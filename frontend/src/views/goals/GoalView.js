@@ -18,11 +18,11 @@ const GoalView = ({ workspaceId }) => {
   const [addingLink, setAddingLink] = useState(null)
   const [menu, setMenu] = useState({ open: false })
 
-  const createGoalLink = useMutation(CREATE_GOAL_LINK, {
+  const [createGoalLink] = useMutation(CREATE_GOAL_LINK, {
     update: cache.createGoalLinkUpdate(workspaceId)
   })
 
-  const deleteGoalLink = useMutation(DELETE_GOAL_LINK, {
+  const [deleteGoalLink] = useMutation(DELETE_GOAL_LINK, {
     update: cache.deleteGoalLinkUpdate(workspaceId)
   })
 

@@ -7,7 +7,7 @@ import WorkspaceCreationActions from './WorkspaceCreationActions'
 
 const useCreateWorkspaceDialog = () => {
   const { openDialog } = useDialog()
-  const createWorkspace = useMutation(CREATE_WORKSPACE, {
+  const [createWorkspace] = useMutation(CREATE_WORKSPACE, {
     refetchQueries: [
       { query: WORKSPACES_FOR_USER }
     ]

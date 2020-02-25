@@ -136,8 +136,8 @@ const UserView = () => {
 
   const [loading, setLoading] = useState(null)
 
-  const disconnectAuth = useMutation(DISCONNECT_AUTH)
-  const mergeUser = useMutation(MERGE_USER, {
+  const [disconnectAuth] = useMutation(DISCONNECT_AUTH)
+  const [mergeUser] = useMutation(MERGE_USER, {
     refetchQueries: data.user.role >= Role.STAFF ? [
       { query: WORKSPACES_FOR_USER },
       { query: PROJECTS_FOR_USER }

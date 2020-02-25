@@ -13,13 +13,13 @@ const MergeList = ({ mergeWorkspaces, canMerge, projectId, activeTemplate, urlPr
   const infoBox = useInfoBox()
   const openEditDialog = useEditWorkspaceDialog()
   const openShareDialog = useShareDialog('workspace')
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
+  const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }
     }]
   })
-  const merge = useMutation(MERGE_PROJECT, {
+  const [merge] = useMutation(MERGE_PROJECT, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }

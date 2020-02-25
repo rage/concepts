@@ -14,7 +14,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, defaultLevel = 'CONCEPT') 
     variables: { id: workspaceId }
   })
 
-  const createConcept = useMutation(CREATE_CONCEPT, {
+  const [createConcept] = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
 

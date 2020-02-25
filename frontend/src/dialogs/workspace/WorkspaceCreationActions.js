@@ -18,7 +18,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
   const [fileName, setFileName] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const dataPortingMutation = useMutation(IMPORT_DATA, {
+  const [dataPortingMutation] = useMutation(IMPORT_DATA, {
     update: projectId
       ? cache.jsonTemplatePortUpdate(projectId)
       : cache.jsonPortUpdate

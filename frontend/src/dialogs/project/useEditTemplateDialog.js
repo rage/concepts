@@ -6,7 +6,7 @@ import { useDialog } from '../DialogProvider'
 
 const useEditTemplateDialog = projectId => {
   const { openDialog } = useDialog()
-  const updateTemplateWorkspace = useMutation(UPDATE_TEMPLATE_WORKSPACE, {
+  const [updateTemplateWorkspace] = useMutation(UPDATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]

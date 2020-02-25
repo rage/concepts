@@ -65,9 +65,9 @@ const CloneView = ({ token, peek, projectId }) => {
     }
   })
 
-  const joinShareLink = useMutation(USE_SHARE_LINK)
+  const [joinShareLink] = useMutation(USE_SHARE_LINK)
 
-  const cloneTemplate = useMutation(CLONE_TEMPLATE_WORKSPACE, {
+  const [cloneTemplate] = useMutation(CLONE_TEMPLATE_WORKSPACE, {
     refetchQueries: !skip ? [{
       query: WORKSPACE_BY_SOURCE_TEMPLATE,
       variables: {
