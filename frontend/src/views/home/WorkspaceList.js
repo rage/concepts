@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { useCreateWorkspaceDialog, useEditWorkspaceDialog } from '../../dialogs/workspace'
 import { useShareDialog } from '../../dialogs/sharing'
@@ -11,7 +11,7 @@ const WorkspaceList = ({ workspaces, urlPrefix }) => {
   const openEditDialog = useEditWorkspaceDialog()
   const openShareDialog = useShareDialog('workspace')
   const openCreateDialog = useCreateWorkspaceDialog()
-  const deleteWorkspace = useMutation(DELETE_WORKSPACE, {
+  const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
     refetchQueries: [{
       query: WORKSPACES_FOR_USER
     }]

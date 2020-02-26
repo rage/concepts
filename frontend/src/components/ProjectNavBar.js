@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   BottomNavigation, BottomNavigationAction, Paper, IconButton, Menu, MenuItem, ListItemIcon, Tooltip
@@ -52,7 +52,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
     variables: { id: projectId }
   })
 
-  const deleteProject = useMutation(DELETE_PROJECT, {
+  const [deleteProject] = useMutation(DELETE_PROJECT, {
     refetchQueries: [
       { query: PROJECTS_FOR_USER }
     ]
@@ -99,7 +99,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   }
 
   const isOwner = Privilege.fromString(
-    projectQuery.data.projectById?.participants.find(pcp => pcp.user.id === user.id)?.privilege
+    projectQuery.data?.projectById.participants.find(pcp => pcp.user.id === user.id)?.privilege
   ) === Privilege.OWNER
 
   return (
@@ -146,7 +146,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
           horizontal: 'right'
         }}>
         {
-          projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
+          projectQuery.data?.projectById.participants.find(p =>
             p.user.id === user.id && Privilege.fromString(p.privilege) === Privilege.OWNER) &&
           <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>

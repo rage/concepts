@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { TextField, MenuItem } from '@material-ui/core'
 
 import { Privilege } from '../../lib/permissions'
@@ -100,14 +100,14 @@ const MembersView = ({ projectId, workspaceId }) => {
 
   const memberData = memberQuery.data && memberQuery.data[`${type}MemberInfo`]
 
-  const updateParticipant = useMutation(UPDATE_PARTICIPANT, {
+  const [updateParticipant] = useMutation(UPDATE_PARTICIPANT, {
     refetchQueries: [{
       query: memberQueryType,
       variables: { id }
     }]
   })
 
-  const deleteParticipant = useMutation(DELETE_PARTICIPANT, {
+  const [deleteParticipant] = useMutation(DELETE_PARTICIPANT, {
     refetchQueries: [{
       query: memberQueryType,
       variables: { id }

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { Link as RouterLink } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -246,20 +246,24 @@ const NavBar = ({ location }) => {
   prevPath.current = path
   const { workspaceId, projectId, courseId } = Object.assign({}, ...path)
 
+  const skipProjectQuery = !loggedIn || user.role < Role.STAFF || !projectId
+  const skipWorkspaceQuery = !loggedIn || !workspaceId
+  const skipCourseQuery = !loggedIn || !courseId
+
   const projectQuery = useQuery(PROJECT_BY_ID, {
-    skip: !loggedIn || user.role < Role.STAFF || !projectId,
+    skip: skipProjectQuery,
     variables: {
       id: projectId
     }
   })
   const workspaceQuery = useQuery(WORKSPACE_BY_ID, {
-    skip: !loggedIn || !workspaceId,
+    skip: skipWorkspaceQuery,
     variables: {
       id: workspaceId
     }
   })
   const courseQuery = useQuery(COURSE_BY_ID, {
-    skip: !loggedIn || !courseId,
+    skip: skipCourseQuery,
     variables: {
       id: courseId
     }
@@ -270,25 +274,25 @@ const NavBar = ({ location }) => {
   </div>
   const getBreadcrumb = type => path.find(p => p.type === type)
 
-  if (projectQuery.data) {
+  if (!skipProjectQuery) {
     getBreadcrumb('project').name = projectQuery.error
       ? 'Project not found'
-      : projectQuery.loading || !projectQuery.data.projectById
+      : projectQuery.loading
         ? breadcrumbLoadingSpinner
         : `Project: ${projectQuery.data.projectById.name}`
   }
-  if (workspaceQuery.data) {
+  if (!skipWorkspaceQuery) {
     const ws = getBreadcrumb('workspace')
     ws.name = workspaceQuery.error
       ? `${ws.name} not found`
-      : workspaceQuery.loading && !workspaceQuery.data.workspaceById
+      : workspaceQuery.loading
         ? breadcrumbLoadingSpinner
         : `${ws.name}: ${workspaceQuery.data.workspaceById.name}`
   }
-  if (courseQuery.data) {
+  if (!skipCourseQuery) {
     getBreadcrumb('course').name = courseQuery.error
       ? 'Course not found'
-      : courseQuery.loading || !courseQuery.data.courseById
+      : courseQuery.loading
         ? breadcrumbLoadingSpinner
         : `Course: ${courseQuery.data.courseById.name}`
   }

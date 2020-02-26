@@ -3,7 +3,7 @@ import {
   Dialog as MuiDialog, DialogActions, DialogContent, DialogContentText,
   DialogTitle, FormControlLabel, Button, Checkbox, FormControl
 } from '@material-ui/core'
-import { useApolloClient } from 'react-apollo-hooks'
+import { useApolloClient } from '@apollo/react-hooks'
 
 import { useLoginStateValue } from '../../lib/store'
 import introContent from '../../static/introContent'
@@ -94,7 +94,7 @@ const IntroDialog = ({ contextRef }) => {
     let trimmedCurrView = array[array.length - 1]
     trimmedCurrView = trimmedCurrView.slice(0, -1)
 
-    const hasSeenGuide = user?.seenGuides?.find(intro => {
+    const hasSeenGuide = user?.seenGuides.find(intro => {
       const [view, guide] = intro.split('.')
       return view === trimmedCurrView && guide === currentGuide
     })

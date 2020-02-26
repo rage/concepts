@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { useEditTemplateDialog, useCreateTemplateDialog } from '../../dialogs/project'
 import { useShareDialog } from '../../dialogs/sharing'
@@ -12,10 +12,10 @@ const TemplateList = ({ templateWorkspaces, projectId, activeTemplate, urlPrefix
   const openEditDialog = useEditTemplateDialog(projectId)
   const openCreateDialog = useCreateTemplateDialog(projectId)
   const openShareDialog = useShareDialog('workspace')
-  const setActiveTemplate = useMutation(SET_ACTIVE_TEMPLATE, {
+  const [setActiveTemplate] = useMutation(SET_ACTIVE_TEMPLATE, {
     update: cache.updateActiveTemplate(projectId)
   })
-  const deleteWorkspace = useMutation(DELETE_TEMPLATE_WORKSPACE, {
+  const [deleteWorkspace] = useMutation(DELETE_TEMPLATE_WORKSPACE, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }

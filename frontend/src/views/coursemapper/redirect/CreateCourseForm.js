@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Container, Button, TextField, Typography, FormHelperText } from '@material-ui/core'
 
@@ -35,7 +35,7 @@ const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
   const [name, setName] = useState('')
   const [error, setError] = useState(false)
 
-  const createCourse = useMutation(CREATE_COURSE, {
+  const [createCourse] = useMutation(CREATE_COURSE, {
     update: cache.createCourseUpdate(workspaceId)
   })
 

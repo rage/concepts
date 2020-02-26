@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
@@ -182,7 +182,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     update: cache.deleteConceptLinkUpdate()
   })
 
-  const updateConceptLink = useMutation(UPDATE_CONCEPT_LINK)
+  const [updateConceptLink] = useMutation(UPDATE_CONCEPT_LINK)
 
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId, workspaceId }
@@ -393,7 +393,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const courseConcepts = courseQuery.data.courseById?.concepts
+  const courseConcepts = courseQuery.data?.courseById.concepts
   useEffect(() => {
     if (!courseConcepts || selected.current.size === 0) {
       return
@@ -611,7 +611,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
 
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
-  } else if (!courseQuery.data.courseById) {
+  } else if (courseQuery.loading) {
     return <LoadingBar id='course-view' />
   }
 

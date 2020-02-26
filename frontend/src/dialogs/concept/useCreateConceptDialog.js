@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { CREATE_CONCEPT } from '../../graphql/Mutation'
 import { useDialog } from '../DialogProvider'
@@ -14,7 +14,7 @@ const useCreateConceptDialog = (workspaceId, isStaff, defaultLevel = 'CONCEPT') 
     variables: { id: workspaceId }
   })
 
-  const createConcept = useMutation(CREATE_CONCEPT, {
+  const [createConcept] = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
 

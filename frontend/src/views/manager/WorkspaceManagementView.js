@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { Typography, Tabs, Tab, AppBar } from '@material-ui/core'
 
 import { useMessageStateValue } from '../../lib/store'
@@ -88,17 +88,17 @@ const CoursePanel = ({ workspaceId, workspaceQuery, focusedCourse, commons = fal
   const [level, setLevel] = useState('OBJECTIVE')
   const [, messageDispatch] = useMessageStateValue()
 
-  const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
-  const createConcept = useMutation(CREATE_CONCEPT, {
+  const [updateCourse] = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
+  const [createConcept] = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
-  const createConceptFromCommon = useMutation(CREATE_CONCEPT_FROM_COMMON, {
+  const [createConceptFromCommon] = useMutation(CREATE_CONCEPT_FROM_COMMON, {
     update: cache.createConceptUpdate(workspaceId)
   })
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
+  const [updateConcept] = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
+  const [deleteConcept] = useMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate(workspaceId)
   })
 
@@ -163,12 +163,12 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
     variables: { id: workspaceId }
   })
 
-  const updateWorkspace = useMutation(UPDATE_WORKSPACE, {
+  const [updateWorkspace] = useMutation(UPDATE_WORKSPACE, {
     update: cache.updateWorkspaceUpdate(workspaceId)
   })
-  const createCourse = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
-  const updateCourse = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
-  const deleteCourse = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
+  const [createCourse] = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
+  const [updateCourse] = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
+  const [deleteCourse] = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
 
   if (workspaceQuery.loading) {
     return <LoadingBar id='workspace-management' />

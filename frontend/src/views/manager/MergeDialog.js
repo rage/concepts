@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import {
   TextField, Button, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText
 } from '@material-ui/core'
@@ -73,7 +73,7 @@ const MergeDialog = ({ workspace, courseId, conceptIds, open, close }) => {
     tags: null
   })
 
-  const doMerge = useMutation(MERGE_CONCEPTS, {
+  const [doMerge] = useMutation(MERGE_CONCEPTS, {
     refetchQueries: [{
       query: WORKSPACE_BY_ID,
       variables: {

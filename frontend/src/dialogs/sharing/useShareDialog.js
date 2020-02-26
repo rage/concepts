@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { Privilege } from '../../lib/permissions'
 import {
@@ -36,7 +36,7 @@ const useShareDialog = (type, title, text) => {
     }
   })
 
-  const createShareLink = useMutation(mutationForType, {
+  const [createShareLink] = useMutation(mutationForType, {
     refetchQueries: [
       { query: targetsForUser },
       {
@@ -48,7 +48,7 @@ const useShareDialog = (type, title, text) => {
     ]
   })
 
-  const deleteShareLink = useMutation(DELETE_SHARE_LINK)
+  const [deleteShareLink] = useMutation(DELETE_SHARE_LINK)
 
   const target = targetQuery.data ? targetQuery.data[`${type}ById`] : null
   const existingToken = target && target.tokens

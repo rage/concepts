@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { UPDATE_COURSE } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
@@ -14,7 +14,7 @@ const useEditCourseDialog = (workspaceId, isStaff) => {
     variables: { id: workspaceId }
   })
 
-  const updateCourse = useMutation(UPDATE_COURSE, {
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
     update: cache.updateCourseUpdate(workspaceId)
   })
 

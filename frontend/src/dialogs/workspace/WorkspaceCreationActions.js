@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Typography, CircularProgress } from '@material-ui/core'
 import Ajv from 'ajv'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import cache from '../../apollo/update'
 import schema from '../../static/port.schema'
@@ -18,7 +18,7 @@ const WorkspaceCreationActions = ({ ctx, handleSubmit, submitDisabled, projectId
   const [fileName, setFileName] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const dataPortingMutation = useMutation(IMPORT_DATA, {
+  const [dataPortingMutation] = useMutation(IMPORT_DATA, {
     update: projectId
       ? cache.jsonTemplatePortUpdate(projectId)
       : cache.jsonPortUpdate

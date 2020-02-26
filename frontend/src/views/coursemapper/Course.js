@@ -5,7 +5,7 @@ import {
   Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon,
   KeyboardArrowUp as CollapseIcon, KeyboardArrowDown as ExpandIcon
 } from '@material-ui/icons'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { Role } from '../../lib/permissions'
 import { Concept } from './concept'
@@ -92,7 +92,7 @@ const Course = ({
     'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspaceId, user.role >= Role.STAFF)
   const course = courseLink.from
-  const updateCourseLink = useMutation(UPDATE_COURSE_LINK, {
+  const [updateCourseLink] = useMutation(UPDATE_COURSE_LINK, {
     update: cache.updateCourseLinkUpdate(workspaceId)
   })
 

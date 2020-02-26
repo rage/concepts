@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { makeStyles, IconButton, Tooltip } from '@material-ui/core'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { HelpOutline as HelpIcon } from '@material-ui/icons'
 
 import { Role } from '../../lib/permissions'
@@ -9,6 +9,7 @@ import WorkspaceList from './WorkspaceList'
 import ProjectList from './ProjectList'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
+import NotFoundView from '../error/NotFoundView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -52,9 +53,10 @@ const UserViewContent = ({ user }) => {
     return () => infoBox.unsetView('home')
   }, [infoBox])
 
-  if (!workspaceQuery.data.workspacesForUser ||
-      (user.role >= Role.STAFF && !projectQuery.data.projectsForUser)) {
+  if (workspaceQuery.loading || (user.role >= Role.STAFF && projectQuery.loading)) {
     return <LoadingBar id='main-view' />
+  } else if (workspaceQuery.error || projectQuery.error) {
+    return <NotFoundView message='Failed to get workspace list' />
   }
 
   return (

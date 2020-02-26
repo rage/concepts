@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { useQuery } from 'react-apollo-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import { IconButton, makeStyles, Menu, MenuItem, Tooltip } from '@material-ui/core'
 import {
   Star as StarIcon, StarBorder as StarBorderIcon, StarHalf as StarHalfIcon
@@ -82,7 +82,7 @@ const MapperLinks = ({
   }
 
   return <div style={{ display: 'contents' }}>
-    {linkQuery.data.linksInCourse?.concepts.map(concept =>
+    {linkQuery.data?.linksInCourse.concepts.map(concept =>
       concept.linksToConcept.map(link => showLink(link) &&
         <ConceptLink
           key={`concept-link-${link.id}`} delay={1}

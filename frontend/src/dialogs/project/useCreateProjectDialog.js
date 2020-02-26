@@ -1,4 +1,4 @@
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { CREATE_PROJECT } from '../../graphql/Mutation'
 import { PROJECTS_FOR_USER } from '../../graphql/Query'
@@ -6,7 +6,7 @@ import { useDialog } from '../DialogProvider'
 
 const useCreateProjectDialog = () => {
   const { openDialog } = useDialog()
-  const createProject = useMutation(CREATE_PROJECT, {
+  const [createProject] = useMutation(CREATE_PROJECT, {
     refetchQueries: [
       { query: PROJECTS_FOR_USER }
     ]

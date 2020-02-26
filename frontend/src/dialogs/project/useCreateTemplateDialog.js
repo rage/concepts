@@ -1,4 +1,4 @@
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 
 import { CREATE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
 import { PROJECT_BY_ID } from '../../graphql/Query'
@@ -7,7 +7,7 @@ import WorkspaceCreationActions from '../workspace/WorkspaceCreationActions'
 
 const useCreateTemplateDialog = projectId => {
   const { openDialog } = useDialog()
-  const createTemplateWorkspace = useMutation(CREATE_TEMPLATE_WORKSPACE, {
+  const [createTemplateWorkspace] = useMutation(CREATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]

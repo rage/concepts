@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
-import { useMutation } from 'react-apollo-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   ListItem, ListItemText, ListItemSecondaryAction, ListItemIcon, Menu, MenuItem, IconButton, Tooltip
@@ -83,11 +83,11 @@ const Concept = ({
 
   const openEditConceptDialog = useEditConceptDialog(workspaceId, user.role >= Role.STAFF)
 
-  const createConceptLink = useMutation(CREATE_CONCEPT_LINK, {
+  const [createConceptLink] = useMutation(CREATE_CONCEPT_LINK, {
     update: cache.createConceptLinkUpdate()
   })
 
-  const deleteConcept = useMutation(DELETE_CONCEPT, {
+  const [deleteConcept] = useMutation(DELETE_CONCEPT, {
     update: cache.deleteConceptUpdate()
   })
 

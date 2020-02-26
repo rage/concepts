@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { WORKSPACE_BY_ID } from '../../graphql/Query'
 import LoadingBar from '../../components/LoadingBar'
@@ -18,11 +18,11 @@ const GoalView = ({ workspaceId }) => {
   const [addingLink, setAddingLink] = useState(null)
   const [menu, setMenu] = useState({ open: false })
 
-  const createGoalLink = useMutation(CREATE_GOAL_LINK, {
+  const [createGoalLink] = useMutation(CREATE_GOAL_LINK, {
     update: cache.createGoalLinkUpdate(workspaceId)
   })
 
-  const deleteGoalLink = useMutation(DELETE_GOAL_LINK, {
+  const [deleteGoalLink] = useMutation(DELETE_GOAL_LINK, {
     update: cache.deleteGoalLinkUpdate(workspaceId)
   })
 

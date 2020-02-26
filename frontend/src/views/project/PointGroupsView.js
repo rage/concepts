@@ -1,7 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField, MenuItem, Tooltip, IconButton } from '@material-ui/core'
-import { useQuery, useMutation } from 'react-apollo-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { ArchiveRounded } from '@material-ui/icons'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
@@ -30,32 +30,32 @@ const PointGroupsView = ({ projectId }) => {
     variables: { id: projectId }
   })
 
-  const createLinkToken = useMutation(CREATE_LINK_TOKEN, {
+  const [createLinkToken] = useMutation(CREATE_LINK_TOKEN, {
     variables: {
       linkType: 'EXPORT_POINTS',
       id: projectId
     }
   })
 
-  const createPointGroup = useMutation(CREATE_POINTGROUP, {
+  const [createPointGroup] = useMutation(CREATE_POINTGROUP, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]
   })
 
-  const updatePointGroup = useMutation(UPDATE_POINTGROUP, {
+  const [updatePointGroup] = useMutation(UPDATE_POINTGROUP, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]
   })
 
-  const deletePointGroup = useMutation(DELETE_POINTGROUP, {
+  const [deletePointGroup] = useMutation(DELETE_POINTGROUP, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]
   })
 
-  const setMainCourse = useMutation(UPDATE_TEMPLATE_WORKSPACE, {
+  const [setMainCourse] = useMutation(UPDATE_TEMPLATE_WORKSPACE, {
     refetchQueries: [
       { query: PROJECT_BY_ID, variables: { id: projectId } }
     ]

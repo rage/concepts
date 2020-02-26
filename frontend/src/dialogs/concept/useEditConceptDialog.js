@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-apollo-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 
 import { UPDATE_CONCEPT } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
@@ -14,7 +14,7 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
     variables: { id: workspaceId }
   })
 
-  const updateConcept = useMutation(UPDATE_CONCEPT, {
+  const [updateConcept] = useMutation(UPDATE_CONCEPT, {
     update: cache.updateConceptUpdate(workspaceId)
   })
 
