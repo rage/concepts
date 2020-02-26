@@ -146,7 +146,7 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
           horizontal: 'right'
         }}>
         {
-          projectQuery.data.projectById && projectQuery.data.projectById.participants.find(p =>
+          projectQuery.data?.projectById.participants.find(p =>
             p.user.id === user.id && Privilege.fromString(p.privilege) === Privilege.OWNER) &&
           <MenuItem aria-label='Share link' onClick={handleShareOpen}>
             <ListItemIcon>

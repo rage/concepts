@@ -9,6 +9,7 @@ import WorkspaceList from './WorkspaceList'
 import ProjectList from './ProjectList'
 import LoadingBar from '../../components/LoadingBar'
 import { useInfoBox } from '../../components/InfoBox'
+import NotFoundView from '../error/NotFoundView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -54,6 +55,8 @@ const UserViewContent = ({ user }) => {
 
   if (workspaceQuery.loading || (user.role >= Role.STAFF && projectQuery.loading)) {
     return <LoadingBar id='main-view' />
+  } else if (workspaceQuery.error || projectQuery.error) {
+    return <NotFoundView message='Failed to get workspace list' />
   }
 
   return (
