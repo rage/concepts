@@ -48,9 +48,9 @@ const useStyles = makeStyles({
     }
   },
   '@keyframes flashWrapper': {
-    '0%': { borderRightColor: 'red' },
-    '25%': { borderRightColor: 'red' },
-    '100%': { borderRightColor: '#f1f1f1' }
+    '0%': { borderLeftColor: 'red' },
+    '25%': { borderLeftColor: 'red' },
+    '100%': { borderLeftColor: '#f1f1f1' }
   }
 })
 
