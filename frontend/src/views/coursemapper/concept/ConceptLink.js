@@ -186,7 +186,7 @@ const useStyles = makeStyles({
 
       borderWidth: '7px',
       borderStyle: 'solid',
-      borderColor: 'transparent transparent transparent #f1f1f1',
+      borderColor: 'transparent transparent transparent rgba(117, 117, 117, 0.1)',
       marginTop: '-7px'
     }
   },

@@ -114,6 +114,8 @@ const Concept = ({
               id: generateTempId(),
               official: false,
               frozen: false,
+              text: '',
+              weight: 100,
               to: {
                 __typename: 'Concept',
                 id: isActive ? concept.id : addingLink.id,
