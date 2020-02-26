@@ -8,7 +8,7 @@ import {
 import { useMutation } from '@apollo/react-hooks'
 
 import { Role } from '../../lib/permissions'
-import { Concept } from './concept'
+import Concept from './Concept'
 import { useLoginStateValue, useMessageStateValue } from '../../lib/store'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'

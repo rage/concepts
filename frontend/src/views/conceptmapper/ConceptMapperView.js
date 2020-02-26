@@ -7,8 +7,8 @@ import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
 import LoadingBar from '../../components/LoadingBar'
+import ConceptLink from '../../components/ConceptLink'
 import ConceptNode from './ConceptNode'
-import { ConceptLink } from '../coursemapper/concept'
 import {
   CREATE_CONCEPT,
   CREATE_CONCEPT_LINK,
@@ -30,6 +30,7 @@ import useCachedMutation from '../../lib/useCachedMutation'
 import { useConfirmDelete } from '../../dialogs/alert'
 import HackySlider from './HackySlider'
 import { LinkMenu } from '../coursemapper/MapperLinks'
+import generateTempId from '../../lib/generateTempId'
 
 const useStyles = makeStyles({
   root: {
@@ -270,14 +271,42 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     }
 
     const finishAddingLink = async to => {
+      const from = addingLinkRef.current
+      setAddingLink(null)
       await createConceptLink({
         variables: {
-          from: addingLinkRef.current,
+          from,
           to,
           workspaceId
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          createConceptLink: {
+            __typename: 'ConceptLink',
+            id: generateTempId(),
+            official: false,
+            frozen: false,
+            text: '',
+            weight: 100,
+            to: {
+              __typename: 'Concept',
+              id: to,
+              course: {
+                __typename: 'Course',
+                id: courseId
+              }
+            },
+            from: {
+              __typename: 'Concept',
+              id: from,
+              course: {
+                __typename: 'Course',
+                id: courseId
+              }
+            }
+          }
         }
       })
-      setAddingLink(null)
     }
 
     const mouseDown = evt => {

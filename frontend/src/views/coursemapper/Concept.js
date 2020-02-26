@@ -9,15 +9,15 @@ import {
   MoreVert as MoreVertIcon, ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon
 } from '@material-ui/icons'
 
-import { Role } from '../../../lib/permissions'
-import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../../graphql/Mutation'
-import cache from '../../../apollo/update'
-import { useMessageStateValue, useLoginStateValue } from '../../../lib/store'
-import { useEditConceptDialog } from '../../../dialogs/concept'
-import { noPropagation } from '../../../lib/eventMiddleware'
-import generateTempId from '../../../lib/generateTempId'
-import ConceptToolTipContent from '../../../components/ConceptTooltipContent'
-import { useConfirmDelete } from '../../../dialogs/alert'
+import { DELETE_CONCEPT, CREATE_CONCEPT_LINK } from '../../graphql/Mutation'
+import cache from '../../apollo/update'
+import { Role } from '../../lib/permissions'
+import { useMessageStateValue, useLoginStateValue } from '../../lib/store'
+import { useEditConceptDialog } from '../../dialogs/concept'
+import { noPropagation } from '../../lib/eventMiddleware'
+import generateTempId from '../../lib/generateTempId'
+import ConceptToolTipContent from '../../components/ConceptTooltipContent'
+import { useConfirmDelete } from '../../dialogs/alert'
 
 const useStyles = makeStyles(theme => ({
   conceptName: {
@@ -101,6 +101,7 @@ const Concept = ({
       setAddingLink(null)
     } else if (addingLink) {
       try {
+        setAddingLink(null)
         const resp = await createConceptLink({
           variables: {
             to: isActive ? concept.id : addingLink.id,
@@ -135,14 +136,7 @@ const Concept = ({
             }
           }
         })
-        // FIXME https://github.com/facebook/react/issues/10231#issuecomment-316644950
-        // CourseMapperView re-render can take 100ms+, so we force-batch these updates.
-        // If/when React starts batching them automatically and removes unstable_batchedUpdates,
-        // this needs to be changed too.
-        ReactDOM.unstable_batchedUpdates(() => {
-          flashLink(resp.data.createConceptLink)
-          setAddingLink(null)
-        })
+        flashLink(resp.data.createConceptLink)
       } catch (err) {
         setAddingLink(null)
         messageDispatch({
