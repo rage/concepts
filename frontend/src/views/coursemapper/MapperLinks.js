@@ -5,7 +5,7 @@ import {
   Star as StarIcon, StarBorder as StarBorderIcon, StarHalf as StarHalfIcon
 } from '@material-ui/icons'
 
-import { ConceptLink } from './concept'
+import ConceptLink from '../../components/ConceptLink'
 import { LINKS_IN_COURSE } from '../../graphql/Query'
 
 const useStyles = makeStyles({
@@ -35,7 +35,8 @@ const useStyles = makeStyles({
   },
   courseTrayOpen: {},
   conceptLinkFlash: {
-    animation: '$flash 3s'
+    animation: '$flash 3s',
+    animationFillMode: 'forwards'
   },
   '@keyframes flash': {
     '0%': { borderTopColor: '#f50057' },
@@ -44,13 +45,14 @@ const useStyles = makeStyles({
   },
   conceptLinkWrapperFlash: {
     '&:before': {
-      animation: '$flashWrapper 3s'
+      animation: '$flashWrapper 3s',
+      animationFillMode: 'forwards'
     }
   },
   '@keyframes flashWrapper': {
     '0%': { borderLeftColor: 'red' },
     '25%': { borderLeftColor: 'red' },
-    '100%': { borderLeftColor: '#f1f1f1' }
+    '100%': { borderLeftColor: 'rgba(117, 117, 117, 0.1)' }
   }
 })
 
@@ -86,7 +88,7 @@ const MapperLinks = ({
       concept.linksToConcept.map(link => showLink(link) &&
         <ConceptLink
           key={`concept-link-${link.id}`} delay={1}
-          active={flashingLink === link.id || (!addingLink && (
+          active={link.id.startsWith('__tmp') || flashingLink === link.id || (!addingLink && (
             focusedConceptIds.has(concept.id) || focusedConceptIds.has(link.from.id)
           ))}
           linkId={link.id} text={link.text} editing={editingLink === link.id} stopEdit={stopEdit}

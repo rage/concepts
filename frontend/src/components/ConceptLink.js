@@ -6,7 +6,7 @@ const defaultAnchor = { x: 0.5, y: 0.5 }
 const container = document.getElementById('link-container')
 
 // TODO turn this into a functional component
-export default class ConceptLink extends Component {
+class ConceptLink extends Component {
   constructor(props) {
     super(props)
     this.fromRef = React.createRef()
@@ -442,3 +442,5 @@ const Line = ({
     </div>
   )
 }
+
+export default ConceptLink

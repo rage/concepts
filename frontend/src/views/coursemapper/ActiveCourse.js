@@ -6,7 +6,7 @@ import {
 import { Edit as EditIcon } from '@material-ui/icons'
 
 import { Role } from '../../lib/permissions'
-import { Concept } from './concept'
+import Concept from './Concept'
 import { useCreateConceptDialog } from '../../dialogs/concept'
 import { useEditCourseDialog } from '../../dialogs/course'
 import { useLoginStateValue } from '../../lib/store'
