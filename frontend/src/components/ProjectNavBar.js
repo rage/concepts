@@ -6,7 +6,8 @@ import {
 } from '@material-ui/core'
 import {
   Shuffle as ShuffleIcon, Delete as DeleteIcon, Edit as EditIcon, Group as GroupIcon,
-  MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon, HelpOutline as HelpIcon
+  MoreVert as MoreVertIcon, Share as ShareIcon, Timelapse as TimelapseIcon, HelpOutline as HelpIcon,
+  Equalizer as EqualizerIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -110,6 +111,11 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
           value='overview'
           label='Project overview'
           icon={<ShuffleIcon />}
+        />
+        <BottomNavigationAction
+          value='statistics'
+          label='Statistics'
+          icon={<EqualizerIcon />}
         />
         <BottomNavigationAction
           value='points'
