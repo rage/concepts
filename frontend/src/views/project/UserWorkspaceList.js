@@ -66,16 +66,17 @@ const InviteOrCloneButton = ({ projectId, activeTemplate }) => {
 
 const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefix }) => {
   const cardHeaderTitle = 'Workspaces by users'
-  let cardHeaderAction
+  let cardHeaderAction = <InviteOrCloneButton
+    projectId={projectId}
+    activeTemplate={activeTemplate}
+  />
 
   if (!activeTemplate) {
     cardHeaderAction = (
       <Tooltip title='You must add an active template before inviting students' placement='bottom'>
-        <div><InviteOrCloneButton projectId={projectId} activeTemplate={activeTemplate} /></div>
+        <div>{cardHeaderAction}</div>
       </Tooltip>
     )
-  } else {
-    cardHeaderAction = <InviteOrCloneButton projectId={projectId} activeTemplate={activeTemplate} />
   }
 
   return <BaseWorkspaceList type={TYPE_USER}
