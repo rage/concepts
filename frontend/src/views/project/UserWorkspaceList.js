@@ -14,7 +14,7 @@ const InviteOrCloneButton = ({ projectId, activeTemplate }) => {
   const infoBox = useInfoBox()
   const openShareDialog = useShareDialog(
     'project',
-    '',
+    'Invite students',
     'Let students clone the active template to contribute towards the mapping.')
   const anchorRef = useRef()
   const [open, setOpen] = useState(false)
