@@ -22,9 +22,9 @@ const useStyles = makeStyles(theme => ({
   },
   statistics: {
     display: 'grid',
-    gridGap: '12px',
+    gridGap: '15px',
     gridTemplate: `"participants  concepts links" 1fr
-                   / 72px 72px 72px`
+                   / 90px 90px 90px`
   },
   participants: {
     gridArea: 'participants'
@@ -47,10 +47,10 @@ const Participants = ({ amount }) => {
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.participants}>
       <Grid item>
-        <PeopleIcon/>
+        <PeopleIcon fontSize="large"/>
       </Grid>
       <Grid item>
-        <Typography variant='h6'>
+        <Typography variant='h5'>
           { amount }
         </Typography>
       </Grid>
@@ -61,15 +61,14 @@ const Participants = ({ amount }) => {
 const Concepts = ({ amount }) => {
   const classes = useStyles()
 
-
   return (
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.concepts}>
       <Grid item>
-        <NoteIcon/>
+        <NoteIcon fontSize="large"/>
       </Grid>
       <Grid item>
-        <Typography variant='h6'>
+        <Typography variant='h5'>
           { amount }
         </Typography>
       </Grid>
@@ -84,10 +83,10 @@ const Links = ({ amount }) => {
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.links}>
       <Grid item>
-        <ShareIcon/>
+        <ShareIcon fontSize="large"/>
       </Grid>
       <Grid item>
-        <Typography variant='h6'>
+        <Typography variant='h5'>
           { amount }
         </Typography>
       </Grid>
@@ -104,7 +103,7 @@ const StatisticsView = ({ projectId }) => {
       <CardContent className={classes.root}>
         <div className={classes.statistics}>
           <Participants amount={220}/>
-          <Concepts amount={12}/> 
+          <Concepts amount={123}/> 
           <Links amount={358}/>
         </div>
         <div className={classes.graph}>
