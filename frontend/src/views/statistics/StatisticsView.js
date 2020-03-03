@@ -1,5 +1,9 @@
 import React from 'react'
-import { Grid, Typography, Card, CardContent, CardHeader } from '@material-ui/core'
+import { Grid, Typography, Card, CardContent } from '@material-ui/core'
+import LoadingBar from '../../components/LoadingBar'
+import NotFoundView from '../error/NotFoundView'
+import { useQuery } from '@apollo/react-hooks'
+import { PROJECT_BY_ID } from '../../graphql/Query'
 import { makeStyles } from '@material-ui/core/styles'
 import { 
   People as PeopleIcon, 
@@ -96,6 +100,16 @@ const Links = ({ amount }) => {
 
 const StatisticsView = ({ projectId }) => {
   const classes = useStyles()
+
+  const projectQuery = useQuery(PROJECT_BY_ID, {
+    variables: { id: projectId }
+  })
+
+  if (projectQuery.loading) {
+    return <LoadingBar id='project-view' />
+  } else if (projectQuery.error) {
+    return <NotFoundView message='Project not found' />
+  }
 
   return (
     <Card elevation={0} className={classes.cardStyle}>
