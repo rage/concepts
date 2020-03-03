@@ -99,7 +99,6 @@ const StatisticsView = ({ projectId }) => {
 
   return (
     <Card elevation={0} className={classes.cardStyle}>
-      <CardHeader title="Statistics"/>
       <CardContent className={classes.root}>
         <div className={classes.statistics}>
           <Participants amount={220}/>
