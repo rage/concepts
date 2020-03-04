@@ -56,9 +56,24 @@ mutation setActiveTemplate($projectId: ID!, $workspaceId: ID!) {
 }
 `
 
+const PROMOTE_MERGE = gql`
+mutation promoteMerge($projectId: ID!, $workspaceId: ID!) {
+  promoteMerge(projectId: $projectId, workspaceId: $workspaceId) {
+    id
+    asMerge {
+      id
+    }
+    asTemplate {
+      id
+    }
+  }
+}
+`
+
 export {
   CREATE_PROJECT,
   UPDATE_PROJECT,
   DELETE_PROJECT,
-  SET_ACTIVE_TEMPLATE
+  SET_ACTIVE_TEMPLATE,
+  PROMOTE_MERGE
 }

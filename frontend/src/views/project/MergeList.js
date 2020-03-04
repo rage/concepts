@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { Button, Tooltip } from '@material-ui/core'
 
 import { PROJECT_BY_ID } from '../../graphql/Query'
-import { DELETE_WORKSPACE, MERGE_PROJECT } from '../../graphql/Mutation'
+import { DELETE_WORKSPACE, MERGE_PROJECT, PROMOTE_MERGE } from '../../graphql/Mutation'
 import { useShareDialog } from '../../dialogs/sharing'
 import { useEditWorkspaceDialog } from '../../dialogs/workspace'
 import BaseWorkspaceList, { TYPE_MERGE } from '../../components/BaseWorkspaceList'
@@ -20,6 +20,12 @@ const MergeList = ({ mergeWorkspaces, canMerge, projectId, activeTemplate, urlPr
     }]
   })
   const [merge] = useMutation(MERGE_PROJECT, {
+    refetchQueries: [{
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
+    }]
+  })
+  const [promoteMerge] = useMutation(PROMOTE_MERGE, {
     refetchQueries: [{
       query: PROJECT_BY_ID,
       variables: { id: projectId }
@@ -50,7 +56,7 @@ const MergeList = ({ mergeWorkspaces, canMerge, projectId, activeTemplate, urlPr
     workspaces={mergeWorkspaces} urlPrefix={urlPrefix} activeTemplate={activeTemplate}
     projectId={projectId} openEditDialog={openEditDialog} openShareDialog={openShareDialog}
     deleteWorkspace={deleteWorkspace} cardHeaderTitle={cardHeaderTitle}
-    cardHeaderAction={cardHeaderAction}
+    cardHeaderAction={cardHeaderAction} promoteMerge={promoteMerge}
   />
 }
 

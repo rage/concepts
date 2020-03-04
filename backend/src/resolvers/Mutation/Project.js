@@ -60,3 +60,24 @@ export const setActiveTemplate = async (root, args, context) => {
     }
   })
 }
+
+export const promoteMerge = async (root, args, context) => {
+  await checkAccess(context, {
+    minimumRole: Role.STAFF,
+    minimumPrivilege: Privilege.EDIT,
+    projectId: args.projectId
+  })
+
+  const parentTemplate = await context.prisma.workspace({ id: args.workspaceId }).asMerge()
+  if (parentTemplate?.id !== args.projectId) {
+    throw new ForbiddenError('Access denied')
+  }
+
+  return await context.prisma.updateWorkspace({
+    where: { id: args.workspaceId },
+    data: {
+      asMerge: { disconnect: true },
+      asTemplate: { connect: { id: args.projectId } }
+    }
+  })
+}
