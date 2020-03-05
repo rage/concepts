@@ -11,6 +11,7 @@ type Query {
   projectsForUser: [ProjectParticipant!]!
   projectById(id: ID!): Project!
   limitedProjectById(id: ID!): LimitedProject!
+  projectStatistics(id: ID!): String!
 
   # Workspace queries
   allWorkspaces: [Workspace!]!

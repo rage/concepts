@@ -12,6 +12,43 @@ query($id: ID!) {
 }
 `
 
+const statisticsQuery = `
+query($id: ID!) {
+  project(where: { id: $id }) {
+    activeTemplate {
+      id
+      courses {
+        id
+        concepts {
+          id
+          name
+          level
+        }
+      }
+      conceptLinks {
+        id
+      }
+      participants {
+        id
+      }
+    }
+    workspaces {
+      id
+      concepts {
+        id
+        level
+      }
+      conceptLinks {
+        id
+      }
+      participants {
+        id
+      }
+    }
+  }
+}
+`
+
 export const allProjects = async (root, args, context) => {
   await checkAccess(context, { minimumRole: Role.ADMIN })
   return await context.prisma.projects()
@@ -42,6 +79,50 @@ export const projectById = async (root, args, context) => {
   return await context.prisma.project({
     id: args.id
   })
+}
+
+export const projectStatistics = async (root, args, context) => {
+  await checkAccess(context, {
+    minimumRole: Role.STAFF,
+    minimumPrivilege: Privilege.VIEW,
+    projectId: args.id
+  })
+  
+  const res = await context.prisma.$graphql(statisticsQuery, {
+    id: args.id
+  })
+
+  const { activeTemplate, workspaces } = res.project
+  const existingConcepts = activeTemplate.courses.flatMap(course => course.concepts.map(concept => concept.id))
+  const existingLinks = activeTemplate.conceptLinks.map(link => link.id)
+  const countedParticipants = activeTemplate.participants.map(participant => participant.id)
+
+  const statistics = {
+    'links': 0,
+    'concepts': 0,
+    'participants': countedParticipants.length
+  }
+
+  for (const workspace of workspaces) {
+    for (const concept of workspace.concepts) {
+      if (!existingConcepts.includes(concept.id)) {
+        statistics.concepts++
+      }
+    }
+    for (const link of workspace.conceptLinks) {
+      if (!existingLinks.includes(link.id)) {
+        statistics.links++
+      }
+    }
+    for (const participant of workspace.participants) {
+      if(!countedParticipants.includes(participant.id)) {
+        statistics.participants++
+        countedParticipants.push(participant.id)
+      }
+    }
+  }
+
+  return JSON.stringify(statistics)
 }
 
 export const projectsForUser = async (root, args, context) => {
