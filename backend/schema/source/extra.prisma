@@ -74,7 +74,7 @@ type Mutation {
   createObjectiveLink(objectiveId: ID!, courseId: ID!, workspaceId: ID!, text: String, weight: Int): ObjectiveLink!
   updateObjectiveLink(id: ID!, text: String, weight: Int): ObjectiveLink!
   deleteObjectiveLink(id: ID!): DeletedGoalLinkItem!
-  
+
   # Project mutations
   createProject(name: String!): Project!
   updateProject(id: ID!, name: String!): Project!
@@ -113,6 +113,7 @@ type Mutation {
   # Merging
   mergeWorkspaces(projectId: ID!): Workspace!
   mergeConcepts(workspaceId: ID!, courseId: ID!, conceptIds: [ID!]!, name: String, description: String, official: Boolean, frozen: Boolean, tags: [TagInput!]): Concept!
+  promoteMerge(projectId: ID!, workspaceId: ID!): Workspace!
 }
 
 type Subscription {

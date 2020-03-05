@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
-  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked
+  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked, ArrowUpward as UpIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -61,7 +61,7 @@ const TYPE_NAMES = {
 const BaseWorkspaceList = ({
   type, workspaces, activeTemplate, projectId, urlPrefix,
   openCreateDialog, openEditDialog, openShareDialog, cardHeaderAction, cardHeaderTitle,
-  deleteWorkspace, setActiveTemplate, style
+  deleteWorkspace, setActiveTemplate, promoteMerge, style
 }) => {
   const classes = useStyles()
   const { history } = useRouter()
@@ -211,6 +211,23 @@ This will change which template is cloned by users.`,
     }
   }
 
+  const handlePromoteMerge = async () => {
+    handleMenuClose()
+    try {
+      await promoteMerge({
+        variables: {
+          projectId,
+          workspaceId: menu.workspace.id
+        }
+      })
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
+  }
+
   const handleNavigateManager = (workspaceId) => {
     history.push(`${urlPrefix}/${workspaceId}/manager`)
   }
@@ -298,7 +315,7 @@ This will change which template is cloned by users.`,
             Share link
           </MenuItem>
         }
-        {type !== TYPE_USER && type === TYPE_TEMPLATE &&
+        {type === TYPE_TEMPLATE &&
           <MenuItem onClick={handleSetActive} disabled={isActiveTemplate}>
             <ListItemIcon>
               {isActiveTemplate
@@ -307,6 +324,14 @@ This will change which template is cloned by users.`,
               }
             </ListItemIcon>
             {!isActiveTemplate ? 'Set as' : 'Is'} active
+          </MenuItem>
+        }
+        {type === TYPE_MERGE &&
+          <MenuItem onClick={handlePromoteMerge}>
+            <ListItemIcon>
+              <UpIcon />
+            </ListItemIcon>
+            Promote to template
           </MenuItem>
         }
         {type !== TYPE_USER &&
