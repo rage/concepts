@@ -31,6 +31,9 @@ query($id : ID!) {
       conceptLinks {
         official
         frozen
+        weight
+        count
+        text
         createdBy {
           id
         }
@@ -56,6 +59,9 @@ query($id : ID!) {
       courseLinks {
         official
         frozen
+        weight
+        count
+        text
         createdBy {
           id
         }
@@ -300,72 +306,60 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
       }))
     },
     commonConcepts: {
-      connect: templateWorkspace.commonConcepts.map(concept => ({
-        id: makeNewId(concept.id),
-        name: concept.name,
-        description: concept.description,
-        official: concept.official,
+      connect: templateWorkspace.commonConcepts.map(({ id, tags, createdBy, ...rest }) => ({
+        ...rest,
+        id: makeNewId(id),
         frozen: true,
-        tags: { connect: concept.tags.map(tag => ({ id: makeNewId(tag.id) })) },
-        createdBy: { connect: { id: concept.createdBy.id } },
+        tags: { connect: tags.map(tag => ({ id: makeNewId(tag.id) })) },
+        createdBy: { connect: { id: createdBy.id } },
         workspace: { connect: { id: workspaceId } },
-        sourceConcept: { connect: { id: concept.id } }
+        sourceConcept: { connect: { id } }
       }))
     },
     courses: {
-      create: templateWorkspace.courses.map(course => ({
-        id: makeNewId(course.id),
-        name: course.name,
-        official: course.official,
+      create: templateWorkspace.courses.map(({
+        id, concepts, createdBy, tags, conceptOrder, objectiveOrder, ...rest
+      }) => ({
+        ...rest,
+        id: makeNewId(id),
         frozen: true,
-        createdBy: { connect: { id: course.createdBy.id } },
-        sourceCourse: { connect: { id: course.id } },
-        tags: { connect: course.tags.map(tag => ({ id: makeNewId(tag.id) })) },
-        conceptOrder:
-          isAutomaticSorting(course.conceptOrder)
-            ? { set: course.conceptOrder }
-            : { set: course.conceptOrder.map(makeNewId) },
-        objectiveOrder:
-          isAutomaticSorting(course.objectiveOrder)
-            ? { set: course.objectiveOrder }
-            : { set: course.objectiveOrder.map(makeNewId) },
+        createdBy: { connect: { id: createdBy.id } },
+        sourceCourse: { connect: { id } },
+        tags: { connect: tags.map(tag => ({ id: makeNewId(tag.id) })) },
+        conceptOrder: {
+          set: isAutomaticSorting(conceptOrder) ? conceptOrder : conceptOrder.map(makeNewId),
+        },
+        objectiveOrder: {
+          set: isAutomaticSorting(objectiveOrder) ? objectiveOrder : objectiveOrder.map(makeNewId)
+        },
         concepts: {
-          create: course.concepts.map(concept => ({
-            id: makeNewId(concept.id),
-            name: concept.name,
-            description: concept.description,
-            official: concept.official,
+          create: concepts.map(({ id, tags, sourceCommon, createdBy, ...rest }) => ({
+            ...rest,
+            id: makeNewId(id),
             frozen: true,
-            tags: { connect: concept.tags.map(tag => ({ id: makeNewId(tag.id) })) },
-            createdBy: { connect: { id: concept.createdBy.id } },
+            tags: { connect: tags.map(tag => ({ id: makeNewId(tag.id) })) },
+            createdBy: { connect: { id: createdBy.id } },
             workspace: { connect: { id: workspaceId } },
-            sourceConcept: { connect: { id: concept.id } },
-            sourceCommon: concept.sourceCommon
-              && { connect: { id: makeNewId(concept.sourceCommon.id) } }
+            sourceConcept: { connect: { id } },
+            sourceCommon: sourceCommon && { connect: { id: makeNewId(sourceCommon.id) } }
           }))
         }
       }))
     },
     conceptLinks: {
-      create: templateWorkspace.conceptLinks.map(link => ({
-        official: link.official,
-        createdBy: { connect: { id: link.createdBy.id } },
-        frozen: link.frozen,
-        weight: link.weight,
-        count: link.count,
-        from: { connect: { id: makeNewId(link.from.id) } },
-        to: { connect: { id: makeNewId(link.to.id) } }
+      create: templateWorkspace.conceptLinks.map(({ createdBy, from, to, ...rest }) => ({
+        ...rest,
+        createdBy: { connect: { id: createdBy.id } },
+        from: { connect: { id: makeNewId(from.id) } },
+        to: { connect: { id: makeNewId(to.id) } }
       }))
     },
     courseLinks: {
-      create: templateWorkspace.courseLinks.map(link => ({
-        official: link.official,
-        createdBy: { connect: { id: link.createdBy.id } },
-        frozen: link.frozen,
-        weight: link.weight,
-        count: link.count,
-        from: { connect: { id: makeNewId(link.from.id) } },
-        to: { connect: { id: makeNewId(link.to.id) } }
+      create: templateWorkspace.courseLinks.map(({ createdBy, from, to, ...rest }) => ({
+        ...rest,
+        createdBy: { connect: { id: createdBy.id } },
+        from: { connect: { id: makeNewId(from.id) } },
+        to: { connect: { id: makeNewId(to.id) } }
       }))
     }
   })
