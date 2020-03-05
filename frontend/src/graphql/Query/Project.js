@@ -122,10 +122,17 @@ query limitedProjectById($id: ID!) {
 }
 `
 
+const PROJECT_STATISTICS = gql`
+query projectStatistics($id: ID!) {
+  projectStatistics(id: $id)
+}
+`
+
 export {
   PROJECTS_FOR_USER,
   PROJECT_BY_ID,
   PROJECT_BY_ID_MEMBER_INFO,
   PROJECT_BY_ID_TEMPLATES,
-  PEEK_ACTIVE_TEMPLATE
+  PEEK_ACTIVE_TEMPLATE,
+  PROJECT_STATISTICS
 }
