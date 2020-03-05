@@ -264,35 +264,27 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
 
   const workspaceId = makeSecret(25)
   const templateWorkspace = result.project.activeTemplate
-  const makeNewId = (id) => id.substring(0, 13) + workspaceId.substring(13, 25)
+  const makeNewId = id => id.substring(0, 13) + workspaceId.substring(13, 25)
   const isAutomaticSorting = conceptOrder => conceptOrder.length === 1
     && conceptOrder[0].startsWith('__ORDER_BY__')
 
   await Promise.all(templateWorkspace.conceptTags.concat(templateWorkspace.courseTags)
-    .map(tag => context.prisma.createTag({
-      ...tag,
-      id: makeNewId(tag.id)
+    .map(({ id, ...rest }) => context.prisma.createTag({
+      ...rest,
+      id: makeNewId(id)
     })))
 
   const newClonedWorkspace = await context.prisma.createWorkspace({
     id: workspaceId,
     name,
     createdBy: { connect: { id: context.user.id } },
-    courseOrder: {
-      set: templateWorkspace.courseOrder.map(makeNewId)
-    },
-    sourceProject: {
-      connect: { id: projectId }
-    },
-    sourceTemplate: {
-      connect: { id: templateWorkspace.id }
-    },
+    courseOrder: { set: templateWorkspace.courseOrder.map(makeNewId) },
+    sourceProject: { connect: { id: projectId } },
+    sourceTemplate: { connect: { id: templateWorkspace.id } },
     participants: {
       create: [{
         privilege: Privilege.OWNER.toString(),
-        user: {
-          connect: { id: context.user.id }
-        }
+        user: { connect: { id: context.user.id } }
       }]
     },
     courseTags: {
@@ -327,7 +319,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
         sourceCourse: { connect: { id } },
         tags: { connect: tags.map(tag => ({ id: makeNewId(tag.id) })) },
         conceptOrder: {
-          set: isAutomaticSorting(conceptOrder) ? conceptOrder : conceptOrder.map(makeNewId),
+          set: isAutomaticSorting(conceptOrder) ? conceptOrder : conceptOrder.map(makeNewId)
         },
         objectiveOrder: {
           set: isAutomaticSorting(objectiveOrder) ? objectiveOrder : objectiveOrder.map(makeNewId)
