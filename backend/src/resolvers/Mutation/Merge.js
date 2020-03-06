@@ -40,6 +40,7 @@ query($id: ID!) {
               weight
               official
               frozen
+              text
               from {
                 name
                 course {
