@@ -230,12 +230,11 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
     courseLinks: {
       create: Object.entries(courses)
         .flatMap(([toCourse, { links }]) => Object.entries(links)
-          .map(([fromCourse, { text, weight, count }]) => ({
+          .map(([fromCourse, { weight, count }]) => ({
             createdBy: { connect: { id: context.user.id } },
             from: { connect: { id: hash(fromCourse) } },
             to: { connect: { id: hash(toCourse) } },
             weight: Math.round(weight / count),
-            text,
             count
           }))
         )
@@ -244,12 +243,13 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
       create: Object.entries(courses)
         .flatMap(([toCourse, { concepts }]) => Object.entries(concepts)
           .flatMap(([toConcept, { links }]) => Object.entries(links)
-            .map(([fromConcept, { course: fromCourse, weight, count }]) => ({
+            .map(([fromConcept, { course: fromCourse, text, weight, count }]) => ({
               createdBy: { connect: { id: context.user.id } },
               from: { connect: { id: hash(fromCourse, fromConcept) } },
               to: { connect: { id: hash(toCourse, toConcept) } },
               weight: Math.round(weight / count),
-              count
+              count,
+              text
             }))
           )
         )
