@@ -40,6 +40,7 @@ query($id: ID!) {
               weight
               official
               frozen
+              text
               from {
                 name
                 course {
@@ -72,6 +73,7 @@ query($conceptIds: [ID!]!) {
       official
       frozen
       weight
+      text
       count
     }
     linksToConcept {
@@ -82,6 +84,7 @@ query($conceptIds: [ID!]!) {
       official
       frozen
       weight
+      text
       count
     }
     course {
@@ -137,6 +140,8 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
     for (const link of links) {
       const updatedLink = setDefault(merged, link.from.name, {
         course: link.from.course ? link.from.course.name : undefined,
+        // TODO merge conflicting texts?
+        text: link.text,
         weight: 0,
         count: 0
       })
@@ -207,11 +212,14 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
           official,
           createdBy: { connect: { id: context.user.id } },
           concepts: {
-            create: Object.entries(concepts).map(([name, { official, description, count }]) => ({
+            create: Object.entries(concepts).map(([name, {
+              level, official, description, count
+            }]) => ({
               id: hash(courseName, name),
               name,
               description,
               official,
+              level,
               count,
               createdBy: { connect: { id: context.user.id } },
               workspace: { connect: { id: workspaceId } }
@@ -235,12 +243,13 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
       create: Object.entries(courses)
         .flatMap(([toCourse, { concepts }]) => Object.entries(concepts)
           .flatMap(([toConcept, { links }]) => Object.entries(links)
-            .map(([fromConcept, { course: fromCourse, weight, count }]) => ({
+            .map(([fromConcept, { course: fromCourse, text, weight, count }]) => ({
               createdBy: { connect: { id: context.user.id } },
               from: { connect: { id: hash(fromCourse, fromConcept) } },
               to: { connect: { id: hash(toCourse, toConcept) } },
               weight: Math.round(weight / count),
-              count
+              count,
+              text
             }))
           )
         )
