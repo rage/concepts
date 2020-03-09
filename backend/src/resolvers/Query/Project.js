@@ -110,6 +110,7 @@ export const projectStatistics = async (root, args, context) => {
     'concepts': 0,
     'participants': countedParticipants.length,
     'maxPoints': 0,
+    'completedPoints': 0,
     'pointList': {}
   }
 
@@ -117,6 +118,7 @@ export const projectStatistics = async (root, args, context) => {
     statistics.maxPoints += group.maxPoints
     for (const completion of group.completions) {
       let points = Math.min(group.maxPoints, completion.conceptAmount * group.pointsPerConcept)
+      statistics.completedPoints += points
       if (!(points in statistics.pointList)) {
         statistics.pointList[points] = 1
       } else {

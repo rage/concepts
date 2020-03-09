@@ -111,7 +111,14 @@ const StatisticsView = ({ projectId }) => {
     return <NotFoundView message='Project not found' />
   }
 
-  const { participants, concepts, links } = JSON.parse(projectQuery.data.projectStatistics)
+  const { 
+    participants, 
+    concepts, 
+    links, 
+    pointList, 
+    maxPoints,
+    completedPoints
+  } = JSON.parse(projectQuery.data.projectStatistics)
 
   return (
     <Card elevation={0} className={classes.cardStyle}>
