@@ -31,6 +31,13 @@ query($id: ID!) {
       participants {
         id
       }
+      pointGroups {
+        maxPoints
+        pointsPerConcept
+        completions {
+          conceptAmount
+        }
+      }
     }
     workspaces {
       id
@@ -96,11 +103,26 @@ export const projectStatistics = async (root, args, context) => {
   const existingConcepts = activeTemplate.courses.flatMap(course => course.concepts.map(concept => concept.id))
   const existingLinks = activeTemplate.conceptLinks.map(link => link.id)
   const countedParticipants = activeTemplate.participants.map(participant => participant.id)
+  const pointGroups = activeTemplate.pointGroups
 
   const statistics = {
     'links': 0,
     'concepts': 0,
-    'participants': countedParticipants.length
+    'participants': countedParticipants.length,
+    'maxPoints': 0,
+    'pointList': {}
+  }
+
+  for (const group of pointGroups) {
+    statistics.maxPoints += group.maxPoints
+    for (const completion of group.completions) {
+      let points = Math.min(group.maxPoints, completion.conceptAmount * group.pointsPerConcept)
+      if (!(points in statistics.pointList)) {
+        statistics.pointList[points] = 1
+      } else {
+        statistics.pointList[points]++
+      }
+    }
   }
 
   for (const workspace of workspaces) {
