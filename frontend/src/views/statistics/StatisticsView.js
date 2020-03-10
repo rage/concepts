@@ -172,7 +172,7 @@ const StatisticsView = ({ projectId }) => {
     maxPoints,
     completedPoints
   } = JSON.parse(projectQuery.data.projectStatistics)
-  const completionPercentage = (completedPoints / maxPoints) * 100
+  const completionPercentage = (Math.round(completedPoints / maxPoints)) * 100
 
   return (
     <Card elevation={0} className={classes.cardStyle}>
