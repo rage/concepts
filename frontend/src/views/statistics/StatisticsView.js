@@ -8,7 +8,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { 
   People as PeopleIcon, 
   Note as NoteIcon,
-  Share as ShareIcon
+  Share as ShareIcon,
+  CheckCircle as CheckCircleIcon
  } from '@material-ui/icons'
 import Chart from 'chart.js'
 
@@ -28,8 +29,8 @@ const useStyles = makeStyles(theme => ({
   statistics: {
     display: 'grid',
     gridGap: '15px',
-    gridTemplate: `"participants  concepts links" 1fr
-                   / 90px 90px 90px`
+    gridTemplate: `"participants  concepts links completion" 1fr
+                   / 120px 120px 120px 120px`
   },
   participants: {
     gridArea: 'participants'
@@ -42,6 +43,9 @@ const useStyles = makeStyles(theme => ({
   },
   graph: {
     gridArea: 'graph'
+  },
+  completion: {
+    gridArea: 'completion'
   }
 }))
 
@@ -99,6 +103,24 @@ const Links = ({ amount }) => {
   )
 }
 
+const Completion = ({ percentage }) => {
+  const classes = useStyles()
+
+  return (
+    <Grid container direction="row" spacing={1}
+      alignItems="center" className={classes.completion}>
+      <Grid item>
+        <CheckCircleIcon fontSize="large"/>
+      </Grid>
+      <Grid item>
+        <Typography variant='h5'>
+          { percentage }%
+        </Typography>
+      </Grid>
+    </Grid>
+  )
+}
+
 const StatisticsView = ({ projectId }) => {
   const classes = useStyles()
   const graphRef = useRef(null)
@@ -111,9 +133,6 @@ const StatisticsView = ({ projectId }) => {
 
     if (graphRef.current) {
       const { pointList } = JSON.parse(projectQuery.data.projectStatistics)
-      console.log(pointList)
-      console.log("Labels:", Object.keys(pointList))
-      console.log("Data:", Object.values(pointList))
       const settings = {
         type: 'bar',
         data: {
@@ -153,6 +172,7 @@ const StatisticsView = ({ projectId }) => {
     maxPoints,
     completedPoints
   } = JSON.parse(projectQuery.data.projectStatistics)
+  const completionPercentage = (completedPoints / maxPoints) * 100
 
   return (
     <Card elevation={0} className={classes.cardStyle}>
@@ -161,6 +181,7 @@ const StatisticsView = ({ projectId }) => {
           <Participants amount={participants}/>
           <Concepts amount={concepts}/> 
           <Links amount={links}/>
+          <Completion percentage={completionPercentage}/>
         </div>
         <div className={classes.graph}>
           <canvas ref={graphRef}/>
