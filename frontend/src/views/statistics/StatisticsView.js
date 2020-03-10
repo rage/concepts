@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useLayoutEffect } from 'react'
 import { Grid, Typography, Card, CardContent } from '@material-ui/core'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
@@ -10,6 +10,7 @@ import {
   Note as NoteIcon,
   Share as ShareIcon
  } from '@material-ui/icons'
+import Chart from 'chart.js'
 
 const useStyles = makeStyles(theme => ({
   cardStyle: {
@@ -100,10 +101,44 @@ const Links = ({ amount }) => {
 
 const StatisticsView = ({ projectId }) => {
   const classes = useStyles()
+  const graphRef = useRef(null)
 
   const projectQuery = useQuery(PROJECT_STATISTICS, {
     variables: { id: projectId }
   })
+
+  useLayoutEffect(() => {
+
+    if (graphRef.current) {
+      const { pointList } = JSON.parse(projectQuery.data.projectStatistics)
+      console.log(pointList)
+      console.log("Labels:", Object.keys(pointList))
+      console.log("Data:", Object.values(pointList))
+      const settings = {
+        type: 'bar',
+        data: {
+          labels: Object.keys(pointList),
+          datasets: [{
+            display: false,
+            label: 'Completions',
+            data: Object.values(pointList),
+            backgroundColor: 'rgba(0, 0, 100, 0.4)'
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: 'Points gained'
+          },
+          legend: {
+            display: false
+          }
+        }
+      }
+
+      const canvas = new Chart(graphRef.current, settings)
+    }
+  }, [projectQuery.loading])
 
   if (projectQuery.loading) {
     return <LoadingBar id='project-view' />
@@ -114,8 +149,7 @@ const StatisticsView = ({ projectId }) => {
   const { 
     participants, 
     concepts, 
-    links, 
-    pointList, 
+    links,
     maxPoints,
     completedPoints
   } = JSON.parse(projectQuery.data.projectStatistics)
@@ -129,7 +163,7 @@ const StatisticsView = ({ projectId }) => {
           <Links amount={links}/>
         </div>
         <div className={classes.graph}>
-          
+          <canvas ref={graphRef}/>
         </div>
       </CardContent>
     </Card>
