@@ -1,5 +1,5 @@
 import React, { useRef, useLayoutEffect } from 'react'
-import { Grid, Typography, Card, CardContent } from '@material-ui/core'
+import { Grid, Typography, Card, CardContent, Tooltip } from '@material-ui/core'
 import LoadingBar from '../../components/LoadingBar'
 import NotFoundView from '../error/NotFoundView'
 import { useQuery } from '@apollo/react-hooks'
@@ -56,7 +56,9 @@ const Participants = ({ amount }) => {
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.participants}>
       <Grid item>
-        <PeopleIcon fontSize="large"/>
+        <Tooltip title="Participants" arrow placement="bottom">
+          <PeopleIcon fontSize="large"/>
+        </Tooltip>
       </Grid>
       <Grid item>
         <Typography variant='h5'>
@@ -74,7 +76,9 @@ const Concepts = ({ amount }) => {
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.concepts}>
       <Grid item>
-        <NoteIcon fontSize="large"/>
+        <Tooltip title="Concepts created" arrow placement="bottom">
+          <NoteIcon fontSize="large"/>
+        </Tooltip>
       </Grid>
       <Grid item>
         <Typography variant='h5'>
@@ -92,7 +96,9 @@ const Links = ({ amount }) => {
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.links}>
       <Grid item>
-        <ShareIcon fontSize="large"/>
+        <Tooltip title="Links created" arrow placement="bottom">
+          <ShareIcon fontSize="large"/>
+        </Tooltip>
       </Grid>
       <Grid item>
         <Typography variant='h5'>
@@ -110,7 +116,9 @@ const Completion = ({ percentage }) => {
     <Grid container direction="row" spacing={1}
       alignItems="center" className={classes.completion}>
       <Grid item>
-        <CheckCircleIcon fontSize="large"/>
+        <Tooltip title="Completion" arrow placement="bottom">
+          <CheckCircleIcon fontSize="large"/>
+        </Tooltip>
       </Grid>
       <Grid item>
         <Typography variant='h5'>
