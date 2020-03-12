@@ -298,7 +298,7 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
       }))
     },
     commonConcepts: {
-      connect: templateWorkspace.commonConcepts.map(({ id, tags, createdBy, ...rest }) => ({
+      create: templateWorkspace.commonConcepts.map(({ id, tags, createdBy, ...rest }) => ({
         ...rest,
         id: makeNewId(id),
         frozen: true,
