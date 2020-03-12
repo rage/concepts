@@ -138,7 +138,9 @@ export const importData = async (root, { data }, context) => {
             from: { connect: { id: fromConceptId } },
             createdBy: { connect: { id: context.user.id } },
             workspace: { connect: { id: workspace.id } },
-            official: canSetOfficial && Boolean(json.projectId || prerequisiteConcept.official)
+            official: canSetOfficial && Boolean(json.projectId || prerequisiteConcept.official),
+            text: prerequisiteConcept.text,
+            weight: prerequisiteConcept.weight,
           })
         ))
       }
