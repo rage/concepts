@@ -116,7 +116,7 @@ export const projectStatistics = async (root, args, context) => {
   const statistics = {
     links: 0,
     concepts: 0,
-    participants: countedParticipants.length,
+    participants: countedParticipants.size,
     maxPoints: 0,
     completedPoints: 0,
     pointList: {}
