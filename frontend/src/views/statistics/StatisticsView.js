@@ -61,7 +61,7 @@ const Participants = ({ amount }) => {
       </Grid>
       <Grid item>
         <Typography variant='h5'>
-          { amount }
+          {amount}
         </Typography>
       </Grid>
     </Grid>
@@ -80,7 +80,7 @@ const Concepts = ({ amount }) => {
       </Grid>
       <Grid item>
         <Typography variant='h5'>
-          { amount }
+          {amount}
         </Typography>
       </Grid>
     </Grid>
@@ -99,7 +99,7 @@ const Links = ({ amount }) => {
       </Grid>
       <Grid item>
         <Typography variant='h5'>
-          { amount }
+          {amount}
         </Typography>
       </Grid>
     </Grid>
@@ -119,7 +119,7 @@ const Completion = ({ percentage }) => {
       </Grid>
       <Grid item>
         <Typography variant='h5'>
-          { percentage }%
+          {percentage}%
         </Typography>
       </Grid>
     </Grid>
