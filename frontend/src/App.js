@@ -24,6 +24,7 @@ import MembersView from './views/members/MembersView'
 import UserView from './views/user/UserView'
 import ConceptMapperView from './views/conceptmapper/ConceptMapperView'
 import GoalView from './views/goals/GoalView'
+import StatisticsView from './views/statistics/StatisticsView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -92,7 +93,7 @@ const projectRouter = prefix => <>
   <Route exact path={`${prefix}/:id`} render={({ match }) =>
     <Redirect to={`${prefix}/${match.params.id}/overview`} />} />
   <Route
-    exact path={`${prefix}/:id/:page(overview|points|members)`}
+    exact path={`${prefix}/:id/:page(overview|statistics|points|members)`}
     render={({ match: { params: { id, page } } }) =>
       <ProjectNavBar urlPrefix={prefix} projectId={id} page={page} />
     }
@@ -101,6 +102,12 @@ const projectRouter = prefix => <>
     exact path={`${prefix}/:id/overview`}
     render={({ match: { params: { id } } }) =>
       <ProjectView projectId={id} />
+    }
+  />
+  <Route
+    exact path={`${prefix}/:id/statistics`}
+    render={({ match: { params: { id } } }) =>
+      <StatisticsView projectId={id} />
     }
   />
   <Route exact path={`${prefix}/:id/members`} render={({ match: { params: { id } } }) =>
