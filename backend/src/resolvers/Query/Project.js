@@ -95,7 +95,7 @@ export const projectStatistics = async (root, args, context) => {
     minimumPrivilege: Privilege.VIEW,
     projectId: args.id
   })
-  
+
   const res = await context.prisma.$graphql(statisticsQuery, {
     id: args.id
   })
@@ -106,24 +106,26 @@ export const projectStatistics = async (root, args, context) => {
     throw new NotFoundError('No active template set.')
   }
 
-  const existingConcepts = activeTemplate.courses.flatMap(course => course.concepts.map(concept => concept.id))
-  const existingLinks = activeTemplate.conceptLinks.map(link => link.id)
-  const countedParticipants = activeTemplate.participants.map(participant => participant.id)
+  const existingConcepts = new Set(activeTemplate.courses
+    .flatMap(course => course.concepts.map(concept => concept.id)))
+  const existingLinks = new Set(activeTemplate.conceptLinks.map(link => link.id))
+  const countedParticipants = new Set(activeTemplate.participants
+    .map(participant => participant.id))
   const pointGroups = activeTemplate.pointGroups
 
   const statistics = {
-    'links': 0,
-    'concepts': 0,
-    'participants': countedParticipants.length,
-    'maxPoints': 0,
-    'completedPoints': 0,
-    'pointList': {}
+    links: 0,
+    concepts: 0,
+    participants: countedParticipants.length,
+    maxPoints: 0,
+    completedPoints: 0,
+    pointList: {}
   }
 
   for (const group of pointGroups) {
     statistics.maxPoints += group.maxPoints
     for (const completion of group.completions) {
-      let points = Math.min(group.maxPoints, completion.conceptAmount * group.pointsPerConcept)
+      const points = Math.min(group.maxPoints, completion.conceptAmount * group.pointsPerConcept)
       statistics.completedPoints += points
       if (!(points in statistics.pointList)) {
         statistics.pointList[points] = 1
@@ -132,22 +134,23 @@ export const projectStatistics = async (root, args, context) => {
       }
     }
   }
-  statistics.pointList = Object.entries(statistics.pointList).map(([value, amount]) => ({value , amount}))
+  statistics.pointList = Object.entries(statistics.pointList)
+    .map(([value, amount]) => ({ value, amount }))
   for (const workspace of workspaces) {
     for (const concept of workspace.concepts) {
-      if (!existingConcepts.includes(concept.id)) {
+      if (!existingConcepts.has(concept.id)) {
         statistics.concepts++
       }
     }
     for (const link of workspace.conceptLinks) {
-      if (!existingLinks.includes(link.id)) {
+      if (!existingLinks.has(link.id)) {
         statistics.links++
       }
     }
     for (const participant of workspace.participants) {
-      if(!countedParticipants.includes(participant.id)) {
+      if (!countedParticipants.has(participant.id)) {
         statistics.participants++
-        countedParticipants.push(participant.id)
+        countedParticipants.add(participant.id)
       }
     }
   }

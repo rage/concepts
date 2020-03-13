@@ -1,19 +1,17 @@
 import React, { useRef, useLayoutEffect } from 'react'
 import { Grid, Typography, Card, CardContent, Tooltip } from '@material-ui/core'
-import LoadingBar from '../../components/LoadingBar'
-import NotFoundView from '../error/NotFoundView'
 import { useQuery } from '@apollo/react-hooks'
-import { PROJECT_STATISTICS } from '../../graphql/Query'
 import { makeStyles } from '@material-ui/core/styles'
-import { 
-  People as PeopleIcon, 
-  Note as NoteIcon,
-  Share as ShareIcon,
-  CheckCircle as CheckCircleIcon
- } from '@material-ui/icons'
+import {
+  People as PeopleIcon, Note as NoteIcon, Share as ShareIcon, CheckCircle as CheckCircleIcon
+} from '@material-ui/icons'
 import Chart from 'chart.js'
 
-const useStyles = makeStyles(theme => ({
+import { PROJECT_STATISTICS } from '../../graphql/Query'
+import NotFoundView from '../error/NotFoundView'
+import LoadingBar from '../../components/LoadingBar'
+
+const useStyles = makeStyles({
   cardStyle: {
     width: '100%',
     maxWidth: '1280px',
@@ -47,17 +45,18 @@ const useStyles = makeStyles(theme => ({
   completion: {
     gridArea: 'completion'
   }
-}))
+})
 
 const Participants = ({ amount }) => {
   const classes = useStyles()
 
   return (
-    <Grid container direction="row" spacing={1}
-      alignItems="center" className={classes.participants}>
+    <Grid
+      container direction='row' spacing={1} alignItems='center' className={classes.participants}
+    >
       <Grid item>
-        <Tooltip title="Participants" arrow placement="bottom">
-          <PeopleIcon fontSize="large"/>
+        <Tooltip title='Participants' arrow placement='bottom'>
+          <PeopleIcon fontSize='large' />
         </Tooltip>
       </Grid>
       <Grid item>
@@ -73,11 +72,10 @@ const Concepts = ({ amount }) => {
   const classes = useStyles()
 
   return (
-    <Grid container direction="row" spacing={1}
-      alignItems="center" className={classes.concepts}>
+    <Grid container direction='row' spacing={1} alignItems='center' className={classes.concepts}>
       <Grid item>
-        <Tooltip title="Concepts created" arrow placement="bottom">
-          <NoteIcon fontSize="large"/>
+        <Tooltip title='Concepts created' arrow placement='bottom'>
+          <NoteIcon fontSize='large' />
         </Tooltip>
       </Grid>
       <Grid item>
@@ -93,11 +91,10 @@ const Links = ({ amount }) => {
   const classes = useStyles()
 
   return (
-    <Grid container direction="row" spacing={1}
-      alignItems="center" className={classes.links}>
+    <Grid container direction='row' spacing={1} alignItems='center' className={classes.links}>
       <Grid item>
-        <Tooltip title="Links created" arrow placement="bottom">
-          <ShareIcon fontSize="large"/>
+        <Tooltip title='Links created' arrow placement='bottom'>
+          <ShareIcon fontSize='large' />
         </Tooltip>
       </Grid>
       <Grid item>
@@ -113,11 +110,11 @@ const Completion = ({ percentage }) => {
   const classes = useStyles()
 
   return (
-    <Grid container direction="row" spacing={1}
-      alignItems="center" className={classes.completion}>
+    <Grid container direction='row' spacing={1}
+      alignItems='center' className={classes.completion}>
       <Grid item>
-        <Tooltip title="Completion" arrow placement="bottom">
-          <CheckCircleIcon fontSize="large"/>
+        <Tooltip title='Completion' arrow placement='bottom'>
+          <CheckCircleIcon fontSize='large' />
         </Tooltip>
       </Grid>
       <Grid item>
@@ -138,7 +135,6 @@ const StatisticsView = ({ projectId }) => {
   })
 
   useLayoutEffect(() => {
-
     if (graphRef.current) {
       const { pointList } = projectQuery.data.projectStatistics
       const settings = {
@@ -163,7 +159,7 @@ const StatisticsView = ({ projectId }) => {
         }
       }
 
-      const canvas = new Chart(graphRef.current, settings)
+      new Chart(graphRef.current, settings)
     }
   }, [projectQuery.loading])
 
@@ -173,26 +169,26 @@ const StatisticsView = ({ projectId }) => {
     return <NotFoundView message='Project not found' />
   }
 
-  const { 
-    participants, 
-    concepts, 
+  const {
+    participants,
+    concepts,
     links,
     maxPoints,
     completedPoints
   } = projectQuery.data.projectStatistics
-  const completionPercentage = (maxPoints === 0) ? 0 : Math.round((completedPoints / maxPoints) * 100)
+  const completionPercentage = maxPoints === 0 ? 0 : Math.round((completedPoints / maxPoints) * 100)
 
   return (
     <Card elevation={0} className={classes.cardStyle}>
       <CardContent className={classes.root}>
         <div className={classes.statistics}>
-          <Participants amount={participants}/>
-          <Concepts amount={concepts}/> 
-          <Links amount={links}/>
-          <Completion percentage={completionPercentage}/>
+          <Participants amount={participants} />
+          <Concepts amount={concepts} />
+          <Links amount={links} />
+          <Completion percentage={completionPercentage} />
         </div>
         <div className={classes.graph}>
-          <canvas ref={graphRef}/>
+          <canvas ref={graphRef} />
         </div>
       </CardContent>
     </Card>
