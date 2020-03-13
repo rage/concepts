@@ -124,7 +124,17 @@ query limitedProjectById($id: ID!) {
 
 const PROJECT_STATISTICS = gql`
 query projectStatistics($id: ID!) {
-  projectStatistics(id: $id)
+  projectStatistics(id: $id) {
+    links
+    concepts
+    participants
+    maxPoints
+    completedPoints
+    pointList {
+      amount
+      value
+    }
+  }
 }
 `
 

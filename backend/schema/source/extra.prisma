@@ -11,7 +11,7 @@ type Query {
   projectsForUser: [ProjectParticipant!]!
   projectById(id: ID!): Project!
   limitedProjectById(id: ID!): LimitedProject!
-  projectStatistics(id: ID!): String!
+  projectStatistics(id: ID!): Statistics!
 
   # Workspace queries
   allWorkspaces: [Workspace!]!
@@ -163,6 +163,20 @@ type Subscription {
   projectMemberCreated(projectId: ID!): ProjectParticipant!
   projectMemberDeleted(projectId: ID!): ProjectParticipant!
   projectMemberUpdated(projectId: ID!): ProjectParticipant!
+}
+
+type PointTuple {
+  amount: Int!
+  value: Int!
+}
+
+type Statistics {
+  links: Int!
+  concepts: Int!
+  participants: Int!
+  maxPoints: Int!
+  completedPoints: Int!
+  pointList: [PointTuple!]!
 }
 
 type CleanResult {

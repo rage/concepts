@@ -1,4 +1,5 @@
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
+import { NotFoundError } from '../../util/errors'
 
 const studentQuery = `
 query($id: ID!) {
@@ -100,6 +101,11 @@ export const projectStatistics = async (root, args, context) => {
   })
 
   const { activeTemplate, workspaces } = res.project
+
+  if (!activeTemplate) {
+    throw new NotFoundError('No active template set.')
+  }
+
   const existingConcepts = activeTemplate.courses.flatMap(course => course.concepts.map(concept => concept.id))
   const existingLinks = activeTemplate.conceptLinks.map(link => link.id)
   const countedParticipants = activeTemplate.participants.map(participant => participant.id)
@@ -126,7 +132,7 @@ export const projectStatistics = async (root, args, context) => {
       }
     }
   }
-
+  statistics.pointList = Object.entries(statistics.pointList).map(([value, amount]) => ({value , amount}))
   for (const workspace of workspaces) {
     for (const concept of workspace.concepts) {
       if (!existingConcepts.includes(concept.id)) {
@@ -146,7 +152,7 @@ export const projectStatistics = async (root, args, context) => {
     }
   }
 
-  return JSON.stringify(statistics)
+  return statistics
 }
 
 export const projectsForUser = async (root, args, context) => {

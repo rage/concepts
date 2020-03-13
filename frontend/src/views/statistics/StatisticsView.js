@@ -140,15 +140,15 @@ const StatisticsView = ({ projectId }) => {
   useLayoutEffect(() => {
 
     if (graphRef.current) {
-      const { pointList } = JSON.parse(projectQuery.data.projectStatistics)
+      const { pointList } = projectQuery.data.projectStatistics
       const settings = {
         type: 'bar',
         data: {
-          labels: Object.keys(pointList),
+          labels: pointList.map(item => item.value),
           datasets: [{
             display: false,
             label: 'Completions',
-            data: Object.values(pointList),
+            data: pointList.map(item => item.amount),
             backgroundColor: 'rgba(0, 0, 100, 0.4)'
           }]
         },
@@ -179,7 +179,7 @@ const StatisticsView = ({ projectId }) => {
     links,
     maxPoints,
     completedPoints
-  } = JSON.parse(projectQuery.data.projectStatistics)
+  } = projectQuery.data.projectStatistics
   const completionPercentage = (maxPoints === 0) ? 0 : (Math.round(completedPoints / maxPoints)) * 100
 
   return (
