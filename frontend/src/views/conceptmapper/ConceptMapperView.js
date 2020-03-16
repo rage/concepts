@@ -1,8 +1,18 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core/styles'
-import { Menu, MenuItem, Divider, Button, ButtonGroup, Typography } from '@material-ui/core'
+import {
+  Menu,
+  MenuItem,
+  Divider,
+  Button,
+  ButtonGroup,
+  Typography,
+  CircularProgress
+} from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
+import ELK from 'elkjs/lib/elk-api.js'
+import { Worker } from 'elkjs/lib/elk-worker.js'
 
 import { COURSE_BY_ID_WITH_LINKS } from '../../graphql/Query'
 import NotFoundView from '../error/NotFoundView'
@@ -10,12 +20,8 @@ import LoadingBar from '../../components/LoadingBar'
 import ConceptLink from '../../components/ConceptLink'
 import ConceptNode from './ConceptNode'
 import {
-  CREATE_CONCEPT,
-  CREATE_CONCEPT_LINK,
-  DELETE_CONCEPT,
-  DELETE_CONCEPT_LINK,
-  UPDATE_CONCEPT,
-  DELETE_MANY_CONCEPTS, UPDATE_MANY_CONCEPTS, UPDATE_CONCEPT_LINK
+  CREATE_CONCEPT, CREATE_CONCEPT_LINK, DELETE_CONCEPT, DELETE_CONCEPT_LINK,
+  UPDATE_CONCEPT, UPDATE_CONCEPT_LINK, DELETE_MANY_CONCEPTS, UPDATE_MANY_CONCEPTS
 } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import {
@@ -31,6 +37,12 @@ import { useConfirmDelete } from '../../dialogs/alert'
 import HackySlider from './HackySlider'
 import { LinkMenu } from '../coursemapper/MapperLinks'
 import generateTempId from '../../lib/generateTempId'
+
+const elk = new ELK({
+  workerFactory(url) {
+    return new Worker(url)
+  }
+})
 
 const useStyles = makeStyles({
   root: {
@@ -123,6 +135,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [adding, setAdding] = useState(null)
   const [addingLink, setAddingLinkState] = useState(null)
   const [editingLink, setEditingLink] = useState(null)
+  const [layouting, setLayouting] = useState(false)
   const addingLinkRef = useRef()
   const setAddingLink = val => {
     setAddingLinkState(val)
@@ -638,6 +651,30 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const menuAddConcept = useCallback(menuAddNode('CONCEPT'), [menuAddNode])
   const menuAddObjective = useCallback(menuAddNode('OBJECTIVE'), [menuAddNode])
 
+  const resetLayout = useCallback(async () => {
+    setLayouting(true)
+    const res = await elk.layout({
+      id: 'root',
+      layoutOptions: {
+        'elk.algorithm': 'layered'
+      },
+      children: Object.values(concepts.current)
+        .map(({ concept: { id }, width, height }) => ({ id, width, height })),
+      edges: courseQuery.data.courseById.concepts
+        .flatMap(({ linksToConcept, id: toId }) => linksToConcept
+          .map(({ id, from }) => ({ id, sources: [from.id], targets: [toId] })))
+    })
+    await updateManyConcepts({
+      variables: {
+        concepts: res.children.map(({ id, width, height, x, y }) => ({
+          id,
+          position: `${x + 70},${y + 70},${width},${height}`
+        }))
+      }
+    })
+    setLayouting(false)
+  }, [courseQuery])
+
   if (courseQuery.error) {
     return <NotFoundView message='Course not found' />
   } else if (courseQuery.loading) {
@@ -690,6 +727,12 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
       />
       <Button variant='outlined' onClick={resetZoom} className={classes.toolbarButton}>
         Reset zoom
+      </Button>
+      <Button variant='outlined' onClick={resetLayout} className={classes.toolbarButton}>
+        Automatic layout
+        {layouting && <div style={{ display: 'flex' }}>
+          <CircularProgress color='inherit' size={24} />
+        </div>}
       </Button>
       <div style={{ display: 'none' }} ref={toolbar}>
         <Button

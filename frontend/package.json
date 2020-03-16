@@ -27,6 +27,7 @@
     "cytoscape": "^3.9.0",
     "cytoscape-klay": "^3.1.2",
     "cytoscape-popper": "^1.0.4",
+    "elkjs": "^0.6.2",
     "fast-levenshtein": "^2.0.6",
     "graphql": "^14.3.0",
     "graphql-tag": "^2.10.1",
@@ -122,7 +123,9 @@
       "es-react/dev/react.js",
       "es-react/dev/react-dom.js",
       "es-react/dev/react-is.js",
-      "es-react/dev/prop-types.js"
+      "es-react/dev/prop-types.js",
+      "elkjs/lib/elk-api.js",
+      "elkjs/lib/elk-worker.js"
     ]
   }
 }
