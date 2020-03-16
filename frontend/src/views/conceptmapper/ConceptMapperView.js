@@ -656,7 +656,8 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
     const res = await elk.layout({
       id: 'root',
       layoutOptions: {
-        'elk.algorithm': 'layered'
+        'elk.algorithm': 'mrtree',
+        'elk.spacing.nodeNode': 50
       },
       children: Object.values(concepts.current)
         .map(({ concept: { id }, width, height }) => ({ id, width, height })),
