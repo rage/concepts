@@ -663,7 +663,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         .map(({ concept: { id }, width, height }) => ({ id, width, height })),
       edges: courseQuery.data.courseById.concepts
         .flatMap(({ linksToConcept, id: toId }) => linksToConcept
-          .map(({ id, from }) => ({ id, sources: [from.id], targets: [toId] })))
+          .map(({ id, from }) => ({ id, source: from.id, target: toId })))
     })
     await updateManyConcepts({
       variables: {
