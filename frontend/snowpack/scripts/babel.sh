@@ -4,10 +4,12 @@ if [[ "$(basename $(pwd))" == "snowpack" ]]; then
 fi
 
 echo "Compiling JSX files with Babel..."
-./node_modules/.bin/babel $@ -d snowpack/dist/ ./src/ \
+mkdir -p snowpack/dist/
+cd snowpack/dist/
+../../node_modules/.bin/babel $@ -d . ../../src/ \
   --presets @babel/preset-react \
   --plugins @babel/plugin-proposal-optional-chaining \
   --plugins @babel/plugin-proposal-class-properties \
-  --plugins ./node_modules/snowpack/assets/babel-plugin.js \
-  --plugins ./snowpack/babel-index-import.js
-
+  --plugins ../../node_modules/snowpack/assets/babel-plugin.js \
+  --plugins ../babel-index-import.js
+cd ../../

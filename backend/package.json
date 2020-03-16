@@ -23,7 +23,7 @@
     "samlify": "^2.6.1",
     "tmc-client-js": "^0.0.9",
     "xml-crypto": "^1.4.0",
-    "xmldom": "^0.2.1"
+    "xmldom": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
