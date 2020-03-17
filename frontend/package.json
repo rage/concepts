@@ -79,6 +79,9 @@
     "snowpack": "^1.0.5"
   },
   "snowpack": {
+    "installOptions": {
+      "dest": "./snowpack/dist/web_modules"
+    },
     "webDependencies": [
       "@date-io/moment",
       "@material-ui/core",

@@ -13,9 +13,9 @@ yarn link react && yarn link react-dom && yarn link react-is && yarn link prop-t
 yarn
 splock=$(cat snowpack.lock 2>/dev/null)
 shasum=$(sha256sum yarn.lock package.json)
-if [[ "$splock" != "$shasum" ]]; then
+if [[ "$splock" != "$shasum" || ! -f ./snowpack/dist/web_modules/import-map.json ]]; then
 	echo "$shasum" > snowpack.lock
-	./node_modules/.bin/snowpack --dest ./snowpack/dist/web_modules
+	./node_modules/.bin/snowpack
 fi
 cd snowpack/
 # pwd: snowpack
