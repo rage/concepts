@@ -4,8 +4,8 @@
     "@babel/plugin-proposal-optional-chaining",
     "@babel/plugin-proposal-class-properties",
     ["../node_modules/snowpack/assets/babel-plugin.js", {
-      "dir": "dist",
-      "importMap": "web_modules/import-map.json"
+      "dir": "web_modules",
+      "importMap": "../dist/web_modules/import-map.json"
     }],
     "./babel-index-import.js"
   ]
