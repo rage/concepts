@@ -124,6 +124,11 @@ const parseProjectPath = (projectId, path, prefix) => {
       name: 'Clone',
       link: `${prefix}/clone`
     }]
+  case 'statistics':
+    return [{
+      name: 'Statistics',
+      link: `${prefix}/statistics`
+    }]
   case 'workspaces': {
     const link = `${prefix}/workspaces/${path[1]}`
     return [{

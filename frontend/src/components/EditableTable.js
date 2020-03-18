@@ -8,7 +8,7 @@ import {
   Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Done as DoneIcon, Clear as ClearIcon
 } from '@material-ui/icons'
 import { DateTimePicker } from '@material-ui/pickers'
-import moment from 'moment'
+import MomentUtils from '@date-io/moment'
 
 import { useMessageStateValue } from '../lib/store'
 
@@ -67,7 +67,9 @@ const TextEditCell = ({ col, state, setState }) => (
   />
 )
 
-const DateViewCell = ({ value }) => moment(value).format(DATETIME_FORMAT)
+const utils = new MomentUtils()
+
+const DateViewCell = ({ value }) => utils.moment(value).format(DATETIME_FORMAT)
 const DateEditCell = ({ col, state, setState }) => (
   <DateTimePicker
     disablePast
