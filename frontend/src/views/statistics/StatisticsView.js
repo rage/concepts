@@ -137,8 +137,7 @@ const StatisticsView = ({ projectId }) => {
   useLayoutEffect(() => {
     if (graphRef.current) {
       const { pointList } = projectQuery.data.projectStatistics
-      let sortedPointList = pointList.slice(0)
-      sortedPointList.sort((a, b) => a.value - b.value)
+      const sortedPointList = pointList.slice().sort((a, b) => a.value - b.value)
 
       const settings = {
         type: 'bar',
