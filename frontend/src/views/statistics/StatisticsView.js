@@ -137,14 +137,17 @@ const StatisticsView = ({ projectId }) => {
   useLayoutEffect(() => {
     if (graphRef.current) {
       const { pointList } = projectQuery.data.projectStatistics
+      let sortedPointList = pointList.slice(0)
+      sortedPointList.sort((a, b) => a.value - b.value)
+
       const settings = {
         type: 'bar',
         data: {
-          labels: pointList.map(item => item.value),
+          labels: sortedPointList.map(item => item.value),
           datasets: [{
             display: false,
             label: 'Completions',
-            data: pointList.map(item => item.amount),
+            data: sortedPointList.map(item => item.amount),
             backgroundColor: 'rgba(0, 0, 100, 0.4)'
           }]
         },
