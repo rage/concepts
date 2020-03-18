@@ -29,7 +29,7 @@ query($id: ID!) {
       conceptLinks {
         id
       }
-      participants {
+      participants(where: { privilege: CLONE, user: { role: STUDENT } }) {
         id
       }
       pointGroups {
@@ -49,7 +49,7 @@ query($id: ID!) {
       conceptLinks {
         id
       }
-      participants {
+      participants(where: { user: { role: STUDENT } }) {
         id
       }
     }
