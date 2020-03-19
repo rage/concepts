@@ -36,6 +36,8 @@ query($wid: ID!) {
         official
         linksToConcept {
           official
+          text
+          weight
           from {
             name
           }
