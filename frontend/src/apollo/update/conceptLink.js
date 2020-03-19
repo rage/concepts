@@ -5,6 +5,11 @@ import * as objectRecursion from '../../lib/objectRecursion'
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
+const updateConceptLinkUpdate = (workspaceId) => 
+  (store, response) => {
+    // TODO: Implement
+}
+
 const createConceptLinkUpdate = () =>
   (store, response) => {
     try {
@@ -95,6 +100,7 @@ const createConceptLinkRecursiveUpdate = workspaceId => (client, response) => {
 }
 
 export {
+  updateConceptLinkUpdate,
   createConceptLinkUpdate,
   deleteConceptLinkUpdate,
   createConceptLinkRecursiveUpdate,
