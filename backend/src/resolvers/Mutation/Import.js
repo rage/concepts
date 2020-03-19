@@ -2,6 +2,7 @@ import Ajv from 'ajv'
 
 import { checkAccess, Role, Privilege } from '../../util/accessControl'
 import schema from '../../static/port.schema'
+import makeSecret from '../../util/secret'
 
 const validateData = Ajv().compile(schema)
 
@@ -36,6 +37,16 @@ export const importData = async (root, { data }, context) => {
     }
   }
 
+  const courseTags = new Map(json
+    .courses.flatMap(course => course.tags)
+    .concat(json.courseTags)
+    .map(tag => [tag.name, { ...tag, id: makeSecret(25) }]))
+
+  const conceptTags = new Map(json
+    .courses.flatMap(course => course.concepts.flatMap(concept => concept.tags))
+    .concat(json.conceptTags)
+    .map(tag => [tag.name, { ...tag, id: makeSecret(25) }]))
+
   // Create or find workspace
   let workspace
   if (json.workspaceId) {
@@ -59,8 +70,8 @@ export const importData = async (root, { data }, context) => {
           user: { connect: { id: context.user.id } }
         }]
       },
-      courseTags: { create: json.courseTags },
-      conceptTags: { create: json.conceptTags },
+      courseTags: { create: Array.from(courseTags.values()) },
+      conceptTags: { create: Array.from(conceptTags.values()) },
       goalTags: { create: json.goalTags }
     })
   }
@@ -76,7 +87,7 @@ export const importData = async (root, { data }, context) => {
       conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       objectiveOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
       workspace: { connect: { id: workspace.id } },
-      tags: { create: course.tags }
+      tags: { connect: course.tags.map(tag => ({ id: courseTags.get(tag.name).id })) }
     })
 
     const concepts = await Promise.all(course.concepts.map(async concept =>
@@ -89,7 +100,7 @@ export const importData = async (root, { data }, context) => {
         createdBy: { connect: { id: context.user.id } },
         workspace: { connect: { id: workspace.id } },
         course: { connect: { id: courseObj.id } },
-        tags: { create: concept.tags }
+        tags: { connect: concept.tags.map(tag => ({ id: conceptTags.get(tag.name).id })) }
       })
     ))
 
@@ -140,7 +151,7 @@ export const importData = async (root, { data }, context) => {
             workspace: { connect: { id: workspace.id } },
             official: canSetOfficial && Boolean(json.projectId || prerequisiteConcept.official),
             text: prerequisiteConcept.text,
-            weight: prerequisiteConcept.weight,
+            weight: prerequisiteConcept.weight
           })
         ))
       }
