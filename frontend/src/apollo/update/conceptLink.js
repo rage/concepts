@@ -17,7 +17,7 @@ const updateConceptLinkUpdate = () =>
       const concept = dataInStoreCopy.linksInCourse.concepts
         .find(concept => concept.id === updatedConceptLink.to.id)
       
-      if (concept && !includedIn(concept.linksToConcept, updatedConceptLink)) {
+      if (concept) {
         concept.linksToConcept = concept.linksToConcept
           .map(conceptLink => conceptLink.id === updatedConceptLink.id ? updatedConceptLink : conceptLink)
       }
