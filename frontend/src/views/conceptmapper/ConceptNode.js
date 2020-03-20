@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { IconButton } from '@material-ui/core'
+import { IconButton, Tooltip } from '@material-ui/core'
 import { ZoomOutMap } from '@material-ui/icons'
 import { DraggableCore } from 'react-draggable'
 
@@ -280,6 +280,7 @@ const ConceptNode = ({
           position: self.position
         })
       }
+      self.node.style.removeProperty('z-index')
     }
 
     const onDragStart = evt => {
@@ -291,6 +292,8 @@ const ConceptNode = ({
         }
         return false
       }
+      // Always put concepts being dragged at top
+      self.node.style.zIndex = '10'
     }
 
     const startEditing = evt => {
@@ -301,15 +304,17 @@ const ConceptNode = ({
 
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
-        <div
-          ref={node => self.node = node} id={id}
-          className={`${classes.root} ${classes[concept.level.toLowerCase()]} concept-root
+        <Tooltip arrow title={concept.description} enterDelay={750} enterNextDelay={750}>
+          <div
+            ref={node => self.node = node} id={id}
+            className={`${classes.root} ${classes[concept.level.toLowerCase()]} concept-root
             ${selected.current.has(id) ? 'selected' : ''}`}
-          data-concept-id={concept.id} style={positionStyle} onDoubleClick={startEditing}
-          onContextMenu={evt => openMenu('concept', concept.id, self, evt)}
-        >
-          {concept.name}
-        </div>
+            data-concept-id={concept.id} style={positionStyle} onDoubleClick={startEditing}
+            onContextMenu={evt => openMenu('concept', concept.id, self, evt)}
+          >
+            {concept.name}
+          </div>
+        </Tooltip>
       </DraggableCore>
     )
   }
