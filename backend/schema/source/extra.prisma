@@ -167,16 +167,16 @@ type Subscription {
 }
 
 type PointTuple {
+  value: Float!
   amount: Int!
-  value: Int!
 }
 
 type Statistics {
   links: Int!
   concepts: Int!
   participants: Int!
-  maxPoints: Int!
-  completedPoints: Int!
+  maxPoints: Float!
+  completedPoints: Float!
   pointList: [PointTuple!]!
 }
 
