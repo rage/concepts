@@ -13,10 +13,19 @@ import { Courses } from './Courses'
 import { Goals } from './Goals'
 import { useStyles } from './styles'
 
+import {
+  useUpdatingSubscription,
+  useManyUpdatingSubscriptions
+} from '../../apollo/useUpdatingSubscription'
+
 const GoalView = ({ workspaceId }) => {
   const classes = useStyles()
   const [addingLink, setAddingLink] = useState(null)
   const [menu, setMenu] = useState({ open: false })
+
+  useManyUpdatingSubscriptions(['course', 'concept'], ['create', 'delete', 'update'], {
+    variables: { workspaceId }
+  })
 
   const [createGoalLink] = useMutation(CREATE_GOAL_LINK, {
     update: cache.createGoalLinkUpdate(workspaceId)
