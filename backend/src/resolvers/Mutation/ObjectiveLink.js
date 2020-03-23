@@ -5,7 +5,9 @@ import pubsub from '../Subscription/pubsub'
 import { nullShield } from '../../util/errors'
 import * as channels from '../Subscription/channels'
 
-const createObjectiveLink = async(root, { objectiveId, courseId, workspaceId, text, weight }, context) => {
+const createObjectiveLink = async(root, {
+  objectiveId, courseId, workspaceId, text, weight
+}, context) => {
   await checkAccess(context, {
     minimumRole: Role.STAFF,
     minimumPrivilege: Privilege.EDIT,

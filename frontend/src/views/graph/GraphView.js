@@ -188,7 +188,7 @@ const GraphView = ({ workspaceId }) => {
   useManyUpdatingSubscriptions(
     ['course', 'concept'],
     ['create', 'delete', 'update'],
-    { variables: { workspaceId }, postUpdate },
+    { variables: { workspaceId }, postUpdate }
 
   )
 

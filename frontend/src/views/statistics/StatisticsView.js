@@ -178,7 +178,8 @@ const StatisticsView = ({ projectId }) => {
     maxPoints,
     completedPoints
   } = projectQuery.data.projectStatistics
-  const completionPercentage = maxPoints === 0 ? 0 : Math.round((completedPoints / (maxPoints * participants)) * 100)
+  const completionPercentage = maxPoints === 0 ? 0 :
+    Math.round((completedPoints / (maxPoints * participants)) * 100)
 
   return (
     <Card elevation={0} className={classes.cardStyle}>

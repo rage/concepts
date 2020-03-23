@@ -12,9 +12,15 @@ export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => 
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
-  const [createCourse] = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
-  const [updateCourse] = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
-  const [deleteCourse] = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
+  const [createCourse] = useMutation(CREATE_COURSE, {
+    update: cache.createCourseUpdate(workspaceId)
+  })
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
+    update: cache.updateCourseUpdate(workspaceId)
+  })
+  const [deleteCourse] = useMutation(DELETE_COURSE, {
+    update: cache.deleteCourseUpdate(workspaceId)
+  })
 
   return (
     <Card elevation={0} className={`${classes.card} ${classes.courses}`}>

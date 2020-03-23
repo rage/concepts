@@ -88,7 +88,9 @@ const CoursePanel = ({ workspaceId, workspaceQuery, focusedCourse, commons = fal
   const [level, setLevel] = useState('OBJECTIVE')
   const [, messageDispatch] = useMessageStateValue()
 
-  const [updateCourse] = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
+    update: cache.updateCourseUpdate(workspaceId)
+  })
   const [createConcept] = useMutation(CREATE_CONCEPT, {
     update: cache.createConceptUpdate(workspaceId)
   })
@@ -166,9 +168,15 @@ const WorkspaceManagementView = ({ urlPrefix, workspaceId, courseId }) => {
   const [updateWorkspace] = useMutation(UPDATE_WORKSPACE, {
     update: cache.updateWorkspaceUpdate(workspaceId)
   })
-  const [createCourse] = useMutation(CREATE_COURSE, { update: cache.createCourseUpdate(workspaceId) })
-  const [updateCourse] = useMutation(UPDATE_COURSE, { update: cache.updateCourseUpdate(workspaceId) })
-  const [deleteCourse] = useMutation(DELETE_COURSE, { update: cache.deleteCourseUpdate(workspaceId) })
+  const [createCourse] = useMutation(CREATE_COURSE, {
+    update: cache.createCourseUpdate(workspaceId)
+  })
+  const [updateCourse] = useMutation(UPDATE_COURSE, {
+    update: cache.updateCourseUpdate(workspaceId)
+  })
+  const [deleteCourse] = useMutation(DELETE_COURSE, {
+    update: cache.deleteCourseUpdate(workspaceId)
+  })
 
   if (workspaceQuery.loading) {
     return <LoadingBar id='workspace-management' />

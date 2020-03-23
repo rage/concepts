@@ -12,11 +12,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { Courses } from './Courses'
 import { Goals } from './Goals'
 import { useStyles } from './styles'
-
-import {
-  useUpdatingSubscription,
-  useManyUpdatingSubscriptions
-} from '../../apollo/useUpdatingSubscription'
+import { useManyUpdatingSubscriptions } from '../../apollo/useUpdatingSubscription'
 
 const GoalView = ({ workspaceId }) => {
   const classes = useStyles()

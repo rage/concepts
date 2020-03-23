@@ -9,7 +9,7 @@ export async function userDetails(accessToken) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`
       }
-    },
+    }
   )
   return res.data
 }

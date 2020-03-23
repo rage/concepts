@@ -5,7 +5,7 @@ import * as objectRecursion from '../../lib/objectRecursion'
 const includedIn = (set, object) =>
   set.map(p => p.id).includes(object.id)
 
-const updateConceptLinkUpdate = () => 
+const updateConceptLinkUpdate = () =>
   (store, response) => {
     try {
       const updatedConceptLink = response.data.updateConceptLink
@@ -16,12 +16,12 @@ const updateConceptLinkUpdate = () =>
       const dataInStoreCopy = { ...dataInStore }
       const concept = dataInStoreCopy.linksInCourse.concepts
         .find(concept => concept.id === updatedConceptLink.to.id)
-      
+
       if (concept) {
-        concept.linksToConcept = concept.linksToConcept
-          .map(conceptLink => conceptLink.id === updatedConceptLink.id ? updatedConceptLink : conceptLink)
+        concept.linksToConcept = concept.linksToConcept.map(conceptLink =>
+          conceptLink.id === updatedConceptLink.id ? updatedConceptLink : conceptLink)
       }
-  
+
       client.writeQuery({
         query: LINKS_IN_COURSE,
         variables: { courseId: updatedConceptLink.to.course.id },
@@ -30,7 +30,7 @@ const updateConceptLinkUpdate = () =>
     } catch (e) {
       console.error('updateConceptLinkUpdate', e)
     }
-}
+  }
 
 const createConceptLinkUpdate = () =>
   (store, response) => {
