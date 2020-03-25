@@ -1,17 +1,18 @@
-const findStronglyConnectedComponents = (nodes, edges) => {
+const findStronglyConnectedComponents = (nodeMap, edges) => {
   let index = 0
   const stack = []
   const sccs = []
 
-  const nodeMap = new Map(nodes.map(node => [node.data.id, node]))
-  for (const node of nodes) {
+  for (const node of nodeMap.values()) {
     node.tarjan = {
-      successors: []
+      successors: [],
+      edgeMap: new Map()
     }
   }
   for (const edge of edges) {
     const from = nodeMap.get(edge.data.source)
     const to = nodeMap.get(edge.data.target)
+    from.tarjan.edgeMap.set(to.data.id, edge)
     from.tarjan.successors.push(to)
   }
 
@@ -43,7 +44,7 @@ const findStronglyConnectedComponents = (nodes, edges) => {
     }
   }
 
-  for (const node of nodes) {
+  for (const node of nodeMap.values()) {
     if (!node.tarjan.index) {
       strongConnect(node)
     }

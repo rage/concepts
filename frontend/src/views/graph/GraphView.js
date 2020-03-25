@@ -22,7 +22,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import { getTagColor } from '../../dialogs/tagSelectUtils'
-import findStronglyConnectedComponents from "./tarjan"
+import findStronglyConnectedComponents from './tarjan'
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -358,7 +358,18 @@ const GraphView = ({ workspaceId }) => {
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
-    console.log(findStronglyConnectedComponents(cur.conceptNodes, cur.conceptEdges))
+    const nodeMap = new Map(cur.conceptNodes.map(node => [node.data.id, node]))
+    const sccs = findStronglyConnectedComponents(nodeMap, cur.conceptEdges)
+    for (const scc of sccs) {
+      for (const node of scc) {
+        for (const node2 of scc) {
+          const edge = node.tarjan.edgeMap.get(node2.data.id)
+          if (edge) {
+            edge.classes = 'cycle'
+          }
+        }
+      }
+    }
 
     const legendIncludedCourses = cur.conceptNodes
       .map(node => node.data.courseId)
@@ -417,6 +428,15 @@ const GraphView = ({ workspaceId }) => {
             'mid-target-arrow-color': 'data(color)',
             'line-fill': 'linear-gradient',
             'line-gradient-stop-colors': 'data(gradient)'
+          }
+        },
+        {
+          selector: 'edge.cycle',
+          style: {
+            'line-color': '#FF0000',
+            'target-arrow-color': '#FF0000',
+            'mid-target-arrow-color': '#FF0000',
+            'line-fill': 'linear'
           }
         }
       ]
