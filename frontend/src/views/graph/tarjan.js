@@ -29,7 +29,7 @@ const findStronglyConnectedComponents = (nodes, edges) => {
       }
     }
 
-    if (node.lowLink === node.index) {
+    if (node.tarjan.lowLink === node.tarjan.index) {
       const scc = []
       let w
       do {
