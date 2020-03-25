@@ -22,6 +22,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import { getTagColor } from '../../dialogs/tagSelectUtils'
+import findStronglyConnectedComponents from "./tarjan"
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -356,6 +357,8 @@ const GraphView = ({ workspaceId }) => {
       cur.conceptEdges.find(edge =>
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
+
+    console.log(findStronglyConnectedComponents(cur.conceptNodes, cur.conceptEdges))
 
     const legendIncludedCourses = cur.conceptNodes
       .map(node => node.data.courseId)
