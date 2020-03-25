@@ -107,7 +107,7 @@ const options = {
     direction: 'DOWN', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
     /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
     edgeRouting: 'ORTHOGONAL', // Defines how edges are routed (POLYLINE, ORTHOGONAL, SPLINES)
-    edgeSpacingFactor: 2.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
+    edgeSpacingFactor: 1.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
     feedbackEdges: false, // Whether feedback edges should be highlighted by routing around the nodes.
     fixedAlignment: 'NONE', // Tells the BK node placer to use a certain alignment instead of taking the optimal result.  This option should usually be left alone.
     /* NONE Chooses the smallest layout from the four possible candidates.
@@ -133,8 +133,8 @@ const options = {
     randomizationSeed: 1, // Seed used for pseudo-random number generators to control the layout algorithm; 0 means a new seed is generated
     routeSelfLoopInside: false, // Whether a self-loop is routed around or inside its node.
     separateConnectedComponents: true, // Whether each connected component should be processed separately
-    spacing: 35, // Overall setting for the minimal amount of space to be left between objects
-    thoroughness: 12 // How much effort should be spent to produce a nice layout..
+    spacing: 20, // Overall setting for the minimal amount of space to be left between objects
+    thoroughness: 15 // How much effort should be spent to produce a nice layout..
   },
   priority: edge => null // Edges with a non-nil value are skipped when geedy edge cycle breaking is enabled
 }
