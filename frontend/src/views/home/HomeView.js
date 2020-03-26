@@ -6,6 +6,7 @@ import { useLoginStateValue } from '../../lib/store'
 import UserViewContent from './UserViewContent'
 import useRouter from '../../lib/useRouter'
 import Auth from '../../lib/authentication'
+import IntroductionCard from './components/IntroductionCard'
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -18,6 +19,30 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4)
   }
 }))
+
+const INTRODUCTION_CARDS = [
+  {
+    key: "intro-card-001",
+    alt: "No alt set",
+    title: "Concept mapping",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+    imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-manager.png"
+  },
+  {
+    key: "intro-card-002",
+    alt: "No alt set",
+    title: "Crowdsourcing",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+    imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-mapper.png"
+  },
+  {
+    key: "intro-card-003",
+    alt: "Using course mapper",
+    title: "Stucture study plan",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+    imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-graph.png"
+  }
+]
 
 const HomeView = () => {
   const classes = useStyles()
@@ -36,7 +61,7 @@ const HomeView = () => {
 
   return (
     <main className={classes.heroContent}>
-      <Container maxWidth='sm'>
+      <Container>
         <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
           Concepts
         </Typography>
@@ -45,6 +70,20 @@ const HomeView = () => {
           their study plan, while students are able to practice mapping the concepts being taught,
           which boosts learning.
         </Typography>
+        <Grid container direction="row" spacing={2} style={{ flexGrow: 1 }}>
+          {
+            INTRODUCTION_CARDS.map(card => 
+              <Grid item xs={4} key={card.key} >
+                <IntroductionCard 
+                  title={card.title}
+                  description={card.description}
+                  alt={card.alt}
+                  imageSource={card.imageSource} 
+                />
+              </Grid>
+            )
+          }
+        </Grid>
         <div className={classes.heroButtons}>
           <Grid container spacing={2} justify='center'>
             <Grid item>
