@@ -358,8 +358,7 @@ const GraphView = ({ workspaceId }) => {
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
-    const nodeMap = new Map(cur.conceptNodes.map(node => [node.data.id, node]))
-    const sccs = findStronglyConnectedComponents(nodeMap, cur.conceptEdges)
+    const sccs = findStronglyConnectedComponents(cur.conceptNodes, cur.conceptEdges)
     for (const scc of sccs) {
       for (const node of scc) {
         for (const node2 of scc) {
