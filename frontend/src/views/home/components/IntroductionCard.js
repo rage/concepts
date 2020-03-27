@@ -12,11 +12,11 @@ const IntroductionCard = ({ imageSource, alt, title, description }) => (
             component="img"
             alt={ alt }
             title={ alt }
-            height="140"
+            height="220"
             image={ imageSource }
         />
         <CardContent>
-            <Typography gutterBottom variant="h5" component="h3">
+            <Typography gutterBottom variant="h5" component="h4">
                 { title }
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
