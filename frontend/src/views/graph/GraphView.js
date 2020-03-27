@@ -22,6 +22,7 @@ import {
   useUpdatingSubscription
 } from '../../apollo/useUpdatingSubscription'
 import { getTagColor } from '../../dialogs/tagSelectUtils'
+import findStronglyConnectedComponents from './tarjan'
 
 cytoscape.use(klay)
 cytoscape.use(popper)
@@ -107,7 +108,7 @@ const options = {
     direction: 'DOWN', // Overall direction of edges: horizontal (right / left) or vertical (down / up)
     /* UNDEFINED, RIGHT, LEFT, DOWN, UP */
     edgeRouting: 'ORTHOGONAL', // Defines how edges are routed (POLYLINE, ORTHOGONAL, SPLINES)
-    edgeSpacingFactor: 2.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
+    edgeSpacingFactor: 1.5, // Factor by which the object spacing is multiplied to arrive at the minimal spacing between edges.
     feedbackEdges: false, // Whether feedback edges should be highlighted by routing around the nodes.
     fixedAlignment: 'NONE', // Tells the BK node placer to use a certain alignment instead of taking the optimal result.  This option should usually be left alone.
     /* NONE Chooses the smallest layout from the four possible candidates.
@@ -133,8 +134,8 @@ const options = {
     randomizationSeed: 1, // Seed used for pseudo-random number generators to control the layout algorithm; 0 means a new seed is generated
     routeSelfLoopInside: false, // Whether a self-loop is routed around or inside its node.
     separateConnectedComponents: true, // Whether each connected component should be processed separately
-    spacing: 35, // Overall setting for the minimal amount of space to be left between objects
-    thoroughness: 12 // How much effort should be spent to produce a nice layout..
+    spacing: 20, // Overall setting for the minimal amount of space to be left between objects
+    thoroughness: 15 // How much effort should be spent to produce a nice layout..
   },
   priority: edge => null // Edges with a non-nil value are skipped when geedy edge cycle breaking is enabled
 }
@@ -357,6 +358,18 @@ const GraphView = ({ workspaceId }) => {
         edge.data.source === node.data.id || edge.data.target === node.data.id)
     )
 
+    const sccs = findStronglyConnectedComponents(cur.conceptNodes, cur.conceptEdges)
+    for (const scc of sccs) {
+      for (const node of scc) {
+        for (const node2 of scc) {
+          const edge = node.tarjan.edgeMap.get(node2.data.id)
+          if (edge) {
+            edge.classes = 'cycle'
+          }
+        }
+      }
+    }
+
     const legendIncludedCourses = cur.conceptNodes
       .map(node => node.data.courseId)
       .filter((id, index, arr) => arr.indexOf(id) === index)
@@ -414,6 +427,15 @@ const GraphView = ({ workspaceId }) => {
             'mid-target-arrow-color': 'data(color)',
             'line-fill': 'linear-gradient',
             'line-gradient-stop-colors': 'data(gradient)'
+          }
+        },
+        {
+          selector: 'edge.cycle',
+          style: {
+            'line-color': '#FF0000',
+            'target-arrow-color': '#FF0000',
+            'mid-target-arrow-color': '#FF0000',
+            'line-fill': 'linear'
           }
         }
       ]
