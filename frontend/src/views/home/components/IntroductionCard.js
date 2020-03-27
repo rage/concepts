@@ -7,19 +7,19 @@ import {
 } from '@material-ui/core'
 
 const IntroductionCard = ({ imageSource, alt, title, description }) => (
-    <Card style={{ maxWidth: 345, whiteSpace: 'nowrap' }}>
+    <Card style={{ maxWidth: 390 }}>
+        <CardMedia
+            component="img"
+            alt={ alt }
+            title={ alt }
+            height="140"
+            image={ imageSource }
+        />
         <CardContent>
-            <CardMedia
-                component="img"
-                alt={ alt }
-                title={ alt }
-                height="140"
-                image={ imageSource }
-            />
-            <Typography>
+            <Typography gutterBottom variant="h5" component="h3">
                 { title }
             </Typography>
-            <Typography variant="body2" noWrap="true" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="p">
                 { description }
             </Typography>
         </CardContent>

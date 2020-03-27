@@ -23,23 +23,23 @@ const useStyles = makeStyles(theme => ({
 const INTRODUCTION_CARDS = [
   {
     key: "intro-card-001",
-    alt: "No alt set",
+    alt: "Concept manager",
     title: "Concept mapping",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+    description: "Map concepts to courses",
     imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-manager.png"
   },
   {
     key: "intro-card-002",
-    alt: "No alt set",
+    alt: "Course mapper",
     title: "Crowdsourcing",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+    description: "Create course related concepts through crowdsourcing",
     imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-mapper.png"
   },
   {
     key: "intro-card-003",
-    alt: "Using course mapper",
+    alt: "Graph view",
     title: "Stucture study plan",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ",
+    description: "Get a better overview of study plan through mindmap",
     imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-graph.png"
   }
 ]
