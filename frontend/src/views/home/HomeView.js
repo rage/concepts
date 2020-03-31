@@ -6,6 +6,7 @@ import { useLoginStateValue } from '../../lib/store'
 import UserViewContent from './UserViewContent'
 import useRouter from '../../lib/useRouter'
 import Auth from '../../lib/authentication'
+import IntroductionCard from './components/IntroductionCard'
 
 const useStyles = makeStyles(theme => ({
   icon: {
@@ -18,6 +19,30 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4)
   }
 }))
+
+const INTRODUCTION_CARDS = [
+  {
+    key: "intro-card-001",
+    alt: "Concept manager",
+    title: "Concept mapping",
+    description: "Map concepts to courses",
+    imageSource: "res/preview-manager.png"
+  },
+  {
+    key: "intro-card-002",
+    alt: "Course mapper",
+    title: "Crowdsourcing",
+    description: "Create course related concepts through crowdsourcing",
+    imageSource: "res/preview-mapper.png"
+  },
+  {
+    key: "intro-card-003",
+    alt: "Graph view",
+    title: "Stucture study plan",
+    description: "Get a better overview of study plan through mindmap",
+    imageSource: "res/preview-graph.png"
+  }
+]
 
 const HomeView = () => {
   const classes = useStyles()
@@ -36,7 +61,7 @@ const HomeView = () => {
 
   return (
     <main className={classes.heroContent}>
-      <Container maxWidth='sm'>
+      <Container>
         <Typography component='h1' variant='h2' align='center' color='textPrimary' gutterBottom>
           Concepts
         </Typography>
@@ -45,6 +70,20 @@ const HomeView = () => {
           their study plan, while students are able to practice mapping the concepts being taught,
           which boosts learning.
         </Typography>
+        <Grid container direction="row" spacing={2} style={{ flexGrow: 1 }}>
+          {
+            INTRODUCTION_CARDS.map(card => 
+              <Grid item xs={4} key={card.key} >
+                <IntroductionCard 
+                  title={card.title}
+                  description={card.description}
+                  alt={card.alt}
+                  imageSource={card.imageSource} 
+                />
+              </Grid>
+            )
+          }
+        </Grid>
         <div className={classes.heroButtons}>
           <Grid container spacing={2} justify='center'>
             <Grid item>
