@@ -604,10 +604,10 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
-        {cycles && <div style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '8px' }}>
+        {cycles ? <div style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '8px' }}>
           <WarningIcon color='secondary' />
           {cycles} cycles detected!
-        </div>}
+        </div> : null}
         {refresh &&
           <Tooltip
             key='refresh-graph'
