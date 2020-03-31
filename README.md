@@ -11,13 +11,13 @@
 ## Previews
 
 ### Workspace manager
-![Workspace manager preview](preview-manager.png)
+![Workspace manager preview](frontend/public/res/preview-manager.png)
 
 ### Concept mapper
-![Concept mapper preview](preview-mapper.png)
+![Concept mapper preview](frontend/public/res/preview-mapper.png)
 
 ### Concept graph
-![Concept graph preview](preview-graph.png)
+![Concept graph preview](frontend/public/res/preview-graph.png)
 
 ### Workspace heatmap
-![Workspace heatmap preview](preview-heatmap.png)
+![Workspace heatmap preview](frontend/public/res/preview-heatmap.png)

@@ -26,21 +26,21 @@ const INTRODUCTION_CARDS = [
     alt: "Concept manager",
     title: "Concept mapping",
     description: "Map concepts to courses",
-    imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-manager.png"
+    imageSource: "res/preview-manager.png"
   },
   {
     key: "intro-card-002",
     alt: "Course mapper",
     title: "Crowdsourcing",
     description: "Create course related concepts through crowdsourcing",
-    imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-mapper.png"
+    imageSource: "res/preview-mapper.png"
   },
   {
     key: "intro-card-003",
     alt: "Graph view",
     title: "Stucture study plan",
     description: "Get a better overview of study plan through mindmap",
-    imageSource: "https://raw.githubusercontent.com/rage/concepts/master/preview-graph.png"
+    imageSource: "res/preview-graph.png"
   }
 ]
 
