@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
 } from '@material-ui/core'
+import { Warning as WarningIcon } from '@material-ui/icons'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
@@ -45,7 +46,9 @@ const useStyles = makeStyles(theme => ({
     top: '60px',
     left: '10px',
     position: 'absolute',
-    zIndex: 10
+    zIndex: 10,
+    display: 'flex',
+    alignItems: 'center'
   },
   sliderWrapper: {
     top: '110px',
@@ -159,6 +162,7 @@ const GraphView = ({ workspaceId }) => {
   const [nextMode, redraw] = useState('courses')
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
+  const [cycles, setCycles] = useState(0)
   const [edgesMissing, setEdgesMissing] = useState({
     course: false,
     concept: false
@@ -359,6 +363,9 @@ const GraphView = ({ workspaceId }) => {
     )
 
     const sccs = findStronglyConnectedComponents(cur.conceptNodes, cur.conceptEdges)
+    if (cycles !== sccs.length) {
+      setCycles(sccs.length)
+    }
     for (const scc of sccs) {
       for (const node of scc) {
         for (const node2 of scc) {
@@ -597,6 +604,10 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
+        {cycles && <div style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '8px' }}>
+          <WarningIcon color='secondary' />
+          {cycles} cycles detected!
+        </div>}
         {refresh &&
           <Tooltip
             key='refresh-graph'
