@@ -2,13 +2,13 @@ import React, { useRef, useState } from 'react'
 import { Button, Tooltip, ButtonGroup, Menu, MenuItem } from '@material-ui/core'
 import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
 import { useMutation } from '@apollo/react-hooks'
-
+import { PROJECT_BY_ID } from '../../graphql/Query'
 import { Privilege } from '../../lib/permissions'
 import generateName from '../../lib/generateName'
 import { useShareDialog } from '../../dialogs/sharing'
 import BaseWorkspaceList, { TYPE_USER } from '../../components/BaseWorkspaceList'
 import { useInfoBox } from '../../components/InfoBox'
-import { CLONE_TEMPLATE_WORKSPACE } from '../../graphql/Mutation'
+import { CLONE_TEMPLATE_WORKSPACE, DELETE_WORKSPACE } from '../../graphql/Mutation'
 
 const InviteOrCloneButton = ({ projectId, activeTemplate }) => {
   const infoBox = useInfoBox()
@@ -70,6 +70,12 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
     projectId={projectId}
     activeTemplate={activeTemplate}
   />
+  const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
+    refetchQueries: [{
+      query: PROJECT_BY_ID,
+      variables: { id: projectId }
+    }]
+  })
 
   if (!activeTemplate) {
     cardHeaderAction = (
@@ -82,7 +88,7 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
   return <BaseWorkspaceList type={TYPE_USER}
     workspaces={userWorkspaces} urlPrefix={urlPrefix} projectId={projectId}
     activeTemplate={activeTemplate} cardHeaderTitle={cardHeaderTitle}
-    cardHeaderAction={cardHeaderAction}
+    cardHeaderAction={cardHeaderAction} deleteWorkspace={deleteWorkspace}
   />
 }
 
