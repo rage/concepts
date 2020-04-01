@@ -342,14 +342,12 @@ This will change which template is cloned by users.`,
             Edit
           </MenuItem>
         }
-        {type !== TYPE_USER &&
-          <MenuItem aria-label='Delete' onClick={handleDelete}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            Delete
-          </MenuItem>
-        }
+        <MenuItem aria-label='Delete' onClick={handleDelete}>
+          <ListItemIcon>
+            <DeleteIcon />
+          </ListItemIcon>
+          Delete
+        </MenuItem>
       </Menu>
     </Card>
   )
