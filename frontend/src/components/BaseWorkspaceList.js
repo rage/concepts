@@ -12,7 +12,7 @@ import {
 
 import { Privilege } from '../lib/permissions'
 import { exportWorkspace } from './WorkspaceNavBar'
-import { useMessageStateValue } from '../lib/store'
+import { useLoginStateValue, useMessageStateValue } from '../lib/store'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
 import { useConfirm, useConfirmDelete } from '../dialogs/alert'
@@ -65,6 +65,7 @@ const BaseWorkspaceList = ({
 }) => {
   const classes = useStyles()
   const { history } = useRouter()
+  const [{ user }] = useLoginStateValue()
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
   const infoBox = useInfoBox()
@@ -247,6 +248,15 @@ This will change which template is cloned by users.`,
   const isActiveTemplate = (menu.workspace && activeTemplate) &&
     menu.workspace.id === activeTemplate.id
 
+  const secondaryText = workspace => {
+    const id = workspace.participants
+      .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER)?.user?.id
+    if (id === user.id) {
+      return <><strong>You</strong> ({id})</>
+    }
+    return id
+  }
+
   return (
     <Card elevation={0} className={classes.root} style={style}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
@@ -266,8 +276,7 @@ This will change which template is cloned by users.`,
                   {workspace.name}
                 </Typography>
               }
-              secondary={type === TYPE_USER && workspace.participants
-                .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER)?.user?.id}
+              secondary={type === TYPE_USER && secondaryText(workspace)}
             />
 
             <ListItemSecondaryAction>
