@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
-  Menu, MenuItem, ListItemIcon, ListSubheader
+  Menu, MenuItem, ListItemIcon, ListSubheader, Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -291,10 +291,10 @@ This will change which template is cloned by users.`,
 
   let workspaceList
   if (type === TYPE_USER) {
-    const sublists = {}
+    const sublistMap = {}
     for (const ws of workspaces) {
-      if (!sublists.hasOwnProperty(ws.sourceTemplate.id)) {
-        sublists[ws.sourceTemplate.id] = [
+      if (!sublistMap.hasOwnProperty(ws.sourceTemplate.id)) {
+        sublistMap[ws.sourceTemplate.id] = [
           <ListSubheader key={ws.sourceTemplate.id}>
             <Typography>
               Cloned from <strong>{templateNames.get(ws.sourceTemplate.id)}</strong>
@@ -303,10 +303,18 @@ This will change which template is cloned by users.`,
           makeWorkspaceItem(ws)
         ]
       } else {
-        sublists[ws.sourceTemplate.id].push(makeWorkspaceItem(ws))
+        sublistMap[ws.sourceTemplate.id].push(makeWorkspaceItem(ws))
       }
     }
-    workspaceList = Object.values(sublists).flatMap(item => item)
+    workspaceList = [
+      sublistMap[activeTemplate.id],
+      <Divider style={{ marginBottom: '8px' }} key={`divider-${activeTemplate.id}`} />,
+      ...Object.entries(sublistMap)
+        .flatMap(([id, list]) =>
+          id !== activeTemplate.id
+            ? [...list, <Divider style={{ marginBottom: '8px' }} key={`divider-${id}`} />]
+            : [])
+    ].slice(0, -1)
   } else {
     workspaceList = workspaces.map((workspace, index) => makeWorkspaceItem(workspace, index))
   }
