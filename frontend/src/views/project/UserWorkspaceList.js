@@ -86,6 +86,8 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
     )
   }
 
+  userWorkspaces = userWorkspaces.filter(ws => ws.sourceTemplate.id === activeTemplate.id)
+
   return <BaseWorkspaceList type={TYPE_USER}
     workspaces={userWorkspaces} urlPrefix={urlPrefix} projectId={projectId}
     activeTemplate={activeTemplate} cardHeaderTitle={cardHeaderTitle}
