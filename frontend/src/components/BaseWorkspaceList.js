@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
-  Menu, MenuItem, ListItemIcon
+  Menu, MenuItem, ListItemIcon, ListSubheader, Divider
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
@@ -12,7 +12,7 @@ import {
 
 import { Privilege } from '../lib/permissions'
 import { exportWorkspace } from './WorkspaceNavBar'
-import { useMessageStateValue } from '../lib/store'
+import { useLoginStateValue, useMessageStateValue } from '../lib/store'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
 import { useConfirm, useConfirmDelete } from '../dialogs/alert'
@@ -36,7 +36,9 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     flex: 1,
-    overflow: 'auto'
+    overflow: 'auto',
+    padding: 0,
+    backgroundColor: theme.palette.background.paper
   },
   progress: {
     margin: theme.spacing(2)
@@ -61,10 +63,11 @@ const TYPE_NAMES = {
 const BaseWorkspaceList = ({
   type, workspaces, activeTemplate, projectId, urlPrefix,
   openCreateDialog, openEditDialog, openShareDialog, cardHeaderAction, cardHeaderTitle,
-  deleteWorkspace, setActiveTemplate, promoteMerge, style
+  deleteWorkspace, setActiveTemplate, promoteMerge, style, templateNames
 }) => {
   const classes = useStyles()
   const { history } = useRouter()
+  const [{ user }] = useLoginStateValue()
   const [menu, setMenu] = useState({ open: false })
   const [, messageDispatch] = useMessageStateValue()
   const infoBox = useInfoBox()
@@ -247,41 +250,79 @@ This will change which template is cloned by users.`,
   const isActiveTemplate = (menu.workspace && activeTemplate) &&
     menu.workspace.id === activeTemplate.id
 
+  const secondaryText = workspace => {
+    const id = workspace.participants
+      .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER)?.user?.id
+    if (id === user.id) {
+      return <><strong>You</strong> ({id})</>
+    }
+    return id
+  }
+
+  const makeWorkspaceItem = (workspace, index) => (
+    <ListItem
+      className={workspace.id === activeTemplate?.id ? classes.templateActive : ''}
+      button
+      key={workspace.id}
+      onClick={() => handleNavigateManager(workspace.id)}
+      ref={index === 0
+        ? gotoGuide() : undefined}
+    >
+      <ListItemText
+        primary={
+          <Typography className={classes.workspaceName} variant='h6'>
+            {workspace.name}
+          </Typography>
+        }
+        secondary={type === TYPE_USER && secondaryText(workspace)}
+      />
+
+      <ListItemSecondaryAction>
+        <IconButton
+          onClick={evt => handleMenuOpen(workspace, evt)}
+          aria-haspopup='true'
+          ref={index === 0 ? workspaceActionGuide() : undefined}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
+
+  let workspaceList
+  if (type === TYPE_USER) {
+    const sublistMap = {}
+    for (const ws of workspaces) {
+      if (!sublistMap.hasOwnProperty(ws.sourceTemplate.id)) {
+        sublistMap[ws.sourceTemplate.id] = [
+          <ListSubheader key={ws.sourceTemplate.id}>
+            <Typography>
+              Cloned from <strong>{templateNames.get(ws.sourceTemplate.id)}</strong>
+            </Typography>
+          </ListSubheader>,
+          makeWorkspaceItem(ws)
+        ]
+      } else {
+        sublistMap[ws.sourceTemplate.id].push(makeWorkspaceItem(ws))
+      }
+    }
+    workspaceList = [
+      sublistMap[activeTemplate.id],
+      <Divider style={{ marginBottom: '8px' }} key={`divider-${activeTemplate.id}`} />,
+      ...Object.entries(sublistMap)
+        .flatMap(([id, list]) =>
+          id !== activeTemplate.id
+            ? [...list, <Divider style={{ marginBottom: '8px' }} key={`divider-${id}`} />]
+            : [])
+    ].slice(0, -1)
+  } else {
+    workspaceList = workspaces.map((workspace, index) => makeWorkspaceItem(workspace, index))
+  }
+
   return (
     <Card elevation={0} className={classes.root} style={style}>
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
-      <List dense={false} className={classes.list}>{
-        workspaces.map((workspace, index) => (
-          <ListItem
-            className={workspace.id === activeTemplate?.id ? classes.templateActive : ''}
-            button
-            key={workspace.id}
-            onClick={() => handleNavigateManager(workspace.id)}
-            ref={index === 0
-              ? gotoGuide() : undefined}
-          >
-            <ListItemText
-              primary={
-                <Typography className={classes.workspaceName} variant='h6'>
-                  {workspace.name}
-                </Typography>
-              }
-              secondary={type === TYPE_USER && workspace.participants
-                .find(p => Privilege.fromString(p.privilege) === Privilege.OWNER)?.user?.id}
-            />
-
-            <ListItemSecondaryAction>
-              <IconButton
-                onClick={evt => handleMenuOpen(workspace, evt)}
-                aria-haspopup='true'
-                ref={index === 0 ? workspaceActionGuide() : undefined}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))
-      }</List>
+      <List dense={false} className={classes.list}>{workspaceList}</List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
         <MenuItem aria-label='Mapper' onClick={handleNavigateCourseMapper}>
           <ListItemIcon>

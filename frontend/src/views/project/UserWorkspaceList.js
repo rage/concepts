@@ -65,7 +65,9 @@ const InviteOrCloneButton = ({ projectId, activeTemplate }) => {
   </>
 }
 
-const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefix }) => {
+const UserWorkspaceList = ({
+  userWorkspaces, projectId, activeTemplate, templateNames, urlPrefix
+}) => {
   const cardHeaderTitle = 'Workspaces by users'
   let cardHeaderAction = <InviteOrCloneButton
     projectId={projectId}
@@ -86,7 +88,7 @@ const UserWorkspaceList = ({ userWorkspaces, projectId, activeTemplate, urlPrefi
     )
   }
 
-  return <BaseWorkspaceList type={TYPE_USER}
+  return <BaseWorkspaceList type={TYPE_USER} templateNames={templateNames}
     workspaces={userWorkspaces} urlPrefix={urlPrefix} projectId={projectId}
     activeTemplate={activeTemplate} cardHeaderTitle={cardHeaderTitle}
     cardHeaderAction={cardHeaderAction} deleteWorkspace={deleteWorkspace}

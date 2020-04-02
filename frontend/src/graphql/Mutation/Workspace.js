@@ -61,6 +61,9 @@ mutation cloneTemplateWorkspace($name: String!, $projectId: ID!) {
   cloneTemplateWorkspace(name: $name, projectId: $projectId) {
     id
     name
+    sourceTemplate {
+      id
+    }
   }
 }
 `

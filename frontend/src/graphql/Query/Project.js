@@ -24,6 +24,9 @@ query projectById($id: ID!) {
     workspaces {
       id
       name
+      sourceTemplate {
+        id
+      }
       participants {
         privilege
         user {

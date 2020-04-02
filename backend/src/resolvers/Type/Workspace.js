@@ -4,6 +4,7 @@ import makeTypeResolvers from './typeutil'
 export const Workspace = makeTypeResolvers('workspace', [
   'participants',
   'sourceProject',
+  'sourceTemplate',
   'asTemplate',
   'asMerge',
   'courses',

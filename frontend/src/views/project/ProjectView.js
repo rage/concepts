@@ -154,6 +154,8 @@ const ProjectView = ({ projectId }) => {
           projectId={projectId}
           userWorkspaces={projectQuery.data.projectById.workspaces}
           activeTemplate={projectQuery.data.projectById.activeTemplate}
+          templateNames={new Map(projectQuery.data.projectById.templates
+            .map(tpl => [tpl.id, tpl.name]))}
           urlPrefix={`/projects/${projectId}/workspaces`}
         />
       </section>
