@@ -296,7 +296,9 @@ This will change which template is cloned by users.`,
       if (!sublists.hasOwnProperty(ws.sourceTemplate.id)) {
         sublists[ws.sourceTemplate.id] = [
           <ListSubheader key={ws.sourceTemplate.id}>
-            <Typography>Cloned from {templateNames.get(ws.sourceTemplate.id)}</Typography>
+            <Typography>
+              Cloned from <strong>{templateNames.get(ws.sourceTemplate.id)}</strong>
+            </Typography>
           </ListSubheader>,
           makeWorkspaceItem(ws)
         ]
