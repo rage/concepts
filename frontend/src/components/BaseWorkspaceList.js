@@ -306,7 +306,7 @@ This will change which template is cloned by users.`,
         sublistMap[ws.sourceTemplate.id].push(makeWorkspaceItem(ws))
       }
     }
-    workspaceList = [
+    workspaceList = activeTemplate === null ? [] : [
       sublistMap[activeTemplate.id],
       <Divider style={{ marginBottom: '8px' }} key={`divider-${activeTemplate.id}`} />,
       ...Object.entries(sublistMap)
