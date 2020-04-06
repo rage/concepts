@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Card, CardHeader, Button, CircularProgress, Typography } from '@material-ui/core'
+import { Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
 import { useLoginStateValue } from '../../lib/store'
@@ -25,8 +25,20 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     overflow: 'auto'
+  },
+  sortSelect: {
+    marginLeft: '8px' 
   }
 }))
+
+
+const sortingOptions = {
+  ALPHA_ASC: 'Alphabetical (A-Z)',
+  ALPHA_DESC: 'Alphabetical (Z-A)',
+  CREATION_ASC: 'Creation date (oldest first)',
+  CREATION_DESC: 'Creation date (newest first)',
+  CUSTOM: 'Custom'
+}
 
 const CourseList = ({
   workspace, setFocusedCourseId, focusedCourseId, updateWorkspace,
@@ -39,6 +51,7 @@ const CourseList = ({
   const [{ user }] = useLoginStateValue()
   const [orderedCourses, setOrderedCourses] = useState([])
   const [dirtyOrder, setDirtyOrder] = useState(null)
+  const [orderMethod, setOrderMethod] = useState('CUSTOM')
 
   useEffect(() => {
     if (!dirtyOrder) {
@@ -83,6 +96,21 @@ const CourseList = ({
             {dirtyOrder === 'loading' ? <CircularProgress /> : 'Save'}
           </Button>
         </> : user.role >= Role.STAFF && <>
+          <TextField
+            select
+            variant='outlined'
+            margin='dense'
+            label='Sort by'
+            value={orderMethod}
+            onChange={event => {
+              setOrderMethod(event.target.value)
+            }}
+            className={classes.sortSelect}
+          >
+            {Object.entries(sortingOptions).map(([key, label]) =>
+              <MenuItem key={key} value={key}>{label}</MenuItem>
+            )}
+          </TextField>
           <Button
             color='primary' onClick={() => setFocusedCourseId('common')} style={{ margin: '6px' }}
             disabled={focusedCourseId === 'common'}
