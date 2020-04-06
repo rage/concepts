@@ -29,7 +29,7 @@
     "cytoscape-popper": "^1.0.4",
     "elkjs": "^0.6.2",
     "fast-levenshtein": "^2.0.6",
-    "graphql": "^14.3.0",
+    "graphql": "^15.0.0",
     "graphql-tag": "^2.10.1",
     "qs": "^6.9.0",
     "react": "^16.8.6",
@@ -39,12 +39,12 @@
     "react-measure": "^2.3.0",
     "react-modal": "^3.8.1",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "3.4.0",
+    "react-scripts": "3.4.1",
     "react-select": "^3.0.4",
     "react-sortable-hoc": "^1.10.1",
     "react-window": "^1.8.1",
     "subscriptions-transport-ws": "^0.9.16",
-    "tippy.js": "^4.3.5",
+    "tippy.js": "^6.1.1",
     "tmc-client-js": "^0.0.9"
   },
   "scripts": {
@@ -75,7 +75,7 @@
     "color-contrast-checker": "^1.5.0",
     "es-react": "16.12.0",
     "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-react-hooks": "^2.0.1",
+    "eslint-plugin-react-hooks": "^3.0.0",
     "snowpack": "^1.0.5"
   },
   "snowpack": {
