@@ -366,9 +366,15 @@ const GraphView = ({ workspaceId }) => {
     if (cycles !== sccs.length) {
       setCycles(sccs.length)
     }
+    let cycleIndex = 0
+    cur.cycles = []
     for (const scc of sccs) {
+      cycleIndex += 1
+      const cycleId = `cycle-${cycleIndex}`
+      cur.cycles.push({ data: { id: cycleId } })
       for (const node of scc) {
         for (const node2 of scc) {
+          node.data.parent = cycleId
           const edge = node.tarjan.edgeMap.get(node2.data.id)
           if (edge) {
             edge.classes = 'cycle'
@@ -392,7 +398,8 @@ const GraphView = ({ workspaceId }) => {
 
     cur.network = cytoscape({
       container: graphRef.current,
-      elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
+      elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges,
+        cur.cycles),
       minZoom: 0.05,
       maxZoom: 5,
       style: [
