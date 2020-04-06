@@ -371,7 +371,13 @@ const GraphView = ({ workspaceId }) => {
     for (const scc of sccs) {
       cycleIndex += 1
       const cycleId = `cycle-${cycleIndex}`
-      cur.cycles.push({ data: { id: cycleId } })
+      cur.cycles.push({
+        group: 'nodes',
+        data: {
+          id: cycleId,
+          type: 'cycle'
+        }
+      })
       for (const node of scc) {
         for (const node2 of scc) {
           node.data.parent = cycleId
@@ -404,7 +410,7 @@ const GraphView = ({ workspaceId }) => {
       maxZoom: 5,
       style: [
         {
-          selector: 'node',
+          selector: 'node[type != "cycle"]',
           style: {
             label: 'data(label)',
             shape: 'round-rectangle',
@@ -416,6 +422,14 @@ const GraphView = ({ workspaceId }) => {
             'text-valign': 'center',
             padding: '10px',
             display: 'data(display)'
+          }
+        },
+        {
+          selector: 'node[type = "cycle"]',
+          style: {
+            shape: 'round-rectangle',
+            'background-color': '#FFAAAA',
+            display: 'element'
           }
         },
         {
