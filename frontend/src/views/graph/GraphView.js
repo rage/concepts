@@ -163,6 +163,7 @@ const GraphView = ({ workspaceId }) => {
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
   const [cycles, setCycles] = useState(0)
+  const [cycleJump, setCycleJump] = useState(0)
   const [edgesMissing, setEdgesMissing] = useState({
     course: false,
     concept: false
@@ -262,6 +263,16 @@ const GraphView = ({ workspaceId }) => {
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
   const resetZoom = () => state.current.network.fit([], 100)
+
+  const jumpToCycle = () => {
+    if (cycles === 0) {
+      return
+    }
+    // The cycle ID is 1..n rather than 0..n-1
+    const newCycleJump = (cycleJump % cycles) + 1
+    state.current.network.fit(state.current.network.$(`#cycle-${newCycleJump}`), 250)
+    setCycleJump(newCycleJump)
+  }
 
   const drawPaths = evt => {
     const cur = state.current
@@ -366,9 +377,21 @@ const GraphView = ({ workspaceId }) => {
     if (cycles !== sccs.length) {
       setCycles(sccs.length)
     }
+    let cycleIndex = 0
+    cur.cycles = []
     for (const scc of sccs) {
+      cycleIndex += 1
+      const cycleId = `cycle-${cycleIndex}`
+      cur.cycles.push({
+        group: 'nodes',
+        data: {
+          id: cycleId,
+          type: 'cycle'
+        }
+      })
       for (const node of scc) {
         for (const node2 of scc) {
+          node.data.parent = cycleId
           const edge = node.tarjan.edgeMap.get(node2.data.id)
           if (edge) {
             edge.classes = 'cycle'
@@ -392,12 +415,13 @@ const GraphView = ({ workspaceId }) => {
 
     cur.network = cytoscape({
       container: graphRef.current,
-      elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges),
+      elements: [].concat(cur.conceptNodes, cur.conceptEdges, cur.courseNodes, cur.courseEdges,
+        cur.cycles),
       minZoom: 0.05,
       maxZoom: 5,
       style: [
         {
-          selector: 'node',
+          selector: 'node[type != "cycle"]',
           style: {
             label: 'data(label)',
             shape: 'round-rectangle',
@@ -409,6 +433,14 @@ const GraphView = ({ workspaceId }) => {
             'text-valign': 'center',
             padding: '10px',
             display: 'data(display)'
+          }
+        },
+        {
+          selector: 'node[type = "cycle"]',
+          style: {
+            shape: 'round-rectangle',
+            'background-color': '#FFAAAA',
+            display: 'element'
           }
         },
         {
@@ -441,8 +473,7 @@ const GraphView = ({ workspaceId }) => {
           style: {
             'line-color': '#FF0000',
             'target-arrow-color': '#FF0000',
-            'mid-target-arrow-color': '#FF0000',
-            'line-fill': 'linear'
+            'mid-target-arrow-color': '#FF0000'
           }
         }
       ]
@@ -604,10 +635,13 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
-        {cycles ? <div style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '8px' }}>
+        {cycles ? <Button
+          className={classes.button} variant='outlined' color='secondary'
+          onClick={jumpToCycle}
+        >
           <WarningIcon color='secondary' />
-          {cycles} cycles detected!
-        </div> : null}
+          {cycles} cycles detected
+        </Button> : null}
         {refresh &&
           <Tooltip
             key='refresh-graph'
