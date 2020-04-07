@@ -163,6 +163,7 @@ const GraphView = ({ workspaceId }) => {
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
   const [cycles, setCycles] = useState(0)
+  const [cycleJump, setCycleJump] = useState(0)
   const [edgesMissing, setEdgesMissing] = useState({
     course: false,
     concept: false
@@ -262,6 +263,16 @@ const GraphView = ({ workspaceId }) => {
 
   const resetLayout = () => state.current[`${state.current.mode.slice(0, -1)}Layout`].run()
   const resetZoom = () => state.current.network.fit([], 100)
+
+  const jumpToCycle = () => {
+    if (cycles === 0) {
+      return
+    }
+    // The cycle ID is 1..n rather than 0..n-1
+    const newCycleJump = (cycleJump % cycles) + 1
+    state.current.network.fit(state.current.network.$(`#cycle-${newCycleJump}`), 250)
+    setCycleJump(newCycleJump)
+  }
 
   const drawPaths = evt => {
     const cur = state.current
@@ -462,8 +473,7 @@ const GraphView = ({ workspaceId }) => {
           style: {
             'line-color': '#FF0000',
             'target-arrow-color': '#FF0000',
-            'mid-target-arrow-color': '#FF0000',
-            'line-fill': 'linear'
+            'mid-target-arrow-color': '#FF0000'
           }
         }
       ]
@@ -625,10 +635,13 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
-        {cycles ? <div style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '8px' }}>
+        {cycles ? <Button
+          className={classes.button} variant='outlined' color='secondary'
+          onClick={jumpToCycle}
+        >
           <WarningIcon color='secondary' />
-          {cycles} cycles detected!
-        </div> : null}
+          {cycles} cycles detected
+        </Button> : null}
         {refresh &&
           <Tooltip
             key='refresh-graph'
