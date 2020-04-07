@@ -6,12 +6,12 @@ import ReactDOM from 'react-dom'
 import { useLoginStateValue } from '../../lib/store'
 import arrayShift from '../../lib/arrayShift'
 import { SortableList } from '../../lib/sortableMoc'
-import { sortedCourses } from '../../lib/ordering'
 import { Role } from '../../lib/permissions'
 import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
+import { sortedConcepts as sortedCourses } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +27,8 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto'
   },
   sortSelect: {
-    marginLeft: '8px' 
+    marginLeft: '8px',
+    width: '220px'
   }
 }))
 
@@ -54,10 +55,10 @@ const CourseList = ({
   const [orderMethod, setOrderMethod] = useState('CUSTOM')
 
   useEffect(() => {
-    if (!dirtyOrder) {
-      setOrderedCourses(sortedCourses(workspace.courses, workspace.courseOrder))
+    if (!dirtyOrder || orderMethod !== 'CUSTOM') {
+      setOrderedCourses(sortedCourses(workspace.courses, workspace.courseOrder, orderMethod))
     }
-  }, [workspace.courses, workspace.courseOrder, dirtyOrder])
+  }, [workspace.courses, workspace.courseOrder, dirtyOrder, orderMethod])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     oldIndex !== newIndex && ReactDOM.unstable_batchedUpdates(() => {
