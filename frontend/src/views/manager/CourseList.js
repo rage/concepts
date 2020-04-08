@@ -11,7 +11,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
-import { sortedConcepts as sortedCourses } from '../../lib/ordering'
+import { sortedItems} from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,7 +56,7 @@ const CourseList = ({
 
   useEffect(() => {
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedCourses(sortedCourses(workspace.courses, workspace.courseOrder, orderMethod))
+      setOrderedCourses(sortedItems(workspace.courses, workspace.courseOrder, orderMethod))
     }
   }, [workspace.courses, workspace.courseOrder, dirtyOrder, orderMethod])
 

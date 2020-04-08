@@ -1,6 +1,6 @@
 import { verifyAndRespondRequest } from '../util/restAuth'
 import { prisma } from '../../schema/generated/prisma-client'
-import { sortedConcepts, sortedCourses } from '../util/ordering'
+import { sortedItems, sortedCourses } from '../util/ordering'
 
 const exportQuery = `
 query($wid: ID!) {
@@ -88,8 +88,8 @@ export const exportAPI = async (req, res) => {
     courses: sortedCourses(result.workspace.courses, courseOrder)
       .map(({ concepts, linksToCourse, conceptOrder, objectiveOrder, ...course }) => ({
         ...course,
-        concepts: sortedConcepts(concepts.filter(isLevel('CONCEPT')), conceptOrder)
-          .concat(sortedConcepts(concepts.filter(isLevel('OBJECTIVE')), objectiveOrder))
+        concepts: sortedItems(concepts.filter(isLevel('CONCEPT')), conceptOrder)
+          .concat(sortedItems(concepts.filter(isLevel('OBJECTIVE')), objectiveOrder))
           .map(({ linksToConcept, ...concept }) => ({
             ...concept,
             prerequisites: linksToConcept.map(prereqMap)

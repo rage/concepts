@@ -15,7 +15,7 @@ import MergeDialog from './MergeDialog'
 import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
-import { sortedConcepts } from '../../lib/ordering'
+import { sortedItems } from '../../lib/ordering'
 import { parseFilter, includeConcept as intIncludeConcept } from './search'
 
 const useStyles = makeStyles(theme => ({
@@ -104,7 +104,7 @@ const ConceptList = ({
       setOrderMethod(defaultOrderMethod)
     }
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
-      setOrderedConcepts(sortedConcepts(course.concepts.filter(concept => concept.level === level),
+      setOrderedConcepts(sortedItems(course.concepts.filter(concept => concept.level === level),
         conceptOrder, orderMethod))
     }
   }, [course.concepts, conceptOrder, dirtyOrder, defaultOrderMethod, orderMethod, level, sortable])

@@ -16,7 +16,7 @@ import { UPDATE_COURSE_LINK } from '../../graphql/Mutation'
 import cache from '../../apollo/update'
 import { useInfoBox } from '../../components/InfoBox'
 import useRouter from '../../lib/useRouter'
-import { sortedConcepts } from '../../lib/ordering'
+import { sortedItems } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -117,7 +117,7 @@ const Course = ({
   const collapsed = collapsedCourseIds.has(course.id)
 
   const orderedConcepts = useMemo(() =>
-    sortedConcepts(course.concepts.filter(concept => concept.level === 'OBJECTIVE'),
+    sortedItems(course.concepts.filter(concept => concept.level === 'OBJECTIVE'),
       course.objectiveOrder),
   [course.concepts, course.objectiveOrder])
 
