@@ -22,25 +22,25 @@ const useStyles = makeStyles(theme => ({
 
 const INTRODUCTION_CARDS = [
   {
-    key: "intro-card-001",
-    alt: "Concept manager",
-    title: "Concept mapping",
-    description: "Map concepts to courses",
-    imageSource: "res/preview-manager.png"
+    key: 'intro-card-001',
+    alt: 'Concept manager',
+    title: 'Concept mapping',
+    description: 'Map concepts to courses',
+    imageSource: 'res/preview-manager.png'
   },
   {
-    key: "intro-card-002",
-    alt: "Course mapper",
-    title: "Crowdsourcing",
-    description: "Create course related concepts through crowdsourcing",
-    imageSource: "res/preview-mapper.png"
+    key: 'intro-card-002',
+    alt: 'Course mapper',
+    title: 'Crowdsourcing',
+    description: 'Create course related concepts through crowdsourcing',
+    imageSource: 'res/preview-mapper.png'
   },
   {
-    key: "intro-card-003",
-    alt: "Graph view",
-    title: "Stucture study plan",
-    description: "Get a better overview of study plan through mindmap",
-    imageSource: "res/preview-graph.png"
+    key: 'intro-card-003',
+    alt: 'Graph view',
+    title: 'Stucture study plan',
+    description: 'Get a better overview of study plan through mindmap',
+    imageSource: 'res/preview-graph.png'
   }
 ]
 
@@ -70,15 +70,15 @@ const HomeView = () => {
           their study plan, while students are able to practice mapping the concepts being taught,
           which boosts learning.
         </Typography>
-        <Grid container direction="row" spacing={2} style={{ flexGrow: 1 }}>
+        <Grid container direction='row' spacing={2} style={{ flexGrow: 1 }}>
           {
-            INTRODUCTION_CARDS.map(card => 
-              <Grid item xs={4} key={card.key} >
-                <IntroductionCard 
+            INTRODUCTION_CARDS.map(card =>
+              <Grid item xs={4} key={card.key}>
+                <IntroductionCard
                   title={card.title}
                   description={card.description}
                   alt={card.alt}
-                  imageSource={card.imageSource} 
+                  imageSource={card.imageSource}
                 />
               </Grid>
             )

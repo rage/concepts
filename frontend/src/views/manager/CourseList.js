@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem } from '@material-ui/core'
+import {
+  Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem
+} from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
 import { useLoginStateValue } from '../../lib/store'
@@ -11,7 +13,7 @@ import { backendToSelect } from '../../dialogs/tagSelectUtils'
 import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
-import { sortedItems} from '../../lib/ordering'
+import { sortedItems } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,7 +33,6 @@ const useStyles = makeStyles(theme => ({
     width: '220px'
   }
 }))
-
 
 const sortingOptions = {
   ALPHA_ASC: 'Alphabetical (A-Z)',
@@ -55,7 +56,7 @@ const CourseList = ({
   const [orderMethod, setOrderMethod] = useState('CUSTOM')
 
   useEffect(() => {
-    if (!dirtyOrder || orderMethod !== 'CUSTOM') {
+    if (!dirtyOrder || orderMethod !== 'CUSTOM') {
       setOrderedCourses(sortedItems(workspace.courses, workspace.courseOrder, orderMethod))
     }
   }, [workspace.courses, workspace.courseOrder, dirtyOrder, orderMethod])

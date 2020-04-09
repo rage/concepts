@@ -1,29 +1,29 @@
 import React from 'react'
 import {
-    Card,
-    CardContent,
-    CardMedia,
-    Typography
+  Card,
+  CardContent,
+  CardMedia,
+  Typography
 } from '@material-ui/core'
 
 const IntroductionCard = ({ imageSource, alt, title, description }) => (
-    <Card style={{ maxWidth: 390 }}>
-        <CardMedia
-            component="img"
-            alt={ alt }
-            title={ alt }
-            height="220"
-            image={ imageSource }
-        />
-        <CardContent>
-            <Typography gutterBottom variant="h5" component="h4">
-                { title }
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-                { description }
-            </Typography>
-        </CardContent>
-    </Card>
+  <Card style={{ maxWidth: 390 }}>
+    <CardMedia
+      component='img'
+      alt={alt}
+      title={alt}
+      height='220'
+      image={imageSource}
+    />
+    <CardContent>
+      <Typography gutterBottom variant='h5' component='h4'>
+        { title }
+      </Typography>
+      <Typography variant='body2' color='textSecondary' component='p'>
+        { description }
+      </Typography>
+    </CardContent>
+  </Card>
 )
 
 export default IntroductionCard
