@@ -13,7 +13,7 @@ import { useLoginStateValue } from '../../lib/store'
 import { useInfoBox } from '../../components/InfoBox'
 import DividerWithText from '../../components/DividerWithText'
 import useRouter from '../../lib/useRouter'
-import { sortedConcepts, sortedCourses } from '../../lib/ordering'
+import { sortedItems, sortedCourses } from '../../lib/ordering'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -85,7 +85,7 @@ const ActiveCourse = ({
     'OBJECTIVE')
   const openEditCourseDialog = useEditCourseDialog(workspace.id, user.role >= Role.STAFF)
 
-  const orderedConcepts = useMemo(() => sortedConcepts(course.concepts
+  const orderedConcepts = useMemo(() => sortedItems(course.concepts
     .filter(concept => concept.level === 'OBJECTIVE'), course.objectiveOrder),
   [course.concepts, course.objectiveOrder])
   const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder),
