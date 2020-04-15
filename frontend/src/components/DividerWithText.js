@@ -17,6 +17,7 @@ const useStyles = makeStyles({
     overflow: 'hidden',
     textAlign: 'center',
     color: '#333',
+    zIndex: 7,
     '&:before': {
       ...dividerLine,
       right: '0.5em',

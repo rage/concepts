@@ -19,7 +19,7 @@ const initialState = {
 }
 
 const CourseEditor = ({
-  submit, defaultValues = {}, tagOptions = [], action = 'Create', cancel
+  className, submit, defaultValues = {}, tagOptions = [], action = 'Create', cancel
 }) => {
   const classes = useStyles()
   const infoBox = useInfoBox()
@@ -63,9 +63,12 @@ const CourseEditor = ({
   const infoBoxSelectRef = infoBox.ref('manager', 'CREATE_COURSE_THEMES')
   const selectRef = useRef(null)
   return (
-    <form className={classes.form} onSubmit={onSubmit} onKeyDown={onKeyDown}>
+    <form
+      className={`${className || ''} ${classes.form}`} onSubmit={onSubmit} onKeyDown={onKeyDown}
+    >
       <TextField
         className={classes.textfield}
+        style={{ marginBottom: '4px' }}
         variant='outlined'
         margin='dense'
         name='courseName'

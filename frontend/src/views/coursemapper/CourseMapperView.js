@@ -43,6 +43,18 @@ const useStyles = makeStyles(() => ({
       }
     }
   },
+  // This is hacky masking CSS to hide concept links from the header
+  // (so they don't overlap with the header texts and instead are cut off below the header)
+  headerLineMask: {
+    position: 'absolute',
+    backgroundColor: '#eee',
+    width: '100%',
+    // Height of content header (see gridTemplate above) plus 10px (see transform below)
+    height: '52px',
+    zIndex: 5,
+    // Translate it up so the gap between the topbar and the content is covered
+    transform: 'translateY(-10px)'
+  },
   courseTrayOpen: {}
 }))
 
@@ -103,6 +115,7 @@ const CourseMapperView = ({ courseId, workspaceId, urlPrefix }) => {
 
   return (
     <main className={`${classes.root} ${courseTrayOpen ? classes.courseTrayOpen : ''}`}>
+      <div className={classes.headerLineMask} />
       <DividerWithText
         gridArea='traySpacer' content='Courses in workspace' hidden={!courseTrayOpen}
       />
