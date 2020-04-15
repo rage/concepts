@@ -14,6 +14,7 @@ import { useInfoBox } from '../../components/InfoBox'
 import CourseEditor from './CourseEditor'
 import CourseListItem from './CourseListItem'
 import { sortedItems } from '../../lib/ordering'
+import search from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -101,6 +102,9 @@ const CourseList = ({
   const isTemplate = Boolean(workspace.asTemplate?.id)
   const courseTags = backendToSelect(workspace.courseTags)
 
+  const conceptFilterParsed = search.parse(courseFilter)
+  const includeCourse = course => search.include(course, conceptFilterParsed)
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -165,7 +169,7 @@ const CourseList = ({
           ref={listRef} className={classes.list} useDragHandle lockAxis='y'
           onSortEnd={onSortEnd}
         >
-          {orderedCourses.map((course, index) => (
+          {orderedCourses.map((course, index) => includeCourse(course) && (
             <CourseListItem
               course={course} user={user} index={index} editing={editing} setEditing={setEditing}
               focusedCourseId={focusedCourseId} setFocusedCourseId={setFocusedCourseId}

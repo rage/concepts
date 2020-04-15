@@ -85,7 +85,7 @@ const CourseEditor = ({
         name='courseDescription'
         label='Course description'
         type='text'
-        value={input.description}
+        value={input.description || ''}
         fullWidth multiline
         onChange={evt => setInput({ ...input, description: evt.target.value })}
       />

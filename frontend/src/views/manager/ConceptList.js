@@ -16,7 +16,7 @@ import ConceptEditor from './ConceptEditor'
 import ConceptListItem from './ConceptListItem'
 import arrayShift from '../../lib/arrayShift'
 import { sortedItems } from '../../lib/ordering'
-import { parseFilter, includeConcept as intIncludeConcept } from './search'
+import search from './search'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -206,10 +206,10 @@ const ConceptList = ({
     return null
   }
 
-  const conceptFilterParsed = parseFilter(conceptFilter)
+  const conceptFilterParsed = search.parse(conceptFilter)
   const includeConcept = concept =>
     concept.level === level
-    && intIncludeConcept(concept, conceptFilterParsed)
+    && search.include(concept, conceptFilterParsed)
 
   const scrollTopToCurrentHeight = () => {
     listRef.current.scrollTop = listRef.current.scrollHeight
