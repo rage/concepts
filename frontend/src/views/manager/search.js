@@ -70,7 +70,7 @@ const matchPart = (concept, part) => {
     // TODO we should do fuzzy matching here when part.quote is false
     return part.additive === (
       concept.name.toLowerCase().includes(part.text)
-          || concept.description.toLowerCase().includes(part.text))
+          || concept.description?.toLowerCase().includes(part.text))
   default:
     console.warn('Unknown part key', part.key)
     return !part.additive
@@ -79,3 +79,8 @@ const matchPart = (concept, part) => {
 
 export const includeConcept = (concept, filter) =>
   filter.find(part => matchPart(concept, part) === false) === undefined
+
+export default {
+  parse: parseFilter,
+  include: includeConcept
+}

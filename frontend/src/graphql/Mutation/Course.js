@@ -6,10 +6,10 @@ import {
 } from '../Fragment'
 
 const CREATE_COURSE = gql`
-mutation createCourse($name: String!, $workspaceId: ID!, $official: Boolean,
+mutation createCourse($name: String!, $description: String, $workspaceId: ID!, $official: Boolean,
                       $frozen: Boolean, $tags: [TagInput!]) {
-  createCourse(name: $name, workspaceId: $workspaceId, official: $official,
-               frozen: $frozen, tags: $tags) {
+  createCourse(name: $name, description: $description, workspaceId: $workspaceId,
+               official: $official, frozen: $frozen, tags: $tags) {
     ...createCourseData
   }
 }
@@ -17,11 +17,12 @@ ${CREATE_COURSE_FRAGMENT}
 `
 
 const UPDATE_COURSE = gql`
-mutation updateCourse($id: ID!, $name: String, $official: Boolean,
+mutation updateCourse($id: ID!, $name: String, $description: String, $official: Boolean,
                       $frozen: Boolean, $tags: [TagInput!], $conceptOrder: [ID!],
                       $objectiveOrder: [ID!]) {
-  updateCourse(id: $id, name: $name, official: $official, frozen: $frozen, tags: $tags,
-               conceptOrder: $conceptOrder, objectiveOrder: $objectiveOrder) {
+  updateCourse(id: $id, name: $name, description: $description, official: $official,
+               frozen: $frozen, tags: $tags, conceptOrder: $conceptOrder,
+               objectiveOrder: $objectiveOrder) {
     ...updateCourseData
   }
 }
