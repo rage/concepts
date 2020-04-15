@@ -68,6 +68,7 @@ const ConceptEditor = ({
   submit,
   cancel,
   action,
+  className,
   tagOptions = [],
   defaultValues = {},
   commonConcepts = [],
@@ -131,7 +132,7 @@ const ConceptEditor = ({
 
   return (
     <form
-      className={classes.form}
+      className={`${className || ''} ${classes.form}`}
       onSubmit={onSubmit}
       onKeyDown={onKeyDown}
     >

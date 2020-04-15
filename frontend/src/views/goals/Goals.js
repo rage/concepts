@@ -46,12 +46,15 @@ export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
           />
         ))}
       </List>
-      <ConceptEditor submit={args => createConcept({
-        variables: {
-          workspaceId,
-          ...args
-        }
-      })} action='Create' tagOptions={tagOptions} defaultValues={{ level: 'GOAL' }} />
+      <ConceptEditor
+        className={classes.formWithMask} action='Create' tagOptions={tagOptions}
+        defaultValues={{ level: 'GOAL' }} submit={args => createConcept({
+          variables: {
+            workspaceId,
+            ...args
+          }
+        })}
+      />
     </Card>
   )
 }

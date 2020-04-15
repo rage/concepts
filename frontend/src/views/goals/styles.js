@@ -1,5 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 
+const lineMask = {
+  position: 'absolute',
+  backgroundColor: '#eee',
+  zIndex: 5
+}
+
 export const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -35,7 +41,8 @@ export const useStyles = makeStyles(theme => ({
     overflow: 'auto'
   },
   title: {
-    gridArea: 'header'
+    gridArea: 'header',
+    zIndex: 7
   },
   activeCircle: {
     zIndex: 2
@@ -53,6 +60,45 @@ export const useStyles = makeStyles(theme => ({
   },
   hoverButton: {
     visibility: 'hidden'
-  }
+  },
 
+  // Below is a whole bunch of hacky masking CSS to hide goal links from places
+  // they're not supposed to be in.
+
+  // This one makes the new goal and new course forms take the full width of
+  // their cards, and then makes them opaque and white
+  formWithMask: {
+    zIndex: 7,
+    backgroundColor: theme.palette.background.paper,
+    transform: 'translateX(-24px)',
+    width: 'calc(100% + 48px)',
+    padding: '0 24px'
+  },
+
+  // These make blank spaces opaque.
+
+  // This one is between the new course and new goal forms
+  bottomMiddleLineMask: {
+    ...lineMask,
+    height: '200px',
+    width: '160px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    bottom: '64px'
+  },
+  // This one is at the bottom, between the content and workspace navbar
+  bottomLineMask: {
+    ...lineMask,
+    width: '100%',
+    bottom: '56px',
+    height: '10px'
+  },
+  // This one is at the top between the cards and the topbar (in the same spot as the header)
+  topLineMask: {
+    ...lineMask,
+    width: '100%',
+    height: '82px',
+    left: 0,
+    transform: 'translateY(-10px)'
+  }
 }))

@@ -43,6 +43,8 @@ const useStyles = makeStyles(() => ({
       }
     }
   },
+  // This is hacky masking CSS to hide concept links from the header
+  // (so they don't overlap with the header texts and instead are cut off below the header)
   headerLineMask: {
     position: 'absolute',
     backgroundColor: '#eee',

@@ -7,6 +7,7 @@ import cache from '../../apollo/update'
 import CourseEditor from '../manager/CourseEditor'
 import { CourseItem } from './CourseItem'
 import { useStyles } from './styles'
+import ConceptEditor from '../manager/ConceptEditor'
 
 export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => {
   const classes = useStyles()
@@ -45,12 +46,15 @@ export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => 
           />
         ))}
       </List>
-      <CourseEditor tagOptions={tagOptions} submit={args => createCourse({
-        variables: {
-          workspaceId,
-          ...args
-        }
-      })} />
+      <CourseEditor
+        className={classes.formWithMask} tagOptions={tagOptions}
+        submit={args => createCourse({
+          variables: {
+            workspaceId,
+            ...args
+          }
+        })}
+      />
     </Card>
   )
 }

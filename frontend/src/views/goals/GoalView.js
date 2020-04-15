@@ -91,7 +91,6 @@ const GoalView = ({ workspaceId }) => {
         tagOptions={courseTags}
         onClickCircle={onClickCircle}
       />
-      <div style={{ gridArea: 'space' }} />
       <Goals
         goals={goals}
         workspaceId={workspaceId}
@@ -112,6 +111,9 @@ const GoalView = ({ workspaceId }) => {
           to={`${addingLink.type}-circle-${addingLink.id}`}
         />}
       </div>
+      <div className={classes.topLineMask} />
+      <div className={classes.bottomMiddleLineMask} />
+      <div className={classes.bottomLineMask} />
       <Menu
         anchorReference='anchorPosition'
         anchorPosition={menu.anchor}
