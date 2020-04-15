@@ -112,8 +112,9 @@ const GoalView = ({ workspaceId }) => {
         />}
       </div>
       <div className={classes.topLineMask} />
-      <div className={classes.bottomMiddleLineMask} />
+      <div className={classes.topMiddleLineMask} />
       <div className={classes.bottomLineMask} />
+      <div className={classes.bottomMiddleLineMask} />
       <Menu
         anchorReference='anchorPosition'
         anchorPosition={menu.anchor}

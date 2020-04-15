@@ -25,7 +25,7 @@ export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => 
 
   return (
     <Card elevation={0} className={`${classes.card} ${classes.courses}`}>
-      <CardHeader title='Courses' />
+      <CardHeader title='Courses' className={classes.cardHeader} />
       <List className={classes.list}>
         {courses.map(course => editing === course.id ? (
           <CourseEditor

@@ -75,6 +75,14 @@ export const useStyles = makeStyles(theme => ({
     padding: '0 24px'
   },
 
+  // Same trick as the above, but for the card header
+  cardHeader: {
+    zIndex: 7,
+    backgroundColor: theme.palette.background.paper,
+    transform: 'translateX(-24px)',
+    width: 'calc(100% + 48px)',
+    padding: '16px 40px'
+  },
   // These make blank spaces opaque.
 
   // This one is between the new course and new goal forms
@@ -92,6 +100,16 @@ export const useStyles = makeStyles(theme => ({
     width: '100%',
     bottom: '56px',
     height: '10px'
+  },
+  // This one is the same as bottomLineMask, but at the top edge of the cards
+  // (below main header, between cards)
+  topMiddleLineMask: {
+    ...lineMask,
+    height: '64px',
+    width: '160px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    top: '130px'
   },
   // This one is at the top between the cards and the topbar (in the same spot as the header)
   topLineMask: {
