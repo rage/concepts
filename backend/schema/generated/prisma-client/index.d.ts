@@ -836,6 +836,8 @@ export type CourseOrderByInput =
   | "id_DESC"
   | "name_ASC"
   | "name_DESC"
+  | "description_ASC"
+  | "description_DESC"
   | "official_ASC"
   | "official_DESC"
   | "frozen_ASC"
@@ -1495,6 +1497,20 @@ export interface CourseWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
@@ -2531,6 +2547,7 @@ export interface CourseCreateManyWithoutWorkspaceInput {
 export interface CourseCreateWithoutWorkspaceInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2566,6 +2583,7 @@ export interface CourseCreateOneWithoutClonesInput {
 export interface CourseCreateWithoutClonesInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2608,6 +2626,7 @@ export interface CourseCreateOneWithoutLinksToCourseInput {
 export interface CourseCreateWithoutLinksToCourseInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2634,6 +2653,7 @@ export interface CourseCreateManyWithoutSourceCourseInput {
 export interface CourseCreateWithoutSourceCourseInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2676,6 +2696,7 @@ export interface CourseCreateOneWithoutLinksFromCourseInput {
 export interface CourseCreateWithoutLinksFromCourseInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2911,6 +2932,7 @@ export interface CourseCreateOneWithoutConceptsInput {
 export interface CourseCreateWithoutConceptsInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3200,6 +3222,7 @@ export interface CourseCreateOneWithoutGoalLinksInput {
 export interface CourseCreateWithoutGoalLinksInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3385,6 +3408,7 @@ export interface CourseCreateOneWithoutObjectiveLinksInput {
 export interface CourseCreateWithoutObjectiveLinksInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3511,6 +3535,7 @@ export interface CourseCreateOneInput {
 export interface CourseCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -4147,6 +4172,7 @@ export interface CourseUpdateWithWhereUniqueWithoutWorkspaceInput {
 
 export interface CourseUpdateWithoutWorkspaceDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4291,6 +4317,7 @@ export interface CourseUpdateOneWithoutClonesInput {
 
 export interface CourseUpdateWithoutClonesDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4354,6 +4381,7 @@ export interface CourseUpdateOneRequiredWithoutLinksToCourseInput {
 
 export interface CourseUpdateWithoutLinksToCourseDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4400,6 +4428,7 @@ export interface CourseUpdateWithWhereUniqueWithoutSourceCourseInput {
 
 export interface CourseUpdateWithoutSourceCourseDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4463,6 +4492,7 @@ export interface CourseUpdateOneRequiredWithoutLinksFromCourseInput {
 
 export interface CourseUpdateWithoutLinksFromCourseDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -4793,6 +4823,7 @@ export interface CourseUpdateOneWithoutConceptsInput {
 
 export interface CourseUpdateWithoutConceptsDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -5540,6 +5571,7 @@ export interface CourseUpdateOneRequiredWithoutGoalLinksInput {
 
 export interface CourseUpdateWithoutGoalLinksDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -5957,6 +5989,7 @@ export interface CourseUpdateOneRequiredWithoutObjectiveLinksInput {
 
 export interface CourseUpdateWithoutObjectiveLinksDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -6283,6 +6316,7 @@ export interface CourseUpdateOneInput {
 
 export interface CourseUpdateDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -7330,6 +7364,20 @@ export interface CourseScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
   official?: Maybe<Boolean>;
   official_not?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
@@ -7362,6 +7410,7 @@ export interface CourseUpdateManyWithWhereNestedInput {
 
 export interface CourseUpdateManyDataInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
@@ -7645,6 +7694,7 @@ export interface ConceptLinkUpdateManyMutationInput {
 
 export interface CourseUpdateInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagUpdateManyInput>;
@@ -7663,6 +7713,7 @@ export interface CourseUpdateInput {
 
 export interface CourseUpdateManyMutationInput {
   name?: Maybe<String>;
+  description?: Maybe<String>;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   conceptOrder?: Maybe<CourseUpdateconceptOrderInput>;
@@ -9197,6 +9248,7 @@ export interface ProjectTokenNullablePromise
 export interface Course {
   id: ID_Output;
   name: String;
+  description?: String;
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
@@ -9208,6 +9260,7 @@ export interface Course {
 export interface CoursePromise extends Promise<Course>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  description: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   tags: <T = FragmentableArray<Tag>>(args?: {
@@ -9287,6 +9340,7 @@ export interface CourseSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   tags: <T = Promise<AsyncIterator<TagSubscription>>>(args?: {
@@ -9368,6 +9422,7 @@ export interface CourseNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  description: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   tags: <T = FragmentableArray<Tag>>(args?: {
@@ -11339,6 +11394,7 @@ export interface CourseSubscriptionPayloadSubscription
 export interface CoursePreviousValues {
   id: ID_Output;
   name: String;
+  description?: String;
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
@@ -11352,6 +11408,7 @@ export interface CoursePreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  description: () => Promise<String>;
   official: () => Promise<Boolean>;
   frozen: () => Promise<Boolean>;
   conceptOrder: () => Promise<ID_Output[]>;
@@ -11365,6 +11422,7 @@ export interface CoursePreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
   official: () => Promise<AsyncIterator<Boolean>>;
   frozen: () => Promise<AsyncIterator<Boolean>>;
   conceptOrder: () => Promise<AsyncIterator<ID_Output[]>>;

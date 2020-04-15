@@ -4,6 +4,7 @@ const CREATE_COURSE_FRAGMENT = gql`
 fragment createCourseData on Course {
   id
   name
+  description
   official
   frozen
   tags {
@@ -47,6 +48,7 @@ const UPDATE_COURSE_FRAGMENT = gql`
 fragment updateCourseData on Course {
   id
   name
+  description
   official
   frozen
   conceptOrder

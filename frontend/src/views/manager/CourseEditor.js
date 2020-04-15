@@ -12,6 +12,7 @@ import useStyles from './editorStyles'
 
 const initialState = {
   name: '',
+  description: '',
   official: undefined,
   frozen: undefined,
   tags: []
@@ -76,6 +77,17 @@ const CourseEditor = ({
         ref={action === 'Create' ? infoBox.ref('manager', 'CREATE_COURSE_NAME') : undefined}
         autoFocus={action !== 'Create'}
         onChange={evt => setInput({ ...input, name: evt.target.value })}
+      />
+      <TextField
+        className={classes.textfield}
+        variant='outlined'
+        margin='dense'
+        name='courseDescription'
+        label='Course description'
+        type='text'
+        value={input.description}
+        fullWidth multiline
+        onChange={evt => setInput({ ...input, description: evt.target.value })}
       />
       <Select
         onChange={selected => setInput({ ...input, tags: selected || [] })}

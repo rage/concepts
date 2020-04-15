@@ -13,6 +13,7 @@ fragment createCourseLinkData on CourseLink {
   from {
     id
     name
+    description
     official
     frozen
     tags {

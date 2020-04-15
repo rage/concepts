@@ -7,7 +7,7 @@ import pubsub from '../Subscription/pubsub'
 import { COURSE_CREATED, COURSE_UPDATED, COURSE_DELETED } from '../Subscription/channels'
 
 export const createCourse = async (root, {
-  name, workspaceId, official, frozen, tags
+  name, description, workspaceId, official, frozen, tags
 }, context) => {
   await checkAccess(context, {
     minimumRole: Role.GUEST,
@@ -18,7 +18,8 @@ export const createCourse = async (root, {
   if (official || frozen) await checkAccess(context, { minimumRole: Role.STAFF, workspaceId })
 
   const newCourse = await context.prisma.createCourse({
-    name: name,
+    name,
+    description,
     official: Boolean(official),
     frozen: Boolean(frozen),
     createdBy: { connect: { id: context.user.id } },
@@ -70,7 +71,7 @@ export const deleteCourse = async (root, { id }, context) => {
 }
 
 export const updateCourse = async (root, {
-  id, name, official, frozen, tags, conceptOrder, objectiveOrder
+  id, name, description, official, frozen, tags, conceptOrder, objectiveOrder
 }, context) => {
   const { id: workspaceId } = nullShield(await context.prisma.course({ id }).workspace())
   await checkAccess(context, {
@@ -107,6 +108,9 @@ export const updateCourse = async (root, {
   if (name !== undefined) {
     if (!belongsToTemplate && name !== oldCourse.name) data.official = false
     data.name = name
+  }
+  if (description !== undefined) {
+    data.description = description
   }
   const updateData = await context.prisma.updateCourse({
     where: { id },

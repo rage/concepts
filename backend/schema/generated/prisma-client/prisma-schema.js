@@ -1946,6 +1946,7 @@ input ConceptWhereUniqueInput {
 type Course {
   id: ID!
   name: String!
+  description: String
   official: Boolean!
   frozen: Boolean!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -1977,6 +1978,7 @@ input CourseCreateconceptOrderInput {
 input CourseCreateInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2045,6 +2047,7 @@ input CourseCreateOneWithoutObjectiveLinksInput {
 input CourseCreateWithoutClonesInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2063,6 +2066,7 @@ input CourseCreateWithoutClonesInput {
 input CourseCreateWithoutConceptsInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2081,6 +2085,7 @@ input CourseCreateWithoutConceptsInput {
 input CourseCreateWithoutGoalLinksInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2099,6 +2104,7 @@ input CourseCreateWithoutGoalLinksInput {
 input CourseCreateWithoutLinksFromCourseInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2117,6 +2123,7 @@ input CourseCreateWithoutLinksFromCourseInput {
 input CourseCreateWithoutLinksToCourseInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2135,6 +2142,7 @@ input CourseCreateWithoutLinksToCourseInput {
 input CourseCreateWithoutObjectiveLinksInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2153,6 +2161,7 @@ input CourseCreateWithoutObjectiveLinksInput {
 input CourseCreateWithoutSourceCourseInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2171,6 +2180,7 @@ input CourseCreateWithoutSourceCourseInput {
 input CourseCreateWithoutWorkspaceInput {
   id: ID
   name: String!
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2617,6 +2627,8 @@ enum CourseOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  description_ASC
+  description_DESC
   official_ASC
   official_DESC
   frozen_ASC
@@ -2630,6 +2642,7 @@ enum CourseOrderByInput {
 type CoursePreviousValues {
   id: ID!
   name: String!
+  description: String
   official: Boolean!
   frozen: Boolean!
   conceptOrder: [ID!]!
@@ -2667,6 +2680,20 @@ input CourseScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
   official: Boolean
   official_not: Boolean
   frozen: Boolean
@@ -2716,6 +2743,7 @@ input CourseUpdateconceptOrderInput {
 
 input CourseUpdateDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2734,6 +2762,7 @@ input CourseUpdateDataInput {
 
 input CourseUpdateInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2752,6 +2781,7 @@ input CourseUpdateInput {
 
 input CourseUpdateManyDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   conceptOrder: CourseUpdateconceptOrderInput
@@ -2760,6 +2790,7 @@ input CourseUpdateManyDataInput {
 
 input CourseUpdateManyMutationInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   conceptOrder: CourseUpdateconceptOrderInput
@@ -2863,6 +2894,7 @@ input CourseUpdateOneWithoutConceptsInput {
 
 input CourseUpdateWithoutClonesDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2880,6 +2912,7 @@ input CourseUpdateWithoutClonesDataInput {
 
 input CourseUpdateWithoutConceptsDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2897,6 +2930,7 @@ input CourseUpdateWithoutConceptsDataInput {
 
 input CourseUpdateWithoutGoalLinksDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2914,6 +2948,7 @@ input CourseUpdateWithoutGoalLinksDataInput {
 
 input CourseUpdateWithoutLinksFromCourseDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2931,6 +2966,7 @@ input CourseUpdateWithoutLinksFromCourseDataInput {
 
 input CourseUpdateWithoutLinksToCourseDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2948,6 +2984,7 @@ input CourseUpdateWithoutLinksToCourseDataInput {
 
 input CourseUpdateWithoutObjectiveLinksDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2965,6 +3002,7 @@ input CourseUpdateWithoutObjectiveLinksDataInput {
 
 input CourseUpdateWithoutSourceCourseDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -2982,6 +3020,7 @@ input CourseUpdateWithoutSourceCourseDataInput {
 
 input CourseUpdateWithoutWorkspaceDataInput {
   name: String
+  description: String
   official: Boolean
   frozen: Boolean
   tags: TagUpdateManyInput
@@ -3083,6 +3122,20 @@ input CourseWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
   official: Boolean
   official_not: Boolean
   frozen: Boolean
