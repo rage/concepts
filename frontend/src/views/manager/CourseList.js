@@ -46,6 +46,7 @@ const sortingOptions = {
   ALPHA_DESC: 'Alphabetical (Z-A)',
   CREATION_ASC: 'Creation date (oldest first)',
   CREATION_DESC: 'Creation date (newest first)',
+  TOPO_ASC: 'Topological',
   CUSTOM: 'Custom'
 }
 

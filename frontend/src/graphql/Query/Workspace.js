@@ -114,6 +114,16 @@ query workspaceById($id: ID!) {
         type
         priority
       }
+      linksToCourse {
+        from {
+          id
+        }
+      }
+      linksFromCourse {
+        to {
+          id
+        }
+      }
       conceptOrder
       objectiveOrder
       concepts {
