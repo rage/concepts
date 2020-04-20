@@ -328,7 +328,6 @@ export const cloneTemplateWorkspace = async (root, { name, projectId }, context)
           create: concepts.map(({ id, tags, sourceCommon, createdBy, ...rest }) => ({
             ...rest,
             id: makeNewId(id),
-            frozen: true,
             tags: { connect: tags.map(tag => ({ id: makeNewId(tag.id) })) },
             createdBy: { connect: { id: createdBy.id } },
             workspace: { connect: { id: workspaceId } },
