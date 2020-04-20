@@ -17,9 +17,8 @@ const WorkspaceList = ({ workspaces, urlPrefix }) => {
     }]
   })
   const cardHeaderTitle = 'Workspaces'
-  const filteredWorkspaces = workspaces.filter(workspace => workspace.sourceProject === null)
-                                .filter(workspace => workspace.asTemplate === null)
-                                .filter(workspace => workspace.asMerge === null)
+  const filteredWorkspaces = workspaces.filter(workspace =>
+    !workspace.sourceProject && !workspace.asTemplate && !workspace.asMerge)
   return <BaseWorkspaceList type={TYPE_MAIN} style={{ gridArea: 'workspaces' }}
     workspaces={filteredWorkspaces} urlPrefix={urlPrefix} openEditDialog={openEditDialog}
     openShareDialog={openShareDialog} openCreateDialog={openCreateDialog}
