@@ -95,7 +95,7 @@ type Workspace {
 
   # Completion data
   mainCourse: Course @relation(link: INLINE, name: "MainCourse")
-  pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup")
+  pointGroups: [PointGroup!]! @relation(name: "WorkspacePointGroup", onDelete: CASCADE)
 
   # Shared metadata
   courseTags: [Tag!] @relation(name: "WorkspaceCourseTags")

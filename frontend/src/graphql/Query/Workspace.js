@@ -12,6 +12,12 @@ query workspacesForUser {
       asTemplate {
         id
       }
+      asMerge {
+        id
+      }
+      sourceProject {
+        id
+      }
       tokens {
         id
         privilege
