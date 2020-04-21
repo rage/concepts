@@ -13,7 +13,6 @@ const topologicalSortCourses = courses => {
         continue
       }
       if (ancestors.has(next.to.id)) {
-        console.error(next.to.id, course.id, ancestors)
         throw new Error('cycle found')
       }
       visit(courseMap.get(next.to.id), ancestors)
@@ -23,8 +22,12 @@ const topologicalSortCourses = courses => {
     sorted.unshift(course)
   }
 
-  for (const course of courses.reverse()) {
-    visit(course, new Set())
+  try {
+    for (const course of courses.reverse()) {
+      visit(course, new Set())
+    }
+  } catch (err) {
+    return courses
   }
 
   return sorted
