@@ -37,7 +37,7 @@ const compareConcepts = (concepts1, concepts2) => {
     // Calculate the avarege of the comparisons
     let compValue = 0.0
     for (const pair of pairs) {
-        if (pair[0].name !== null && pair[1].name !== null) {
+        if (pair[0] !== null && pair[1] !== null) {
             compValue = lev.get(pair[0].name, pair[1].name)
         }
     }
