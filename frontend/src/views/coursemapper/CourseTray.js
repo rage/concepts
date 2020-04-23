@@ -187,7 +187,7 @@ const CourseTray = ({ activeCourseId, workspace, courseLinks, urlPrefix }) => {
 
   const orderedCourses = useMemo(() => sortedCourses(workspace.courses, workspace.courseOrder)
     .filter(course => course.name.toLowerCase().includes(filterKeywordLowercase)),
-  [filterKeywordLowercase, workspace.courses, workspace.courseOrder])
+  [filterKeywordLowercase, workspace.courses, workspace.courses.length, workspace.courseOrder])
 
   return (
     <Paper elevation={0} className={classes.root}>

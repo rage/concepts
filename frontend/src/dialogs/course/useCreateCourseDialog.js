@@ -32,6 +32,7 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
         priority: tag.priority || 0,
         __typename: 'Tag'
       })),
+      linksFromCourse: [],
       linksToCourse: [],
       conceptOrder: [],
       objectiveOrder: [],
