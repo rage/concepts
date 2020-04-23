@@ -7,13 +7,13 @@ import lev from 'fast-levenshtein'
  * @param {concepts} concepts an array of concepts
  */
 const closestPair = (concept, concepts) => {
-    const closestPair = null;
-    const value = 0;
+    const closestPair = null
+    const value = 0
 
     for (const compConcept of concepts) {
         let compValue = lev.get(concept.name, compConcept.name);
         if (compValue > value) {
-            compValue = compValue;
+            value = compValue
             closestPair = compConcept
         }
     }
