@@ -7,7 +7,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
-  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked, ArrowUpward as UpIcon
+  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked, ArrowUpward as UpIcon,
+  SyncAlt as SyncAltIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -324,6 +325,12 @@ This will change which template is cloned by users.`,
       <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
       <List dense={false} className={classes.list}>{workspaceList}</List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
+      <MenuItem aria-label='Compare' onClick={() => {}}>
+          <ListItemIcon>
+            <SyncAltIcon />
+          </ListItemIcon>
+          Compare
+        </MenuItem>
         <MenuItem aria-label='Mapper' onClick={handleNavigateCourseMapper}>
           <ListItemIcon>
             <AccountTreeIcon />
