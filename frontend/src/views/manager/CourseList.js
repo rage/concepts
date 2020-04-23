@@ -46,6 +46,7 @@ const sortingOptions = {
   ALPHA_DESC: 'Alphabetical (Z-A)',
   CREATION_ASC: 'Creation date (oldest first)',
   CREATION_DESC: 'Creation date (newest first)',
+  TOPO_ASC: 'Topological',
   CUSTOM: 'Custom'
 }
 
@@ -74,7 +75,7 @@ const CourseList = ({
     if (!dirtyOrder || orderMethod !== 'CUSTOM') {
       setOrderedCourses(sortedItems(workspace.courses, order, orderMethod))
     }
-  }, [workspace.courses, order, dirtyOrder, orderMethod])
+  }, [workspace.courses, workspace.courses.length, order, dirtyOrder, orderMethod])
 
   const onSortEnd = ({ oldIndex, newIndex }) =>
     oldIndex !== newIndex && ReactDOM.unstable_batchedUpdates(() => {

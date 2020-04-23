@@ -18,6 +18,11 @@ fragment createCourseData on Course {
       id
     }
   }
+  linksFromCourse {
+    to {
+      id
+    }
+  }
   conceptOrder
   objectiveOrder
   concepts {

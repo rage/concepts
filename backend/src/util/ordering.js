@@ -1,3 +1,38 @@
+const topologicalSortCourses = courses => {
+  const courseMap = new Map(courses.map(course => [course.id, course]))
+  const visited = new Set()
+  const sorted = []
+
+  const visit = (course, ancestors) => {
+    if (visited.has(course.id)) {
+      return
+    }
+    ancestors.add(course.id)
+    for (const next of course.linksFromCourse) {
+      if (next.to.id === course.id) {
+        continue
+      }
+      if (ancestors.has(next.to.id)) {
+        throw new Error('cycle found')
+      }
+      visit(courseMap.get(next.to.id), ancestors)
+    }
+    ancestors.delete(course.id)
+    visited.add(course.id)
+    sorted.unshift(course)
+  }
+
+  try {
+    for (const course of courses.reverse()) {
+      visit(course, new Set())
+    }
+  } catch (err) {
+    return courses
+  }
+
+  return sorted
+}
+
 const internalSortItems = (items, method, order) => {
   switch (method) {
   case 'CUSTOM':
@@ -8,6 +43,10 @@ const internalSortItems = (items, method, order) => {
       })
       .filter(item => item !== null)
       .concat(items)
+  case 'TOPO_ASC':
+    return topologicalSortCourses(items)
+  case 'TOPO_DESC':
+    return topologicalSortCourses(items).reverse()
   case 'ALPHA_ASC':
     return items.sort((a, b) => a.name.localeCompare(b.name, 'fi'))
   case 'ALPHA_DESC':
