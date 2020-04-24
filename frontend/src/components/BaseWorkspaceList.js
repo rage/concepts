@@ -78,7 +78,7 @@ const BaseWorkspaceList = ({
   const infoBox = useInfoBox()
   const confirmDelete = useConfirmDelete()
   const confirm = useConfirm()
-  const [compareMode, setCompareMode] = useState(false)
+  const [compareMode, setCompareMode] = useState({status: false, workspaceId: null})
 
   const handleCreateOpen = () => {
     handleMenuClose()
@@ -178,12 +178,12 @@ const BaseWorkspaceList = ({
   }
 
   const handleCompareMode = () => {
-    setCompareMode(true)
+    setCompareMode({ status: true, workspaceId: menu.workspace.id })
     handleMenuClose()
   }
 
   const cancelCompareMode = () => {
-    setCompareMode(false)
+    setCompareMode({ status: false, workspaceId: null })
   }
 
   const handleDelete = async () => {
@@ -293,8 +293,10 @@ This will change which template is cloned by users.`,
       />
 
       <ListItemSecondaryAction>
-        { compareMode ? 
-          <IconButton onClick={() => {}}>
+        { compareMode.status ? 
+          <IconButton onClick={() => {
+            console.log(`Comparing ${compareMode.workspaceId} with ${workspace.id}`)
+          }}>
               <SyncAltIcon />
           </IconButton> : 
           <IconButton
@@ -342,7 +344,7 @@ This will change which template is cloned by users.`,
   return (
     <Card elevation={0} className={classes.root} style={style}>
       {
-        compareMode ? 
+        compareMode.status ? 
           <Button 
             color='primary' variant='outlined' 
             className={classes.cancelButton} onClick={cancelCompareMode}> Cancel  comparison </Button> : 
@@ -401,12 +403,14 @@ This will change which template is cloned by users.`,
             Promote to template
           </MenuItem>
         }
-        <MenuItem aria-label='Compare' onClick={handleCompareMode}>
-          <ListItemIcon>
-            <SyncAltIcon />
-          </ListItemIcon>
-          Compare
-        </MenuItem>
+        {type !== TYPE_TEMPLATE &&
+          <MenuItem aria-label='Compare' onClick={handleCompareMode}>
+            <ListItemIcon>
+              <SyncAltIcon />
+            </ListItemIcon>
+            Compare
+          </MenuItem>
+        }
         {type !== TYPE_USER &&
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
