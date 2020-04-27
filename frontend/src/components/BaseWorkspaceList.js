@@ -285,7 +285,7 @@ This will change which template is cloned by users.`,
     >
       <ListItemText
         primary={
-          <Typography className={classes.workspaceName} variant='h6'>
+          <Typography className={classes.workspaceName} variant='h6' style={{color: compareMode.workspaceId == workspace.id ? 'red' : 'black'}}>
             {workspace.name}
           </Typography>
         }
@@ -343,13 +343,7 @@ This will change which template is cloned by users.`,
 
   return (
     <Card elevation={0} className={classes.root} style={style}>
-      {
-        compareMode.status ? 
-          <Button 
-            color='primary' variant='outlined' 
-            className={classes.cancelButton} onClick={cancelCompareMode}> Cancel  comparison </Button> : 
-          <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
-      }
+      <CardHeader action={cardHeaderAction} title={cardHeaderTitle} />
       <List dense={false} className={classes.list}>{workspaceList}</List>
       <Menu anchorEl={menu.anchor} open={menu.open} onClose={handleMenuClose}>
         <MenuItem aria-label='Mapper' onClick={handleNavigateCourseMapper}>
@@ -426,6 +420,11 @@ This will change which template is cloned by users.`,
           Delete
         </MenuItem>
       </Menu>
+      {
+        compareMode.status && 
+          <Button color='primary' variant='outlined' 
+          className={classes.cancelButton} onClick={cancelCompareMode}> Cancel  comparison </Button>
+      }
     </Card>
   )
 }
