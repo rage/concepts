@@ -262,6 +262,10 @@ This will change which template is cloned by users.`,
     history.push(`${urlPrefix}/${menu.workspace.id}/heatmap`)
   }
 
+  const handleNavigateComparisonView = (workspaceId) => {
+    history.push(`${urlPrefix}/${compareMode.workspaceId}/conceptmapper/${workspaceId}`)
+  }
+
   const isActiveTemplate = (menu.workspace && activeTemplate) &&
     menu.workspace.id === activeTemplate.id
 
@@ -295,7 +299,7 @@ This will change which template is cloned by users.`,
       <ListItemSecondaryAction>
         { compareMode.status ? 
           <IconButton onClick={() => {
-            console.log(`Comparing ${compareMode.workspaceId} with ${workspace.id}`)
+            handleNavigateComparisonView(workspace.id)
           }}>
               <SyncAltIcon />
           </IconButton> : 
