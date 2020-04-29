@@ -83,48 +83,50 @@ const CourseListItem = ({
         />
         : ''}
     >
-      <SortableItem
-        className={course.id === focusedCourseId ? classes.listItemActive :
-          editing && editing !== course.id ? classes.listItemDisabled : null}
-        button={editing !== course.id}
-        classes={{ button: classes.courseButton }}
-        index={index}
-        ref={index === 0 ? infoBox.ref('manager', 'FOCUS_COURSE') : undefined}
-        onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
-      >
-        {editing === course.id ? <CourseEditor
-          submit={args => {
-            setEditing(null)
-            updateCourse({ id: course.id, ...args })
-          }}
-          cancel={() => setEditing(null)}
-          defaultValues={course}
-          tagOptions={courseTags}
-          action='Save'
-        /> : <>
-          <ListItemText primary={
-            <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
-          } />
-          <ListItemSecondaryAction>
-            {course.frozen && user.role < Role.STAFF ? (
-              <IconButton disabled classes={{ root: classes.hoverButton }}>
-                <LockIcon />
-              </IconButton>
-            ) : <>
-              <IconButton
-                title={course.frozen ? 'This course is frozen' : undefined}
-                disabled={course.frozen} className={classes.hoverButton} onClick={handleDelete}
-              >
-                <DeleteIcon />
-              </IconButton>
-              <IconButton className={classes.hoverButton} onClick={handleEdit}>
-                <EditIcon />
-              </IconButton>
-            </>}
-            <DragHandle />
-          </ListItemSecondaryAction>
-        </>}
-      </SortableItem>
+      <div>
+        <SortableItem
+          className={course.id === focusedCourseId ? classes.listItemActive :
+            editing && editing !== course.id ? classes.listItemDisabled : null}
+          button={editing !== course.id}
+          classes={{ button: classes.courseButton }}
+          index={index}
+          ref={index === 0 ? infoBox.ref('manager', 'FOCUS_COURSE') : undefined}
+          onClick={() => editing !== course.id && setFocusedCourseId(course.id)}
+        >
+          {editing === course.id ? <CourseEditor
+            submit={args => {
+              setEditing(null)
+              updateCourse({ id: course.id, ...args })
+            }}
+            cancel={() => setEditing(null)}
+            defaultValues={course}
+            tagOptions={courseTags}
+            action='Save'
+          /> : <>
+            <ListItemText primary={
+              <Typography className={classes.courseName} variant='h6'>{course.name}</Typography>
+            } />
+            <ListItemSecondaryAction>
+              {course.frozen && user.role < Role.STAFF ? (
+                <IconButton disabled classes={{ root: classes.hoverButton }}>
+                  <LockIcon />
+                </IconButton>
+              ) : <>
+                <IconButton
+                  title={course.frozen ? 'This course is frozen' : undefined}
+                  disabled={course.frozen} className={classes.hoverButton} onClick={handleDelete}
+                >
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton className={classes.hoverButton} onClick={handleEdit}>
+                  <EditIcon />
+                </IconButton>
+              </>}
+              <DragHandle />
+            </ListItemSecondaryAction>
+          </>}
+        </SortableItem>
+      </div>
     </Tooltip>
   )
 }
