@@ -5,7 +5,13 @@ import { getTagColor } from '../dialogs/tagSelectUtils'
 
 const ConceptToolTipContent = ({ description, subtitle, tags }) => (
   <div style={{ padding: '2px' }}>
-    <Typography variant='body1'>
+    <Typography variant='body1' style={{
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: '-webkit-box',
+      WebkitBoxOrient: 'vertical',
+      WebkitLineClamp: 5
+    }}>
       {description}
     </Typography>
     {
