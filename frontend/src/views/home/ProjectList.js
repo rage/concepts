@@ -51,12 +51,24 @@ const ProjectList = ({ projects }) => {
   })
 
   const handleDelete = async (id) => {
-    if (!await confirmDelete('Are you sure you want to delete this project?')) {
+    const confirm = await confirmDelete(
+      'Are you sure you want to delete this project?',
+      {
+        checkboxes: [{
+          name: 'Also delete ALL related workspaces',
+          id: 'deleteWorkspaces',
+          default: false
+        }]
+      })
+    if (!confirm.ok) {
       return
     }
     try {
       await deleteProject({
-        variables: { id }
+        variables: {
+          id,
+          deleteWorkspaces: confirm.deleteWorkspaces
+        }
       })
     } catch (err) {
       messageDispatch({
