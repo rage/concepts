@@ -16,12 +16,13 @@ export const useConfirm = () => {
 
 export const useConfirmDelete = () => {
   const { open } = useAlertDialog()
-  return message => open({
+  return (message, extra = {}) => open({
     type: 'warning',
     title: 'Confirm deletion',
     message,
     confirm: 'Yes, delete',
     confirmColor: 'secondary',
-    cancel: 'No, cancel'
+    cancel: 'No, cancel',
+    ...extra
   })
 }

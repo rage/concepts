@@ -75,13 +75,23 @@ const ProjectNavBar = ({ page, projectId, urlPrefix }) => {
   const handleDelete = async () => {
     setMenuAnchor(null)
 
-    if (!await confirmDelete('Are you sure you want to delete this project?')) {
+    const confirm = await confirmDelete(
+      'Are you sure you want to delete this project?',
+      {
+        checkboxes: [{
+          name: 'Also delete ALL related workspaces',
+          id: 'deleteWorkspaces',
+          default: false
+        }]
+      })
+    if (!confirm.ok) {
       return
     }
     try {
       await deleteProject({
         variables: {
-          id: projectId
+          id: projectId,
+          deleteWorkspaces: confirm.deleteWorkspaces
         }
       })
     } catch {
