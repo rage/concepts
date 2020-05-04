@@ -19,8 +19,8 @@ mutation updateProject($id: ID!, $name: String!) {
 `
 
 const DELETE_PROJECT = gql`
-mutation deleteProject($id: ID!) {
-  deleteProject(id: $id) {
+mutation deleteProject($id: ID!, $deleteWorkspaces: Boolean!) {
+  deleteProject(id: $id, deleteWorkspaces: $deleteWorkspaces) {
     id
   }
 }
