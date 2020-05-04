@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Card, CardHeader, CardContent, List, IconButton } from '@material-ui/core'
+import {
+  Button, Card, CardHeader, CardContent, List, IconButton, Typography
+} from '@material-ui/core'
 import {
   Edit as EditIcon, Lock as LockedIcon, LockOpen as LockOpenIcon,
   KeyboardArrowUp as CollapseIcon, KeyboardArrowDown as ExpandIcon
@@ -60,6 +62,15 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     borderRadius: 0,
     marginBottom: '6px'
+  },
+  description: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 5,
+
+    padding: '0 16px'
   },
   content: {
     paddingTop: 0
@@ -142,6 +153,9 @@ const Course = ({
           </IconButton>
         </>}>
       </CardHeader>
+      <Typography variant='body2' className={classes.description}>
+        {course.description}
+      </Typography>
       <Button className={classes.collapser} onClick={() => toggleCollapse(course.id)}>
         {collapsed ? <ExpandIcon /> : <CollapseIcon />}
       </Button>

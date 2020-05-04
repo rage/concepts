@@ -58,20 +58,17 @@ const useEditConceptDialog = (workspaceId, isStaff) => {
       name: 'description',
       multiline: true,
       defaultValue: description
-    },
-    {
+    }, {
       name: 'official',
       type: 'checkbox',
       defaultValue: official,
       hidden: !isStaff
-    },
-    {
+    }, {
       name: 'frozen',
       type: 'checkbox',
       defaultValue: frozen,
       hidden: !isStaff
-    },
-    {
+    }, {
       type: 'select',
       name: 'tags',
       label: 'Select tags...',
