@@ -5,6 +5,7 @@ query courseById($id: ID!) {
   courseById(id: $id) {
     id
     name
+    description
     official
     frozen
     tags {
@@ -42,6 +43,7 @@ query courseById($id: ID!) {
   courseById(id: $id) {
     id
     name
+    description
     official
     frozen
     tags {
@@ -124,6 +126,7 @@ fragment courseAndConcepts on Course {
   __typename
   id
   name
+  description
   official
   frozen
   tags {

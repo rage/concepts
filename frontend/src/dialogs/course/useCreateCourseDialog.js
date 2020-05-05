@@ -18,12 +18,13 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
     update: cache.createCourseUpdate(workspaceId)
   })
 
-  const createOptimisticResponse = ({ name, official, frozen, tags }) => ({
+  const createOptimisticResponse = ({ name, description, official, frozen, tags }) => ({
     __typename: 'Mutation',
     createCourse: {
       __typename: 'Course',
       id: generateTempId(),
       name,
+      description,
       official,
       frozen,
       tags: tags.map(tag => ({
@@ -56,13 +57,14 @@ const useCreateCourseDialog = (workspaceId, isStaff) => {
     fields: [{
       name: 'name',
       required: true
-    },
-    {
+    }, {
+      name: 'description',
+      multiline: true
+    }, {
       name: 'official',
       type: 'checkbox',
       hidden: !isStaff
-    },
-    {
+    }, {
       name: 'frozen',
       type: 'checkbox',
       hidden: !isStaff

@@ -69,18 +69,15 @@ const useCreateConceptDialog = (workspaceId, isStaff, defaultLevel = 'CONCEPT') 
       name: 'description',
       multiline: true,
       defaultValue: description
-    },
-    {
+    }, {
       name: 'official',
       type: 'checkbox',
       hidden: !isStaff
-    },
-    {
+    }, {
       name: 'frozen',
       type: 'checkbox',
       hidden: !isStaff
-    },
-    {
+    }, {
       type: 'select',
       name: 'tags',
       label: 'Select tags...',

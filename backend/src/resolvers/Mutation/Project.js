@@ -22,6 +22,15 @@ export const deleteProject = async (root, args, context) => {
     minimumPrivilege: Privilege.OWNER,
     projectId: args.id
   })
+  if (args.deleteWorkspaces) {
+    await context.prisma.deleteManyWorkspaces({
+      OR: [
+        { asMerge: { id: args.id } },
+        { asTemplate: { id: args.id } },
+        { sourceProject: { id: args.id } }
+      ]
+    })
+  }
   return await context.prisma.deleteProject({
     id: args.id
   })
