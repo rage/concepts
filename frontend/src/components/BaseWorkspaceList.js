@@ -263,16 +263,7 @@ This will change which template is cloned by users.`,
   }
 
   const handleNavigateComparisonView = (workspaceId) => {
-    if (activeTemplate.pointGroups.length > 0) {
-      const activeCourseId = activeTemplate.pointGroups[0].course.id
-      const url = `${urlPrefix}/conceptmapper/cmp/${compareMode.workspaceId}/w/${workspaceId}/${activeCourseId}`
-      history.push(url)
-    } else {
-      messageDispatch({
-        type: 'setError',
-        data: 'No pointgroup set'
-      })
-    }
+    history.push(`${urlPrefix}/comp/${compareMode.workspaceId}/w/${workspaceId}`)
   }
 
   const isActiveTemplate = (menu.workspace && activeTemplate) &&
