@@ -1,5 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
+import { useQuery } from '@apollo/react-hooks'
+import { WORKSPACE_COMPARISON } from '../../graphql/Query'
+
+import LoadingBar from '../../components/LoadingBar'
+import ConceptLink from '../../components/ConceptLink'
+import ConceptNode from './ConceptNode'
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -24,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const GraphContainer = ({ concepts, links }) => {
+const GraphContainer = ({ workspace }) => {
     const { graphWrapper } = useStyles()
 
     return (
@@ -39,8 +45,16 @@ const GraphSplitter = () => <div style={{borderLeft: '1px solid black'}} />
 const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
 
     const { wrapper, containerWrapper, compPercentageWrapper } = useStyles()
-    const workspaceQuery = null
-    const compWorkspaceQuery = null
+    
+    const workspaceQuery = useQuery(WORKSPACE_COMPARISON, { 
+        variables: { workspaceId, compWorkspaceId }
+    })
+
+    if (!workspaceQuery.data) {
+        return <LoadingBar id='comparison-view' />
+    }
+
+    const { workspace, compWorkspace } = workspaceQuery.data
 
     return (
         <div className={wrapper}>
@@ -48,9 +62,9 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
                 <h1> 78 % </h1>  
             </div>
             <div className={containerWrapper}>
-                <GraphContainer/>
+                <GraphContainer workspace={workspace}/>
                 <GraphSplitter/>
-                <GraphContainer/>
+                <GraphContainer workspace={compWorkspace}/>
             </div>
         </div>
     )
