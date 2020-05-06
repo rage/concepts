@@ -122,7 +122,7 @@ const oppositeLevel = {
 
 const conversionOptions = ['CONCEPT', 'OBJECTIVE']
 
-const ConceptMapperView = ({ workspaceId, courseId, urlPrefix, compWorkspaceId }) => {
+const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
   const [{ user }] = useLoginStateValue()
