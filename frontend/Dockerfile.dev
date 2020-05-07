@@ -1,3 +1,6 @@
+# N.B. This is the legacy dockerfile, the one now used in development is
+# snowpack/Dockerfile.dev
+
 FROM node:12-alpine
 
 VOLUME /concepts/frontend
