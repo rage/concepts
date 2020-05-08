@@ -4,8 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { WORKSPACE_COMPARISON } from '../../graphql/Query'
 
 import LoadingBar from '../../components/LoadingBar'
-import ConceptLink from '../../components/ConceptLink'
-import ConceptNode from './ConceptNode'
+import { compareConcepts } from './conceptMapComparison'
 
 const useStyles = makeStyles(theme => ({
     wrapper: {
@@ -56,10 +55,14 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
 
     const { workspace, compWorkspace } = workspaceQuery.data
 
+    const compareCourses = (course, compCourse) => {
+        return compareConcepts(course.concepts, compCourse.concepts) 
+    }
+    const distance  = compareCourses(workspace.courses[0], compWorkspace.courses[0])
     return (
         <div className={wrapper}>
             <div className={compPercentageWrapper}>
-                <h1> 78 % </h1>  
+                <h1> Total distance: { distance.toFixed(2) } </h1>  
             </div>
             <div className={containerWrapper}>
                 <GraphContainer workspace={workspace}/>

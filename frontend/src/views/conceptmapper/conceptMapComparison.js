@@ -6,18 +6,18 @@ import lev from 'fast-levenshtein'
  * @param {concepts} concepts an array of concepts
  */
 const closestPair = (concept, concepts) => {
-    const closestPair = null
-    const value = 0
+    let closestPair = null
+    let value = 999
 
     for (const compConcept of concepts) {
-        let compValue = lev.get(concept.name, compConcept.name);
-        if (compValue > value) {
+        const compValue = lev.get(concept.name, compConcept.name)
+        if (compValue < value) {
             value = compValue
             closestPair = compConcept
         }
     }
 
-    return closestPair
+    return { concept, closestPair, value }
 }
 
 /**
@@ -27,8 +27,8 @@ const closestPair = (concept, concepts) => {
  */
 const compareConcepts = (concepts1, concepts2) => {
     const pairs = []
-    for (concept of concepts1) {
-        pairs.push([concept, closestPair(concepts2)])
+    for (const concept of concepts1) {
+        pairs.push(closestPair(concept, concepts2))
     }
 
     // TODO: compare concept links
@@ -36,8 +36,9 @@ const compareConcepts = (concepts1, concepts2) => {
     // Calculate the avarege of the comparisons
     let compValue = 0.0
     for (const pair of pairs) {
-        if (pair[0] !== null && pair[1] !== null) {
-            compValue = lev.get(pair[0].name, pair[1].name)
+        const { closestPair, value } = pair
+        if (closestPair !== null) {
+            compValue += value
         }
     }
 
@@ -46,5 +47,6 @@ const compareConcepts = (concepts1, concepts2) => {
 }
 
 export {
-    compareConcepts
+    compareConcepts,
+    closestPair
 }
