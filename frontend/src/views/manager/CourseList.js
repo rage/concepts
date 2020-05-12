@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { ExpandMore } from '@material-ui/icons'
 import {
-  Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem
+  Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem, Menu, IconButton
 } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
@@ -60,6 +61,7 @@ const CourseList = ({
   const [editing, setEditing] = useState(null)
   const [{ user }] = useLoginStateValue()
   const [courseFilter, setCourseFilter] = useState('')
+  const [menu, setMenu] = useState({ open: false, anchor: null })
 
   const order = workspace.courseOrder
   const isOrdered = order?.length === 1 && order[0].startsWith('__ORDER_BY__')
@@ -106,6 +108,17 @@ const CourseList = ({
   const conceptFilterParsed = search.parse(courseFilter)
   const includeCourse = course => search.include(course, conceptFilterParsed)
 
+  const openMenu = evt => setMenu({ anchor: evt.target, open: true })
+  const closeMenu = () => setMenu({ ...menu, open: false })
+  const selectMenu = tagName => () => {
+    let space = ' '
+    if (courseFilter.length === 0 || courseFilter.endsWith(' ')) {
+      space = ''
+    }
+    setCourseFilter(`${courseFilter}${space}tag:${tagName}`)
+    closeMenu()
+  }
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -143,6 +156,12 @@ const CourseList = ({
           onChange={evt => setCourseFilter(evt.target.value)}
           className={classes.filterText}
         />
+        {courseTags.length > 0 && <IconButton onClick={openMenu}><ExpandMore /></IconButton>}
+        <Menu anchorEl={menu.anchor} open={menu.open} onClose={closeMenu}>
+          {courseTags.map(tag =>
+            <MenuItem key={tag.id} onClick={selectMenu(tag.label)}>tag:{tag.label}</MenuItem>
+          )}
+        </Menu>
         <TextField
           select
           variant='outlined'
