@@ -45,6 +45,9 @@ export const parseFilter = filter => {
     building.length = 0
   }
   for (const char of filter.split('')) {
+    // TODO Maybe this should just set quote = null instead of build() when char === quote
+    //      That way you could have multiple quoted parts (which is probably not necessary in
+    //      practice, but would be technically nice to have)
     if (char === quote || (char === ' ' && !quote)) build()
     else if (!quote && (char === '"' || char === "'")) quote = char
     else building.push(char)

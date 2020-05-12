@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ExpandMore } from '@material-ui/icons'
 import {
-  Button, TextField, Card, CardHeader, MenuItem, CircularProgress, Typography, IconButton, Menu
+  Button, TextField, Card, CardHeader, MenuItem, CircularProgress, Typography, IconButton, Menu,
+  Tooltip
 } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
@@ -273,9 +274,14 @@ const ConceptList = ({
     if (conceptFilter.length === 0 || conceptFilter.endsWith(' ')) {
       space = ''
     }
+    if (tagName.includes(' ')) {
+      tagName = `"${tagName}"`
+    }
     setConceptFilter(`${conceptFilter}${space}tag:${tagName}`)
     closeMenu()
   }
+
+  const tagSort = (tag1, tag2) => tag1.label.toLowerCase().localeCompare(tag2.label.toLowerCase())
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -295,10 +301,14 @@ const ConceptList = ({
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
         />
-        {conceptTags.length > 0 && <IconButton onClick={openMenu}><ExpandMore /></IconButton>}
+        {conceptTags.length > 0 && (
+          <Tooltip title='Filter by tag'>
+            <IconButton onClick={openMenu}><ExpandMore /></IconButton>
+          </Tooltip>
+        )}
         <Menu anchorEl={menu.anchor} open={menu.open} onClose={closeMenu}>
-          {conceptTags.map(tag =>
-            <MenuItem key={tag.id} onClick={selectMenu(tag.label)}>tag:{tag.label}</MenuItem>
+          {conceptTags.sort(tagSort).map(tag =>
+            <MenuItem key={tag.id} onClick={selectMenu(tag.label)}>{tag.label}</MenuItem>
           )}
         </Menu>
         { sortable &&

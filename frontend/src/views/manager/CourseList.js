@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { ExpandMore } from '@material-ui/icons'
 import {
-  Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem, Menu, IconButton
+  Card, CardHeader, Button, CircularProgress, Typography, TextField, MenuItem, Menu, IconButton,
+  Tooltip
 } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
@@ -108,6 +109,8 @@ const CourseList = ({
   const conceptFilterParsed = search.parse(courseFilter)
   const includeCourse = course => search.include(course, conceptFilterParsed)
 
+  // TODO this tag menu stuff is duplicated in ConceptList.js
+  //      and should be moved to some shared component.
   const openMenu = evt => setMenu({ anchor: evt.target, open: true })
   const closeMenu = () => setMenu({ ...menu, open: false })
   const selectMenu = tagName => () => {
@@ -115,9 +118,14 @@ const CourseList = ({
     if (courseFilter.length === 0 || courseFilter.endsWith(' ')) {
       space = ''
     }
+    if (tagName.includes(' ')) {
+      tagName = `"${tagName}"`
+    }
     setCourseFilter(`${courseFilter}${space}tag:${tagName}`)
     closeMenu()
   }
+
+  const tagSort = (tag1, tag2) => tag1.label.toLowerCase().localeCompare(tag2.label.toLowerCase())
 
   return (
     <Card elevation={0} className={classes.root}>
@@ -156,10 +164,14 @@ const CourseList = ({
           onChange={evt => setCourseFilter(evt.target.value)}
           className={classes.filterText}
         />
-        {courseTags.length > 0 && <IconButton onClick={openMenu}><ExpandMore /></IconButton>}
+        {courseTags.length > 0 && (
+          <Tooltip title='Filter by tag'>
+            <IconButton onClick={openMenu}><ExpandMore /></IconButton>
+          </Tooltip>
+        )}
         <Menu anchorEl={menu.anchor} open={menu.open} onClose={closeMenu}>
-          {courseTags.map(tag =>
-            <MenuItem key={tag.id} onClick={selectMenu(tag.label)}>tag:{tag.label}</MenuItem>
+          {courseTags.sort(tagSort).map(tag =>
+            <MenuItem key={tag.id} onClick={selectMenu(tag.label)}>{tag.label}</MenuItem>
           )}
         </Menu>
         <TextField
