@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import { ExpandMore } from '@material-ui/icons'
 import {
-  Button, TextField, Card, CardHeader, MenuItem, CircularProgress, Typography
+  Button, TextField, Card, CardHeader, MenuItem, CircularProgress, Typography, IconButton, Menu,
+  Tooltip
 } from '@material-ui/core'
 import ReactDOM from 'react-dom'
 
@@ -89,6 +91,7 @@ const ConceptList = ({
   const mergeDialogTimeout = useRef(-1)
   const [mergeDialogOpen, setMergeDialogOpen] = useState(null)
   const [conceptFilter, setConceptFilter] = useState('')
+  const [menu, setMenu] = useState({ open: false, anchor: null })
 
   const orderName = `${level.toLowerCase()}Order`
   const conceptOrder = course[orderName]
@@ -264,6 +267,22 @@ const ConceptList = ({
     })
   }
 
+  const openMenu = evt => setMenu({ anchor: evt.target, open: true })
+  const closeMenu = () => setMenu({ ...menu, open: false })
+  const selectMenu = tagName => () => {
+    let space = ' '
+    if (conceptFilter.length === 0 || conceptFilter.endsWith(' ')) {
+      space = ''
+    }
+    if (tagName.includes(' ')) {
+      tagName = `"${tagName}"`
+    }
+    setConceptFilter(`${conceptFilter}${space}tag:${tagName}`)
+    closeMenu()
+  }
+
+  const tagSort = (tag1, tag2) => tag1.label.toLowerCase().localeCompare(tag2.label.toLowerCase())
+
   return (
     <Card elevation={0} className={classes.root}>
       <CardHeader
@@ -282,6 +301,16 @@ const ConceptList = ({
           onChange={evt => setConceptFilter(evt.target.value)}
           className={classes.filterText}
         />
+        {conceptTags.length > 0 && (
+          <Tooltip title='Filter by tag'>
+            <IconButton onClick={openMenu}><ExpandMore /></IconButton>
+          </Tooltip>
+        )}
+        <Menu anchorEl={menu.anchor} open={menu.open} onClose={closeMenu}>
+          {conceptTags.sort(tagSort).map(tag =>
+            <MenuItem key={tag.id} onClick={selectMenu(tag.label)}>{tag.label}</MenuItem>
+          )}
+        </Menu>
         { sortable &&
           <TextField
             select

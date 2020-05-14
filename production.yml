@@ -13,7 +13,7 @@ services:
       PRISMA_MANAGEMENT_API_JWT_SECRET: yFodXR4mdFErATYsUrBvE4RPBiCUADbdONF6OMH28kA8gU0T6A
       BASE_URL: https://concepts.cs.helsinki.fi
       #HAKA_LOGIN_URL: https://haka.funet.fi/shibboleth/WAYF?entityID=https://concepts.cs.helsinki.fi&return=https://concepts.cs.helsinki.fi/api/login
-      #HAKA_METADATA_URL: https://haka.funet.fi/metadata/haka-metadata.xml
+      #SAML_METADATA_URL: https://haka.funet.fi/metadata/haka-metadata.xml
       #SAML_DIR: /concepts/backend/saml
     depends_on:
       - prisma

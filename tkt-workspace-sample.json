@@ -1,0 +1,4856 @@
+{
+  "workspaceId": "ck6kfbl3a02940864l8ho3u4n",
+  "conceptTags": [
+    {
+      "name": "REMEMBER",
+      "type": "bloom",
+      "priority": 0
+    },
+    {
+      "name": "UNDERSTAND",
+      "type": "bloom",
+      "priority": 100
+    },
+    {
+      "name": "APPLY",
+      "type": "bloom",
+      "priority": 200
+    },
+    {
+      "name": "ANALYZE",
+      "type": "bloom",
+      "priority": 300
+    },
+    {
+      "name": "EVALUATE",
+      "type": "bloom",
+      "priority": 400
+    },
+    {
+      "name": "CREATE",
+      "type": "bloom",
+      "priority": 500
+    }
+  ],
+  "courseTags": [],
+  "courses": [
+    {
+      "name": "Ohjelmoinnin perusteet",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Metodien käyttö",
+          "description": "Osaa luoda metodeja ja ymmärtää miten ohjelman suoritus etenee kun metodia kutsutaan ja toisaalta kun metodikutsusta palataan",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "742,535,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Metodien ymmärrys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Yksikkötestaus",
+          "description": "Harjoittelet ohjelmien testaamista syötteitä ja tulosteita vertailemalla ja osaat kirjoittaa yksikkötestejä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1177,194,200,34",
+          "level": "CONCEPT",
+          "prerequisites": []
+        },
+        {
+          "name": "IO",
+          "description": "Tuntee käsitteet tiedosto ja tiedostojärjestelmä ja osaa lukea merkkijonomuotoista tietoa tiedostosta",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "176,245,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Syötteen luku ja käsittely",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Olioiden vertailu",
+          "description": "Osaa vertailla olioiden samankaltaisuutta sekä määritellä samankaltaisuuden vertailuun käytettävän metodin ",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1367,596,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "OOP-käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Olioiden käyttö luokissa",
+          "description": "Osaa määritellä luokkaan viittaustyyppisiä oliomuuttujia, käyttää olioita metodin paluuarvona, sekä käyttää listoja oliomuuttujina",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1581,596,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "OOP-käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Staattiset metodit",
+          "description": "Ymmärtää staattisten ja ei-staattisten metodien erot",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "601,619,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Metodien käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Olioiden käyttöhajautustauluissa",
+          "description": "Osaa käyttää olioita hajautustaulun arvona ja tietää miten oliot toimivat hajautustaulun avaimena",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1117,593,237,38",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "OOP-käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Single responsibility principle",
+          "description": "Osaa käyttää olioita sekä tiedon esittämiseen että ohjelman jakamiseen useampaan vastuualueeseen (tekstikäyttöliittymä, sovelluslogiikka)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1363,479,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "OOP ymmärrys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Proseduraalinen ja olio-ohjelmoinnin ero",
+          "description": "Osaa kertoa proseduraalisen ohjelmoinnin ja olio-ohjelmoinnin eroista ja toteuttaa ohjelmia kumpaakin ohjelmointiparadigmaa noudattaen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1587,481,272,36",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "OOP ymmärrys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Syötteen luku ja käsittely",
+          "description": "Osaa kirjoittaa ohjelmia, jotka lukevat käyttäjältä syötettä ja tekevät laskentaa syötteen perusteella",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "284,153,181,40",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Muuttujan, ehtolauseen ja toistolauseen ymmärrys ja käyttö",
+          "description": "Tuntee käsitteet muuttuja, ehtolause ja toistolause, ja osaa käyttää näitä ohjelmissasi",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "343.4195765882462,382.8082427739983,215,76",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Taulukon läpikäynti",
+              "official": false
+            },
+            {
+              "name": "Syötteen luku ja käsittely",
+              "official": false
+            },
+            {
+              "name": "Loogiset operaattorit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Ohjelmointikokemus",
+          "description": "Tuntee muutamia osaongelmia sekä niihin liittyviä ratkaisumalleja",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "332,593,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Muuttujan, ehtolauseen ja toistolauseen ymmärrys ja käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Loogiset operaattorit",
+          "description": "Tuntee loogiset operaatiot ja, tai ja ei ja osaa käyttää niitä ehto- ja toistolauseissa ",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "119,337,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Metodien ymmärrys",
+          "description": "Tuntee käsitteet metodi, metodin parametri, metodin palautusarvo ja ohjelman kutsupino ",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "740,459,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Koodin dokumentointi",
+          "description": "Tietää lähdekoodin kommentointitapoja ja ymmärtää miten muuttujien ja metodien nimentä vaikuttaa ohjelman ymmärrettävyyteen ",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "211,693,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Ohjelmointikokemus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Lista- ja taulukkorakenne",
+          "description": "Tuntee lista- ja taulukkorakenteen ja osaa käyttää niitä osana ohjelmia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "801,237,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Alkeis- ja viitetyyppiset muuttujat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Taulukon läpikäynti",
+          "description": "Osaa käydä listan ja taulukon läpi while-toistolausetta ja indeksimuuttujaa käyttäen sekä for-each -toistolausetta käyttäen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "699,325,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Lista- ja taulukkorakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Merkkijonon käsittely",
+          "description": "Tuntee merkkijonoon liittyviä metodeja ja osaa pilkkoa merkkijonon pienempiin osiin",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "520,243,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Syötteen luku ja käsittely",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "OOP ymmärrys",
+          "description": "Tietää mitä olio-ohjelmointi tarkoittaa ja Tuntee olio-ohjelmointiin liittyvät keskeiset käsitteet kuten luokka ja olio",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1360,374,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "OOP-käyttö",
+          "description": "Osaa luoda luokkia ja olioita sekä käyttää niitä osana toteuttamiasi ohjelmia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1133,481,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "OOP ymmärrys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Alkeis- ja viitetyyppiset muuttujat",
+          "description": "Tietää mitä alkeis- ja viittaustyyppiset muuttujat ovat ja ymmärtää miten niiden toiminta eroaa toisistaan (muuttujan arvon asetus, metodin parametrina käyttö)",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "788,157,232,38",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Konstruktorin ja metodin monipuolinen käyttö",
+          "description": "Osaa luoda luokkaan useita konstruktoreja sekä useita samannimisiä metodeja ",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "869,606,210,55",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Metodien käyttö",
+              "official": false
+            },
+            {
+              "name": "OOP-käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Hajautustaulun käyttö",
+          "description": "Tuntee hajautustaulun ja osaa käsitellä hajautustaulussa olevaa tietoa ja Osaa ryhmitellä tietoa hajautustaulun avulla ja osaa käyttää listaa hajautustaulun arvona",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "916,322,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Lista- ja taulukkorakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Algoritmin määritelmä",
+          "description": "Tietää mitä käsite algoritmi tarkoittaa ja osaa kuvailla muutamien järjestämis- ja hakualgoritmien toimintaa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "444,691,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Ohjelmointikokemus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Testivetoinen ohjelmistokehitys",
+          "description": "Tietää testivetoisen ohjelmistokehityksen perusaskeleet",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1171,274,220,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Yksikkötestaus",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Ohjelmoinnin perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Ohjelmoinnin jatkokurssi",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Abstraktit luokat",
+          "description": "Tietää miten abstraktit luokat toimivat",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "502,686,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Luokkien perintä",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Virrat (java)",
+          "description": "Osaa käsitellä tietokokoelmia virran avulla",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "502,114,200,34",
+          "level": "CONCEPT",
+          "prerequisites": []
+        },
+        {
+          "name": "Filter ja map",
+          "description": "Osaa rajata virran arvoja (filter) sekä muuntaa virran arvojen tyyppiä (map)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "502,307,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Lambda-lauseke",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Lambda-lauseke",
+          "description": "Tuntee käsitteen lambda-lauseke",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "502,210,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Virrat (java)",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Lueteltu tyyppi",
+          "description": "Tuntee lueteltun tyypin ja osaa hyödyntää sitä ohjelmissa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "96,519,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Olion esitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Iteraattori",
+          "description": "Tuntee Iteraattorin ja osaa hyödyntää sitä ohjelmissa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "696,422,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Olion esitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Perintä ja rajapinta",
+          "description": "Tuntee käsitteet perintä ja rajapinta ",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "367,513,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Olion esitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Luokkien perintä",
+          "description": "Osaa luoda luokkia, jotka periytyvät toisesta luokasta ja osaa luoda luokkia, jotka toteuttavat yhden tai useamman rajapinnan",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "366,585,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Perintä ja rajapinta",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Olion esitys",
+          "description": "Ymmärtää että olio voidaan esittää kaikkien sen todellisten tyyppien avulla",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "371,427,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Olioiden järjestely javassa",
+          "description": "Osaa järjestää olioita Javan valmista Comparable-rajapintaa hyödyntäen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "24,422,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Olion esitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Säännöllinen lauseke",
+          "description": "Tuntee säännöllisen lausekkeen ja osaa hyödyntää sitä ohjelmissa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "250,154,214,33",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Luokkakaavioiden käyttö",
+          "description": "Tuntee luokkakaaviot ja osaa tulkita ja rakentaa ohjelmia luokkakaavioiden perusteella",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1163,583,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Javan pakkaukset",
+          "description": "Osaa käyttää Javan pakkauksia ja tietää mistä import-lauseen osat muodostuvat",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "949,588,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Javan poikkeuskäsittely",
+          "description": "Tuntee Javan erilaisia poikkeuksia ja osaa käsitellä sekä heittää niitä eteenpäin",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "623,506,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Olion esitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "IO-kirjoitus",
+          "description": "Osaa kirjoittaa tietoa tiedostoon ohjelmallisesti",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1550,148,239,33",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Geneeriset tyyppiparametrit",
+          "description": "Tietää mitä geneeriset tyyppiparametrit ovat ja osaa luoda luokkia jotka käyttävät niitä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "263,686,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Luokkien perintä",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "HashMap ja ArrayListan sisäinen toteutus",
+          "description": "Tietää pääpiirteittäin ArrayListin ja HashMapin sisäisen toteutuksen ja osaa luoda niistä yksinkertaistetut omat versiot",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "248,209,212,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Lista- ja taulukkorakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Satunnaislukujen luonti ja käyttö",
+          "description": "Tietää miten satunnaislukuja luodaan ja osaa käyttää Javan valmiita välineitä satunnaislukujen luomiseen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1327,508,240,37",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Moniulotteisen tiedon käsittely",
+          "description": "Tuntee menetelmiä moniulotteisen tiedon esittämiseen ja osaa luoda sekä käsitellä moniulotteisia taulukoita",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1581,585,214,38",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Graaffisen käyttöliittymän luonti (javalla)",
+          "description": "Tutustut graafisten käyttöliittymien ohjelmointiin",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1077,207,275,36",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöliittymän mekanismit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöliittymän mekanismit",
+          "description": "Tuntee muutamia käyttöliittymäkomponentteja, käyttöliittymäkomponenttien asettelun mekanismeja, sekä osaa käsitellä käyttöliittymän tapahtumia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1115,116,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Käyttöliittymät monilla näkymillä",
+          "description": "Osaa tehdä käyttöliittymiä, jotka sisältävät useamman näkymän",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "907,302,183,58",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Graaffisen käyttöliittymän luonti (javalla)",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Menetelmiä tiedon visualisointiin",
+          "description": "Tuntee menetelmiä tiedon visualisointiin",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1121,319,233,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Graaffisen käyttöliittymän luonti (javalla)",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Viiva- ja pylväskaavio (javalla)",
+          "description": " Osaa käyttää Javan valmiiksi tarjoamia kaavioita (viivakaavio, pylväskaavio)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1127,415,211,39",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Menetelmiä tiedon visualisointiin",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kuvien ja äänien käsittely (javalla)",
+          "description": "Osaa näyttää kuvia sekä soittaa äänitiedostoja Luot suuremman ohjelman esimerkkiä noudattaen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1397,328,245,35",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Graaffisen käyttöliittymän luonti (javalla)",
+              "official": false
+            },
+            {
+              "name": "IO-kirjoitus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Simulaation luonti",
+          "description": "Tuntee menetelmiä simulaatioiden luomiseen ja kertaat kaksiulotteisten taulukkojen käyttöä ",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1356,680,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Satunnaislukujen luonti ja käyttö",
+              "official": false
+            },
+            {
+              "name": "Luokkakaavioiden käyttö",
+              "official": false
+            },
+            {
+              "name": "Moniulotteisen tiedon käsittely",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kirjastojen luonti",
+          "description": "Tietää, että muiden kirjoittamia kirjastoja voi käyttää osana omia ohjelmia",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "927,680,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Javan pakkaukset",
+              "official": false
+            },
+            {
+              "name": "Luokkakaavioiden käyttö",
+              "official": false
+            },
+            {
+              "name": "Testikattavuus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Testikattavuus",
+          "description": "Kertaat käsitettä yksikkötestaus ja tuntee pääpiirteittäin käsitteen testikattavuus",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "718,588,213,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Ohjelmoinnin jatkokurssi",
+          "official": true
+        },
+        {
+          "name": "Ohjelmoinnin perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Tietokantojen perusteet",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "ACID",
+          "description": "Tuntee termin ACID",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "457,689,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Tietokannanhallintajärjestelmän tuntemus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "BASE",
+          "description": "Tuntee termin BASE",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "362,632,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Tietokannanhallintajärjestelmän tuntemus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Relaatiotietokannan käsitteet",
+          "description": "Tuntee käsitteet tieto, tietokannanhallintajärjestelmä, relaatiotietokanta, tietokanta, tietokantataulu, pääavain ja viiteavain",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "789,195,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokannanhallintajärjestelmän ominaisuudet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "SQL-kielen toiminta periaatteet",
+          "description": "Tuntee tietokantakyselyiden muodostamiseen käytettävän SQL-kielen toimintaperiaatteet",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "773,295,226,35",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Relaatiotietokannan käsitteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Haku yhdestä tai useammasta tietokantataulusta",
+          "description": "Osaa hakea SQL-kielen avulla tietoa yhdestä tai useammasta tietokantataulusta ja osaa rajata ja järjestää kyselyiden tuloksia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "523,338,136,75",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokantataulujen luonti ja poisto",
+          "description": "Osaa luoda ja poistaa tietokantatauluja",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "539,430,244,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokantatauluun lisäys ja poisto",
+          "description": "Osaa lisätä tietokantaan tietoa ja osaa muokata tietokannassa olevaa tietoa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "461,528,244,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokantataulujen luonti ja poisto",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Yhteenvetokyselyt",
+          "description": "Osaa tehdä yhteenvetokyselyitä ja rajata yhteenvetokyselyiden tuloksia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1047,430,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokannanhallintajärjestelmän tuntemus",
+          "description": "Tietää joitakin olemassaolevia tietokannanhallintajärjestelmiä ja olet kokeillut niiden käyttämistä",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "660,577,288,33",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Tiedon kuvaus",
+          "description": "Tuntee menetelmiä tiedon ja tietokannan kuvaamiseen",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1282,97,166,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Käsiteanalyysi",
+          "description": "Tuntee käsiteanalyysin askeleet ja osaa luoda ongelma-alueen kuvauksesta käsitekaavion",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1115,179,223,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon kuvaus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käsitekaavion hyödyntäminen",
+          "description": "Osaa luoda käsitekaaviosta tietokantakaavion",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1117,250,223,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käsiteanalyysi",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kolmas normaalimuoto",
+          "description": "Tietää mitä tietokannan normalisointi tarkoittaa osaa muuntaa annetun tietokantataulun kolmanteen normaalimuotoon",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "210,508,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokantataulujen luonti ja poisto",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokannan eheys ja tietokantatransaktio",
+          "description": "Tuntee käsitteen tietokannan eheys ja tietokantatransaktio, ja tietää milloin tietokantatransaktioita käytetään",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "977,686,163,55",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Tietokannanhallintajärjestelmän ominaisuudet",
+          "description": "Tietää tietokannanhallintajärjestelmältä vaadittuja ominaisuuksia, joita tarvitaan tietokantatransaktioiden toimintaan",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "736,109,317,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Alikyselyt SQL-kielellä",
+          "description": "Osaa tehdä alikyselyitä SQL-kielellä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "742,492,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokantakyselyiden tehokkuus arviointi",
+          "description": "Tuntee menetelmiä tietokantakyselyiden tehokkuuden tarkasteluun",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "472,255,163,56",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokanta indeksit",
+          "description": "Tietää mitä indeksit ovat ja tietää milloin tietokantatauluihin kannattaa määritellä indeksejä",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "201,282,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokantakyselyiden tehokkuus arviointi",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokannan denormalisointi",
+          "description": "Tietää mitä tietokannan denormalisointi tarkoittaa",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "214,445,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokantataulujen luonti ja poisto",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokanta sovellus",
+          "description": "Osaa luoda tietokantaa käyttävän Java-kielisen sovelluksen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1286,391,134,59",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietokantataulun ja olion yhteys",
+          "description": "Tunnistat olio-ohjelmoinnista tuttujen luokkien ja tietokantataulujen välisen yhteyden",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1406,180,143,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon kuvaus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Data Access Object -suunnittelumalli",
+          "description": "Tuntee Data Access Object (DAO) -suunnittelumallin ja ymmärtää sen toiminnan ja haittapuolet",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1420,281,123,75",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokantataulun ja olion yhteys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "N + 1 -kyselyn ongelma",
+          "description": "Osaa kuvata N+1 -kyselyn ongelmat",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1002,635,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokannanhallintajärjestelmän tuntemus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "SQL-injektio",
+          "description": "Tuntee käsitteen SQL-injektio ja tuntee menetelmiä SQL-injektioiden estämiseen",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "959,492,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "SQL-kielen toiminta periaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Muut tietokannanhallintajärjestelmät",
+          "description": "Tuntee pinnallisesti tietokannanhallintajärjestelmien historiaa ja tuntee muitakin kuin relaatiotietokannanhallintajärjestelmiä",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "704,693,247,36",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokannanhallintajärjestelmän tuntemus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "GDPR",
+          "description": "Tietää mitä henkilötiedoilla tarkoitetaan ja tietää muutamia GDPR-lainsäädännön oleellisia kohtia henkilötietojen käsittelyyn liittyen",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1319,498,63,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietokanta sovellus",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Ohjelmoinnin jatkokurssi",
+          "official": true
+        },
+        {
+          "name": "Tietokantojen perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Tietokoneen toiminta",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Laitteistokomponenttien väliset nopeus erot",
+          "description": "Osaa selittää laitteistokomponenttien väliset suuret nopeuserot ja niiden vaikutukset järjestelmään.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "308,340,178,58",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän laitteistorajapinnan toteutus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessorin toiminta",
+          "description": "Osaa selittää prosessorin toiminnan (suoritussykli) konekäskyjen suorittajana.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1002,296,199,36",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tavoitteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Väylä- ja muistihierarkian perusajatukset",
+          "description": "Osaa selittää väylä- ja muistihierarkian perusajatukset.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1150,339,140,78",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Välimuisti ja virtuaalimuisti",
+          "description": "Osaa selittää välimuistin ja virtuaalimuistin toiminnan perusteet.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1315,165,189,38",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessorin suoritustilat",
+          "description": "Osaa selittää prosessorin erilaiset suoritustilat ja erityisesti etuoikeutetun suoritustilan tarkoituksen.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1011,450,181,35",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessorin toiminta",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessorin suoritustilan vaihtuminen",
+          "description": "Osaa selittää, milloin ja miten prosessorin suoritustila vaihtuu.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1151,527,175,52",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessorin suoritustilat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessorin keskeytykset",
+          "description": "Osaa selittää keskeytysten merkityksen ja toteutuksen konekäskyjen suorituksen tasolla",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1010,609,188,36",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessorin suoritustilat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Keskeytysjärjestelmän toiminta",
+          "description": "Osaa selittää keskeytysjärjestelmän toiminnan",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "855,371,227,35",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessorin toiminta",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tiedon tallentaminen",
+          "description": "Osaa toteuttaa globaalien muuttujat, vakiot, tietueet ja yksinkertaiset taulukot ja selittää niiden tilanvarauksien toteutuksen käännöksen, latauksen tai suorituksen aikana",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1266,245,223,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tavoitteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Valinta ja toistorakenne",
+          "description": "Osaa ohjelmoida valinta- ja toistorakenteet sekä toteuttaa aliohjelmien kutsut.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "857,549,179,36",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessorin suoritustilat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kokonais ja liukulukujen esitysmuodot",
+          "description": "Osaa selittää kokonais- ja liukulukujen esitysmuodot sekä merkkien ja merkkijonojen tallennuksen periaatteet",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1686,387,129,83",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Kokonaislukujen esitysmuodot (n-järj.)",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kokonaislukujen esitysmuodot (n-järj.)",
+          "description": "Osaa muuttaa kokonaislukujen esitysmuodot 2-, 8-, 16- ja 10-järjestelmien välillä.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1595,308,163,56",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Olioiden tallettaminen ja viittaaminen",
+          "description": "Osaa toteuttaa tietueiden, olioiden ja moniulotteisten taulukoiden (eri tavoin talletettuna) tilanvaraukset ja niihin viittaamisen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1480,380,201,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Globaalien ja paikallisten tietorakenteiden erot",
+          "description": "Osaa selittää globaalien ja paikallisten tietorakenteiden erot tilanvarauksessa ja niihin viittaamisessa ja osaa käyttää aktivointitietueita ja aktivointitietuepinoa (rekursiivisten) aliohjelmien toteutuksessa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "712,423,191,50",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän perustoiminnat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kuvien ja äänten esittäminen laitteistossa",
+          "description": "Osaa selittää karkealla tasolla, kuinka (liikkuvat) kuvat ja äänet esitetään laitteistossa ja osaa selittää ja ottaa huomioon liukulukujen tarkkuuden muutokset laskennan aikana.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1298,340,176,52",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Muuttumattomuuden suojaus",
+          "description": "Osaa käyttää tiedon muuttumattomuuden suojauksen perusmenetelmiä (pariteettibitti, Hamming-koodi)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1351,480,219,38",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Prosessin käsite",
+          "description": "Osaa selittää prosessin käsitteen ja sen esitysmuodon käyttöjärjestelmässä sekä prosessin erilaiset tilat ja niiden väliset tilasiirtymät.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "537,367,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän perustoiminnat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessin vaihto",
+          "description": "Osaa selittää, milloin ja miten suorituksessa oleva prosessi vaihtuu",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "484,437,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessin käsite",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöjärjestelmän perustoiminnat",
+          "description": "Osaa luetella käyttöjärjestelmän perustoiminnot (prosessien, muistin, tiedostojen, laitteiden ja verkon hallinta).",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "623,290,253,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tavoitteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käännös, linkitys ja lataus",
+          "description": "Osaa selittää käännöksen, linkityksen ja latauksen perusideat.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "486,509,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Käyttöjärjestelmän tavoitteet",
+          "description": "Osaa selittää käyttöjärjestelmän tavoitteet ja perustoiminnot sekä käyttäjän näkökulmasta että käyttöjärjestelmän ylläpitäjän näkökulmasta.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "742,123,205,36",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Käyttöjärjestelmän toteuttamismekanismit",
+          "description": "Osaa selittää käyttöjärjestelmäpalvelujen toteutusmekanismin erilaisten (etuoikeutettujen) aliohjelmien tai prosessien avulla.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "155,201,301,36",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tavoitteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Staattinen ja dynaaminen linkitys",
+          "description": "Osaa selittää staattisen ja dynaamisen linkityksen edut ja haitat.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "465,587,243,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käännös, linkitys ja lataus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöjärjestelmän laitteistorajapinnan toteutus",
+          "description": "Osaa selittää käyttöjärjestelmän laitteistorajapinnan toteutuksen laiteajurien ja keskeytyskäsittelijöiden avulla",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "145,271,323,32",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän toteuttamismekanismit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tiedostopalvelimen ja tiedostovälimuistin perusidea",
+          "description": "Osaa selittää tiedostopalvelimen ja tiedostovälimuistin perusidean.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1523,178,227,57",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Levymuisti",
+          "description": "Osaa selittää levymuistin rakenteen ja toiminnan sekä laskea levymuistiin talletetun tiedoston saantiajan.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1572,256,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedon tallentaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "I/O-menetelmä",
+          "description": "Osaa luokitella erilaiset I/O-menetelmät.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "145,340,129,39",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän laitteistorajapinnan toteutus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Java-ohjelmien suoritustavat",
+          "description": "Osaa selittää Java-ohjelmien erilaiset suoritustavat ja niiden eroavaisuudet.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "118,647,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "JVM-perusrakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "JVM-perusrakenne",
+          "description": "Osaa selittää Java-virtuaalikoneen (JVM) perusrakenteen ja toiminnan sekä valita tiettyyn sovellukseen sopivan Java-ohjelmien suoritustavan.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "228,579,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "JIT-kääntäjä",
+          "description": "Osaa selittää JIT-kääntämisen perusidean.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "360,647,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "JVM-perusrakenne",
+              "official": false
+            },
+            {
+              "name": "Staattinen ja dynaaminen linkitys",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Tietokoneen toiminta",
+          "official": true
+        },
+        {
+          "name": "Ohjelmoinnin jatkokurssi",
+          "official": true
+        },
+        {
+          "name": "Ohjelmoinnin perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Johdatus tietojenkäsittelytieteeseen",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Yleiskuva tietojenkäsittelytieteestä",
+          "description": "Yleiskuva tietojenkäsittelytieteestä",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "858,333,266,37",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Etiikka ja immateriaalioikeus",
+          "description": "Perustietoa alan etiikasta ja immateriaalioikeudesta",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1170,505,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Yleiskuva tietojenkäsittelytieteestä",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Englannin kielinen tieteellinen kirjallisuus",
+          "description": "Tottunut hakemaan ja lukemaan tieteellistä kirjallisuutta englanniksi",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "561,329,236,51",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Alan tekstin kirjoitus",
+          "description": "Osaa kirjoittaa alan asiatekstiä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "675,508,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Englannin kielinen tieteellinen kirjallisuus",
+              "official": false
+            },
+            {
+              "name": "Yleiskuva tietojenkäsittelytieteestä",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Viestintä",
+          "description": "Tottunut suullisesti esittämään oman alan aiheita",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "910,503,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Yleiskuva tietojenkäsittelytieteestä",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Johdatus tietojenkäsittelytieteeseen",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Tietorakenteet ja algoritmit",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Algoritmin suunnittelu ja analyysi",
+          "description": "Tuntee algoritmien suunnittelun ja analyysin liittyviä perustekniikoita: rekursio, silmukkainvariantti, iso-O-merkintä, iteratiivisten ja rekursiivisten algoritmien aika- ja tilavaativuus",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "828,335,240,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Aika- ja tilavaativuusanalyysi",
+              "official": false
+            },
+            {
+              "name": "Oikeellisuuden perustelu",
+              "official": false
+            },
+            {
+              "name": "Algoritmi-termistö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Algoritmien laatiminen",
+          "description": "Osaa laatia algoritmeja soveltaen opintojaksolla esitettyjä perustekniikoita ja tietorakenteita sekä toteuttaa ne Java-kielellä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "854,428,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Algoritmin suunnittelu ja analyysi",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Aika- ja tilavaativuusanalyysi",
+          "description": " Osaa analysoida algoritmin aika- ja tilavaativuutta O-merkinnän avulla",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "630,237,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Oikeellisuuden perustelu",
+          "description": "osaa perustella algoritmin oikeellisuuden esim. silmukkainvarianttia käyttäen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "850,232,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Hakemistorakenteen toteutus",
+          "description": "tuntee yksityiskohtaisesti erilaisten hakemistorakenteiden toteutukset",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "850,525,211,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Algoritmien laatiminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Järjestämisalgoritmejä",
+          "description": "Osaa toteuttaa tärkeimmät järjestämisalgoritmit ja tuntee niiden aikavaativuudet (lisäysjärjestäminen, lomitusjärjestäminen, pikajärjestäminen)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "610,421,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Algoritmin suunnittelu ja analyysi",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Verkot",
+          "description": "Tuntee verkkojen peruskäsitteet ja osaa toteuttaa tärkeimmät polunetsintään ja virittäviin puihin liittyvät algoritmit",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1105,408,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Algoritmin suunnittelu ja analyysi",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Algoritmi-termistö",
+          "description": "Käyttää opintojaksolla esitettyjä peruskäsitteitä (esim. hakemistot, verkot, järjestäminen) osana monimutkaisempien laskennallisten ongelmien ratkaisua ja valita tunteeuista algoritmeista tilanteeseen sopivan esim. aikavaativuuden perusteella",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1095,234,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Tietorakenteet ja algoritmit",
+          "official": true
+        },
+        {
+          "name": "Ohjelmoinnin jatkokurssi",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Käyttöjärjestelmät",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Käyttöjärjestelmän palvelut ja niiden toiminta",
+          "description": "Osaa kuvata käyttöjärjestelmien tarjoamat palvelut ja niiden toiminnan",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "233,452,185,57",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöjärjestelmän rakenneratkaisu",
+          "description": "Osaa kuvata käyttöjärjestelmän yleiset rakenneratkaisut rajapintoineen.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "293,553,238,38",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöjärjestelmän asema",
+          "description": "Osaa selittää käyttöjärjes­telmän aseman nyky­aikaisessa tietojenkäsittely-ympäristössä.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "207,384,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+          "description": "Osaa kuvata käyttöjärjestelmän tehtävät ja rakenteen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "599,337,150,56",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Prosessien ja säikeiden hallintarakenne",
+          "description": "Osaa kuvata prosessien ja säikeiden hallintarakenteet ja käyttöjärjestelmän tehtävät niihin liittyen.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "392,244,122,73",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessien suojausmekanismit",
+          "description": "Osaa kuvata prosessien suojausmekanismit ja erilaisten suoritustilojen (käyttäjä/etuoikeutettu) käyttämisen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "983,594,157,54",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmien tietoturva",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Säikeiden suoritus eri tasoilla",
+          "description": "Osaa kuvata erilaiset tavat suorittaa säikeitä eri tasoilla.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "410,84,221,35",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Säikeiden suoritustapa",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Vuoronantotekniikat",
+          "description": "Osaa kuvata yleisimmät prosessien vuoronantotekniikat yhden suorittimen järjestelmissä, moniprosessorijärjestelmissä ja tosiaikajärjestelmissä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "581,478,156,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Vuoronantotekniikkojen soveltuvuus",
+          "description": "Osaa vertailla vuoronanto­menetel­mien soveltuvuutta erilaisilla työ­kuormilla.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "452,616,172,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Vuoronantotekniikat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Säikeiden suoritustapa",
+          "description": "Osaa valita ja perustella tarkoituk­sen­mukaisen säikeiden suoritus­tavan ohjelmiston toiminnan kannalta.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "399,172,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessien ja säikeiden hallintarakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Säikeiden ja prosessien muistin käyttö",
+          "description": "Osaa selittää säikeiden ja prosessien yhteiskäyttöisen muistialueen käytön ja sanomanvälityksen (IPC).",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "131,289,179,56",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessien ja säikeiden hallintarakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaistaminen",
+          "description": "Osaa selittää rinnakkaisuuden tarpeen sovelluksessa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1425,115,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Samanaikaisuuden perusmallit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaistamisen tekijät",
+          "description": "Osaa selittää esimerk­kien avulla, mitkä tekijät johtavat rinnakkaisiin toimintoihin laitteisto- ja ohjelmistotasolla.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1055,168,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaisohjelmien suoritusskenaariot",
+          "description": "Osaa selittää erilaisten suoritus­skenaarioiden merkityksen rinnak­kaisohjelmien suoritusta tutkittaessa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1600,234,157,61",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaistamisen ongelmia",
+          "description": "Osaa antaa esimerkkejä yleisistä ongelmista, joihin virheellinen rinnakkaisratkaisu voi johtaa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1288,315,211,32",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistamisen edut ja haitat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Prosessien suorituksen eteneminen",
+          "description": "Osaa selittää prosessien suorituk­sen etenemisen epädeter­ministisen luonteen ja sen vaikutukset.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "197,154,107,76",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Prosessien ja säikeiden hallintarakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaistamisen edut ja haitat",
+          "description": "Osaa selittää rinnakkaisuuden edut, haitat, toteutustasot ja toteutusmenetelmät.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1341,241,232,32",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaistamisongelman ratkaisun vaatimukset",
+          "description": "Osaa selittää rinnakkaisuus­ongelmien ratkaisuille asetettavat vaatimukset (esim. oikeellisuuden määrittely ja oikeellisuus kaikissa skenaarioissa) ja osaa löytää virheelliseen lopputulokseen johtavan skenaarion.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1378,392,193,55",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistamisen ongelmia",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaisen suorituksen peruskäsitteet",
+          "description": "Osaa selittää rinnakkaisen suorituksen peruskäsitteet: atomisuus, kriittinen vaihe, synkronointi, kommunikointi, lukkiutuminen.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1789,213,121,83",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Rinnakkaisohjelmoinnin perusmallit",
+          "description": "Osaa selittää rinnakkaisohjelmoinnin perusmallit: kriittisen vaiheen ongelma, vuorolappu, lukijat-kirjoittajat, tuottaja-kuluttaja, asiakas-palvelin ja puomi­synkronointi.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1735,85,173,52",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Lukkiutuminen",
+          "description": "Osaa kuvata lukkiutumistilanteen synnyn ja selittää välttämättömät ja riittävät ehdot lukkiutumiselle.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1521,314,117,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistamisen edut ja haitat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kriittisenvaiheen ongelman ratkaisu",
+          "description": "Osaa suunnitella kriittisen vaiheen ongelman ratkaisun laitteistotukea hyödyntäen tilanteeseen parhaiten sopivalla me­­ne­telmällä: keskeytysten esto, busy-wait, semafori, monitori, viestit.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1202,389,137,59",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistamisen ongelmia",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Semafori ja monitori",
+          "description": "Osaa selittää semaforin ja monitorin rakenteet, ja käyttää niitä oikein ongelmien ratkaisuissa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1129,232,195,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Rinnakkaistaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Samanaikaisuuden perusmallit",
+          "description": "Osaa soveltaa samanaikaisuuden perusmalleja todellisissa ongelmanratkaisuissa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1072,90,236,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "DDA-algoritmi",
+          "description": "Osaa selittää, kuinka lukkiutumis­tilanne voidaan havaita DDA-algoritmilla, kuinka havaitusta lukkiutumisesta voidaan toipua ja kuinka lukkiutumistilanne voidaan ennakolta estää joko pankkiirin algoritmilla tai muilla tavoin.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1586,384,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Lukkiutuminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Virtuaalimuistin yleisperiaatteet",
+          "description": "Osaa kuvata virtuaalimuistin (VM) toteutuksen yleis­periaatteen ja keskeiset käsitteet (sivutus, sivutaulu, osoitteenmuunnos ja TLB, sivunpuutos)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1430,534,236,40",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Monitasoisen sivuttavan VM:n toiminnat",
+          "description": "Osaa kuvata monitasoisen sivuttavan VM:n toiminnan.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1419,676,280,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Sivutus- ja segmentointimenetelmät",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Virtuaalimuistin simulointi",
+          "description": "Osaa algoritmitasolla simuloida osoit­teen­muunnoksen sivuttavaa VM:ää käyttävässä järjestelmässä.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1694,681,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "VM-toteutus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Sivukoon vaikutukset",
+          "description": "Osaa analysoida sivukoon vaikutu­ksia sekä prosessin toimintaan että sivutaulun kokoon",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1112,761,251,32",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Sivukoko",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Sivukoko",
+          "description": "Osaa perustella tietyn sivukoon valinnan.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1200,675,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Sivutus- ja segmentointimenetelmät",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Sivutus- ja segmentointimenetelmät",
+          "description": "Osaa kuvata (monitasoisten) sivu­tus- ja segmentointi­menetel­mien hyödyt ja haitat.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1325,610,246,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Virtuaalimuistin yleisperiaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "VM-toteutus",
+          "description": "Osaa algoritmitasolla selittää VM-toteutuksen: sivujen kor­vaus-, nouto- ja poistomene­telmät.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1626,615,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Virtuaalimuistin yleisperiaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tiedostojärjestelmän perusrakenne",
+          "description": "Osaa kuvata tiedosto-järjestelmän perus­­rakenteen ja sen osien yhteis­toiminnan.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "894,271,149,56",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kommunikointi oheislaitteiden ja käyttöjärjestelmän välillä",
+          "description": "Osaa selittää, miten kommunikointi oheis­laitteiden ja käyttöjärjestelmän välillä toimii.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "909,452,220,52",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Kovalevyn vuoronantoalgoritmin toiminta",
+          "description": "Osaa selittää kovalevyn perusvuoronantoalgoritmien toiminnat.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "642,614,151,72",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Vuoronantotekniikat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "RAID",
+          "description": "Osaa selittää RAID-toteutusten perusidean.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "46,702,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "RAID-toteutus",
+          "description": "Osaa selittää erilaisten RAID-toteutus­ten piirteet ja vertailla niiden ominai­suuksia.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "44,765,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "RAID",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tiedostojen organisointimallit",
+          "description": "Osaa selittää erilaiset tiedostojen organisointimallit ja milloin niitä on järkevä käyttää.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1087,299,129,54",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedostojärjestelmän perusrakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "B-puut",
+          "description": "Osaa selittää B-puiden käytön tiedostojen indeksien toteutuksessa.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "935,371,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tiedostojärjestelmän perusrakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Käyttöjärjestelmien tietoturva",
+          "description": "Osaa selittää käyttöjärjestelmän tietoturvauhat ja niiden torjuntamenetelmät.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "720,514,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmän tehtävät ja rakenne",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Pääsynvalvonta mekanismit",
+          "description": " Osaa selittää käyttöjärjestelmän pääsynvalvontamekanismit.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "842,622,121,56",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Käyttöjärjestelmien tietoturva",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Tietokoneen toiminta",
+          "official": true
+        },
+        {
+          "name": "Käyttöjärjestelmät",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Ohjelmistotekniikka",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Ohjelmistotuotannon vaiheet",
+          "description": "Tuntee ohjelmistotuotantoprosessin vaiheet",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "721,431,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Ketterä- ja vesiputousmalli",
+              "official": false
+            },
+            {
+              "name": "Ohjelmistosuunnitteluperiaatteet",
+              "official": false
+            },
+            {
+              "name": "UML-mallintaminen",
+              "official": false
+            },
+            {
+              "name": "Versionhallinta",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Ketterä- ja vesiputousmalli",
+          "description": "On tietoinen vesiputousmallin ja ketterän ohjelmistotuotannon luonteesta",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "438,331,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Versionhallinta",
+          "description": "Osaa soveltaa versionhallintaa osana ohjelmistokehitystä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1014,538,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "UML-mallintaminen",
+          "description": "Osaa soveltaa UML-mallinnustekniikkaa vaatimusmäärittelyssä ja ohjelmiston suunnittelussa tarkoituksenmukaisella tavalla",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1003,330,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Ohjelmistotestauksen vaiheet",
+          "description": "Tuntee ohjelmiston testauksen eri vaiheet",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1293,441,233,40",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Automatisoitu testaus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Automatisoitu testaus",
+          "description": " Osaa soveltaa automatisoitua testausta yksinkertaisissa ohjelmistoprojekteissa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1283,380,252,40",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Ohjelmistosuunnitteluperiaatteet",
+          "description": "Tuntee tärkeimpiä ohjelmiston suunnitteluperiaatteita ja osaa soveltaa niitä yksinkertaisissa projekteissa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "689,329,232,33",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Ohjelmoinnin jatkokurssi",
+          "official": true
+        },
+        {
+          "name": "Tietokantojen perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Ohjelmistotuotanto",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Ohjelmistoprosessi",
+          "description": "Tuntee ohjelmistoprosessin, erityisesti ketterän prosessin vaiheet",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "805,613,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Suunnittelu, toteutus ja testaus ketterässä ohjelmistokehityksessä",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Vaatimusten hallinta",
+          "description": "Tietää miten vaatimuksia hallitaan ketterässä ohjelmistotuotantoprosessissa",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1050,371,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Suunnittelu, toteutus ja testaus ketterässä ohjelmistokehityksessä",
+          "description": "Ymmärtää suunnittelun, toteutuksen ja testauksen vastuut ja luonteen ketterässä ohjelmistotuotannossa",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "780,463,244,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Vaatimusten hallinta",
+              "official": false
+            },
+            {
+              "name": "Ohjelmiston laadunhallinta",
+              "official": false
+            },
+            {
+              "name": "Toimiminen ohjelmistokehityksessä",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Ohjelmiston laadunhallinta",
+          "description": "Ymmärtää ohjelmiston laadunhallinnan perusteet",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "541,363,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Toimiminen ohjelmistokehityksessä",
+          "description": "Osaa toimia ympäristössä, jossa ohjelmistokehitys tapahtuu hallitusti ja toistettavalla tavalla",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "780,359,245,38",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Ohjelmistotekniikka",
+          "official": true
+        },
+        {
+          "name": "Ohjelmoinnin jatkokurssi",
+          "official": true
+        },
+        {
+          "name": "Ohjelmistotuotanto",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Laskennan mallit",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Automaattit ja kieliopit",
+          "description": "Osaa laatia annetulle formaalille kielelle äärellisen automaatin, yhteydettömän kieliopin tms.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "682,275,200,34",
+          "level": "CONCEPT",
+          "prerequisites": []
+        },
+        {
+          "name": "Säännölliset ja yhteydettömät kielet",
+          "description": "Tuntee säännöllisten ja yhteydettömien kielten perusominaisuudet ja osaa käyttää niitä esim. kielen säännöllisyyden tutkimiseen",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "960,293,260,35",
+          "level": "CONCEPT",
+          "prerequisites": []
+        },
+        {
+          "name": "Ratkeamattomuus",
+          "description": "Ymmärtää ratkeamattomuuden merkityksen, tunnistaa tyypilliset ratkeamattomat ongelmat ja osaa tehdä yksinkertaisia ratkeamattomuustodistuksia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1235,436,200,34",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Vaikeusluokat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Vaikeusluokat",
+          "description": "Tuntee luokkien P ja NP sekä NP-täydellisyyttä koskevat perustulokset ja osaa tehdä niiden perusteella yksinkertaisia päätelmiä; tuntee joitain keskeisiä NP-täydellisiä ongelmia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "1231,361,200,34",
+          "level": "CONCEPT",
+          "prerequisites": []
+        },
+        {
+          "name": "Deterministiset ja epädeterministiset automaatit",
+          "description": "Tuntee säännölliset kielet, deterministiset ja epädeterministiset äärelliset automaatit, säännölliset lausekkeet; niiden sovellukset ja rajoitukset",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "457,443,325,37",
+          "level": "CONCEPT",
+          "prerequisites": [
+            {
+              "name": "Automaattit ja kieliopit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Algoritmien ja laskennallisten ongelmien täsmällinen esitys",
+          "description": "Osaa esittää algoritmeihin ja laskennallisiin ongelmiin liittyviä päättelyjä täsmällisesti ja sopivaa matemaattista formalismia käyttäen ja laatia yksinkertaisia todistuksia",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "846,520,397,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Automaattit ja kieliopit",
+              "official": false
+            },
+            {
+              "name": "Säännölliset ja yhteydettömät kielet",
+              "official": false
+            },
+            {
+              "name": "Deterministiset ja epädeterministiset automaatit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Church-turing teesi",
+          "description": "Osaa selittää Churchin-Turingin teesin ja perustella sitä",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "452,578,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Deterministiset ja epädeterministiset automaatit",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Laskennan mallit",
+          "official": true
+        },
+        {
+          "name": "Tietorakenteet ja algoritmit",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Tietoliikenteen perusteet",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Internetin toimintaperiaatteet",
+          "description": "Osaa selittää ”miten Internet toimii” ja perustellen kuvata siinä käytettyjä rakenteellisia, teknisiä ja toiminnallisia periaatteita (kuten toimintamallit, rakenneosat, erilaiset osoitteet ja tunnisteet, datan siirto protokollapinon avulla, luotettava kuljetuspalvelu, vuonvalvonta, TCP:n ruuhkanhallinta)",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "747,201,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Asiakas-palvelija malli",
+          "description": "Osaa selittää asiakas-palvelija malliin perustuvien verkkosovellusten sekä niiden toteutuksessa käytettyjen sovellusprotokollien periaatteet",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "718,365,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Internetin toimintaperiaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Vertaistoimijamalli",
+          "description": "Osaa kuvata vertaistoimijamallin idean. ",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "498,362,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Internetin toimintaperiaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "DNS toiminta",
+          "description": "Osaa selittää, mihin tarvitaan nimipalvelua (DNS) ja kuvata sen rakenteen ja toiminnan.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "540,551,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Asiakas-palvelija malli",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "IP-paketin välitys",
+          "description": "Osaa selittää toisaalta miten lähettävän ohjelman viesti saadaan IP-pakettiin ja toisaalta miten IP-paketti välitetään Internetissä viestin vastaanottajalle.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "983,375,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Internetin toimintaperiaatteet",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Reitittimen, keskittimen ja kytkimen ero",
+          "description": "Osaa selittää reitittimen, keskittimen ja kytkimen toiminnan ja erot",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "804,550,281,39",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "IP-paketin välitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Pakettien rakenne ja sisältö",
+          "description": " Osaa kuvata pakettien, kehysten ja muiden viestien sisältöjä ja rakenteita",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1163,551,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "IP-paketin välitys",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tietoturva uhat",
+          "description": "Osaa kuvata tietoliikenteeseen kohdistuvat riskitekijät ja turvallisuusuhat",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1224,371,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Palomuurin toiminta",
+          "description": "Osaa selittää kuinka palomuuri toimii.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            }
+          ],
+          "official": false,
+          "position": "1454,546,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tietoturva uhat",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Tietoliikenteen perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Tietoturvan perusteet",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Operatiivisen turvallisuuden perusperiaatteet",
+          "description": "Tuntee kyberturvallisuuden ja operatiivisen turvallisuuden perusperiaatteet ja osaa soveltaa niitä esimerkkitapauksissa",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "576,315,312,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Haavoittuvuuden tunnistaminen ja vastakeinot",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Web-sovelluskehityksen tietoturvauhat",
+          "description": "Tuntee web-sovelluskehityksen periaatteet ja tärkeimmät näiden sovellusten tietoturvaan kohdistuvat uhat",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "967,315,268,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Haavoittuvuuden tunnistaminen ja vastakeinot",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Haavoittuvuuden tunnistaminen ja vastakeinot",
+          "description": "Osaa tunnistaa esimerkkitapauksiin liittyvät haavoittuvuudet ja tuntee myös tarvittavat vastatoimet",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            }
+          ],
+          "official": false,
+          "position": "742,229,325,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Tietoturvan perusteet",
+          "official": true
+        },
+        {
+          "name": "Tietoliikenteen perusteet",
+          "official": true
+        },
+        {
+          "name": "Tietokoneen toiminta",
+          "official": true
+        },
+        {
+          "name": "Tietokantojen perusteet",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "Johdatus tekoälyyn",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Tekoälyn filosofiset ongelmat",
+          "description": "Can express the basic philosophical problems related to AI (the difficulty in defining AI and consciousness, acting vs thinking, Turing test)",
+          "tags": [],
+          "official": false,
+          "position": "136,236,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Aidon ja fiktiivisen tekoälyn erottaminen",
+          "description": "Can distinguish between realistic and unrealistic AI in science-fiction",
+          "tags": [],
+          "official": false,
+          "position": "48,321,166,52",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tekoälyn filosofiset ongelmat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Modernin ja entisen tekoälyn eroavaisuuksia",
+          "description": " Can describe the contrast between \"Good Old Fashioned AI\" (GOFAI) and modern AI approaches",
+          "tags": [],
+          "official": false,
+          "position": "273,323,136,72",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tekoälyn filosofiset ongelmat",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tekoälyn suosittuja kehitystapoja",
+          "description": "Knows the main stream developments in the history of AI",
+          "tags": [],
+          "official": false,
+          "position": "594,478,226,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Verkko-ongelmien ratkaiseminen",
+          "description": "Can formulate a problem as a graph and apply search algorithms to solve it",
+          "tags": [],
+          "official": false,
+          "position": "985,317,140,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Yksinkertaisen pelin mallintaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "A* algoritmin toteutus",
+          "description": "Can explain and implement A* search",
+          "tags": [],
+          "official": false,
+          "position": "842,416,158,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Verkko-ongelmien ratkaiseminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Yksinkertaisen pelin mallintaminen",
+          "description": " Can formulate a simple game (such as tic-tac-toe) as a game tree",
+          "tags": [],
+          "official": false,
+          "position": "838,251,246,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Minmax-algoritmin toteuttaminen",
+          "description": "Can explain and implement the minimax algorithm and depth-limited alpha-beta pruning",
+          "tags": [],
+          "official": false,
+          "position": "1039,411,139,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Verkko-ongelmien ratkaiseminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Heurestiikan toteutus",
+          "description": "Can design a reasonable heuristic evaluation function in a game (e.g., chess)",
+          "tags": [],
+          "official": false,
+          "position": "1765,317,110,56",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Todennäköisyysmallien käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Todennäköisyysmallien käyttö",
+          "description": "Can express uncertain knowledge in a simple situation using a probabilistic model",
+          "tags": [],
+          "official": false,
+          "position": "1498,232,210,35",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "Bayesin teoreeman käyttö",
+          "description": "Can apply the Bayes theorem to calculate posterior probabilities given evidence in a simple scenario",
+          "tags": [],
+          "official": false,
+          "position": "1317,315,137,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Todennäköisyysmallien käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Otannan todennäköisyys",
+          "description": "Can estimate probability values from a sample",
+          "tags": [],
+          "official": false,
+          "position": "1484,314,118,53",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Todennäköisyysmallien käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Ongelman esittäminen Bayesin verkkona",
+          "description": "Can represent a problem solving situation as a Bayesian network",
+          "tags": [],
+          "official": false,
+          "position": "1247,398,164,55",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Bayesin teoreeman käyttö",
+              "official": false
+            },
+            {
+              "name": "Verkko-ongelmien ratkaiseminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Approksimaatio tekniikoita",
+          "description": " Can apply an approximate (Monte Carlo) technique to perform inference in a Bayesian network",
+          "tags": [],
+          "official": false,
+          "position": "1625,319,117,54",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Todennäköisyysmallien käyttö",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Koneoppimisen variaatioita",
+          "description": "Can distinguish between unsupervised and supervised machine learning scenarios",
+          "tags": [],
+          "official": false,
+          "position": "719,547,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tekoälyn suosittuja kehitystapoja",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Valvotun koneoppimisen luokittimien toteutus",
+          "description": "Can implement at least two supervised classification methods (e.g., naive Bayes, nearest neighbour classifier)",
+          "tags": [],
+          "official": false,
+          "position": "791,601,173,55",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Koneoppimisen variaatioita",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Neuroverkkojen tyypit",
+          "description": "Knows the main types of neural networks (feed-forward, recurrent, self-organizing map) and their main principles",
+          "tags": [],
+          "official": false,
+          "position": "498,553,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tekoälyn suosittuja kehitystapoja",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Perceptron-algoritmin toteutus",
+          "description": "Can implement the perceptron algorithm in a simple binary classification problem",
+          "tags": [],
+          "official": false,
+          "position": "428,613,240,39",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Neuroverkkojen tyypit",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Lauseitten luonti kontekstittomalla kielopilla",
+          "description": "Can generate natural language sentences from a context-free grammar",
+          "tags": [],
+          "official": false,
+          "position": "472,232,306,36",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        },
+        {
+          "name": "CYK-algoritmi",
+          "description": "Can parse a sentence using the Cocke-Younger-Kasami algorithm",
+          "tags": [],
+          "official": false,
+          "position": "525,309,200,34",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Lauseitten luonti kontekstittomalla kielopilla",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Automaattisen robotin luonnin vaikeus",
+          "description": "Appreciates the difficulty of implementing an autonomous robot in the real world",
+          "tags": [],
+          "official": false,
+          "position": "367,424,162,55",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Modernin ja entisen tekoälyn eroavaisuuksia",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Yksinkertaisten toimintojen luonti",
+          "description": " Implements simple functionalities, e.g., following a line on the floor, using a robot with limited sensor capabilities",
+          "tags": [],
+          "official": false,
+          "position": "744,334,133,55",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Yksinkertaisen pelin mallintaminen",
+              "official": false
+            }
+          ]
+        }
+      ],
+      "prerequisites": [
+        {
+          "name": "Johdatus tekoälyyn",
+          "official": true
+        }
+      ]
+    },
+    {
+      "name": "TKT Kandidaatin tutkielma",
+      "tags": [],
+      "official": true,
+      "concepts": [
+        {
+          "name": "Valmistaminen maisteriopintoihin",
+          "description": "Kehittää itselleen omakohtaiset työskentelyprosessit, jotka valmistavat ja soveltuvat maisteri- ja jatko-opintoihin, tutkimusyhteisön vuorovaikutteiseen tapaan tuottaa uutta tietoa sekä tutkimustuloksia hyödyntävän yritysmaailman asiatuntijatehtäviin.",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "378,682,272,39",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tieteellisen tekstin jalostaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tieteelliseenkirjallisuuteen tutustuminen",
+          "description": "Tutustuu oman alansa tieteellisen kirjallisen ja suullisen kommunikaation normeihin ja menetelmiin sekä tutustuu tutkimustiedon haun välineisiin oman tutkielmansa aihepiirinsä kautta. ",
+          "tags": [
+            {
+              "name": "REMEMBER",
+              "type": "bloom",
+              "priority": 0
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "520,279,279,39",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tutkimusmenetelmien merkitys ja tulosten uskottavuus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tieteellisen tekstin tuottaminen",
+          "description": "Tuottaa valitsemastaan aihepiiristä tutkielman, niin että tutkimuskysymyksen kannalta merkittävät näkökohdat argumentoidaan johdonmukaisesti ja olennaiseen keskittyen, käyttäen tieteenalan tarkkaa termistöä, käsittelee asiaa syventävästi (soveltaen, analysoiden tai arvioiden) ja jäsenneltynä lukijalle ymmärrettävään muotoon. ",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "420,434,252,33",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tieteelliseenkirjallisuuteen tutustuminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tieteellinen viestintä",
+          "description": "Tuottaa tutkielmaansa liittyen myös suullisen esitelmän, joka vastaa tieteellisen argumentoivan, syvätason käsittelyn tavoitteisiin.",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "1004,334,261,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tutkimusmenetelmien merkitys ja tulosten uskottavuus",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tieteellisen tekstin jalostaminen",
+          "description": "Oppii omatoimisemmin kontrolloimaan omaa työskentelyprosessiaan tieteellisen tiedon hankkijana nykyaikaisin välinein ja jalostajana kirjalliseen ja suullisen esityksen muotoon.",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "385,549,280,37",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Tieteellisen tekstin tuottaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Vertaispalautteen antaminen ja hyödyntäminen",
+          "description": "Oppii antamaan ja hyödyntämään vertaispalautetta näissä tehtävissä ja suhtautumaan kriittisesti julkaistuun tutkimustietoon ja sen laatuun",
+          "tags": [
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "838,488,345,40",
+          "level": "OBJECTIVE",
+          "prerequisites": [
+            {
+              "name": "Vertaispalautteen antaminen ja hyödyntäminen",
+              "official": false
+            },
+            {
+              "name": "Tieteellinen viestintä",
+              "official": false
+            },
+            {
+              "name": "Tieteellisen tekstin tuottaminen",
+              "official": false
+            }
+          ]
+        },
+        {
+          "name": "Tutkimusmenetelmien merkitys ja tulosten uskottavuus",
+          "description": " Ymmärtää tutkimusmenetelmien merkityksen tulosten uskottavuudelle ja osaa etsiä relevantteja julkaisusarjoja oman aihepiirinsä jatkuvaa seuraamista varten.",
+          "tags": [
+            {
+              "name": "APPLY",
+              "type": "bloom",
+              "priority": 200
+            },
+            {
+              "name": "UNDERSTAND",
+              "type": "bloom",
+              "priority": 100
+            }
+          ],
+          "official": false,
+          "position": "859,183,372,33",
+          "level": "OBJECTIVE",
+          "prerequisites": []
+        }
+      ],
+      "prerequisites": []
+    }
+  ],
+  "workspace": "TKT-kandi",
+  "goalTags": [
+    {
+      "name": "KNOWLEDGE",
+      "type": "goal",
+      "priority": 100
+    },
+    {
+      "name": "SKILL",
+      "type": "goal",
+      "priority": 200
+    }
+  ]
+}
