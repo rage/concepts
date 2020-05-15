@@ -38,10 +38,26 @@ const GraphContainer = ({ workspace, courseId }) => {
     const { graphWrapper } = useStyles()
     const graphRef = useRef(null)
 
+    const options = {
+        name: 'klay',
+        fit: true,
+        padding: 100,
+        klay: {
+            nodePlacement: 'BRANDES_KOEPF',
+            nodeLayering: 'NETWORK_SIMPLEX',
+            spacing: 20,
+            inLayerSpacingFactor: 2.5,
+            layoutHierarchy: true,
+            edgeSpacingFactor: 1.5,
+            direction: 'DOWN'
+        }
+    }
+
     const state = useRef({
         network: null,
         nodes: null,
-        edges: null
+        edges: null,
+        layout: null
     })
 
     const initGraph = () => {
@@ -94,9 +110,21 @@ const GraphContainer = ({ workspace, courseId }) => {
                         padding: '10px',
                         display: 'data(display)'
                     }
+              },
+              {
+                selector: 'edge',
+                style: {
+                  width: 5,
+                  'line-color': '#ccc',
+                  'target-arrow-color': '#ccc',
+                  'mid-target-arrow-shape': 'triangle'
+                }
               }
             ]
         })
+
+        cur.layout = cur.network.layout(options)
+        cur.layout.run()
     }
 
     useEffect(() => initGraph(), [])
