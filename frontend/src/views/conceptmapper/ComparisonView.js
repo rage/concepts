@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const GraphContainer = ({ workspace, courseId }) => {
+const GraphContainer = ({ workspace, courseName }) => {
     const { graphWrapper } = useStyles()
     const graphRef = useRef(null)
 
@@ -62,7 +62,7 @@ const GraphContainer = ({ workspace, courseId }) => {
 
     const initGraph = () => {
         const cur = state.current
-        const course = workspace.courses.find(course => course.id == courseId)
+        const course = workspace.courses.find(course => course.name == courseName)
         if (course == null) return (<div> Course not found </div>)
 
         cur.nodes = []
@@ -156,15 +156,18 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
 
     const distance  = compareCourses(workspace.courses[0], compWorkspace.courses[0])
 
+    let compCourseList = new Set(compWorkspace.courses.map(course => course.name))
+    let courseList = workspace.courses.filter(course => compCourseList.has(course.name)).map(course => course.name)
+
     return (
         <div className={wrapper}>
             <div className={compPercentageWrapper}>
-                <h1> Total distance: { distance.toFixed(2) } </h1>  
+                <h1> Total distance of <i>{ workspace.courses[0].name }</i>: { distance.toFixed(2) } </h1>
             </div>
             <div className={containerWrapper}>
-                <GraphContainer workspace={workspace} courseId={workspace.courses[0].id}/>
+                <GraphContainer workspace={workspace} courseName={courseList[0]}/>
                 <GraphSplitter/>
-                <GraphContainer workspace={compWorkspace} courseId={compWorkspace.courses[0].id}/>
+                <GraphContainer workspace={compWorkspace} courseName={courseList[0]}/>
             </div>
         </div>
     )
