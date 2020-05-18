@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
 import { WORKSPACE_COMPARISON } from '../../graphql/Query'
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const GraphContainer = ({ workspace, courseName }) => {
+const GraphContainer = ({ course }) => {
     const { graphWrapper } = useStyles()
     const graphRef = useRef(null)
 
@@ -62,7 +62,6 @@ const GraphContainer = ({ workspace, courseName }) => {
 
     const initGraph = () => {
         const cur = state.current
-        const course = workspace.courses.find(course => course.name == courseName)
         if (course == null) return (<div> Course not found </div>)
 
         cur.nodes = []
@@ -137,9 +136,9 @@ const GraphContainer = ({ workspace, courseName }) => {
 const GraphSplitter = () => <div style={{borderLeft: '1px solid black'}} />
 
 const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
-
     const { wrapper, containerWrapper, compPercentageWrapper } = useStyles()
-    
+    const [courseIndex, setCourseIndex] = useState(0)
+
     const workspaceQuery = useQuery(WORKSPACE_COMPARISON, { 
         variables: { workspaceId, compWorkspaceId }
     })
@@ -154,20 +153,36 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
         return compareConcepts(course.concepts, compCourse.concepts) 
     }
 
-    const distance  = compareCourses(workspace.courses[0], compWorkspace.courses[0])
-
     let compCourseList = new Set(compWorkspace.courses.map(course => course.name))
-    let courseList = workspace.courses.filter(course => compCourseList.has(course.name)).map(course => course.name)
+    let courseList = workspace.courses.filter(course => compCourseList.has(course.name))
+                                       .map(course => ({
+                                           name: course.name,
+                                           course: course,
+                                           compCourse: compWorkspace.courses.find(compCourse => compCourse.name === course.name)
+                                       }))
+    
+    if (courseList.length === 0) {
+        return (
+            <div>
+                <center>
+                    <h1> No similar courses to compare </h1>
+                </center>
+            </div>
+        )
+    }
+
+    const distance  = compareCourses(courseList[courseIndex].course, courseList[courseIndex].compCourse)
+
 
     return (
         <div className={wrapper}>
             <div className={compPercentageWrapper}>
-                <h1> Total distance of <i>{ workspace.courses[0].name }</i>: { distance.toFixed(2) } </h1>
+                <h1> Total distance of <i>{ courseList[courseIndex].name }</i>: { distance.toFixed(2) } </h1>
             </div>
             <div className={containerWrapper}>
-                <GraphContainer workspace={workspace} courseName={courseList[0]}/>
+                <GraphContainer course={courseList[courseIndex].course}/>
                 <GraphSplitter/>
-                <GraphContainer workspace={compWorkspace} courseName={courseList[0]}/>
+                <GraphContainer course={courseList[courseIndex].compCourse}/>
             </div>
         </div>
     )
