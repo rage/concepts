@@ -34,9 +34,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const GraphContainer = ({ course }) => {
+const GraphContainer = ({ course, setSelectedConceptIdx, selectedConceptIdx, matches, compared }) => {
     const { graphWrapper } = useStyles()
     const graphRef = useRef(null)
+    const networkRef = useRef(null)
 
     const options = {
         name: 'klay',
@@ -122,11 +123,46 @@ const GraphContainer = ({ course }) => {
             ]
         })
 
+        cur.network.nodes().forEach(node => {
+            var pair = null
+
+            if (compared) {
+                pair = matches.find(pair => pair.closestPair.name == node.data().label)
+            } else {
+                pair = matches.find(pair => pair.concept.name == node.data().label)
+            }
+
+            if (!pair) {
+                node.style('background-color', 'red')
+            }
+        })
+
+        cur.network.nodes().on('select', evt => {
+            const name = evt.target.data().label
+            if (compared) {
+                setSelectedConceptIdx(matches.findIndex(item => item.closestPair.name == name))
+            } else {
+                setSelectedConceptIdx(matches.findIndex(item => item.concept.name == name))
+            }
+        })
+
         cur.layout = cur.network.layout(options)
         cur.layout.run()
+        networkRef.current = cur
     }
 
     useEffect(() => initGraph(), [])
+
+    if (selectedConceptIdx >= 0) {
+        const label = compared ? matches[selectedConceptIdx].closestPair.name : matches[selectedConceptIdx].concept.name
+        networkRef.current.network.nodes().forEach(node => {
+            if (node.data().label == label) {
+                node.select()
+            } else {
+                node.deselect()
+            }
+        })
+    }
 
     return (
         <div className={graphWrapper} ref={graphRef}/>
@@ -138,6 +174,7 @@ const GraphSplitter = () => <div style={{borderLeft: '1px solid black'}} />
 const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
     const { wrapper, containerWrapper, compPercentageWrapper } = useStyles()
     const [courseIndex, setCourseIndex] = useState(0)
+    const [selectedConceptIdx, setSelectedConceptIdx] = useState(-1)
 
     const workspaceQuery = useQuery(WORKSPACE_COMPARISON, { 
         variables: { workspaceId, compWorkspaceId }
@@ -171,18 +208,33 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
         )
     }
 
-    const distance  = compareCourses(courseList[courseIndex].course, courseList[courseIndex].compCourse)
+    const {
+        matches, 
+        percentage,
+        avgDistance 
+    }  = compareCourses(courseList[courseIndex].course, courseList[courseIndex].compCourse)
 
 
     return (
         <div className={wrapper}>
             <div className={compPercentageWrapper}>
-                <h1> Total distance of <i>{ courseList[courseIndex].name }</i>: { distance.toFixed(2) } </h1>
+                <h1> Similarity of <i>{ courseList[courseIndex].name }</i>: { percentage }% </h1>
             </div>
             <div className={containerWrapper}>
-                <GraphContainer course={courseList[courseIndex].course}/>
+                <GraphContainer 
+                    course={courseList[courseIndex].course}
+                    setSelectedConceptIdx={setSelectedConceptIdx}
+                    selectedConceptIdx={selectedConceptIdx}
+                    matches={matches}
+                />
                 <GraphSplitter/>
-                <GraphContainer course={courseList[courseIndex].compCourse}/>
+                <GraphContainer 
+                    course={courseList[courseIndex].compCourse}
+                    setSelectedConceptIdx={setSelectedConceptIdx}
+                    selectedConceptIdx={selectedConceptIdx}
+                    matches={matches}
+                    compared
+                />
             </div>
         </div>
     )
