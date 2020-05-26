@@ -401,7 +401,7 @@ This will change which template is cloned by users.`,
             Promote to template
           </MenuItem>
         }
-        {type !== TYPE_TEMPLATE &&
+        {type !== TYPE_TEMPLATE && projectId &&
           <MenuItem aria-label='Compare' onClick={handleCompareMode}>
             <ListItemIcon>
               <SyncAltIcon />
