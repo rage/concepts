@@ -2547,7 +2547,7 @@ export interface CourseCreateManyWithoutWorkspaceInput {
 export interface CourseCreateWithoutWorkspaceInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2583,7 +2583,7 @@ export interface CourseCreateOneWithoutClonesInput {
 export interface CourseCreateWithoutClonesInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2626,7 +2626,7 @@ export interface CourseCreateOneWithoutLinksToCourseInput {
 export interface CourseCreateWithoutLinksToCourseInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2653,7 +2653,7 @@ export interface CourseCreateManyWithoutSourceCourseInput {
 export interface CourseCreateWithoutSourceCourseInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2696,7 +2696,7 @@ export interface CourseCreateOneWithoutLinksFromCourseInput {
 export interface CourseCreateWithoutLinksFromCourseInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2759,7 +2759,7 @@ export interface ConceptCreateWithoutWorkspaceInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2784,7 +2784,7 @@ export interface ConceptCreateWithoutClonesInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2809,7 +2809,7 @@ export interface ConceptCreateWithoutCommonClonesInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2837,7 +2837,7 @@ export interface ConceptCreateWithoutSourceConceptInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2865,7 +2865,7 @@ export interface ConceptCreateWithoutSourceCommonInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2909,7 +2909,7 @@ export interface ConceptCreateWithoutLinksToConceptInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -2932,7 +2932,7 @@ export interface CourseCreateOneWithoutConceptsInput {
 export interface CourseCreateWithoutConceptsInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3067,7 +3067,7 @@ export interface ConceptCreateInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3112,7 +3112,7 @@ export interface ConceptCreateWithoutLinksFromConceptInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3222,7 +3222,7 @@ export interface CourseCreateOneWithoutGoalLinksInput {
 export interface CourseCreateWithoutGoalLinksInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3250,7 +3250,7 @@ export interface ConceptCreateWithoutCourseInput {
   name: String;
   description?: Maybe<String>;
   level?: Maybe<ConceptLevel>;
-  position?: Maybe<String>;
+  position: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3408,7 +3408,7 @@ export interface CourseCreateOneWithoutObjectiveLinksInput {
 export interface CourseCreateWithoutObjectiveLinksInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -3535,7 +3535,7 @@ export interface CourseCreateOneInput {
 export interface CourseCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
-  description?: Maybe<String>;
+  description: String;
   official?: Maybe<Boolean>;
   frozen?: Maybe<Boolean>;
   tags?: Maybe<TagCreateManyInput>;
@@ -9248,7 +9248,7 @@ export interface ProjectTokenNullablePromise
 export interface Course {
   id: ID_Output;
   name: String;
-  description?: String;
+  description: String;
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];
@@ -9600,7 +9600,7 @@ export interface Concept {
   name: String;
   description?: String;
   level: ConceptLevel;
-  position?: String;
+  position: String;
   official: Boolean;
   frozen: Boolean;
   count: Int;
@@ -11266,7 +11266,7 @@ export interface ConceptPreviousValues {
   name: String;
   description?: String;
   level: ConceptLevel;
-  position?: String;
+  position: String;
   official: Boolean;
   frozen: Boolean;
   count: Int;
@@ -11394,7 +11394,7 @@ export interface CourseSubscriptionPayloadSubscription
 export interface CoursePreviousValues {
   id: ID_Output;
   name: String;
-  description?: String;
+  description: String;
   official: Boolean;
   frozen: Boolean;
   conceptOrder: ID_Output[];

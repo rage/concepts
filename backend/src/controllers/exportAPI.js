@@ -26,6 +26,7 @@ query($wid: ID!) {
     courses {
       name
       official
+      description
       conceptOrder
       objectiveOrder
       concepts {

@@ -104,6 +104,13 @@
             ],
             "minLength": 1
           },
+          "description": {
+              "type": "string",
+              "description": "Description of the course",
+              "example": [
+                "Basics of programming"
+              ]
+          },
           "official": {
             "type": "boolean",
             "description": "Whether or not the course is official, rather than user-specified",

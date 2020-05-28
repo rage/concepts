@@ -82,6 +82,7 @@ export const importData = async (root, { data }, context) => {
   const courseData = await Promise.all(courses.map(async course => {
     const courseObj = await context.prisma.createCourse({
       name: course.name,
+      description: course.description,
       official: canSetOfficial && Boolean(json.projectId || course.official),
       createdBy: { connect: { id: context.user.id } },
       conceptOrder: { set: ['__ORDER_BY__CREATION_ASC'] },
