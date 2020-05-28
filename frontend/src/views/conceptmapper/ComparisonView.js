@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Select, MenuItem, FormControl } from '@material-ui/core'
 import { useQuery } from '@apollo/react-hooks'
 import { WORKSPACE_COMPARISON } from '../../graphql/Query'
 
@@ -151,7 +151,7 @@ const GraphContainer = ({ course, setSelectedConceptIdx, selectedConceptIdx, mat
         networkRef.current = cur
     }
 
-    useEffect(() => initGraph(), [])
+    useEffect(() => initGraph(), [course])
 
     if (selectedConceptIdx >= 0) {
         const label = compared ? matches[selectedConceptIdx].closestPair.name : matches[selectedConceptIdx].concept.name
@@ -190,6 +190,15 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
         return compareConcepts(course.concepts, compCourse.concepts) 
     }
 
+    const handleSelectMenu = (event) => {
+        setSelectedConceptIdx(-1)
+        setCourseIndex(event.target.value)
+        const data = compareCourses(courseList[courseIndex].course, courseList[courseIndex].compCourse)
+        matches = data.matches
+        percentage = data.percentage
+        avgDistance = data.avgDistance
+    }
+
     let compCourseList = new Set(compWorkspace.courses.map(course => course.name))
     let courseList = workspace.courses.filter(course => compCourseList.has(course.name))
                                        .map(course => ({
@@ -208,17 +217,20 @@ const ComparisonView = ({ urlPrefix, workspaceId, compWorkspaceId }) => {
         )
     }
 
-    const {
+    let {
         matches, 
         percentage,
         avgDistance 
     }  = compareCourses(courseList[courseIndex].course, courseList[courseIndex].compCourse)
 
-
     return (
         <div className={wrapper}>
             <div className={compPercentageWrapper}>
-                <h1> Similarity of <i>{ courseList[courseIndex].name }</i>: { percentage }% </h1>
+                <h2> Similarity of <FormControl>
+                    <Select onChange={handleSelectMenu} value={courseIndex} defaultValue={0}>
+                        { courseList.map((course, idx) => <MenuItem key={idx} value={idx}> {course.name}</MenuItem>) }
+                    </Select>
+                </FormControl>: { percentage.toFixed(2) }% </h2>
             </div>
             <div className={containerWrapper}>
                 <GraphContainer 
