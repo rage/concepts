@@ -622,7 +622,7 @@ input ConceptCreateInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -693,7 +693,7 @@ input ConceptCreateWithoutClonesInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -713,7 +713,7 @@ input ConceptCreateWithoutCommonClonesInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -733,7 +733,7 @@ input ConceptCreateWithoutCourseInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -753,7 +753,7 @@ input ConceptCreateWithoutLinksFromConceptInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -773,7 +773,7 @@ input ConceptCreateWithoutLinksToConceptInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -793,7 +793,7 @@ input ConceptCreateWithoutSourceCommonInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -813,7 +813,7 @@ input ConceptCreateWithoutSourceConceptInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -833,7 +833,7 @@ input ConceptCreateWithoutWorkspaceInput {
   name: String!
   description: String
   level: ConceptLevel
-  position: String!
+  position: String
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
