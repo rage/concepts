@@ -189,13 +189,13 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const deleteConceptLink = useCachedMutation(DELETE_CONCEPT_LINK, {
     update: cache.deleteConceptLinkUpdate()
   })
-
+  
   const [updateConceptLink] = useMutation(UPDATE_CONCEPT_LINK)
-
+  
   const courseQuery = useQuery(COURSE_BY_ID_WITH_LINKS, {
     variables: { id: courseId, workspaceId }
   })
-
+  
   const selectNode = useCallback((id, state) => {
     selected.current.add(id)
     toolbar.current.style.display = 'contents'

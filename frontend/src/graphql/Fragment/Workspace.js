@@ -42,6 +42,24 @@ fragment coursesForWorkspace on Workspace {
 }
 `
 
+const WORKSPACE_CONCEPTS_FRAGMENT = gql`
+fragment workspaceConcepts on Workspace {
+  id
+  courses {
+    id
+    name
+    concepts {
+      id
+      name
+      linksToConcept {
+        from { id }
+      }
+    }
+  }
+}
+`
+
 export {
+  WORKSPACE_CONCEPTS_FRAGMENT,
   COURSES_FOR_WORKSPACE_FRAGMENT
 }
