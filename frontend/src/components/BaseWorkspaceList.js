@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import {
   List, ListItem, ListItemText, ListItemSecondaryAction, Card, CardHeader, Typography, IconButton,
-  Menu, MenuItem, ListItemIcon, ListSubheader, Divider
+  Menu, MenuItem, ListItemIcon, ListSubheader, Divider, Button
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
-  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked, ArrowUpward as UpIcon
+  AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked, ArrowUpward as UpIcon,
+  SyncAlt as SyncAltIcon
 } from '@material-ui/icons'
 
 import { Privilege } from '../lib/permissions'
@@ -33,6 +34,10 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
+  },
+  cancelButton: {
+    marginTop: '16px',
+    marginBottom: '16px'
   },
   list: {
     flex: 1,
@@ -73,6 +78,7 @@ const BaseWorkspaceList = ({
   const infoBox = useInfoBox()
   const confirmDelete = useConfirmDelete()
   const confirm = useConfirm()
+  const [compareMode, setCompareMode] = useState({status: false, workspaceId: null})
 
   const handleCreateOpen = () => {
     handleMenuClose()
@@ -171,6 +177,15 @@ const BaseWorkspaceList = ({
     openShareDialog(menu.workspace.id, Privilege.EDIT)
   }
 
+  const handleCompareMode = () => {
+    setCompareMode({ status: true, workspaceId: menu.workspace.id })
+    handleMenuClose()
+  }
+
+  const cancelCompareMode = () => {
+    setCompareMode({ status: false, workspaceId: null })
+  }
+
   const handleDelete = async () => {
     handleMenuClose()
 
@@ -247,6 +262,10 @@ This will change which template is cloned by users.`,
     history.push(`${urlPrefix}/${menu.workspace.id}/heatmap`)
   }
 
+  const handleNavigateComparisonView = (workspaceId) => {
+    history.push(`${urlPrefix}/comp/${compareMode.workspaceId}/w/${workspaceId}`)
+  }
+
   const isActiveTemplate = (menu.workspace && activeTemplate) &&
     menu.workspace.id === activeTemplate.id
 
@@ -270,7 +289,7 @@ This will change which template is cloned by users.`,
     >
       <ListItemText
         primary={
-          <Typography className={classes.workspaceName} variant='h6'>
+          <Typography className={classes.workspaceName} variant='h6' style={{color: compareMode.workspaceId == workspace.id ? 'red' : 'black'}}>
             {workspace.name}
           </Typography>
         }
@@ -278,13 +297,20 @@ This will change which template is cloned by users.`,
       />
 
       <ListItemSecondaryAction>
-        <IconButton
-          onClick={evt => handleMenuOpen(workspace, evt)}
-          aria-haspopup='true'
-          ref={index === 0 ? workspaceActionGuide() : undefined}
-        >
-          <MoreVertIcon />
-        </IconButton>
+        { compareMode.status ? 
+          <IconButton onClick={() => {
+            handleNavigateComparisonView(workspace.id)
+          }}>
+              <SyncAltIcon />
+          </IconButton> : 
+          <IconButton
+            onClick={evt => handleMenuOpen(workspace, evt)}
+            aria-haspopup='true'
+            ref={index === 0 ? workspaceActionGuide() : undefined}
+          >
+            <MoreVertIcon />
+          </IconButton>
+      }
       </ListItemSecondaryAction>
     </ListItem>
   )
@@ -375,6 +401,14 @@ This will change which template is cloned by users.`,
             Promote to template
           </MenuItem>
         }
+        {type !== TYPE_TEMPLATE && projectId &&
+          <MenuItem aria-label='Compare' onClick={handleCompareMode}>
+            <ListItemIcon>
+              <SyncAltIcon />
+            </ListItemIcon>
+            Compare
+          </MenuItem>
+        }
         {type !== TYPE_USER &&
           <MenuItem aria-label='Edit' onClick={handleEditOpen}>
             <ListItemIcon>
@@ -390,6 +424,11 @@ This will change which template is cloned by users.`,
           Delete
         </MenuItem>
       </Menu>
+      {
+        compareMode.status && 
+          <Button color='primary' variant='outlined' 
+          className={classes.cancelButton} onClick={cancelCompareMode}> Cancel  comparison </Button>
+      }
     </Card>
   )
 }

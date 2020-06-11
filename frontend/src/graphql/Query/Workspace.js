@@ -1,6 +1,9 @@
 import gql from 'graphql-tag'
 
-import { COURSES_FOR_WORKSPACE_FRAGMENT } from '../Fragment'
+import { 
+  COURSES_FOR_WORKSPACE_FRAGMENT,
+  WORKSPACE_CONCEPTS_FRAGMENT
+} from '../Fragment'
 
 const WORKSPACES_FOR_USER = gql`
 query workspacesForUser {
@@ -207,7 +210,20 @@ query workspaceBySourceTemplate($sourceId: ID!) {
 }
 `
 
+const WORKSPACE_COMPARISON = gql`
+query workspaceComparison($workspaceId: ID!, $compWorkspaceId: ID!) {
+  workspace: workspaceById (id: $workspaceId) {
+    ...workspaceConcepts
+  }
+  compWorkspace: workspaceById(id: $compWorkspaceId) {
+    ...workspaceConcepts
+  }
+}
+${WORKSPACE_CONCEPTS_FRAGMENT}
+`
+
 export {
+  WORKSPACE_COMPARISON,
   WORKSPACES_FOR_USER,
   WORKSPACE_BY_ID,
   WORKSPACE_BY_ID_MEMBER_INFO,

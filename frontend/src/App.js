@@ -25,6 +25,7 @@ import UserView from './views/user/UserView'
 import ConceptMapperView from './views/conceptmapper/ConceptMapperView'
 import GoalView from './views/goals/GoalView'
 import StatisticsView from './views/statistics/StatisticsView'
+import ComparisonView from './views/conceptmapper/ComparisonView'
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -81,6 +82,9 @@ const workspaceRouter = (prefix) => <>
     <MembersView workspaceId={wid} />} />
   <Route exact path={`${prefix}/:wid/goals`} render={({ match: { params: { wid } } }) =>
     <GoalView workspaceId={wid} />} />
+  <Route exact path={`${prefix}/comp/:wid/w/:oid`} render={({ match: { params: { wid, oid } } }) => {
+     return (<ComparisonView workspaceId={wid} compWorkspaceId={oid} urlPrefix={prefix}/>)
+    }}/>
   <Route
     path={`${prefix}/:wid/:page(conceptmapper|mapper|graph|heatmap|manager|members|goals)/:cid?`}
     exact render={({ match: { params: { wid, cid, page } } }) =>
