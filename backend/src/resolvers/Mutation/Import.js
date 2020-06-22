@@ -76,6 +76,28 @@ export const importData = async (root, { data }, context) => {
     })
   }
 
+  // Save common concepts 
+  const commonConcepts = await Promise.all(json.commonConcepts.map(async concept => 
+    await context.prisma.createConcept({
+      name: concept.name,
+      description: concept.description,
+      level: concept.level,
+      tags: { connect: concept.tags.map(tag => ({ id: conceptTags.get(tag.name).id })) },
+      official: canSetOfficial && Boolean(json.projectId || concept.official),
+      createdBy: { connect: { id: context.user.id } },
+      workspace: { connect: { id: workspace.id }}
+    })
+  ))
+  
+  await Promise.all(commonConcepts.map(async concept => 
+    await context.prisma.updateWorkspace({
+      where: { id: workspace.id },
+      data: {
+        commonConcepts: { connect: { id: concept.id }}
+      }
+    })
+  ))
+
   // Save data to prisma
   const courses = json.courses
 

@@ -83,6 +83,54 @@
     "conceptTags": {
       "$ref": "#/definitions/tags"
     },
+    "commonConcepts": {
+      "type": "array",
+      "description": "List of common concepts",
+      "uniqueItems": true,
+      "items":  {
+        "type": "object",
+        "description": "Concept object",
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of concept",
+              "examples": [
+                "Toistolause",
+                "Ehtolause"
+              ],
+              "minLength": 1
+            },
+            "tags": {
+              "$ref": "#/definitions/tags"
+            },
+            "level": {
+              "type": "string",
+              "description": "level of the concept",
+              "enum": [
+                "CONCEPT",
+                "OBJECTIVE",
+                "GOAL",
+                "COMMON"
+              ]
+            },
+            "official": {
+              "type": "boolean",
+              "description": "Whether or not the concept is official, rather than user-specified",
+              "examples": [
+                true
+              ]
+            },
+            "description": {
+              "type": "string",
+              "description": "Description for concept"
+            }
+        }
+      }
+    },
     "courses": {
       "type": "array",
       "description": "List of courses in workspace",
