@@ -64,6 +64,47 @@ query($wid: ID!) {
 }
 `
 
+/**
+ * Convert response to markdown format
+ * @param {workspace} workspace Workspace from the query
+ */
+const workspaceToMarkdown = (workspace) => {
+  let markdown = [`# ${workspace.workspace}`]
+  for (const course of workspace.courses) {
+    markdown.push("\n## " + course.name)
+    markdown.push("### Objectives")
+    for (const concept of course.concepts) {
+      if (concept.level == 'OBJECTIVE') {
+        markdown.push("- " + concept.name)
+        markdown.push("\t- " + concept.description)
+      }
+    }
+    
+    const prereqs = course.linksToCourse.filter(link => link.from.name != course.name)
+    if (prereqs.length > 0) {
+      markdown.push("### Prerequisites")
+      for (const courseLink of prereqs) {
+        markdown.push("- " + courseLink.from.name)
+      }
+    }
+  }
+
+  return markdown.join("\n")
+}
+
+export const markdownExportAPI = async (req, res) => {
+  const resp = verifyAndRespondRequest(req, res, 'EXPORT_MARKDOWN')
+
+  if (resp !== 'OK') return resp
+  const { wid } = req.params
+
+  const result = await prisma.$graphql(exportQuery, { wid })
+  const markdown = workspaceToMarkdown(result.workspace)
+
+  res.set('Content-Disposition', `attachment; filename=${result.workspace.workspace}.md`)
+  return res.send(markdown)
+}
+
 export const exportAPI = async (req, res) => {
   const resp = verifyAndRespondRequest(req, res, 'EXPORT_WORKSPACE')
   if (resp !== 'OK') return resp

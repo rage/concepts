@@ -189,6 +189,7 @@ type CleanResult {
 enum LinkType {
   EXPORT_WORKSPACE
   EXPORT_POINTS
+  EXPORT_MARKDOWN
 }
 
 union ProjectOrWorkspace = Workspace | Project | LimitedProject

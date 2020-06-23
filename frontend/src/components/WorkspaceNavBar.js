@@ -8,7 +8,7 @@ import {
   Shuffle as ShuffleIcon, GridOn as GridOnIcon, DeviceHub as DeviceHubIcon, Group as GroupIcon,
   CloudDownload as CloudDownloadIcon, Delete as DeleteIcon, Edit as EditIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, VerticalSplit as VerticalSplitIcon, HelpOutline as HelpIcon,
-  AccountTree as AccountTreeIcon, School as SchoolIcon
+  AccountTree as AccountTreeIcon, School as SchoolIcon, Notes as NotesIcon 
 } from '@material-ui/icons'
 
 import { Privilege, Role } from '../lib/permissions'
@@ -42,6 +42,20 @@ const useStyles = makeStyles({
     height: '56px'
   }
 })
+
+export const exportMarkdown = async workspaceId => {
+  const linkResp = await client.mutate({
+    mutation: CREATE_LINK_TOKEN,
+    variables: {
+      linkType: 'EXPORT_MARKDOWN',
+      id: workspaceId
+    }
+  })
+
+  // eslint-disable-next-line max-len
+  const url = `${window.location.origin}/api/workspace/${workspaceId}/markdown?access_token=${linkResp.data.createLinkToken}`
+  window.open(url, '_blank')
+}
 
 export const exportWorkspace = async workspaceId => {
   const linkResp = await client.mutate({
@@ -134,6 +148,18 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
     }
   }
 
+  const handleWorkspaceMarkdown = async () => {
+    setMenuAnchor(null)
+    try {
+      await exportMarkdown(workspaceId)
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
+  }
+
   const onChange = (event, newPage) => {
     const cid = courseId && courseId !== 'common'
       && (newPage === 'mapper' || newPage === 'conceptmapper' || newPage === 'manager')
@@ -182,11 +208,17 @@ const WorkspaceNavBar = ({ page, workspaceId, courseId, urlPrefix }) => {
             vertical: 'bottom',
             horizontal: 'right'
           }}>
-          <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+          <MenuItem aria-label='Export JSON' onClick={handleWorkspaceExport}>
             <ListItemIcon>
               <CloudDownloadIcon />
             </ListItemIcon>
-            Export
+            Export JSON
+          </MenuItem>
+          <MenuItem aria-label='Export markdown' onClick={handleWorkspaceMarkdown}>
+            <ListItemIcon>
+              <NotesIcon />
+            </ListItemIcon>
+            Export markdown
           </MenuItem>
           { isOwner &&
             <MenuItem aria-label='Share link' onClick={handleShareOpen}>

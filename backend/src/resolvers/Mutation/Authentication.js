@@ -66,6 +66,7 @@ export const createLinkToken = async (root, { linkType, id, expiry }, context) =
     expiry: (expiry ? new Date(expiry) : nextWeek()).toISOString()
   }
   switch (linkType) {
+  case 'EXPORT_MARKDOWN':
   case 'EXPORT_WORKSPACE':
     await checkAccess(context, { minimumPrivilege: Privilege.VIEW, workspaceId: id })
     data.workspaceId = id
