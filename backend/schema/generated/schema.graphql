@@ -492,7 +492,7 @@ type CourseLink {
 type Course {
   id: ID!
   name: String!
-  description: String
+  description: String!
   official: Boolean!
   frozen: Boolean!
   tags: [Tag!]!
@@ -581,7 +581,7 @@ type Concept {
   name: String!
   description: String
   level: ConceptLevel!
-  position: String
+  position: String!
   official: Boolean!
   frozen: Boolean!
   tags: [Tag!]!
