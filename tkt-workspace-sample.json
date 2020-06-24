@@ -36,6 +36,7 @@
   "courses": [
     {
       "name": "Ohjelmoinnin perusteet",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -601,6 +602,7 @@
     },
     {
       "name": "Ohjelmoinnin jatkokurssi",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -1238,6 +1240,7 @@
     },
     {
       "name": "Tietokantojen perusteet",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -1835,6 +1838,7 @@
     },
     {
       "name": "Tietokoneen toiminta",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -2500,6 +2504,7 @@
     },
     {
       "name": "Johdatus tietojenkäsittelytieteeseen",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -2612,6 +2617,7 @@
     },
     {
       "name": "Tietorakenteet ja algoritmit",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -2797,6 +2803,7 @@
     },
     {
       "name": "Käyttöjärjestelmät",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -3644,6 +3651,7 @@
     },
     {
       "name": "Ohjelmistotekniikka",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -3798,6 +3806,7 @@
     },
     {
       "name": "Ohjelmistotuotanto",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -3912,6 +3921,7 @@
     },
     {
       "name": "Laskennan mallit",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -4087,6 +4097,7 @@
     },
     {
       "name": "Tietoliikenteen perusteet",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -4280,6 +4291,7 @@
     },
     {
       "name": "Tietoturvan perusteet",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -4375,6 +4387,7 @@
     },
     {
       "name": "Johdatus tekoälyyn",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -4675,6 +4688,7 @@
     },
     {
       "name": "TKT Kandidaatin tutkielma",
+      "description":"",
       "tags": [],
       "official": true,
       "concepts": [
@@ -4841,6 +4855,7 @@
     }
   ],
   "workspace": "TKT-kandi",
+  "commonConcepts": [],
   "goalTags": [
     {
       "name": "KNOWLEDGE",
