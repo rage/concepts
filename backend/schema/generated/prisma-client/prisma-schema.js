@@ -593,7 +593,7 @@ type Concept {
   name: String!
   description: String
   level: ConceptLevel!
-  position: String
+  position: String!
   official: Boolean!
   frozen: Boolean!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -1309,7 +1309,7 @@ type ConceptPreviousValues {
   name: String!
   description: String
   level: ConceptLevel!
-  position: String
+  position: String!
   official: Boolean!
   frozen: Boolean!
   count: Int!
@@ -1946,7 +1946,7 @@ input ConceptWhereUniqueInput {
 type Course {
   id: ID!
   name: String!
-  description: String
+  description: String!
   official: Boolean!
   frozen: Boolean!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -1978,7 +1978,7 @@ input CourseCreateconceptOrderInput {
 input CourseCreateInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2047,7 +2047,7 @@ input CourseCreateOneWithoutObjectiveLinksInput {
 input CourseCreateWithoutClonesInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2066,7 +2066,7 @@ input CourseCreateWithoutClonesInput {
 input CourseCreateWithoutConceptsInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2085,7 +2085,7 @@ input CourseCreateWithoutConceptsInput {
 input CourseCreateWithoutGoalLinksInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2104,7 +2104,7 @@ input CourseCreateWithoutGoalLinksInput {
 input CourseCreateWithoutLinksFromCourseInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2123,7 +2123,7 @@ input CourseCreateWithoutLinksFromCourseInput {
 input CourseCreateWithoutLinksToCourseInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2142,7 +2142,7 @@ input CourseCreateWithoutLinksToCourseInput {
 input CourseCreateWithoutObjectiveLinksInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2161,7 +2161,7 @@ input CourseCreateWithoutObjectiveLinksInput {
 input CourseCreateWithoutSourceCourseInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2180,7 +2180,7 @@ input CourseCreateWithoutSourceCourseInput {
 input CourseCreateWithoutWorkspaceInput {
   id: ID
   name: String!
-  description: String
+  description: String!
   official: Boolean
   frozen: Boolean
   tags: TagCreateManyInput
@@ -2642,7 +2642,7 @@ enum CourseOrderByInput {
 type CoursePreviousValues {
   id: ID!
   name: String!
-  description: String
+  description: String!
   official: Boolean!
   frozen: Boolean!
   conceptOrder: [ID!]!

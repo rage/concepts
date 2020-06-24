@@ -7,6 +7,17 @@ query($wid: ID!) {
   workspace(where: { id: $wid }) {
     workspaceId: id
     workspace: name
+    commonConcepts {
+      name
+      description
+      level
+      official
+      tags {
+        name
+        type
+        priority
+      }
+    }
     courseTags {
       name
       type
@@ -26,6 +37,7 @@ query($wid: ID!) {
     courses {
       name
       official
+      description
       conceptOrder
       objectiveOrder
       concepts {
