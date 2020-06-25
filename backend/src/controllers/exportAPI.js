@@ -113,7 +113,7 @@ export const markdownExportAPI = async (req, res) => {
   const result = await prisma.$graphql(exportQuery, { wid })
   const markdown = workspaceToMarkdown(result.workspace)
 
-  res.set('Content-Disposition', `attachment; filename=${result.workspace.workspace}.md`)
+  res.set('Content-Disposition', `attachment; filename="${result.workspace.workspace}.md"`)
   return res.send(markdown)
 }
 
