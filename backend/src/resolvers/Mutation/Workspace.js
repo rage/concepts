@@ -75,6 +75,7 @@ query($id : ID!) {
       courses {
         id
         name
+        description
         official
         frozen
         tags {
