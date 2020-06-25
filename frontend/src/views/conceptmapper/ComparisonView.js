@@ -68,6 +68,7 @@ const GraphContainer = ({ course, setSelectedConceptIdx, selectedConceptIdx, mat
         cur.nodes = []
         cur.edges = []
 
+        const nodeIds = course.concepts.map(concept => concept.id)
         for (const concept of course.concepts) {
             cur.nodes.push({
                 group: 'nodes',
@@ -80,6 +81,7 @@ const GraphContainer = ({ course, setSelectedConceptIdx, selectedConceptIdx, mat
                 }
             })
             for (const conceptLink of concept.linksToConcept) {
+                if (!nodeIds.includes(conceptLink.from.id)) continue
                 cur.edges.push({
                     group: 'edges',
                     data: {
