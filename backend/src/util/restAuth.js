@@ -21,6 +21,12 @@ const typeMap = {
     tokenIdKey: 'workspaceId',
     action: 'export workspace',
     container: 'workspace'
+  },
+  EXPORT_MARKDOWN: {
+    idKey: 'wid',
+    tokenIdKey: 'workspaceId',
+    action: 'export markdown',
+    container: 'workspace'
   }
 }
 

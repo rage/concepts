@@ -8,11 +8,12 @@ import {
   Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon, GridOn as GridOnIcon, Share as ShareIcon,
   MoreVert as MoreVertIcon, CloudDownload as CloudDownloadIcon, Shuffle as ShuffleIcon,
   AccountTree as AccountTreeIcon, RadioButtonChecked, RadioButtonUnchecked, ArrowUpward as UpIcon,
-  SyncAlt as SyncAltIcon
+  SyncAlt as SyncAltIcon, Notes as NotesIcon 
 } from '@material-ui/icons'
 
+
 import { Privilege } from '../lib/permissions'
-import { exportWorkspace } from './WorkspaceNavBar'
+import { exportWorkspace, exportMarkdown } from './WorkspaceNavBar'
 import { useLoginStateValue, useMessageStateValue } from '../lib/store'
 import useRouter from '../lib/useRouter'
 import { useInfoBox } from './InfoBox'
@@ -159,6 +160,18 @@ const BaseWorkspaceList = ({
     handleMenuClose()
     try {
       await exportWorkspace(menu.workspace.id)
+    } catch (err) {
+      messageDispatch({
+        type: 'setError',
+        data: err.message
+      })
+    }
+  }
+
+  const handleWorkspaceMarkdown = async () => {
+    handleMenuClose()
+    try {
+      await exportMarkdown(menu.workspace.id)
     } catch (err) {
       messageDispatch({
         type: 'setError',
@@ -368,11 +381,17 @@ This will change which template is cloned by users.`,
           </ListItemIcon>
           Heatmap
         </MenuItem>
-        <MenuItem aria-label='Export' onClick={handleWorkspaceExport}>
+        <MenuItem aria-label='Export JSON' onClick={handleWorkspaceExport}>
           <ListItemIcon>
             <CloudDownloadIcon />
           </ListItemIcon>
-          Export
+          Export JSON
+        </MenuItem>
+        <MenuItem aria-label='Export markdown' onClick={handleWorkspaceMarkdown}>
+          <ListItemIcon>
+            <NotesIcon />
+          </ListItemIcon>
+          Export markdown
         </MenuItem>
         {type !== TYPE_USER &&
           <MenuItem aria-label='Share link' onClick={handleShareOpen}>
