@@ -88,7 +88,9 @@ const workspaceToMarkdown = (workspace) => {
     for (const concept of course.concepts) {
       if (concept.level == 'OBJECTIVE') {
         markdown.push("- " + concept.name)
-        markdown.push("\t- " + concept.description)
+        if (concept.description.trim() != '') {
+          markdown.push("\t- " + concept.description)
+        }
       }
     }
     
