@@ -18,6 +18,7 @@ query($id: ID!) {
         courses {
           id
           name
+          description
           official
           frozen
           linksToCourse {
@@ -160,6 +161,7 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
   for (const workspace of result.project.activeTemplate.clones) {
     for (const course of workspace.courses) {
       const updatedCourse = setDefault(courses, course.name, {
+        description: course.description,
         official: course.official,
         frozen: course.frozen,
         links: {},
@@ -206,9 +208,10 @@ export const mergeWorkspaces = async (root, { projectId }, context) => {
     },
     courses: {
       create: Object.entries(courses)
-        .map(([courseName, { official, concepts }]) => ({
+        .map(([courseName, { official, concepts, description  }]) => ({
           id: hash(courseName),
           name: courseName,
+          description,
           official,
           createdBy: { connect: { id: context.user.id } },
           concepts: {
