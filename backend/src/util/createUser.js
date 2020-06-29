@@ -28,6 +28,7 @@ export const makeMockWorkspaceForUser = async (prisma, userId) => {
       create: templateWorkspace.courses.map(course => ({
         id: makeNewId(course.id),
         name: course.name,
+        description: course.description,
         createdBy: { connect: { id: userId } },
         concepts: {
           create: course.concepts.map(concept => ({

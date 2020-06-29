@@ -76,6 +76,7 @@
         {
           "id": "cjysiozw13gt60712n5wrbypk",
           "name": "We are editing this course test",
+          "description": "",
           "createdBy": {
             "id": "cjxelvrtp0j9r0751fdxnx6aq"
           },
@@ -133,6 +134,7 @@
         {
           "id": "cjysiozw13gt707120hc60l4w",
           "name": "This is another course",
+          "description": "",
           "createdBy": {
             "id": "cjxelvrtp0j9r0751fdxnx6aq"
           },
@@ -141,6 +143,7 @@
         {
           "id": "cjysiozw13gt80712zx27kuco",
           "name": "Courses can be prerequisites",
+          "description": "",
           "createdBy": {
             "id": "cjxelvrtp0j9r0751fdxnx6aq"
           },
@@ -158,6 +161,7 @@
         {
           "id": "cjysiozw13gt90712fs5aoz3f",
           "name": "This is another prerequisite course",
+          "description": "",
           "createdBy": {
             "id": "cjxelvrtp0j9r0751fdxnx6aq"
           },
