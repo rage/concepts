@@ -24,6 +24,7 @@
     "chart.js": "^2.9.3",
     "chroma-js": "^2.0.4",
     "customize-cra": "^0.9.1",
+    "cypress": "^4.10.0",
     "cytoscape": "^3.9.0",
     "cytoscape-klay": "^3.1.2",
     "cytoscape-popper": "^1.0.4",
