@@ -593,7 +593,7 @@ type Concept {
   name: String!
   description: String
   level: ConceptLevel!
-  position: String!
+  position: String
   official: Boolean!
   frozen: Boolean!
   tags(where: TagWhereInput, orderBy: TagOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Tag!]
@@ -1309,7 +1309,7 @@ type ConceptPreviousValues {
   name: String!
   description: String
   level: ConceptLevel!
-  position: String!
+  position: String
   official: Boolean!
   frozen: Boolean!
   count: Int!
