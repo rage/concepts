@@ -9600,7 +9600,7 @@ export interface Concept {
   name: String;
   description?: String;
   level: ConceptLevel;
-  position: String;
+  position?: String;
   official: Boolean;
   frozen: Boolean;
   count: Int;
@@ -11266,7 +11266,7 @@ export interface ConceptPreviousValues {
   name: String;
   description?: String;
   level: ConceptLevel;
-  position: String;
+  position?: String;
   official: Boolean;
   frozen: Boolean;
   count: Int;
