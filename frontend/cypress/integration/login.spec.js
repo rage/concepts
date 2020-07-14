@@ -6,10 +6,7 @@ describe('Visit concepts', () => {
     })
 
     it("wrong username and password", () => {
-        const username = "wrong user"
-        const password = "wrong pass"
-
-        cy.login(username, password)
+        cy.login("wrong user", "wrong pass")
         cy.url().should('include', '/login')
         cy.get('.MuiFormHelperText-root').contains("Invalid")
     })
