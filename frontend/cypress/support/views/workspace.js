@@ -1,5 +1,9 @@
-Cypress.Commands.add("workspaceListContains", item => {
-    cy.contains('.MuiListItem-root', item)
+Cypress.Commands.add("workspaceListContains", (item, contains) => {
+    if (contains) {
+        cy.contains('.MuiListItem-root', item)
+    } else {
+        cy.contains('.MuiListItem-root', item).should('not.exist')
+    }
 })
 
 Cypress.Commands.add("createWorkspace", name => {

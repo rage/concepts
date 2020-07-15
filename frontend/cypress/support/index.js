@@ -1,3 +1,3 @@
 import './utils/session'
-import './authentication'
-import './workspace'
+import './views/authentication'
+import './views/workspace'

@@ -13,6 +13,14 @@ describe('As a guest I can', () => {
 
     it("create a workspace", () => {
         cy.createWorkspace('guestWorkspace')
-        cy.workspaceListContains("guestWorkspace")
+        cy.workspaceListContains("guestWorkspace", true)
     })
+
+    it("can remove a workspace", () => {
+        cy.get(':nth-child(2) > .MuiListItemSecondaryAction-root > .MuiButtonBase-root').click()
+        cy.get('[aria-label="Delete"]').click()
+        cy.get('.MuiButton-textSecondary').click()
+        cy.workspaceListContains("guestWorkspace", false)
+    })
+
 })
