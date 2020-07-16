@@ -1,4 +1,4 @@
-Cypress.Commands.add("workspaceListContains", (item, contains) => {
+Cypress.Commands.add("listContains", (item, contains) => {
     if (contains) {
         cy.contains('.MuiListItem-root', item)
     } else {
