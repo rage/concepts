@@ -44,4 +44,12 @@ describe('As a guest I can', () => {
         cy.get('.makeStyles-form-835 > .MuiButtonBase-root').click()
         cy.listContains("Test course", true)
     })
+
+    it("select course and create objective", () => {
+        cy.get(':nth-child(5) > .MuiListItem-root').click()
+        cy.get('.MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root').type("objective 1")
+        cy.get('.makeStyles-concepts-661 > .MuiCard-root > .makeStyles-form-835 > .makeStyles-textfield-832 > .MuiInputBase-root > .MuiInputBase-input').type("description")
+        cy.get('.makeStyles-concepts-661 > .MuiCard-root > .makeStyles-form-835 > .MuiButtonBase-root').click()
+        cy.listContains("objective 1", true)
+    })
 })
