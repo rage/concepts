@@ -50,6 +50,8 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
+    "e2etest": "./node_modules/.bin/cypress run --headless",
+    "cypress": "./node_modules/.bin/cypress open",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test"
   },
