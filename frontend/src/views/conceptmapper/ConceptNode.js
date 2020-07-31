@@ -302,6 +302,9 @@ const ConceptNode = ({
       setEditing(true)
     }
 
+    // -- Experimental
+    positionStyle.boxShadow = `0px 0px 0px ${concept.linksToConcept.length}px rgba(0, 0, 0, 0.75)`
+
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
         <Tooltip arrow title={concept.description} enterDelay={750} enterNextDelay={750}>
