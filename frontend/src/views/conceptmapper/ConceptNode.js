@@ -303,7 +303,14 @@ const ConceptNode = ({
     }
 
     // -- Experimental
-    positionStyle.boxShadow = `0px 0px 0px ${concept.linksToConcept.length}px rgba(0, 0, 0, 0.75)`
+    let height = 0
+    for (const v of Object.values(concepts?.current)) {
+      for (const link of v.concept.linksToConcept) {
+        if (link.from.id == concept.id) height++;
+      }
+    }
+    height = Math.max(0, height - 1)
+    positionStyle.boxShadow = `0px 0px ${height}px ${height}px rgba(0, 0, 200, 0.75)`
 
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
