@@ -90,14 +90,26 @@ const ConceptNode = ({
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
   const [name, setName] = useState(concept.name)
+  const [height, setHeight] = useState(0)
   const id = `concept-${concept.id}`
+
+  const getHeight = () => {
+    let height = 0
+    for (const v of Object.values(concepts?.current)) {
+      for (const link of v.concept.linksToConcept) {
+        if (link.from.id == concept.id) height++;
+      }
+    }
+    return Math.max(0, height - 1)
+  }
 
   useEffect(() => {
     if (name !== concept.name) {
       setName(concept.name)
     }
+    setHeight(getHeight())
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [concept.name])
+  }, [concept.name, concepts])
 
   if (!concepts.current[id]) concepts.current[id] = { name }
   const self = concepts.current[id]
@@ -302,14 +314,7 @@ const ConceptNode = ({
       setEditing(true)
     }
 
-    // -- Experimental
-    let height = 0
-    for (const v of Object.values(concepts?.current)) {
-      for (const link of v.concept.linksToConcept) {
-        if (link.from.id == concept.id) height++;
-      }
-    }
-    height = Math.max(0, height - 1)
+    // -- Height of the concept
     positionStyle.boxShadow = `0px 0px ${height}px ${height}px rgba(0, 0, 200, 0.75)`
 
     return (
