@@ -90,24 +90,24 @@ const ConceptNode = ({
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
   const [name, setName] = useState(concept.name)
-  const [height, setHeight] = useState(0)
+  const [importance, setImportance] = useState(0)
   const id = `concept-${concept.id}`
 
-  const getHeight = () => {
-    let height = 0
+  const getImportance = () => {
+    let value = 0
     for (const v of Object.values(concepts?.current)) {
       for (const link of v.concept.linksToConcept) {
-        if (link.from.id == concept.id) height++;
+        if (link.from.id == concept.id) value++;
       }
     }
-    return Math.max(0, height - 1)
+    return Math.min(Math.max(0, value - 1), 10)
   }
 
   useEffect(() => {
     if (name !== concept.name) {
       setName(concept.name)
     }
-    setHeight(getHeight())
+    setImportance(getImportance())
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [concept.name, concepts])
 
@@ -314,8 +314,8 @@ const ConceptNode = ({
       setEditing(true)
     }
 
-    // -- Height of the concept
-    positionStyle.boxShadow = `0px 0px ${height}px ${height}px rgba(0, 0, 200, 0.75)`
+    // -- Importance of the concept
+    positionStyle.boxShadow = `0px 0px ${importance}px ${importance}px rgba(0, 0, 200, 0.75)`
 
     return (
       <DraggableCore onDrag={onDrag} onStop={onDragStop} onStart={onDragStart}>
