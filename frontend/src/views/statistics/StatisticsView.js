@@ -136,18 +136,25 @@ const StatisticsView = ({ projectId }) => {
 
   useLayoutEffect(() => {
     if (graphRef.current) {
-      const { pointList } = projectQuery.data.projectStatistics
+      const { maxPoints, pointList } = projectQuery.data.projectStatistics
       const sortedPointList = pointList.slice().sort((a, b) => a.value - b.value)
+      const converted = sortedPointList.map(point => 
+        ({
+          ...point, 
+          value: Math.floor((point.value / maxPoints) * 100)
+        })
+      )
 
       const settings = {
-        type: 'bar',
+        type: 'line',
         data: {
-          labels: sortedPointList.map(item => item.value),
+          labels: converted.map(item => item.value + "%"),
           datasets: [{
             display: false,
             label: 'Completions',
-            data: sortedPointList.map(item => item.amount),
-            backgroundColor: 'rgba(0, 0, 100, 0.4)'
+            data: converted.map(item => item.amount),
+            backgroundColor: 'rgba(0, 0, 100, 0.4)',
+            fill: 'start'
           }]
         },
         options: {
