@@ -194,7 +194,7 @@ const StatisticsView = ({ projectId }) => {
     maxPoints,
     completedPoints
   } = projectQuery.data.projectStatistics
-  const completionPercentage = maxPoints === 0 ? 0 :
+  const completionPercentage = (maxPoints === 0 || participants === 0) ? 0 :
     Math.round((completedPoints / (maxPoints * participants)) * 100)
 
   return (
