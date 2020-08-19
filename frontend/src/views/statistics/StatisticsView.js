@@ -145,14 +145,23 @@ const StatisticsView = ({ projectId }) => {
         })
       )
 
+      const resultList = {}
+      for (var i = 0; i <= 100; i++) {
+        resultList[i] = 0
+      }
+      for (let item of converted) {
+        resultList[item.value] = item.amount
+      }
+
       const settings = {
         type: 'line',
         data: {
-          labels: converted.map(item => item.value + "%"),
+          suggestedMin: 0,
+          labels: Object.keys(resultList).map(item => item + "%"),
           datasets: [{
             display: false,
             label: 'Completions',
-            data: converted.map(item => item.amount),
+            data: Object.values(resultList),
             backgroundColor: 'rgba(0, 0, 100, 0.4)',
             fill: 'start'
           }]
