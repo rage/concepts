@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import {
   Menu, MenuItem, Divider, Button, ButtonGroup, Typography, CircularProgress
 } from '@material-ui/core'
-import { ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons'
+import { ArrowDropDown as ArrowDropDownIcon, VisibilityOff as VisibilityOffIcon, Visibility as VisibilityIcon, VisibilityOff } from '@material-ui/icons'
 import ELK from 'elkjs/lib/elk-api.js'
 import { Worker } from 'elkjs/lib/elk-worker.js'
 
@@ -130,6 +130,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
   const [addingLink, setAddingLinkState] = useState(null)
   const [editingLink, setEditingLink] = useState(null)
   const [layouting, setLayouting] = useState(false)
+  const [highlight, setHighlight] = useState(false)
   const addingLinkRef = useRef()
   const setAddingLink = val => {
     setAddingLinkState(val)
@@ -685,7 +686,7 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
           key={concept.id} workspaceId={workspaceId} concept={concept} pan={pan} concepts={concepts}
           openMenu={openMenu} closeMenu={closeMenu} openConceptDialog={openEditConceptDialog}
           selected={selected} selectNode={selectNode} deselectNode={deselectNode}
-          submit={submitExistingConcept} submitAllPosition={submitAllPosition}
+          submit={submitExistingConcept} submitAllPosition={submitAllPosition} highlight={highlight}
         />,
         ...concept.linksToConcept.map(link => <ConceptLink
           key={link.id} delay={1} active linkId={link.id} text={link.text} weight={link.weight}
@@ -728,6 +729,10 @@ const ConceptMapperView = ({ workspaceId, courseId, urlPrefix }) => {
         {layouting && <div style={{ display: 'flex' }}>
           <CircularProgress color='inherit' size={24} />
         </div>}
+      </Button>
+      <Button variant='outlined' onClick={() => { setHighlight(!highlight)} } className={classes.toolbarButton}>
+        { highlight ? <VisibilityIcon/> : <VisibilityOffIcon/> }
+        <span style={{marginLeft: '2px'}}> Highlight</span>
       </Button>
       <div style={{ display: 'none' }} ref={toolbar}>
         <Button
