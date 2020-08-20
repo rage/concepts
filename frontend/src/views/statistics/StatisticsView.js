@@ -138,19 +138,20 @@ const StatisticsView = ({ projectId }) => {
     if (graphRef.current) {
       const { maxPoints, pointList } = projectQuery.data.projectStatistics
       const sortedPointList = pointList.slice().sort((a, b) => a.value - b.value)
+      const xTick = 5
       const converted = sortedPointList.map(point => 
         ({
           ...point, 
-          value: Math.floor((point.value / maxPoints) * 100)
+          value: Math.round(Math.floor((point.value / maxPoints) * 100) / xTick) * xTick
         })
       )
 
       const resultList = {}
-      for (var i = 0; i <= 100; i++) {
+      for (var i = 0; i <= 100; i+=xTick) {
         resultList[i] = 0
       }
       for (let item of converted) {
-        resultList[item.value] = item.amount
+        resultList[item.value] += item.amount
       }
 
       const settings = {
