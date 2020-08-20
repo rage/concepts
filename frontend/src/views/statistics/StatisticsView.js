@@ -173,6 +173,15 @@ const StatisticsView = ({ projectId }) => {
           },
           legend: {
             display: false
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  min: 0
+                }
+              }
+            ]
           }
         }
       }
