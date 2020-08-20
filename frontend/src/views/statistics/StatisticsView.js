@@ -138,21 +138,31 @@ const StatisticsView = ({ projectId }) => {
     if (graphRef.current) {
       const { maxPoints, pointList } = projectQuery.data.projectStatistics
       const sortedPointList = pointList.slice().sort((a, b) => a.value - b.value)
+      const xTick = 5
       const converted = sortedPointList.map(point => 
         ({
           ...point, 
-          value: Math.floor((point.value / maxPoints) * 100)
+          value: Math.round(Math.floor((point.value / maxPoints) * 100) / xTick) * xTick
         })
       )
+
+      const resultList = {}
+      for (var i = 0; i <= 100; i+=xTick) {
+        resultList[i] = 0
+      }
+      for (let item of converted) {
+        resultList[item.value] += item.amount
+      }
 
       const settings = {
         type: 'line',
         data: {
-          labels: converted.map(item => item.value + "%"),
+          suggestedMin: 0,
+          labels: Object.keys(resultList).map(item => item + "%"),
           datasets: [{
             display: false,
             label: 'Completions',
-            data: converted.map(item => item.amount),
+            data: Object.values(resultList),
             backgroundColor: 'rgba(0, 0, 100, 0.4)',
             fill: 'start'
           }]
@@ -164,6 +174,15 @@ const StatisticsView = ({ projectId }) => {
           },
           legend: {
             display: false
+          },
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  min: 0
+                }
+              }
+            ]
           }
         }
       }
@@ -185,7 +204,7 @@ const StatisticsView = ({ projectId }) => {
     maxPoints,
     completedPoints
   } = projectQuery.data.projectStatistics
-  const completionPercentage = maxPoints === 0 ? 0 :
+  const completionPercentage = (maxPoints === 0 || participants === 0) ? 0 :
     Math.round((completedPoints / (maxPoints * participants)) * 100)
 
   return (
