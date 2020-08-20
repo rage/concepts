@@ -85,19 +85,31 @@ const parsePosition = position => {
 const ConceptNode = ({
   concept, concepts, selected, selectNode, deselectNode, pan,
   openMenu, closeMenu, submit, submitAllPosition, cancel, isNew = false,
-  openConceptDialog
+  openConceptDialog, highlight
 }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState(isNew)
   const [name, setName] = useState(concept.name)
+  const [importance, setImportance] = useState(0)
   const id = `concept-${concept.id}`
+
+  const getImportance = () => {
+    let value = 0
+    for (const v of Object.values(concepts?.current)) {
+      for (const link of v.concept.linksToConcept) {
+        if (link.from.id == concept.id) value++;
+      }
+    }
+    return Math.min(Math.max(0, value - 1), 10)
+  }
 
   useEffect(() => {
     if (name !== concept.name) {
       setName(concept.name)
     }
+    setImportance(getImportance())
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [concept.name])
+  }, [concept.name, concepts, highlight])
 
   if (!concepts.current[id]) concepts.current[id] = { name }
   const self = concepts.current[id]
@@ -300,6 +312,11 @@ const ConceptNode = ({
       evt.stopPropagation()
       closeMenu(concept.id)
       setEditing(true)
+    }
+
+    // -- Importance of the concept
+    if (highlight) {
+      positionStyle.boxShadow = `0px 0px ${importance}px ${importance}px rgba(0, 0, 200, 0.75)`
     }
 
     return (
