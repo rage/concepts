@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
+  Button, TextField, Slider, InputAdornment,
+  FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
 } from '@material-ui/core'
-import { Warning as WarningIcon } from '@material-ui/icons'
+import { Warning as WarningIcon, FilterList as FilterListIcon, FilterList } from '@material-ui/icons'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
@@ -160,6 +161,7 @@ const logToLinear = value =>
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
+  const [filter, setFilter] = useState('')
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
   const [cycles, setCycles] = useState(0)
@@ -635,6 +637,23 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
+        <TextField 
+          style={{ marginLeft: '8px' }} 
+          placeholder="Filter..." 
+          color='primary'
+          value={filter}
+          onChange={evt => {
+            evt.preventDefault()
+            setFilter(evt.target.value)
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FilterListIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
         {cycles ? <Button
           className={classes.button} variant='outlined' color='secondary'
           onClick={jumpToCycle}
