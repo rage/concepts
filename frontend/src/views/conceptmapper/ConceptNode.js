@@ -96,8 +96,9 @@ const ConceptNode = ({
   const getImportance = () => {
     let value = 0
     for (const v of Object.values(concepts?.current)) {
+      if (!v.concept.linksToConcept) continue
       for (const link of v.concept.linksToConcept) {
-        if (link.from.id == concept.id) value++;
+        if (link.from.id == concept.id) value++
       }
     }
     return Math.min(Math.max(0, value - 1), 10)
