@@ -46,6 +46,7 @@ const CreateCourseForm = ({ workspaceId, urlPrefix }) => {
       courseRes = await createCourse({
         variables: {
           name: name.trim(),
+          description: '',
           workspaceId
         }
       })
