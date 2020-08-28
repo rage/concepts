@@ -161,7 +161,6 @@ const logToLinear = value =>
 const GraphView = ({ workspaceId }) => {
   const classes = useStyles()
   const [nextMode, redraw] = useState('courses')
-  const [filter, setFilter] = useState('')
   const [zoom, setZoom] = useState(20)
   const [error, setError] = useState(null)
   const [cycles, setCycles] = useState(0)
@@ -641,17 +640,15 @@ const GraphView = ({ workspaceId }) => {
           style={{ marginLeft: '8px' }} 
           placeholder="Filter..." 
           color='primary'
-          value={filter}
           onChange={evt => {
             evt.preventDefault()
-            setFilter(evt.target.value)
             
             // Update graph with the keyword
+            const value = evt.target.value
             const cur = state.current
             state.current.network.startBatch()
-
             cur.network.nodes(`node[type="${cur.mode.slice(0, -1)}"]`).forEach(conceptNode => {
-              if (conceptNode.data("label").includes(filter) || filter === '') {
+              if (conceptNode.data("label").includes(value) || value === '') {
                 conceptNode.style("display", "element")
               } else {
                 conceptNode.style("display", "none")
