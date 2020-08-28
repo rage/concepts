@@ -645,6 +645,20 @@ const GraphView = ({ workspaceId }) => {
           onChange={evt => {
             evt.preventDefault()
             setFilter(evt.target.value)
+            
+            // Update graph with the keyword
+            const cur = state.current
+            state.current.network.startBatch()
+
+            cur.network.nodes(`node[type="${cur.mode.slice(0, -1)}"]`).forEach(conceptNode => {
+              if (conceptNode.data("label").includes(filter) || filter === '') {
+                conceptNode.style("display", "element")
+              } else {
+                conceptNode.style("display", "none")
+              }
+            })
+            
+            state.current.network.endBatch()
           }}
           InputProps={{
             startAdornment: (
