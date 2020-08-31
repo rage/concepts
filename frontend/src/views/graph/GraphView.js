@@ -646,7 +646,7 @@ const GraphView = ({ workspaceId }) => {
             // Update graph with the keyword
             const value = evt.target.value.toLowerCase()
             const cur = state.current
-            state.current.network.startBatch()
+            cur.network.startBatch()
             cur.network.nodes(`node[type="${cur.mode.slice(0, -1)}"]`).forEach(conceptNode => {
               if (conceptNode.data("label").toLowerCase().includes(value) || value === '') {
                 conceptNode.style("background-opacity", 1)
@@ -656,8 +656,7 @@ const GraphView = ({ workspaceId }) => {
                 conceptNode.style("text-opacity", 0.2)
               }
             })
-            
-            state.current.network.endBatch()
+            cur.network.endBatch()
           }}
           InputProps={{
             startAdornment: (
