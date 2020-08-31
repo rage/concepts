@@ -644,11 +644,11 @@ const GraphView = ({ workspaceId }) => {
             evt.preventDefault()
             
             // Update graph with the keyword
-            const value = evt.target.value
+            const value = evt.target.value.toLowerCase()
             const cur = state.current
             state.current.network.startBatch()
             cur.network.nodes(`node[type="${cur.mode.slice(0, -1)}"]`).forEach(conceptNode => {
-              if (conceptNode.data("label").includes(value) || value === '') {
+              if (conceptNode.data("label").toLowerCase().includes(value) || value === '') {
                 conceptNode.style("display", "element")
               } else {
                 conceptNode.style("display", "none")
