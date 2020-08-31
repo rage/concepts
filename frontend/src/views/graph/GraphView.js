@@ -649,9 +649,11 @@ const GraphView = ({ workspaceId }) => {
             state.current.network.startBatch()
             cur.network.nodes(`node[type="${cur.mode.slice(0, -1)}"]`).forEach(conceptNode => {
               if (conceptNode.data("label").toLowerCase().includes(value) || value === '') {
-                conceptNode.style("display", "element")
+                conceptNode.style("background-opacity", 1)
+                conceptNode.style("text-opacity", 1)
               } else {
-                conceptNode.style("display", "none")
+                conceptNode.style("background-opacity", 0.2)
+                conceptNode.style("text-opacity", 0.2)
               }
             })
             
