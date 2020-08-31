@@ -4,7 +4,7 @@ import {
   Button, TextField, Slider, InputAdornment,
   FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
 } from '@material-ui/core'
-import { Warning as WarningIcon, FilterList as FilterListIcon, FilterList } from '@material-ui/icons'
+import { Warning as WarningIcon, FilterList as FilterListIcon } from '@material-ui/icons'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
