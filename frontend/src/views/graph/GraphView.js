@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Button, Slider, FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
+  Button, TextField, Slider, InputAdornment,
+  FormGroup, FormControlLabel, FormControl, FormLabel, Checkbox, Typography, Tooltip
 } from '@material-ui/core'
-import { Warning as WarningIcon } from '@material-ui/icons'
+import { Warning as WarningIcon, FilterList as FilterListIcon } from '@material-ui/icons'
 import cytoscape from 'cytoscape'
 import klay from 'cytoscape-klay'
 import popper from 'cytoscape-popper'
@@ -635,6 +636,36 @@ const GraphView = ({ workspaceId }) => {
         >
           Reset zoom
         </Button>
+        <TextField 
+          style={{ marginLeft: '8px' }} 
+          placeholder="Filter..." 
+          color='primary'
+          onChange={evt => {
+            evt.preventDefault()
+            
+            // Update graph with the keyword
+            const value = evt.target.value.toLowerCase()
+            const cur = state.current
+            cur.network.startBatch()
+            cur.network.nodes(`node[type="${cur.mode.slice(0, -1)}"]`).forEach(conceptNode => {
+              if (conceptNode.data("label").toLowerCase().includes(value) || value === '') {
+                conceptNode.style("background-opacity", 1)
+                conceptNode.style("text-opacity", 1)
+              } else {
+                conceptNode.style("background-opacity", 0.2)
+                conceptNode.style("text-opacity", 0.2)
+              }
+            })
+            cur.network.endBatch()
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FilterListIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
         {cycles ? <Button
           className={classes.button} variant='outlined' color='secondary'
           onClick={jumpToCycle}
