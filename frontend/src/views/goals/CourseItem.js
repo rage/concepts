@@ -1,4 +1,4 @@
-import { IconButton, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import { IconButton, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core'
 import {
   ArrowRight as ArrowRightIcon,
   Delete as DeleteIcon,
@@ -9,8 +9,9 @@ import React from 'react'
 import { noPropagation } from '../../lib/eventMiddleware'
 import { useConfirmDelete } from '../../dialogs/alert'
 import { useStyles } from './styles'
+import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 
-export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle }) => {
+export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle, editing }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
 
@@ -21,6 +22,21 @@ export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle }) 
   })
 
   return (
+    <Tooltip
+      key={course.id}
+      placement='left-start'
+      classes={{
+        tooltip: classes.tooltip,
+        popper: classes.popper
+      }}
+      TransitionComponent={({ children }) => children || null}
+      title={editing !== course.id ?
+        <ConceptToolTipContent
+          description={course.description || 'No description available'}
+          tags={course.tags}
+        />
+        : ''}
+    >
     <ListItem divider key={course.id} className={classes.listItemContainer}>
       <ListItemText>{course.name}</ListItemText>
       <ListItemIcon>
@@ -40,5 +56,6 @@ export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle }) 
         </IconButton>
       </ListItemIcon>
     </ListItem>
+    </Tooltip>
   )
 }

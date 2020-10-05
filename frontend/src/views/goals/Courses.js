@@ -41,7 +41,7 @@ export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => 
           />
         ) : (
           <CourseItem
-            deleteCourse={id => deleteCourse({ variables: { id } })}
+            deleteCourse={id => deleteCourse({ variables: { id } })} editing={editing}
             key={course.id} course={course} setEditing={setEditing} onClickCircle={onClickCircle}
           />
         ))}
