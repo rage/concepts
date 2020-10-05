@@ -1,10 +1,15 @@
-import { IconButton, ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core'
+import { 
+  IconButton, ListItem, ListItemIcon, 
+  ListItemText, ListItemSecondaryAction, Tooltip,
+  Menu, MenuItem
+} from '@material-ui/core'
 import {
+  MoreVert as MoreVertIcon,
   ArrowRight as ArrowRightIcon,
   Delete as DeleteIcon,
   Edit as EditIcon
 } from '@material-ui/icons'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { noPropagation } from '../../lib/eventMiddleware'
 import { useConfirmDelete } from '../../dialogs/alert'
@@ -14,10 +19,15 @@ import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle, editing }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
+  const [state, setState] = useState({ anchorEl: null })
+
+  const handleMenuOpen = evt => setState({ anchorEl: evt.currentTarget })
+  const handleMenuClose = () => setState({ anchorEl: null })
 
   const handleDelete = noPropagation(async () => {
     if (await confirmDelete(`Are you sure you want to delete the course ${course.name}?`)) {
       await deleteCourse(course.id)
+      handleMenuClose()
     }
   })
 
@@ -37,25 +47,45 @@ export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle, ed
         />
         : ''}
     >
-    <ListItem divider key={course.id} className={classes.listItemContainer}>
-      <ListItemText>{course.name}</ListItemText>
-      <ListItemIcon>
-        <IconButton onClick={handleDelete} className={classes.hoverButton}>
-          <DeleteIcon />
-        </IconButton>
-        <IconButton onClick={() => setEditing(course.id)} className={classes.hoverButton}>
-          <EditIcon />
-        </IconButton>
-        <IconButton
-          onClick={onClickCircle('course', course.id)}
-          className={classes.activeCircle}
-        >
-          <ArrowRightIcon
-            viewBox='7 7 10 10' id={`course-circle-${course.id}`}
-            className='course-circle' />
-        </IconButton>
-      </ListItemIcon>
-    </ListItem>
+      <ListItem divider key={course.id} className={classes.listItemContainer}>
+        <ListItemText>{course.name}</ListItemText>
+        <ListItemIcon>
+          <IconButton onClick={handleMenuOpen}>
+            <MoreVertIcon />
+          </IconButton>
+          <IconButton
+            onClick={onClickCircle('course', course.id)}
+            className={classes.activeCircle}
+          >
+            <ArrowRightIcon
+              viewBox='7 7 10 10' id={`course-circle-${course.id}`}
+              className='course-circle' />
+          </IconButton>
+        </ListItemIcon>
+        <ListItemSecondaryAction>
+          <Menu
+            anchorEl={state.anchorEl}
+            open={state.anchorEl}
+            onClose={handleMenuClose}
+          >
+            <MenuItem aria-label='Delete' onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon/>
+              </ListItemIcon>
+              Delete
+            </MenuItem>
+            <MenuItem aria-label='Edit' onClick={() => {
+              setEditing(course.id)
+              handleMenuClose()
+            }}>
+              <ListItemIcon>
+                <EditIcon/>
+              </ListItemIcon>
+              Edit
+            </MenuItem>
+          </Menu>
+        </ListItemSecondaryAction>
+      </ListItem>
     </Tooltip>
   )
 }
