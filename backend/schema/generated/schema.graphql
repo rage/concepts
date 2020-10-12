@@ -596,7 +596,7 @@ type Concept {
   # Links
   linksFromConcept: [ConceptLink!]!
   linksToConcept: [ConceptLink!]!
-
+  goalLinks: [GoalLink!]!
   # Relations
   course: Course
   workspace: Workspace!
