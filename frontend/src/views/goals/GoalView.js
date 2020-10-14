@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 
@@ -38,7 +38,7 @@ const GoalView = ({ workspaceId }) => {
 
   
   // Used for highlighting links
-  const active = useRef({
+  const [active, setActive] = useState({
     'links': new Set(),
     'courses': new Set(),
     'goals': new Set()
@@ -105,24 +105,25 @@ const GoalView = ({ workspaceId }) => {
 
 
   const onToggle = (type, item) => {
-    const cur = active.current
-    const actived = !cur[`${type}s`].has(item.id)
+    const activate = !active[`${type}s`].has(item.id)
 
-    if (actived) {
-      cur[`${type}s`].add(item.id)
+    if (activate) {
+      active[`${type}s`].add(item.id)
     } else {
-      cur[`${type}s`].delete(item.id)
+      active[`${type}s`].delete(item.id)
     }
 
     goalLinks.forEach(link => {
       if (link[type].id == item.id) {
-        if (actived) {
-          cur.links.add(link.id)
+        if (activate) {
+          active.links.add(link.id)
         } else {
-          cur.links.delete(link.id)
+          active.links.delete(link.id)
         }
       }
     })
+
+    setActive({...active, links: active.links})
   }
 
   const onToggleCourse = (course) => evt  => {
@@ -155,7 +156,7 @@ const GoalView = ({ workspaceId }) => {
       <div>
         <GoalLinks 
           goalLinks={goalLinks} 
-          activeLinks={active.current.links} 
+          activeLinks={active.links} 
           openMenu={openMenu}
         /> 
         {addingLink && <ConceptLink
