@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Menu, MenuItem } from '@material-ui/core'
 import { useMutation, useQuery } from '@apollo/react-hooks'
 
@@ -14,6 +14,19 @@ import { Goals } from './Goals'
 import { useStyles } from './styles'
 import { useManyUpdatingSubscriptions } from '../../apollo/useUpdatingSubscription'
 
+
+const GoalLinks = ({ openMenu, goalLinks, activeLinks }) => (
+  <>
+      {goalLinks.map(link => <ConceptLink
+          key={`goal-link-${link.id}`} delay={1} active={activeLinks.has(link.id)} linkId={link.id}
+          from={`goal-circle-${link.goal.id}`} to={`course-circle-${link.course.id}`}
+          fromConceptId={link.goal.id} toConceptId={link.course.id}
+          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: +5, x1: -6 }}
+          onContextMenu={openMenu}
+        />)}
+  </>
+)
+
 const GoalView = ({ workspaceId }) => {
   const classes = useStyles()
   const [addingLink, setAddingLink] = useState(null)
@@ -23,6 +36,14 @@ const GoalView = ({ workspaceId }) => {
     variables: { workspaceId }
   })
 
+  
+  // Used for highlighting links
+  const active = useRef({
+    'links': new Set(),
+    'courses': new Set(),
+    'goals': new Set()
+  })
+  
   const [createGoalLink] = useMutation(CREATE_GOAL_LINK, {
     update: cache.createGoalLinkUpdate(workspaceId)
   })
@@ -82,29 +103,61 @@ const GoalView = ({ workspaceId }) => {
   const goalTags = backendToSelect(workspaceQuery.data.workspaceById.goalTags)
   const courseTags = backendToSelect(workspaceQuery.data.workspaceById.courseTags)
 
+
+  const onToggle = (type, item) => {
+    const cur = active.current
+    const actived = !cur[`${type}s`].has(item.id)
+
+    if (actived) {
+      cur[`${type}s`].add(item.id)
+    } else {
+      cur[`${type}s`].delete(item.id)
+    }
+
+    goalLinks.forEach(link => {
+      if (link[type].id == item.id) {
+        if (actived) {
+          cur.links.add(link.id)
+        } else {
+          cur.links.delete(link.id)
+        }
+      }
+    })
+  }
+
+  const onToggleCourse = (course) => evt  => {
+    evt.stopPropagation()
+    onToggle('course', course)
+  }
+
+  const onToggleGoal = (goal) => evt => {
+    evt.stopPropagation()
+    onToggle('goal', goal)
+  }
+
   return (
     <div className={classes.root} onClick={() => setAddingLink(null)}>
       <h1 className={classes.title}>Goal Mapping</h1>
       <Courses
         courses={courses}
+        onToggleCourse={onToggleCourse}
         workspaceId={workspaceId}
         tagOptions={courseTags}
         onClickCircle={onClickCircle}
       />
       <Goals
         goals={goals}
+        onToggleGoal={onToggleGoal}
         workspaceId={workspaceId}
         tagOptions={goalTags}
         onClickCircle={onClickCircle}
       />
       <div>
-        {goalLinks.map(link => <ConceptLink
-          key={`goal-link-${link.id}`} delay={1} active linkId={link.id}
-          from={`goal-circle-${link.goal.id}`} to={`course-circle-${link.course.id}`}
-          fromConceptId={link.goal.id} toConceptId={link.course.id}
-          fromAnchor='center middle' toAnchor='center middle' posOffsets={{ x0: +5, x1: -6 }}
-          onContextMenu={openMenu}
-        />)}
+        <GoalLinks 
+          goalLinks={goalLinks} 
+          activeLinks={active.current.links} 
+          openMenu={openMenu}
+        /> 
         {addingLink && <ConceptLink
           active within={document.body} followMouse
           from={`${addingLink.type}-circle-${addingLink.id}`}

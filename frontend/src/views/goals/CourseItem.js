@@ -16,7 +16,7 @@ import { useConfirmDelete } from '../../dialogs/alert'
 import { useStyles } from './styles'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 
-export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle, editing }) => {
+export const CourseItem = ({ course, onToggleCourse, deleteCourse, setEditing, onClickCircle, editing }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
   const [state, setState] = useState({ anchorEl: null })
@@ -47,7 +47,7 @@ export const CourseItem = ({ course, deleteCourse, setEditing, onClickCircle, ed
         />
         : ''}
     >
-      <ListItem divider key={course.id} className={classes.listItemContainer}>
+      <ListItem divider button onClick={onToggleCourse(course)} key={course.id} className={classes.listItemContainer}>
         <ListItemText>{course.name}</ListItemText>
         <ListItemIcon>
           <IconButton onClick={handleMenuOpen}>

@@ -16,7 +16,7 @@ import { noPropagation } from '../../lib/eventMiddleware'
 import ConceptToolTipContent from '../../components/ConceptTooltipContent'
 import { useStyles } from './styles'
 
-export const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle }) => {
+export const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle, onToggleGoal }) => {
   const classes = useStyles()
   const confirmDelete = useConfirmDelete()
   const [state, setState] = useState({ anchorEl: null })
@@ -32,7 +32,7 @@ export const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle }) => 
   })
 
   return (
-    <ListItem divider key={goal.id} className={classes.listItemContainer}>
+    <ListItem button onClick={onToggleGoal(goal)} divider key={goal.id} className={classes.listItemContainer}>
       <ListItemIcon>
         <IconButton
           onClick={onClickCircle('goal', goal.id)} className={classes.activeCircle}

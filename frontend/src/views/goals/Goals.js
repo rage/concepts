@@ -8,7 +8,7 @@ import ConceptEditor from '../manager/ConceptEditor'
 import { GoalItem } from './GoalItem'
 import { useStyles } from './styles'
 
-export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
+export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle, onToggleGoal }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -40,6 +40,7 @@ export const Goals = ({ workspaceId, goals, tagOptions, onClickCircle }) => {
           />
         ) : (
           <GoalItem
+            onToggleGoal={onToggleGoal}
             updateConcept={variables => updateConcept({ variables })}
             deleteConcept={id => deleteConcept({ variables: { id } })}
             key={goal.id} goal={goal} setEditing={setEditing} onClickCircle={onClickCircle}
