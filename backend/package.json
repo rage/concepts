@@ -22,7 +22,7 @@
     "qs": "^6.9.0",
     "samlify": "^2.6.1",
     "tmc-client-js": "^0.0.9",
-    "xml-crypto": "^1.4.0",
+    "xml-crypto": "^2.0.0",
     "xmldom": "^0.3.0"
   },
   "devDependencies": {
