@@ -119,6 +119,10 @@ export const useStyles = makeStyles(theme => ({
     left: 0,
     transform: 'translateY(-10px)'
   },
+  // Used in ListItemText in GoalItem and CourseItem 
+  toggleable: {
+    cursor: 'pointer'
+  },
   // This one is used in the course tooltip
   tooltip: {
     backgroundColor: 'white',

@@ -32,7 +32,7 @@ export const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle, onTog
   })
 
   return (
-    <ListItem button onClick={onToggleGoal(goal)} divider key={goal.id} className={classes.listItemContainer}>
+    <ListItem divider key={goal.id} className={classes.listItemContainer}>
       <ListItemIcon>
         <IconButton
           onClick={onClickCircle('goal', goal.id)} className={classes.activeCircle}
@@ -42,7 +42,7 @@ export const GoalItem = ({ goal, deleteConcept, setEditing, onClickCircle, onTog
             className='goal-circle' />
         </IconButton>
       </ListItemIcon>
-      <ListItemText>
+      <ListItemText className={classes.toggleable} onClick={onToggleGoal(goal)}>
         <ConceptToolTipContent
           tags={goal.tags} subtitle={goal.description} description={goal.name}
         />

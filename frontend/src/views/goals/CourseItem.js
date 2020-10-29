@@ -47,8 +47,8 @@ export const CourseItem = ({ course, onToggleCourse, deleteCourse, setEditing, o
         />
         : ''}
     >
-      <ListItem divider button onClick={onToggleCourse(course)} key={course.id} className={classes.listItemContainer}>
-        <ListItemText>{course.name}</ListItemText>
+      <ListItem divider key={course.id} className={classes.listItemContainer}>
+        <ListItemText className={classes.toggleable} onClick={onToggleCourse(course)}>{course.name}</ListItemText>
         <ListItemIcon>
           <IconButton onClick={handleMenuOpen}>
             <MoreVertIcon />
