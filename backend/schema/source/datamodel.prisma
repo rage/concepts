@@ -290,7 +290,7 @@ type Concept {
   # Links
   linksFromConcept: [ConceptLink!]! @relation(name: "FromConcept", onDelete: CASCADE)
   linksToConcept: [ConceptLink!]! @relation(name: "ToConcept", onDelete: CASCADE)
-
+  goalLinks: [GoalLink!]! @relation(name: "GoalConcept", onDelete: CASCADE)
   # Relations
   course: Course @relation(name: "ConceptCourses")
   workspace: Workspace! @relation(link: INLINE, name:"WorkspaceConcepts")

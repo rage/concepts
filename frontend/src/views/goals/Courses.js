@@ -7,9 +7,8 @@ import cache from '../../apollo/update'
 import CourseEditor from '../manager/CourseEditor'
 import { CourseItem } from './CourseItem'
 import { useStyles } from './styles'
-import ConceptEditor from '../manager/ConceptEditor'
 
-export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => {
+export const Courses = ({ workspaceId, courses, onToggleCourse, tagOptions, onClickCircle }) => {
   const classes = useStyles()
   const [editing, setEditing] = useState()
 
@@ -41,7 +40,8 @@ export const Courses = ({ workspaceId, courses, tagOptions, onClickCircle }) => 
           />
         ) : (
           <CourseItem
-            deleteCourse={id => deleteCourse({ variables: { id } })}
+            onToggleCourse={onToggleCourse}
+            deleteCourse={id => deleteCourse({ variables: { id } })} editing={editing}
             key={course.id} course={course} setEditing={setEditing} onClickCircle={onClickCircle}
           />
         ))}

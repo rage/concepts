@@ -118,5 +118,20 @@ export const useStyles = makeStyles(theme => ({
     height: '82px',
     left: 0,
     transform: 'translateY(-10px)'
+  },
+  // Used in ListItemText in GoalItem and CourseItem 
+  toggleable: {
+    cursor: 'pointer'
+  },
+  // This one is used in the course tooltip
+  tooltip: {
+    backgroundColor: 'white',
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 16,
+    margin: '2px'
+  },
+  popper: {
+    padding: '5px'
   }
 }))
