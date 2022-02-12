@@ -8,7 +8,7 @@
   "type": "module",
   "dependencies": {
     "@authenio/samlify-node-xmllint": "^1.0.1",
-    "ajv": "^6.10.0",
+    "ajv": "^6.12.3",
     "apollo-server-core": "^2.14.2",
     "axios": "^0.19.0",
     "cookie-parser": "^1.4.4",
